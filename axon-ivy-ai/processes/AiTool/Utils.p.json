@@ -1,0 +1,64 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "197F7A490AF4A60F",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "AiTool.UtilsData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "Setup AI Service Caller",
+      "config" : {
+        "signature" : "setupAiServiceCaller",
+        "input" : {
+          "params" : [
+            { "name" : "connector", "type" : "com.axonivy.utils.ai.connector.AbstractAiServiceConnector", "desc" : "" }
+          ],
+          "map" : {
+            "out.connector" : "param.connector"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "connector", "type" : "com.axonivy.utils.ai.connector.AbstractAiServiceConnector", "desc" : "" }
+          ],
+          "map" : {
+            "result.connector" : "in.connector"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 136, "y" : 104 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 552, "y" : 104 }
+      }
+    }, {
+      "id" : "f5",
+      "type" : "Script",
+      "name" : "Set default AI connector if empty",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.connector.OpenAiServiceConnector;",
+            "",
+            "in.connector = in.connector is initialized ? in.connector : OpenAiServiceConnector.getTinyBrain();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 336, "y" : 103 },
+        "size" : { "width" : 132, "height" : 63 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f1" }
+      ]
+    } ]
+}

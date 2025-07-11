@@ -18,15 +18,15 @@
       <artifactId>ivy-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.axonivy.ivy.webtest</groupId>
+      <artifactId>web-tester</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>axon-ivy-ai-demo</artifactId>
       <version>13.2.0-SNAPSHOT</version>
       <type>iar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.axonivy.ivy.webtest</groupId>
-      <artifactId>web-tester</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
   <repositories>

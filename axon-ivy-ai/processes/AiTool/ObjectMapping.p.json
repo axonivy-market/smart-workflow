@@ -1,0 +1,204 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "197F7B1E77E4A5DA",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "AiTool.ObjectMappingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "AiObjectMapping",
+      "config" : {
+        "signature" : "AiObjectMapping",
+        "input" : {
+          "params" : [
+            { "name" : "query", "type" : "String", "desc" : "" },
+            { "name" : "targetObject", "type" : "Object", "desc" : "" },
+            { "name" : "examples", "type" : "List<com.axonivy.utils.ai.dto.ai.AiExample>", "desc" : "" },
+            { "name" : "customInstructions", "type" : "List<String>", "desc" : "" },
+            { "name" : "connector", "type" : "com.axonivy.utils.ai.connector.AbstractAiServiceConnector", "desc" : "" },
+            { "name" : "fieldExplanations", "type" : "List<com.axonivy.utils.ai.dto.ai.FieldExplanation>", "desc" : "" }
+          ],
+          "map" : {
+            "out.connector" : "param.connector",
+            "out.customInstructions" : "param.customInstructions",
+            "out.examplesJson" : "param.examples",
+            "out.fieldExplanations" : "param.fieldExplanations",
+            "out.query" : "param.query",
+            "out.targetObject" : "param.targetObject"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "Object", "desc" : "" }
+          ],
+          "map" : {
+            "result.result" : "in.resultObject"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 320, "y" : 128 },
+        "labelOffset" : { "x" : 17, "y" : -23 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "CallSubStart",
+      "name" : "AiJsonObjectMapping",
+      "config" : {
+        "signature" : "AiJsonObjectMapping",
+        "input" : {
+          "params" : [
+            { "name" : "query", "type" : "String", "desc" : "" },
+            { "name" : "targetJsonObject", "type" : "String", "desc" : "" },
+            { "name" : "examplesJson", "type" : "List<com.axonivy.utils.ai.dto.ai.AiExample>", "desc" : "" },
+            { "name" : "customInstructions", "type" : "List<String>", "desc" : "" },
+            { "name" : "fieldExplanations", "type" : "List<com.axonivy.utils.ai.dto.ai.FieldExplanation>", "desc" : "" },
+            { "name" : "connector", "type" : "com.axonivy.utils.ai.connector.AbstractAiServiceConnector", "desc" : "" }
+          ],
+          "map" : {
+            "out.connector" : "param.connector",
+            "out.customInstructions" : "param.customInstructions",
+            "out.examplesJson" : "param.examplesJson",
+            "out.fieldExplanations" : "param.fieldExplanations",
+            "out.query" : "param.query",
+            "out.targetObjectJson" : "param.targetJsonObject"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "resultJson", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.resultJson" : "in.resultJson"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 320, "y" : 272 },
+        "labelOffset" : { "x" : 17, "y" : -23 }
+      },
+      "connect" : [
+        { "id" : "f3", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "SubProcessCall",
+      "name" : "Setup AI Service caller",
+      "config" : {
+        "processCall" : "AiTool/Utils:setupAiServiceCaller(com.axonivy.utils.ai.connector.AbstractAiServiceConnector)",
+        "call" : {
+          "map" : {
+            "param.connector" : "in.connector"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.connector" : "result.connector"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 480, "y" : 128 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f8", "color" : "default" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "SubProcessCall",
+      "name" : "Setup AI Service caller",
+      "config" : {
+        "processCall" : "AiTool/Utils:setupAiServiceCaller(com.axonivy.utils.ai.connector.AbstractAiServiceConnector)",
+        "call" : {
+          "map" : {
+            "param.connector" : "in.connector"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.connector" : "result.connector"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 480, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f10", "color" : "default" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Object mapping",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
+            "import com.axonivy.utils.ai.dto.ai.AiVariable;",
+            "import com.axonivy.utils.ai.function.DataMapping;",
+            "",
+            "DataMapping mapper = DataMapping.getBuilder().withQuery(in.query)",
+            "  .useService(in.connector)",
+            "  .withTargetObject(in.targetObject)",
+            "  .addExamples(in.examplesJson)",
+            "  .addFieldExplanations(in.fieldExplanations)",
+            "  .addCustomInstructions(in.customInstructions).build();",
+            "",
+            "AiVariable result = mapper.execute();",
+            "in.resultObject = BusinessEntityConverter.jsonValueToEntity(result.content, Object.class);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 640, "y" : 128 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f12", "color" : "default" }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "Script",
+      "name" : "JSON Object mapping",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.function.DataMapping;",
+            "",
+            "DataMapping dataMapper = DataMapping.getBuilder().withQuery(in.query)",
+            "  .useService(in.connector)",
+            "  .withTargetJson(in.targetObjectJson)",
+            "  .addExamples(in.examplesJson)",
+            "  .addFieldExplanations(in.fieldExplanations)",
+            "  .addCustomInstructions(in.customInstructions).build();",
+            "",
+            "in.resultJson = dataMapper.execute().content;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 640, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f13", "color" : "default" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 768, "y" : 128 }
+      }
+    }, {
+      "id" : "f13",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 768, "y" : 272 }
+      }
+    } ]
+}

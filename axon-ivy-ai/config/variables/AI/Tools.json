@@ -1,0 +1,44 @@
+[
+  {
+    "id": "create-support-task",
+    "name": "Create Support Task Tool",
+    "usage": "Use this tool to create an Axon Ivy task from a given task information object",
+    "signature" : "createSupportTask(String)",
+    "parameters" : [
+      {
+          "name" : "supportTicket",
+          "value" : "",
+          "description": "Support ticket object",
+          "isMandatory": "true"
+      }
+    ],
+    "instructions": [
+        {
+          "type": "input",
+          "content": "use the query",
+          "toolId": "create-support-ticket"
+        }
+      ]
+  },
+  {
+    "id": "create-support-ticket",
+    "name": "Create Support Ticket Tool",
+    "usage": "Use this tool to create a support ticket object from a given user query",
+    "signature" : "createSupportTicket(String)",
+    "parameters" : [
+      {
+          "name" : "query",
+          "value" : "",
+          "description": "The original user query",
+          "isMandatory": "true"
+      }
+    ],
+    "instructions": [
+	  {
+	    "type": "input",
+		"content": "use the query",
+		"toolId": "create-support-ticket"
+	  }
+      ]
+  }
+]

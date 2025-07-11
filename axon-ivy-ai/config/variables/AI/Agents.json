@@ -1,0 +1,21 @@
+[
+  {
+    "id": "support-agent",
+    "name" : "Support Agent",
+    "usage" : "Support agent",
+    "model" : "gpt-4o-mini",
+    "tools" : ["create-support-task", "create-support-ticket"],
+    "instructions": [
+      {
+        "type": "input",
+        "content": "use the query",
+        "toolId": "create-support-ticket"
+      },
+      {
+        "type": "input",
+        "content": "use the task information object",
+        "toolId": "create-support-task"
+      }
+    ]
+  }
+]

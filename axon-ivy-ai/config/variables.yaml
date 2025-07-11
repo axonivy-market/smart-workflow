@@ -1,2 +1,9 @@
 # yaml-language-server: $schema=https://json-schema.axonivy.com/app/13.2.0/variables.json
 Variables:
+  AI:
+    OpenAI:
+      #[password]
+      APIKey: ${decrypt:}
+    # [file: json]
+    Agents: ""
+    Tools: ""
