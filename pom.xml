@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.axonivy.market</groupId><!-- your group id: e.g. com.axonivy.connector.<myconnector> or com.axonivy.utils.<myutil> -->
-  <name>MY-PRODUCT-NAME</name><!-- fill your product name -->
-  <artifactId>MY-PRODUCT-NAME-modules</artifactId><!-- fill your product name + a "-modules" postfix -->
-  <version>12.0.0-SNAPSHOT</version><!-- identicate your minimal compliant ivy version with the first 2 digits -->
+  <groupId>com.axonivy.utils.ai</groupId>
+  <name>axon-ivy-ai</name>
+  <artifactId>axon-ivy-ai-modules</artifactId>
+  <version>13.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
