@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.axonivy.utils.ai.dto.AbstractConfiguration;
 import com.axonivy.utils.ai.dto.ai.Instruction;
+import com.axonivy.utils.ai.enums.AgentType;
 import com.axonivy.utils.ai.enums.InstructionType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -18,6 +19,9 @@ public class GoalBasedAgentModel extends AbstractConfiguration {
 
   private String goal;
   private int maxIterations;
+
+  // Agent type - defaults to STEP_BY_STEP for backward compatibility
+  private AgentType agentType = AgentType.STEP_BY_STEP;
 
   // Dual AI Model Architecture
   private String planningModel;
@@ -74,6 +78,14 @@ public class GoalBasedAgentModel extends AbstractConfiguration {
 
   public void setMaxIterations(int maxIterations) {
     this.maxIterations = maxIterations;
+  }
+
+  public AgentType getAgentType() {
+    return agentType;
+  }
+
+  public void setAgentType(AgentType agentType) {
+    this.agentType = agentType;
   }
 
   public String getPlanningModel() {

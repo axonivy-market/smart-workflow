@@ -1,9 +1,10 @@
 [
   {
-    "id": "support-agent",
-    "name": "Support Agent",
-    "usage": "Advanced customer support agent with goal-driven execution and smart decision making",
-    "goal": "Create a support ticket for the user and Axon Ivy task for that support ticket",
+    "id": "support-agent-steps",
+    "name": "Step-by-Step Support Agent",
+    "usage": "Creates support tickets and tasks using sequential step execution",
+    "goal": "Create a support ticket for the user and assign appropriate approvers to handle it efficiently",
+    "agentType": "STEP_BY_STEP",
     "maxIterations": 15,
     "planningModel": "gpt-4o",
     "planningModelKey": "${AI.OpenAI.APIKey}",
@@ -13,11 +14,46 @@
     "instructions": [
       {
         "type": "planning",
-        "content": "Always run the tool create-support-ticket first to create a support ticket for the user"
+        "content": "Create a detailed step-by-step plan to handle the support request"
+      },
+      {
+        "type": "planning", 
+        "content": "Ensure each step has a clear purpose and builds on the previous step"
+      },
+      {
+        "type": "execution",
+        "content": "Execute each step in the planned sequence and verify completion before proceeding"
+      }
+    ]
+  },
+  {
+    "id": "support-agent-todos",
+    "name": "Todo-based Support Agent", 
+    "usage": "Creates support tickets and tasks using outcome-focused todo execution",
+    "goal": "Create a support ticket for the user and assign appropriate approvers to handle it efficiently",
+    "agentType": "TODO_LIST",
+    "maxIterations": 15,
+    "planningModel": "gpt-4o",
+    "planningModelKey": "${AI.OpenAI.APIKey}",
+    "executionModel": "gpt-4o-mini", 
+    "executionModelKey": "${AI.OpenAI.APIKey}",
+    "tools": ["create-support-task", "create-support-ticket", "choose-ticket-approvers"],
+    "instructions": [
+      {
+        "type": "planning",
+        "content": "Create outcome-focused todos that achieve specific results rather than following rigid steps"
       },
       {
         "type": "planning",
-        "content": "After the support ticket is created, fill approvers to it"
+        "content": "Each todo should have clear success criteria that can be objectively verified"
+      },
+      {
+        "type": "execution", 
+        "content": "Work on each todo until its success criteria are fully met before moving to the next"
+      },
+      {
+        "type": "execution",
+        "content": "If a todo is not completed after multiple attempts, analyze what's missing and adapt the approach"
       }
     ]
   }

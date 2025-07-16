@@ -3,35 +3,17 @@ package com.axonivy.utils.ai.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
-import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
-import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
-import com.axonivy.utils.ai.dto.ai.Instruction;
-import com.axonivy.utils.ai.dto.ai.configuration.GoalBasedAgentModel;
 import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.function.DataMapping;
 import com.axonivy.utils.ai.function.Planning;
-import com.axonivy.utils.ai.history.HistoryLog;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
-import com.axonivy.utils.ai.utils.IvyVariableUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.input.PromptTemplate;
 
-public class IvyAgent {
-
-  private static final int DEFAULT_MAX_ITERATIONS = 20; // Default iteration limit
-  private static final String ONE_LINE = System.lineSeparator();
-  private static final String TWO_LINES = System.lineSeparator() + System.lineSeparator();
+public class IvyAgent extends BaseAgent {
 
   private static final String EXECUTION_PROMPT_TEMPLATE = """
       GOAL: {{goal}}
@@ -66,92 +48,11 @@ public class IvyAgent {
       Final Reasoning: [Why the goal has been achieved]
       """;
 
-  // Unique identifier for the agent
-  private String id;
-
   // Ordered list of steps that define the agent's behavior or process
   private List<AiStep> steps;
 
-  // Human-readable name for the agent
-  private String name;
-
-  // Description or intended usage of the agent
-  private String usage;
-
-  // List of variables used or produced by the agent
-  private List<AiVariable> variables;
-
-  // Enhanced Configuration Fields
-  private String goal;                           // Agent's primary objective
-  private int maxIterations = DEFAULT_MAX_ITERATIONS; // Configurable iteration limit
-  private AbstractAiServiceConnector DEFAULT_CONNECTOR = OpenAiServiceConnector.getTinyBrain();
-
-  // Dual AI Model Architecture
-  private AbstractAiServiceConnector planningModel; // For plan generation
-  private AbstractAiServiceConnector executionModel; // For step execution & reasoning
-
-  // Instruction System
-  private List<Instruction> instructions;                 // Planning and execution instructions
-
-  // Execution history log (not serialized to JSON)
-  @JsonIgnore
-  private HistoryLog historyLog;
-
-  private List<String> observationHistory;
-
-  private String originalQuery;
-
-  private List<IvyTool> tools;
-
-  // List of results collected during agent execution (not serialized to JSON)
-  @JsonIgnore
-  private List<AiVariable> results;
-
   public IvyAgent() {
-    id = UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY);
-  }
-
-  /**
-   * Load the agent from model.
-   */
-  public void loadFromModel(GoalBasedAgentModel model) {
-    this.id = model.getId();
-    this.name = model.getName();
-    this.usage = model.getUsage();
-    this.goal = model.getGoal();
-    
-    // Set configurable iterations
-    // If default max iteration is not set, use the default value: 20
-    this.maxIterations = model.getMaxIterations() > 0 ? model.getMaxIterations() : DEFAULT_MAX_ITERATIONS;
-
-    // Initialize planning model
-    planningModel = DEFAULT_CONNECTOR;
-    if (StringUtils.isNotBlank(model.getPlanningModel()) && StringUtils.isNotBlank(model.getPlanningModelKey())) {
-      planningModel = new OpenAiServiceConnector();
-      planningModel.init(model.getPlanningModel(),
-          IvyVariableUtils.resolveVariableReference(model.getPlanningModelKey()));
-    }
-
-    // Initialize execution model
-    executionModel = DEFAULT_CONNECTOR;
-    if (StringUtils.isNotBlank(model.getExecutionModel()) && StringUtils.isNotBlank(model.getExecutionModelKey())) {
-      executionModel = new OpenAiServiceConnector();
-      executionModel.init(model.getExecutionModel(),
-          IvyVariableUtils.resolveVariableReference(model.getExecutionModelKey()));
-    }
-
-    // Load instructions
-    instructions = Optional.ofNullable(model.getInstructions()).orElseGet(ArrayList::new);
-
-    // Load tools
-    this.tools = new ArrayList<>();
-    List<IvyTool> foundTools = BusinessEntityConverter.jsonValueToEntities(Ivy.var().get("Ai.Tools"), IvyTool.class);
-    for (String toolName : model.getTools()) {
-      Optional<IvyTool> ivyTool = foundTools.stream().filter(t -> t.getId().equals(toolName)).findFirst();
-      if (ivyTool.isPresent()) {
-        this.tools.add(ivyTool.get());
-      }
-    }
+    super();
   }
 
   /**
@@ -177,24 +78,9 @@ public class IvyAgent {
     }
 
     prompt.append("Available tools: ");
-    prompt.append(tools.stream().map(tool -> tool.getId()).collect(Collectors.joining(", ")));
+    prompt.append(tools.stream().map(tool -> tool.getId()).collect(java.util.stream.Collectors.joining(", ")));
     prompt.append(TWO_LINES).append("Create a detailed execution plan to achieve the goal:");
     return prompt.toString();
-  }
-
-  /**
-   * Helper method to filter instructions by type
-   */
-  private List<String> getInstructionsByType(InstructionType type) {
-    if (instructions == null || instructions.isEmpty()) {
-      return new ArrayList<>();
-    }
-    
-    return instructions.stream()
-        .filter(instruction -> instruction.getType() == type)
-        .map(Instruction::getContent)
-        .filter(content -> content != null && !content.trim().isEmpty())
-        .collect(Collectors.toList());
   }
 
   /**
@@ -203,6 +89,7 @@ public class IvyAgent {
    * 
    * @param query The user input query.
    */
+  @Override
   public void start(String query) {
     this.originalQuery = query;
     this.observationHistory = new ArrayList<>();
@@ -249,7 +136,7 @@ public class IvyAgent {
     steps = new ArrayList<>();
     for (AiStep step : plannedSteps) {
 
-      IvyTool tool = tools.stream().filter(w -> w.getId().equals(step.getToolId())).findFirst()
+      var tool = tools.stream().filter(w -> w.getId().equals(step.getToolId())).findFirst()
           .orElseThrow(() -> new IllegalArgumentException("Tool not found for ID: " + step.getToolId()));
       step.useTool(tool);
       steps.add(step);
@@ -261,12 +148,13 @@ public class IvyAgent {
   /**
    * Executes the assigned plan with adaptive ReAct reasoning between steps.
    */
+  @Override
   public void execute() {
     if (getVariables() == null) {
       setVariables(new ArrayList<>());
     }
 
-    historyLog = new HistoryLog();
+    historyLog = new com.axonivy.utils.ai.history.HistoryLog();
 
     // Log input variables with goal information
     String inputVariablesStr = "Start running adaptive managing agent";
@@ -400,7 +288,7 @@ public class IvyAgent {
     try {
       // Find the agent specified in the decision
       String targetToolId = decision.getAgentSelection().trim();
-      IvyTool targetTool = tools.stream().filter(t -> t.getId().equals(targetToolId)).findFirst().orElse(null);
+      var targetTool = tools.stream().filter(t -> t.getId().equals(targetToolId)).findFirst().orElse(null);
 
       if (targetTool != null) {
         // Create a new adaptive step
@@ -429,18 +317,6 @@ public class IvyAgent {
   }
 
   /**
-   * Builds a description of available worker agents
-   */
-  private String buildAvailableToolsDescription() {
-    StringBuilder toolsStr = new StringBuilder();
-    for (var tool : tools) {
-      toolsStr.append("- ID: ").append(tool.getId()).append(", Name: ").append(tool.getName()).append(", Usage: ")
-          .append(tool.getUsage()).append(System.lineSeparator());
-    }
-    return toolsStr.toString();
-  }
-
-  /**
    * Retrieves the step by its number.
    *
    * @param stepNo the step number to find
@@ -452,93 +328,11 @@ public class IvyAgent {
         .findFirst().orElse(null);
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
   public List<AiStep> getSteps() {
     return steps;
   }
 
   public void setSteps(List<AiStep> steps) {
     this.steps = steps;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getUsage() {
-    return usage;
-  }
-
-  public void setUsage(String usage) {
-    this.usage = usage;
-  }
-
-  public List<AiVariable> getVariables() {
-    return variables;
-  }
-
-  public void setVariables(List<AiVariable> variables) {
-    this.variables = variables;
-  }
-
-  public List<AiVariable> getResults() {
-    return results;
-  }
-
-  public void setResults(List<AiVariable> results) {
-    this.results = results;
-  }
-
-
-
-  public String getGoal() {
-    return goal;
-  }
-
-  public void setGoal(String goal) {
-    this.goal = goal;
-  }
-
-  public int getMaxIterations() {
-    return maxIterations;
-  }
-
-  public void setMaxIterations(int maxIterations) {
-    this.maxIterations = maxIterations;
-  }
-
-  public List<Instruction> getInstructions() {
-    return instructions;
-  }
-
-  public void setInstructions(List<Instruction> instructions) {
-    this.instructions = instructions;
-  }
-
-  public AbstractAiServiceConnector getPlanningModel() {
-    return planningModel;
-  }
-
-  public void setPlanningModel(AbstractAiServiceConnector planningModel) {
-    this.planningModel = planningModel;
-  }
-
-  public AbstractAiServiceConnector getExecutionModel() {
-    return executionModel;
-  }
-
-  public void setExecutionModel(AbstractAiServiceConnector executionModel) {
-    this.executionModel = executionModel;
   }
 }
