@@ -1,0 +1,146 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1980D0F50B41C9EE",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.axon.ivy.ai.demo.SupportTicketCreation.SupportTicketCreationData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "guid" : "1980D0F50B95343D"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "1980D0F50C0F8E5C"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 160 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogEventStart",
+      "name" : "startAgent",
+      "config" : {
+        "guid" : "1980D45DC3849D1D"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f18" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 616, "y" : 272 }
+      }
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "init employee",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.EmployeeService;",
+            "in.employee = EmployeeService.getInstance().findByUsername(ivy.session.getSessionUserName());"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f13",
+      "type" : "TriggerCall",
+      "name" : "Trigger agent",
+      "config" : {
+        "processCall" : "AgentDemo/StartDemo:startSupportTicketAgent(String)",
+        "call" : {
+          "map" : {
+            "param.query" : "com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter.entityToJsonValue(in.request)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 480, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f16",
+      "type" : "Script",
+      "name" : "Create request object",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.request.content = in.content;",
+            "in.request.requestor = in.employee.username;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 320, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f17", "to" : "f13", "color" : "default" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "Alternative",
+      "name" : "empty content ?",
+      "config" : {
+        "conditions" : {
+          "f20" : "org.apache.commons.lang3.StringUtils.isBlank(in.content)",
+          "f19" : ""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 192, "y" : 272 },
+        "labelOffset" : { "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f16", "label" : {
+            "name" : "no",
+            "offset" : { "x" : -3, "y" : 6 }
+          }, "color" : "default" },
+        { "id" : "f20", "to" : "f7", "via" : [ { "x" : 192, "y" : 360 }, { "x" : 616, "y" : 360 } ], "label" : {
+            "name" : "yes",
+            "segment" : 1.5,
+            "offset" : { "x" : -195, "y" : -42 }
+          } }
+      ]
+    } ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "dev",
+    "name": "Development",
+    "firstLevelManager": "mike.johnson",
+    "secondLevelManager": "jane.smith"
+  },
+  {
+    "id": "qa",
+    "name": "Quality Assurance",
+    "firstLevelManager": "sarah.wilson",
+    "secondLevelManager": "alex.martinez"
+  },
+  {
+    "id": "hr",
+    "name": "Human Resource",
+    "firstLevelManager": "robert.miller",
+    "secondLevelManager": "lisa.davis"
+  }
+]

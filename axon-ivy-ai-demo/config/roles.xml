@@ -4,4 +4,7 @@
     <role>
         <identifier>SupportTeam</identifier>
     </role>
+    <role>
+        <identifier>TechnicalTeam</identifier>
+    </role>
 </role>

@@ -622,7 +622,8 @@
               "code" : [
                 "in.customInstructions.add(\"Only focus on adding custom fields\");",
                 "in.customInstructions.add(\"Each custom field is a pair of name - value. Example: {\\\"requestor\\\" : \\\"mnhnam\\\"}\");",
-                "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");"
+                "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");",
+                "in.customInstructions.add(\"Add custom field: 'requestor', value is the requestor username\");"
               ]
             }
           },
@@ -688,6 +689,80 @@
       },
       "connect" : [
         { "id" : "f56", "to" : "S0", "color" : "default" }
+      ]
+    }, {
+      "id" : "f61",
+      "type" : "CallSubStart",
+      "name" : "chooseTicketApprover(String)",
+      "config" : {
+        "signature" : "chooseTicketApprover",
+        "input" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.query" : "param.supportTicket"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "" }
+          ],
+          "map" : {
+            "result.supportTicket" : "in.supportTicket"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 656 }
+      },
+      "connect" : [
+        { "id" : "f64", "to" : "f66" }
+      ]
+    }, {
+      "id" : "f62",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 640, "y" : 656 }
+      }
+    }, {
+      "id" : "f63",
+      "type" : "Script",
+      "name" : "Choose approvers programmatically",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.axon.ivy.ai.demo.handler.SupportTicketApproverHandler;",
+            "SupportTicketApproverHandler.chooseApprovers(in.supportTicket);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 480, "y" : 656 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f65", "to" : "f62" }
+      ]
+    }, {
+      "id" : "f66",
+      "type" : "Script",
+      "name" : "Convert to support ticket",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket;",
+            "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
+            "",
+            "in.supportTicket = BusinessEntityConverter.jsonValueToEntity(in.query, SupportTicket.class) as SupportTicket;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 656 }
+      },
+      "connect" : [
+        { "id" : "f67", "to" : "f63", "color" : "default" }
       ]
     } ]
 }
