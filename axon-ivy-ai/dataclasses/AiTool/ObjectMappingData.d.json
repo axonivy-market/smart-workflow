@@ -7,9 +7,6 @@
     "name" : "query",
     "type" : "String"
   }, {
-    "name" : "targetObjectJson",
-    "type" : "String"
-  }, {
     "name" : "targetObject",
     "type" : "java.lang.Object"
   }, {
@@ -22,13 +19,13 @@
     "name" : "customInstructions",
     "type" : "List<String>"
   }, {
-    "name" : "examplesJson",
-    "type" : "List<com.axonivy.utils.ai.dto.ai.AiExample>"
-  }, {
     "name" : "fieldExplanations",
     "type" : "List<com.axonivy.utils.ai.dto.ai.FieldExplanation>"
   }, {
     "name" : "connector",
     "type" : "com.axonivy.utils.ai.connector.AbstractAiServiceConnector"
+  }, {
+    "name" : "exampleJson",
+    "type" : "List<com.axonivy.utils.ai.dto.ai.AiExample>"
   } ]
 }

@@ -1,20 +1,23 @@
 [
   {
     "id": "support-agent",
-    "name" : "Support Agent",
-    "usage" : "Support agent",
-    "model" : "gpt-4o-mini",
-    "tools" : ["create-support-task", "create-support-ticket"],
+    "name": "Support Agent",
+    "usage": "Advanced customer support agent with goal-driven execution and smart decision making",
+    "goal": "Create a support ticket for the user and Axon Ivy task for that support ticket",
+    "maxIterations": 15,
+    "planningModel": "gpt-4o",
+    "planningModelKey": "${AI.OpenAI.APIKey}",
+    "executionModel": "gpt-4o-mini",
+    "executionModelKey": "${AI.OpenAI.APIKey}",
+    "tools": ["create-support-task", "create-support-ticket", "choose-ticket-approvers"],
     "instructions": [
       {
-        "type": "input",
-        "content": "use the query",
-        "toolId": "create-support-ticket"
+        "type": "planning",
+        "content": "Always run the tool create-support-ticket first to create a support ticket for the user"
       },
       {
-        "type": "input",
-        "content": "use the task information object",
-        "toolId": "create-support-task"
+        "type": "planning",
+        "content": "After the support ticket is created, fill approvers to it"
       }
     ]
   }

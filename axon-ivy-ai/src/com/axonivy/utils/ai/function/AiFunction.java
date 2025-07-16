@@ -87,12 +87,20 @@ public abstract class AiFunction {
   // Option to put the result into wrapper characters or not. default is true
   private Boolean useWrappers = true;
 
+  protected boolean failedToBuildInstructions;
+
   protected abstract AiVariable createStandardResult(String resultFromAI);
 
   // Method to execute this function
   public AiVariable execute() {
     // Build instructions
     buildInstructions();
+
+    // If error occurred when building instructions, return empty result
+    if (failedToBuildInstructions) {
+      failedToBuildInstructions = false;
+      return createStandardResult(StringUtils.EMPTY);
+    }
 
     // Map parameters
     Map<String, Object> params = new HashMap<>();

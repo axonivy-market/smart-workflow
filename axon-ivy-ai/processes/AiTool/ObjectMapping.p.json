@@ -23,7 +23,7 @@
           "map" : {
             "out.connector" : "param.connector",
             "out.customInstructions" : "param.customInstructions",
-            "out.examplesJson" : "param.examples",
+            "out.exampleJson" : "param.examples",
             "out.fieldExplanations" : "param.fieldExplanations",
             "out.query" : "param.query",
             "out.targetObject" : "param.targetObject"
@@ -44,46 +44,6 @@
       },
       "connect" : [
         { "id" : "f1", "to" : "f4" }
-      ]
-    }, {
-      "id" : "f2",
-      "type" : "CallSubStart",
-      "name" : "AiJsonObjectMapping",
-      "config" : {
-        "signature" : "AiJsonObjectMapping",
-        "input" : {
-          "params" : [
-            { "name" : "query", "type" : "String", "desc" : "" },
-            { "name" : "targetJsonObject", "type" : "String", "desc" : "" },
-            { "name" : "examplesJson", "type" : "List<com.axonivy.utils.ai.dto.ai.AiExample>", "desc" : "" },
-            { "name" : "customInstructions", "type" : "List<String>", "desc" : "" },
-            { "name" : "fieldExplanations", "type" : "List<com.axonivy.utils.ai.dto.ai.FieldExplanation>", "desc" : "" },
-            { "name" : "connector", "type" : "com.axonivy.utils.ai.connector.AbstractAiServiceConnector", "desc" : "" }
-          ],
-          "map" : {
-            "out.connector" : "param.connector",
-            "out.customInstructions" : "param.customInstructions",
-            "out.examplesJson" : "param.examplesJson",
-            "out.fieldExplanations" : "param.fieldExplanations",
-            "out.query" : "param.query",
-            "out.targetObjectJson" : "param.targetJsonObject"
-          }
-        },
-        "result" : {
-          "params" : [
-            { "name" : "resultJson", "type" : "String", "desc" : "" }
-          ],
-          "map" : {
-            "result.resultJson" : "in.resultJson"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 320, "y" : 272 },
-        "labelOffset" : { "x" : 17, "y" : -23 }
-      },
-      "connect" : [
-        { "id" : "f3", "to" : "f6" }
       ]
     }, {
       "id" : "f4",
@@ -110,30 +70,6 @@
         { "id" : "f5", "to" : "f8", "color" : "default" }
       ]
     }, {
-      "id" : "f6",
-      "type" : "SubProcessCall",
-      "name" : "Setup AI Service caller",
-      "config" : {
-        "processCall" : "AiTool/Utils:setupAiServiceCaller(com.axonivy.utils.ai.connector.AbstractAiServiceConnector)",
-        "call" : {
-          "map" : {
-            "param.connector" : "in.connector"
-          }
-        },
-        "output" : {
-          "map" : {
-            "out" : "in",
-            "out.connector" : "result.connector"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 480, "y" : 272 }
-      },
-      "connect" : [
-        { "id" : "f7", "to" : "f10", "color" : "default" }
-      ]
-    }, {
       "id" : "f8",
       "type" : "Script",
       "name" : "Object mapping",
@@ -146,10 +82,11 @@
             "",
             "DataMapping mapper = DataMapping.getBuilder().withQuery(in.query)",
             "  .useService(in.connector)",
-            "  .withTargetObject(in.targetObject)",
-            "  .addExamples(in.examplesJson)",
+            "  .withObject(in.targetObject)",
+            "  .addExamples(in.exampleJson)",
             "  .addFieldExplanations(in.fieldExplanations)",
-            "  .addCustomInstructions(in.customInstructions).build();",
+            "  .addCustomInstructions(in.customInstructions)",
+            "  .withInstructionsStrategy().build();",
             "",
             "AiVariable result = mapper.execute();",
             "in.resultObject = BusinessEntityConverter.jsonValueToEntity(result.content, Object.class);"
@@ -163,42 +100,10 @@
         { "id" : "f9", "to" : "f12", "color" : "default" }
       ]
     }, {
-      "id" : "f10",
-      "type" : "Script",
-      "name" : "JSON Object mapping",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.ai.function.DataMapping;",
-            "",
-            "DataMapping dataMapper = DataMapping.getBuilder().withQuery(in.query)",
-            "  .useService(in.connector)",
-            "  .withTargetJson(in.targetObjectJson)",
-            "  .addExamples(in.examplesJson)",
-            "  .addFieldExplanations(in.fieldExplanations)",
-            "  .addCustomInstructions(in.customInstructions).build();",
-            "",
-            "in.resultJson = dataMapper.execute().content;"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 640, "y" : 272 }
-      },
-      "connect" : [
-        { "id" : "f11", "to" : "f13", "color" : "default" }
-      ]
-    }, {
       "id" : "f12",
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 768, "y" : 128 }
-      }
-    }, {
-      "id" : "f13",
-      "type" : "CallSubEnd",
-      "visual" : {
-        "at" : { "x" : 768, "y" : 272 }
       }
     } ]
 }

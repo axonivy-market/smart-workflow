@@ -164,7 +164,7 @@ public class IvyTool implements Serializable {
     Map<String, Object> paramsMap = new HashMap<>();
     paramsMap.put("variables", AiVariableUtils.convertAiVariablesToString(variables));
     AiVariable result = DataMapping.getBuilder().useService(getConnector())
-        .withQuery(PromptTemplate.from(VARIABLES_TEMPLATE).apply(paramsMap).text()).withTargetObject(param)
+        .withQuery(PromptTemplate.from(VARIABLES_TEMPLATE).apply(paramsMap).text()).withObject(param)
         .addFieldExplanations(Arrays.asList(new FieldExplanation(param.getName(), param.getDescription()))).build()
         .execute();
 

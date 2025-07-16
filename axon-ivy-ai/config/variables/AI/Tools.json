@@ -40,5 +40,26 @@
 		"toolId": "create-support-ticket"
 	  }
       ]
+  },
+  {
+    "id": "choose-ticket-approvers",
+    "name": "Choost Support Ticket Approvers Tool",
+    "usage": "Use this tool update Support ticket object with approvers",
+    "signature" : "chooseTicketApprover(String)",
+    "parameters" : [
+      {
+          "name" : "supportTicket",
+          "value" : "",
+          "description": "Support ticket object",
+          "isMandatory": "true"
+      }
+    ],
+    "instructions": [
+        {
+          "type": "input",
+          "content": "use the support ticket object",
+          "toolId": "choose-ticket-approver"
+        }
+      ]
   }
 ]

@@ -141,7 +141,7 @@ public final class AiVariableUtils {
 
     // Prepare data mapping using AI service
     DataMapping.Builder builder = DataMapping.getBuilder().useService(connector).withQuery(variablesStr)
-        .withTargetObject(AiVariable.getMappingExampleList())
+        .withObject(AiVariable.getMappingExampleList())
         .addCustomInstruction("Extract list of variables from the variable list above")
         .addCustomInstruction("The result must be a JSON array")
         .addCustomInstruction("If there is no variable from the list matched, return an empty JSON array");

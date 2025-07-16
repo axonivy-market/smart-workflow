@@ -2,13 +2,10 @@ package com.axonivy.utils.ai.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,11 +14,14 @@ import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
 import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
+import com.axonivy.utils.ai.dto.ai.Instruction;
 import com.axonivy.utils.ai.dto.ai.configuration.GoalBasedAgentModel;
+import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.function.DataMapping;
 import com.axonivy.utils.ai.function.Planning;
 import com.axonivy.utils.ai.history.HistoryLog;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
+import com.axonivy.utils.ai.utils.IvyVariableUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -29,23 +29,27 @@ import dev.langchain4j.model.input.PromptTemplate;
 
 public class IvyAgent {
 
-  private static final int MAX_ITERATIONS = 20; // Prevent infinite loops
+  private static final int DEFAULT_MAX_ITERATIONS = 20; // Default iteration limit
+  private static final String ONE_LINE = System.lineSeparator();
+  private static final String TWO_LINES = System.lineSeparator() + System.lineSeparator();
 
-  // ReAct reasoning template for plan adaptation
-  private static final String REACT_REASONING_TEMPLATE = """
+  private static final String EXECUTION_PROMPT_TEMPLATE = """
+      GOAL: {{goal}}
+
+      {{executionInstructions}}CURRENT SITUATION:
       Original Query: {{originalQuery}}
-
-      Current Plan Status:
-      {{planStatus}}
-
-      Latest Step Result:
-      {{latestResult}}
-
+      Current Step: {{currentStepName}}
+      Latest Result: {{latestResult}}
       Observation History:
       {{observationHistory}}
 
-      Available Tools:
+      AVAILABLE TOOLS:
       {{availableTools}}
+
+      ANALYSIS REQUIRED:
+      1. Is the goal achieved? (Consider the execution instructions)
+      2. If not, should we continue with the current plan or adapt it?
+      3. Are there any execution instruction triggers based on the latest result?
 
       Based on the latest step result and current progress, analyze if the plan needs to be updated:
 
@@ -62,13 +66,6 @@ public class IvyAgent {
       Final Reasoning: [Why the goal has been achieved]
       """;
 
-  // Pattern to parse ReAct reasoning response
-  private static final Pattern DECISION_PATTERN = Pattern.compile("Decision:\\s*(YES|NO|COMPLETE)",
-      Pattern.CASE_INSENSITIVE);
-  private static final Pattern NEXT_ACTION_PATTERN = Pattern.compile("Next Action:\\s*(.+?)(?=\\n|$)", Pattern.DOTALL);
-  private static final Pattern AGENT_SELECTION_PATTERN = Pattern.compile("Agent Selection:\\s*(.+?)(?=\\n|$)",
-      Pattern.DOTALL);
-
   // Unique identifier for the agent
   private String id;
 
@@ -84,11 +81,21 @@ public class IvyAgent {
   // List of variables used or produced by the agent
   private List<AiVariable> variables;
 
+  // Enhanced Configuration Fields
+  private String goal;                           // Agent's primary objective
+  private int maxIterations = DEFAULT_MAX_ITERATIONS; // Configurable iteration limit
+  private AbstractAiServiceConnector DEFAULT_CONNECTOR = OpenAiServiceConnector.getTinyBrain();
+
+  // Dual AI Model Architecture
+  private AbstractAiServiceConnector planningModel; // For plan generation
+  private AbstractAiServiceConnector executionModel; // For step execution & reasoning
+
+  // Instruction System
+  private List<Instruction> instructions;                 // Planning and execution instructions
+
   // Execution history log (not serialized to JSON)
   @JsonIgnore
   private HistoryLog historyLog;
-
-  private AbstractAiServiceConnector connector;
 
   private List<String> observationHistory;
 
@@ -111,9 +118,32 @@ public class IvyAgent {
     this.id = model.getId();
     this.name = model.getName();
     this.usage = model.getUsage();
+    this.goal = model.getGoal();
+    
+    // Set configurable iterations
+    // If default max iteration is not set, use the default value: 20
+    this.maxIterations = model.getMaxIterations() > 0 ? model.getMaxIterations() : DEFAULT_MAX_ITERATIONS;
 
-    this.connector = OpenAiServiceConnector.getTinyBrain();
+    // Initialize planning model
+    planningModel = DEFAULT_CONNECTOR;
+    if (StringUtils.isNotBlank(model.getPlanningModel()) && StringUtils.isNotBlank(model.getPlanningModelKey())) {
+      planningModel = new OpenAiServiceConnector();
+      planningModel.init(model.getPlanningModel(),
+          IvyVariableUtils.resolveVariableReference(model.getPlanningModelKey()));
+    }
 
+    // Initialize execution model
+    executionModel = DEFAULT_CONNECTOR;
+    if (StringUtils.isNotBlank(model.getExecutionModel()) && StringUtils.isNotBlank(model.getExecutionModelKey())) {
+      executionModel = new OpenAiServiceConnector();
+      executionModel.init(model.getExecutionModel(),
+          IvyVariableUtils.resolveVariableReference(model.getExecutionModelKey()));
+    }
+
+    // Load instructions
+    instructions = Optional.ofNullable(model.getInstructions()).orElseGet(ArrayList::new);
+
+    // Load tools
     this.tools = new ArrayList<>();
     List<IvyTool> foundTools = BusinessEntityConverter.jsonValueToEntities(Ivy.var().get("Ai.Tools"), IvyTool.class);
     for (String toolName : model.getTools()) {
@@ -122,6 +152,49 @@ public class IvyAgent {
         this.tools.add(ivyTool.get());
       }
     }
+  }
+
+  /**
+   * Builds an enhanced planning prompt that includes goal and planning instructions
+   */
+  private String buildPlanningPrompt(String query) {
+    StringBuilder prompt = new StringBuilder();
+    
+    if (goal != null && !goal.isEmpty()) {
+      prompt.append("GOAL: ").append(goal).append(TWO_LINES);
+    }
+
+    prompt.append("USER QUERY: ").append(query).append(TWO_LINES);
+
+    // Add planning instructions if available
+    List<String> planningInstructions = getInstructionsByType(InstructionType.PLANNING);
+    if (!planningInstructions.isEmpty()) {
+      prompt.append("PLANNING INSTRUCTIONS:").append(ONE_LINE);
+      for (int i = 0; i < planningInstructions.size(); i++) {
+        prompt.append((i + 1)).append(". ").append(planningInstructions.get(i)).append(ONE_LINE);
+      }
+      prompt.append(ONE_LINE);
+    }
+
+    prompt.append("Available tools: ");
+    prompt.append(tools.stream().map(tool -> tool.getId()).collect(Collectors.joining(", ")));
+    prompt.append(TWO_LINES).append("Create a detailed execution plan to achieve the goal:");
+    return prompt.toString();
+  }
+
+  /**
+   * Helper method to filter instructions by type
+   */
+  private List<String> getInstructionsByType(InstructionType type) {
+    if (instructions == null || instructions.isEmpty()) {
+      return new ArrayList<>();
+    }
+    
+    return instructions.stream()
+        .filter(instruction -> instruction.getType() == type)
+        .map(Instruction::getContent)
+        .filter(content -> content != null && !content.trim().isEmpty())
+        .collect(Collectors.toList());
   }
 
   /**
@@ -143,12 +216,24 @@ public class IvyAgent {
     inputVariable.setDescription("The input query");
     getVariables().add(inputVariable);
 
-    // Generate high-level plan from query using a large AI model
-    Planning planning = Planning.getBuilder().addTools(tools).useService(connector).withQuery(query).build();
+    // Generate high-level plan from query using the planning AI model
+    String enhancedPlanningPrompt = buildPlanningPrompt(query);
+    Planning.Builder planningBuilder = Planning.getBuilder()
+        .addTools(tools)
+        .useService(planningModel)
+        .withQuery(enhancedPlanningPrompt);
+    
+    // Add planning instructions as custom instructions
+    List<String> planningInstructions = getInstructionsByType(InstructionType.PLANNING);
+    for (String instruction : planningInstructions) {
+      planningBuilder.addCustomInstruction(instruction);
+    }
+    
+    Planning planning = planningBuilder.build();
     String crudePlan = planning.execute().getContent();
 
-    // Map plan content to a list of AiSteps using a smaller AI model
-    String stepString = DataMapping.getBuilder().useService(connector).withTargetObject(new AiStep())
+    // Map plan content to a list of AiSteps using execution AI model
+    String stepString = DataMapping.getBuilder().useService(executionModel).withObject(new AiStep())
         .addFieldExplanations(Arrays.asList(new FieldExplanation("stepNo", "Incremental integer, starts at 1"),
             new FieldExplanation("name", "Name of the step"), new FieldExplanation("analysis", "Analysis of the step"),
             new FieldExplanation("toolId", "Tool ID to execute the step"),
@@ -183,10 +268,13 @@ public class IvyAgent {
 
     historyLog = new HistoryLog();
 
-    // Log input variables
+    // Log input variables with goal information
     String inputVariablesStr = "Start running adaptive managing agent";
+    if (goal != null && !goal.isEmpty()) {
+      inputVariablesStr += " with goal: " + goal;
+    }
     if (!getVariables().isEmpty()) {
-      inputVariablesStr = "Inputs\n-----------------\n" + BusinessEntityConverter.entityToJsonValue(getVariables());
+      inputVariablesStr += "\nInputs\n-----------------\n" + BusinessEntityConverter.entityToJsonValue(getVariables());
     }
     historyLog.addSystemMessage(inputVariablesStr, AiStep.INITIAL_STEP);
 
@@ -194,7 +282,7 @@ public class IvyAgent {
     boolean inProgress = true;
     int iterationCount = 0;
 
-    while (inProgress && iterationCount < MAX_ITERATIONS) {
+    while (inProgress && iterationCount < maxIterations) {
       iterationCount++;
       AiStep runningStep = getStepByNumber(runningStepNo);
       if (runningStep == null) {
@@ -202,8 +290,8 @@ public class IvyAgent {
         break;
       }
 
-      // Execute the step
-      List<AiVariable> aiResults = runningStep.run(getVariables(), connector);
+      // Execute the step using execution connector
+      List<AiVariable> aiResults = runningStep.run(getVariables(), executionModel);
 
       // Add step result into current variable list
       if (aiResults != null) {
@@ -247,38 +335,62 @@ public class IvyAgent {
       }
     }
 
-    if (iterationCount >= MAX_ITERATIONS) {
-      System.err.println("Maximum iterations reached in adaptive execution");
-      historyLog.addSystemMessage("Maximum iterations reached", iterationCount);
+    if (iterationCount >= maxIterations) {
+      System.err.println("Maximum iterations (" + maxIterations + ") reached in adaptive execution");
+      historyLog.addSystemMessage("Maximum iterations (" + maxIterations + ") reached", iterationCount);
     }
   }
 
   /**
-   * Performs ReAct-style reasoning about the latest step result
+   * Performs ReAct-style reasoning about the latest step result with execution instructions
    */
   private ReActDecision performReActReasoning(String latestResult, AiStep currentStep) {
     try {
-      // Build the reasoning prompt
-      Map<String, Object> params = new HashMap<>();
-      params.put("originalQuery", originalQuery);
-      params.put("planStatus", buildPlanStatus(currentStep));
-      params.put("latestResult", latestResult);
-      params.put("observationHistory", String.join("\n", observationHistory));
-      params.put("availableTools", buildAvailableToolsDescription());
-
-      String reasoningPrompt = PromptTemplate.from(REACT_REASONING_TEMPLATE).apply(params).text();
-
-      // Get AI reasoning
-      String aiResponse = connector.generate(reasoningPrompt);
+      // Build enhanced reasoning prompt with execution instructions
+      String enhancedReasoningPrompt = buildExecutionReasoningPrompt(latestResult, currentStep);
+      
+      // Get AI reasoning using execution connector
+      String aiResponse = executionModel.generate(enhancedReasoningPrompt);
 
       // Parse the response
-      return parseReActDecision(aiResponse);
+      return ReActDecision.parseReActDecision(aiResponse);
 
     } catch (Exception e) {
       System.err.println("Error in ReAct reasoning: " + e.getMessage());
+      historyLog.addSystemMessage("Error in ReAct reasoning: " + e.getMessage(), currentStep.getStepNo());
       // Default to continuing with original plan
       return new ReActDecision(false, false, "Error in reasoning, continuing with plan", "", "");
     }
+  }
+
+  /**
+   * Builds enhanced reasoning prompt with execution instructions
+   */
+  private String buildExecutionReasoningPrompt(String latestResult, AiStep currentStep) {
+    // Prepare execution instructions section
+    List<String> executionInstructions = getInstructionsByType(InstructionType.EXECUTION);
+    String executionInstructionsText = "";
+    if (!executionInstructions.isEmpty()) {
+      StringBuilder instructionsBuilder = new StringBuilder();
+      instructionsBuilder.append("EXECUTION INSTRUCTIONS:\n");
+      for (int i = 0; i < executionInstructions.size(); i++) {
+        instructionsBuilder.append((i + 1)).append(". ").append(executionInstructions.get(i)).append(ONE_LINE);
+      }
+      instructionsBuilder.append(ONE_LINE);
+      executionInstructionsText = instructionsBuilder.toString();
+    }
+
+    // Build template parameters
+    java.util.Map<String, Object> params = new java.util.HashMap<>();
+    params.put("goal", goal != null ? goal : "Complete the user request");
+    params.put("executionInstructions", executionInstructionsText);
+    params.put("originalQuery", originalQuery);
+    params.put("currentStepName", currentStep.getName());
+    params.put("latestResult", latestResult);
+    params.put("observationHistory", String.join("\n", observationHistory));
+    params.put("availableTools", buildAvailableToolsDescription());
+
+    return PromptTemplate.from(EXECUTION_PROMPT_TEMPLATE).apply(params).text();
   }
 
   /**
@@ -317,24 +429,6 @@ public class IvyAgent {
   }
 
   /**
-   * Builds a description of the current plan status
-   */
-  private String buildPlanStatus(AiStep currentStep) {
-    StringBuilder status = new StringBuilder();
-    status.append("Current step: ").append(currentStep.getStepNo()).append(" - ").append(currentStep.getName())
-        .append("\n");
-
-    status.append("Remaining steps:\n");
-    for (AiStep step : steps) {
-      if (step.getStepNo() > currentStep.getStepNo()) {
-        status.append("  Step ").append(step.getStepNo()).append(": ").append(step.getName()).append("\n");
-      }
-    }
-
-    return status.toString();
-  }
-
-  /**
    * Builds a description of available worker agents
    */
   private String buildAvailableToolsDescription() {
@@ -344,36 +438,6 @@ public class IvyAgent {
           .append(tool.getUsage()).append(System.lineSeparator());
     }
     return toolsStr.toString();
-  }
-
-  /**
-   * Parses the AI response to extract ReAct decision
-   */
-  private ReActDecision parseReActDecision(String aiResponse) {
-    // Parse decision
-    Matcher decisionMatcher = DECISION_PATTERN.matcher(aiResponse);
-    String decision = decisionMatcher.find() ? decisionMatcher.group(1).toUpperCase() : "NO";
-
-    boolean shouldUpdate = "YES".equals(decision);
-    boolean isComplete = "COMPLETE".equals(decision);
-
-    // Parse next action if updating
-    String nextAction = "";
-    String agentSelection = "";
-
-    if (shouldUpdate) {
-      Matcher actionMatcher = NEXT_ACTION_PATTERN.matcher(aiResponse);
-      if (actionMatcher.find()) {
-        nextAction = actionMatcher.group(1).trim();
-      }
-
-      Matcher agentMatcher = AGENT_SELECTION_PATTERN.matcher(aiResponse);
-      if (agentMatcher.find()) {
-        agentSelection = agentMatcher.group(1).trim();
-      }
-    }
-
-    return new ReActDecision(shouldUpdate, isComplete, aiResponse, nextAction, agentSelection);
   }
 
   /**
@@ -436,51 +500,45 @@ public class IvyAgent {
     this.results = results;
   }
 
-  public AbstractAiServiceConnector getConnector() {
-    return connector;
+
+
+  public String getGoal() {
+    return goal;
   }
 
-  public void setConnector(AbstractAiServiceConnector connector) {
-    this.connector = connector;
+  public void setGoal(String goal) {
+    this.goal = goal;
   }
 
-  /**
-   * Helper class to represent a ReAct decision
-   */
-  private static class ReActDecision {
-    private final boolean shouldUpdatePlan;
-    private final boolean isComplete;
-    private final String reasoning;
-    private final String nextAction;
-    private final String agentSelection;
+  public int getMaxIterations() {
+    return maxIterations;
+  }
 
-    public ReActDecision(boolean shouldUpdatePlan, boolean isComplete, String reasoning, String nextAction,
-        String agentSelection) {
-      this.shouldUpdatePlan = shouldUpdatePlan;
-      this.isComplete = isComplete;
-      this.reasoning = reasoning;
-      this.nextAction = nextAction;
-      this.agentSelection = agentSelection;
-    }
+  public void setMaxIterations(int maxIterations) {
+    this.maxIterations = maxIterations;
+  }
 
-    public boolean shouldUpdatePlan() {
-      return shouldUpdatePlan;
-    }
+  public List<Instruction> getInstructions() {
+    return instructions;
+  }
 
-    public boolean isComplete() {
-      return isComplete;
-    }
+  public void setInstructions(List<Instruction> instructions) {
+    this.instructions = instructions;
+  }
 
-    public String getReasoning() {
-      return reasoning;
-    }
+  public AbstractAiServiceConnector getPlanningModel() {
+    return planningModel;
+  }
 
-    public String getNextAction() {
-      return nextAction;
-    }
+  public void setPlanningModel(AbstractAiServiceConnector planningModel) {
+    this.planningModel = planningModel;
+  }
 
-    public String getAgentSelection() {
-      return agentSelection;
-    }
+  public AbstractAiServiceConnector getExecutionModel() {
+    return executionModel;
+  }
+
+  public void setExecutionModel(AbstractAiServiceConnector executionModel) {
+    this.executionModel = executionModel;
   }
 }
