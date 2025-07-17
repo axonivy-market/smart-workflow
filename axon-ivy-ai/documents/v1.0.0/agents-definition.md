@@ -1,5 +1,7 @@
 # Agents Definition in Axon Ivy
 
+> **Key Architectural Note**: The `goal` field is **IvyAgent-specific only**. TodoAgent does not use or require a goal field as its implicit goal is to complete all todos successfully.
+
 ## Agent Types: Conceptual Level of Agents in Axon Ivy
 
 Axon Ivy provides two main conceptual levels of agents for automation and process orchestration, as defined in the `AgentType` enum:
@@ -28,6 +30,37 @@ Axon Ivy provides two main conceptual levels of agents for automation and proces
 
 Agents are configured using JSON files stored in the `AI.Agents` variable. The configuration follows the `AgentModel` class structure:
 
+#### Base Configuration Structure
+
+All agents share these common configuration fields:
+
+```json
+{
+  "id": "unique-agent-identifier",
+  "name": "Human-readable agent name",
+  "usage": "Description of agent's intended use",
+  "agentType": "STEP_BY_STEP | TODO_LIST",
+  "maxIterations": 15,
+  "planningModel": "gpt-4o",
+  "planningModelKey": "${AI.OpenAI.APIKey}",
+  "executionModel": "gpt-4o-mini",
+  "executionModelKey": "${AI.OpenAI.APIKey}",
+  "tools": ["tool-id-1", "tool-id-2"],
+  "instructions": [
+    {
+      "type": "planning",
+      "content": "Planning-specific instruction"
+    },
+    {
+      "type": "execution",
+      "content": "Execution-specific instruction"
+    }
+  ]
+}
+```
+
+#### IvyAgent (STEP_BY_STEP) Configuration
+
 ```json
 {
   "id": "unique-agent-identifier",
@@ -35,6 +68,33 @@ Agents are configured using JSON files stored in the `AI.Agents` variable. The c
   "usage": "Description of agent's intended use",
   "goal": "Primary objective of the agent",
   "agentType": "STEP_BY_STEP",
+  "maxIterations": 15,
+  "planningModel": "gpt-4o",
+  "planningModelKey": "${AI.OpenAI.APIKey}",
+  "executionModel": "gpt-4o-mini",
+  "executionModelKey": "${AI.OpenAI.APIKey}",
+  "tools": ["tool-id-1", "tool-id-2"],
+  "instructions": [
+    {
+      "type": "planning",
+      "content": "Planning-specific instruction"
+    },
+    {
+      "type": "execution",
+      "content": "Execution-specific instruction"
+    }
+  ]
+}
+```
+
+#### TodoAgent (TODO_LIST) Configuration
+
+```json
+{
+  "id": "unique-agent-identifier",
+  "name": "Human-readable agent name",
+  "usage": "Description of agent's intended use",
+  "agentType": "TODO_LIST",
   "maxIterations": 15,
   "planningModel": "gpt-4o",
   "planningModelKey": "${AI.OpenAI.APIKey}",
@@ -69,8 +129,7 @@ public abstract class BaseAgent {
   protected String name;
   protected String usage;
   
-  // Goal and execution control
-  protected String goal;
+  // Execution control
   protected int maxIterations = DEFAULT_MAX_ITERATIONS;
   
   // Dual AI Model Architecture
@@ -99,6 +158,7 @@ public abstract class BaseAgent {
     // Loads configuration from AgentModel
     // Initializes planning and execution models
     // Sets up tools and instructions
+    // Note: goal field is loaded by IvyAgent subclass only
   }
   
   // Helper method to filter instructions by type
@@ -113,12 +173,13 @@ public abstract class BaseAgent {
 
 ### Fields in Agent Configuration
 
+#### Core Fields (All Agent Types)
+
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `id` | String | Yes | Unique identifier for the agent instance |
 | `name` | String | Yes | Human-readable name for the agent |
 | `usage` | String | No | Description of agent's intended use |
-| `goal` | String | Yes | Primary objective of the agent. This field critically affects both the planning and execution phases - it guides the AI in generating appropriate plans and making execution decisions aligned with the desired outcome |
 | `agentType` | AgentType | No | Type of agent (defaults to STEP_BY_STEP) |
 | `maxIterations` | Integer | No | Maximum execution iterations (default: 20) |
 | `planningModel` | String | No | AI model name for planning phase |
@@ -127,6 +188,12 @@ public abstract class BaseAgent {
 | `executionModelKey` | String | No | API key for execution model. Accepts: <br/>• **Normal string**: Direct API key value <br/>• **Variable reference**: `${variable.path}` format to load from Axon Ivy variables.yaml (e.g., `${AI.OpenAI.APIKey}`) |
 | `tools` | Array | Yes | List of tool IDs available to the agent. Contains the IDs of usable tools that the agent can invoke during execution. Tools must be pre-configured in the system and their IDs must match existing tool definitions |
 | `instructions` | Array | No | List of instruction objects with type and content. Two instruction types affect different phases: <br/>• **`planning`**: Instructions that guide the AI during plan generation phase <br/>• **`execution`**: Instructions that guide the AI during step/todo execution phase |
+
+#### IvyAgent-Specific Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `goal` | String | **Yes (IvyAgent only)** | Primary objective of the agent. This field critically affects both the planning and execution phases - it guides the AI in generating appropriate plans and making execution decisions aligned with the desired outcome. **Not used by TodoAgent** - TodoAgent's goal is implicit (complete all todos) |
 
 ## Step-by-Step Agent
 
@@ -492,7 +559,6 @@ public class TodoAgent extends BaseAgent {
   "id": "support-agent-todos",
   "name": "Todo-based Support Agent",
   "usage": "Creates support tickets using outcome-focused todo execution",
-  "goal": "Create support ticket and assign approvers efficiently",
   "agentType": "TODO_LIST",
   "maxIterations": 15,
   "planningModel": "gpt-4o",

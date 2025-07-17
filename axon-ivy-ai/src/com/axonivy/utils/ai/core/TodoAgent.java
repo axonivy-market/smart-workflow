@@ -18,17 +18,16 @@ import dev.langchain4j.model.input.PromptTemplate;
 /**
  * Todo-based agent that works through a list of todos until each is completed.
  * This agent focuses on achieving specific outcomes rather than following predetermined steps.
+ * The implicit goal of this agent is to complete all todos successfully.
  */
 public class TodoAgent extends BaseAgent {
 
   private static final String TODO_PLANNING_TEMPLATE = """
-      GOAL: {{goal}}
+      TASK: Create a todo list to complete the user request. Each todo should be an outcome-focused task with clear success criteria.
 
       {{planningInstructions}}USER QUERY: {{query}}
 
       Available tools: {{availableTools}}
-
-      TASK: Create a todo list to achieve the goal. Each todo should be an outcome-focused task with clear success criteria.
 
       For each todo, provide:
       - description: What needs to be accomplished
@@ -39,33 +38,10 @@ public class TodoAgent extends BaseAgent {
       - resultName: Expected result name
       - resultDescription: What the result should contain
 
-      Create a JSON list of todos that will achieve the goal when completed sequentially.
+      Create a JSON list of todos that will fulfill the user request when completed sequentially.
       """;
 
-  private static final String GOAL_ASSESSMENT_TEMPLATE = """
-      GOAL: {{goal}}
-      ORIGINAL QUERY: {{originalQuery}}
 
-      COMPLETED TODOS:
-      {{completedTodos}}
-
-      CURRENT VARIABLES:
-      {{currentVariables}}
-
-      ASSESSMENT REQUIRED:
-      1. Review all completed todos and their results
-      2. Check if the original goal has been achieved
-      3. Determine if any additional work is needed
-
-      Based on the completed todos and current state, has the goal been achieved?
-
-      Analysis: [Analyze how the completed todos relate to the original goal]
-      Decision: [GOAL_ACHIEVED | CONTINUE_NEEDED]
-      Reasoning: [Explain why the goal is or isn't achieved]
-
-      If CONTINUE_NEEDED, provide:
-      Missing: [What is still needed to achieve the goal]
-      """;
 
   // List of todos to be executed
   private List<AiTodo> todos;
@@ -82,7 +58,7 @@ public class TodoAgent extends BaseAgent {
   }
 
   /**
-   * Builds todo planning prompt that includes goal and planning instructions
+   * Builds todo planning prompt with planning instructions
    */
   private String buildTodoPlanningPrompt(String query) {
     // Prepare planning instructions section
@@ -100,7 +76,6 @@ public class TodoAgent extends BaseAgent {
 
     // Build template parameters
     Map<String, Object> params = new HashMap<>();
-    params.put("goal", goal != null ? goal : "Complete the user request");
     params.put("planningInstructions", planningInstructionsText);
     params.put("query", query);
     params.put("availableTools", buildAvailableToolsDescription());
@@ -160,7 +135,7 @@ public class TodoAgent extends BaseAgent {
   }
 
   /**
-   * Executes the todo list sequentially until all are completed or goal is achieved.
+   * Executes the todo list sequentially until all are completed.
    */
   @Override
   public void execute() {
@@ -170,11 +145,8 @@ public class TodoAgent extends BaseAgent {
 
     historyLog = new HistoryLog();
 
-    // Log input variables with goal information
-    String inputVariablesStr = "Start running todo-based agent";
-    if (goal != null && !goal.isEmpty()) {
-      inputVariablesStr += " with goal: " + goal;
-    }
+    // Log input variables with todo information
+    String inputVariablesStr = "Start running todo-based agent to complete all todos";
     if (!getVariables().isEmpty()) {
       inputVariablesStr += "\nInputs\n-----------------\n" + BusinessEntityConverter.entityToJsonValue(getVariables());
     }
@@ -187,7 +159,6 @@ public class TodoAgent extends BaseAgent {
       currentTodoIndex = i;
       currentTodo = todos.get(i);
 
-      System.err.println("Starting todo " + (i + 1) + ": " + currentTodo.getDescription());
       historyLog.addSystemMessage("Starting todo " + (i + 1) + ": " + currentTodo.getDescription(), i + 1);
 
       // Execute this todo until completion
@@ -195,35 +166,27 @@ public class TodoAgent extends BaseAgent {
       globalIterationCount += currentTodo.getCurrentIteration();
 
       if (todoCompleted) {
-        System.err.println("Todo completed: " + currentTodo.getDescription());
         historyLog.addSystemMessage("Todo completed: " + currentTodo.getDescription(), i + 1);
         
         // Add todo results to global variables
         if (currentTodo.getTodoResults() != null) {
           getVariables().addAll(currentTodo.getTodoResults());
         }
-
-        // Check if overall goal is achieved after this todo
-        if (isGoalAchieved()) {
-          System.err.println("Goal achieved after completing todo " + (i + 1));
-          historyLog.addSystemMessage("Goal achieved after completing todo " + (i + 1), i + 1);
-          break;
-        }
       } else {
-        System.err.println("Todo failed or reached max iterations: " + currentTodo.getDescription());
         historyLog.addSystemMessage("Todo failed: " + currentTodo.getDescription(), i + 1);
         // Continue to next todo or decide to stop based on configuration
       }
     }
 
-    // Final goal verification
-    if (!isGoalAchieved()) {
-      System.err.println("All todos completed but goal may not be fully achieved");
-      historyLog.addSystemMessage("All todos completed but goal may not be fully achieved", todos.size());
+    // Final completion check
+    boolean allTodosCompleted = todos.stream().allMatch(AiTodo::isCompleted);
+    if (allTodosCompleted) {
+      historyLog.addSystemMessage("All todos completed successfully", todos.size());
+    } else {
+      historyLog.addSystemMessage("Some todos were not completed", todos.size());
     }
 
     if (globalIterationCount >= maxIterations) {
-      System.err.println("Maximum global iterations (" + maxIterations + ") reached in todo execution");
       historyLog.addSystemMessage("Maximum global iterations (" + maxIterations + ") reached", globalIterationCount);
     }
   }
@@ -249,16 +212,7 @@ public class TodoAgent extends BaseAgent {
           return true;
         }
 
-        // Add a small delay to prevent rapid iteration (optional)
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-          break;
-        }
-
       } catch (Exception e) {
-        System.err.println("Error executing todo '" + todo.getDescription() + "': " + e.getMessage());
         historyLog.addSystemMessage("Error executing todo: " + e.getMessage(), currentTodoIndex + 1);
         break;
       }
@@ -267,44 +221,7 @@ public class TodoAgent extends BaseAgent {
     return todo.isCompleted();
   }
 
-  /**
-   * Checks if the overall goal has been achieved based on completed todos.
-   */
-  private boolean isGoalAchieved() {
-    try {
-      // Build completed todos summary
-      StringBuilder completedTodosStr = new StringBuilder();
-      for (int i = 0; i <= currentTodoIndex && i < todos.size(); i++) {
-        AiTodo todo = todos.get(i);
-        if (todo.isCompleted()) {
-          completedTodosStr.append("- ").append(todo.getDescription())
-              .append(" (Completed: ").append(todo.getCurrentStatus()).append(")\n");
-        }
-      }
 
-      // Build template parameters
-      Map<String, Object> params = new HashMap<>();
-      params.put("goal", goal != null ? goal : "Complete the user request");
-      params.put("originalQuery", originalQuery);
-      params.put("completedTodos", completedTodosStr.toString());
-      params.put("currentVariables", BusinessEntityConverter.entityToJsonValue(getVariables()));
-
-      String assessmentPrompt = PromptTemplate.from(GOAL_ASSESSMENT_TEMPLATE).apply(params).text();
-
-      // Get AI assessment
-      String aiResponse = executionModel.generate(assessmentPrompt);
-
-      // Parse the decision
-      boolean goalAchieved = aiResponse.toUpperCase().contains("DECISION: GOAL_ACHIEVED") || 
-                           aiResponse.toUpperCase().contains("DECISION:GOAL_ACHIEVED");
-
-      return goalAchieved;
-
-    } catch (Exception e) {
-      System.err.println("Error assessing goal achievement: " + e.getMessage());
-      return false; // Conservative approach: assume goal not achieved on error
-    }
-  }
 
   // Getters and setters
   public List<AiTodo> getTodos() {

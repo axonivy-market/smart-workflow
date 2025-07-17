@@ -30,7 +30,6 @@
     "id": "support-agent-todos",
     "name": "Todo-based Support Agent", 
     "usage": "Creates support tickets and tasks using outcome-focused todo execution",
-    "goal": "Create a support ticket for the user and assign appropriate approvers to handle it efficiently",
     "agentType": "TODO_LIST",
     "maxIterations": 15,
     "planningModel": "gpt-4o",

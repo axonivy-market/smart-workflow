@@ -45,7 +45,6 @@ public abstract class BaseAgent {
   protected List<AiVariable> variables;
 
   // Enhanced Configuration Fields
-  protected String goal;                           // Agent's primary objective
   protected int maxIterations = DEFAULT_MAX_ITERATIONS; // Configurable iteration limit
   protected AbstractAiServiceConnector DEFAULT_CONNECTOR = OpenAiServiceConnector.getTinyBrain();
 
@@ -81,7 +80,6 @@ public abstract class BaseAgent {
     this.id = model.getId();
     this.name = model.getName();
     this.usage = model.getUsage();
-    this.goal = model.getGoal();
     
     // Set configurable iterations
     // If default max iteration is not set, use the default value: 20
@@ -197,13 +195,7 @@ public abstract class BaseAgent {
     this.results = results;
   }
 
-  public String getGoal() {
-    return goal;
-  }
 
-  public void setGoal(String goal) {
-    this.goal = goal;
-  }
 
   public int getMaxIterations() {
     return maxIterations;

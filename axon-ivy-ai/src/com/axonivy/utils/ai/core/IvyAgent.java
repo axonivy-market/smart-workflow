@@ -15,6 +15,9 @@ import dev.langchain4j.model.input.PromptTemplate;
 
 public class IvyAgent extends BaseAgent {
 
+  // IvyAgent-specific field
+  protected String goal;                           // Agent's primary objective (required for IvyAgent)
+
   private static final String EXECUTION_PROMPT_TEMPLATE = """
       GOAL: {{goal}}
 
@@ -53,6 +56,15 @@ public class IvyAgent extends BaseAgent {
 
   public IvyAgent() {
     super();
+  }
+
+  /**
+   * Override to handle IvyAgent-specific goal field loading
+   */
+  @Override
+  public void loadFromModel(com.axonivy.utils.ai.dto.ai.configuration.AgentModel model) {
+    super.loadFromModel(model);
+    this.goal = model.getGoal(); // IvyAgent requires goal field
   }
 
   /**
@@ -334,5 +346,13 @@ public class IvyAgent extends BaseAgent {
 
   public void setSteps(List<AiStep> steps) {
     this.steps = steps;
+  }
+
+  public String getGoal() {
+    return goal;
+  }
+
+  public void setGoal(String goal) {
+    this.goal = goal;
   }
 }
