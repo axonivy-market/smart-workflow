@@ -140,7 +140,7 @@ public class TodoAgent extends BaseAgent {
             new FieldExplanation("stepNo", "Sequential number starting from 1"),
             new FieldExplanation("resultName", "Expected result name"),
             new FieldExplanation("resultDescription", "What the result should contain"),
-            new FieldExplanation("maxIterationsPerTodo", "Maximum iterations for this todo (default 5)")))
+            new FieldExplanation("maxIterationsPerTodo", "Maximum iterations for this todo")))
         .withQuery(todoPlanningPrompt).asList(true).build().execute().getContent();
 
     List<AiTodo> plannedTodos = BusinessEntityConverter.jsonValueToEntities(todoString, AiTodo.class);
@@ -150,7 +150,8 @@ public class TodoAgent extends BaseAgent {
     for (AiTodo todo : plannedTodos) {
       // Set default values if not provided
       if (todo.getMaxIterationsPerTodo() <= 0) {
-        todo.setMaxIterationsPerTodo(5);
+        // Max iterations of each todo equals to max iterations of the agent
+        todo.setMaxIterationsPerTodo(getMaxIterations());
       }
       todos.add(todo);
     }

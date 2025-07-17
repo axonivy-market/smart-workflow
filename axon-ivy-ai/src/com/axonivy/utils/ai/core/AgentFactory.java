@@ -1,6 +1,6 @@
 package com.axonivy.utils.ai.core;
 
-import com.axonivy.utils.ai.dto.ai.configuration.GoalBasedAgentModel;
+import com.axonivy.utils.ai.dto.ai.configuration.AgentModel;
 import com.axonivy.utils.ai.enums.AgentType;
 
 /**
@@ -45,14 +45,14 @@ public class AgentFactory {
   }
 
   /**
-   * Creates and configures an agent from a GoalBasedAgentModel.
+   * Creates and configures an agent from a AgentModel.
    * This method creates the appropriate agent type and loads the configuration.
    * 
    * @param model The configuration model for the agent
    * @return A configured agent instance ready for use
    * @throws IllegalArgumentException if the agent type in the model is unknown
    */
-  public static BaseAgent createAgent(GoalBasedAgentModel model) {
+  public static BaseAgent createAgent(AgentModel model) {
     // Determine agent type from model (defaulting to STEP_BY_STEP for backward compatibility)
     AgentType agentType = AgentType.STEP_BY_STEP; // Default
     
@@ -70,13 +70,14 @@ public class AgentFactory {
   }
 
   /**
-   * Creates and configures an agent from a GoalBasedAgentModel with explicit agent type override.
+   * Creates and configures an agent from a AgentModel with explicit agent type
+   * override.
    * 
-   * @param model The configuration model for the agent
+   * @param model     The configuration model for the agent
    * @param agentType The agent type to create (overrides model's agent type)
    * @return A configured agent instance ready for use
    */
-  public static BaseAgent createAgent(GoalBasedAgentModel model, AgentType agentType) {
+  public static BaseAgent createAgent(AgentModel model, AgentType agentType) {
     BaseAgent agent = createAgent(agentType);
     agent.loadFromModel(model);
     return agent;

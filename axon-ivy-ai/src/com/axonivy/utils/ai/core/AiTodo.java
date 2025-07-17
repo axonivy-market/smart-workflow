@@ -76,7 +76,7 @@ public class AiTodo implements Serializable {
   private List<String> availableToolIds;
 
   // Maximum iterations allowed for this specific todo
-  private int maxIterationsPerTodo = 5;
+  private int maxIterationsPerTodo;
 
   // Results accumulated during todo execution
   @JsonIgnore

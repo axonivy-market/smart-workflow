@@ -10,7 +10,7 @@ import com.axonivy.utils.ai.enums.InstructionType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GoalBasedAgentModel extends AbstractConfiguration {
+public class AgentModel extends AbstractConfiguration {
 
   private String name;
   private String usage;

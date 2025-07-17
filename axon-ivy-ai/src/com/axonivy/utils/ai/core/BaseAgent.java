@@ -13,7 +13,7 @@ import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
 import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.Instruction;
-import com.axonivy.utils.ai.dto.ai.configuration.GoalBasedAgentModel;
+import com.axonivy.utils.ai.dto.ai.configuration.AgentModel;
 import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.history.HistoryLog;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
@@ -77,7 +77,7 @@ public abstract class BaseAgent {
   /**
    * Load the agent from model.
    */
-  public void loadFromModel(GoalBasedAgentModel model) {
+  public void loadFromModel(AgentModel model) {
     this.id = model.getId();
     this.name = model.getName();
     this.usage = model.getUsage();
