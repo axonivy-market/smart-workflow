@@ -3,9 +3,11 @@ package com.axonivy.utils.ai.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
+import com.axonivy.utils.ai.enums.AiVariableState;
 import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.function.DataMapping;
 import com.axonivy.utils.ai.function.Planning;
@@ -106,14 +108,8 @@ public class IvyAgent extends BaseAgent {
     this.originalQuery = query;
     this.observationHistory = new ArrayList<>();
 
-    // Prepare input variable
-    setVariables(new ArrayList<>());
-    AiVariable inputVariable = new AiVariable();
-    inputVariable.init();
-    inputVariable.setName("query");
-    inputVariable.setContent(query);
-    inputVariable.setDescription("The input query");
-    getVariables().add(inputVariable);
+    // Process input query - handle JSON or plain text
+    processInputQuery(query);
 
     // Generate high-level plan from query using the planning AI model
     String enhancedPlanningPrompt = buildPlanningPrompt(query);
@@ -129,7 +125,7 @@ public class IvyAgent extends BaseAgent {
     }
     
     Planning planning = planningBuilder.build();
-    String crudePlan = planning.execute().getContent();
+    String crudePlan = planning.execute().getSafeValue();
 
     // Map plan content to a list of AiSteps using execution AI model
     String stepString = DataMapping.getBuilder().useService(executionModel).withObject(new AiStep())
@@ -140,7 +136,7 @@ public class IvyAgent extends BaseAgent {
             new FieldExplanation("previous", "ID of the previous step, 0 if initial"),
             new FieldExplanation("resultName", "Expected result name"),
             new FieldExplanation("resultDescription", "Expected result description")))
-        .withQuery(crudePlan).asList(true).build().execute().getContent();
+        .withQuery(crudePlan).asList(true).build().execute().getSafeValue();
 
     List<AiStep> plannedSteps = BusinessEntityConverter.jsonValueToEntities(stepString, AiStep.class);
 
@@ -193,9 +189,24 @@ public class IvyAgent extends BaseAgent {
       // Execute the step using execution connector
       List<AiVariable> aiResults = runningStep.run(getVariables(), executionModel);
 
-      // Add step result into current variable list
+      // Update step results into current variable list
       if (aiResults != null) {
-        getVariables().addAll(aiResults);
+        for (AiVariable stepResult : aiResults) {
+          // If the variable list has variable with same name, update value of the
+          // existing variable
+          Optional<AiVariable> matchedVariable = variables.stream()
+              .filter(current -> current.getState() != AiVariableState.ERROR)
+              .filter(current -> current.getParameter().getName().equals(stepResult.getParameter().getName()))
+              .findFirst();
+          if (matchedVariable.isPresent()) {
+            matchedVariable.map(AiVariable::getParameter).get().setValue(stepResult.getParameter().getValue());
+            continue;
+          }
+
+          // Otherwise add the variable to the variable list
+          getVariables().add(stepResult);
+        }
+
 
         // Log step result
         historyLog.addSystemMessage(BusinessEntityConverter.entityToJsonValue(aiResults), runningStep.getStepNo());

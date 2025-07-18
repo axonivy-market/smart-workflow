@@ -10,9 +10,6 @@ import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import com.axonivy.utils.ai.dto.ai.AiVariable;
-import com.axonivy.utils.ai.enums.AiVariableState;
-
 import ch.ivyteam.ivy.process.call.SubProcessCallStart;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
@@ -177,23 +174,5 @@ public class IvyAdapterService {
       }
       return subProcessStartList;
     });
-  }
-
-  public static AiVariable getAiResult(String runId) {
-    String signature = "getAiResult(String)";
-    Map<String, Object> params = new HashMap<>();
-    params.put("runId", runId);
-
-    Map<String, Object> result = startSubProcessInApplication(signature, params);
-    Object resultObj = result.get("result");
-
-    if (resultObj == null || !(resultObj instanceof AiVariable)) {
-      AiVariable error = new AiVariable();
-      error.setState(AiVariableState.ERROR);
-      error.setContent("Error when getting result for runId " + runId);
-      return error;
-    }
-
-    return (AiVariable) resultObj;
   }
 }

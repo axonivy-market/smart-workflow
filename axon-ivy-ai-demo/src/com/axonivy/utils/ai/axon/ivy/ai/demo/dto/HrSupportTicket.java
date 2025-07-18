@@ -4,23 +4,23 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.ai.axon.ivy.ai.demo.enums.TicketType;
+import com.axonivy.utils.ai.axon.ivy.ai.demo.enums.HrTicketType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class SupportTicket {
+public class HrSupportTicket {
   private String id;
-  private TicketType type;
+  private HrTicketType type;
   private String name;
   private String description;
-  private String employeeUsername;
+  private String requestorId;
   private String firstApprover;
   private String secondApprover;
 
   @JsonIgnore
   private Employee requestor;
 
-  public SupportTicket() {
-    setId(UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY));
+  public HrSupportTicket() {
+    this.id = UUID.randomUUID().toString().replace("-", StringUtils.EMPTY);
   }
 
   public String getId() {
@@ -31,11 +31,11 @@ public class SupportTicket {
     this.id = id;
   }
 
-  public TicketType getType() {
+  public HrTicketType getType() {
     return type;
   }
 
-  public void setType(TicketType type) {
+  public void setType(HrTicketType type) {
     this.type = type;
   }
 
@@ -55,6 +55,14 @@ public class SupportTicket {
     this.description = description;
   }
 
+  public String getRequestorId() {
+    return requestorId;
+  }
+
+  public void setRequestorId(String requestorId) {
+    this.requestorId = requestorId;
+  }
+
   public String getFirstApprover() {
     return firstApprover;
   }
@@ -69,21 +77,5 @@ public class SupportTicket {
 
   public void setSecondApprover(String secondApprover) {
     this.secondApprover = secondApprover;
-  }
-
-  public Employee getRequestor() {
-    return requestor;
-  }
-
-  public void setRequestor(Employee requestor) {
-    this.requestor = requestor;
-  }
-
-  public String getEmployeeUsername() {
-    return employeeUsername;
-  }
-
-  public void setEmployeeUsername(String employeeUsername) {
-    this.employeeUsername = employeeUsername;
   }
 }

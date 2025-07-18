@@ -9,7 +9,7 @@ import com.axonivy.utils.ai.axon.ivy.ai.demo.service.EmployeeService;
 public final class SupportTicketApproverHandler {
 
   public static void chooseApprovers(SupportTicket ticket) {
-    Employee employee = EmployeeService.getInstance().findByUsername(ticket.getRequestorId());
+    Employee employee = EmployeeService.getInstance().findByUsername(ticket.getEmployeeUsername());
     Department dept = DepartmentService.getInstance().findAll().stream()
         .filter(d -> d.getId().equals(employee.getDepartmentId())).findFirst().orElse(null);
     if (dept == null) {

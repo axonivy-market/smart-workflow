@@ -37,5 +37,12 @@
   }, {
     "name" : "instructions",
     "type" : "List<com.axonivy.utils.ai.dto.ai.Instruction>"
+  }, {
+    "name" : "employeeUsername",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "employeeInfo",
+    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Employee"
   } ]
 }

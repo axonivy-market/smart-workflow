@@ -41,8 +41,6 @@ public class TodoAgent extends BaseAgent {
       Create a JSON list of todos that will fulfill the user request when completed sequentially.
       """;
 
-
-
   // List of todos to be executed
   private List<AiTodo> todos;
 
@@ -93,14 +91,8 @@ public class TodoAgent extends BaseAgent {
     this.originalQuery = query;
     this.observationHistory = new ArrayList<>();
 
-    // Prepare input variable
-    setVariables(new ArrayList<>());
-    AiVariable inputVariable = new AiVariable();
-    inputVariable.init();
-    inputVariable.setName("query");
-    inputVariable.setContent(query);
-    inputVariable.setDescription("The input query");
-    getVariables().add(inputVariable);
+    // Process input query - handle JSON or plain text
+    processInputQuery(query);
 
     // Generate todo list from query using the planning AI model
     String todoPlanningPrompt = buildTodoPlanningPrompt(query);
@@ -116,7 +108,7 @@ public class TodoAgent extends BaseAgent {
             new FieldExplanation("resultName", "Expected result name"),
             new FieldExplanation("resultDescription", "What the result should contain"),
             new FieldExplanation("maxIterationsPerTodo", "Maximum iterations for this todo")))
-        .withQuery(todoPlanningPrompt).asList(true).build().execute().getContent();
+        .withQuery(todoPlanningPrompt).asList(true).build().execute().getSafeValue();
 
     List<AiTodo> plannedTodos = BusinessEntityConverter.jsonValueToEntities(todoString, AiTodo.class);
 

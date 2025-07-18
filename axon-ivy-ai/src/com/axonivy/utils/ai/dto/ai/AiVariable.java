@@ -2,11 +2,14 @@ package com.axonivy.utils.ai.dto.ai;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.ai.dto.IvyToolParameter;
 import com.axonivy.utils.ai.enums.AiVariableState;
+import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -24,22 +27,15 @@ public class AiVariable {
 
   public AiVariable(String name, String content) {
     this.id = UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY);
-    this.name = name;
-    this.content = content;
+    this.parameter = new IvyToolParameter(name, content, "");
     this.state = AiVariableState.SUCCESS;
   }
 
   // Unique identifier for the variable (auto-generated if not explicitly set)
   private String id;
 
-  // Content or value of the variable
-  private String content;
-
-  // Human-readable description of the variable's purpose
-  private String description;
-
-  // Logical name of the variable (used to reference it in steps/tools)
-  private String name;
+  // IvyToolParameter containing name, value, description, etc.
+  private IvyToolParameter parameter;
 
   private AiVariableState state;
 
@@ -49,6 +45,7 @@ public class AiVariable {
   @JsonIgnore
   public void init() {
     this.id = UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY);
+    this.parameter = new IvyToolParameter();
     this.state = AiVariableState.EMPTY;
   }
 
@@ -60,28 +57,12 @@ public class AiVariable {
     this.id = id;
   }
 
-  public String getContent() {
-    return content;
+  public IvyToolParameter getParameter() {
+    return parameter;
   }
 
-  public void setContent(String content) {
-    this.content = content;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+  public void setParameter(IvyToolParameter parameter) {
+    this.parameter = parameter;
   }
 
   public AiVariableState getState() {
@@ -101,14 +82,26 @@ public class AiVariable {
   public static AiVariable getMappingExample() {
     AiVariable example = new AiVariable();
     example.setId(UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY));
-    example.setName("Example variable");
-    example.setContent("Just an example");
-    example.setDescription("Example description");
+    example.setParameter(new IvyToolParameter("Example variable", "Just an example", "Example description"));
     example.setState(AiVariableState.SUCCESS);
     return example;
   }
 
   public static List<AiVariable> getMappingExampleList() {
     return Arrays.asList(getMappingExample());
+  }
+
+  public static List<String> getExampleIdList() {
+    String id1 = UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY);
+    String id2 = UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY);
+    String id3 = UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY);
+    return Arrays.asList(id1, id2, id3);
+  }
+
+  @JsonIgnore
+  public String getSafeValue() {
+    Object value = Optional.ofNullable(this).map(AiVariable::getParameter).map(IvyToolParameter::getValue)
+        .orElse(StringUtils.EMPTY);
+    return value instanceof String ? (String) value : BusinessEntityConverter.entityToJsonValue(value);
   }
 }

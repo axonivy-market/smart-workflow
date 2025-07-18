@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
+import com.axonivy.utils.ai.dto.IvyToolParameter;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.Instruction;
 import com.axonivy.utils.ai.enums.AiVariableState;
@@ -22,6 +23,13 @@ import ch.ivyteam.ivy.environment.Ivy;
 public final class AiVariableUtils {
 
   private static final String VARIABLE_FORMAT = """
+      Variable %d
+      ID: %s
+      Name: %s
+      Description: %s
+      """;
+
+  private static final String VARIABLE_JSON_FORMAT = """
       Variable %d
       %s
       """;
@@ -36,7 +44,8 @@ public final class AiVariableUtils {
    */
   public static List<AiVariable> addOrReplaceVariable(AiVariable newVar, List<AiVariable> varList) {
     // If the input variable is null or has blank fields, do nothing
-    if (newVar == null || StringUtils.isBlank(newVar.getName())) {
+    if (StringUtils.isBlank(Optional.ofNullable(newVar).map(AiVariable::getParameter).map(IvyToolParameter::getName)
+        .orElse(StringUtils.EMPTY))) {
       return varList;
     }
 
@@ -49,7 +58,7 @@ public final class AiVariableUtils {
 
     // Find if a variable with the same name exists; replace if found
     for (int i = 0; i < varList.size(); i++) {
-      if (newVar.getName().equals(varList.get(i).getName())) {
+      if (newVar.getParameter().getName().equals(varList.get(i).getParameter().getName())) {
         varList.set(i, newVar);
         return varList;
       }
@@ -116,10 +125,10 @@ public final class AiVariableUtils {
       // Create a new AiVariable
       AiVariable variable = new AiVariable();
       variable.init();
-      variable.setName(entry.getKey());
+      variable.getParameter().setName(entry.getKey());
       String val = (entry.getValue() instanceof String) ? (String) entry.getValue()
           : BusinessEntityConverter.entityToJsonValue(entry.getValue());
-      variable.setContent(val);
+      variable.getParameter().setValue(val);
 
       // Add the variable to the result list
       varList.add(variable);
@@ -141,9 +150,9 @@ public final class AiVariableUtils {
 
     // Prepare data mapping using AI service
     DataMapping.Builder builder = DataMapping.getBuilder().useService(connector).withQuery(variablesStr)
-        .withObject(AiVariable.getMappingExampleList())
-        .addCustomInstruction("Extract list of variables from the variable list above")
-        .addCustomInstruction("The result must be a JSON array")
+        .withObject(AiVariable.getExampleIdList())
+        .addCustomInstruction("Extract ID of selected variables")
+        .addCustomInstruction("The result must be an Json array that parsable to Java List<String>")
         .addCustomInstruction("If there is no variable from the list matched, return an empty JSON array");
 
     // Add instructions to the AI service
@@ -156,9 +165,15 @@ public final class AiVariableUtils {
     Ivy.log().error("extract result");
     Ivy.log().error(BusinessEntityConverter.entityToJsonValue(result));
 
-    // If extraction successful, convert and set extracted variables
+    // If extraction successful, extract variables
     if (Optional.ofNullable(result).map(AiVariable::getState).get() == AiVariableState.SUCCESS) {
-      return BusinessEntityConverter.jsonValueToEntities(result.getContent(), AiVariable.class);
+      List<AiVariable> newList = new ArrayList<>();
+      for (AiVariable variable : variables) {
+        if (result.getSafeValue().contains(variable.getId())) {
+          newList.add(variable);
+        }
+      }
+      return newList;
     }
 
     return new ArrayList<>();
@@ -168,7 +183,20 @@ public final class AiVariableUtils {
     String variablesStr = StringUtils.EMPTY;
     if (CollectionUtils.isNotEmpty(variables)) {
       for (int i = 0; i < variables.size(); i++) {
-        variablesStr += String.format(VARIABLE_FORMAT, i + 1,
+        Optional<AiVariable> current = Optional.ofNullable(variables.get(i));
+        variablesStr += String.format(VARIABLE_FORMAT, i + 1, current.map(AiVariable::getId).orElse(StringUtils.EMPTY),
+            current.map(AiVariable::getParameter).map(IvyToolParameter::getName).orElse(StringUtils.EMPTY),
+            current.map(AiVariable::getParameter).map(IvyToolParameter::getDescription).orElse(StringUtils.EMPTY));
+      }
+    }
+    return variablesStr;
+  }
+
+  public static String convertAiVariablesToJsonString(List<AiVariable> variables) {
+    String variablesStr = StringUtils.EMPTY;
+    if (CollectionUtils.isNotEmpty(variables)) {
+      for (int i = 0; i < variables.size(); i++) {
+        variablesStr += String.format(VARIABLE_JSON_FORMAT, i + 1,
             BusinessEntityConverter.entityToJsonNode(variables.get(i)).toString());
       }
     }

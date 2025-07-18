@@ -66,6 +66,6 @@ public class InstructionsStrategy implements InstructionBuilder, ResultProcessor
         String cleanResult = rawResult.trim();
         
         // Use StringProcessingUtils to handle any remaining JSON formatting issues
-        return StringProcessingUtils.standardizeResult(cleanResult);
+        return StringProcessingUtils.standardizeResult(cleanResult, false);
     }
 } 

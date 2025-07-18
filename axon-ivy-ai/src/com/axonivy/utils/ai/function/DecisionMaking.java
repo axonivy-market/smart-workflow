@@ -71,7 +71,8 @@ public class DecisionMaking extends AiFunction {
     }
     AiVariable result = new AiVariable();
     result.init();
-    result.setContent(resultFromAI);
+    result.getParameter().setValue(resultFromAI);
+    result.getParameter().setClassName("String");
     result.setState(AiVariableState.SUCCESS);
     return result;
   }
@@ -137,6 +138,7 @@ public class DecisionMaking extends AiFunction {
       decisionMaking.setOptions(options);
       decisionMaking.setExamples(examples);
       decisionMaking.setCustomInstructions(customInstructions);
+      decisionMaking.setIsPlainText(false);
       return decisionMaking;
     }
   }

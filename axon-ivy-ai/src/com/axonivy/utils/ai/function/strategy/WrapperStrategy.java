@@ -52,10 +52,10 @@ public class WrapperStrategy implements InstructionBuilder, ResultProcessor {
     @Override
     public String processResult(String rawResult) {
         // Extract the JSON from the wrapper (<< >>)
-        String standardResult = StringProcessingUtils.standardizeResult(rawResult);
+        String standardResult = StringProcessingUtils.standardizeResult(rawResult, true);
         
         // Use StringProcessingUtils to check and fix JSON if needed
-        return StringProcessingUtils.standardizeResult(standardResult);
+        return StringProcessingUtils.standardizeResult(standardResult, true);
     }
     
     /**

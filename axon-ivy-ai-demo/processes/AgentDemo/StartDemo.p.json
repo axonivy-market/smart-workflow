@@ -50,10 +50,10 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.ai.core.IvyAgent;",
-            "import com.axonivy.utils.ai.service.GoalBasedAgentService;",
-            "import com.axonivy.utils.ai.dto.ai.configuration.GoalBasedAgentModel;",
+            "import com.axonivy.utils.ai.service.AgentService;",
+            "import com.axonivy.utils.ai.dto.ai.configuration.AgentModel;",
             "IvyAgent agent = new IvyAgent();",
-            "GoalBasedAgentModel model =GoalBasedAgentService.getInstance().findAll().get(0) as GoalBasedAgentModel;",
+            "AgentModel model = AgentService.getInstance().findById(\"support-agent\") as AgentModel;",
             "agent.loadFromModel(model);",
             "agent.start(in.query);"
           ]

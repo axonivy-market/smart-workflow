@@ -69,7 +69,8 @@ public class Planning extends AiFunction {
     }
     AiVariable result = new AiVariable();
     result.init();
-    result.setContent(resultFromAI);
+    result.getParameter().setValue(resultFromAI);
+    result.getParameter().setClassName("String");
     result.setState(AiVariableState.SUCCESS);
     return result;
   }
@@ -141,7 +142,6 @@ public class Planning extends AiFunction {
       planning.setQuery(query);
       planning.setTools(tools);
       planning.setCustomInstructions(customInstructions);
-      planning.setUseWrappers(false);
       return planning;
     }
   }

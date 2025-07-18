@@ -106,8 +106,8 @@
       "config" : {
         "output" : {
           "code" : [
-            "in.request.content = in.content;",
-            "in.request.requestor = in.employee.username;"
+            "in.request.query = in.content;",
+            "in.request.employeeUsername = in.employee.username;"
           ]
         }
       },

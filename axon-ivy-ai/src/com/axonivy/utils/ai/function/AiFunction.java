@@ -84,8 +84,11 @@ public abstract class AiFunction {
   // AI service connector to handle the communication with AI provider
   private AbstractAiServiceConnector connector;
 
-  // Option to put the result into wrapper characters or not. default is true
-  private Boolean useWrappers = true;
+  // Option to put the result into wrapper characters or not. default is false
+  private Boolean useWrappers = false;
+
+  // Option to show the result as plain text or not. Default is true
+  private Boolean isPlainText = true;
 
   protected boolean failedToBuildInstructions;
 
@@ -107,14 +110,14 @@ public abstract class AiFunction {
     params.put("query", Optional.ofNullable(query).orElse(""));
     params.put("functionInstructions", Optional.ofNullable(functionInstructions).orElse(""));
     params.put("customInstructions", getFormattedCustomInstructions());
-    params.put("wrapperInstruction", useWrappers ? WRAPPER_INSTRUCTION : StringUtils.EMPTY);
+    params.put("wrapperInstruction", (isPlainText || !useWrappers) ? StringUtils.EMPTY : WRAPPER_INSTRUCTION);
     params.put("examples", getFormattedExamples());
 
     // Use AI to perform action
     String resultFromAI = connector.generate(PromptTemplate.from(PROMPT_TEMPLATE).apply(params).text());
 
     // standardized the result from AI
-    resultFromAI = useWrappers ? standardizeResult(resultFromAI) : resultFromAI;
+    resultFromAI = isPlainText ? resultFromAI : standardizeResult(resultFromAI);
 
     // return the final result
     return createStandardResult(resultFromAI);
@@ -123,7 +126,7 @@ public abstract class AiFunction {
   // Method to standardize result from AI
   // If cannot extract the standardize result, return null instead
   protected String standardizeResult(String result) {
-    return StringProcessingUtils.standardizeResult(result);
+    return StringProcessingUtils.standardizeResult(result, true);
   }
 
   public String getFunctionInstructions() {
@@ -156,6 +159,30 @@ public abstract class AiFunction {
 
   public void setQuery(String query) {
     this.query = query;
+  }
+
+  public AbstractAiServiceConnector getConnector() {
+    return connector;
+  }
+
+  public void setConnector(AbstractAiServiceConnector connector) {
+    this.connector = connector;
+  }
+
+  public Boolean getIsPlainText() {
+    return isPlainText;
+  }
+
+  public void setIsPlainText(Boolean isPlainText) {
+    this.isPlainText = isPlainText;
+  }
+
+  public Boolean getUseWrappers() {
+    return useWrappers;
+  }
+
+  public void setUseWrappers(Boolean useWrappers) {
+    this.useWrappers = useWrappers;
   }
 
   private String getFormattedCustomInstructions() {
@@ -197,29 +224,13 @@ public abstract class AiFunction {
     this.examples = examples;
   }
 
-  public Boolean getUseWrappers() {
-    return useWrappers;
-  }
-
-  public void setUseWrappers(Boolean useWrappers) {
-    this.useWrappers = useWrappers;
-  }
-
   protected AiVariable buildErrorResult() {
     AiVariable result = new AiVariable();
     result.init();
-    result.setContent("Error occurred when AI generating the result");
+    result.getParameter().setValue("Error occurred when AI generating the result");
     result.setState(AiVariableState.ERROR);
-    result.setDescription("Error occurred when AI generating the result");
+    result.getParameter().setDescription("Error occurred when AI generating the result");
     return result;
-  }
-
-  public AbstractAiServiceConnector getConnector() {
-    return connector;
-  }
-
-  public void setConnector(AbstractAiServiceConnector connector) {
-    this.connector = connector;
   }
 
   public static class Builder {

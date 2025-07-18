@@ -62,11 +62,11 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
   @Override
   public String generate(String message) {
     try {
-      Ivy.log().error("Input");
-      Ivy.log().error(message);
+      // Ivy.log().error("Input");
+      // Ivy.log().error(message);
       String result = chatModel.chat(message);
-      Ivy.log().error("result");
-      Ivy.log().error(result);
+      // Ivy.log().error("result");
+      // Ivy.log().error(result);
       return result;
     } catch (Exception e) {
       OpenAIErrorResponse error = BusinessEntityConverter.jsonValueToEntity(e.getCause().getMessage(),

@@ -1,22 +1,22 @@
 package com.axonivy.utils.ai.axon.ivy.ai.demo.dto;
 
 public class EmployeeRequest {
-  private String requestor;
-  private String content;
+  private String employeeUsername;
+  private String query;
 
-  public String getRequestor() {
-    return requestor;
+  public String getEmployeeUsername() {
+    return employeeUsername;
   }
 
-  public void setRequestor(String requestor) {
-    this.requestor = requestor;
+  public void setEmployeeUsername(String employeeUsername) {
+    this.employeeUsername = employeeUsername;
   }
 
-  public String getContent() {
-    return content;
+  public String getQuery() {
+    return query;
   }
 
-  public void setContent(String content) {
-    this.content = content;
+  public void setQuery(String query) {
+    this.query = query;
   }
 }

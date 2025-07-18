@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
 import com.axonivy.utils.ai.dto.IvyToolParameter;
@@ -21,7 +21,6 @@ import com.axonivy.utils.ai.dto.ai.Instruction;
 import com.axonivy.utils.ai.enums.AiVariableState;
 import com.axonivy.utils.ai.exception.AiException;
 import com.axonivy.utils.ai.function.DataMapping;
-import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.axonivy.utils.ai.service.IvyAdapterService;
 import com.axonivy.utils.ai.utils.AiVariableUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -66,6 +65,9 @@ public class IvyTool implements Serializable {
 // Process parameter definitions
   private List<IvyToolParameter> parameters;
 
+  // Process result definitions
+  private List<IvyToolParameter> resultDefinitions;
+
   @JsonIgnore
   private AbstractAiServiceConnector connector;
 
@@ -93,34 +95,51 @@ public class IvyTool implements Serializable {
     Map<String, Object> processResult = IvyAdapterService.startSubProcessInApplication(signature, processParams);
     List<AiVariable> results = new ArrayList<>();
 
+    // If there is no predefined result definition, skip extracting result, return
+    // an empty list
+    if (CollectionUtils.isEmpty(resultDefinitions)) {
+      return results;
+    }
+
     // If no result, assume there was an error during execution
     if (processResult == null || processResult.size() == 0) {
       // Set a default error result if no result is returned
       AiVariable error = new AiVariable();
       error.setState(AiVariableState.ERROR);
-      error.setContent("Error happened when running the Ivy tool: " + getName());
-      error.setName("Error " + getName());
+      error.setParameter(new IvyToolParameter());
+      error.getParameter().setClassName("String");
+      error.getParameter().setValue("Error happened when running the Ivy tool: " + getName());
+      error.getParameter().setName("Error " + getName());
       results.add(error);
       return results;
     }
 
     // Retrieve results and convert to AiVariable
-    for (Entry<String, Object> r : processResult.entrySet()) {
-      if (r.getValue() instanceof AiVariable) {
-        results.add((AiVariable) r.getValue());
-      } else {
-        results.add(new AiVariable(r.getKey(), BusinessEntityConverter.entityToJsonValue(r.getValue())));
+    for (var resultDefinition : resultDefinitions) {
+      Object resultObj = processResult.entrySet().stream().filter(r -> r.getKey().equals(resultDefinition.getName()))
+          .map(Entry::getValue).findFirst().orElse(null);
+      if (Objects.nonNull(resultObj)) {
+        AiVariable newVar = new AiVariable();
+        newVar.init();
+        newVar.getParameter().setName(resultDefinition.getName());
+        newVar.getParameter().setDescription(resultDefinition.getDescription());
+        newVar.getParameter().setClassName(resultDefinition.getClassName());
+        newVar.getParameter().setValue(resultObj);
+        newVar.setState(AiVariableState.SUCCESS);
+        results.add(newVar);
       }
     }
-
     return results;
   }
 
   private void fulfillIvyToolUsingName() {
     if (CollectionUtils.isNotEmpty(parameters)) {
       for (IvyToolParameter param : parameters) {
-        param.setValue(variables.stream().filter(variable -> variable.getName().equals(param.getName()))
-            .map(AiVariable::getContent).findFirst().orElseGet(() -> StringUtils.EMPTY));
+        param.setValue(variables.stream().filter(variable -> variable.getParameter().getName().equals(param.getName()))
+            .filter(variable -> variable.getParameter().getClassName().contentEquals(param.getClassName()))
+            .map(AiVariable::getParameter).map(IvyToolParameter::getValue)
+            .findFirst().orElseGet(() -> null));
+        
       }
     }
   }
@@ -162,7 +181,7 @@ public class IvyTool implements Serializable {
 
     // Use AI to fulfill parameter
     Map<String, Object> paramsMap = new HashMap<>();
-    paramsMap.put("variables", AiVariableUtils.convertAiVariablesToString(variables));
+    paramsMap.put("variables", AiVariableUtils.convertAiVariablesToJsonString(variables));
     AiVariable result = DataMapping.getBuilder().useService(getConnector())
         .withQuery(PromptTemplate.from(VARIABLES_TEMPLATE).apply(paramsMap).text()).withObject(param)
         .addFieldExplanations(Arrays.asList(new FieldExplanation(param.getName(), param.getDescription()))).build()
@@ -173,9 +192,9 @@ public class IvyTool implements Serializable {
       return param;
     }
 
-    // Otherwise convert the mapped object to an instance of IvyToolParameter
+    // Otherwise return the IvyToolParameter
     try {
-      return BusinessEntityConverter.jsonValueToEntity(result.getContent(), IvyToolParameter.class);
+      return result.getParameter();
     } catch (AiException e) {
       // If the conversion is failed, return the original parameter
       return param;
@@ -244,5 +263,13 @@ public class IvyTool implements Serializable {
 
   public void setConnector(AbstractAiServiceConnector connector) {
     this.connector = connector;
+  }
+
+  public List<IvyToolParameter> getResultDefinitions() {
+    return resultDefinitions;
+  }
+
+  public void setResultDefinitions(List<IvyToolParameter> results) {
+    this.resultDefinitions = results;
   }
 }

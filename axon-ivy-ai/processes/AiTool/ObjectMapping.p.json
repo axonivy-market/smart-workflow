@@ -89,7 +89,7 @@
             "  .withInstructionsStrategy().build();",
             "",
             "AiVariable result = mapper.execute();",
-            "in.resultObject = BusinessEntityConverter.jsonValueToEntity(result.content, Object.class);"
+            "in.resultObject = result.parameter.value;"
           ]
         }
       },

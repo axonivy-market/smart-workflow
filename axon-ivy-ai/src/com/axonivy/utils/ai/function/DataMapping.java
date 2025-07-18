@@ -150,7 +150,17 @@ public class DataMapping extends AiFunction {
     }
     AiVariable result = new AiVariable();
     result.init();
-    result.setContent(resultFromAI);
+    
+    // Put the parsed object get from AI to the result
+    // If failed, put the JSON object instead
+    try {
+      Object objFromAI = BusinessEntityConverter.jsonValueToEntity(resultFromAI, targetObject.getClass());
+      result.getParameter().setValue(objFromAI);
+    } catch (Exception e) {
+      result.getParameter().setValue(resultFromAI);
+    }
+
+    result.getParameter().setClassName(targetObject == null ? "String" : targetObject.getClass().getName());
     result.setState(AiVariableState.SUCCESS);
     return result;
   }
@@ -236,7 +246,7 @@ public class DataMapping extends AiFunction {
     }
 
     // Check if content is not blank
-    if (StringUtils.isBlank(result.getContent())) {
+    if (StringUtils.isBlank(result.getSafeValue())) {
       return false;
     }
 
@@ -245,10 +255,10 @@ public class DataMapping extends AiFunction {
       try {
         if (asList != null && asList) {
           // For list results, try to parse as array
-          BusinessEntityConverter.jsonValueToEntities(result.getContent(), targetObject.getClass());
+          BusinessEntityConverter.jsonValueToEntities(result.getSafeValue(), targetObject.getClass());
         } else {
           // For single object results, try to parse as single object
-          BusinessEntityConverter.jsonValueToEntity(result.getContent(), targetObject.getClass());
+          BusinessEntityConverter.jsonValueToEntity(result.getSafeValue(), targetObject.getClass());
         }
         // If parsing succeeds, the result is valid
         return true;
@@ -260,7 +270,7 @@ public class DataMapping extends AiFunction {
     }
 
     // Fallback: basic validation if no target object is available
-    String content = result.getContent().toLowerCase();
+    String content = result.getSafeValue().toLowerCase();
     if (content.contains("error") || content.contains("failed") || content.contains("invalid")) {
       return false;
     }
@@ -316,7 +326,7 @@ public class DataMapping extends AiFunction {
 
         // Log failure and continue to next attempt
         String errorReason = result != null ? String.format("Invalid result - State: %s, Content: %s",
-            result.getState(), StringUtils.abbreviate(result.getContent(), 50)) : "Null result";
+            result.getState(), StringUtils.abbreviate(result.getSafeValue(), 50)) : "Null result";
         Ivy.log().info(String.format("Attempt %d failed: %s", currentAttempt, errorReason));
 
       } catch (Exception e) {
@@ -476,6 +486,8 @@ public class DataMapping extends AiFunction {
       dataMapper.setExamples(examples);
       dataMapper.setFieldExplanations(fieldExplanations);
       dataMapper.setStrategy(strategy);
+      dataMapper.setIsPlainText(false);
+      dataMapper.setUseWrappers(dataMapper.getStrategy() == ExtractionStrategy.WRAPPER);
 
       // Set retry configuration
       dataMapper.setMaxRetries(maxRetries);

@@ -88,7 +88,7 @@
             "  in.result = \"\";",
             "}",
             "",
-            "in.result = in.variable.content;"
+            "in.result = in.variable.getSafeValue();"
           ]
         },
         "sudo" : true

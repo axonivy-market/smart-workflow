@@ -2,8 +2,7 @@ package com.axonivy.utils.ai.dto;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
@@ -12,14 +11,17 @@ public class IvyToolParameter implements Serializable {
   private static final long serialVersionUID = 630365402103731067L;
 
   private String name;
-  private String value;
+  private String className;
   private String description;
   private Boolean isMandatory;
+
+  @JsonIgnore
+  private Object value;
 
   public IvyToolParameter() {
   }
 
-  public IvyToolParameter(String name, String value, String description) {
+  public IvyToolParameter(String name, Object value, String description) {
     this.name = name;
     this.value = value;
     this.description = description;
@@ -28,7 +30,7 @@ public class IvyToolParameter implements Serializable {
   public IvyToolParameter(String name, String description) {
     this.name = name;
     this.description = description;
-    this.value = StringUtils.EMPTY;
+    this.value = null;
   }
 
   public String getName() {
@@ -39,11 +41,11 @@ public class IvyToolParameter implements Serializable {
     this.name = name;
   }
 
-  public String getValue() {
+  public Object getValue() {
     return value;
   }
 
-  public void setValue(String value) {
+  public void setValue(Object value) {
     this.value = value;
   }
 
@@ -61,5 +63,13 @@ public class IvyToolParameter implements Serializable {
 
   public void setIsMandatory(Boolean isMandatory) {
     this.isMandatory = isMandatory;
+  }
+
+  public String getClassName() {
+    return className;
+  }
+
+  public void setClassName(String className) {
+    this.className = className;
   }
 }

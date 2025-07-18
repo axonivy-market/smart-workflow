@@ -19,6 +19,8 @@ import com.axonivy.utils.ai.history.HistoryLog;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.axonivy.utils.ai.utils.IvyVariableUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -140,6 +142,87 @@ public abstract class BaseAgent {
           .append(tool.getUsage()).append(System.lineSeparator());
     }
     return toolsStr.toString();
+  }
+
+  /**
+   * Processes input query and creates variables. If query is a valid JSON object
+   * {"field1": "value1", "field2": "value2"}, splits JSON properties into
+   * individual variables. Otherwise, creates a single "query" variable with the
+   * entire input.
+   * 
+   * @param query The input query string
+   */
+  protected void processInputQuery(String query) {
+    if (getVariables() == null) {
+      setVariables(new ArrayList<>());
+    }
+
+    // Try to parse as JSON object first
+    if (isValidJsonObject(query)) {
+      createVariablesFromJsonObject(query);
+    } else {
+      // Fall back to single query variable for everything else
+      // (arrays, primitives, invalid JSON, plain text)
+      createSingleQueryVariable(query);
+    }
+  }
+
+  /**
+   * Checks if the input string is a valid JSON object (not array or primitive)
+   */
+  private boolean isValidJsonObject(String input) {
+    if (StringUtils.isBlank(input)) {
+      return false;
+    }
+
+    try {
+      ObjectMapper mapper = BusinessEntityConverter.getObjectMapper();
+      JsonNode rootNode = mapper.readTree(input.trim());
+      // Only return true for JSON objects, not arrays or primitives
+      return rootNode.isObject();
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * Creates variables from JSON object input. Only handles JSON objects.
+   */
+  private void createVariablesFromJsonObject(String jsonInput) {
+    try {
+      ObjectMapper mapper = BusinessEntityConverter.getObjectMapper();
+      JsonNode rootNode = mapper.readTree(jsonInput.trim());
+
+      // Handle JSON object - create variable for each property
+      rootNode.fieldNames().forEachRemaining(fieldName -> {
+        JsonNode fieldValue = rootNode.get(fieldName);
+        AiVariable variable = new AiVariable();
+        variable.init();
+        variable.getParameter().setName(fieldName);
+        variable.getParameter().setValue(fieldValue.isTextual() ? fieldValue.asText() : fieldValue.toString());
+        variable.getParameter().setDescription("JSON property: " + fieldName);
+
+        // By default, all parameters send to agent are String
+        variable.getParameter().setClassName("String");
+
+        getVariables().add(variable);
+      });
+    } catch (Exception e) {
+      // If JSON parsing fails unexpectedly, fall back to single query variable
+      createSingleQueryVariable(jsonInput);
+    }
+  }
+
+  /**
+   * Creates a single query variable with the entire input
+   */
+  private void createSingleQueryVariable(String query) {
+    AiVariable inputVariable = new AiVariable();
+    inputVariable.init();
+    inputVariable.getParameter().setName("query");
+    inputVariable.getParameter().setValue(query);
+    inputVariable.getParameter().setDescription("The input query");
+    getVariables().add(inputVariable);
   }
 
   /**
