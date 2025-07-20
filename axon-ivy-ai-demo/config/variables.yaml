@@ -5,3 +5,5 @@ Variables:
     Employee: ""
     # [file: json]
     Department: ""
+    # [file: json]
+    SupportTicket: ""

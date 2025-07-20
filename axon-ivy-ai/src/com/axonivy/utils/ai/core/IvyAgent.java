@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
 import com.axonivy.utils.ai.enums.AiVariableState;
@@ -13,6 +14,7 @@ import com.axonivy.utils.ai.function.DataMapping;
 import com.axonivy.utils.ai.function.Planning;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.input.PromptTemplate;
 
 public class IvyAgent extends BaseAgent {
@@ -82,7 +84,7 @@ public class IvyAgent extends BaseAgent {
     prompt.append("USER QUERY: ").append(query).append(TWO_LINES);
 
     // Add planning instructions if available
-    List<String> planningInstructions = getInstructionsByType(InstructionType.PLANNING);
+    List<String> planningInstructions = getPlanningInstructions();
     if (!planningInstructions.isEmpty()) {
       prompt.append("PLANNING INSTRUCTIONS:").append(ONE_LINE);
       for (int i = 0; i < planningInstructions.size(); i++) {
@@ -119,7 +121,7 @@ public class IvyAgent extends BaseAgent {
         .withQuery(enhancedPlanningPrompt);
     
     // Add planning instructions as custom instructions
-    List<String> planningInstructions = getInstructionsByType(InstructionType.PLANNING);
+    List<String> planningInstructions = getPlanningInstructions();
     for (String instruction : planningInstructions) {
       planningBuilder.addCustomInstruction(instruction);
     }
@@ -182,7 +184,7 @@ public class IvyAgent extends BaseAgent {
       iterationCount++;
       AiStep runningStep = getStepByNumber(runningStepNo);
       if (runningStep == null) {
-        System.err.println("No step found for stepNo: " + runningStepNo);
+        Ivy.log().info("No step found for stepNo: " + runningStepNo);
         break;
       }
 
@@ -225,7 +227,7 @@ public class IvyAgent extends BaseAgent {
       if (decision.isComplete()) {
         // Goal achieved, finish execution
         inProgress = false;
-        System.err.println("ReAct reasoning determined goal is achieved: " + decision.getReasoning());
+        Ivy.log().info("ReAct reasoning determined goal is achieved: " + decision.getReasoning());
         historyLog.addSystemMessage("Execution completed by ReAct reasoning: " + decision.getReasoning(),
             runningStep.getStepNo());
       } else if (decision.shouldUpdatePlan()) {
@@ -241,13 +243,13 @@ public class IvyAgent extends BaseAgent {
       // Final step logic
       if (runningStepNo == AiStep.FINALIZE_STEP) {
         inProgress = false;
-        System.err.println("managing final result");
-        System.err.println(BusinessEntityConverter.entityToJsonValue(getResults()));
+        Ivy.log().info("Final result");
+        Ivy.log().info(BusinessEntityConverter.entityToJsonValue(getResults()));
       }
     }
 
     if (iterationCount >= maxIterations) {
-      System.err.println("Maximum iterations (" + maxIterations + ") reached in adaptive execution");
+      Ivy.log().info("Maximum iterations (" + maxIterations + ") reached in adaptive execution");
       historyLog.addSystemMessage("Maximum iterations (" + maxIterations + ") reached", iterationCount);
     }
   }
@@ -267,7 +269,7 @@ public class IvyAgent extends BaseAgent {
       return ReActDecision.parseReActDecision(aiResponse);
 
     } catch (Exception e) {
-      System.err.println("Error in ReAct reasoning: " + e.getMessage());
+      Ivy.log().info("Error in ReAct reasoning: " + e.getMessage());
       historyLog.addSystemMessage("Error in ReAct reasoning: " + e.getMessage(), currentStep.getStepNo());
       // Default to continuing with original plan
       return new ReActDecision(false, false, "Error in reasoning, continuing with plan", "", "");
@@ -279,7 +281,7 @@ public class IvyAgent extends BaseAgent {
    */
   private String buildExecutionReasoningPrompt(String latestResult, AiStep currentStep) {
     // Prepare execution instructions section
-    List<String> executionInstructions = getInstructionsByType(InstructionType.EXECUTION);
+    List<String> executionInstructions = getInstructions(InstructionType.EXECUTION, currentStep);
     String executionInstructionsText = "";
     if (!executionInstructions.isEmpty()) {
       StringBuilder instructionsBuilder = new StringBuilder();
@@ -314,29 +316,96 @@ public class IvyAgent extends BaseAgent {
       var targetTool = tools.stream().filter(t -> t.getId().equals(targetToolId)).findFirst().orElse(null);
 
       if (targetTool != null) {
-        // Create a new adaptive step
-        AiStep adaptiveStep = new AiStep();
-        adaptiveStep.setStepNo(currentStep.getStepNo() + 1000); // Use high number to avoid conflicts
-        adaptiveStep.setName("Adaptive: " + decision.getNextAction());
-        adaptiveStep.setAnalysis("Dynamically created based on ReAct reasoning");
-        adaptiveStep.setPrevious(currentStep.getStepNo());
-        adaptiveStep.setNext(AiStep.FINALIZE_STEP); // Default to final, can be changed by further reasoning
-        adaptiveStep.useTool(targetTool);
-        adaptiveStep.setToolId(targetToolId);
+        // Check if we should modify the next step or create a new one
+        int nextStepNo = currentStep.getNext();
+        AiStep nextStep = getStepByNumber(nextStepNo);
 
-        // Add the adaptive step to our steps list
-        steps.add(adaptiveStep);
+        if (nextStep != null && nextStepNo != AiStep.FINALIZE_STEP) {
+          // Update the existing next step instead of creating a new one
+          nextStep.setName("Adapted: " + decision.getNextAction());
+          nextStep.setAnalysis("Dynamically adapted based on ReAct reasoning: " + decision.getReasoning());
+          nextStep.useTool(targetTool);
+          nextStep.setToolId(targetToolId);
 
-        return adaptiveStep.getStepNo();
+          // Remove any subsequent steps that are no longer valid due to plan change
+          removeInvalidSubsequentSteps(nextStep);
+
+          Ivy.log().info("Adapted existing step " + nextStep.getStepNo() + " to use tool: " + targetToolId);
+          return nextStep.getStepNo();
+
+        } else {
+          // Create a new adaptive step when no next step exists or we're at the end
+          AiStep adaptiveStep = createAdaptiveStep(decision, currentStep, targetTool, targetToolId);
+
+          // Update the current step to point to our new adaptive step
+          currentStep.setNext(adaptiveStep.getStepNo());
+
+          // Add the adaptive step to our steps list
+          steps.add(adaptiveStep);
+
+          Ivy.log().info("Created new adaptive step " + adaptiveStep.getStepNo() + " with tool: " + targetToolId);
+          return adaptiveStep.getStepNo();
+        }
+
       } else {
-        System.err.println("Could not find tool for adaptive step: " + targetToolId);
+        Ivy.log().info("Could not find tool for adaptive step: " + targetToolId);
         return currentStep.getNext(); // Fall back to original plan
       }
 
     } catch (Exception e) {
-      System.err.println("Error adapting plan: " + e.getMessage());
+      Ivy.log().info("Error adapting plan: " + e.getMessage());
       return currentStep.getNext(); // Fall back to original plan
     }
+  }
+
+  /**
+   * Creates a new adaptive step
+   */
+  private AiStep createAdaptiveStep(ReActDecision decision, AiStep currentStep, IvyTool targetTool,
+      String targetToolId) {
+    AiStep adaptiveStep = new AiStep();
+    adaptiveStep.setStepNo(getNextAvailableStepNumber());
+    adaptiveStep.setName("Adaptive: " + decision.getNextAction());
+    adaptiveStep.setAnalysis("Dynamically created based on ReAct reasoning: " + decision.getReasoning());
+    adaptiveStep.setPrevious(currentStep.getStepNo());
+    adaptiveStep.setNext(AiStep.FINALIZE_STEP); // Default to final, can be changed by further reasoning
+    adaptiveStep.useTool(targetTool);
+    adaptiveStep.setToolId(targetToolId);
+    return adaptiveStep;
+  }
+
+  /**
+   * Removes subsequent steps that are no longer valid after a plan adaptation
+   */
+  private void removeInvalidSubsequentSteps(AiStep adaptedStep) {
+    List<AiStep> stepsToRemove = new ArrayList<>();
+    int currentNext = adaptedStep.getNext();
+
+    // Find all steps that come after the adapted step
+    while (currentNext != AiStep.FINALIZE_STEP) {
+      AiStep stepToCheck = getStepByNumber(currentNext);
+      if (stepToCheck != null) {
+        stepsToRemove.add(stepToCheck);
+        currentNext = stepToCheck.getNext();
+      } else {
+        break;
+      }
+    }
+
+    // Remove invalid subsequent steps
+    if (!stepsToRemove.isEmpty()) {
+      steps.removeAll(stepsToRemove);
+      adaptedStep.setNext(AiStep.FINALIZE_STEP); // Point adapted step to finalize
+      Ivy.log().info("Removed " + stepsToRemove.size() + " subsequent steps due to plan adaptation");
+    }
+  }
+
+  /**
+   * Gets the next available step number to avoid conflicts
+   */
+  private int getNextAvailableStepNumber() {
+    int maxStepNo = steps.stream().mapToInt(AiStep::getStepNo).max().orElse(0);
+    return maxStepNo + 1;
   }
 
   /**

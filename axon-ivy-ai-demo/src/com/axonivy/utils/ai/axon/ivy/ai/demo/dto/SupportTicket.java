@@ -8,6 +8,7 @@ import com.axonivy.utils.ai.axon.ivy.ai.demo.enums.TicketType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SupportTicket {
+
   private String id;
   private TicketType type;
   private String name;
@@ -15,6 +16,9 @@ public class SupportTicket {
   private String employeeUsername;
   private String firstApprover;
   private String secondApprover;
+  private ApprovalHistory firstApproval;
+  private ApprovalHistory secondApproval;
+
 
   @JsonIgnore
   private Employee requestor;
@@ -85,5 +89,21 @@ public class SupportTicket {
 
   public void setEmployeeUsername(String employeeUsername) {
     this.employeeUsername = employeeUsername;
+  }
+
+  public ApprovalHistory getFirstApproval() {
+    return firstApproval;
+  }
+
+  public void setFirstApproval(ApprovalHistory firstApproval) {
+    this.firstApproval = firstApproval;
+  }
+
+  public ApprovalHistory getSecondApproval() {
+    return secondApproval;
+  }
+
+  public void setSecondApproval(ApprovalHistory secondApproval) {
+    this.secondApproval = secondApproval;
   }
 }

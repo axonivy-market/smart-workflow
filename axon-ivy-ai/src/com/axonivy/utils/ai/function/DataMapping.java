@@ -211,16 +211,16 @@ public class DataMapping extends AiFunction {
    */
   private void initializeStrategies() {
     switch (strategy) {
-      case WRAPPER:
-        this.instructionBuilder = new WrapperStrategy(asList);
-        this.resultProcessor = new WrapperStrategy(asList);
-        setUseWrappers(true);
-        break;
-      case INSTRUCTIONS:
-        this.instructionBuilder = new InstructionsStrategy(asList);
-        this.resultProcessor = new InstructionsStrategy(asList);
-        setUseWrappers(false);
-        break;
+    case WRAPPER:
+      this.instructionBuilder = new WrapperStrategy(asList);
+      this.resultProcessor = new WrapperStrategy(asList);
+      setUseWrappers(true);
+      break;
+    case INSTRUCTIONS:
+      this.instructionBuilder = new InstructionsStrategy(asList);
+      this.resultProcessor = new InstructionsStrategy(asList);
+      setUseWrappers(false);
+      break;
     }
   }
 

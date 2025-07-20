@@ -7,5 +7,9 @@
     "name" : "taskInfo",
     "type" : "com.axonivy.utils.ai.dto.ivy.TaskInfo",
     "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "secondTaskInfo",
+    "type" : "com.axonivy.utils.ai.dto.ivy.TaskInfo",
+    "modifiers" : [ "PERSISTENT" ]
   } ]
 }

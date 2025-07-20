@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
-import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.function.DataMapping;
 import com.axonivy.utils.ai.history.HistoryLog;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
@@ -60,7 +59,7 @@ public class TodoAgent extends BaseAgent {
    */
   private String buildTodoPlanningPrompt(String query) {
     // Prepare planning instructions section
-    List<String> planningInstructions = getInstructionsByType(InstructionType.PLANNING);
+    List<String> planningInstructions = getPlanningInstructions();
     String planningInstructionsText = "";
     if (!planningInstructions.isEmpty()) {
       StringBuilder instructionsBuilder = new StringBuilder();

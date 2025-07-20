@@ -10,7 +10,7 @@
     "planningModelKey": "${AI.OpenAI.APIKey}",
     "executionModel": "gpt-4o-mini",
     "executionModelKey": "${AI.OpenAI.APIKey}",
-    "tools": ["create-support-task", "create-support-ticket", "choose-ticket-approvers"],
+    "tools": ["create-support-task", "create-support-ticket", "choose-ticket-approvers", "handle-hr-ticket"],
     "instructions": [
       {
         "type": "planning",
@@ -19,6 +19,11 @@
       {
         "type": "planning", 
         "content": "once the support ticket is created, approver is assigned, create an Axon Ivy task"
+      },
+      {
+        "type": "execution",
+        "toolId": "choose-ticket-approvers",
+        "content": "If the ticket type is HR, use the specified tool to handle HR Ticket. Otherwise, use the typical Create Support Task Tool"
       }
     ]
   },

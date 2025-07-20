@@ -2,6 +2,8 @@ package com.axonivy.utils.ai.axon.ivy.ai.demo.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Employee;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 
@@ -21,6 +23,13 @@ public class EmployeeService {
 
   public Employee findByUsername(String username) {
     List<Employee> employees = BusinessEntityConverter.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), Employee.class);
-    return employees.stream().filter(e -> e.getUsername().equals(username)).findFirst().get();
+    Employee found = employees.stream().filter(e -> e.getUsername().equals(username)).findFirst().get();
+
+    if (StringUtils.isNotBlank(found.getDepartmentId())) {
+      found.setDepartment(DepartmentService.getInstance().findAll().stream()
+          .filter(dept -> dept.getId().equals(found.getDepartmentId())).findFirst().orElse(null));
+    }
+
+    return found;
   }
 }

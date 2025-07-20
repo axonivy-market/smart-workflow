@@ -93,5 +93,34 @@
           "toolId": "choose-ticket-approver"
         }
       ]
+  },
+  {
+    "id": "handle-hr-ticket",
+    "name": "Handle HR Ticket Tool",
+    "usage": "Use this tool to handle HR ticket",
+    "signature" : "handleHrTicket(com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket)",
+    "parameters" : [
+      {
+          "name" : "supportTicket",
+          "value" : "",
+          "className" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
+          "description": "the support ticket object"
+      }
+    ],
+    "resultDefinitions" : [
+      {
+          "name" : "supportTicket",
+          "value" : "",
+          "className" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
+          "description": "the updated support ticket object with approvers"
+      }
+    ],
+    "instructions": [
+        {
+          "type": "input",
+          "content": "use the support ticket object",
+          "toolId": "handle-hr-ticket"
+        }
+      ]
   }
 ]

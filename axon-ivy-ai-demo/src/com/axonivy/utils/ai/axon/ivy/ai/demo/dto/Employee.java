@@ -74,4 +74,8 @@ public class Employee implements Serializable {
   public void setDepartmentId(String departmentId) {
     this.departmentId = departmentId;
   }
+
+  public Integer getRemainingDays() {
+    return maxLeaveDays - usedLeaveDays;
+  }
 }

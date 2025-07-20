@@ -120,15 +120,26 @@ public abstract class BaseAgent {
   /**
    * Helper method to filter instructions by type
    */
-  protected List<String> getInstructionsByType(InstructionType type) {
+  protected List<String> getInstructions(InstructionType type, AiStep currentStep) {
     if (instructions == null || instructions.isEmpty()) {
       return new ArrayList<>();
     }
-    
+
     return instructions.stream()
         .filter(instruction -> instruction.getType() == type)
+        .filter(instruction -> StringUtils.isNotBlank(instruction.getContent().strip()))
+        .filter(instruction -> instruction.getToolId().equals(currentStep.getToolId()))
         .map(Instruction::getContent)
-        .filter(content -> content != null && !content.trim().isEmpty())
+        .collect(Collectors.toList());
+  }
+
+  protected List<String> getPlanningInstructions() {
+    if (instructions == null || instructions.isEmpty()) {
+      return new ArrayList<>();
+    }
+
+    return instructions.stream().filter(instruction -> instruction.getType() == InstructionType.PLANNING)
+        .filter(instruction -> StringUtils.isNotBlank(instruction.getContent().strip())).map(Instruction::getContent)
         .collect(Collectors.toList());
   }
 
