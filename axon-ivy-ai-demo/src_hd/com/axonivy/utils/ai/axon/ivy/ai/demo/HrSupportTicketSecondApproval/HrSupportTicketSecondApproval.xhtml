@@ -85,10 +85,35 @@
             <p:fieldset legend="First Approval" styleClass="w-full">
               <div class="ui-g">
                 <div class="ui-g-3">
+                  <h:outputText value="Approver" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <h:outputText value="#{data.firstApprover.fullName}" />
+                </div>
+                <div class="ui-g-3">
+                  <h:outputText value="Approver Decision" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <h:outputText value="#{data.supportTicket.firstApproval.isApprove ? 'APPROVE' : 'REJECT'}"
+                    styleClass="#{data.supportTicket.firstApproval.isApprove ? 'text-green-800' : 'text-red-800'}" />
+                </div>
+                <div class="ui-g-3">
+                  <h:outputText value="Reason" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <h:outputText value="#{data.supportTicket.firstApproval.comment}" />
+                </div>
+              </div>
+            </p:fieldset>
+          </div>
+          <div class="ui-g-12 ui-g p-0 mt-4 ui-fluid">
+            <p:fieldset legend="Second Approval" styleClass="w-full">
+              <div class="ui-g">
+                <div class="ui-g-3">
                   <h:outputText value="Decision" styleClass="font-bold" />
                 </div>
                 <div class="ui-g-9">
-                  <p:selectOneRadio value="#{data.supportTicket.firstApproval.isApprove}">
+                  <p:selectOneRadio value="#{data.supportTicket.secondApproval.isApprove}">
                     <f:selectItem itemValue="#{true}" itemLabel="Yes" />
                     <f:selectItem itemValue="#{false}" itemLabel="No" />
                   </p:selectOneRadio>
@@ -97,14 +122,11 @@
                   <h:outputText value="Comment" styleClass="font-bold" />
                 </div>
                 <div class="ui-g-12">
-                  <p:inputTextarea rows="3" autoResize="true" value="#{data.supportTicket.firstApproval.comment}" />
+                  <p:inputTextarea rows="3" autoResize="true" value="#{data.supportTicket.secondApproval.comment}" />
                 </div>
               </div>
             </p:fieldset>
           </div>
-        </div>
-        <div class="w-full flex justify-content-end mt-4">
-          <p:commandButton value="Save" actionListener="#{logic.close}" process="@(form)" />
         </div>
       </h:form>
 

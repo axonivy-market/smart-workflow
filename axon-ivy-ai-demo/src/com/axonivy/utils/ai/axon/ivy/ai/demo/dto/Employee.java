@@ -15,6 +15,7 @@ public class Employee implements Serializable {
   private String departmentId;
   private Integer maxLeaveDays;
   private Integer usedLeaveDays;
+  private String email;
 
   @JsonIgnore
   private Department department;
@@ -77,5 +78,13 @@ public class Employee implements Serializable {
 
   public Integer getRemainingDays() {
     return maxLeaveDays - usedLeaveDays;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 }

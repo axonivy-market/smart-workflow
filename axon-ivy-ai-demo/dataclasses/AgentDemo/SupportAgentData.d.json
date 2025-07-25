@@ -48,5 +48,15 @@
     "name" : "secondTaskInfo",
     "type" : "com.axonivy.utils.ai.dto.ivy.TaskInfo",
     "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "aiApproval",
+    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.AiApprovalDecision"
+  }, {
+    "name" : "aiApprovalStr",
+    "type" : "String"
+  }, {
+    "name" : "aiResult",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
   } ]
 }

@@ -169,7 +169,7 @@
         "dialog" : "com.axonivy.utils.ai.axon.ivy.ai.demo.HrSupportTicketApproval:start(String)",
         "call" : {
           "map" : {
-            "param.ticketId" : "in.taskInfo.customFields.get(\"ticketId\").toString()"
+            "param.ticketId" : "in.taskInfo.customFields.get(\"ticketId\") as String"
           }
         }
       },
@@ -184,10 +184,10 @@
       "type" : "DialogCall",
       "name" : "HR ticket approval",
       "config" : {
-        "dialog" : "com.axonivy.utils.ai.axon.ivy.ai.demo.HrSupportTicketApproval:start(String)",
+        "dialog" : "com.axonivy.utils.ai.axon.ivy.ai.demo.HrSupportTicketSecondApproval:start(String)",
         "call" : {
           "map" : {
-            "param.ticketId" : "in.taskInfo.customFields.get(\"ticketId\").toString()"
+            "param.ticketId" : "in.taskInfo.customFields.get(\"ticketId\") as String"
           }
         }
       },

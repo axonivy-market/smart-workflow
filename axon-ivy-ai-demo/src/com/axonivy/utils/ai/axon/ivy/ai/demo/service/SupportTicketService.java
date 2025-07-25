@@ -3,12 +3,12 @@ package com.axonivy.utils.ai.axon.ivy.ai.demo.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
+import com.axonivy.utils.ai.utils.IdGenerationUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -45,7 +45,7 @@ public class SupportTicketService {
 
     if (StringUtils.isBlank(ticket.getId())) {
       // Create new ticket
-      ticket.setId(UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY));
+      ticket.setId(IdGenerationUtils.generateRandomId());
       existingTickets.add(ticket);
     } else {
       // Update existing ticket
@@ -70,7 +70,6 @@ public class SupportTicketService {
     if (StringUtils.isBlank(id)) {
       return null;
     }
-
     SupportTicket found = findAll().stream().filter(ticket -> ticket.getId().equals(id)).findFirst().orElse(null);
 
     if (StringUtils.isNotBlank(found.getEmployeeUsername())) {

@@ -49,13 +49,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.core.IvyAgent;",
-            "import com.axonivy.utils.ai.service.AgentService;",
-            "import com.axonivy.utils.ai.dto.ai.configuration.AgentModel;",
-            "IvyAgent agent = new IvyAgent();",
-            "AgentModel model = AgentService.getInstance().findById(\"support-agent\") as AgentModel;",
-            "agent.loadFromModel(model);",
-            "agent.start(in.query);"
+            "import com.axonivy.utils.ai.core.AgentExecutor;",
+            "AgentExecutor executor = new AgentExecutor();",
+            "executor.startExecution(\"support-agent\", in.query, ivy.session.getSessionUserName());"
           ]
         }
       },

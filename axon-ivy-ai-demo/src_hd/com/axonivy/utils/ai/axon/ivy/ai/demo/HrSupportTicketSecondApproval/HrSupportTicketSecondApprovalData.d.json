@@ -1,9 +1,13 @@
 {
   "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
-  "simpleName" : "HrSupportTicketApprovalData",
-  "namespace" : "com.axonivy.utils.ai.axon.ivy.ai.demo.HrSupportTicketApproval",
+  "simpleName" : "HrSupportTicketSecondApprovalData",
+  "namespace" : "com.axonivy.utils.ai.axon.ivy.ai.demo.HrSupportTicketSecondApproval",
   "isBusinessCaseData" : false,
   "fields" : [ {
+    "name" : "supportTicketId",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
     "name" : "supportTicket",
     "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
     "modifiers" : [ "PERSISTENT" ]
@@ -12,8 +16,8 @@
     "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Employee",
     "modifiers" : [ "PERSISTENT" ]
   }, {
-    "name" : "supportTicketId",
-    "type" : "String",
+    "name" : "firstApprover",
+    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Employee",
     "modifiers" : [ "PERSISTENT" ]
   } ]
 }

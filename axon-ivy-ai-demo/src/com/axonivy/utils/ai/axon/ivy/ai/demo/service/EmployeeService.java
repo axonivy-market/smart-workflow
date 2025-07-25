@@ -22,8 +22,14 @@ public class EmployeeService {
   }
 
   public Employee findByUsername(String username) {
+    if (StringUtils.isBlank(username)) {
+      return null;
+    }
+
+    String query = username.startsWith("#") ? username.substring(1) : username;
+
     List<Employee> employees = BusinessEntityConverter.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), Employee.class);
-    Employee found = employees.stream().filter(e -> e.getUsername().equals(username)).findFirst().get();
+    Employee found = employees.stream().filter(e -> e.getUsername().equals(query)).findFirst().get();
 
     if (StringUtils.isNotBlank(found.getDepartmentId())) {
       found.setDepartment(DepartmentService.getInstance().findAll().stream()

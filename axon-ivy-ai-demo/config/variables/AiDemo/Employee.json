@@ -5,7 +5,8 @@
     "position": "junior",
     "departmentId": "dev",
     "maxLeaveDays": 25,
-    "usedLeaveDays": 8
+    "usedLeaveDays": 8,
+    "email": "john.doe@localhost.com"
   },
   {
     "username": "jane.smith",
@@ -13,7 +14,8 @@
     "position": "senior",
     "departmentId": "dev",
     "maxLeaveDays": 28,
-    "usedLeaveDays": 12
+    "usedLeaveDays": 12,
+    "email": "jane.smith@localhost.com"
   },
   {
     "username": "mike.johnson",
@@ -21,7 +23,8 @@
     "position": "manager",
     "departmentId": "dev",
     "maxLeaveDays": 30,
-    "usedLeaveDays": 15
+    "usedLeaveDays": 15,
+    "email": "mike.johnson@localhost.com"
   },
   {
     "username": "sarah.wilson",
@@ -29,7 +32,8 @@
     "position": "senior",
     "departmentId": "qa",
     "maxLeaveDays": 28,
-    "usedLeaveDays": 10
+    "usedLeaveDays": 10,
+    "email": "sarah.wilson@localhost.com"
   },
   {
     "username": "tom.brown",
@@ -37,7 +41,8 @@
     "position": "junior",
     "departmentId": "qa",
     "maxLeaveDays": 25,
-    "usedLeaveDays": 6
+    "usedLeaveDays": 6,
+    "email": "tom.brown@localhost.com"
   },
   {
     "username": "lisa.davis",
@@ -45,7 +50,8 @@
     "position": "manager",
     "departmentId": "hr",
     "maxLeaveDays": 30,
-    "usedLeaveDays": 18
+    "usedLeaveDays": 18,
+    "email": "lisa.davis@localhost.com"
   },
   {
     "username": "robert.miller",
@@ -53,7 +59,8 @@
     "position": "senior",
     "departmentId": "hr",
     "maxLeaveDays": 28,
-    "usedLeaveDays": 14
+    "usedLeaveDays": 14,
+    "email": "robert.miller@localhost.com"
   },
   {
     "username": "emma.garcia",
@@ -61,7 +68,8 @@
     "position": "junior",
     "departmentId": "dev",
     "maxLeaveDays": 25,
-    "usedLeaveDays": 5
+    "usedLeaveDays": 5,
+    "email": "emma.garcia@localhost.com"
   },
   {
     "username": "alex.martinez",
@@ -69,7 +77,8 @@
     "position": "manager",
     "departmentId": "qa",
     "maxLeaveDays": 30,
-    "usedLeaveDays": 20
+    "usedLeaveDays": 20,
+    "email": "alex.martinez@localhost.com"
   },
   {
     "username": "anna.lee",
@@ -77,6 +86,7 @@
     "position": "junior",
     "departmentId": "hr",
     "maxLeaveDays": 25,
-    "usedLeaveDays": 9
+    "usedLeaveDays": 9,
+    "email": "anna.lee@localhost.com"
   }
 ]

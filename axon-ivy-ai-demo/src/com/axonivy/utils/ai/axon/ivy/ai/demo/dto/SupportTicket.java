@@ -1,10 +1,7 @@
 package com.axonivy.utils.ai.axon.ivy.ai.demo.dto;
 
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.axonivy.utils.ai.axon.ivy.ai.demo.enums.TicketType;
+import com.axonivy.utils.ai.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SupportTicket {
@@ -16,15 +13,17 @@ public class SupportTicket {
   private String employeeUsername;
   private String firstApprover;
   private String secondApprover;
+  private AiApprovalDecision aiApproval;
   private ApprovalHistory firstApproval;
   private ApprovalHistory secondApproval;
+  private String requestedDate;
 
 
   @JsonIgnore
   private Employee requestor;
 
   public SupportTicket() {
-    setId(UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY));
+    setId(IdGenerationUtils.generateRandomId());
   }
 
   public String getId() {
@@ -105,5 +104,21 @@ public class SupportTicket {
 
   public void setSecondApproval(ApprovalHistory secondApproval) {
     this.secondApproval = secondApproval;
+  }
+
+  public String getRequestedDate() {
+    return requestedDate;
+  }
+
+  public void setRequestedDate(String requestedDate) {
+    this.requestedDate = requestedDate;
+  }
+
+  public AiApprovalDecision getAiApproval() {
+    return aiApproval;
+  }
+
+  public void setAiApproval(AiApprovalDecision aiApproval) {
+    this.aiApproval = aiApproval;
   }
 }

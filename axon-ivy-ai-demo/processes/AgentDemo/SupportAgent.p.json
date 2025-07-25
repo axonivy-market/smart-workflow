@@ -21,10 +21,10 @@
         },
         "result" : {
           "params" : [
-            { "name" : "taskResult", "type" : "com.axonivy.utils.ai.dto.ai.AiVariable", "desc" : "" }
+            { "name" : "aiResult", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "result.taskResult" : "in.aiVariable"
+            "result.aiResult" : "in.aiResult"
           }
         }
       },
@@ -39,7 +39,7 @@
       "id" : "f2",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 1192, "y" : 72 }
+        "at" : { "x" : 1264, "y" : 72 }
       }
     }, {
       "id" : "f3",
@@ -70,12 +70,7 @@
             "import com.axonivy.utils.ai.enums.AiVariableState;",
             "import com.axonivy.utils.ai.dto.ai.AiVariable;",
             "",
-            "in.aiVariable = new AiVariable();",
-            "in.aiVariable.setParameter(new IvyToolParameter());",
-            "in.aiVariable.getParameter().setClassName(\"String\");",
-            "in.aiVariable.getParameter().setValue(\"Task is created successfully\");",
-            "in.aiVariable.getParameter().setName(\"taskResult\");",
-            "in.aiVariable.state = AiVariableState.SUCCESS;"
+            "in.aiResult = \"Task is created successfully\";"
           ]
         }
       },
@@ -103,10 +98,12 @@
         },
         "result" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "support ticket object" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "support ticket object" },
+            { "name" : "aiResult", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "result.supportTicket" : "in.supportTicket"
+            "result.supportTicket" : "in.supportTicket",
+            "result.aiResult" : "in.aiResult"
           }
         }
       },
@@ -122,7 +119,7 @@
       "id" : "f9",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 1264, "y" : 232 }
+        "at" : { "x" : 1408, "y" : 232 }
       }
     }, {
       "id" : "f10",
@@ -308,7 +305,7 @@
         "at" : { "x" : 1120, "y" : 232 }
       },
       "connect" : [
-        { "id" : "f75", "to" : "f9" }
+        { "id" : "f75", "to" : "f165" }
       ]
     }, {
       "id" : "f29",
@@ -586,10 +583,12 @@
         },
         "result" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "" },
+            { "name" : "aiResult", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "result.supportTicket" : "in.supportTicket"
+            "result.supportTicket" : "in.supportTicket",
+            "result.aiResult" : "in.aiResult"
           }
         }
       },
@@ -603,7 +602,7 @@
       "id" : "f62",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 720, "y" : 656 }
+        "at" : { "x" : 856, "y" : 656 }
       }
     }, {
       "id" : "f63",
@@ -640,10 +639,10 @@
         },
         "result" : {
           "params" : [
-            { "name" : "result", "type" : "com.axonivy.utils.ai.dto.ai.AiVariable", "desc" : "" }
+            { "name" : "aiResult", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "result.result" : "in.aiVariable"
+            "result.aiResult" : "in.aiResult"
           }
         }
       },
@@ -678,6 +677,7 @@
       "config" : {
         "output" : {
           "code" : [
+            "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
             "import com.axonivy.utils.ai.dto.ai.FieldExplanation;",
             "import java.util.Arrays;",
             "",
@@ -686,7 +686,9 @@
             "  new FieldExplanation(\"description\", \"Description of the task\"),",
             "  new FieldExplanation(\"responsible\", \"Responsible of the task\"),",
             "  new FieldExplanation(\"customFields\", \"Custom fields for the task. Each custom field is a pair of key-value. This field is an Map<String, String> in Java\")",
-            "));"
+            "));",
+            "",
+            "in.query = BusinessEntityConverter.entityToJsonValue(in.supportTicket);"
           ]
         }
       },
@@ -729,15 +731,7 @@
     }, {
       "id" : "f87",
       "type" : "Script",
-      "name" : "Create Task info object",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.ai.dto.ivy.TaskInfo;",
-            "in.taskInfo = new TaskInfo();"
-          ]
-        }
-      },
+      "name" : "To be continued...",
       "visual" : {
         "at" : { "x" : 816, "y" : 784 }
       },
@@ -813,7 +807,7 @@
             "name" : "update personal info",
             "offset" : { "x" : 1, "y" : 14 }
           }, "color" : "default" },
-        { "id" : "f107", "to" : "f105", "label" : {
+        { "id" : "f107", "to" : "S3", "label" : {
             "name" : "leave request",
             "offset" : { "x" : -47, "y" : 1 }
           } }
@@ -832,36 +826,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1544, "y" : 1112 }
+        "at" : { "x" : 1536, "y" : 920 }
       },
       "connect" : [
-        { "id" : "f118", "to" : "f119" }
-      ]
-    }, {
-      "id" : "f99",
-      "type" : "SubProcessCall",
-      "name" : "Use AI: Evaluate leave request",
-      "config" : {
-        "processCall" : "AiTool/DecisionMaking:AiDecide(List<com.axonivy.utils.ai.dto.ai.AiOption>,String,List<com.axonivy.utils.ai.dto.ai.AiExample>,List<String>,com.axonivy.utils.ai.connector.AbstractAiServiceConnector)",
-        "call" : {
-          "map" : {
-            "param.options" : "in.options",
-            "param.query" : "com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter.entityToJsonValue(in.supportTicket)",
-            "param.connector" : "in.connector"
-          }
-        },
-        "output" : {
-          "map" : {
-            "out" : "in",
-            "out.categorizedResult" : "result.result"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 584, "y" : 1112 }
-      },
-      "connect" : [
-        { "id" : "f100", "to" : "f103" }
+        { "id" : "f151", "to" : "f143", "via" : [ { "x" : 1648, "y" : 920 } ] }
       ]
     }, {
       "id" : "f103",
@@ -869,57 +837,31 @@
       "name" : "status of the request?",
       "config" : {
         "conditions" : {
-          "f125" : "in.categorizedResult.equals(\"reject\")",
-          "f129" : "in.categorizedResult.equals(\"approve\")"
+          "f125" : "in.aiApprovalStr == \"REJECT\"",
+          "f129" : "in.aiApprovalStr == \"APPROVE\""
         }
       },
       "visual" : {
-        "at" : { "x" : 744, "y" : 1112 },
+        "at" : { "x" : 888, "y" : 920 },
         "labelOffset" : { "y" : -24 }
       },
       "connect" : [
-        { "id" : "f125", "to" : "f113", "via" : [ { "x" : 744, "y" : 1224 } ], "label" : {
+        { "id" : "f125", "to" : "f113", "via" : [ { "x" : 888, "y" : 1032 } ], "label" : {
             "name" : "reject",
             "segment" : 1.5,
-            "offset" : { "x" : -123, "y" : 14 }
+            "offset" : { "x" : -75, "y" : -58 }
           } },
-        { "id" : "f129", "to" : "f126", "label" : {
+        { "id" : "f129", "to" : "S4", "label" : {
             "name" : "approve",
             "offset" : { "x" : -3, "y" : 14 }
           } }
-      ]
-    }, {
-      "id" : "f105",
-      "type" : "Script",
-      "name" : "Prepare query before send to AI",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.EmployeeService;",
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Employee;",
-            "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
-            "",
-            "Employee requestor = EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername);",
-            "",
-            "in.query = \"Employee remaining day: \" + requestor.getRemainingDays()",
-            "  + System.lineSeparator()",
-            "  + \"The request: \"",
-            "  + System.lineSeparator() + in.supportTicket.description;"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 584, "y" : 920 }
-      },
-      "connect" : [
-        { "id" : "f106", "to" : "f138", "color" : "default" }
       ]
     }, {
       "id" : "f113",
       "type" : "EMail",
       "name" : "Send reject email",
       "visual" : {
-        "at" : { "x" : 1144, "y" : 1224 }
+        "at" : { "x" : 1032, "y" : 1032 }
       },
       "connect" : [
         { "id" : "f116", "to" : "f143" }
@@ -928,119 +870,8 @@
       "id" : "f115",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 2064, "y" : 1224 }
+        "at" : { "x" : 1904, "y" : 1032 }
       }
-    }, {
-      "id" : "f119",
-      "type" : "EMail",
-      "name" : "Send inform email",
-      "visual" : {
-        "at" : { "x" : 1720, "y" : 1112 }
-      },
-      "connect" : [
-        { "id" : "f120", "to" : "f143", "via" : [ { "x" : 1808, "y" : 1112 } ], "color" : "default" }
-      ]
-    }, {
-      "id" : "f126",
-      "type" : "Script",
-      "name" : "Prepare field explanations",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.ai.dto.ivy.TaskInfo;",
-            "import com.axonivy.utils.ai.dto.ai.FieldExplanation;",
-            "import java.util.Arrays;",
-            "",
-            "in.taskInfo = new TaskInfo();",
-            "",
-            "in.fieldExplanations.addAll(Arrays.asList(",
-            "  new FieldExplanation(\"name\", \"Name of the Axon ivy task.\"),",
-            "  new FieldExplanation(\"description\", \"Description of the task\"),",
-            "  new FieldExplanation(\"responsible\", \"Responsible of the task\"),",
-            "  new FieldExplanation(\"customFields\", \"Custom fields for the task. Each custom field is a pair of key-value. This field is an Map<String, String> in Java\")",
-            "));"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 904, "y" : 1112 }
-      },
-      "connect" : [
-        { "id" : "f127", "to" : "f136", "color" : "default" }
-      ]
-    }, {
-      "id" : "f128",
-      "type" : "SubProcessCall",
-      "name" : "Use AI to create task info",
-      "config" : {
-        "processCall" : "AiTool/ObjectMapping:AiObjectMapping(String,Object,List<com.axonivy.utils.ai.dto.ai.AiExample>,List<String>,com.axonivy.utils.ai.connector.AbstractAiServiceConnector,List<com.axonivy.utils.ai.dto.ai.FieldExplanation>)",
-        "call" : {
-          "map" : {
-            "param.query" : "in.query",
-            "param.targetObject" : "in.taskInfo",
-            "param.customInstructions" : "in.customInstructions",
-            "param.connector" : "in.connector"
-          }
-        },
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.ai.dto.ivy.TaskInfo;",
-            "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
-            "",
-            "String taskInfoStr = BusinessEntityConverter.entityToJsonValue(result.result);",
-            "in.taskInfo = BusinessEntityConverter.jsonValueToEntity(taskInfoStr, TaskInfo.class) as TaskInfo;"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 1224, "y" : 1112 }
-      },
-      "connect" : [
-        { "id" : "f130", "to" : "f146" }
-      ]
-    }, {
-      "id" : "f136",
-      "type" : "Script",
-      "name" : "Set custom instructions",
-      "config" : {
-        "output" : {
-          "code" : [
-            "in.customInstructions.add(\"Task name should be in format: <user name> requested a leave request from <from date> to <to date>\");",
-            "in.customInstructions.add(\"Description should be: This request is approved by Axon Ivy AI\");"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 1064, "y" : 1112 }
-      },
-      "connect" : [
-        { "id" : "f137", "to" : "f128", "color" : "default" }
-      ]
-    }, {
-      "id" : "f138",
-      "type" : "Script",
-      "name" : "prepare options",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.ai.dto.ai.AiOption;",
-            "",
-            "AiOption approve = new AiOption(\"approve\", \"The support ticket related to asking for day off, absent, leave request\");",
-            "AiOption reject = new AiOption(\"reject\", \"The support ticket related to personal information update\");",
-            "",
-            "in.options.clear();",
-            "in.options.add(approve);",
-            "in.options.add(reject);"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 584, "y" : 1016 },
-        "size" : { "height" : 63 }
-      },
-      "connect" : [
-        { "id" : "f139", "to" : "f99", "color" : "default" }
-      ]
     }, {
       "id" : "f140",
       "type" : "CallSubEnd",
@@ -1053,22 +884,11 @@
       "name" : "Prepare result",
       "config" : {
         "output" : {
-          "code" : [
-            "import com.axonivy.utils.ai.dto.IvyToolParameter;",
-            "import com.axonivy.utils.ai.enums.AiVariableState;",
-            "import com.axonivy.utils.ai.dto.ai.AiVariable;",
-            "",
-            "in.aiVariable = new AiVariable();",
-            "in.aiVariable.setParameter(new IvyToolParameter());",
-            "in.aiVariable.getParameter().setClassName(\"String\");",
-            "in.aiVariable.getParameter().setValue(\"Task is created successfully\");",
-            "in.aiVariable.getParameter().setName(\"taskResult\");",
-            "in.aiVariable.state = AiVariableState.SUCCESS;"
-          ]
+          "code" : "in.aiResult = \"Task is created successfully. The HR ticket will be proceed by another employee, you don't need to care about it. The request of user is handled correctly.\";"
         }
       },
       "visual" : {
-        "at" : { "x" : 1936, "y" : 1224 }
+        "at" : { "x" : 1776, "y" : 1032 }
       },
       "connect" : [
         { "id" : "f145", "to" : "f115", "color" : "default" }
@@ -1077,7 +897,7 @@
       "id" : "f143",
       "type" : "Alternative",
       "visual" : {
-        "at" : { "x" : 1808, "y" : 1224 }
+        "at" : { "x" : 1648, "y" : 1032 }
       },
       "connect" : [
         { "id" : "f144", "to" : "f142", "color" : "default" }
@@ -1092,25 +912,453 @@
             "in.secondTaskInfo.customFields = in.taskInfo.customFields;",
             "in.secondTaskInfo.name = in.taskInfo.name;",
             "in.secondTaskInfo.description = in.taskInfo.description;",
-            "in.secondTaskInfo.responsible = in.taskInfo.responsible;"
+            "in.secondTaskInfo.responsible = in.taskInfo.responsible;",
+            "in.secondTaskInfo.customFields = in.taskInfo.customFields;"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 1384, "y" : 1112 }
+        "at" : { "x" : 1192, "y" : 920 }
       },
       "connect" : [
-        { "id" : "f147", "to" : "f98", "color" : "default" }
+        { "id" : "f147", "to" : "f152", "color" : "default" }
       ]
     }, {
       "id" : "f148",
       "type" : "Script",
       "name" : "Save to database",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.SupportTicketService;",
+            "",
+            "Date today =  new Date();",
+            "in.supportTicket.requestedDate = today.toString();",
+            "SupportTicketService.getInstance().save(in.supportTicket);"
+          ]
+        }
+      },
       "visual" : {
         "at" : { "x" : 544, "y" : 656 }
       },
       "connect" : [
-        { "id" : "f149", "to" : "f62", "color" : "default" }
+        { "id" : "f149", "to" : "f167", "color" : "default" }
+      ]
+    }, {
+      "id" : "f152",
+      "type" : "Script",
+      "name" : "Update task responsibles",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.taskInfo.responsible = in.supportTicket.firstApprover;",
+            "in.secondTaskInfo.responsible = in.supportTicket.secondApprover;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 920 }
+      },
+      "connect" : [
+        { "id" : "f153", "to" : "f98", "color" : "default" }
+      ]
+    }, {
+      "id" : "S3",
+      "type" : "EmbeddedProcess",
+      "name" : "Use AI: request approval",
+      "elements" : [ {
+          "id" : "S3-g0",
+          "type" : "EmbeddedStart",
+          "name" : "in",
+          "visual" : {
+            "at" : { "x" : 16, "y" : 176 }
+          },
+          "parentConnector" : "f107",
+          "connect" : [
+            { "id" : "S3-f10", "to" : "S3-f2", "label" : {
+                "name" : "leave request",
+                "offset" : { "x" : -1, "y" : 14 }
+              } }
+          ]
+        }, {
+          "id" : "S3-g1",
+          "type" : "EmbeddedEnd",
+          "name" : "out",
+          "visual" : {
+            "at" : { "x" : 944, "y" : 176 }
+          },
+          "parentConnector" : "f161"
+        }, {
+          "id" : "S3-f2",
+          "type" : "Script",
+          "name" : "Prepare query before send to AI",
+          "config" : {
+            "output" : {
+              "code" : [
+                "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.EmployeeService;",
+                "import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Employee;",
+                "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
+                "",
+                "Employee requestor = EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername);",
+                "",
+                "in.query = \"Employee remaining day: \" + requestor.getRemainingDays()",
+                "  + System.lineSeparator()",
+                "  + \"The request: \"",
+                "  + System.lineSeparator() + in.supportTicket.description;"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 208, "y" : 176 }
+          },
+          "connect" : [
+            { "id" : "S3-f3", "to" : "S3-f4" }
+          ]
+        }, {
+          "id" : "S3-f4",
+          "type" : "Script",
+          "name" : "Prepare field explanations",
+          "config" : {
+            "output" : {
+              "code" : [
+                "import com.axonivy.utils.ai.dto.ai.FieldExplanation;",
+                "import java.util.Arrays;",
+                "",
+                "in.fieldExplanations.addAll(Arrays.asList(",
+                "  new FieldExplanation(\"reason\", \"the reason why you choose the decision. This field should be plain text.\"),",
+                "  new FieldExplanation(\"decision\", \"your decision. This is an enum field, therefore it only accepts one of 3 values: APPROVE, REJECT, WARNING.\")",
+                "));"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 392, "y" : 176 }
+          },
+          "connect" : [
+            { "id" : "S3-f5", "to" : "S3-f6" }
+          ]
+        }, {
+          "id" : "S3-f6",
+          "type" : "Script",
+          "name" : "Set custom instructions",
+          "config" : {
+            "output" : {
+              "code" : [
+                "in.customInstructions.clear();",
+                "",
+                "in.customInstructions.add(\"Analyse the provided data, make decision.\");",
+                "in.customInstructions.add(\"Set field 'decision' = APPROVE when you think that the request is reasonable, no reason to deny.\");",
+                "in.customInstructions.add(\"set field 'decision' = REJECT when you think that the request is unreasonable, it should be rejected.\");"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 592, "y" : 176 }
+          },
+          "connect" : [
+            { "id" : "S3-f7", "to" : "S3-f8" }
+          ]
+        }, {
+          "id" : "S3-f8",
+          "type" : "SubProcessCall",
+          "name" : "Use AI to approve",
+          "config" : {
+            "processCall" : "AiTool/ObjectMapping:AiObjectMapping(String,Object,List<com.axonivy.utils.ai.dto.ai.AiExample>,List<String>,com.axonivy.utils.ai.connector.AbstractAiServiceConnector,List<com.axonivy.utils.ai.dto.ai.FieldExplanation>)",
+            "call" : {
+              "map" : {
+                "param.query" : "in.query + System.lineSeparator() + \"username : \" + in.employeeUsername;",
+                "param.targetObject" : "in.aiApproval",
+                "param.customInstructions" : "in.customInstructions",
+                "param.connector" : "in.connector",
+                "param.fieldExplanations" : "in.fieldExplanations"
+              }
+            },
+            "output" : {
+              "code" : [
+                "import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.AiApprovalDecision;",
+                "import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket;",
+                "",
+                "in.aiApproval = result.result as AiApprovalDecision;",
+                "in.supportTicket.aiApproval = in.aiApproval;",
+                "in.aiApprovalStr = in.supportTicket.aiApproval.decision.name();"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 792, "y" : 176 }
+          },
+          "connect" : [
+            { "id" : "S3-f9", "to" : "S3-g1" }
+          ]
+        } ],
+      "visual" : {
+        "at" : { "x" : 584, "y" : 920 }
+      },
+      "connect" : [
+        { "id" : "f161", "to" : "f163" }
+      ]
+    }, {
+      "id" : "S4",
+      "type" : "EmbeddedProcess",
+      "name" : "Use AI: Create task info",
+      "elements" : [ {
+          "id" : "S4-g0",
+          "type" : "EmbeddedStart",
+          "name" : "in",
+          "visual" : {
+            "at" : { "x" : 109, "y" : 62 }
+          },
+          "parentConnector" : "f129",
+          "connect" : [
+            { "id" : "S4-f9", "to" : "S4-f2", "label" : {
+                "name" : "approve",
+                "offset" : { "x" : -3, "y" : 14 }
+              } }
+          ]
+        }, {
+          "id" : "S4-g1",
+          "type" : "EmbeddedEnd",
+          "name" : "out",
+          "visual" : {
+            "at" : { "x" : 837, "y" : 62 }
+          },
+          "parentConnector" : "f162"
+        }, {
+          "id" : "S4-f2",
+          "type" : "Script",
+          "name" : "Prepare field explanations",
+          "config" : {
+            "output" : {
+              "code" : [
+                "import com.axonivy.utils.ai.dto.ivy.TaskInfo;",
+                "import com.axonivy.utils.ai.dto.ai.FieldExplanation;",
+                "import java.util.Arrays;",
+                "",
+                "in.taskInfo = new TaskInfo();",
+                "in.fieldExplanations.clear();",
+                "",
+                "in.fieldExplanations.addAll(Arrays.asList(",
+                "  new FieldExplanation(\"name\", \"Name of the Axon ivy task.\"),",
+                "  new FieldExplanation(\"description\", \"Description of the task\"),",
+                "  new FieldExplanation(\"responsible\", \"Responsible of the task\"),",
+                "  new FieldExplanation(\"customFields\", \"Custom fields for the task. Each custom field is a pair of key-value. This field is an Map<String, String> in Java\")",
+                "));"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 253, "y" : 62 }
+          },
+          "connect" : [
+            { "id" : "S4-f3", "to" : "S4-f6", "color" : "default" }
+          ]
+        }, {
+          "id" : "S4-f4",
+          "type" : "SubProcessCall",
+          "name" : "Use AI to create task info",
+          "config" : {
+            "processCall" : "AiTool/ObjectMapping:AiObjectMapping(String,Object,List<com.axonivy.utils.ai.dto.ai.AiExample>,List<String>,com.axonivy.utils.ai.connector.AbstractAiServiceConnector,List<com.axonivy.utils.ai.dto.ai.FieldExplanation>)",
+            "call" : {
+              "map" : {
+                "param.query" : "in.query",
+                "param.targetObject" : "in.taskInfo",
+                "param.customInstructions" : "in.customInstructions",
+                "param.connector" : "in.connector"
+              }
+            },
+            "output" : {
+              "code" : [
+                "import com.axonivy.utils.ai.dto.ivy.TaskInfo;",
+                "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
+                "",
+                "String taskInfoStr = BusinessEntityConverter.entityToJsonValue(result.result);",
+                "in.taskInfo = BusinessEntityConverter.jsonValueToEntity(taskInfoStr, TaskInfo.class) as TaskInfo;"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 573, "y" : 62 }
+          },
+          "connect" : [
+            { "id" : "S4-f5", "to" : "S4-S0" }
+          ]
+        }, {
+          "id" : "S4-f6",
+          "type" : "Script",
+          "name" : "Set custom instructions",
+          "config" : {
+            "output" : {
+              "code" : [
+                "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.EmployeeService;",
+                "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
+                "",
+                "in.customInstructions.clear();",
+                "",
+                "in.customInstructions.add(\"Task name should be in format: <user name> requested a leave request from <from date> to <to date>\");",
+                "in.customInstructions.add(\"from date and to date should be calculated based on content of the request\");",
+                "in.customInstructions.add(\"Date format should be follow this locale: \" + ivy.session.formattingLocale.getDisplayCountry());",
+                "in.customInstructions.add(\"Description should be: This request is approved by Axon Ivy AI\");",
+                "",
+                "",
+                "in.query = \"Support ticket:\" + System.lineSeparator()",
+                "  + BusinessEntityConverter.entityToJsonValue(in.supportTicket)",
+                "  + System.lineSeparator()",
+                "  + \"Requestor:\" + System.lineSeparator()",
+                "  + BusinessEntityConverter.entityToJsonValue(EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername));"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 413, "y" : 62 }
+          },
+          "connect" : [
+            { "id" : "S4-f7", "to" : "S4-f4", "color" : "default" }
+          ]
+        }, {
+          "id" : "S4-S0",
+          "type" : "EmbeddedProcess",
+          "name" : "Update custom field",
+          "elements" : [ {
+              "id" : "S4-S0-g0",
+              "type" : "EmbeddedStart",
+              "name" : "in",
+              "visual" : {
+                "at" : { "x" : 109, "y" : 62 }
+              },
+              "parentConnector" : "S4-f5",
+              "connect" : [
+                { "id" : "S4-S0-f6", "to" : "S4-S0-f2" }
+              ]
+            }, {
+              "id" : "S4-S0-g1",
+              "type" : "EmbeddedEnd",
+              "name" : "out",
+              "visual" : {
+                "at" : { "x" : 616, "y" : 64 }
+              },
+              "parentConnector" : "S4-f8"
+            }, {
+              "id" : "S4-S0-f2",
+              "type" : "Script",
+              "name" : "Set custom instructions",
+              "config" : {
+                "output" : {
+                  "code" : [
+                    "in.customInstructions.clear();",
+                    "",
+                    "in.customInstructions.add(\"Only focus on adding custom fields\");",
+                    "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");"
+                  ]
+                }
+              },
+              "visual" : {
+                "at" : { "x" : 272, "y" : 64 }
+              },
+              "connect" : [
+                { "id" : "S4-S0-f3", "to" : "S4-S0-f4" }
+              ]
+            }, {
+              "id" : "S4-S0-f4",
+              "type" : "SubProcessCall",
+              "name" : "Use AI to update task info",
+              "config" : {
+                "processCall" : "AiTool/ObjectMapping:AiObjectMapping(String,Object,List<com.axonivy.utils.ai.dto.ai.AiExample>,List<String>,com.axonivy.utils.ai.connector.AbstractAiServiceConnector,List<com.axonivy.utils.ai.dto.ai.FieldExplanation>)",
+                "call" : {
+                  "map" : {
+                    "param.query" : "in.query",
+                    "param.targetObject" : "in.taskInfo",
+                    "param.customInstructions" : "in.customInstructions",
+                    "param.connector" : "in.connector"
+                  }
+                },
+                "output" : {
+                  "code" : [
+                    "import com.axonivy.utils.ai.dto.ivy.TaskInfo;",
+                    "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
+                    "",
+                    "String taskInfoStr = BusinessEntityConverter.entityToJsonValue(result.result);",
+                    "in.taskInfo = BusinessEntityConverter.jsonValueToEntity(taskInfoStr, TaskInfo.class) as TaskInfo;"
+                  ]
+                }
+              },
+              "visual" : {
+                "at" : { "x" : 456, "y" : 64 }
+              },
+              "connect" : [
+                { "id" : "S4-S0-f5", "to" : "S4-S0-g1" }
+              ]
+            } ],
+          "visual" : {
+            "at" : { "x" : 733, "y" : 62 }
+          },
+          "connect" : [
+            { "id" : "S4-f8", "to" : "S4-g1", "color" : "default" }
+          ]
+        } ],
+      "visual" : {
+        "at" : { "x" : 1032, "y" : 920 }
+      },
+      "connect" : [
+        { "id" : "f162", "to" : "f146" }
+      ]
+    }, {
+      "id" : "f163",
+      "type" : "Script",
+      "name" : "Save Support Ticket to DB",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.SupportTicketService;",
+            "SupportTicketService.getInstance().save(in.supportTicket);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 920 }
+      },
+      "connect" : [
+        { "id" : "f164", "to" : "f103", "color" : "default" }
+      ]
+    }, {
+      "id" : "f165",
+      "type" : "Script",
+      "name" : "Prepare result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.dto.IvyToolParameter;",
+            "import com.axonivy.utils.ai.enums.AiVariableState;",
+            "import com.axonivy.utils.ai.dto.ai.AiVariable;",
+            "",
+            "in.aiResult = \"The support ticket is created\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1288, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f166", "to" : "f9", "color" : "default" }
+      ]
+    }, {
+      "id" : "f167",
+      "type" : "Script",
+      "name" : "Prepare result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.dto.IvyToolParameter;",
+            "import com.axonivy.utils.ai.enums.AiVariableState;",
+            "import com.axonivy.utils.ai.dto.ai.AiVariable;",
+            "in.aiResult = \"Assigned approvers for the support ticket\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 720, "y" : 656 }
+      },
+      "connect" : [
+        { "id" : "f168", "to" : "f62", "color" : "default" }
       ]
     } ]
 }
