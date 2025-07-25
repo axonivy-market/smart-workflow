@@ -5,11 +5,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
-import com.axonivy.utils.ai.enums.AiVariableState;
+import com.axonivy.utils.ai.enums.ExecutionStatus;
 import com.axonivy.utils.ai.enums.InstructionType;
+import com.axonivy.utils.ai.enums.log.LogLevel;
+import com.axonivy.utils.ai.enums.log.LogPhase;
 import com.axonivy.utils.ai.function.DataMapping;
 import com.axonivy.utils.ai.function.Planning;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
@@ -21,6 +26,8 @@ public class IvyAgent extends BaseAgent {
 
   // IvyAgent-specific field
   protected String goal;                           // Agent's primary objective (required for IvyAgent)
+
+  private List<AiVariable> missingInputs; // Missing inputs
 
   private static final String EXECUTION_PROMPT_TEMPLATE = """
       GOAL: {{goal}}
@@ -55,8 +62,7 @@ public class IvyAgent extends BaseAgent {
       Final Reasoning: [Why the goal has been achieved]
       """;
 
-  // Ordered list of steps that define the agent's behavior or process
-  private List<AiStep> steps;
+
 
   public IvyAgent() {
     super();
@@ -106,15 +112,10 @@ public class IvyAgent extends BaseAgent {
    * @param query The user input query.
    */
   @Override
-  public void start(String query) {
-    this.originalQuery = query;
-    this.observationHistory = new ArrayList<>();
-
-    // Process input query - handle JSON or plain text
-    processInputQuery(query);
+  public ExecutionStatus start(AgentExecution execution) {
 
     // Generate high-level plan from query using the planning AI model
-    String enhancedPlanningPrompt = buildPlanningPrompt(query);
+    String enhancedPlanningPrompt = buildPlanningPrompt(execution.getOriginalQuery());
     Planning.Builder planningBuilder = Planning.getBuilder()
         .addTools(tools)
         .useService(planningModel)
@@ -128,9 +129,10 @@ public class IvyAgent extends BaseAgent {
     
     Planning planning = planningBuilder.build();
     String crudePlan = planning.execute().getSafeValue();
+    execution.getLogger().log(LogLevel.PLANNING, LogPhase.INIT, crudePlan, planning.getPrompt(), 0);
 
     // Map plan content to a list of AiSteps using execution AI model
-    String stepString = DataMapping.getBuilder().useService(executionModel).withObject(new AiStep())
+    DataMapping dataMapper = DataMapping.getBuilder().useService(executionModel).withObject(new AiStep())
         .addFieldExplanations(Arrays.asList(new FieldExplanation("stepNo", "Incremental integer, starts at 1"),
             new FieldExplanation("name", "Name of the step"), new FieldExplanation("analysis", "Analysis of the step"),
             new FieldExplanation("toolId", "Tool ID to execute the step"),
@@ -138,66 +140,65 @@ public class IvyAgent extends BaseAgent {
             new FieldExplanation("previous", "ID of the previous step, 0 if initial"),
             new FieldExplanation("resultName", "Expected result name"),
             new FieldExplanation("resultDescription", "Expected result description")))
-        .withQuery(crudePlan).asList(true).build().execute().getSafeValue();
+        .withQuery(crudePlan).asList(true).build();
+    String stepString = dataMapper.execute().getSafeValue();
 
     List<AiStep> plannedSteps = BusinessEntityConverter.jsonValueToEntities(stepString, AiStep.class);
+    execution.getLogger().log(LogLevel.PLANNING, LogPhase.RUNNING,
+        BusinessEntityConverter.entityToJsonValue(plannedSteps), dataMapper.getPrompt(), 0);
 
     // Assign each step to a corresponding worker agent by runnerId
-    steps = new ArrayList<>();
     for (AiStep step : plannedSteps) {
 
       var tool = tools.stream().filter(w -> w.getId().equals(step.getToolId())).findFirst()
           .orElseThrow(() -> new IllegalArgumentException("Tool not found for ID: " + step.getToolId()));
       step.useTool(tool);
-      steps.add(step);
+      execution.getSteps().add(step);
     }
 
-    execute();
+    execute(execution);
+
+    if (CollectionUtils.isNotEmpty(missingInputs)) {
+      return ExecutionStatus.PENDING;
+    }
+    return ExecutionStatus.DONE;
   }
 
   /**
    * Executes the assigned plan with adaptive ReAct reasoning between steps.
    */
   @Override
-  public void execute() {
-    if (getVariables() == null) {
-      setVariables(new ArrayList<>());
-    }
-
-    historyLog = new com.axonivy.utils.ai.history.HistoryLog();
-
-    // Log input variables with goal information
-    String inputVariablesStr = "Start running adaptive managing agent";
-    if (goal != null && !goal.isEmpty()) {
-      inputVariablesStr += " with goal: " + goal;
-    }
-    if (!getVariables().isEmpty()) {
-      inputVariablesStr += "\nInputs\n-----------------\n" + BusinessEntityConverter.entityToJsonValue(getVariables());
-    }
-    historyLog.addSystemMessage(inputVariablesStr, AiStep.INITIAL_STEP);
-
+  public void execute(AgentExecution execution) {
     int runningStepNo = AiStep.INITIAL_STEP;
     boolean inProgress = true;
     int iterationCount = 0;
 
     while (inProgress && iterationCount < maxIterations) {
       iterationCount++;
-      AiStep runningStep = getStepByNumber(runningStepNo);
+      AiStep runningStep = getStepByNumber(runningStepNo, execution);
       if (runningStep == null) {
         Ivy.log().info("No step found for stepNo: " + runningStepNo);
         break;
       }
 
       // Execute the step using execution connector
-      List<AiVariable> aiResults = runningStep.run(getVariables(), executionModel);
+      List<AiVariable> aiResults = runningStep.run(execution.getVariables(), executionModel, execution.getLogger(),
+          iterationCount);
+
+      // Handle missing parameters when running a step
+      if (CollectionUtils.isNotEmpty(runningStep.getTool().getMissingParameters())) {
+        this.missingInputs = runningStep.getTool().getMissingParameters();
+        Ivy.log().info(
+            String.format("Missing parameters when running step %d, tool %s", runningStepNo, runningStep.getToolId()));
+        return;
+      }
 
       // Update step results into current variable list
       if (aiResults != null) {
         for (AiVariable stepResult : aiResults) {
           // If the variable list has variable with same name, update value of the
           // existing variable
-          Optional<AiVariable> matchedVariable = variables.stream()
-              .filter(current -> current.getState() != AiVariableState.ERROR)
+          Optional<AiVariable> matchedVariable = execution.getVariables().stream()
               .filter(current -> current.getParameter().getName().equals(stepResult.getParameter().getName()))
               .findFirst();
           if (matchedVariable.isPresent()) {
@@ -206,21 +207,27 @@ public class IvyAgent extends BaseAgent {
           }
 
           // Otherwise add the variable to the variable list
-          getVariables().add(stepResult);
+          execution.getVariables().add(stepResult);
         }
-
-
-        // Log step result
-        historyLog.addSystemMessage(BusinessEntityConverter.entityToJsonValue(aiResults), runningStep.getStepNo());
       }
 
       // Perform ReAct-style observation and reasoning
-      String latestResult = aiResults != null ? BusinessEntityConverter.entityToJsonValue(aiResults) : "No result";
 
-      ReActDecision decision = performReActReasoning(latestResult, runningStep);
+      // Use tool's AI result string
+      // If there is not AI result string, use the JSON presentation of result
+      // variables instead
+      String latestResult = "No result";
+      if (StringUtils.isNotBlank(runningStep.getTool().getAiResult())) {
+        latestResult = runningStep.getTool().getAiResult();
+      } else if (aiResults != null) {
+        latestResult = BusinessEntityConverter.entityToJsonValue(aiResults);
+      }
+
+      ReActDecision decision = performReActReasoning(latestResult, runningStep, execution, iterationCount);
 
       // Add observation to history
-      observationHistory
+
+      execution.getObservationHistory()
           .add(String.format("Step %d: %s -> %s", runningStep.getStepNo(), runningStep.getName(), latestResult));
 
       // Act on the ReAct decision
@@ -228,13 +235,15 @@ public class IvyAgent extends BaseAgent {
         // Goal achieved, finish execution
         inProgress = false;
         Ivy.log().info("ReAct reasoning determined goal is achieved: " + decision.getReasoning());
-        historyLog.addSystemMessage("Execution completed by ReAct reasoning: " + decision.getReasoning(),
-            runningStep.getStepNo());
+        execution.getLogger().logAdaptivePlan(LogPhase.COMPLETE,
+            "Execution completed by ReAct reasoning:" + System.lineSeparator() + decision.toPrettyString(),
+            decision.getDecisionContext(), runningStepNo, iterationCount, runningStep.getToolId());
       } else if (decision.shouldUpdatePlan()) {
         // Update plan based on reasoning
-        runningStepNo = adaptPlanBasedOnReasoning(decision, runningStep);
-        historyLog.addSystemMessage("Plan adapted by ReAct reasoning: " + decision.getReasoning(),
-            runningStep.getStepNo());
+        runningStepNo = adaptPlanBasedOnReasoning(decision, runningStep, execution);
+        execution.getLogger().logAdaptivePlan(LogPhase.RUNNING,
+            "Plan adapted by ReAct reasoning:" + System.lineSeparator() + decision.toPrettyString(),
+            decision.getDecisionContext(), runningStepNo, iterationCount, runningStep.getToolId());
       } else {
         // Continue with original plan
         runningStepNo = runningStep.getNext();
@@ -250,36 +259,43 @@ public class IvyAgent extends BaseAgent {
 
     if (iterationCount >= maxIterations) {
       Ivy.log().info("Maximum iterations (" + maxIterations + ") reached in adaptive execution");
-      historyLog.addSystemMessage("Maximum iterations (" + maxIterations + ") reached", iterationCount);
+      execution.getLogger().log(LogLevel.STEP, LogPhase.ERROR, "Maximum iterations (" + maxIterations + ") reached",
+          StringUtils.EMPTY, iterationCount);
     }
   }
 
   /**
    * Performs ReAct-style reasoning about the latest step result with execution instructions
    */
-  private ReActDecision performReActReasoning(String latestResult, AiStep currentStep) {
+  private ReActDecision performReActReasoning(String latestResult, AiStep currentStep, AgentExecution execution,
+      int iterationCount) {
     try {
       // Build enhanced reasoning prompt with execution instructions
-      String enhancedReasoningPrompt = buildExecutionReasoningPrompt(latestResult, currentStep);
+      String enhancedReasoningPrompt = buildExecutionReasoningPrompt(latestResult, currentStep, execution);
       
       // Get AI reasoning using execution connector
       String aiResponse = executionModel.generate(enhancedReasoningPrompt);
 
       // Parse the response
-      return ReActDecision.parseReActDecision(aiResponse);
+      ReActDecision decision = ReActDecision.parseReActDecision(aiResponse);
+
+      // Set decision context
+      decision.setDecisionContext(enhancedReasoningPrompt);
+      return decision;
 
     } catch (Exception e) {
-      Ivy.log().info("Error in ReAct reasoning: " + e.getMessage());
-      historyLog.addSystemMessage("Error in ReAct reasoning: " + e.getMessage(), currentStep.getStepNo());
+      execution.getLogger().log(LogLevel.PLANNING, LogPhase.ERROR, "Error in ReAct reasoning: " + e.getMessage(),
+          StringUtils.EMPTY, iterationCount);
       // Default to continuing with original plan
-      return new ReActDecision(false, false, "Error in reasoning, continuing with plan", "", "");
+      return new ReActDecision(false, false, "Error in reasoning, continuing with plan", StringUtils.EMPTY,
+          StringUtils.EMPTY);
     }
   }
 
   /**
    * Builds enhanced reasoning prompt with execution instructions
    */
-  private String buildExecutionReasoningPrompt(String latestResult, AiStep currentStep) {
+  private String buildExecutionReasoningPrompt(String latestResult, AiStep currentStep, AgentExecution execution) {
     // Prepare execution instructions section
     List<String> executionInstructions = getInstructions(InstructionType.EXECUTION, currentStep);
     String executionInstructionsText = "";
@@ -297,10 +313,10 @@ public class IvyAgent extends BaseAgent {
     java.util.Map<String, Object> params = new java.util.HashMap<>();
     params.put("goal", goal != null ? goal : "Complete the user request");
     params.put("executionInstructions", executionInstructionsText);
-    params.put("originalQuery", originalQuery);
+    params.put("originalQuery", execution.getOriginalQuery());
     params.put("currentStepName", currentStep.getName());
     params.put("latestResult", latestResult);
-    params.put("observationHistory", String.join("\n", observationHistory));
+    params.put("observationHistory", String.join(System.lineSeparator(), execution.getObservationHistory()));
     params.put("availableTools", buildAvailableToolsDescription());
 
     return PromptTemplate.from(EXECUTION_PROMPT_TEMPLATE).apply(params).text();
@@ -309,7 +325,7 @@ public class IvyAgent extends BaseAgent {
   /**
    * Adapts the execution plan based on ReAct reasoning
    */
-  private int adaptPlanBasedOnReasoning(ReActDecision decision, AiStep currentStep) {
+  private int adaptPlanBasedOnReasoning(ReActDecision decision, AiStep currentStep, AgentExecution execution) {
     try {
       // Find the agent specified in the decision
       String targetToolId = decision.getAgentSelection().trim();
@@ -318,30 +334,29 @@ public class IvyAgent extends BaseAgent {
       if (targetTool != null) {
         // Check if we should modify the next step or create a new one
         int nextStepNo = currentStep.getNext();
-        AiStep nextStep = getStepByNumber(nextStepNo);
+        AiStep nextStep = getStepByNumber(nextStepNo, execution);
 
         if (nextStep != null && nextStepNo != AiStep.FINALIZE_STEP) {
           // Update the existing next step instead of creating a new one
           nextStep.setName("Adapted: " + decision.getNextAction());
           nextStep.setAnalysis("Dynamically adapted based on ReAct reasoning: " + decision.getReasoning());
           nextStep.useTool(targetTool);
-          nextStep.setToolId(targetToolId);
 
           // Remove any subsequent steps that are no longer valid due to plan change
-          removeInvalidSubsequentSteps(nextStep);
+          removeInvalidSubsequentSteps(nextStep, execution);
 
           Ivy.log().info("Adapted existing step " + nextStep.getStepNo() + " to use tool: " + targetToolId);
           return nextStep.getStepNo();
 
         } else {
           // Create a new adaptive step when no next step exists or we're at the end
-          AiStep adaptiveStep = createAdaptiveStep(decision, currentStep, targetTool, targetToolId);
+          AiStep adaptiveStep = createAdaptiveStep(decision, currentStep, targetTool, targetToolId, execution);
 
           // Update the current step to point to our new adaptive step
           currentStep.setNext(adaptiveStep.getStepNo());
 
           // Add the adaptive step to our steps list
-          steps.add(adaptiveStep);
+          execution.getSteps().add(adaptiveStep);
 
           Ivy.log().info("Created new adaptive step " + adaptiveStep.getStepNo() + " with tool: " + targetToolId);
           return adaptiveStep.getStepNo();
@@ -362,28 +377,27 @@ public class IvyAgent extends BaseAgent {
    * Creates a new adaptive step
    */
   private AiStep createAdaptiveStep(ReActDecision decision, AiStep currentStep, IvyTool targetTool,
-      String targetToolId) {
+      String targetToolId, AgentExecution execution) {
     AiStep adaptiveStep = new AiStep();
-    adaptiveStep.setStepNo(getNextAvailableStepNumber());
+    adaptiveStep.setStepNo(getNextAvailableStepNumber(execution));
     adaptiveStep.setName("Adaptive: " + decision.getNextAction());
     adaptiveStep.setAnalysis("Dynamically created based on ReAct reasoning: " + decision.getReasoning());
     adaptiveStep.setPrevious(currentStep.getStepNo());
     adaptiveStep.setNext(AiStep.FINALIZE_STEP); // Default to final, can be changed by further reasoning
     adaptiveStep.useTool(targetTool);
-    adaptiveStep.setToolId(targetToolId);
     return adaptiveStep;
   }
 
   /**
    * Removes subsequent steps that are no longer valid after a plan adaptation
    */
-  private void removeInvalidSubsequentSteps(AiStep adaptedStep) {
+  private void removeInvalidSubsequentSteps(AiStep adaptedStep, AgentExecution execution) {
     List<AiStep> stepsToRemove = new ArrayList<>();
     int currentNext = adaptedStep.getNext();
 
     // Find all steps that come after the adapted step
     while (currentNext != AiStep.FINALIZE_STEP) {
-      AiStep stepToCheck = getStepByNumber(currentNext);
+      AiStep stepToCheck = getStepByNumber(currentNext, execution);
       if (stepToCheck != null) {
         stepsToRemove.add(stepToCheck);
         currentNext = stepToCheck.getNext();
@@ -394,7 +408,7 @@ public class IvyAgent extends BaseAgent {
 
     // Remove invalid subsequent steps
     if (!stepsToRemove.isEmpty()) {
-      steps.removeAll(stepsToRemove);
+      execution.getSteps().removeAll(stepsToRemove);
       adaptedStep.setNext(AiStep.FINALIZE_STEP); // Point adapted step to finalize
       Ivy.log().info("Removed " + stepsToRemove.size() + " subsequent steps due to plan adaptation");
     }
@@ -403,29 +417,20 @@ public class IvyAgent extends BaseAgent {
   /**
    * Gets the next available step number to avoid conflicts
    */
-  private int getNextAvailableStepNumber() {
-    int maxStepNo = steps.stream().mapToInt(AiStep::getStepNo).max().orElse(0);
+  private int getNextAvailableStepNumber(AgentExecution execution) {
+    int maxStepNo = execution.getSteps().stream().mapToInt(AiStep::getStepNo).max().orElse(0);
     return maxStepNo + 1;
   }
 
   /**
    * Retrieves the step by its number.
-   *
-   * @param stepNo the step number to find
+   * 
    * @return the matching AiStep or null
    */
-  private AiStep getStepByNumber(int stepNo) {
-    return steps.stream().filter(
+  private AiStep getStepByNumber(int stepNo, AgentExecution execution) {
+    return execution.getSteps().stream().filter(
         step -> stepNo == AiStep.INITIAL_STEP ? step.getPrevious() == AiStep.INITIAL_STEP : step.getStepNo() == stepNo)
         .findFirst().orElse(null);
-  }
-
-  public List<AiStep> getSteps() {
-    return steps;
-  }
-
-  public void setSteps(List<AiStep> steps) {
-    this.steps = steps;
   }
 
   public String getGoal() {

@@ -3,7 +3,6 @@ package com.axonivy.utils.ai.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,13 +13,12 @@ import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.Instruction;
 import com.axonivy.utils.ai.dto.ai.configuration.AgentModel;
+import com.axonivy.utils.ai.enums.ExecutionStatus;
 import com.axonivy.utils.ai.enums.InstructionType;
-import com.axonivy.utils.ai.history.HistoryLog;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
+import com.axonivy.utils.ai.utils.IdGenerationUtils;
 import com.axonivy.utils.ai.utils.IvyVariableUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -43,9 +41,6 @@ public abstract class BaseAgent {
   // Description or intended usage of the agent
   protected String usage;
 
-  // List of variables used or produced by the agent
-  protected List<AiVariable> variables;
-
   // Enhanced Configuration Fields
   protected int maxIterations = DEFAULT_MAX_ITERATIONS; // Configurable iteration limit
   protected AbstractAiServiceConnector DEFAULT_CONNECTOR = OpenAiServiceConnector.getTinyBrain();
@@ -57,14 +52,6 @@ public abstract class BaseAgent {
   // Instruction System
   protected List<Instruction> instructions;                 // Planning and execution instructions
 
-  // Execution history log (not serialized to JSON)
-  @JsonIgnore
-  protected HistoryLog historyLog;
-
-  protected List<String> observationHistory;
-
-  protected String originalQuery;
-
   protected List<IvyTool> tools;
 
   // List of results collected during agent execution (not serialized to JSON)
@@ -72,7 +59,7 @@ public abstract class BaseAgent {
   protected List<AiVariable> results;
 
   public BaseAgent() {
-    id = UUID.randomUUID().toString().replaceAll("-", StringUtils.EMPTY);
+    id = IdGenerationUtils.generateRandomId();
   }
 
   /**
@@ -156,97 +143,16 @@ public abstract class BaseAgent {
   }
 
   /**
-   * Processes input query and creates variables. If query is a valid JSON object
-   * {"field1": "value1", "field2": "value2"}, splits JSON properties into
-   * individual variables. Otherwise, creates a single "query" variable with the
-   * entire input.
-   * 
-   * @param query The input query string
-   */
-  protected void processInputQuery(String query) {
-    if (getVariables() == null) {
-      setVariables(new ArrayList<>());
-    }
-
-    // Try to parse as JSON object first
-    if (isValidJsonObject(query)) {
-      createVariablesFromJsonObject(query);
-    } else {
-      // Fall back to single query variable for everything else
-      // (arrays, primitives, invalid JSON, plain text)
-      createSingleQueryVariable(query);
-    }
-  }
-
-  /**
-   * Checks if the input string is a valid JSON object (not array or primitive)
-   */
-  private boolean isValidJsonObject(String input) {
-    if (StringUtils.isBlank(input)) {
-      return false;
-    }
-
-    try {
-      ObjectMapper mapper = BusinessEntityConverter.getObjectMapper();
-      JsonNode rootNode = mapper.readTree(input.trim());
-      // Only return true for JSON objects, not arrays or primitives
-      return rootNode.isObject();
-    } catch (Exception e) {
-      return false;
-    }
-  }
-
-  /**
-   * Creates variables from JSON object input. Only handles JSON objects.
-   */
-  private void createVariablesFromJsonObject(String jsonInput) {
-    try {
-      ObjectMapper mapper = BusinessEntityConverter.getObjectMapper();
-      JsonNode rootNode = mapper.readTree(jsonInput.trim());
-
-      // Handle JSON object - create variable for each property
-      rootNode.fieldNames().forEachRemaining(fieldName -> {
-        JsonNode fieldValue = rootNode.get(fieldName);
-        AiVariable variable = new AiVariable();
-        variable.init();
-        variable.getParameter().setName(fieldName);
-        variable.getParameter().setValue(fieldValue.isTextual() ? fieldValue.asText() : fieldValue.toString());
-        variable.getParameter().setDescription("JSON property: " + fieldName);
-
-        // By default, all parameters send to agent are String
-        variable.getParameter().setClassName("String");
-
-        getVariables().add(variable);
-      });
-    } catch (Exception e) {
-      // If JSON parsing fails unexpectedly, fall back to single query variable
-      createSingleQueryVariable(jsonInput);
-    }
-  }
-
-  /**
-   * Creates a single query variable with the entire input
-   */
-  private void createSingleQueryVariable(String query) {
-    AiVariable inputVariable = new AiVariable();
-    inputVariable.init();
-    inputVariable.getParameter().setName("query");
-    inputVariable.getParameter().setValue(query);
-    inputVariable.getParameter().setDescription("The input query");
-    getVariables().add(inputVariable);
-  }
-
-  /**
    * Template method - starts the agent with a user query.
    * 
-   * @param query The user input query.
+   * @param execution The agent execution.
    */
-  public abstract void start(String query);
+  public abstract ExecutionStatus start(AgentExecution execution);
 
   /**
    * Template method - executes the agent's plan.
    */
-  public abstract void execute();
+  public abstract void execute(AgentExecution execution);
 
   // Getters and setters
   public String getId() {
@@ -271,14 +177,6 @@ public abstract class BaseAgent {
 
   public void setUsage(String usage) {
     this.usage = usage;
-  }
-
-  public List<AiVariable> getVariables() {
-    return variables;
-  }
-
-  public void setVariables(List<AiVariable> variables) {
-    this.variables = variables;
   }
 
   public List<AiVariable> getResults() {

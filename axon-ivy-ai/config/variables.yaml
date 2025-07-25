@@ -6,4 +6,8 @@ Variables:
       APIKey: ${decrypt:}
     # [file: json]
     Agents: ""
+    # [file: json]
     Tools: ""
+    # [file: json]
+    Logs: ""
+    

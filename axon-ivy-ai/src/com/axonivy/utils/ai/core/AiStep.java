@@ -1,13 +1,20 @@
 package com.axonivy.utils.ai.core;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
+import com.axonivy.utils.ai.core.log.ExecutionLogger;
 import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
+import com.axonivy.utils.ai.enums.log.LogLevel;
+import com.axonivy.utils.ai.enums.log.LogPhase;
 import com.axonivy.utils.ai.exception.AiException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.model.input.PromptTemplate;
 
 /**
  * Represents a single step in an AI workflow. A step can either use a tool
@@ -23,6 +31,13 @@ import ch.ivyteam.ivy.environment.Ivy;
  */
 @JsonInclude(value = Include.NON_EMPTY)
 public class AiStep implements Serializable {
+
+  private static final String LOG_HEADER_TEMPLATE = """
+      Step No: {{stepNo}}
+      Next Step: {{next}}
+      Previous Step: {{prev}}
+      Tool Id: {{toolId}}
+      """;
 
   // Constant representing the initial step index in the agent workflow
   public static final int INITIAL_STEP = 0;
@@ -38,9 +53,9 @@ public class AiStep implements Serializable {
   private static final long serialVersionUID = -7596426640750339316L;
 
   // Step metadata
-  private int stepNo;
-  private int previous;
-  private int next;
+  private Integer stepNo;
+  private Integer previous;
+  private Integer next;
   private String name;
   private String analysis;
   private String toolId;
@@ -69,10 +84,14 @@ public class AiStep implements Serializable {
    * Executes the step. Exceptions will move the flow to the final step and be
    * logged.
    */
-  public List<AiVariable> run(List<AiVariable> aiVariables, AbstractAiServiceConnector connector) {
+  public List<AiVariable> run(List<AiVariable> aiVariables, AbstractAiServiceConnector connector,
+      ExecutionLogger logger, int iterationCount) {
+
+    // Log the step
+    logger.log(LogLevel.STEP, LogPhase.INIT, generateLogEntryContent(), StringUtils.EMPTY, iterationCount);
     try {
       tool.setConnector(connector);
-      return tool.execute(aiVariables);
+      return tool.execute(aiVariables, logger, iterationCount);
 
     } catch (AiException | JsonProcessingException e) {
       // If any exception occurs, log and move to finalize step
@@ -89,27 +108,27 @@ public class AiStep implements Serializable {
     tool.setVariables(variables);
   }
 
-  public int getStepNo() {
+  public Integer getStepNo() {
     return stepNo;
   }
 
-  public void setStepNo(int stepNo) {
+  public void setStepNo(Integer stepNo) {
     this.stepNo = stepNo;
   }
 
-  public int getPrevious() {
+  public Integer getPrevious() {
     return previous;
   }
 
-  public void setPrevious(int previous) {
+  public void setPrevious(Integer previous) {
     this.previous = previous;
   }
 
-  public int getNext() {
+  public Integer getNext() {
     return next;
   }
 
-  public void setNext(int next) {
+  public void setNext(Integer next) {
     this.next = next;
   }
 
@@ -151,5 +170,15 @@ public class AiStep implements Serializable {
 
   public void setRunId(String runId) {
     this.runId = runId;
+  }
+
+  public String generateLogEntryContent() {
+    Map<String, Object> params = new HashMap<>();
+    params.put("stepNo", Optional.ofNullable(stepNo.toString()).orElse(StringUtils.EMPTY));
+    params.put("next", Optional.ofNullable(next.toString()).orElse(StringUtils.EMPTY));
+    params.put("prev", Optional.ofNullable(previous.toString()).orElse(StringUtils.EMPTY));
+    params.put("toolId", Optional.ofNullable(tool).map(IvyTool::getId).orElse(StringUtils.EMPTY));
+
+    return PromptTemplate.from(LOG_HEADER_TEMPLATE).apply(params).text();
   }
 }

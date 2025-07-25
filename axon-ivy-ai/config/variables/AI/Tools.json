@@ -109,10 +109,10 @@
     ],
     "resultDefinitions" : [
       {
-          "name" : "supportTicket",
+          "name" : "result",
           "value" : "",
-          "className" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
-          "description": "the updated support ticket object with approvers"
+          "className" : "com.axonivy.utils.ai.dto.ai.AiVariable",
+          "description": "The result"
       }
     ],
     "instructions": [

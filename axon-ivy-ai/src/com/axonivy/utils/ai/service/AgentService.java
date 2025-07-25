@@ -2,10 +2,6 @@ package com.axonivy.utils.ai.service;
 
 import com.axonivy.utils.ai.dto.ai.configuration.AgentModel;
 
-/**
- * Service class for managing goal-based agent configurations. Handles CRUD
- * operations for goal-based agents including file persistence.
- */
 public class AgentService extends JsonConfigurationService<AgentModel> {
 
   private static AgentService instance;

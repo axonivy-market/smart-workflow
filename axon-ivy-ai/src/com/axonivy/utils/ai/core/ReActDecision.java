@@ -73,6 +73,8 @@ public class ReActDecision implements Serializable {
   private final String nextAction;
   private final String agentSelection;
 
+  private String decisionContext; // The given context to make the decision
+
   public ReActDecision(boolean shouldUpdatePlan, boolean isComplete, String reasoning, String nextAction,
       String agentSelection) {
     this.shouldUpdatePlan = shouldUpdatePlan;
@@ -114,7 +116,8 @@ public class ReActDecision implements Serializable {
               "Extract the decision value: YES (to update plan), NO (continue with current plan), or COMPLETE (goal achieved)"),
               new FieldExplanation("nextAction", "Extract the next action description when decision is YES"),
               new FieldExplanation("agentSelection", "Extract the agent/tool ID selection when decision is YES"),
-              new FieldExplanation("reasoning", "Extract the reasoning or thought process behind the decision")))
+              new FieldExplanation("reasoning", "Extract the reasoning or thought process behind the decision"),
+              new FieldExplanation("decisionContext", "Keep this field empty")))
           .disableRetry() // Disable retry for faster processing
           .build();
 
@@ -175,5 +178,28 @@ public class ReActDecision implements Serializable {
     }
 
     return new ReActDecision(shouldUpdate, isComplete, aiResponse, nextAction, agentSelection);
+  }
+
+  public String toPrettyString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append(String.format("Reasoning: %s", reasoning));
+    builder.append(System.lineSeparator());
+    builder.append(String.format("Should update plan: %s", Boolean.toString(shouldUpdatePlan)));
+    builder.append(System.lineSeparator());
+    builder.append(String.format("Is completed: %s", Boolean.toString(isComplete)));
+    builder.append(System.lineSeparator());
+    builder.append(String.format("Next action: %s", nextAction));
+    builder.append(System.lineSeparator());
+    builder.append(String.format("Selected tool: %s", agentSelection));
+
+    return builder.toString();
+  }
+
+  public String getDecisionContext() {
+    return decisionContext;
+  }
+
+  public void setDecisionContext(String decisionContext) {
+    this.decisionContext = decisionContext;
   }
 }

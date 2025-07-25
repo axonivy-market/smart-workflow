@@ -92,6 +92,8 @@ public abstract class AiFunction {
 
   protected boolean failedToBuildInstructions;
 
+  private String prompt;
+
   protected abstract AiVariable createStandardResult(String resultFromAI);
 
   // Method to execute this function
@@ -107,14 +109,15 @@ public abstract class AiFunction {
 
     // Map parameters
     Map<String, Object> params = new HashMap<>();
-    params.put("query", Optional.ofNullable(query).orElse(""));
-    params.put("functionInstructions", Optional.ofNullable(functionInstructions).orElse(""));
+    params.put("query", Optional.ofNullable(query).orElse(StringUtils.EMPTY));
+    params.put("functionInstructions", Optional.ofNullable(functionInstructions).orElse(StringUtils.EMPTY));
     params.put("customInstructions", getFormattedCustomInstructions());
     params.put("wrapperInstruction", (isPlainText || !useWrappers) ? StringUtils.EMPTY : WRAPPER_INSTRUCTION);
     params.put("examples", getFormattedExamples());
 
     // Use AI to perform action
-    String resultFromAI = connector.generate(PromptTemplate.from(PROMPT_TEMPLATE).apply(params).text());
+    prompt = PromptTemplate.from(PROMPT_TEMPLATE).apply(params).text().strip();
+    String resultFromAI = connector.generate(prompt);
 
     // standardized the result from AI
     resultFromAI = isPlainText ? resultFromAI : standardizeResult(resultFromAI);
@@ -231,6 +234,14 @@ public abstract class AiFunction {
     result.setState(AiVariableState.ERROR);
     result.getParameter().setDescription("Error occurred when AI generating the result");
     return result;
+  }
+
+  public String getPrompt() {
+    return prompt;
+  }
+
+  public void setPrompt(String prompt) {
+    this.prompt = prompt;
   }
 
   public static class Builder {

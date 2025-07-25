@@ -12,13 +12,17 @@ import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
+import com.axonivy.utils.ai.core.log.ExecutionLogger;
 import com.axonivy.utils.ai.dto.IvyToolParameter;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
 import com.axonivy.utils.ai.dto.ai.Instruction;
 import com.axonivy.utils.ai.enums.AiVariableState;
+import com.axonivy.utils.ai.enums.log.LogLevel;
+import com.axonivy.utils.ai.enums.log.LogPhase;
 import com.axonivy.utils.ai.exception.AiException;
 import com.axonivy.utils.ai.function.DataMapping;
 import com.axonivy.utils.ai.service.IvyAdapterService;
@@ -68,8 +72,18 @@ public class IvyTool implements Serializable {
   // Process result definitions
   private List<IvyToolParameter> resultDefinitions;
 
+  // The connector to AI service
   @JsonIgnore
   private AbstractAiServiceConnector connector;
+
+  // Result after run the tool. This string will be used as the input for adaptive
+  // planning
+  @JsonIgnore
+  private String aiResult;
+
+  // Missing parameters
+  @JsonIgnore
+  private List<AiVariable> missingParameters;
 
   /**
    * Executes the Ivy process using the provided signature and input variables.
@@ -77,7 +91,11 @@ public class IvyTool implements Serializable {
    * 
    * @throws JsonProcessingException
    */
-  public List<AiVariable> execute(List<AiVariable> inputVariables) throws JsonProcessingException {
+  public List<AiVariable> execute(List<AiVariable> inputVariables, ExecutionLogger logger, int iterationCount)
+      throws JsonProcessingException {
+
+    logInit(logger, iterationCount);
+
     // convert AI variables to process parameters
     variables = AiVariableUtils.extractInputAiVariables(instructions, inputVariables, getConnector());
 
@@ -87,16 +105,50 @@ public class IvyTool implements Serializable {
     // Use name to fulfill parameter
     fulfillIvyToolUsingName();
 
+    // check missing inputs
+    missingParameters = new ArrayList<>();
+    for (var param : parameters) {
+      if (param.getValue() == null) {
+        AiVariable missingVariable = new AiVariable(param.getName(), null);
+        missingVariable.setParameter(param);
+        missingVariable.setState(AiVariableState.ERROR);
+        missingParameters.add(missingVariable);
+      }
+    }
+
     Map<String, Object> processParams = new HashMap<>();
     for (var param : getParameters()) {
       processParams.put(param.getName(), param.getValue());
     }
 
-    Map<String, Object> processResult = IvyAdapterService.startSubProcessInApplication(signature, processParams);
-    List<AiVariable> results = new ArrayList<>();
+    // Handle missing parameters
+    if (CollectionUtils.isNotEmpty(missingParameters)) {
+      // Log missing parameters
+      logMissingInputVariables(logger, iterationCount);
 
+      // Set the result to null since the tool isn't run
+      return null;
+    }
+
+    // Log extracted variables
+    logInputVariables(logger, iterationCount);
+
+    // Call the callable subprocess (the tool)
+    Map<String, Object> processResult = IvyAdapterService.startSubProcessInApplication(signature, processParams);
+
+    // The tool will return 2 kind of results:
+    // "aiResult" : A string in natural language that will be use to evaluate next step
+    // Other objects: result variables of the tool
+
+    // Get AI result
+    if (Objects.nonNull(processResult.get("aiResult"))) {
+      aiResult = (String) processResult.get("aiResult");
+    }
+
+    // Extracting result variables
     // If there is no predefined result definition, skip extracting result, return
     // an empty list
+    List<AiVariable> results = new ArrayList<>();
     if (CollectionUtils.isEmpty(resultDefinitions)) {
       return results;
     }
@@ -111,6 +163,7 @@ public class IvyTool implements Serializable {
       error.getParameter().setValue("Error happened when running the Ivy tool: " + getName());
       error.getParameter().setName("Error " + getName());
       results.add(error);
+      logError(logger, error, iterationCount);
       return results;
     }
 
@@ -129,6 +182,7 @@ public class IvyTool implements Serializable {
         results.add(newVar);
       }
     }
+    logOutputVariables(logger, results, iterationCount);
     return results;
   }
 
@@ -139,7 +193,6 @@ public class IvyTool implements Serializable {
             .filter(variable -> variable.getParameter().getClassName().contentEquals(param.getClassName()))
             .map(AiVariable::getParameter).map(IvyToolParameter::getValue)
             .findFirst().orElseGet(() -> null));
-        
       }
     }
   }
@@ -199,6 +252,70 @@ public class IvyTool implements Serializable {
       // If the conversion is failed, return the original parameter
       return param;
     }
+  }
+
+  private String generateLogHeaderString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append(String.format("Tool Id: %s", id));
+    builder.append(System.lineSeparator());
+    builder.append(String.format("Tool Name: %s", name));
+    return builder.toString();
+  }
+
+  private void logInit(ExecutionLogger logger, int iterationCount) {
+    logger.log(LogLevel.TOOL, LogPhase.INIT, generateLogHeaderString(), StringUtils.EMPTY, iterationCount);
+  }
+
+  private void logInputVariables(ExecutionLogger logger, int iterationCount) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Input variables:");
+    builder.append(System.lineSeparator());
+    if (CollectionUtils.isEmpty(variables)) {
+      builder.append("None");
+    } else {
+      for (AiVariable variable : variables) {
+        builder.append(variable.toPrettyString());
+        builder.append(System.lineSeparator());
+      }
+    }
+
+    logger.log(LogLevel.TOOL, LogPhase.RUNNING, generateLogHeaderString(), builder.toString(), iterationCount);
+  }
+
+  private void logMissingInputVariables(ExecutionLogger logger, int iterationCount) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Missing parameters:");
+    builder.append(System.lineSeparator());
+    for (AiVariable missingParam : missingParameters) {
+      builder.append(missingParam.toPrettyString());
+      builder.append(System.lineSeparator());
+    }
+
+    logger.log(LogLevel.TOOL, LogPhase.ERROR, generateLogHeaderString(), builder.toString(), iterationCount);
+  }
+
+  private void logOutputVariables(ExecutionLogger logger, List<AiVariable> results, int iterationCount) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Result:");
+    builder.append(System.lineSeparator());
+    if (CollectionUtils.isEmpty(results)) {
+      builder.append("None");
+    } else {
+      for (AiVariable variable : results) {
+        builder.append(variable.toPrettyString());
+        builder.append(System.lineSeparator());
+      }
+    }
+
+    logger.log(LogLevel.TOOL, LogPhase.COMPLETE, generateLogHeaderString(), builder.toString(), iterationCount);
+  }
+
+  private void logError(ExecutionLogger logger, AiVariable error, int iterationCount) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Error:");
+    builder.append(System.lineSeparator());
+    builder.append(error.toPrettyString());
+    logger.log(LogLevel.TOOL, LogPhase.ERROR, generateLogHeaderString(), builder.toString(), iterationCount);
   }
 
   public String getId() {
@@ -271,5 +388,21 @@ public class IvyTool implements Serializable {
 
   public void setResultDefinitions(List<IvyToolParameter> results) {
     this.resultDefinitions = results;
+  }
+
+  public String getAiResult() {
+    return aiResult;
+  }
+
+  public void setAiResult(String aiResult) {
+    this.aiResult = aiResult;
+  }
+
+  public List<AiVariable> getMissingParameters() {
+    return missingParameters;
+  }
+
+  public void setMissingParameters(List<AiVariable> missingParameters) {
+    this.missingParameters = missingParameters;
   }
 }

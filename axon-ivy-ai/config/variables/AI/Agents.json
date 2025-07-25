@@ -3,7 +3,7 @@
     "id": "support-agent",
     "name": "Step-by-Step Support Agent",
     "usage": "Creates support tickets and tasks using sequential step execution",
-    "goal": "Create a support ticket for the user and assign appropriate approvers to handle it efficiently",
+    "goal": "The request of user is handled correctly. A task should be created to handle the ticket.",
     "agentType": "STEP_BY_STEP",
     "maxIterations": 15,
     "planningModel": "gpt-4o",
@@ -17,35 +17,19 @@
         "content": "Should create a support ticket before assign approver to it"
       },
       {
-        "type": "planning", 
-        "content": "once the support ticket is created, approver is assigned, create an Axon Ivy task"
+         "type": "execution",
+        "toolId": "create-support-ticket",
+        "content": "After create a support ticket, should choose approvers"
       },
       {
         "type": "execution",
         "toolId": "choose-ticket-approvers",
         "content": "If the ticket type is HR, use the specified tool to handle HR Ticket. Otherwise, use the typical Create Support Task Tool"
-      }
-    ]
-  },
-  {
-    "id": "support-agent-todos",
-    "name": "Todo-based Support Agent", 
-    "usage": "Creates support tickets and tasks using outcome-focused todo execution",
-    "agentType": "TODO_LIST",
-    "maxIterations": 15,
-    "planningModel": "gpt-4o",
-    "planningModelKey": "${AI.OpenAI.APIKey}",
-    "executionModel": "gpt-4o-mini", 
-    "executionModelKey": "${AI.OpenAI.APIKey}",
-    "tools": ["create-support-task", "create-support-ticket", "choose-ticket-approvers"],
-    "instructions": [
-      {
-        "type": "planning",
-        "content": "Should create a support ticket before assign approver to it"
       },
       {
-        "type": "planning", 
-        "content": "once the support ticket is created, approver is assigned, create an Axon Ivy task"
+        "type": "execution",
+        "toolId": "choose-ticket-approvers",
+        "content": "If the ticket type is HR, use the specified tool to handle HR Ticket. Otherwise, use the typical Create Support Task Tool"
       }
     ]
   }

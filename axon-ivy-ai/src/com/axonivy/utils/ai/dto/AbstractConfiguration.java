@@ -1,9 +1,6 @@
 package com.axonivy.utils.ai.dto;
 
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-
+import com.axonivy.utils.ai.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public abstract class AbstractConfiguration {
@@ -14,7 +11,7 @@ public abstract class AbstractConfiguration {
   private boolean isPublic;
 
   public AbstractConfiguration() {
-    id = UUID.randomUUID().toString().replace("-", StringUtils.EMPTY);
+    id = IdGenerationUtils.generateRandomId();
   }
 
   public String getId() {
