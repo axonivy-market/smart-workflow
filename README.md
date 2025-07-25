@@ -1,7 +1,13 @@
-# MY-PRODUCT-NAME
+# Axon Ivy Smart Ochestrator
 
-[![CI Build](https://github.com/axonivy-market/REPO-NAME/actions/workflows/ci.yml/badge.svg)](https://github.com/axonivy-market/REPO-NAME/actions/workflows/ci.yml)
+## How to see the Agent prototype concept
 
-"YOUR SHORT DESCRIPTION GOES HERE"
+1. Open the web application [Excalidraw](https://excalidraw.com/).
 
-Read our [documentation](MY-PRODUCT-NAME-product/README.md).
+2. Once you are in the Excalidraw designer, press **Ctrl + O**.
+
+3. Choose the *axon-ivy-ai/tree/master/axon-ivy-ai/documents/v1.0.0/smart-orchestrator.excalidraw* file
+
+Now you can see how the Agent prototype works.
+
+Alternatively, you can also examine the *axon-ivy-ai/tree/master/axon-ivy-ai/documents/v1.0.0/smart-orchestrator.png* image.
