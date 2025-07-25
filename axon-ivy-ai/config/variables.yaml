@@ -5,6 +5,10 @@ Variables:
       #[password]
       APIKey: ${decrypt:}
       BaseUrl: ""
+    MCP:
+      github:
+        #[password]
+        token: ${decrypt:}
     # [file: json]
     Agents: ""
     # [file: json]
