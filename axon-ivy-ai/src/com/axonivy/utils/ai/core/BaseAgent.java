@@ -17,7 +17,6 @@ import com.axonivy.utils.ai.enums.ExecutionStatus;
 import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.axonivy.utils.ai.utils.IdGenerationUtils;
-import com.axonivy.utils.ai.utils.IvyVariableUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -69,7 +68,7 @@ public abstract class BaseAgent {
     this.id = model.getId();
     this.name = model.getName();
     this.usage = model.getUsage();
-    
+
     // Set configurable iterations
     // If default max iteration is not set, use the default value: 20
     this.maxIterations = model.getMaxIterations() > 0 ? model.getMaxIterations() : DEFAULT_MAX_ITERATIONS;
@@ -78,16 +77,14 @@ public abstract class BaseAgent {
     planningModel = DEFAULT_CONNECTOR;
     if (StringUtils.isNotBlank(model.getPlanningModel()) && StringUtils.isNotBlank(model.getPlanningModelKey())) {
       planningModel = new OpenAiServiceConnector();
-      planningModel.init(model.getPlanningModel(),
-          IvyVariableUtils.resolveVariableReference(model.getPlanningModelKey()));
+      planningModel.init(model.getPlanningModel());
     }
 
     // Initialize execution model
     executionModel = DEFAULT_CONNECTOR;
     if (StringUtils.isNotBlank(model.getExecutionModel()) && StringUtils.isNotBlank(model.getExecutionModelKey())) {
       executionModel = new OpenAiServiceConnector();
-      executionModel.init(model.getExecutionModel(),
-          IvyVariableUtils.resolveVariableReference(model.getExecutionModelKey()));
+      executionModel.init(model.getExecutionModel());
     }
 
     // Load instructions
@@ -144,7 +141,7 @@ public abstract class BaseAgent {
 
   /**
    * Template method - starts the agent with a user query.
-   * 
+   *
    * @param execution The agent execution.
    */
   public abstract ExecutionStatus start(AgentExecution execution);
@@ -187,8 +184,6 @@ public abstract class BaseAgent {
     this.results = results;
   }
 
-
-
   public int getMaxIterations() {
     return maxIterations;
   }
@@ -220,4 +215,4 @@ public abstract class BaseAgent {
   public void setExecutionModel(AbstractAiServiceConnector executionModel) {
     this.executionModel = executionModel;
   }
-} 
+}
