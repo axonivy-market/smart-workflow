@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.ai.core.log.ExecutionLogger;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.enums.ExecutionStatus;
+import com.axonivy.utils.ai.memory.AgentMessageLogger;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.axonivy.utils.ai.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -49,7 +49,7 @@ public class AgentExecution implements Serializable {
   private String errorMessage;
 
   @JsonIgnore
-  private ExecutionLogger logger;
+  private AgentMessageLogger messageManager;
 
   /**
    * Constructor with basic execution info
@@ -72,8 +72,8 @@ public class AgentExecution implements Serializable {
     // Use the query to initialize variables.
     processInputQuery(originalQuery);
 
-    // Init logger
-    logger = new ExecutionLogger(id);
+    // Init message manager
+    messageManager = new AgentMessageLogger();
   }
 
   /**
@@ -324,11 +324,11 @@ public class AgentExecution implements Serializable {
     updateTimestamp();
   }
 
-  public ExecutionLogger getLogger() {
-    return logger;
+  public AgentMessageLogger getMessageManager() {
+    return messageManager;
   }
 
-  public void setLogger(ExecutionLogger logger) {
-    this.logger = logger;
+  public void setMessageManager(AgentMessageLogger messageManager) {
+    this.messageManager = messageManager;
   }
 }

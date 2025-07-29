@@ -129,7 +129,7 @@ public class IvyAgent extends BaseAgent {
     
     Planning planning = planningBuilder.build();
     String crudePlan = planning.execute().getSafeValue();
-    execution.getLogger().log(LogLevel.PLANNING, LogPhase.INIT, crudePlan, planning.getPrompt(), 0);
+    execution.getMessageManager().log(LogLevel.PLANNING, LogPhase.INIT, crudePlan, planning.getPrompt(), 0);
 
     // Map plan content to a list of AiSteps using execution AI model
     DataMapping dataMapper = DataMapping.getBuilder().useService(executionModel).withObject(new AiStep())
@@ -144,7 +144,7 @@ public class IvyAgent extends BaseAgent {
     String stepString = dataMapper.execute().getSafeValue();
 
     List<AiStep> plannedSteps = BusinessEntityConverter.jsonValueToEntities(stepString, AiStep.class);
-    execution.getLogger().log(LogLevel.PLANNING, LogPhase.RUNNING,
+    execution.getMessageManager().log(LogLevel.PLANNING, LogPhase.RUNNING,
         BusinessEntityConverter.entityToJsonValue(plannedSteps), dataMapper.getPrompt(), 0);
 
     // Assign each step to a corresponding worker agent by runnerId
@@ -182,7 +182,8 @@ public class IvyAgent extends BaseAgent {
       }
 
       // Execute the step using execution connector
-      List<AiVariable> aiResults = runningStep.run(execution.getVariables(), executionModel, execution.getLogger(),
+      List<AiVariable> aiResults = runningStep.run(execution.getVariables(), executionModel,
+          execution.getMessageManager(),
           iterationCount);
 
       // Handle missing parameters when running a step
@@ -235,13 +236,13 @@ public class IvyAgent extends BaseAgent {
         // Goal achieved, finish execution
         inProgress = false;
         Ivy.log().info("ReAct reasoning determined goal is achieved: " + decision.getReasoning());
-        execution.getLogger().logAdaptivePlan(LogPhase.COMPLETE,
+        execution.getMessageManager().logAdaptivePlan(LogPhase.COMPLETE,
             "Execution completed by ReAct reasoning:" + System.lineSeparator() + decision.toPrettyString(),
             decision.getDecisionContext(), runningStepNo, iterationCount, runningStep.getToolId());
       } else if (decision.shouldUpdatePlan()) {
         // Update plan based on reasoning
         runningStepNo = adaptPlanBasedOnReasoning(decision, runningStep, execution);
-        execution.getLogger().logAdaptivePlan(LogPhase.RUNNING,
+        execution.getMessageManager().logAdaptivePlan(LogPhase.RUNNING,
             "Plan adapted by ReAct reasoning:" + System.lineSeparator() + decision.toPrettyString(),
             decision.getDecisionContext(), runningStepNo, iterationCount, runningStep.getToolId());
       } else {
@@ -259,7 +260,8 @@ public class IvyAgent extends BaseAgent {
 
     if (iterationCount >= maxIterations) {
       Ivy.log().info("Maximum iterations (" + maxIterations + ") reached in adaptive execution");
-      execution.getLogger().log(LogLevel.STEP, LogPhase.ERROR, "Maximum iterations (" + maxIterations + ") reached",
+      execution.getMessageManager().log(LogLevel.STEP, LogPhase.ERROR,
+          "Maximum iterations (" + maxIterations + ") reached",
           StringUtils.EMPTY, iterationCount);
     }
   }
@@ -284,7 +286,8 @@ public class IvyAgent extends BaseAgent {
       return decision;
 
     } catch (Exception e) {
-      execution.getLogger().log(LogLevel.PLANNING, LogPhase.ERROR, "Error in ReAct reasoning: " + e.getMessage(),
+      execution.getMessageManager().log(LogLevel.PLANNING, LogPhase.ERROR,
+          "Error in ReAct reasoning: " + e.getMessage(),
           StringUtils.EMPTY, iterationCount);
       // Default to continuing with original plan
       return new ReActDecision(false, false, "Error in reasoning, continuing with plan", StringUtils.EMPTY,

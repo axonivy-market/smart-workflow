@@ -10,12 +10,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
-import com.axonivy.utils.ai.core.log.ExecutionLogger;
 import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.enums.log.LogLevel;
 import com.axonivy.utils.ai.enums.log.LogPhase;
 import com.axonivy.utils.ai.exception.AiException;
+import com.axonivy.utils.ai.memory.AgentMessageLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -85,7 +85,7 @@ public class AiStep implements Serializable {
    * logged.
    */
   public List<AiVariable> run(List<AiVariable> aiVariables, AbstractAiServiceConnector connector,
-      ExecutionLogger logger, int iterationCount) {
+      AgentMessageLogger logger, int iterationCount) {
 
     // Log the step
     logger.log(LogLevel.STEP, LogPhase.INIT, generateLogEntryContent(), StringUtils.EMPTY, iterationCount);

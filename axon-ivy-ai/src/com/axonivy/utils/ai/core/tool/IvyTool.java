@@ -15,7 +15,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
-import com.axonivy.utils.ai.core.log.ExecutionLogger;
 import com.axonivy.utils.ai.dto.IvyToolParameter;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
@@ -25,6 +24,7 @@ import com.axonivy.utils.ai.enums.log.LogLevel;
 import com.axonivy.utils.ai.enums.log.LogPhase;
 import com.axonivy.utils.ai.exception.AiException;
 import com.axonivy.utils.ai.function.DataMapping;
+import com.axonivy.utils.ai.memory.AgentMessageLogger;
 import com.axonivy.utils.ai.service.IvyAdapterService;
 import com.axonivy.utils.ai.utils.AiVariableUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -91,7 +91,7 @@ public class IvyTool implements Serializable {
    * 
    * @throws JsonProcessingException
    */
-  public List<AiVariable> execute(List<AiVariable> inputVariables, ExecutionLogger logger, int iterationCount)
+  public List<AiVariable> execute(List<AiVariable> inputVariables, AgentMessageLogger logger, int iterationCount)
       throws JsonProcessingException {
 
     logInit(logger, iterationCount);
@@ -262,11 +262,11 @@ public class IvyTool implements Serializable {
     return builder.toString();
   }
 
-  private void logInit(ExecutionLogger logger, int iterationCount) {
+  private void logInit(AgentMessageLogger logger, int iterationCount) {
     logger.log(LogLevel.TOOL, LogPhase.INIT, generateLogHeaderString(), StringUtils.EMPTY, iterationCount);
   }
 
-  private void logInputVariables(ExecutionLogger logger, int iterationCount) {
+  private void logInputVariables(AgentMessageLogger logger, int iterationCount) {
     StringBuilder builder = new StringBuilder();
     builder.append("Input variables:");
     builder.append(System.lineSeparator());
@@ -282,7 +282,7 @@ public class IvyTool implements Serializable {
     logger.log(LogLevel.TOOL, LogPhase.RUNNING, generateLogHeaderString(), builder.toString(), iterationCount);
   }
 
-  private void logMissingInputVariables(ExecutionLogger logger, int iterationCount) {
+  private void logMissingInputVariables(AgentMessageLogger logger, int iterationCount) {
     StringBuilder builder = new StringBuilder();
     builder.append("Missing parameters:");
     builder.append(System.lineSeparator());
@@ -294,7 +294,7 @@ public class IvyTool implements Serializable {
     logger.log(LogLevel.TOOL, LogPhase.ERROR, generateLogHeaderString(), builder.toString(), iterationCount);
   }
 
-  private void logOutputVariables(ExecutionLogger logger, List<AiVariable> results, int iterationCount) {
+  private void logOutputVariables(AgentMessageLogger logger, List<AiVariable> results, int iterationCount) {
     StringBuilder builder = new StringBuilder();
     builder.append("Result:");
     builder.append(System.lineSeparator());
@@ -310,7 +310,7 @@ public class IvyTool implements Serializable {
     logger.log(LogLevel.TOOL, LogPhase.COMPLETE, generateLogHeaderString(), builder.toString(), iterationCount);
   }
 
-  private void logError(ExecutionLogger logger, AiVariable error, int iterationCount) {
+  private void logError(AgentMessageLogger logger, AiVariable error, int iterationCount) {
     StringBuilder builder = new StringBuilder();
     builder.append("Error:");
     builder.append(System.lineSeparator());
