@@ -16,3 +16,4 @@ lib/mvn-deps/
 logs/
 src_dataClasses/
 src_wsproc/
+axon-ivy-ai-test/config/variables.yaml
