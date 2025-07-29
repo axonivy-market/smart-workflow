@@ -1,21 +1,14 @@
 package com.axonivy.utils.ai.connector.test;
 
+import static ch.ivyteam.test.client.OpenAiTestClient.aiMock;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Map;
-
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-
-import com.axonivy.ivy.webtest.engine.EngineUrl;
-import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
-import com.axonivy.utils.ai.mock.MockOpenAI;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
-import dev.langchain4j.model.openai.OpenAiChatModel;
 
 @IvyTest
 class TestOpenAiServiceConnector {
@@ -25,14 +18,14 @@ class TestOpenAiServiceConnector {
 
   @Test
   void chatRaw() {
-    var openAi = mockClient();
+    var openAi = aiMock();
     var response = openAi.chat("ready?");
     assertThat(response).contains("How can I assist you today?");
   }
 
   @Test
   void requestLogAccess() {
-    mockClient().chat("ready?");
+    aiMock().chat("ready?");
 
     assertThat(httpRequestLog())
         .as("transport logs are easy to access and assert in tests")
@@ -45,15 +38,6 @@ class TestOpenAiServiceConnector {
         .filter(line -> line.startsWith("HTTP request"))
         .findFirst()
         .orElseThrow();
-  }
-
-  private static OpenAiChatModel mockClient() {
-    var localApi = EngineUrl.createRestUrl(MockOpenAI.PATH_SUFFIX);
-    return new OpenAiServiceConnector()
-        .buildOpenAiModel()
-        .baseUrl(localApi)
-        .customHeaders(Map.of(CsrfProtectionFilter.HEADER_NAME, "ivy"))
-        .build();
   }
 
 }
