@@ -4,17 +4,16 @@ import java.util.Map;
 
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 
-import com.axonivy.ivy.webtest.engine.EngineUrl;
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
-import com.axonivy.utils.ai.mock.MockOpenAI;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 
 public class OpenAiTestClient {
 
   public static OpenAiChatModelBuilder mockBuilder() {
-    var localApi = EngineUrl.createRestUrl(MockOpenAI.PATH_SUFFIX);
+    var localApi = Ivy.rest().client("mockClient").getUri().toASCIIString();
     return new OpenAiServiceConnector()
         .buildOpenAiModel()
         .baseUrl(localApi)
