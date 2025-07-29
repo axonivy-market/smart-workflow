@@ -10,7 +10,7 @@ import ch.ivyteam.ivy.environment.IvyTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
-@IvyTest
+@IvyTest(enableWebServer = true)
 class TestOpenAiServiceConnector {
 
   @RegisterExtension
