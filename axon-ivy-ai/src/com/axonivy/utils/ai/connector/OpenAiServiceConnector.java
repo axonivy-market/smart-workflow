@@ -39,6 +39,8 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
 
   public OpenAiChatModelBuilder buildOpenAiModel() {
     return OpenAiChatModel.builder().apiKey(Ivy.var().get("Ai.OpenAI.APIKey"))
+        .logRequests(true)
+        .logResponses(true)
         .modelName(OpenAiChatModelName.GPT_4_1_MINI)
         .temperature(Double.valueOf(AiConstant.TEMPERATURE));
   }
