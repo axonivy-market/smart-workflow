@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.ai.tools.IvyToolExecutor;
 import com.axonivy.utils.ai.tools.IvyToolSpecs;
+import com.axonivy.utils.ai.tools.IvyToolsProvider;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -25,6 +26,7 @@ import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.service.AiServices;
 
 @IvyProcessTest(enableWebServer = true)
 class TestIvyToolsProvider {
@@ -65,6 +67,20 @@ class TestIvyToolsProvider {
     assertThat(response2).isNotNull();
 
     log.debugs().forEach(System.out::println);
+  }
+
+  interface SupportAgent {
+    String chat(String query);
+  }
+
+  @Test
+  void chatAgentic() {
+    var supporter = AiServices.builder(SupportAgent.class)
+        .chatModel(aiMock())
+        .toolProvider(new IvyToolsProvider())
+        .build();
+    String chat = supporter.chat("Help me, my computer is beeping, it started after opening AxonIvy Portal.");
+    System.out.println(chat);
   }
 
 }

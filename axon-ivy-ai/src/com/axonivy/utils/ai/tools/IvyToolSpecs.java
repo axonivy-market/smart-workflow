@@ -22,7 +22,7 @@ public class IvyToolSpecs {
         .toList();
   }
 
-  private static ToolSpecification toTool(CallSubStart toolStart) {
+  public static ToolSpecification toTool(CallSubStart toolStart) {
     CallSignature signature = toolStart.getSignature();
     Builder builder = ToolSpecification.builder()
         .name(signature.getName());
