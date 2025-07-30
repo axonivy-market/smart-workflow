@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.process.call.SubProcessCall;
 import ch.ivyteam.ivy.process.call.SubProcessCallResult;
 import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
@@ -18,7 +19,7 @@ public class IvyToolExecutor {
   public static ToolExecutionResultMessage execute(ToolExecutionRequest execTool) {
     String name = execTool.name();
 
-    Optional<CallSubStart> startable = IvyToolsProcesses.toolStarts().stream()
+    Optional<CallSubStart> startable = new IvyToolsProcesses(IProcessModelVersion.current()).toolStarts().stream()
         .filter(start -> start.getSignature().getName().equals(name))
         .findFirst();
 

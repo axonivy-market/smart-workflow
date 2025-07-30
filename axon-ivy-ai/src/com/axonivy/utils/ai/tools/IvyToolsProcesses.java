@@ -7,14 +7,20 @@ import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.process.model.ProcessKind;
 import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 import ch.ivyteam.ivy.process.rdm.IProcessManager;
+import ch.ivyteam.ivy.process.rdm.IProjectProcessManager;
 
 @SuppressWarnings("restriction")
 class IvyToolsProcesses {
 
-  static List<CallSubStart> toolStarts() {
-    // TODO: craft with APIs that are public accessible
+  private final IProjectProcessManager processes;
+
+  IvyToolsProcesses(IProcessModelVersion pmv) {
     IProcessManager man = ch.ivyteam.ivy.process.rdm.IProcessManager.instance();
-    var processes = man.getProjectDataModelFor(IProcessModelVersion.current());
+    this.processes = man.getProjectDataModelFor(pmv);
+  }
+
+  List<CallSubStart> toolStarts() {
+    // TODO: craft with APIs that are public accessible
     return processes.searchAll(EnumSet.of(ProcessKind.CALLABLE_SUB))
         .tag("tool")
         .type(CallSubStart.class)

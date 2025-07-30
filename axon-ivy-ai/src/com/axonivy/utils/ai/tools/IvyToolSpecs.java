@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 import ch.ivyteam.ivy.process.model.element.event.start.value.CallSignature;
 import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
@@ -15,7 +16,8 @@ import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 public class IvyToolSpecs {
 
   public static List<ToolSpecification> find() {
-    return IvyToolsProcesses.toolStarts().stream()
+    return new IvyToolsProcesses(IProcessModelVersion.current())
+        .toolStarts().stream()
         .map(IvyToolSpecs::toTool)
         .toList();
   }
