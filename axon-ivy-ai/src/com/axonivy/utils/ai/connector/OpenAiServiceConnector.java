@@ -43,6 +43,7 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
     String PREFIX = "Ai.OpenAI.";
     String BASE_URL = PREFIX + "BaseUrl";
     String API_KEY = PREFIX + "APIKey";
+    String TEST_HEADER = PREFIX + "Headers.test";
   }
 
   public OpenAiChatModelBuilder buildOpenAiModel() {
@@ -55,7 +56,12 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
     if (!baseUrl.isBlank()) {
       builder.baseUrl(baseUrl);
     }
-    builder.apiKey(Ivy.var().get(OpenAiConf.API_KEY));
+    var testing = Ivy.var().get(OpenAiConf.TEST_HEADER);
+    if (!testing.isBlank()) {
+      builder.customHeaders(Map.of("X-Requested-By", "ivy", "X-Test", testing));
+    } else {
+      builder.apiKey(Ivy.var().get(OpenAiConf.API_KEY));
+    }
     return builder;
   }
 

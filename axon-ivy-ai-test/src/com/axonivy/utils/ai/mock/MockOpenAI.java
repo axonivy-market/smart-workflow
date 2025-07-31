@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -33,10 +34,15 @@ public class MockOpenAI {
   @Path("chat/completions")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response chat(JsonNode request) {
-    return Response.ok()
-        .entity(load("completions-response.json"))
-        .build();
+  public Response chat(JsonNode request, @HeaderParam("X-Test") String test) {
+    if ("chat".equals(test)) {
+      if (request.toPrettyString().contains("ready?")) {
+        return Response.ok()
+            .entity(load("completions-response.json"))
+            .build();
+      }
+    }
+    return Response.ok().entity("not implemented!").build();
   }
 
   public static String load(String json) {

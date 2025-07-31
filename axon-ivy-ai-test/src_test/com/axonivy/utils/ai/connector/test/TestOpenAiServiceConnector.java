@@ -24,6 +24,7 @@ class TestOpenAiServiceConnector {
   @BeforeEach
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl());
+    fixture.var(OpenAiConf.TEST_HEADER, "chat");
   }
 
   @Test
