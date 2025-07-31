@@ -2,7 +2,6 @@ package com.axonivy.utils.ai.tools;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
 
@@ -18,12 +17,7 @@ import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
 import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
-import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.request.ChatRequest;
-import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.service.AiServices;
 
 public class AgenticProcessCall extends AbstractUserProcessExtension {
 
@@ -35,30 +29,21 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
   public CompositeObject perform(IRequestId requestId, CompositeObject in, IIvyScriptContext context) throws Exception {
     String query = getConfig().get(Conf.QUERY); // execute scripted?
 
-    UserMessage init = UserMessage.from(query);
-
     var model = new OpenAiServiceConnector()
         .buildOpenAiModel().build();
 
-    List<ToolSpecification> ivyTools = IvyToolSpecs.find();
-    ChatRequest request = ChatRequest.builder()
-        .messages(init)
-        .toolSpecifications(ivyTools)
+    var supporter = AiServices.builder(SupportAgent.class)
+        .chatModel(model)
+        .toolProvider(new IvyToolsProvider())
         .build();
-    ChatResponse response = model.chat(request);
-    AiMessage aiMessage = response.aiMessage();
+    var response2 = supporter.chat(query);
 
-    var results = aiMessage.toolExecutionRequests().stream()
-        .map(IvyToolExecutor::execute).toList();
-
-    ChatRequest request2 = ChatRequest.builder()
-        .messages(Stream.concat(Stream.of((ChatMessage) init, aiMessage), results.stream()).toList())
-        .toolSpecifications(ivyTools)
-        .build();
-    ChatResponse response2 = model.chat(request2);
-
-    Ivy.log().info(response2);
+    Ivy.log().info("Agent response: " + response2);
     return in;
+  }
+
+  interface SupportAgent {
+    String chat(String query);
   }
 
   public static class Editor extends UiEditorExtension {
