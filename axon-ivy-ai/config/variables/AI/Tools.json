@@ -97,7 +97,7 @@
   {
     "id": "handle-hr-ticket",
     "name": "Handle HR Ticket Tool",
-    "usage": "Use this tool to handle HR ticket",
+    "usage": "Use this tool to handle HR ticket. Only use this tool when the support ticket type is HR",
     "signature" : "handleHrTicket(com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket)",
     "parameters" : [
       {

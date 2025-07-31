@@ -1,0 +1,452 @@
+package com.axonivy.utils.ai.function;
+
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
+import com.axonivy.utils.ai.dto.ai.AiExample;
+import com.axonivy.utils.ai.dto.ai.AiVariable;
+import com.axonivy.utils.ai.dto.ai.FieldExplanation;
+import com.axonivy.utils.ai.enums.AiVariableState;
+import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.model.chat.request.json.JsonBooleanSchema;
+import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
+import dev.langchain4j.model.chat.request.json.JsonIntegerSchema;
+import dev.langchain4j.model.chat.request.json.JsonNumberSchema;
+import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
+import dev.langchain4j.model.chat.request.json.JsonSchema;
+import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
+import dev.langchain4j.model.chat.request.json.JsonStringSchema;
+
+public class DataMapper extends AiFunction<Object, AiVariable> {
+
+  private static final String TEMPLATE = """
+      QUERY:
+      {{query}}
+      -------------------------------
+      INSTRUCTIONS:
+      {{customInstructions}}
+      -------------------------------
+      EXAMPLES OF RESULT:
+      {{examples}}
+      """;
+
+  // Object need to extract
+  private Object targetObject;
+
+  // The result is a list
+  private Boolean asList;
+
+  private List<FieldExplanation> fieldExplanations;
+
+  // Examples for AI guidance
+  private List<AiExample> examples = new ArrayList<>();
+
+  public static Builder getBuilder() {
+    return new Builder();
+  }
+
+  @Override
+  protected boolean validateInputs() {
+    return super.validateInputs() && targetObject != null;
+  }
+
+  @Override
+  protected Map<String, Object> buildParameters() {
+    Map<String, Object> params = new HashMap<>();
+    params.put("query", getQuery());
+    params.put("customInstructions", formatCustomInstructions());
+    params.put("examples", formatExamples());
+    return params;
+  }
+
+  @Override
+  protected JsonSchema generateJsonSchema() {
+    if (targetObject == null) {
+      return null;
+    }
+
+    String schemaName = targetObject.getClass().getSimpleName();
+    JsonObjectSchema rootSchema = buildObjectSchemaWithExplanations(targetObject.getClass());
+
+    if (rootSchema == null) {
+      return null;
+    }
+
+    return JsonSchema.builder().name(schemaName).rootElement(rootSchema).build();
+  }
+
+  @Override
+  protected AiVariable parseJsonResponse(String jsonResponse) {
+    if (StringUtils.isBlank(jsonResponse)) {
+      return buildErrorResult();
+    }
+
+    AiVariable result = new AiVariable();
+    result.init();
+    
+    // Put the parsed object get from AI to the result
+    // If failed, put the JSON object instead
+    try {
+      Object objFromAI = BusinessEntityConverter.jsonValueToEntity(jsonResponse, targetObject.getClass());
+      result.getParameter().setValue(objFromAI);
+    } catch (Exception e) {
+      result.getParameter().setValue(jsonResponse);
+    }
+
+    result.getParameter().setClassName(targetObject.getClass().getName());
+    result.setState(AiVariableState.SUCCESS);
+    return result;
+  }
+
+  @Override
+  protected AiVariable processResult(AiVariable parsedResult) {
+    // Validate the result using the original validation logic
+    if (isValidResult(parsedResult)) {
+      return parsedResult;
+    }
+
+    return buildErrorResult();
+  }
+
+  @Override
+  protected String getTemplate() {
+    return TEMPLATE;
+  }
+
+  @Override
+  protected AiVariable handleValidationFailure() {
+    return buildErrorResult();
+  }
+
+  @Override
+  protected AiVariable handleSchemaGenerationFailure() {
+    return buildErrorResult();
+  }
+
+  @Override
+  protected AiVariable handleAiServiceFailure() {
+    return buildErrorResult();
+  }
+
+  @Override
+  protected AiVariable handleExecutionException(Exception e) {
+    Ivy.log().error(String.format("DataMapping execution failed: %s", e.getMessage()));
+    return buildErrorResult();
+  }
+
+  /**
+   * Convert the targetObject to JSON string using Jackson
+   * 
+   * @return converted JSON object or empty if failed
+   */
+  public String convertObjectToJson() {
+    try {
+      return BusinessEntityConverter.getObjectMapper().writeValueAsString(targetObject);
+    } catch (JsonProcessingException e) {
+      return StringUtils.EMPTY;
+    }
+  }
+
+  /**
+   * Determines if the result from AI is valid and successful by attempting to
+   * parse it back to the target object.
+   */
+  private boolean isValidResult(AiVariable result) {
+    if (result == null) {
+      return false;
+    }
+
+    // Check if result state indicates success
+    if (result.getState() != AiVariableState.SUCCESS) {
+      return false;
+    }
+
+    // Check if content is not blank
+    if (StringUtils.isBlank(result.getSafeValue())) {
+      return false;
+    }
+
+    // The ultimate validation: try to parse the result back to the target object
+    if (targetObject != null) {
+      try {
+        if (BooleanUtils.isTrue(asList)) {
+          // For list results, try to parse as array
+          BusinessEntityConverter.jsonValueToEntities(result.getSafeValue(), targetObject.getClass());
+        } else {
+          // For single object results, try to parse as single object
+          BusinessEntityConverter.jsonValueToEntity(result.getSafeValue(), targetObject.getClass());
+        }
+        // If parsing succeeds, the result is valid
+        return true;
+      } catch (Exception e) {
+        // If parsing fails, the result is not valid regardless of other checks
+        System.out.println("Result validation failed - JSON parsing error: " + e.getMessage());
+        return false;
+      }
+    }
+
+    // Fallback: basic validation if no target object is available
+    String content = result.getSafeValue().toLowerCase();
+    if (content.contains("error") || content.contains("failed") || content.contains("invalid")) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private AiVariable buildErrorResult() {
+    AiVariable result = new AiVariable();
+    result.init();
+    result.getParameter().setValue("ERROR");
+    result.getParameter().setClassName(targetObject != null ? targetObject.getClass().getName() : "String");
+    result.setState(AiVariableState.ERROR);
+    return result;
+  }
+
+  /**
+   * Builds a {@link JsonObjectSchema} representing the fields of the class.
+   * Enhanced version that applies field explanations and required field logic.
+   *
+   * @param clazz the class to process
+   * @return the object schema with property mappings
+   */
+  private JsonObjectSchema buildObjectSchemaWithExplanations(Class<?> clazz) {
+    JsonObjectSchema.Builder builder = JsonObjectSchema.builder();
+    List<String> requiredFields = new ArrayList<>();
+
+    Field[] fields = clazz.getDeclaredFields();
+
+    if (fields.length == 0) {
+      return null;
+    }
+
+    for (Field field : fields) {
+      // Skip static and synthetic fields
+      if (java.lang.reflect.Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+        continue;
+      }
+
+      String fieldName = field.getName();
+      // Use the utility method from JsonSchemaAiFunction for basic type mapping
+      JsonSchemaElement fieldSchema = createSchemaElementForTypeWithLimitedSupport(field.getType(), field);
+
+      // Skip unsupported field
+      if (fieldSchema == null) {
+        continue;
+      }
+
+      // Add description from FieldExplanation if available
+      if (CollectionUtils.isNotEmpty(fieldExplanations)) {
+        for (FieldExplanation explanation : fieldExplanations) {
+          if (explanation.getName().equals(fieldName)) {
+            // Use the utility method from JsonSchemaAiFunction
+            fieldSchema = addDescriptionToSchema(fieldSchema, explanation);
+
+            // If the field is marked as mandatory, add it to the required fields list
+            if (BooleanUtils.isTrue(explanation.isMandatory())) {
+              requiredFields.add(fieldName);
+            }
+            break;
+          }
+        }
+      }
+
+      builder.addProperty(fieldName, fieldSchema);
+    }
+
+    // Set required fields
+    if (!requiredFields.isEmpty()) {
+      builder.required(requiredFields.toArray(new String[0]));
+    }
+
+    return builder.build();
+  }
+
+  /**
+   * Maps a Java type to an appropriate {@link JsonSchemaElement}. Limited version
+   * that doesn't support arrays, lists, and nested objects (DataMapping
+   * requirement).
+   *
+   * @param type  the field type
+   * @param field the field itself (unused here but could be extended)
+   * @return a schema element representing the field's type, null for unsupported
+   *         types
+   */
+  private JsonSchemaElement createSchemaElementForTypeWithLimitedSupport(Class<?> type, Field field) {
+    // Handle primitive and wrapper types
+    if (type == String.class || type == char.class || type == Character.class) {
+      return JsonStringSchema.builder().build();
+    }
+
+    if (type == int.class || type == Integer.class || type == long.class || type == Long.class
+        || type == BigInteger.class) {
+      return JsonIntegerSchema.builder().build();
+    }
+
+    if (type == float.class || type == Float.class || type == double.class || type == Double.class
+        || type == BigDecimal.class) {
+      return JsonNumberSchema.builder().build();
+    }
+
+    if (type == boolean.class || type == Boolean.class) {
+      return JsonBooleanSchema.builder().build();
+    }
+
+    // Handle enums
+    if (type.isEnum()) {
+      Object[] enumConstants = type.getEnumConstants();
+      List<String> enumValues = new ArrayList<>();
+      for (Object enumConstant : enumConstants) {
+        enumValues.add(enumConstant.toString());
+      }
+      return JsonEnumSchema.builder().enumValues(enumValues).build();
+    }
+
+    // DataMapping doesn't support arrays, lists, and nested objects
+    return null;
+  }
+
+  private String formatExamples() {
+    if (CollectionUtils.isEmpty(examples)) {
+      return StringUtils.EMPTY;
+    }
+
+    StringBuilder builder = new StringBuilder();
+    for (AiExample example : examples) {
+      builder
+          .append(String.format("Query: %s\nExpected result: %s\n\n", example.getQuery(), example.getExpectedResult()));
+    }
+    return builder.toString().strip();
+  }
+
+  // Getters and setters for domain-specific fields
+  public Object getTargetObject() {
+    return this.targetObject;
+  }
+
+  public void setTargetObject(Object targetObject) {
+    this.targetObject = targetObject;
+  }
+
+  public List<FieldExplanation> getFieldExplanations() {
+    return this.fieldExplanations;
+  }
+
+  public void setFieldExplanations(List<FieldExplanation> fieldExplanations) {
+    this.fieldExplanations = fieldExplanations;
+  }
+
+  public Boolean getAsList() {
+    return asList;
+  }
+
+  public void setAsList(Boolean asList) {
+    this.asList = asList;
+  }
+
+  public List<AiExample> getExamples() {
+    return examples;
+  }
+
+  public void setExamples(List<AiExample> examples) {
+    this.examples = examples;
+  }
+
+//Builder class for DataMapping
+  public static class Builder extends AiFunction.Builder<Object, AiVariable, DataMapper> {
+    private Object targetObject;
+    private List<FieldExplanation> fieldExplanations;
+    private Boolean asList;
+    private List<AiExample> examples = new ArrayList<>();
+
+    @Override
+    public Builder useService(AbstractAiServiceConnector connector) {
+      return (Builder) super.useService(connector);
+    }
+
+    @Override
+    public Builder withQuery(String query) {
+      return (Builder) super.withQuery(query);
+    }
+
+    @Override
+    public Builder addCustomInstructions(List<String> instructions) {
+      return (Builder) super.addCustomInstructions(instructions);
+    }
+
+    @Override
+    public Builder addCustomInstruction(String instruction) {
+      return (Builder) super.addCustomInstruction(instruction);
+    }
+
+    @Override
+    public Builder addInputData(List<Object> data) {
+      return (Builder) super.addInputData(data);
+    }
+
+    public Builder addFieldExplanations(List<FieldExplanation> fieldExplanations) {
+      if (this.fieldExplanations == null) {
+        this.fieldExplanations = new ArrayList<>();
+      }
+      this.fieldExplanations.addAll(fieldExplanations);
+      return this;
+    }
+
+    public Builder addExamples(List<AiExample> examples) {
+      if (CollectionUtils.isNotEmpty(examples)) {
+        this.examples.addAll(examples);
+      }
+      return this;
+    }
+
+    public Builder withObject(Object object) {
+      this.targetObject = object;
+      return this;
+    }
+
+    public Builder withTargetObject(Object targetObject) {
+      this.targetObject = targetObject;
+      return this;
+    }
+
+    public Builder withTargetJson(String json) {
+      try {
+        this.targetObject = BusinessEntityConverter.jsonValueToEntity(json, Object.class);
+      } catch (Exception e) {
+        this.targetObject = null;
+      }
+      return this;
+    }
+
+    public Builder asList(Boolean asList) {
+      this.asList = asList;
+      return this;
+    }
+
+    @Override
+    public DataMapper build() {
+      DataMapper dataMapper = new DataMapper();
+      dataMapper.setConnector(connector);
+      dataMapper.setQuery(query);
+      dataMapper.setCustomInstructions(customInstructions);
+      dataMapper.setTargetObject(targetObject);
+      dataMapper.setFieldExplanations(fieldExplanations);
+      dataMapper.setAsList(asList);
+      dataMapper.setExamples(examples);
+      return dataMapper;
+    }
+  }
+}

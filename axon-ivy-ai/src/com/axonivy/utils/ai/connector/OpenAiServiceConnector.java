@@ -37,6 +37,10 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
     this.chatModel = buildOpenAiModel()
         .modelName(modelName)
         .build();
+
+    this.jsonModel = buildJsonOpenAiModel()
+        .modelName(modelName)
+        .build();
   }
 
   public interface OpenAiConf {

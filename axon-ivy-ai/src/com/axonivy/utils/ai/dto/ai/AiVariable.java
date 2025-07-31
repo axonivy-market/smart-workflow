@@ -48,6 +48,7 @@ public class AiVariable {
   // IvyToolParameter containing name, value, description, etc.
   private IvyToolParameter parameter;
 
+  // State of the variable
   private AiVariableState state;
 
   /**

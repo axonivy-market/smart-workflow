@@ -1,168 +1,315 @@
 package com.axonivy.utils.ai.function;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
-import com.axonivy.utils.ai.dto.ai.AiExample;
-import com.axonivy.utils.ai.dto.ai.AiVariable;
-import com.axonivy.utils.ai.enums.AiVariableState;
-import com.axonivy.utils.ai.utils.StringProcessingUtils;
+import com.axonivy.utils.ai.dto.ai.FieldExplanation;
+import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import dev.langchain4j.model.input.PromptTemplate;
+import dev.langchain4j.model.chat.request.json.JsonArraySchema;
+import dev.langchain4j.model.chat.request.json.JsonBooleanSchema;
+import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
+import dev.langchain4j.model.chat.request.json.JsonIntegerSchema;
+import dev.langchain4j.model.chat.request.json.JsonNumberSchema;
+import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
+import dev.langchain4j.model.chat.request.json.JsonSchema;
+import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
+import dev.langchain4j.model.chat.request.json.JsonStringSchema;
 
-public abstract class AiFunction {
-  protected static final String RESULT_PREFIX = "<<";
-  protected static final String RESULT_POSTFIX = ">>";
+/**
+ * Abstract base class for AI functions that use JSON schemas for structured
+ * data extraction.
+ * 
+ * This class provides a template method pattern for AI functions that: -
+ * Generate JSON schemas based on target data structures - Call AI services with
+ * structured output requirements - Parse JSON responses into domain objects
+ * 
+ * @param <T> The input data type (e.g., AiVariable, IvyTool, Object)
+ * @param <R> The result type (e.g., List<AiVariable>, List<AiStep>, AiVariable)
+ */
+public abstract class AiFunction<T, R> {
 
-  // Format an example to format:
-  // Input: example input
-  // Output: example output
-  //
-  private static final String EXAMPLE_LINE_PATTERN = """
-          Query: %s
-          Expected result: %s
-
-      """;
-
-  // The general prompt template
-  protected static final String PROMPT_TEMPLATE = """
-      Query:
-      {{query}}
-      -------------------------------
-      Instruction:
-      - {{functionInstructions}}
-      {{customInstructions}}
-      {{wrapperInstruction}}
-
-      {{examples}}
-      """;
-
-  private static final String WRAPPER_INSTRUCTION = """
-      - Put the result inside '<<' and '>>'.
-          + Example of a plain text output: <<This is the result>>
-          + Example of a json output: <<{"name":"test"}>>
-          + Example of a multi-line output:
-          <<This is a line
-           another line
-
-           another line>>
-      """;
-
-  // Template for the examples part
-  private static final String EXAMPLES_TEMPLATE = """
-      -------------------------------
-      Below are some examples of correct result:
-
-      {{examples}}
-      """;
-
-  // The input query
-  private String query;
-
-  // Instructions to guide AI how to execute the function
-  private String functionInstructions;
-
-  // Instructions to guide AI how to show the result
-  private List<String> outputInstructions;
-
-  // The external instructions that modify or refine the function's behavior
-  private List<String> customInstructions;
-
-  // Set of examples of how the result look like
-  private List<AiExample> examples;
-
-  // Abstract method to build instructions before execute
-  protected abstract void buildInstructions();
-
-  // AI service connector to handle the communication with AI provider
+  // AI service connector to handle communication with AI provider
   private AbstractAiServiceConnector connector;
 
-  // Option to put the result into wrapper characters or not. default is false
-  private Boolean useWrappers = false;
+  // The input query/prompt
+  private String query;
 
-  // Option to show the result as plain text or not. Default is true
-  private Boolean isPlainText = true;
+  // Custom instructions to modify the function's behavior
+  private List<String> customInstructions;
 
-  protected boolean failedToBuildInstructions;
+  // Input data for processing
+  private List<T> inputData;
 
-  private String prompt;
+  // Execution result
+  private R result;
 
-  protected abstract AiVariable createStandardResult(String resultFromAI);
+  /**
+   * Template method that defines the execution flow. Subclasses should not
+   * override this method.
+   */
+  public final R execute() {
+    try {
+      // Step 1: Validate inputs
+      if (!validateInputs()) {
+        return handleValidationFailure();
+      }
 
-  // Method to execute this function
-  public AiVariable execute() {
-    // Build instructions
-    buildInstructions();
+      // Step 2: Build template parameters
+      Map<String, Object> parameters = buildParameters();
 
-    // If error occurred when building instructions, return empty result
-    if (failedToBuildInstructions) {
-      failedToBuildInstructions = false;
-      return createStandardResult(StringUtils.EMPTY);
+      // Step 3: Generate JSON schema
+      JsonSchema jsonSchema = generateJsonSchema();
+      if (jsonSchema == null) {
+        return handleSchemaGenerationFailure();
+      }
+
+      // Step 4: Call AI service
+      String aiResponse = callAiService(jsonSchema, parameters);
+      if (StringUtils.isBlank(aiResponse)) {
+        return handleAiServiceFailure();
+      }
+
+      // Step 5: Parse JSON response
+      R parsedResult = parseJsonResponse(aiResponse);
+
+      // Step 6: Process and validate result
+      result = processResult(parsedResult);
+
+      return result;
+
+    } catch (Exception e) {
+      return handleExecutionException(e);
+    }
+  }
+
+  /**
+   * Validates inputs before execution. Default implementation checks for
+   * connector and query.
+   */
+  protected boolean validateInputs() {
+    return connector != null && StringUtils.isNotBlank(query);
+  }
+
+  /**
+   * Builds template parameters for the AI prompt. Subclasses must implement this
+   * to provide domain-specific parameters.
+   */
+  protected abstract Map<String, Object> buildParameters();
+
+  /**
+   * Generates the JSON schema for structured AI output. Subclasses must implement
+   * this to define their expected data structure.
+   */
+  protected abstract JsonSchema generateJsonSchema();
+
+  /**
+   * Parses the JSON response from the AI service. Subclasses must implement this
+   * to convert JSON to their domain objects.
+   */
+  protected abstract R parseJsonResponse(String jsonResponse);
+
+  /**
+   * Processes the parsed result and performs any final validation or
+   * transformation. Default implementation returns the parsed result as-is.
+   */
+  protected R processResult(R parsedResult) {
+    return parsedResult;
+  }
+
+  /**
+   * Returns the template string for the AI prompt. Subclasses must provide their
+   * specific template.
+   */
+  protected abstract String getTemplate();
+
+  /**
+   * Calls the AI service with the generated schema and parameters.
+   */
+  protected final String callAiService(JsonSchema jsonSchema, Map<String, Object> parameters) {
+    return connector.generateJson(jsonSchema, parameters, getTemplate());
+  }
+
+  /**
+   * Formats custom instructions for inclusion in prompts.
+   */
+  protected final String formatCustomInstructions() {
+    if (CollectionUtils.isEmpty(customInstructions)) {
+      return StringUtils.EMPTY;
     }
 
-    // Map parameters
-    Map<String, Object> params = new HashMap<>();
-    params.put("query", Optional.ofNullable(query).orElse(StringUtils.EMPTY));
-    params.put("functionInstructions", Optional.ofNullable(functionInstructions).orElse(StringUtils.EMPTY));
-    params.put("customInstructions", getFormattedCustomInstructions());
-    params.put("wrapperInstruction", (isPlainText || !useWrappers) ? StringUtils.EMPTY : WRAPPER_INSTRUCTION);
-    params.put("examples", getFormattedExamples());
+    StringBuilder builder = new StringBuilder();
+    for (String instruction : customInstructions) {
+      builder.append("- ").append(instruction).append(System.lineSeparator());
+    }
 
-    // Use AI to perform action
-    prompt = PromptTemplate.from(PROMPT_TEMPLATE).apply(params).text().strip();
-    String resultFromAI = connector.generate(prompt);
-
-    // standardized the result from AI
-    resultFromAI = isPlainText ? resultFromAI : standardizeResult(resultFromAI);
-
-    // return the final result
-    return createStandardResult(resultFromAI);
+    return builder.toString().strip();
   }
 
-  // Method to standardize result from AI
-  // If cannot extract the standardize result, return null instead
-  protected String standardizeResult(String result) {
-    return StringProcessingUtils.standardizeResult(result, true);
+  /**
+   * Safely parses JSON arrays from AI responses. Common utility for extracting
+   * array data from AI JSON responses.
+   */
+  protected final List<String> parseJsonArray(String jsonResponse, String arrayFieldName) {
+    List<String> result = new ArrayList<>();
+    try {
+      JsonNode arrayNode = BusinessEntityConverter.objectMapper.readTree(jsonResponse).get(arrayFieldName);
+
+      if (arrayNode != null && arrayNode.isArray()) {
+        for (JsonNode node : arrayNode) {
+          result.add(node.asText());
+        }
+      }
+    } catch (JsonProcessingException e) {
+      // Return empty list on parsing failure
+    }
+    return result;
   }
 
-  public String getFunctionInstructions() {
-    return this.functionInstructions;
+  // Common JSON Schema Generation Utilities
+
+  /**
+   * Creates a JsonSchemaElement for a Java type using reflection.
+   */
+  public static JsonSchemaElement createSchemaElementForType(Class<?> type, Field field) {
+    // Handle primitive and wrapper types
+    if (type == String.class || type == char.class || type == Character.class) {
+      return JsonStringSchema.builder().build();
+    }
+
+    if (type == int.class || type == Integer.class || type == long.class || type == Long.class
+        || type == BigInteger.class) {
+      return JsonIntegerSchema.builder().build();
+    }
+
+    if (type == float.class || type == Float.class || type == double.class || type == Double.class
+        || type == BigDecimal.class) {
+      return JsonNumberSchema.builder().build();
+    }
+
+    if (type == boolean.class || type == Boolean.class) {
+      return JsonBooleanSchema.builder().build();
+    }
+
+    // Handle enums
+    if (type.isEnum()) {
+      Object[] enumConstants = type.getEnumConstants();
+      List<String> enumValues = new ArrayList<>();
+      for (Object enumConstant : enumConstants) {
+        enumValues.add(enumConstant.toString());
+      }
+      return JsonEnumSchema.builder().enumValues(enumValues).build();
+    }
+
+    // Handle arrays
+    if (type.isArray()) {
+      Class<?> componentType = type.getComponentType();
+      JsonSchemaElement itemSchema = createSchemaElementForType(componentType, null);
+      return JsonArraySchema.builder().items(itemSchema).build();
+    }
+
+    // Handle collections
+    if (Collection.class.isAssignableFrom(type)) {
+      if (field != null && field.getGenericType() instanceof ParameterizedType) {
+        ParameterizedType paramType = (ParameterizedType) field.getGenericType();
+        Type[] typeArgs = paramType.getActualTypeArguments();
+        if (typeArgs.length > 0) {
+          Class<?> itemType = (Class<?>) typeArgs[0];
+          JsonSchemaElement itemSchema = createSchemaElementForType(itemType, null);
+          return JsonArraySchema.builder().items(itemSchema).build();
+        }
+      }
+      // Default to string array if we can't determine the type
+      return JsonArraySchema.builder().items(JsonStringSchema.builder().build()).build();
+    }
+
+    // Handle nested objects
+    return buildObjectSchema(type);
   }
 
-  public void setFunctionInstructions(String functionInstructions) {
-    this.functionInstructions = functionInstructions;
+  /**
+   * Builds a JsonObjectSchema from a Java class using reflection.
+   */
+  public static JsonObjectSchema buildObjectSchema(Class<?> clazz) {
+    JsonObjectSchema.Builder builder = JsonObjectSchema.builder();
+
+    Field[] fields = clazz.getDeclaredFields();
+    for (Field field : fields) {
+      // Skip static and synthetic fields
+      if (java.lang.reflect.Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+        continue;
+      }
+
+      String fieldName = field.getName();
+      JsonSchemaElement fieldSchema = createSchemaElementForType(field.getType(), field);
+
+      if (fieldSchema != null) {
+        builder.addProperty(fieldName, fieldSchema);
+      }
+    }
+
+    return builder.build();
   }
 
-  public List<String> getCustomInstructions() {
-    return this.customInstructions;
+  /**
+   * Adds description to a schema element based on field explanation.
+   */
+  public static JsonSchemaElement addDescriptionToSchema(JsonSchemaElement schema, FieldExplanation explanation) {
+    String description = explanation.getExplanation();
+
+    if (schema instanceof JsonStringSchema) {
+      return JsonStringSchema.builder().description(description).build();
+    } else if (schema instanceof JsonIntegerSchema) {
+      return JsonIntegerSchema.builder().description(description).build();
+    } else if (schema instanceof JsonNumberSchema) {
+      return JsonNumberSchema.builder().description(description).build();
+    } else if (schema instanceof JsonBooleanSchema) {
+      return JsonBooleanSchema.builder().description(description).build();
+    } else if (schema instanceof JsonEnumSchema) {
+      JsonEnumSchema enumSchema = (JsonEnumSchema) schema;
+      return JsonEnumSchema.builder().description(description).enumValues(enumSchema.enumValues()).build();
+    }
+
+    return schema;
   }
 
-  public void setCustomInstructions(List<String> customInstructions) {
-    this.customInstructions = customInstructions;
+  // Error handling methods that subclasses can override
+
+  protected R handleValidationFailure() {
+    System.err.println("JsonSchemaAiFunction validation failed");
+    return null;
   }
 
-  public List<String> getOutputInstructions() {
-    return this.outputInstructions;
+  protected R handleSchemaGenerationFailure() {
+    System.err.println("JsonSchemaAiFunction schema generation failed");
+    return null;
   }
 
-  public void setOutputInstructions(List<String> outputInstructions) {
-    this.outputInstructions = outputInstructions;
+  protected R handleAiServiceFailure() {
+    System.err.println("JsonSchemaAiFunction AI service call failed");
+    return null;
   }
 
-  public String getQuery() {
-    return this.query;
+  protected R handleExecutionException(Exception e) {
+    System.err.println("JsonSchemaAiFunction execution failed: " + e.getMessage());
+    e.printStackTrace();
+    return null;
   }
 
-  public void setQuery(String query) {
-    this.query = query;
-  }
+  // Getters and setters
 
   public AbstractAiServiceConnector getConnector() {
     return connector;
@@ -172,121 +319,81 @@ public abstract class AiFunction {
     this.connector = connector;
   }
 
-  public Boolean getIsPlainText() {
-    return isPlainText;
+  public String getQuery() {
+    return query;
   }
 
-  public void setIsPlainText(Boolean isPlainText) {
-    this.isPlainText = isPlainText;
+  public void setQuery(String query) {
+    this.query = query;
   }
 
-  public Boolean getUseWrappers() {
-    return useWrappers;
+  public List<String> getCustomInstructions() {
+    return customInstructions;
   }
 
-  public void setUseWrappers(Boolean useWrappers) {
-    this.useWrappers = useWrappers;
+  public void setCustomInstructions(List<String> customInstructions) {
+    this.customInstructions = customInstructions;
   }
 
-  private String getFormattedCustomInstructions() {
+  public List<T> getInputData() {
+    return inputData;
+  }
 
-    // If there is no instructions, just return an empty string
-    if (CollectionUtils.isEmpty(customInstructions)) {
-      return "";
-    }
+  public void setInputData(List<T> inputData) {
+    this.inputData = inputData;
+  }
 
-    // Format each instruction in a single line with the leading '-' character
-    String result = StringUtils.EMPTY;
-    for (String item : customInstructions) {
-      result = result.concat(String.format("- %s\n", item));
-    }
-
+  public R getResult() {
     return result;
   }
 
-  private String getFormattedExamples() {
-    // If there is no example, return empty string
-    if (examples == null || examples.isEmpty()) {
-      return "";
-    }
-
-    // Format examples using the EXAMPLE_LINE_PATTERN String pattern
-    String result = StringUtils.EMPTY;
-    for (AiExample item : examples) {
-      result = result.concat(String.format(EXAMPLE_LINE_PATTERN, item.getQuery(), item.getExpectedResult()));
-    }
-
-    // Map the formatted examples into the examples template
-    Map<String, Object> params = new HashMap<>();
-    params.put("examples", result);
-
-    return PromptTemplate.from(EXAMPLES_TEMPLATE).apply(params).text();
-  }
-
-  public void setExamples(List<AiExample> examples) {
-    this.examples = examples;
-  }
-
-  protected AiVariable buildErrorResult() {
-    AiVariable result = new AiVariable();
-    result.init();
-    result.getParameter().setValue("Error occurred when AI generating the result");
-    result.setState(AiVariableState.ERROR);
-    result.getParameter().setDescription("Error occurred when AI generating the result");
-    return result;
-  }
-
-  public String getPrompt() {
-    return prompt;
-  }
-
-  public void setPrompt(String prompt) {
-    this.prompt = prompt;
-  }
-
-  public static class Builder {
+  /**
+   * Abstract builder class for JsonSchemaAiFunction implementations.
+   * 
+   * @param <T> The input data type that the AI function processes (e.g.,
+   *            AiVariable, IvyTool, Object)
+   * @param <R> The result type that the AI function returns (e.g.,
+   *            List<AiVariable>, List<AiStep>, AiVariable)
+   * @param <F> The concrete AI function type that extends JsonSchemaAiFunction<T,
+   *            R>
+   */
+  public abstract static class Builder<T, R, F extends AiFunction<T, R>> {
     protected AbstractAiServiceConnector connector;
-    protected String query = StringUtils.EMPTY;
+    protected String query;
     protected List<String> customInstructions = new ArrayList<>();
-    protected List<AiExample> examples = new ArrayList<>();
+    protected List<T> inputData = new ArrayList<>();
 
-    public Builder useService(AbstractAiServiceConnector connector) {
+    public Builder<T, R, F> useService(AbstractAiServiceConnector connector) {
       this.connector = connector;
       return this;
     }
 
-    public Builder withQuery(String query) {
+    public Builder<T, R, F> withQuery(String query) {
       this.query = query;
       return this;
     }
 
-    public Builder addCustomInstruction(String instruction) {
+    public Builder<T, R, F> addCustomInstructions(List<String> instructions) {
+      if (CollectionUtils.isNotEmpty(instructions)) {
+        this.customInstructions.addAll(instructions);
+      }
+      return this;
+    }
+
+    public Builder<T, R, F> addCustomInstruction(String instruction) {
       if (StringUtils.isNotBlank(instruction)) {
         this.customInstructions.add(instruction);
       }
       return this;
     }
 
-    public Builder addExample(List<AiExample> examples) {
-      if (StringUtils.isNotBlank(query)) {
-        this.examples.addAll(examples);
+    public Builder<T, R, F> addInputData(List<T> data) {
+      if (CollectionUtils.isNotEmpty(data)) {
+        this.inputData.addAll(data);
       }
       return this;
     }
 
-    public AiFunction build() {
-      return new AiFunction() {
-
-        @Override
-        protected void buildInstructions() {
-        }
-
-        @Override
-        protected AiVariable createStandardResult(String resultFromAI) {
-          // TODO Auto-generated method stub
-          return null;
-        }
-      };
-    }
+    public abstract F build();
   }
 }

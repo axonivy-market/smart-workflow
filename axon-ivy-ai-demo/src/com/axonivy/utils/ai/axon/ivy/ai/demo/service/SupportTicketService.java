@@ -34,9 +34,9 @@ public class SupportTicketService {
     }
   }
 
-  public void save(SupportTicket ticket) {
+  public SupportTicket save(SupportTicket ticket) {
     if (ticket == null) {
-      return;
+      return ticket;
     }
 
     List<SupportTicket> existingTickets = Optional
@@ -64,6 +64,7 @@ public class SupportTicketService {
     }
 
     Ivy.var().set(VARIABLE_KEY, BusinessEntityConverter.entityToJsonValue(existingTickets));
+    return ticket;
   }
 
   public SupportTicket findById(String id) {

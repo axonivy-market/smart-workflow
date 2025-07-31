@@ -3,6 +3,7 @@ package com.axonivy.utils.ai.dto.ai;
 public class FieldExplanation {
   private String name;
   private String explanation;
+  private Boolean isMandatory;
 
   public FieldExplanation(String name, String explanation) {
     this.name = name;
@@ -23,5 +24,13 @@ public class FieldExplanation {
 
   public void setExplanation(String explanation) {
     this.explanation = explanation;
+  }
+
+  public Boolean isMandatory() {
+    return isMandatory;
+  }
+
+  public void setMandatory(Boolean isMandatory) {
+    this.isMandatory = isMandatory;
   }
 }
