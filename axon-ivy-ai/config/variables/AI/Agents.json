@@ -14,7 +14,7 @@
     "instructions": [
       {
         "type": "planning",
-        "content": "Should create a support ticket before assign approver to it"
+        "content": "Should create a support ticket before assign approver to it. Don't need to plan optional step"
       },
       {
          "type": "execution",

@@ -60,9 +60,6 @@ public class AiStep implements Serializable {
   private String analysis;
   private String toolId;
 
-  @JsonIgnore
-  private String runId;
-
   // Execution targets
   @JsonIgnore
   private IvyTool tool;
@@ -162,14 +159,6 @@ public class AiStep implements Serializable {
 
   public void setToolId(String toolId) {
     this.toolId = toolId;
-  }
-
-  public String getRunId() {
-    return runId;
-  }
-
-  public void setRunId(String runId) {
-    this.runId = runId;
   }
 
   public String generateLogEntryContent() {

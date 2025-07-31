@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,12 +14,9 @@ import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
 import com.axonivy.utils.ai.dto.IvyToolParameter;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.Instruction;
-import com.axonivy.utils.ai.enums.AiVariableState;
 import com.axonivy.utils.ai.enums.InstructionType;
-import com.axonivy.utils.ai.function.DataMapping;
+import com.axonivy.utils.ai.function.AiVariableExtractor;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
-
-import ch.ivyteam.ivy.environment.Ivy;
 
 public final class AiVariableUtils {
 
@@ -138,47 +136,6 @@ public final class AiVariableUtils {
     return varList;
   }
 
-  private static List<AiVariable> extractAiVariables(InstructionType instructionType, List<Instruction> instructions,
-      List<AiVariable> variables, AbstractAiServiceConnector connector) {
-    if (CollectionUtils.isEmpty(instructions)) {
-      return variables;
-    }
-
-    // Convert current variables to JSON string
-
-    String variablesStr = convertAiVariablesToString(variables);
-
-    // Prepare data mapping using AI service
-    DataMapping.Builder builder = DataMapping.getBuilder().useService(connector).withQuery(variablesStr)
-        .withObject(AiVariable.getExampleIdList())
-        .addCustomInstruction("Extract ID of selected variables")
-        .addCustomInstruction("The result must be an Json array that parsable to Java List<String>")
-        .addCustomInstruction("If there is no variable from the list matched, return an empty JSON array");
-
-    // Add instructions to the AI service
-    Optional.ofNullable(instructions).orElseGet(() -> new ArrayList<>()).stream()
-        .filter(instruction -> instruction.getType() == instructionType).map(Instruction::getContent)
-        .forEach(builder::addCustomInstruction);
-
-    // Execute the AI function
-    AiVariable result = builder.build().execute();
-    Ivy.log().error("extract result");
-    Ivy.log().error(BusinessEntityConverter.entityToJsonValue(result));
-
-    // If extraction successful, extract variables
-    if (Optional.ofNullable(result).map(AiVariable::getState).get() == AiVariableState.SUCCESS) {
-      List<AiVariable> newList = new ArrayList<>();
-      for (AiVariable variable : variables) {
-        if (result.getSafeValue().contains(variable.getId())) {
-          newList.add(variable);
-        }
-      }
-      return newList;
-    }
-
-    return new ArrayList<>();
-  }
-
   public static String convertAiVariablesToString(List<AiVariable> variables) {
     String variablesStr = StringUtils.EMPTY;
     if (CollectionUtils.isNotEmpty(variables)) {
@@ -205,16 +162,33 @@ public final class AiVariableUtils {
 
   public static List<AiVariable> extractOutputAiVariables(List<Instruction> instructions, List<AiVariable> variables,
       AbstractAiServiceConnector connector) {
-    return extractAiVariables(InstructionType.EXTRACT_OUTPUT, instructions, variables, connector);
+    AiVariableExtractor extractor = AiVariableExtractor.getBuilder()
+        .addInstructions(
+            instructions.stream().filter(instruction -> InstructionType.EXTRACT_OUTPUT == instruction.getType())
+                .collect(Collectors.toList()))
+        .addVariables(variables).useService(connector)
+        .build();
+    extractor.execute();
+    return extractor.getExtracted();
   }
 
   public static List<AiVariable> extractInputAiVariables(List<Instruction> instructions, List<AiVariable> variables,
       AbstractAiServiceConnector connector) {
-    return extractAiVariables(InstructionType.EXTRACT_INPUT, instructions, variables, connector);
+    AiVariableExtractor extractor = AiVariableExtractor.getBuilder()
+        .addInstructions(instructions.stream()
+            .filter(instruction -> InstructionType.EXTRACT_INPUT == instruction.getType()).collect(Collectors.toList()))
+        .addVariables(variables).useService(connector).build();
+    extractor.execute();
+    return extractor.getExtracted();
   }
 
   public static List<AiVariable> extractExecutionAiVariables(List<Instruction> instructions, List<AiVariable> variables,
       AbstractAiServiceConnector connector) {
-    return extractAiVariables(InstructionType.EXECUTION, instructions, variables, connector);
+    AiVariableExtractor extractor = AiVariableExtractor.getBuilder()
+        .addInstructions(instructions.stream()
+            .filter(instruction -> InstructionType.EXECUTION == instruction.getType()).collect(Collectors.toList()))
+        .addVariables(variables).useService(connector).build();
+    extractor.execute();
+    return extractor.getExtracted();
   }
 }

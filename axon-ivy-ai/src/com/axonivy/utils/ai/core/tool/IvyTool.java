@@ -24,7 +24,7 @@ import com.axonivy.utils.ai.enums.AiVariableState;
 import com.axonivy.utils.ai.enums.log.LogLevel;
 import com.axonivy.utils.ai.enums.log.LogPhase;
 import com.axonivy.utils.ai.exception.AiException;
-import com.axonivy.utils.ai.function.DataMapping;
+import com.axonivy.utils.ai.function.DataMapper;
 import com.axonivy.utils.ai.service.IvyAdapterService;
 import com.axonivy.utils.ai.utils.AiVariableUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -187,7 +187,7 @@ public class IvyTool implements Serializable {
   }
 
   private void fulfillIvyToolUsingName() {
-    if (CollectionUtils.isNotEmpty(parameters)) {
+    if (CollectionUtils.isNotEmpty(parameters) && CollectionUtils.isNotEmpty(variables)) {
       for (IvyToolParameter param : parameters) {
         param.setValue(variables.stream().filter(variable -> variable.getParameter().getName().equals(param.getName()))
             .filter(variable -> variable.getParameter().getClassName().contentEquals(param.getClassName()))
@@ -235,7 +235,7 @@ public class IvyTool implements Serializable {
     // Use AI to fulfill parameter
     Map<String, Object> paramsMap = new HashMap<>();
     paramsMap.put("variables", AiVariableUtils.convertAiVariablesToJsonString(variables));
-    AiVariable result = DataMapping.getBuilder().useService(getConnector())
+    AiVariable result = DataMapper.getBuilder().useService(getConnector())
         .withQuery(PromptTemplate.from(VARIABLES_TEMPLATE).apply(paramsMap).text()).withObject(param)
         .addFieldExplanations(Arrays.asList(new FieldExplanation(param.getName(), param.getDescription()))).build()
         .execute();

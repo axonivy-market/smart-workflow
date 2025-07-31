@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
 import com.axonivy.utils.ai.dto.ai.FieldExplanation;
-import com.axonivy.utils.ai.function.DataMapping;
+import com.axonivy.utils.ai.function.DataMapper;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 
 public class ReActDecision implements Serializable {
@@ -110,7 +110,7 @@ public class ReActDecision implements Serializable {
   public static ReActDecision parseReActDecision(String aiResponse) {
     try {
       // Use DataMapping to extract structured data from AI response
-      DataMapping dataMapping = DataMapping.getBuilder().withObject(new ReActDecisionData())
+      DataMapper dataMapping = DataMapper.getBuilder().withObject(new ReActDecisionData())
           .useService(OpenAiServiceConnector.getTinyBrain()).withQuery(aiResponse)
           .addFieldExplanations(Arrays.asList(new FieldExplanation("decision",
               "Extract the decision value: YES (to update plan), NO (continue with current plan), or COMPLETE (goal achieved)"),
@@ -118,7 +118,6 @@ public class ReActDecision implements Serializable {
               new FieldExplanation("agentSelection", "Extract the agent/tool ID selection when decision is YES"),
               new FieldExplanation("reasoning", "Extract the reasoning or thought process behind the decision"),
               new FieldExplanation("decisionContext", "Keep this field empty")))
-          .disableRetry() // Disable retry for faster processing
           .build();
 
       var result = dataMapping.execute();

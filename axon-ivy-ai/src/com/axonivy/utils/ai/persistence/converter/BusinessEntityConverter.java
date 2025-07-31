@@ -13,8 +13,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.ivyteam.ivy.environment.Ivy;
-
 /**
  * This class provides method to convert Business entity object into Json value
  * and reverse
@@ -35,7 +33,6 @@ public final class BusinessEntityConverter {
 
     public static <T> T jsonValueToEntity(String jsonValue, Class<T> classType) {
       try {
-        Ivy.log().error(jsonValue);
         return getObjectMapper().readValue(jsonValue, classType);
       } catch (IOException e) {
         throw new AiException(e);

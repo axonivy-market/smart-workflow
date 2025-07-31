@@ -1,7 +1,6 @@
 package com.axonivy.utils.ai.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,13 +9,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
-import com.axonivy.utils.ai.dto.ai.FieldExplanation;
 import com.axonivy.utils.ai.enums.ExecutionStatus;
 import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.enums.log.LogLevel;
 import com.axonivy.utils.ai.enums.log.LogPhase;
-import com.axonivy.utils.ai.function.DataMapping;
-import com.axonivy.utils.ai.function.Planning;
+import com.axonivy.utils.ai.function.AgentPlanner;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -98,11 +95,7 @@ public class IvyAgent extends BaseAgent {
       }
       prompt.append(ONE_LINE);
     }
-
-    prompt.append("Available tools: ");
-    prompt.append(tools.stream().map(tool -> tool.getId()).collect(java.util.stream.Collectors.joining(", ")));
-    prompt.append(TWO_LINES).append("Create a detailed execution plan to achieve the goal:");
-    return prompt.toString();
+    return prompt.toString().strip();
   }
 
   /**
@@ -116,46 +109,18 @@ public class IvyAgent extends BaseAgent {
 
     // Generate high-level plan from query using the planning AI model
     String enhancedPlanningPrompt = buildPlanningPrompt(execution.getOriginalQuery());
-    Planning.Builder planningBuilder = Planning.getBuilder()
+    AgentPlanner planner = AgentPlanner.getBuilder()
         .addTools(tools)
         .useService(planningModel)
-        .withQuery(enhancedPlanningPrompt);
-    
-    // Add planning instructions as custom instructions
-    List<String> planningInstructions = getPlanningInstructions();
-    for (String instruction : planningInstructions) {
-      planningBuilder.addCustomInstruction(instruction);
-    }
-    
-    Planning planning = planningBuilder.build();
-    String crudePlan = planning.execute().getSafeValue();
-    execution.getLogger().log(LogLevel.PLANNING, LogPhase.INIT, crudePlan, planning.getPrompt(), 0);
+        .withQuery(enhancedPlanningPrompt)
+        .addCustomInstructions(getPlanningInstructions()).build();
 
-    // Map plan content to a list of AiSteps using execution AI model
-    DataMapping dataMapper = DataMapping.getBuilder().useService(executionModel).withObject(new AiStep())
-        .addFieldExplanations(Arrays.asList(new FieldExplanation("stepNo", "Incremental integer, starts at 1"),
-            new FieldExplanation("name", "Name of the step"), new FieldExplanation("analysis", "Analysis of the step"),
-            new FieldExplanation("toolId", "Tool ID to execute the step"),
-            new FieldExplanation("next", "ID of the next step, -1 if final"),
-            new FieldExplanation("previous", "ID of the previous step, 0 if initial"),
-            new FieldExplanation("resultName", "Expected result name"),
-            new FieldExplanation("resultDescription", "Expected result description")))
-        .withQuery(crudePlan).asList(true).build();
-    String stepString = dataMapper.execute().getSafeValue();
+    planner.execute();
 
-    List<AiStep> plannedSteps = BusinessEntityConverter.jsonValueToEntities(stepString, AiStep.class);
-    execution.getLogger().log(LogLevel.PLANNING, LogPhase.RUNNING,
-        BusinessEntityConverter.entityToJsonValue(plannedSteps), dataMapper.getPrompt(), 0);
+    execution.getLogger().log(LogLevel.PLANNING, LogPhase.INIT,
+        BusinessEntityConverter.entityToJsonValue(planner.getSteps()), planner.getGeneratedPlan(), 0);
 
-    // Assign each step to a corresponding worker agent by runnerId
-    for (AiStep step : plannedSteps) {
-
-      var tool = tools.stream().filter(w -> w.getId().equals(step.getToolId())).findFirst()
-          .orElseThrow(() -> new IllegalArgumentException("Tool not found for ID: " + step.getToolId()));
-      step.useTool(tool);
-      execution.getSteps().add(step);
-    }
-
+    execution.setSteps(planner.getSteps());
     execute(execution);
 
     if (CollectionUtils.isNotEmpty(missingInputs)) {
@@ -428,9 +393,18 @@ public class IvyAgent extends BaseAgent {
    * @return the matching AiStep or null
    */
   private AiStep getStepByNumber(int stepNo, AgentExecution execution) {
-    return execution.getSteps().stream().filter(
+    AiStep selected = execution.getSteps().stream().filter(
         step -> stepNo == AiStep.INITIAL_STEP ? step.getPrevious() == AiStep.INITIAL_STEP : step.getStepNo() == stepNo)
         .findFirst().orElse(null);
+
+    for (IvyTool tool : this.tools) {
+      if (tool.getId().equals(selected.getToolId())) {
+        selected.setTool(tool);
+        break;
+      }
+    }
+
+    return selected;
   }
 
   public String getGoal() {
