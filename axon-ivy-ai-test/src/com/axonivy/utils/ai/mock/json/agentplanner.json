@@ -1,0 +1,128 @@
+{
+  "simple_support_plan": {
+    "id": "chatcmpl-planner-simple",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 150,
+      "completion_tokens": 80,
+      "total_tokens": 230
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"steps\":[{\"stepNo\":1,\"name\":\"Validate Ticket\",\"analysis\":\"First step to validate the incoming support ticket format and content\",\"toolId\":\"TICKET_VALIDATOR\",\"next\":2,\"previous\":0,\"resultName\":\"validation_result\",\"resultDescription\":\"Validation status and ticket details\"},{\"stepNo\":2,\"name\":\"Send Response\",\"analysis\":\"Send automated response to customer based on ticket validation\",\"toolId\":\"EMAIL_SENDER\",\"next\":-1,\"previous\":1,\"resultName\":\"email_sent\",\"resultDescription\":\"Confirmation of email delivery\"}]}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "complex_onboarding_plan": {
+    "id": "chatcmpl-planner-complex",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 180,
+      "completion_tokens": 120,
+      "total_tokens": 300
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"steps\":[{\"stepNo\":1,\"name\":\"Create User Account\",\"analysis\":\"Initialize the customer onboarding by creating a new user account\",\"toolId\":\"USER_CREATOR\",\"next\":2,\"previous\":0,\"resultName\":\"user_account\",\"resultDescription\":\"New user account details and credentials\"},{\"stepNo\":2,\"name\":\"Process Documents\",\"analysis\":\"Process and validate customer documents for compliance\",\"toolId\":\"DOCUMENT_PROCESSOR\",\"next\":3,\"previous\":1,\"resultName\":\"document_status\",\"resultDescription\":\"Document processing results and compliance status\"},{\"stepNo\":3,\"name\":\"Send Welcome Notification\",\"analysis\":\"Send welcome email and onboarding instructions to new customer\",\"toolId\":\"NOTIFICATION_SENDER\",\"next\":-1,\"previous\":2,\"resultName\":\"welcome_sent\",\"resultDescription\":\"Confirmation of welcome notification delivery\"}]}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "escalation_plan": {
+    "id": "chatcmpl-planner-escalation",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 160,
+      "completion_tokens": 100,
+      "total_tokens": 260
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"steps\":[{\"stepNo\":1,\"name\":\"Validate Urgent Ticket\",\"analysis\":\"Validate and prioritize the urgent customer complaint\",\"toolId\":\"TICKET_VALIDATOR\",\"next\":2,\"previous\":0,\"resultName\":\"urgent_validation\",\"resultDescription\":\"Priority assessment and ticket classification\"},{\"stepNo\":2,\"name\":\"Escalate to Management\",\"analysis\":\"Escalate urgent complaint to management for immediate attention\",\"toolId\":\"EMAIL_SENDER\",\"next\":3,\"previous\":1,\"resultName\":\"escalation_assigned\",\"resultDescription\":\"Management assignment and escalation tracking\"},{\"stepNo\":3,\"name\":\"Send Priority Response\",\"analysis\":\"Send immediate acknowledgment to customer about escalation\",\"toolId\":\"EMAIL_SENDER\",\"next\":-1,\"previous\":2,\"resultName\":\"priority_response\",\"resultDescription\":\"Customer notification of escalation status\"}]}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "single_step_plan": {
+    "id": "chatcmpl-planner-single",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 100,
+      "completion_tokens": 40,
+      "total_tokens": 140
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"steps\":[{\"stepNo\":1,\"name\":\"Generate Sales Report\",\"analysis\":\"Analyze sales data and generate comprehensive monthly report\",\"toolId\":\"DATA_ANALYZER\",\"next\":-1,\"previous\":0,\"resultName\":\"sales_report\",\"resultDescription\":\"Monthly sales analysis and trends report\"}]}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "invalid_plan": {
+    "id": "chatcmpl-planner-invalid",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 80,
+      "completion_tokens": 20,
+      "total_tokens": 100
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "invalid json structure without proper steps array"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "default": {
+    "id": "chatcmpl-planner-default",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 120,
+      "completion_tokens": 60,
+      "total_tokens": 180
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"steps\":[{\"stepNo\":1,\"name\":\"Default Step\",\"analysis\":\"Default planning step for unmatched queries\",\"toolId\":\"DEFAULT_TOOL\",\"next\":-1,\"previous\":0,\"resultName\":\"default_result\",\"resultDescription\":\"Default step execution result\"}]}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  }
+} 

@@ -1,0 +1,149 @@
+{
+  "reject_vacation": {
+    "id": "chatcmpl-decision-reject",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 120,
+      "completion_tokens": 25,
+      "total_tokens": 145
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"selectedOptionId\":\"REJECT\"}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "billing_issue": {
+    "id": "chatcmpl-decision-billing",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 110,
+      "completion_tokens": 30,
+      "total_tokens": 140
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"selectedOptionId\":\"BILLING_ISSUE\"}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "critical_priority": {
+    "id": "chatcmpl-decision-critical",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 100,
+      "completion_tokens": 28,
+      "total_tokens": 128
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"selectedOptionId\":\"CRITICAL\"}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "approve_manager": {
+    "id": "chatcmpl-decision-approve",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 115,
+      "completion_tokens": 26,
+      "total_tokens": 141
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"selectedOptionId\":\"APPROVE\"}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "invalid_option": {
+    "id": "chatcmpl-decision-invalid",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 90,
+      "completion_tokens": 30,
+      "total_tokens": 120
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"selectedOptionId\":\"INVALID_OPTION_NOT_IN_LIST\"}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "malformed_json": {
+    "id": "chatcmpl-decision-malformed",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 80,
+      "completion_tokens": 20,
+      "total_tokens": 100
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "invalid json without proper structure"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "default": {
+    "id": "chatcmpl-decision-default",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 95,
+      "completion_tokens": 25,
+      "total_tokens": 120
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"selectedOptionId\":\"ESCALATE\"}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  }
+} 

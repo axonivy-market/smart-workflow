@@ -38,9 +38,6 @@ public class DataMapper extends AiFunction<Object, AiVariable> {
       -------------------------------
       INSTRUCTIONS:
       {{customInstructions}}
-      -------------------------------
-      EXAMPLES OF RESULT:
-      {{examples}}
       """;
 
   // Object need to extract
@@ -50,9 +47,6 @@ public class DataMapper extends AiFunction<Object, AiVariable> {
   private Boolean asList;
 
   private List<FieldExplanation> fieldExplanations;
-
-  // Examples for AI guidance
-  private List<AiExample> examples = new ArrayList<>();
 
   public static Builder getBuilder() {
     return new Builder();
@@ -68,7 +62,6 @@ public class DataMapper extends AiFunction<Object, AiVariable> {
     Map<String, Object> params = new HashMap<>();
     params.put("query", getQuery());
     params.put("customInstructions", formatCustomInstructions());
-    params.put("examples", formatExamples());
     return params;
   }
 
@@ -319,19 +312,6 @@ public class DataMapper extends AiFunction<Object, AiVariable> {
     return null;
   }
 
-  private String formatExamples() {
-    if (CollectionUtils.isEmpty(examples)) {
-      return StringUtils.EMPTY;
-    }
-
-    StringBuilder builder = new StringBuilder();
-    for (AiExample example : examples) {
-      builder
-          .append(String.format("Query: %s\nExpected result: %s\n\n", example.getQuery(), example.getExpectedResult()));
-    }
-    return builder.toString().strip();
-  }
-
   // Getters and setters for domain-specific fields
   public Object getTargetObject() {
     return this.targetObject;
@@ -355,14 +335,6 @@ public class DataMapper extends AiFunction<Object, AiVariable> {
 
   public void setAsList(Boolean asList) {
     this.asList = asList;
-  }
-
-  public List<AiExample> getExamples() {
-    return examples;
-  }
-
-  public void setExamples(List<AiExample> examples) {
-    this.examples = examples;
   }
 
 //Builder class for DataMapping
@@ -445,7 +417,6 @@ public class DataMapper extends AiFunction<Object, AiVariable> {
       dataMapper.setTargetObject(targetObject);
       dataMapper.setFieldExplanations(fieldExplanations);
       dataMapper.setAsList(asList);
-      dataMapper.setExamples(examples);
       return dataMapper;
     }
   }

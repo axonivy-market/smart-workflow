@@ -15,6 +15,7 @@ import com.axonivy.utils.ai.enums.AiVariableState;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 import dev.langchain4j.model.chat.request.json.JsonSchema;
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
@@ -80,7 +81,7 @@ public class DecisionMaker extends AiFunction<AiOption, AiVariable> {
   @Override
   protected AiVariable parseJsonResponse(String jsonResponse) {
     try {
-      JsonNode rootNode = BusinessEntityConverter.objectMapper.readTree(jsonResponse);
+      JsonNode rootNode = BusinessEntityConverter.getObjectMapper().readTree(jsonResponse);
       JsonNode selectedIdNode = rootNode.get(SELECTED_OPTION_ID);
 
       if (selectedIdNode != null && !selectedIdNode.isNull()) {
@@ -99,6 +100,7 @@ public class DecisionMaker extends AiFunction<AiOption, AiVariable> {
         }
       }
     } catch (Exception e) {
+      Ivy.log().error(e);
       // Fall through to error handling
     }
 

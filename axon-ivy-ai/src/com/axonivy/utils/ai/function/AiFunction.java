@@ -1,12 +1,6 @@
 package com.axonivy.utils.ai.function;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +13,8 @@ import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import dev.langchain4j.model.chat.request.json.JsonArraySchema;
+import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.internal.JsonSchemaElementUtils;
 import dev.langchain4j.model.chat.request.json.JsonBooleanSchema;
 import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema;
@@ -179,93 +174,35 @@ public abstract class AiFunction<T, R> {
     return result;
   }
 
-  // Common JSON Schema Generation Utilities
+  // JSON Schema Generation Utilities using langchain4j
 
   /**
-   * Creates a JsonSchemaElement for a Java type using reflection.
+   * Creates a JsonSchemaElement for a Java type using langchain4j's comprehensive
+   * utilities. This handles primitives, collections, enums, complex objects, and
+   * recursion automatically.
    */
-  public static JsonSchemaElement createSchemaElementForType(Class<?> type, Field field) {
-    // Handle primitive and wrapper types
-    if (type == String.class || type == char.class || type == Character.class) {
-      return JsonStringSchema.builder().build();
-    }
-
-    if (type == int.class || type == Integer.class || type == long.class || type == Long.class
-        || type == BigInteger.class) {
-      return JsonIntegerSchema.builder().build();
-    }
-
-    if (type == float.class || type == Float.class || type == double.class || type == Double.class
-        || type == BigDecimal.class) {
-      return JsonNumberSchema.builder().build();
-    }
-
-    if (type == boolean.class || type == Boolean.class) {
-      return JsonBooleanSchema.builder().build();
-    }
-
-    // Handle enums
-    if (type.isEnum()) {
-      Object[] enumConstants = type.getEnumConstants();
-      List<String> enumValues = new ArrayList<>();
-      for (Object enumConstant : enumConstants) {
-        enumValues.add(enumConstant.toString());
-      }
-      return JsonEnumSchema.builder().enumValues(enumValues).build();
-    }
-
-    // Handle arrays
-    if (type.isArray()) {
-      Class<?> componentType = type.getComponentType();
-      JsonSchemaElement itemSchema = createSchemaElementForType(componentType, null);
-      return JsonArraySchema.builder().items(itemSchema).build();
-    }
-
-    // Handle collections
-    if (Collection.class.isAssignableFrom(type)) {
-      if (field != null && field.getGenericType() instanceof ParameterizedType) {
-        ParameterizedType paramType = (ParameterizedType) field.getGenericType();
-        Type[] typeArgs = paramType.getActualTypeArguments();
-        if (typeArgs.length > 0) {
-          Class<?> itemType = (Class<?>) typeArgs[0];
-          JsonSchemaElement itemSchema = createSchemaElementForType(itemType, null);
-          return JsonArraySchema.builder().items(itemSchema).build();
-        }
-      }
-      // Default to string array if we can't determine the type
-      return JsonArraySchema.builder().items(JsonStringSchema.builder().build()).build();
-    }
-
-    // Handle nested objects
-    return buildObjectSchema(type);
+  public static JsonSchemaElement createSchemaElementForType(Class<?> type) {
+    return JsonSchemaElementUtils.jsonSchemaElementFrom(type);
   }
 
   /**
-   * Builds a JsonObjectSchema from a Java class using reflection.
+   * Builds a JsonObjectSchema from a Java class using langchain4j's sophisticated
+   * utilities. This handles field detection, required fields, recursion, and
+   * annotations automatically.
    */
   public static JsonObjectSchema buildObjectSchema(Class<?> clazz) {
-    JsonObjectSchema.Builder builder = JsonObjectSchema.builder();
-
-    Field[] fields = clazz.getDeclaredFields();
-    for (Field field : fields) {
-      // Skip static and synthetic fields
-      if (java.lang.reflect.Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
-        continue;
-      }
-
-      String fieldName = field.getName();
-      JsonSchemaElement fieldSchema = createSchemaElementForType(field.getType(), field);
-
-      if (fieldSchema != null) {
-        builder.addProperty(fieldName, fieldSchema);
-      }
+    JsonSchemaElement element = JsonSchemaElementUtils.jsonSchemaElementFrom(clazz);
+    if (element instanceof JsonObjectSchema) {
+      return (JsonObjectSchema) element;
     }
-
-    return builder.build();
+    // Fallback: create empty object schema if the utility doesn't return an object
+    // schema
+    return JsonObjectSchema.builder().build();
   }
 
   /**
-   * Adds description to a schema element based on field explanation.
+   * Adds description to a schema element based on field explanation. This method
+   * preserves the original functionality for field explanations.
    */
   public static JsonSchemaElement addDescriptionToSchema(JsonSchemaElement schema, FieldExplanation explanation) {
     String description = explanation.getExplanation();
@@ -289,22 +226,22 @@ public abstract class AiFunction<T, R> {
   // Error handling methods that subclasses can override
 
   protected R handleValidationFailure() {
-    System.err.println("JsonSchemaAiFunction validation failed");
+    Ivy.log().error("AiFunction validation failed");
     return null;
   }
 
   protected R handleSchemaGenerationFailure() {
-    System.err.println("JsonSchemaAiFunction schema generation failed");
+    Ivy.log().error("AiFunction schema generation failed");
     return null;
   }
 
   protected R handleAiServiceFailure() {
-    System.err.println("JsonSchemaAiFunction AI service call failed");
+    Ivy.log().error("AiFunction AI service call failed");
     return null;
   }
 
   protected R handleExecutionException(Exception e) {
-    System.err.println("JsonSchemaAiFunction execution failed: " + e.getMessage());
+    Ivy.log().error("AiFunction execution failed: " + e.getMessage());
     e.printStackTrace();
     return null;
   }
@@ -348,14 +285,13 @@ public abstract class AiFunction<T, R> {
   }
 
   /**
-   * Abstract builder class for JsonSchemaAiFunction implementations.
+   * Abstract builder class for AiFunction implementations.
    * 
    * @param <T> The input data type that the AI function processes (e.g.,
    *            AiVariable, IvyTool, Object)
    * @param <R> The result type that the AI function returns (e.g.,
    *            List<AiVariable>, List<AiStep>, AiVariable)
-   * @param <F> The concrete AI function type that extends JsonSchemaAiFunction<T,
-   *            R>
+   * @param <F> The concrete AI function type that extends AiFunction<T, R>
    */
   public abstract static class Builder<T, R, F extends AiFunction<T, R>> {
     protected AbstractAiServiceConnector connector;

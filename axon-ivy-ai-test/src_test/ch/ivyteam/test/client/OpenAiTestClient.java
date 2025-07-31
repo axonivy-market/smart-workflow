@@ -15,4 +15,7 @@ public class OpenAiTestClient {
     return new OpenAiServiceConnector().buildOpenAiModel().build();
   }
 
+  public static OpenAiChatModel structuredOutputAiMock() {
+    return new OpenAiServiceConnector().buildJsonOpenAiModel().build();
+  }
 }

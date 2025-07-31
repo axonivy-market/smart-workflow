@@ -1,0 +1,107 @@
+{
+  "jane_smith": {
+    "id": "chatcmpl-datamapper-jane",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 75,
+      "completion_tokens": 35,
+      "total_tokens": 110
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"name\":\"Jane Smith\",\"age\":25,\"isActive\":true}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "alice_johnson": {
+    "id": "chatcmpl-datamapper-alice",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 85,
+      "completion_tokens": 45,
+      "total_tokens": 130
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"name\":\"Alice Johnson\",\"position\":\"SENIOR\",\"salary\":75000}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "chris_davis": {
+    "id": "chatcmpl-datamapper-chris",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 90,
+      "completion_tokens": 40,
+      "total_tokens": 130
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"name\":\"Chris Davis\",\"age\":25,\"isActive\":true}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "invalid_json": {
+    "id": "chatcmpl-datamapper-invalid",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 50,
+      "completion_tokens": 20,
+      "total_tokens": 70
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "invalid json content"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  },
+  "default": {
+    "id": "chatcmpl-datamapper-default",
+    "object": "chat.completion",
+    "created": 1681911424,
+    "model": "gpt-4o-mini",
+    "usage": {
+      "prompt_tokens": 60,
+      "completion_tokens": 30,
+      "total_tokens": 90
+    },
+    "choices": [
+      {
+        "message": {
+          "role": "assistant",
+          "content": "{\"name\":\"Default Person\",\"age\":30,\"isActive\":true}"
+        },
+        "finish_reason": "stop",
+        "index": 0
+      }
+    ]
+  }
+}
