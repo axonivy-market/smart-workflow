@@ -34,15 +34,35 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
 
   @Override
   public void init(String modelName) {
-    this.chatModel = buildOpenAiModel().modelName(modelName).build();
+    this.chatModel = buildOpenAiModel()
+        .modelName(modelName)
+        .build();
+  }
+
+  public interface OpenAiConf {
+    String PREFIX = "Ai.OpenAI.";
+    String BASE_URL = PREFIX + "BaseUrl";
+    String API_KEY = PREFIX + "APIKey";
+    String TEST_HEADER = PREFIX + "Headers.test";
   }
 
   public OpenAiChatModelBuilder buildOpenAiModel() {
-    return OpenAiChatModel.builder().apiKey(Ivy.var().get("Ai.OpenAI.APIKey"))
+    var builder = OpenAiChatModel.builder()
         .logRequests(true)
         .logResponses(true)
         .modelName(OpenAiChatModelName.GPT_4_1_MINI)
         .temperature(Double.valueOf(AiConstant.TEMPERATURE));
+    var baseUrl = Ivy.var().get(OpenAiConf.BASE_URL);
+    if (!baseUrl.isBlank()) {
+      builder.baseUrl(baseUrl);
+    }
+    var testing = Ivy.var().get(OpenAiConf.TEST_HEADER);
+    if (!testing.isBlank()) {
+      builder.customHeaders(Map.of("X-Requested-By", "ivy", "X-Test", testing));
+    } else {
+      builder.apiKey(Ivy.var().get(OpenAiConf.API_KEY));
+    }
+    return builder;
   }
 
   @Override
