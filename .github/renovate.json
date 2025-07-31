@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>axonivy/renovate-config",
+    "schedule:earlyMondays"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames" :[
+        "org.apache.maven.*",
+        "org.junit.jupiter:*",
+        "org.assertj:*"
+      ],
+      "automerge": true
+    }
+  ]
+}
