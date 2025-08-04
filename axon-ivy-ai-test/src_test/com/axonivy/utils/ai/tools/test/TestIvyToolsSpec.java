@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.connector.test;
+package com.axonivy.utils.ai.tools.test;
 
 import static ch.ivyteam.ivy.process.model.value.scripting.VariableDesc.var;
 import static org.assertj.core.api.Assertions.assertThat;
