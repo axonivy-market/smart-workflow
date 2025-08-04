@@ -1,13 +1,13 @@
 package com.axonivy.utils.ai.tools;
 
-import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.process.call.SubProcessCall;
 import ch.ivyteam.ivy.process.call.SubProcessCallResult;
+import ch.ivyteam.ivy.process.call.SubProcessCallStart;
+import ch.ivyteam.ivy.process.call.SubProcessCallStartParamCaller;
 import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
@@ -34,25 +34,24 @@ public class IvyToolExecutor {
         .withPid(startable.get().getRootProcess().getPid().getProcessGuid())
         .withStartSignature(signature.toSimpleNameSignature());
 
-    var args = Json.fromJson(execTool.arguments(), JsonNode.class);
-    execTool.arguments();
+    var parameters = new JsonProcessParameters(IProcessModelVersion.current())
+        .readParams(signature.getInputParameters(), execTool.arguments());
 
-    var values = signature.getInputParameters().stream().map(in -> {
-      var jArg = args.get(in.getName());
-      // TODO; support much more scenarios!
-      if ("String".equals(in.getType().getSimpleName())) {
-        if (jArg != null) {
-          return jArg.asText();
-        }
-        return "";
-      }
-      return null;
-    })
-        .filter(Objects::nonNull)
-        .toArray(Object[]::new);
+    SubProcessCallResult res = call(callable, parameters);
 
-    SubProcessCallResult res = callable.call(values);
-    Object miniResult = res.first();
-    return ToolExecutionResultMessage.from(execTool, Json.toJson(miniResult));
+    return ToolExecutionResultMessage.from(execTool, Json.toJson(res.asMap()));
   }
+
+  @SuppressWarnings("null")
+  private static SubProcessCallResult call(SubProcessCallStart callable, Map<String, Object> params) {
+    if (params.isEmpty()) {
+      return callable.call();
+    }
+    SubProcessCallStartParamCaller pCaller = null;
+    for (var entry : params.entrySet()) {
+      pCaller = callable.withParam(entry.getKey(), entry.getValue());
+    }
+    return pCaller.call();
+  }
+
 }
