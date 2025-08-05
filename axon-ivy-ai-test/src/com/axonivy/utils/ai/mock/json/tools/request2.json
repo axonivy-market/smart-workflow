@@ -1,0 +1,9 @@
+{
+  "model" : "gpt-4o-mini",
+  "messages" : [ {
+    "role" : "user",
+    "content" : "Query:\nComputer is beeping after opening AxonIvy Portal\n-------------------------------\nInstruction:\n- Options:\n    - ID: technical\n  condition: The query related to technical support such as broken computer, slow internet\n\n- ID: hr\n  condition: The query related to human resource such as leave request, personal information update\n\n- ID: customer\n  condition: The query related to customer\n\n- ID: other\n  condition: The query didn't meet any condition above\n\n\n\n- an option is an ID - condition pair\n- analyze the query, choose the most suitable option\n- the result MUST be the ID of the chosen option"
+  } ],
+  "temperature" : 0.0,
+  "stream" : false
+}

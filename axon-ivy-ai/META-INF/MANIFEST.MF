@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: axon-ivy-ai
+Bundle-SymbolicName: axon-ivy-ai
+Bundle-Version: 13.2.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Automatic-Module-Name: axon.ivy.ai
+Require-Bundle: ch.ivyteam.ivy.process.rdm,
+ ch.ivyteam.ivy.java,
+ ch.ivyteam.ivy.scripting.dataclass

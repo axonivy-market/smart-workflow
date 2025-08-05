@@ -1,0 +1,9 @@
+{
+  "model" : "gpt-4o-mini",
+  "messages" : [ {
+    "role" : "user",
+    "content" : "Query:\nComputer is beeping after opening AxonIvy Portal\nusername : \n-------------------------------\nInstruction:\n- Understand the content and update the fields in the following JSON object based on the information you extract:\n\n{\n  \"id\" : \"07644219c2f94e07990a4a652e408ca6\",\n  \"type\" : \"TECHNICAL\",\n  \"name\" : null,\n  \"description\" : null,\n  \"employeeUsername\" : null,\n  \"firstApprover\" : null,\n  \"secondApprover\" : null,\n  \"aiApproval\" : null,\n  \"firstApproval\" : null,\n  \"secondApproval\" : null,\n  \"requestedDate\" : null\n}\n\nReturn exactly this JSON object with its fields updated/filled based on the content you analyzed. Do not change the structure, only update the field values.\n\n\n- This is a support type technical\n- ticket name must be start with prefix [type]. Example: [HR] User request a day leave\n- description must be the whole query\n- ticket name must be informative"
+  } ],
+  "temperature" : 0.0,
+  "stream" : false
+}

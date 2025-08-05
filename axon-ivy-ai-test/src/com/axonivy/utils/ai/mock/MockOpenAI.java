@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import io.swagger.v3.oas.annotations.Hidden;
 
@@ -42,7 +43,37 @@ public class MockOpenAI {
             .build();
       }
     }
+    if ("tool".equals(test)) {
+      return toolTest(request);
+    }
     return Response.ok().entity("not implemented!").build();
+  }
+
+  private Response toolTest(JsonNode request) {
+    var messages = (ArrayNode) request.get("messages");
+    System.out.println(messages.toPrettyString());
+    if (messages.size() >= 1) {
+      var current = messages.get(messages.size() - 1);
+      if (current.toString().contains("\"tool_call_id\"")) {
+        return Response.ok()
+            .entity(load("tools/response4.json"))
+            .build();
+      }
+      if (current.toPrettyString().contains("Instruction:\\n- Understand")) {
+        return Response.ok()
+            .entity(load("tools/response3.json"))
+            .build();
+      }
+      if (current.toPrettyString().contains("Instruction:")) {
+        return Response.ok()
+            .entity(load("tools/response2.json"))
+            .build();
+      }
+      return Response.ok()
+          .entity(load("tools/response1.json"))
+          .build();
+    }
+    return Response.status(404).build();
   }
 
   public static String load(String json) {

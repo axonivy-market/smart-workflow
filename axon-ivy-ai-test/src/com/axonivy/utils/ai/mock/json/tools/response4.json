@@ -1,0 +1,36 @@
+{
+  "id": "chatcmpl-ByexpTLFHQsyCBN5DZZ6VVyRfJtsE",
+  "object": "chat.completion",
+  "created": 1753796845,
+  "model": "gpt-4.1-mini-2025-04-14",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "I have created a support ticket for the issue with your computer beeping after opening AxonIvy Portal. A technical support team member will look into this and assist you shortly. If you have any more details to add, please let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 255,
+    "completion_tokens": 51,
+    "total_tokens": 306,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "service_tier": "default",
+  "system_fingerprint": "fp_6f2eabb9a5"
+}
