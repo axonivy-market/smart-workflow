@@ -28,6 +28,9 @@
           }
         }
       },
+      "tags" : [
+        "tool"
+      ],
       "visual" : {
         "at" : { "x" : 88, "y" : 72 },
         "description" : "Use this tool to create a support ticket task"
@@ -88,11 +91,9 @@
         "signature" : "createSupportTicket",
         "input" : {
           "params" : [
-            { "name" : "query", "type" : "String", "desc" : "The original input query" },
-            { "name" : "employeeUsername", "type" : "String", "desc" : "Username of the employee who create the request" }
+            { "name" : "query", "type" : "String", "desc" : "The original input query" }
           ],
           "map" : {
-            "out.employeeUsername" : "param.employeeUsername",
             "out.query" : "param.query"
           }
         },
@@ -573,7 +574,7 @@
     }, {
       "id" : "f61",
       "type" : "CallSubStart",
-      "name" : "chooseTicketApprover(SupportTicket)",
+      "name" : "Choose ticket approver",
       "config" : {
         "signature" : "chooseTicketApprover",
         "input" : {
@@ -595,8 +596,12 @@
           }
         }
       },
+      "tags" : [
+        "tool"
+      ],
       "visual" : {
-        "at" : { "x" : 88, "y" : 656 }
+        "at" : { "x" : 88, "y" : 656 },
+        "description" : "Use this tool to choose approvers for a suport ticket object."
       },
       "connect" : [
         { "id" : "f74", "to" : "f63" }
@@ -629,7 +634,7 @@
     }, {
       "id" : "f68",
       "type" : "CallSubStart",
-      "name" : "handleHrTicket(SupportTicket)",
+      "name" : "HR ticket handler",
       "config" : {
         "signature" : "handleHrTicket",
         "input" : {
@@ -649,8 +654,12 @@
           }
         }
       },
+      "tags" : [
+        "tool"
+      ],
       "visual" : {
-        "at" : { "x" : 88, "y" : 784 }
+        "at" : { "x" : 88, "y" : 784 },
+        "description" : "Use this tool to handle support ticket type HR"
       },
       "connect" : [
         { "id" : "f86", "to" : "f91" }

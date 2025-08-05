@@ -78,18 +78,16 @@
           "code" : [
             "import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;",
             "import com.axonivy.utils.ai.dto.ai.AiVariable;",
-            "import com.axonivy.utils.ai.function.DataMapping;",
+            "import com.axonivy.utils.ai.function.DataMapper;",
             "",
-            "DataMapping mapper = DataMapping.getBuilder().withQuery(in.query)",
+            "DataMapper mapper = DataMapper.getBuilder().withQuery(in.query)",
             "  .useService(in.connector)",
             "  .withObject(in.targetObject)",
             "  .addExamples(in.exampleJson)",
             "  .addFieldExplanations(in.fieldExplanations)",
-            "  .addCustomInstructions(in.customInstructions)",
-            "  .withInstructionsStrategy().build();",
+            "  .addCustomInstructions(in.customInstructions).build();",
             "",
-            "AiVariable result = mapper.execute();",
-            "in.resultObject = result.parameter.value;"
+            "in.resultObject = mapper.execute();"
           ]
         }
       },

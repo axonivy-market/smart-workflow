@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.axonivy.utils.ai.exception.ai.OpenAIErrorResponse;
 
+import dev.langchain4j.model.chat.request.json.JsonSchema;
+
 public abstract class AbstractAiServiceConnector implements Serializable {
 
   private static final long serialVersionUID = -5201325150657914187L;
@@ -18,4 +20,6 @@ public abstract class AbstractAiServiceConnector implements Serializable {
   public abstract String generate(String message);
 
   public abstract String generate(Map<String, Object> variables, String promptTemplate);
+
+  public abstract String generateJson(JsonSchema jsonSchema, Map<String, Object> variables, String promptTemplate);
 }

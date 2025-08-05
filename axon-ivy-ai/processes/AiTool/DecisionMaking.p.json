@@ -74,21 +74,15 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.ai.enums.AiVariableState;",
-            "import com.axonivy.utils.ai.function.DecisionMaking;",
+            "import com.axonivy.utils.ai.function.DecisionMaker;",
             "",
-            "DecisionMaking decider = DecisionMaking.getBuilder()",
+            "DecisionMaker decisionMaker = DecisionMaker.getBuilder()",
             "  .useService(in.connector)",
             "  .addOptions(in.options)",
             "  .addCustomInstructions(in.customInstructions)",
             "  .withQuery(in.query).build();",
             "",
-            "in.variable = decider.execute();",
-            "",
-            "if (in.variable.state != AiVariableState.SUCCESS) {",
-            "  in.result = \"\";",
-            "}",
-            "",
-            "in.result = in.variable.getSafeValue();"
+            "in.result = decisionMaker.execute() as String;"
           ]
         },
         "sudo" : true

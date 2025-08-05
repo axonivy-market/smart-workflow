@@ -4,17 +4,22 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
+import java.util.Optional;
 
 import com.axonivy.utils.ai.core.log.ExecutionLogger;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
+import com.axonivy.utils.ai.dto.ai.Instruction;
 import com.axonivy.utils.ai.enums.ExecutionStatus;
+import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.axonivy.utils.ai.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
+import ch.ivyteam.ivy.process.model.value.scripting.QualifiedType;
+import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
+import ch.ivyteam.ivy.process.model.value.scripting.VariableInfo;
 
 /**
  * Represents a single execution instance of an AI agent.
@@ -27,19 +32,23 @@ public class AgentExecution implements Serializable {
 
 //Execution metadata
   private String id;
-  private String agentId;
+  private String agentName;
   private ExecutionStatus status;
   private String username;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
   // Execution state (moved from BaseAgent)
-  private String originalQuery;
+  private Object input;
   private List<AiVariable> variables;
   private List<AiVariable> results;
   private List<String> observationHistory;
 
-  // Agent-specific execution state (moved from IvyAgent)
+  // Given tools that agent can use
+  @SuppressWarnings("restriction")
+  private List<CallSubStart> tools;
+  private List<Instruction> instructions;
+
   private List<AiStep> steps;
   private int currentStepNo;
   private String plan;
@@ -51,14 +60,25 @@ public class AgentExecution implements Serializable {
   @JsonIgnore
   private ExecutionLogger logger;
 
+  @JsonIgnore
+  private String parsedOriginalInputQuery;
+
+  private String goal;
+
+  private Integer maxIteration;
+
+  private AiStep runningStep;
+
   /**
    * Constructor with basic execution info
    */
-  public AgentExecution(String agentId, String originalQuery, String username) {
+  @SuppressWarnings("restriction")
+  public AgentExecution(String agentName, String username, Object input, List<CallSubStart> tools,
+      List<Instruction> instructions, String goal, Integer maxIterations) {
     this.id = IdGenerationUtils.generateRandomId();
-    this.agentId = agentId;
-    this.originalQuery = originalQuery;
-    this.username = username;
+    this.agentName = agentName;
+    this.input = input;
+    this.username = Ivy.session().getSessionUserName();
     this.status = ExecutionStatus.PENDING;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
@@ -66,11 +86,15 @@ public class AgentExecution implements Serializable {
     this.results = new ArrayList<>();
     this.observationHistory = new ArrayList<>();
     this.steps = new ArrayList<>();
-    this.currentStepNo = AiStep.INITIAL_STEP;
+    this.currentStepNo = 0;
     this.iterationCount = 0;
+    this.tools = tools;
+    this.instructions = instructions;
+    this.goal = goal;
+    this.maxIteration = maxIterations;
 
     // Use the query to initialize variables.
-    processInputQuery(originalQuery);
+    processInput();
 
     // Init logger
     logger = new ExecutionLogger(id);
@@ -84,77 +108,31 @@ public class AgentExecution implements Serializable {
    * 
    * @param query The input query string
    */
-  protected void processInputQuery(String query) {
+  protected void processInput() {
     if (getVariables() == null) {
       setVariables(new ArrayList<>());
     }
 
-    // Try to parse as JSON object first
-    if (isValidJsonObject(query)) {
-      createVariablesFromJsonObject(query);
+    if (input instanceof String) {
+      createSingleQueryVariable((String) input);
     } else {
-      // Fall back to single query variable for everything else
-      // (arrays, primitives, invalid JSON, plain text)
-      createSingleQueryVariable(query);
-    }
-  }
-
-  /**
-   * Checks if the input string is a valid JSON object (not array or primitive)
-   */
-  private boolean isValidJsonObject(String input) {
-    if (StringUtils.isBlank(input)) {
-      return false;
-    }
-
-    try {
-      ObjectMapper mapper = BusinessEntityConverter.getObjectMapper();
-      JsonNode rootNode = mapper.readTree(input.trim());
-      // Only return true for JSON objects, not arrays or primitives
-      return rootNode.isObject();
-    } catch (Exception e) {
-      return false;
-    }
-  }
-
-  /**
-   * Creates variables from JSON object input. Only handles JSON objects.
-   */
-  private void createVariablesFromJsonObject(String jsonInput) {
-    try {
-      ObjectMapper mapper = BusinessEntityConverter.getObjectMapper();
-      JsonNode rootNode = mapper.readTree(jsonInput.trim());
-
-      // Handle JSON object - create variable for each property
-      rootNode.fieldNames().forEachRemaining(fieldName -> {
-        JsonNode fieldValue = rootNode.get(fieldName);
-        AiVariable variable = new AiVariable();
-        variable.init();
-        variable.getParameter().setName(fieldName);
-        variable.getParameter().setValue(fieldValue.isTextual() ? fieldValue.asText() : fieldValue.toString());
-        variable.getParameter().setDescription("JSON property: " + fieldName);
-
-        // By default, all parameters send to agent are String
-        variable.getParameter().setClassName("String");
-
-        getVariables().add(variable);
-      });
-    } catch (Exception e) {
-      // If JSON parsing fails unexpectedly, fall back to single query variable
-      createSingleQueryVariable(jsonInput);
+      createSingleQueryVariable(BusinessEntityConverter.entityToJsonValue(input));
     }
   }
 
   /**
    * Creates a single query variable with the entire input
    */
+  @SuppressWarnings("restriction")
   private void createSingleQueryVariable(String query) {
     AiVariable inputVariable = new AiVariable();
     inputVariable.init();
-    inputVariable.getParameter().setName("query");
+    VariableDesc variableDesc = new VariableDesc("query", new QualifiedType(String.class.getName()),
+        new VariableInfo("The original input query"));
+    inputVariable.getParameter().setDefinition(variableDesc);
     inputVariable.getParameter().setValue(query);
-    inputVariable.getParameter().setDescription("The input query");
     getVariables().add(inputVariable);
+    parsedOriginalInputQuery = query;
   }
 
   /**
@@ -192,17 +170,25 @@ public class AgentExecution implements Serializable {
   }
 
   /**
-   * Gets the current step based on currentStepNo
+   * Get immutable list of planning instructions
+   * 
+   * @return the list of planning instructions
    */
-  public AiStep getCurrentStep() {
-    if (steps == null || steps.isEmpty()) {
-      return null;
-    }
+  public List<Instruction> getPlanningInstructions() {
+    return Optional.ofNullable(instructions).orElseGet(() -> new ArrayList<>()).stream()
+        .filter(instruction -> InstructionType.PLANNING == instruction.getType()).toList();
+  }
 
-    return steps.stream()
-        .filter(step -> currentStepNo == AiStep.INITIAL_STEP ? step.getPrevious() == AiStep.INITIAL_STEP
-            : step.getStepNo() == currentStepNo)
-        .findFirst().orElse(null);
+  /**
+   * Get immutable list of execution instruction by tool name
+   * 
+   * @param toolName
+   * @return the list of corresponding execution instructions
+   */
+  public List<Instruction> getExecutionInstructionsOf(String toolName) {
+    return Optional.ofNullable(instructions).orElseGet(() -> new ArrayList<>()).stream()
+        .filter(instruction -> InstructionType.EXECUTION == instruction.getType())
+        .filter(instruction -> instruction.getToolName().equals(toolName)).toList();
   }
 
   // Getters and setters
@@ -214,12 +200,12 @@ public class AgentExecution implements Serializable {
     this.id = id;
   }
 
-  public String getAgentId() {
-    return agentId;
+  public String getAgentName() {
+    return agentName;
   }
 
-  public void setAgentId(String agentId) {
-    this.agentId = agentId;
+  public void setAgentName(String agentName) {
+    this.agentName = agentName;
   }
 
   public ExecutionStatus getStatus() {
@@ -248,14 +234,6 @@ public class AgentExecution implements Serializable {
 
   public void setUpdatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
-  }
-
-  public String getOriginalQuery() {
-    return originalQuery;
-  }
-
-  public void setOriginalQuery(String originalQuery) {
-    this.originalQuery = originalQuery;
   }
 
   public List<AiVariable> getVariables() {
@@ -330,5 +308,59 @@ public class AgentExecution implements Serializable {
 
   public void setLogger(ExecutionLogger logger) {
     this.logger = logger;
+  }
+
+  @SuppressWarnings("restriction")
+  public List<CallSubStart> getTools() {
+    return tools;
+  }
+
+  @SuppressWarnings("restriction")
+  public void setTools(List<CallSubStart> tools) {
+    this.tools = tools;
+  }
+
+  public List<Instruction> getInstructions() {
+    return instructions;
+  }
+
+  public void setInstructions(List<Instruction> instructions) {
+    this.instructions = instructions;
+  }
+
+  public Object getInput() {
+    return input;
+  }
+
+  public void setInput(Object input) {
+    this.input = input;
+  }
+
+  public String getParsedOriginalInputQuery() {
+    return parsedOriginalInputQuery;
+  }
+
+  public String getGoal() {
+    return goal;
+  }
+
+  public void setGoal(String goal) {
+    this.goal = goal;
+  }
+
+  public Integer getMaxIteration() {
+    return maxIteration;
+  }
+
+  public void setMaxIteration(Integer maxIteration) {
+    this.maxIteration = maxIteration;
+  }
+
+  public AiStep getRunningStep() {
+    return runningStep;
+  }
+
+  public void setRunningStep(AiStep runningStep) {
+    this.runningStep = runningStep;
   }
 }

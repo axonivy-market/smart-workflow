@@ -1,11 +1,15 @@
 {
   "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
-  "simpleName" : "SupportAgentToolsData",
+  "simpleName" : "AgentInput",
   "namespace" : "AgentDemo",
   "isBusinessCaseData" : false,
   "fields" : [ {
-    "name" : "agentInput",
-    "type" : "AgentDemo.AgentInput",
+    "name" : "employeeUsername",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "query",
+    "type" : "String",
     "modifiers" : [ "PERSISTENT" ]
   } ]
 }

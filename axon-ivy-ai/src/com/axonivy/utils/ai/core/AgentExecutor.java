@@ -1,13 +1,14 @@
 package com.axonivy.utils.ai.core;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.axonivy.utils.ai.dto.ai.configuration.AgentModel;
+import com.axonivy.utils.ai.dto.ai.Instruction;
 import com.axonivy.utils.ai.enums.ExecutionStatus;
-import com.axonivy.utils.ai.service.AgentService;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 
 /**
  * Orchestrates agent executions and manages execution contexts. Provides the
@@ -30,32 +31,30 @@ public class AgentExecutor {
    * @param username The username initiating the execution
    * @return The UUID of the created execution
    */
-  public String startExecution(String agentId, String query, String username) {
+  @SuppressWarnings("restriction")
+  public String startExecution(Object input, String username, String agentName, List<CallSubStart> tools,
+      List<Instruction> instructions, String goal, Integer maxIterations) {
     try {
-      // Step 1: Initialize agent from configuration
-      AgentModel agentModel = AgentService.getInstance().findById(agentId);
-      if (agentModel == null) {
-        return null;
-      }
-      IvyAgent agent = new IvyAgent();
-      agent.loadFromModel(agentModel);
-
-      // Step 2: Create AgentExecution context
-      AgentExecution execution = createExecutionContext(agentId, query, username);
+      // Step 1: Create AgentExecution context
+      AgentExecution execution = new AgentExecution(agentName, username, input, tools, instructions, goal,
+          maxIterations);
+      execution.setStatus(ExecutionStatus.PENDING);
 
       // Store execution for tracking
       executions.put(execution.getId(), execution);
 
-      // Step 3: Start agent execution with context
+      // Step 2: Start agent execution with context
+      IvyAgent agent = new IvyAgent();
       ExecutionStatus status = agent.start(execution);
       execution.setStatus(ExecutionStatus.DONE);
 
       Ivy.log()
-          .info("Execution " + execution.getId() + " for agent " + agentId + " by user " + username + " is completed");
+          .info(
+              "Execution " + execution.getId() + " for agent " + agentName + " by user " + username + " is completed");
       return execution.getId();
 
     } catch (Exception e) {
-      Ivy.log().error("Failed to start execution for agent " + agentId + ": " + e.getMessage(), e);
+      Ivy.log().error("Failed to start execution for agent " + agentName + ": " + e.getMessage(), e);
       throw new RuntimeException("Failed to start agent execution", e);
     }
   }
@@ -73,16 +72,5 @@ public class AgentExecutor {
   public ExecutionStatus getExecutionStatus(String executionId) {
     AgentExecution execution = executions.get(executionId);
     return execution != null ? execution.getStatus() : null;
-  }
-
-  /**
-   * Creates a new execution context with initial state
-   */
-  private AgentExecution createExecutionContext(String agentId, String query, String username) {
-    AgentExecution execution = new AgentExecution(agentId, query, username);
-    execution.setStatus(ExecutionStatus.PENDING);
-
-    Ivy.log().info("Created execution context " + execution.getId() + " for agent " + agentId);
-    return execution;
   }
 }

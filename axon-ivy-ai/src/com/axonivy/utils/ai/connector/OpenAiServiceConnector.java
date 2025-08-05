@@ -10,6 +10,12 @@ import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.model.chat.Capability;
+import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.request.ResponseFormat;
+import dev.langchain4j.model.chat.request.ResponseFormatType;
+import dev.langchain4j.model.chat.request.json.JsonSchema;
+import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
@@ -19,6 +25,7 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
   private static final long serialVersionUID = -7887376408428122870L;
 
   private OpenAiChatModel chatModel;
+  private OpenAiChatModel jsonModel;
 
   public static OpenAiServiceConnector getBigBrain() {
     OpenAiServiceConnector result = new OpenAiServiceConnector();
@@ -37,6 +44,8 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
     this.chatModel = buildOpenAiModel()
         .modelName(modelName)
         .build();
+
+    this.jsonModel = buildJsonOpenAiModel().modelName(modelName).build();
   }
 
   public interface OpenAiConf {
@@ -65,6 +74,23 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
     return builder;
   }
 
+  public OpenAiChatModelBuilder buildJsonOpenAiModel() {
+    var builder = OpenAiChatModel.builder().logRequests(true).logResponses(true)
+        .modelName(OpenAiChatModelName.GPT_4_1_MINI).temperature(Double.valueOf(AiConstant.TEMPERATURE))
+        .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA).strictJsonSchema(true);
+    var baseUrl = Ivy.var().get(OpenAiConf.BASE_URL);
+    if (!baseUrl.isBlank()) {
+      builder.baseUrl(baseUrl);
+    }
+    var testing = Ivy.var().get(OpenAiConf.TEST_HEADER);
+    if (!testing.isBlank()) {
+      builder.customHeaders(Map.of("X-Requested-By", "ivy", "X-Test", testing));
+    } else {
+      builder.apiKey(Ivy.var().get(OpenAiConf.API_KEY));
+    }
+    return builder;
+  }
+
   @Override
   public OpenAIErrorResponse testConnection() {
     try {
@@ -79,9 +105,6 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
   @Override
   public String generate(String message) {
     try {
-
-      // Ivy.log().error("result");
-      // Ivy.log().error(result);
       return chatModel.chat(message);
     } catch (Exception e) {
       OpenAIErrorResponse error = BusinessEntityConverter.jsonValueToEntity(e.getCause().getMessage(),
@@ -99,6 +122,41 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
           OpenAIErrorResponse.class);
       return error.getError().getMessage();
     }
+  }
+
+  @Override
+  public String generateJson(JsonSchema jsonSchema, Map<String, Object> variables, String promptTemplate) {
+    try {
+      ResponseFormat responseFormat = ResponseFormat.builder().type(ResponseFormatType.JSON).jsonSchema(jsonSchema)
+          .build();
+
+      ChatRequest chatRequest = ChatRequest.builder().responseFormat(responseFormat)
+          .messages(PromptTemplate.from(promptTemplate).apply(variables).toUserMessage()).build();
+
+      ChatResponse result = jsonModel.chat(chatRequest);
+      // Need to implement guardrail
+      return result.aiMessage().text();
+    } catch (Exception e) {
+      OpenAIErrorResponse error = BusinessEntityConverter.jsonValueToEntity(e.getCause().getMessage(),
+          OpenAIErrorResponse.class);
+      return error.getError().getMessage();
+    }
+  }
+
+  public OpenAiChatModel getChatModel() {
+    return chatModel;
+  }
+
+  public void setChatModel(OpenAiChatModel chatModel) {
+    this.chatModel = chatModel;
+  }
+
+  public OpenAiChatModel getJsonModel() {
+    return jsonModel;
+  }
+
+  public void setJsonModel(OpenAiChatModel jsonModel) {
+    this.jsonModel = jsonModel;
   }
 
 }

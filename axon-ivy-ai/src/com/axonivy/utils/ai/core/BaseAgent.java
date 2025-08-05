@@ -2,7 +2,6 @@ package com.axonivy.utils.ai.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,14 +11,10 @@ import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
 import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
 import com.axonivy.utils.ai.dto.ai.Instruction;
-import com.axonivy.utils.ai.dto.ai.configuration.AgentModel;
 import com.axonivy.utils.ai.enums.ExecutionStatus;
 import com.axonivy.utils.ai.enums.InstructionType;
-import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.axonivy.utils.ai.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import ch.ivyteam.ivy.environment.Ivy;
 
 /**
  * Abstract base class for all AI agents. Contains common fields and functionality
@@ -59,62 +54,6 @@ public abstract class BaseAgent {
 
   public BaseAgent() {
     id = IdGenerationUtils.generateRandomId();
-  }
-
-  /**
-   * Load the agent from model.
-   */
-  public void loadFromModel(AgentModel model) {
-    this.id = model.getId();
-    this.name = model.getName();
-    this.usage = model.getUsage();
-
-    // Set configurable iterations
-    // If default max iteration is not set, use the default value: 20
-    this.maxIterations = model.getMaxIterations() > 0 ? model.getMaxIterations() : DEFAULT_MAX_ITERATIONS;
-
-    // Initialize planning model
-    planningModel = DEFAULT_CONNECTOR;
-    if (StringUtils.isNotBlank(model.getPlanningModel()) && StringUtils.isNotBlank(model.getPlanningModelKey())) {
-      planningModel = new OpenAiServiceConnector();
-      planningModel.init(model.getPlanningModel());
-    }
-
-    // Initialize execution model
-    executionModel = DEFAULT_CONNECTOR;
-    if (StringUtils.isNotBlank(model.getExecutionModel()) && StringUtils.isNotBlank(model.getExecutionModelKey())) {
-      executionModel = new OpenAiServiceConnector();
-      executionModel.init(model.getExecutionModel());
-    }
-
-    // Load instructions
-    instructions = Optional.ofNullable(model.getInstructions()).orElseGet(ArrayList::new);
-
-    // Load tools
-    this.tools = new ArrayList<>();
-    List<IvyTool> foundTools = BusinessEntityConverter.jsonValueToEntities(Ivy.var().get("Ai.Tools"), IvyTool.class);
-    for (String toolName : model.getTools()) {
-      Optional<IvyTool> ivyTool = foundTools.stream().filter(t -> t.getId().equals(toolName)).findFirst();
-      if (ivyTool.isPresent()) {
-        this.tools.add(ivyTool.get());
-      }
-    }
-  }
-
-  /**
-   * Helper method to filter instructions by type
-   */
-  protected List<String> getInstructions(InstructionType type, AiStep currentStep) {
-    if (instructions == null || instructions.isEmpty()) {
-      return new ArrayList<>();
-    }
-
-    return instructions.stream()
-        .filter(instruction -> instruction.getType() == type)
-        .filter(instruction -> StringUtils.isNotBlank(instruction.getContent().strip()))
-        .filter(instruction -> instruction.getToolId().equals(currentStep.getToolId()))
-        .map(Instruction::getContent)
-        .collect(Collectors.toList());
   }
 
   protected List<String> getPlanningInstructions() {

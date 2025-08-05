@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
 import dev.langchain4j.model.input.PromptTemplate;
 
 /**
@@ -36,9 +37,10 @@ public class AiVariable {
   public AiVariable() {
   }
 
-  public AiVariable(String name, String content) {
+  @SuppressWarnings("restriction")
+  public AiVariable(VariableDesc definition) {
     this.id = IdGenerationUtils.generateRandomId();
-    this.parameter = new IvyToolParameter(name, content, "");
+    this.parameter = new IvyToolParameter(definition, StringUtils.EMPTY);
     this.state = AiVariableState.SUCCESS;
   }
 
@@ -49,6 +51,8 @@ public class AiVariable {
   private IvyToolParameter parameter;
 
   private AiVariableState state;
+
+  private String errorContent;
 
   /**
    * Default constructor that auto-generates a unique ID without hyphens.
@@ -90,10 +94,11 @@ public class AiVariable {
    * @return an example {@link AiVariable} with preset name, content, and
    *         description.
    */
+  @SuppressWarnings("restriction")
   public static AiVariable getMappingExample() {
     AiVariable example = new AiVariable();
     example.setId(IdGenerationUtils.generateRandomId());
-    example.setParameter(new IvyToolParameter("Example variable", "Just an example", "Example description"));
+    example.setParameter(new IvyToolParameter(new VariableDesc("Test", String.class.getTypeName()), "Testing example"));
     example.setState(AiVariableState.SUCCESS);
     return example;
   }
@@ -122,5 +127,13 @@ public class AiVariable {
     params.put("state", state);
     params.put("param", BusinessEntityConverter.entityToJsonValue(parameter));
     return PromptTemplate.from(PRETTY_TEMPLATE).apply(params).text();
+  }
+
+  public String getErrorContent() {
+    return errorContent;
+  }
+
+  public void setErrorContent(String errorContent) {
+    this.errorContent = errorContent;
   }
 }

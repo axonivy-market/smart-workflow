@@ -1,6 +1,7 @@
 package com.axonivy.utils.ai.core;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
 import com.axonivy.utils.ai.core.log.ExecutionLogger;
 import com.axonivy.utils.ai.core.tool.IvyTool;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
+import com.axonivy.utils.ai.enums.AiVariableState;
 import com.axonivy.utils.ai.enums.log.LogLevel;
 import com.axonivy.utils.ai.enums.log.LogPhase;
 import com.axonivy.utils.ai.exception.AiException;
@@ -24,88 +26,105 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.input.PromptTemplate;
 
-/**
- * Represents a single step in an AI workflow. A step can either use a tool
- * (e.g., AI function) or an agent (another set of steps), and is responsible
- * for executing that logic and producing a result.
- */
 @JsonInclude(value = Include.NON_EMPTY)
 public class AiStep implements Serializable {
 
+  /** Template for logging step metadata */
   private static final String LOG_HEADER_TEMPLATE = """
       Step No: {{stepNo}}
-      Next Step: {{next}}
-      Previous Step: {{prev}}
-      Tool Id: {{toolId}}
+      Tool Name: {{toolName}}
       """;
-
-  // Constant representing the initial step index in the agent workflow
-  public static final int INITIAL_STEP = 0;
-
-  // Constant indicating a finalize step, typically used for cleanup or final
-  // actions
-  public static final int FINALIZE_STEP = -1;
-
-  // Constant for a special step where variables are extracted from results or
-  // context
-  public static final int EXTRACT_VARIABLES_STEP = -2;
 
   private static final long serialVersionUID = -7596426640750339316L;
 
-  // Step metadata
-  private Integer stepNo;
-  private Integer previous;
-  private Integer next;
-  private String name;
-  private String analysis;
-  private String toolId;
+  private Integer stepNo; // The order number of the step in the workflow
+  private String toolSignature; // Signature of the tool configured for this step
 
   @JsonIgnore
-  private String runId;
-
-  // Execution targets
-  @JsonIgnore
-  private IvyTool tool;
+  private IvyTool tool; // Tool to be executed during this step
 
   // Default constructor
   public AiStep() {
   }
 
   /**
-   * Configures this step to use a specific AI tool. The step will copy input
-   * variables from the tool and register the tool ID.
+   * Configures this step to use a specific AI tool. Tool name is automatically
+   * copied from the tool instance.
+   *
+   * @param tool the {@link IvyTool} instance to use
    */
   public void useTool(IvyTool tool) {
     this.tool = tool;
-    this.setToolId(tool.getId());
+    this.setToolSignature(tool.getSignature());
   }
 
   /**
-   * Executes the step. Exceptions will move the flow to the final step and be
-   * logged.
+   * Executes the current step by calling its configured tool.
+   * <p>
+   * In case of exceptions, logs the error and returns an error-state variable.
+   *
+   * @param aiVariables    the input variables for the tool
+   * @param connector      the connector used to access LLM or external services
+   * @param logger         the logger to record step execution
+   * @param iterationCount current iteration count (for retry or looped flows)
+   * @return a list of resulting {@link AiVariable}, or a single error variable
    */
   public List<AiVariable> run(List<AiVariable> aiVariables, AbstractAiServiceConnector connector,
       ExecutionLogger logger, int iterationCount) {
 
-    // Log the step
+    // Log step metadata
     logger.log(LogLevel.STEP, LogPhase.INIT, generateLogEntryContent(), StringUtils.EMPTY, iterationCount);
     try {
+      // Configure and run the tool
       tool.setConnector(connector);
       return tool.execute(aiVariables, logger, iterationCount);
 
     } catch (AiException | JsonProcessingException e) {
-      // If any exception occurs, log and move to finalize step
+      // Log error to Ivy runtime logs
       Ivy.log().error(e);
-      setNext(FINALIZE_STEP);
-      return null;
+      // Return variable in error state
+      return Arrays.asList(generateErrorResult(e));
     }
   }
 
+  /**
+   * Adds variables to the current tool instance, if the list is not empty.
+   *
+   * @param variables list of {@link AiVariable}s to pass to the tool
+   */
   public void addVariables(List<AiVariable> variables) {
     if (CollectionUtils.isEmpty(variables)) {
       return;
     }
     tool.setVariables(variables);
+  }
+
+  /**
+   * Generates content for logging based on the configured template. Includes step
+   * number and tool name.
+   *
+   * @return formatted log content
+   */
+  public String generateLogEntryContent() {
+    Map<String, Object> params = new HashMap<>();
+    params.put("stepNo", Optional.ofNullable(stepNo.toString()).orElse(StringUtils.EMPTY));
+    params.put("toolName", Optional.ofNullable(tool).map(IvyTool::getName).orElse(StringUtils.EMPTY));
+
+    return PromptTemplate.from(LOG_HEADER_TEMPLATE).apply(params).text();
+  }
+
+  /**
+   * Generates a variable marked in error state with exception details.
+   *
+   * @param e the exception encountered during step execution
+   * @return an {@link AiVariable} with error state and content
+   */
+  private AiVariable generateErrorResult(Exception e) {
+    AiVariable result = new AiVariable();
+    result.setState(AiVariableState.ERROR);
+    result.setErrorContent(
+        Optional.ofNullable(e).map(Exception::getCause).map(Throwable::toString).orElse(StringUtils.EMPTY));
+    return result;
   }
 
   public Integer getStepNo() {
@@ -116,38 +135,6 @@ public class AiStep implements Serializable {
     this.stepNo = stepNo;
   }
 
-  public Integer getPrevious() {
-    return previous;
-  }
-
-  public void setPrevious(Integer previous) {
-    this.previous = previous;
-  }
-
-  public Integer getNext() {
-    return next;
-  }
-
-  public void setNext(Integer next) {
-    this.next = next;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getAnalysis() {
-    return analysis;
-  }
-
-  public void setAnalysis(String analysis) {
-    this.analysis = analysis;
-  }
-
   public IvyTool getTool() {
     return tool;
   }
@@ -156,29 +143,11 @@ public class AiStep implements Serializable {
     this.tool = tool;
   }
 
-  public String getToolId() {
-    return toolId;
+  public String getToolSignature() {
+    return toolSignature;
   }
 
-  public void setToolId(String toolId) {
-    this.toolId = toolId;
-  }
-
-  public String getRunId() {
-    return runId;
-  }
-
-  public void setRunId(String runId) {
-    this.runId = runId;
-  }
-
-  public String generateLogEntryContent() {
-    Map<String, Object> params = new HashMap<>();
-    params.put("stepNo", Optional.ofNullable(stepNo.toString()).orElse(StringUtils.EMPTY));
-    params.put("next", Optional.ofNullable(next.toString()).orElse(StringUtils.EMPTY));
-    params.put("prev", Optional.ofNullable(previous.toString()).orElse(StringUtils.EMPTY));
-    params.put("toolId", Optional.ofNullable(tool).map(IvyTool::getId).orElse(StringUtils.EMPTY));
-
-    return PromptTemplate.from(LOG_HEADER_TEMPLATE).apply(params).text();
+  public void setToolSignature(String toolSignature) {
+    this.toolSignature = toolSignature;
   }
 }

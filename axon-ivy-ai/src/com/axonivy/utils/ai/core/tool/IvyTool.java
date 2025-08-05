@@ -2,35 +2,32 @@ package com.axonivy.utils.ai.core.tool;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.connector.AbstractAiServiceConnector;
 import com.axonivy.utils.ai.core.log.ExecutionLogger;
 import com.axonivy.utils.ai.dto.IvyToolParameter;
 import com.axonivy.utils.ai.dto.ai.AiVariable;
-import com.axonivy.utils.ai.dto.ai.FieldExplanation;
 import com.axonivy.utils.ai.dto.ai.Instruction;
 import com.axonivy.utils.ai.enums.AiVariableState;
+import com.axonivy.utils.ai.enums.InstructionType;
 import com.axonivy.utils.ai.enums.log.LogLevel;
 import com.axonivy.utils.ai.enums.log.LogPhase;
-import com.axonivy.utils.ai.exception.AiException;
-import com.axonivy.utils.ai.function.DataMapping;
 import com.axonivy.utils.ai.service.IvyAdapterService;
 import com.axonivy.utils.ai.utils.AiVariableUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import dev.langchain4j.model.input.PromptTemplate;
+import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 
 /**
  * Represents a specific type of tool used for integrating with Ivy Workflow
@@ -40,12 +37,6 @@ import dev.langchain4j.model.input.PromptTemplate;
 public class IvyTool implements Serializable {
 
   private static final long serialVersionUID = -4175428864013818110L;
-
-  private static final String VARIABLES_TEMPLATE = """
-      Provided variables list:
-
-          {{variables}}
-      """;
 
   // Unique identifier for this tool instance
   private String id;
@@ -85,19 +76,34 @@ public class IvyTool implements Serializable {
   @JsonIgnore
   private List<AiVariable> missingParameters;
 
+  @SuppressWarnings("restriction")
+  @JsonIgnore
+  private CallSubStart ivyProcess;
+
   /**
    * Executes the Ivy process using the provided signature and input variables.
    * The result of the process execution is set as the result of this tool.
    * 
    * @throws JsonProcessingException
    */
+  @SuppressWarnings("restriction")
   public List<AiVariable> execute(List<AiVariable> inputVariables, ExecutionLogger logger, int iterationCount)
       throws JsonProcessingException {
 
     logInit(logger, iterationCount);
+    
+    List<Instruction> inputInstructions = new ArrayList<>();
+
+    for(var paramDesc : ivyProcess.getSignature().getInputParameters()) {
+      Instruction extractInstruction = new Instruction();
+      extractInstruction.setType(InstructionType.EXTRACT_INPUT);
+      extractInstruction.setToolName(name);
+      extractInstruction.setContent(paramDesc.getInfo().getDescription());
+      inputInstructions.add(extractInstruction);
+    }
 
     // convert AI variables to process parameters
-    variables = AiVariableUtils.extractInputAiVariables(instructions, inputVariables, getConnector());
+    variables = AiVariableUtils.extractInputAiVariables(inputInstructions, inputVariables, getConnector());
 
     // Use AI to fulfill parameter
     // fullfilIvyTool();
@@ -109,8 +115,7 @@ public class IvyTool implements Serializable {
     missingParameters = new ArrayList<>();
     for (var param : parameters) {
       if (param.getValue() == null) {
-        AiVariable missingVariable = new AiVariable(param.getName(), null);
-        missingVariable.setParameter(param);
+        AiVariable missingVariable = new AiVariable(param.getDefinition());
         missingVariable.setState(AiVariableState.ERROR);
         missingParameters.add(missingVariable);
       }
@@ -118,7 +123,7 @@ public class IvyTool implements Serializable {
 
     Map<String, Object> processParams = new HashMap<>();
     for (var param : getParameters()) {
-      processParams.put(param.getName(), param.getValue());
+      processParams.put(param.getDefinition().getName(), param.getValue());
     }
 
     // Handle missing parameters
@@ -134,16 +139,15 @@ public class IvyTool implements Serializable {
     logInputVariables(logger, iterationCount);
 
     // Call the callable subprocess (the tool)
-    Map<String, Object> processResult = IvyAdapterService.startSubProcessInApplication(signature, processParams);
+    String signatureToStart = signature.replaceAll("java.lang.String", "String");
+    Map<String, Object> processResult = IvyAdapterService.startSubProcessInApplication(signatureToStart, processParams);
 
     // The tool will return 2 kind of results:
     // "aiResult" : A string in natural language that will be use to evaluate next step
     // Other objects: result variables of the tool
 
     // Get AI result
-    if (Objects.nonNull(processResult.get("aiResult"))) {
-      aiResult = (String) processResult.get("aiResult");
-    }
+    aiResult = Optional.ofNullable(processResult.get("aiResult")).map(obj -> (String) obj).orElse(null);
 
     // Extracting result variables
     // If there is no predefined result definition, skip extracting result, return
@@ -158,10 +162,7 @@ public class IvyTool implements Serializable {
       // Set a default error result if no result is returned
       AiVariable error = new AiVariable();
       error.setState(AiVariableState.ERROR);
-      error.setParameter(new IvyToolParameter());
-      error.getParameter().setClassName("String");
-      error.getParameter().setValue("Error happened when running the Ivy tool: " + getName());
-      error.getParameter().setName("Error " + getName());
+      error.setErrorContent("Error happened when running the Ivy tool: " + getName());
       results.add(error);
       logError(logger, error, iterationCount);
       return results;
@@ -169,14 +170,12 @@ public class IvyTool implements Serializable {
 
     // Retrieve results and convert to AiVariable
     for (var resultDefinition : resultDefinitions) {
-      Object resultObj = processResult.entrySet().stream().filter(r -> r.getKey().equals(resultDefinition.getName()))
+      Object resultObj = processResult.entrySet().stream()
+          .filter(r -> r.getKey().equals(resultDefinition.getDefinition().getName()))
           .map(Entry::getValue).findFirst().orElse(null);
+
       if (Objects.nonNull(resultObj)) {
-        AiVariable newVar = new AiVariable();
-        newVar.init();
-        newVar.getParameter().setName(resultDefinition.getName());
-        newVar.getParameter().setDescription(resultDefinition.getDescription());
-        newVar.getParameter().setClassName(resultDefinition.getClassName());
+        AiVariable newVar = new AiVariable(resultDefinition.getDefinition());
         newVar.getParameter().setValue(resultObj);
         newVar.setState(AiVariableState.SUCCESS);
         results.add(newVar);
@@ -186,71 +185,31 @@ public class IvyTool implements Serializable {
     return results;
   }
 
+  /**
+   * Fulfills each {@link IvyToolParameter} in the current step by assigning a
+   * matching value from the list of input {@link AiVariable}s.
+   * <p>
+   * A match is determined by comparing both the parameter name and its fully
+   * qualified type. If a matching variable is found, its value is assigned to the
+   * tool parameter.
+   */
+  @SuppressWarnings("restriction")
   private void fulfillIvyToolUsingName() {
     if (CollectionUtils.isNotEmpty(parameters)) {
       for (IvyToolParameter param : parameters) {
-        param.setValue(variables.stream().filter(variable -> variable.getParameter().getName().equals(param.getName()))
-            .filter(variable -> variable.getParameter().getClassName().contentEquals(param.getClassName()))
-            .map(AiVariable::getParameter).map(IvyToolParameter::getValue)
-            .findFirst().orElseGet(() -> null));
+        // Define matching condition: name and type must be equal
+        Predicate<AiVariable> matchByNameAndType = variable -> 
+          variable.getParameter().getDefinition().getName().equals(param.getDefinition().getName())
+            && variable.getParameter().getDefinition().getType().fullQualifiedName()
+                .equals(param.getDefinition().getType().fullQualifiedName());
+
+          // Search for the first variable that matches the parameter by name and type
+          AiVariable matchedValue = variables.stream().filter(matchByNameAndType).findFirst().orElse(null);
+
+          // Set the matched value to the parameter
+          param.setValue(Optional.ofNullable(matchedValue).map(AiVariable::getParameter).map(IvyToolParameter::getValue)
+              .orElse(null));
       }
-    }
-  }
-
-  @JsonIgnore
-  public void fullfilIvyTool() throws JsonProcessingException {
-    fulfillNormalAttributes();
-    fulfillMandatoryParameters();
-  }
-
-  private void fulfillNormalAttributes() {
-    if (CollectionUtils.isNotEmpty(getParameters())) {
-
-      // Use AI to fulfill value of all mandatory parameters
-      getParameters().stream().filter(param -> BooleanUtils.isNotTrue(BooleanUtils.toBoolean(param.getIsMandatory())))
-          .forEach(param -> {
-            IvyToolParameter newAttribute = fulfillIvyToolParameter(param);
-            getParameters().stream().filter(attr -> attr.getName().contentEquals(param.getName())).findFirst().get()
-                .setValue(newAttribute.getValue());
-          });
-    }
-  }
-
-  private void fulfillMandatoryParameters() throws JsonProcessingException {
-    if (CollectionUtils.isNotEmpty(getParameters())) {
-      // Use AI to fulfill value of all mandatory parameters
-      getParameters().stream().filter(param -> BooleanUtils.isTrue(BooleanUtils.toBoolean(param.getIsMandatory())))
-          .forEach(param -> {
-            IvyToolParameter newAttribute = fulfillIvyToolParameter(param);
-            getParameters().stream().filter(attr -> attr.getName().contentEquals(param.getName())).findFirst().get()
-                .setValue(newAttribute.getValue());
-          });
-    }
-  }
-
-  private IvyToolParameter fulfillIvyToolParameter(IvyToolParameter param) {
-    // Clear value of the parameter before fulfill
-    param = Optional.ofNullable(param).orElseGet(() -> new IvyToolParameter());
-
-    // Use AI to fulfill parameter
-    Map<String, Object> paramsMap = new HashMap<>();
-    paramsMap.put("variables", AiVariableUtils.convertAiVariablesToJsonString(variables));
-    AiVariable result = DataMapping.getBuilder().useService(getConnector())
-        .withQuery(PromptTemplate.from(VARIABLES_TEMPLATE).apply(paramsMap).text()).withObject(param)
-        .addFieldExplanations(Arrays.asList(new FieldExplanation(param.getName(), param.getDescription()))).build()
-        .execute();
-
-    // If the data mapping process is failed, return the original parameter
-    if (result.getState() != AiVariableState.SUCCESS) {
-      return param;
-    }
-
-    // Otherwise return the IvyToolParameter
-    try {
-      return result.getParameter();
-    } catch (AiException e) {
-      // If the conversion is failed, return the original parameter
-      return param;
     }
   }
 
@@ -404,5 +363,15 @@ public class IvyTool implements Serializable {
 
   public void setMissingParameters(List<AiVariable> missingParameters) {
     this.missingParameters = missingParameters;
+  }
+
+  @SuppressWarnings("restriction")
+  public CallSubStart getIvyProcess() {
+    return ivyProcess;
+  }
+
+  @SuppressWarnings("restriction")
+  public void setIvyProcess(CallSubStart ivyProcess) {
+    this.ivyProcess = ivyProcess;
   }
 }

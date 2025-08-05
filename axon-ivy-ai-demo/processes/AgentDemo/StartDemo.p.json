@@ -46,15 +46,6 @@
       "id" : "f3",
       "type" : "Script",
       "name" : "Start agent",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.ai.core.AgentExecutor;",
-            "AgentExecutor executor = new AgentExecutor();",
-            "executor.startExecution(\"support-agent\", in.query, ivy.session.getSessionUserName());"
-          ]
-        }
-      },
       "visual" : {
         "at" : { "x" : 280, "y" : 64 }
       },

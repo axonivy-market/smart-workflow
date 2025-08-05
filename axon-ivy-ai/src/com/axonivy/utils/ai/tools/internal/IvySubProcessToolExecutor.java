@@ -32,7 +32,7 @@ public class IvySubProcessToolExecutor {
 
     var callable = SubProcessCall
         .withPid(startable.get().getRootProcess().getPid().getProcessGuid())
-        .withStartSignature(signature.toSimpleNameSignature());
+        .withStartSignature(signature.toSignatureString());
 
     var parameters = new JsonProcessParameters(IProcessModelVersion.current())
         .readParams(signature.getInputParameters(), execTool.arguments());

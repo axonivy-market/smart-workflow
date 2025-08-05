@@ -1,14 +1,6 @@
 package com.axonivy.utils.ai.core;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
-import com.axonivy.utils.ai.dto.ai.FieldExplanation;
-import com.axonivy.utils.ai.function.DataMapping;
-import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 
 public class ReActDecision implements Serializable {
 
@@ -60,32 +52,22 @@ public class ReActDecision implements Serializable {
     }
   }
 
-  // Patterns to parse AI reasoning response (kept as fallback)
-  private static final Pattern DECISION_PATTERN = Pattern.compile("Decision:\\s*(YES|NO|COMPLETE)",
-      Pattern.CASE_INSENSITIVE);
-  private static final Pattern NEXT_ACTION_PATTERN = Pattern.compile("Next Action:\\s*(.+?)(?=\\n|$)", Pattern.DOTALL);
-  private static final Pattern AGENT_SELECTION_PATTERN = Pattern.compile("Agent Selection:\\s*(.+?)(?=\\n|$)",
-      Pattern.DOTALL);
-
-  private final boolean shouldUpdatePlan;
-  private final boolean isComplete;
-  private final String reasoning;
-  private final String nextAction;
-  private final String agentSelection;
+  private boolean isComplete;
+  private String reasoning;
+  private String nextAction;
+  private String selectedSignature;
 
   private String decisionContext; // The given context to make the decision
 
+  public ReActDecision() {
+  }
+
   public ReActDecision(boolean shouldUpdatePlan, boolean isComplete, String reasoning, String nextAction,
-      String agentSelection) {
-    this.shouldUpdatePlan = shouldUpdatePlan;
+      String selectedSignature, String decisionContext) {
     this.isComplete = isComplete;
     this.reasoning = reasoning;
     this.nextAction = nextAction;
-    this.agentSelection = agentSelection;
-  }
-
-  public boolean shouldUpdatePlan() {
-    return shouldUpdatePlan;
+    this.selectedSignature = selectedSignature;
   }
 
   public boolean isComplete() {
@@ -100,97 +82,19 @@ public class ReActDecision implements Serializable {
     return nextAction;
   }
 
-  public String getAgentSelection() {
-    return agentSelection;
-  }
-
-  /**
-   * Parses the AI response to extract ReAct decision using DataMapping
-   */
-  public static ReActDecision parseReActDecision(String aiResponse) {
-    try {
-      // Use DataMapping to extract structured data from AI response
-      DataMapping dataMapping = DataMapping.getBuilder().withObject(new ReActDecisionData())
-          .useService(OpenAiServiceConnector.getTinyBrain()).withQuery(aiResponse)
-          .addFieldExplanations(Arrays.asList(new FieldExplanation("decision",
-              "Extract the decision value: YES (to update plan), NO (continue with current plan), or COMPLETE (goal achieved)"),
-              new FieldExplanation("nextAction", "Extract the next action description when decision is YES"),
-              new FieldExplanation("agentSelection", "Extract the agent/tool ID selection when decision is YES"),
-              new FieldExplanation("reasoning", "Extract the reasoning or thought process behind the decision"),
-              new FieldExplanation("decisionContext", "Keep this field empty")))
-          .disableRetry() // Disable retry for faster processing
-          .build();
-
-      var result = dataMapping.execute();
-
-      if (result != null && result.getSafeValue() != null) {
-        // Parse the extracted data
-        ReActDecisionData extracted = BusinessEntityConverter.jsonValueToEntity(result.getSafeValue(),
-            ReActDecisionData.class);
-
-        if (extracted != null) {
-          String decision = extracted.getDecision() != null ? extracted.getDecision().toUpperCase() : "NO";
-
-          boolean shouldUpdate = "YES".equals(decision);
-          boolean isComplete = "COMPLETE".equals(decision);
-
-          String nextAction = extracted.getNextAction() != null ? extracted.getNextAction().trim() : "";
-          String agentSelection = extracted.getAgentSelection() != null ? extracted.getAgentSelection().trim() : "";
-          String reasoning = extracted.getReasoning() != null ? extracted.getReasoning() : aiResponse;
-
-          return new ReActDecision(shouldUpdate, isComplete, reasoning, nextAction, agentSelection);
-        }
-      }
-    } catch (Exception e) {
-      // Log the error and fall back to regex parsing
-      System.out.println("DataMapping parsing failed, falling back to regex: " + e.getMessage());
-    }
-
-    // Fallback to original regex-based parsing
-    return parseReActDecisionWithRegex(aiResponse);
-  }
-
-  /**
-   * Fallback method using regex patterns (original implementation)
-   */
-  private static ReActDecision parseReActDecisionWithRegex(String aiResponse) {
-    // Parse decision
-    Matcher decisionMatcher = DECISION_PATTERN.matcher(aiResponse);
-    String decision = decisionMatcher.find() ? decisionMatcher.group(1).toUpperCase() : "NO";
-
-    boolean shouldUpdate = "YES".equals(decision);
-    boolean isComplete = "COMPLETE".equals(decision);
-
-    // Parse next action if updating
-    String nextAction = "";
-    String agentSelection = "";
-
-    if (shouldUpdate) {
-      Matcher actionMatcher = NEXT_ACTION_PATTERN.matcher(aiResponse);
-      if (actionMatcher.find()) {
-        nextAction = actionMatcher.group(1).trim();
-      }
-
-      Matcher agentMatcher = AGENT_SELECTION_PATTERN.matcher(aiResponse);
-      if (agentMatcher.find()) {
-        agentSelection = agentMatcher.group(1).trim();
-      }
-    }
-
-    return new ReActDecision(shouldUpdate, isComplete, aiResponse, nextAction, agentSelection);
+  public String getSelectedSignature() {
+    return selectedSignature;
   }
 
   public String toPrettyString() {
     StringBuilder builder = new StringBuilder();
     builder.append(String.format("Reasoning: %s", reasoning));
     builder.append(System.lineSeparator());
-    builder.append(String.format("Should update plan: %s", Boolean.toString(shouldUpdatePlan)));
-    builder.append(System.lineSeparator());
     builder.append(String.format("Is completed: %s", Boolean.toString(isComplete)));
     builder.append(System.lineSeparator());
     builder.append(String.format("Next action: %s", nextAction));
     builder.append(System.lineSeparator());
-    builder.append(String.format("Selected tool: %s", agentSelection));
+    builder.append(String.format("Signature of selected tool: %s", selectedSignature));
 
     return builder.toString();
   }

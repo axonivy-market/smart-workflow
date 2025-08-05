@@ -1,10 +1,13 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
   "simpleName" : "Person",
   "namespace" : "com.axonivy.utils.ai.test",
+  "isBusinessCaseData" : false,
   "fields" : [ {
-    "name" : "firstName"
+    "name" : "firstName",
+    "type" : "String"
   }, {
-    "name" : "lastName"
+    "name" : "lastName",
+    "type" : "String"
   } ]
 }
