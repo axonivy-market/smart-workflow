@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools;
+package com.axonivy.utils.ai.tools.internal;
 
 import java.util.Map;
 import java.util.Optional;
@@ -14,7 +14,7 @@ import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.internal.Json;
 
 @SuppressWarnings("restriction")
-public class IvyToolExecutor {
+public class IvySubProcessToolExecutor {
 
   public static ToolExecutionResultMessage execute(ToolExecutionRequest execTool) {
     String name = execTool.name();

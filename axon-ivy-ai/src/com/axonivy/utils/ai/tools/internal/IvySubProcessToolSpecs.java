@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools;
+package com.axonivy.utils.ai.tools.internal;
 
 import java.util.List;
 
@@ -11,12 +11,12 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.agent.tool.ToolSpecification.Builder;
 
 @SuppressWarnings("restriction")
-public class IvyToolSpecs {
+public class IvySubProcessToolSpecs {
 
   public static List<ToolSpecification> find() {
     return new IvyToolsProcesses(IProcessModelVersion.current())
         .toolStarts().stream()
-        .map(IvyToolSpecs::toTool)
+        .map(IvySubProcessToolSpecs::toTool)
         .toList();
   }
 

@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools;
+package com.axonivy.utils.ai.tools.internal;
 
 import java.util.LinkedHashMap;
 import java.util.List;

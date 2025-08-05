@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
-import com.axonivy.utils.ai.tools.IvyToolExecutor;
+import com.axonivy.utils.ai.tools.internal.IvySubProcessToolExecutor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -18,7 +18,7 @@ import ch.ivyteam.test.client.OpenAiTestClient;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 
 @IvyProcessTest(enableWebServer = true)
-class TestIvyToolExecutor {
+class TestIvySubProcessToolExecutor {
 
   @BeforeEach
   void setup(AppFixture fixture) {
@@ -34,7 +34,7 @@ class TestIvyToolExecutor {
         .arguments("{\"query\":\"Computer is beeping after opening AxonIvy Portal\"}")
         .build();
 
-    var result = IvyToolExecutor.execute(queryOnly);
+    var result = IvySubProcessToolExecutor.execute(queryOnly);
     assertThat(result.text())
         .contains("[TECHNICAL]");
 

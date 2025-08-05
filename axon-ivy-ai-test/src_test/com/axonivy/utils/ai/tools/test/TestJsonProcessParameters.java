@@ -9,7 +9,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.test.Person;
-import com.axonivy.utils.ai.tools.JsonProcessParameters;
+import com.axonivy.utils.ai.tools.internal.JsonProcessParameters;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;

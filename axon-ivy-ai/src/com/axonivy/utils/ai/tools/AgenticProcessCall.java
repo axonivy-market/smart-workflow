@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
+import com.axonivy.utils.ai.tools.internal.IvyToolsProcesses;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ProcessModelVersionRelation;
@@ -34,7 +35,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
 
     var supporter = AiServices.builder(SupportAgent.class)
         .chatModel(model)
-        .toolProvider(new IvyToolsProvider())
+        .toolProvider(new IvySubProcessToolsProvider())
         .build();
     var response2 = supporter.chat(query);
 

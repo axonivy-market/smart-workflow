@@ -16,7 +16,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.client.OpenAiTestClient;
 
 @IvyProcessTest(enableWebServer = true)
-class TestSuportAgentTools {
+class TestSupportAgentTools {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("SupportAgentTools");
 

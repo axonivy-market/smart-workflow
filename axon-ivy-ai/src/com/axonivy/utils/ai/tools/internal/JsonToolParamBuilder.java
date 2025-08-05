@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools;
+package com.axonivy.utils.ai.tools.internal;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
