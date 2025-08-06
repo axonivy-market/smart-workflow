@@ -1,0 +1,46 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1987FC3259488F27",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.test.TestToolUserData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "reducedTools",
+      "config" : {
+        "signature" : "reducedTools"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.ai.tools.AgenticProcessCall",
+        "userConfig" : {
+          "tools" : "[\"whoami\"]",
+          "resultMapping" : "in.result",
+          "query" : "\"Tools options as json array\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 64 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
+    } ]
+}

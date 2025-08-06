@@ -2,6 +2,7 @@ package com.axonivy.utils.ai.mock;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
@@ -46,7 +47,22 @@ public class MockOpenAI {
     if ("tool".equals(test)) {
       return toolTest(request);
     }
+    if ("tools.filter".equals(test)) {
+      return toolsFilter(request);
+    }
     return Response.ok().entity("not implemented!").build();
+  }
+
+  private Response toolsFilter(JsonNode request) {
+    var tools = (ArrayNode) request.get("tools");
+    var toolNames = new ArrayList<String>();
+    tools.forEach(tool -> toolNames.add(tool.get("function").get("name").asText()));
+    if (toolNames.size() == 1 && "whoami".equals(toolNames.get(0))) {
+      return Response.ok()
+          .entity(load("tools/filter/response.json"))
+          .build();
+    }
+    return Response.serverError().build();
   }
 
   private Response toolTest(JsonNode request) {
