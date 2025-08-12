@@ -1,14 +1,13 @@
 package com.axonivy.utils.ai.tools;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
 import com.axonivy.utils.ai.tools.internal.IvyToolsProcesses;
-
-import com.axonivy.utils.ai.core.AgentExecutor;
-import com.axonivy.utils.ai.dto.ai.Instruction;
+import com.axonivy.utils.ai.tools.internal.ScriptContextUtil;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ProcessModelVersionRelation;
@@ -19,73 +18,60 @@ import ch.ivyteam.ivy.process.extension.impl.AbstractUserProcessExtension;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
 import ch.ivyteam.ivy.process.extension.ui.UiEditorExtension;
 import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
+import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
 import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
+import dev.langchain4j.service.AiServices;
 
 public class AgenticProcessCall extends AbstractUserProcessExtension {
 
+  interface Variable {
+    String RESULT = "result";
+  }
+
   public interface Conf {
     String QUERY = "query";
-    String PLANNING_INSTRUCTIONS = "planningInstructions";
-    String INSTRUCTIONS = "instructions";
-    String MAX_ITERATIONS = "maxIterations";
-    String AGENT_ID = "agentId";
-    String GOAL = "goal";
+    String TOOLS = "tools";
+    String MAP_TO = "resultMapping";
   }
 
-  @SuppressWarnings("restriction")
-  private static List<CallSubStart> toolList() {
-    IProcessModelVersion pmv = JavaConfigurationNavigationUtil.getProcessModelVersion(Editor.class);
-    List<IProcessModelVersion> user = pmv.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.DEPENDENT);
-    if (!user.isEmpty()) {
-      pmv = user.get(0); // TOOD: smarter; can I know my calling process?
-    }
-
-    try {
-      return new IvyToolsProcesses(pmv).toolStarts().stream().toList();
-    } catch (Exception ex) {
-      return null;
-    }
-  }
-
-  @SuppressWarnings("restriction")
+  @SuppressWarnings({"unchecked"})
   @Override
   public CompositeObject perform(IRequestId requestId, CompositeObject in, IIvyScriptContext context) throws Exception {
-    Object inputObj = in.get(getConfig().get(Conf.QUERY).substring(3));
-    if (inputObj == null) {
-      inputObj = getConfig().get(Conf.QUERY);
-    }
-    Integer maxIterations = NumberUtils.toInt(getConfig().get(Conf.MAX_ITERATIONS), 15);
+    String query = getConfig().get(Conf.QUERY); // execute scripted?
 
-    String goal = getConfig().get(Conf.GOAL);
+    var model = new OpenAiServiceConnector()
+        .buildOpenAiModel().build();
 
-    List<Instruction> instructions = new ArrayList<>();
-    instructions.add(Instruction.createPlanningInstruction(getConfig().get(Conf.PLANNING_INSTRUCTIONS)));
-    List<CallSubStart> tools = toolList();
-
-    for (var tool : tools) {
-      String signatureStr = tool.getSignature().toSignatureString();
-      String executionInstruction = getConfig().get(signatureStr);
-      if (StringUtils.isNotBlank(executionInstruction)) {
-        instructions.add(Instruction.createExecutionInstruction(signatureStr, executionInstruction));
+    var selectedTools = Optional.ofNullable(getConfig().get(Conf.TOOLS))
+        .filter(Predicate.not(String::isBlank));
+    List<String> toolFilter = null;
+    if (selectedTools.isPresent()) {
+      try {
+        toolFilter = (List<String>) executeIvyScript(context, selectedTools.get());
+      } catch (Exception ex) {
+        Ivy.log().error("Failed to filter tools from " + selectedTools.get(), ex);
       }
     }
 
-    AgentExecutor executor = new AgentExecutor();
-    executor.startExecution(inputObj, Ivy.session().getSessionUserName(), getConfig().get(Conf.AGENT_ID), tools,
-        instructions, goal, maxIterations);
+    var supporter = AiServices.builder(SupportAgent.class)
+        .chatModel(model)
+        .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter))
+        .build();
+    var result = supporter.chat(query);
 
-    /*
-     * var model = new OpenAiServiceConnector() .buildOpenAiModel().build();
-     * 
-     * var supporterBuilder = AiServices.builder(SupportAgent.class)
-     * .chatModel(model) .toolProvider(new IvyToolsProvider());
-     * 
-     * var supporter = supporterBuilder.build();
-     */
-    // var response2 = supporter.chat(query);
+    var mapTo = getConfig().get(Conf.MAP_TO);
+    if (mapTo != null) {
+      String mapIt = mapTo + "=result";
+      try {
+        new ScriptContextUtil(context).declareVariable(Variable.RESULT, result);
+        executeIvyScript(context, mapIt);
+      } catch (Exception ex) {
+        Ivy.log().error("Failed to map result to " + mapTo, ex);
+      }
+    }
 
-    // Ivy.log().info("Agent response: " + response2);
+    Ivy.log().info("Agent response: " + result);
     return in;
   }
 
@@ -95,43 +81,40 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
 
   public static class Editor extends UiEditorExtension {
 
-    @SuppressWarnings("restriction")
     @Override
     public void initUiFields(ExtensionUiBuilder ui) {
-      ui.label("Agent Id").create();
-      ui.scriptField(Conf.AGENT_ID)
-          .multiline()
-          .create();
-      
-      ui.label("Goal").create();
-      ui.textField(Conf.GOAL).multiline().create();
-
-      ui.label("Agent Input").create();
+      ui.label("How can I assist you today?").create();
       ui.scriptField(Conf.QUERY)
           .multiline()
           .requireType(String.class)
           .create();
-
-      // Iteration count
-      ui.label("Max Iterations").create();
-      ui.scriptField(Conf.MAX_ITERATIONS)
-          .requireType(Integer.class)
+      ui.label("You have the following tools ready to assist you:\n" + toolList() + "\n\n"
+          + "Select the available tools, or keep empty to use all:")
+          .multiline()
+          .create();
+      ui.scriptField(Conf.TOOLS)
+          .requireType(List.class)
           .create();
 
-      // Instructions section
-      ui.label("Planning Instructions").create();
-      ui.label("Configure instructions for planning phases").create();
-      ui.textField(Conf.PLANNING_INSTRUCTIONS).multiline().create();
+      ui.label("Map result to:").create();
+      ui.scriptField(Conf.MAP_TO).create();
+    }
 
-      ui.label("Tools").create();
-      for (var toolStartable : AgenticProcessCall.toolList()) {
-        ui.label(" " + toolStartable.getName()).create();
-        String description = toolStartable.getDescription();
-        if (StringUtils.isNotBlank(description)) {
-          ui.label("  - " + description).create();
-        }
-        ui.label("  - Execution instructions").create();
-        ui.textField(toolStartable.getSignature().toSignatureString()).multiline().create();
+    @SuppressWarnings("restriction")
+    private String toolList() {
+      IProcessModelVersion pmv = JavaConfigurationNavigationUtil.getProcessModelVersion(Editor.class);
+      List<IProcessModelVersion> user = pmv.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.DEPENDENT);
+      if (!user.isEmpty()) {
+        pmv = user.get(0); // TOOD: smarter; can I know my calling process?
+      }
+
+      try {
+        return new IvyToolsProcesses(pmv).toolStarts().stream()
+            .map(CallSubStart::getSignature)
+            .map(tool -> "- " + tool.getName() + tool.getInputParameters().stream().map(VariableDesc::getName).toList())
+            .collect(Collectors.joining("\n"));
+      } catch (Exception ex) {
+        return "";
       }
     }
   }

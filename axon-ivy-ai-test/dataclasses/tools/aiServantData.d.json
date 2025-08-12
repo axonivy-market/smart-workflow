@@ -1,0 +1,9 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "aiServantData",
+  "namespace" : "tools",
+  "fields" : [ {
+    "name" : "person",
+    "type" : "com.axonivy.utils.ai.test.Person"
+  } ]
+}
