@@ -56,11 +56,11 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
     if (!baseUrl.isBlank()) {
       builder.baseUrl(baseUrl);
     }
-    var testing = Ivy.var().get(OpenAiConf.TEST_HEADER);
-    if (!testing.isBlank()) {
-      builder.customHeaders(Map.of("X-Requested-By", "ivy", "X-Test", testing));
+    String key = Ivy.var().get(OpenAiConf.API_KEY);
+    if (!key.isBlank()) {
+      builder.apiKey(key);
     } else {
-      builder.apiKey(Ivy.var().get(OpenAiConf.API_KEY));
+      builder.customHeaders(Map.of("X-Requested-By", "ivy")); // TODO as pure test variable
     }
     return builder;
   }
