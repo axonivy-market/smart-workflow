@@ -1,9 +1,10 @@
 {
   "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
-  "simpleName" : "SupportAgentToolsData",
+  "simpleName" : "AgentInput",
   "namespace" : "AgentDemo",
   "fields" : [ {
-    "name" : "agentInput",
-    "type" : "AgentDemo.AgentInput"
+    "name" : "username"
+  }, {
+    "name" : "message"
   } ]
 }

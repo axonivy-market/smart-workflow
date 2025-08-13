@@ -28,6 +28,9 @@
           }
         }
       },
+      "tags" : [
+        "tool"
+      ],
       "visual" : {
         "at" : { "x" : 88, "y" : 72 },
         "description" : "Use this tool to create a support ticket task"

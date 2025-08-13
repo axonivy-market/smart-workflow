@@ -40,8 +40,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
   public CompositeObject perform(IRequestId requestId, CompositeObject in, IIvyScriptContext context) throws Exception {
     String query = getConfig().get(Conf.QUERY); // execute scripted?
 
-    var model = new OpenAiServiceConnector()
-        .buildOpenAiModel().build();
+    var model = OpenAiServiceConnector.buildOpenAiModel().build();
 
     var selectedTools = Optional.ofNullable(getConfig().get(Conf.TOOLS))
         .filter(Predicate.not(String::isBlank));

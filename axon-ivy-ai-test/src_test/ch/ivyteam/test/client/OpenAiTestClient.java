@@ -12,7 +12,7 @@ public class OpenAiTestClient {
   }
 
   public static OpenAiChatModel aiMock() {
-    return new OpenAiServiceConnector().buildOpenAiModel().build();
+    return OpenAiServiceConnector.buildOpenAiModel().build();
   }
 
 }
