@@ -1,0 +1,69 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "198A1AC925DE5BB4",
+  "config" : {
+    "data" : "AgentDemo.SupportAgentToolsWithPlanningData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "startPlanning",
+      "config" : {
+        "signature" : "startPlanning"
+      },
+      "tags" : [
+        "demo"
+      ],
+      "visual" : {
+        "at" : { "x" : 336, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "Script",
+      "name" : "Init input",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.agentInput.username = ivy.session.getSessionUserName();",
+            "in.agentInput.message = \"Help me, my computer is beeping, it started after opening AxonIvy Portal.\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 464, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "f3", "to" : "f4", "color" : "default" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent with planning",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.ai.tools.ReactAgenticProcessCall",
+        "userConfig" : {
+          "planningInstructions" : "Should create a support ticket then create a task to handle the support ticket",
+          "agentId" : "\"support-agent\"",
+          "maxIterations" : "15",
+          "goal" : "create support ticket, and follow business context",
+          "query" : "in.agentInput"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 648, "y" : 216 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f6", "color" : "default" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 776, "y" : 216 }
+      }
+    } ]
+}
