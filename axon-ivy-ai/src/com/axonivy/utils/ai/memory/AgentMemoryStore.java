@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
@@ -68,5 +69,14 @@ public class AgentMemoryStore implements ChatMemoryStore {
 
   private Optional<AgentMemory> findMemoryOptional(Object memoryId) {
     return memories.stream().filter(memory -> memory.id().equals(memoryId)).findFirst();
+  }
+
+  public void persist(Object memoryId) {
+    Optional<AgentMemory> memoryOpt = findMemoryOptional(memoryId);
+    if (memoryOpt.isPresent()) {
+      AgentMemory memory = memoryOpt.get();
+      memory.convertToPersistedMessages();
+      Ivy.repo().save(memoryOpt.get());
+    }
   }
 }

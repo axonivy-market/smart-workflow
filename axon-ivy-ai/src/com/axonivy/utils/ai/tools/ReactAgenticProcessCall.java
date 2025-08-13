@@ -55,6 +55,7 @@ public class ReactAgenticProcessCall extends AbstractUserProcessExtension {
 
     IvyToolRunner runner = new IvyToolRunner(memoryProvider, runUuid, new IvySubProcessToolsProvider());
     runner.run(query, maxIterations);
+    memoryProvider.persist(runUuid);
     return in;
   }
 

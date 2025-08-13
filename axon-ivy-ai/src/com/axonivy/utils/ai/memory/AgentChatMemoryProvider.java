@@ -18,4 +18,8 @@ public class AgentChatMemoryProvider implements ChatMemoryProvider {
   public void saveMessages(Object memoryId) {
     return;
   }
+
+  public void persist(Object memoryId) {
+    AgentMemoryStore.getInstance().persist(memoryId);
+  }
 }
