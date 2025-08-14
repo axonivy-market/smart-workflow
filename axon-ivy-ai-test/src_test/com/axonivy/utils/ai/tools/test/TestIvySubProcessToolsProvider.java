@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
-import com.axonivy.utils.ai.tools.IvySubProcessToolsProvider;
-import com.axonivy.utils.ai.tools.internal.IvySubProcessToolExecutor;
-import com.axonivy.utils.ai.tools.internal.IvySubProcessToolSpecs;
+import com.axonivy.utils.ai.core.IvySubProcessToolsProvider;
+import com.axonivy.utils.ai.core.internal.IvySubProcessToolExecutor;
+import com.axonivy.utils.ai.core.internal.IvySubProcessToolSpecs;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;

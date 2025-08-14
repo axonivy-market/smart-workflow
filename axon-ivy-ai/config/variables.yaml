@@ -5,9 +5,3 @@ Variables:
       #[password]
       APIKey: ${decrypt:}
       BaseUrl: ""
-    # [file: json]
-    Agents: ""
-    # [file: json]
-    Tools: ""
-    # [file: json]
-    Logs: ""

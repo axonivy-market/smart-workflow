@@ -4,18 +4,31 @@ import com.axonivy.utils.ai.axon.ivy.ai.demo.enums.TicketType;
 import com.axonivy.utils.ai.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dev.langchain4j.model.output.structured.Description;
+
 public class SupportTicket {
 
   private String id;
+
+  @Description("Type of the support ticket. It's an enum field")
   private TicketType type;
+  @Description("Name of the support ticket. Must be start with prefix 'Support ticket: '")
   private String name;
+  @Description("description of the support ticket")
   private String description;
+  @Description("username of the employee requested this ticket")
   private String employeeUsername;
+  @Description("username of the first approver of this ticket. Field type: approval")
   private String firstApprover;
+  @Description("username of the second approver of this ticket. Field type: approval")
   private String secondApprover;
+  @Description("approval decision by AI. Field type: approval")
   private AiApprovalDecision aiApproval;
+  @Description("approval decision by the first approver. Field type: approval")
   private ApprovalHistory firstApproval;
+  @Description("approval decision by the second approver. Field type: approval")
   private ApprovalHistory secondApproval;
+  @Description("The request date of this support ticket. Do not fill this field")
   private String requestedDate;
 
 

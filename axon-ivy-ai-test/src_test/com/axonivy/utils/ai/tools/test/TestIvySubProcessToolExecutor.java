@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
-import com.axonivy.utils.ai.tools.internal.IvySubProcessToolExecutor;
+import com.axonivy.utils.ai.core.internal.IvySubProcessToolExecutor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 

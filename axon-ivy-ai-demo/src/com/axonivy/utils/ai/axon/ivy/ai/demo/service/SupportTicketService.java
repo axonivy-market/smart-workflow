@@ -7,10 +7,11 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket;
-import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 import com.axonivy.utils.ai.utils.IdGenerationUtils;
+import com.axonivy.utils.ai.utils.JsonUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.internal.Json;
 
 public class SupportTicketService {
 
@@ -28,7 +29,7 @@ public class SupportTicketService {
 
   public List<SupportTicket> findAll() {
     try {
-      return BusinessEntityConverter.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), SupportTicket.class);
+      return JsonUtils.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), SupportTicket.class);
     } catch (Exception e) {
       return new ArrayList<>();
     }
@@ -40,7 +41,7 @@ public class SupportTicketService {
     }
 
     List<SupportTicket> existingTickets = Optional
-        .ofNullable(BusinessEntityConverter.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), SupportTicket.class))
+        .ofNullable(JsonUtils.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), SupportTicket.class))
         .orElseGet(ArrayList::new);
 
     if (StringUtils.isBlank(ticket.getId())) {
@@ -63,7 +64,7 @@ public class SupportTicketService {
       }
     }
 
-    Ivy.var().set(VARIABLE_KEY, BusinessEntityConverter.entityToJsonValue(existingTickets));
+    Ivy.var().set(VARIABLE_KEY, Json.toJson(existingTickets));
   }
 
   public SupportTicket findById(String id) {
