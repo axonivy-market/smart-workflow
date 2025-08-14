@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
+import com.axonivy.utils.ai.output.DynamicAgent;
+import com.axonivy.utils.ai.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.ai.tools.internal.IvyToolsProcesses;
 import com.axonivy.utils.ai.tools.internal.ScriptContextUtil;
 
@@ -32,11 +34,15 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
   public interface Conf {
     String QUERY = "query";
     String TOOLS = "tools";
+    String OUTPUT = "resultType";
     String MAP_TO = "resultMapping";
   }
 
-  public interface SupportAgent {
-    String chat(String query);
+  interface ChatAgent extends DynamicAgent<String> {
+    @Override
+    default String chat(String query) {
+      return null;
+    }
   }
 
   @SuppressWarnings({"unchecked"})
@@ -53,8 +59,13 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
         .build();
 
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
+    Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
+    var structured = execute(context, Conf.OUTPUT, Class.class);
+    if (structured.isPresent()) {
+      agentType = StructuredOutputAgent.agent(structured.get());
+    }
 
-    var supporter = AiServices.builder(SupportAgent.class)
+    var supporter = AiServices.builder(agentType)
         .chatModel(model)
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter))
         .build();
@@ -106,6 +117,9 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       ui.scriptField(Conf.TOOLS)
           .requireType(List.class)
           .create();
+
+      ui.label("Expect result of type:").create();
+      ui.scriptField(Conf.OUTPUT).requireType(Class.class).create();
 
       ui.label("Map result to:").create();
       ui.scriptField(Conf.MAP_TO).create();
