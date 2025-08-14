@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.agent.IvyToolRunner;
 import com.axonivy.utils.ai.agent.Planner;
-import com.axonivy.utils.ai.memory.AgentChatMemoryProvider;
 import com.axonivy.utils.ai.tools.internal.IvySubProcessToolSpecs;
 import com.axonivy.utils.ai.tools.internal.IvyToolsProcesses;
 import com.axonivy.utils.ai.utils.IdGenerationUtils;
@@ -29,6 +28,10 @@ import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.internal.Json;
+import dev.langchain4j.memory.chat.ChatMemoryProvider;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 
 public class ReactAgenticProcessCall extends AbstractUserProcessExtension {
 
@@ -61,15 +64,17 @@ public class ReactAgenticProcessCall extends AbstractUserProcessExtension {
     String goal = getConfig().get(Conf.GOAL);
     String planningInstructions = getConfig().get(Conf.PLANNING_INSTRUCTIONS);
 
-    AgentChatMemoryProvider memoryProvider = new AgentChatMemoryProvider();
-    String runUuid = IdGenerationUtils.generateRandomId();
-    memoryProvider.createNewMemory(runUuid);
+    ChatMemoryStore store = new InMemoryChatMemoryStore();
+    ChatMemoryProvider memoryProvider = memoryId -> MessageWindowChatMemory.builder().id(memoryId)
+        .maxMessages(30)
+        .chatMemoryStore(store).build();
 
-    Planner planner = new Planner(memoryProvider, runUuid);
+    String memoryId = IdGenerationUtils.generateRandomId();
+    Planner planner = new Planner(memoryProvider, memoryId);
 
     planner.createPlan(goal, query, toolInfos, planningInstructions);
 
-    IvyToolRunner runner = new IvyToolRunner(memoryProvider, runUuid, toolProvider);
+    IvyToolRunner runner = new IvyToolRunner(memoryProvider, memoryId, toolProvider);
     runner.run(query, maxIterations);
     return in;
   }

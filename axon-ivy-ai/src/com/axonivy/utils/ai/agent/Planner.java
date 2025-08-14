@@ -1,8 +1,8 @@
 package com.axonivy.utils.ai.agent;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
-import com.axonivy.utils.ai.memory.AgentChatMemoryProvider;
 
+import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
@@ -13,16 +13,16 @@ import dev.langchain4j.service.V;
 public class Planner {
 
   private OpenAiChatModel model;
-  private AgentChatMemoryProvider memoryProvider;
+  private ChatMemoryProvider memoryProvider;
   private String memoryId;
 
-  public Planner(OpenAiChatModel model, AgentChatMemoryProvider memoryProvider, String memoryId) {
+  public Planner(OpenAiChatModel model, ChatMemoryProvider memoryProvider, String memoryId) {
     this.model = model;
     this.memoryProvider = memoryProvider;
     this.memoryId = memoryId;
   }
 
-  public Planner(AgentChatMemoryProvider memoryProvider, String memoryId) {
+  public Planner(ChatMemoryProvider memoryProvider, String memoryId) {
     buildDefaultModel();
     this.memoryProvider = memoryProvider;
     this.memoryId = memoryId;
@@ -37,7 +37,6 @@ public class Planner {
         .chatMemoryProvider(memoryProvider).build();
     String result = plannerInstance.createPlan(goal, query, toolInfos, instructions, memoryId);
 
-    memoryProvider.saveMessages(memoryId);
     return result;
   }
 
