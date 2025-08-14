@@ -101,12 +101,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
 
     @SuppressWarnings("restriction")
     private String toolList() {
-      IProcessModelVersion pmv = JavaConfigurationNavigationUtil.getProcessModelVersion(Editor.class);
-      List<IProcessModelVersion> user = pmv.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.DEPENDENT);
-      if (!user.isEmpty()) {
-        pmv = user.get(0); // TOOD: smarter; can I know my calling process?
-      }
-
+      IProcessModelVersion pmv = getPmv();
       try {
         return new IvyToolsProcesses(pmv).toolStarts().stream()
             .map(CallSubStart::getSignature)
@@ -116,6 +111,19 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
         return "";
       }
     }
-  }
 
+    private IProcessModelVersion getPmv() {
+      return Optional.ofNullable(IProcessModelVersion.current())
+          .orElseGet(this::preDiavolezzaSprint13);
+    }
+
+    private IProcessModelVersion preDiavolezzaSprint13() {
+      var pmv = JavaConfigurationNavigationUtil.getProcessModelVersion(Editor.class);
+      List<IProcessModelVersion> user = pmv.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.DEPENDENT);
+      if (!user.isEmpty()) {
+        pmv = user.get(0); // TODO: delete me once Sprint13 is public available
+      }
+      return pmv;
+    }
+  }
 }
