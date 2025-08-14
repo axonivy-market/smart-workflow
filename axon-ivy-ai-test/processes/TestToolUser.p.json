@@ -42,5 +42,43 @@
       "connect" : [
         { "id" : "f4", "to" : "f1" }
       ]
+    }, {
+      "id" : "f5",
+      "type" : "RequestStart",
+      "name" : "expandQuery",
+      "config" : {
+        "signature" : "expandQuery"
+      },
+      "visual" : {
+        "at" : { "x" : 528, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.ai.tools.AgenticProcessCall",
+        "userConfig" : {
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "\"Return the following name as result: \"+ivy.session.getSessionUserName()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 640, "y" : 64 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 752, "y" : 64 }
+      }
     } ]
 }
