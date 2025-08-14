@@ -3,11 +3,15 @@ package com.axonivy.utils.ai.connector.test;
 import static ch.ivyteam.test.client.OpenAiTestClient.aiMock;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import javax.ws.rs.core.Response;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
+import com.axonivy.utils.ai.mock.MockOpenAI;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
@@ -23,8 +27,17 @@ class TestOpenAiServiceConnector {
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl());
-    fixture.var(OpenAiConf.TEST_HEADER, "chat");
+    fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("chat"));
+    MockOpenAI.defineChat(this::chat);
+  }
+
+  private Response chat(JsonNode request) {
+    if (request.toPrettyString().contains("ready?")) {
+      return Response.ok()
+          .entity(TestOpenAiServiceConnector.class.getResourceAsStream("completions-response.json"))
+          .build();
+    }
+    return Response.serverError().build();
   }
 
   @Test
@@ -41,7 +54,8 @@ class TestOpenAiServiceConnector {
     assertThat(httpRequestLog())
         .as("transport logs are easy to access and assert in tests")
         .contains("url: http://")
-        .contains("/api/aiMock/chat/completions");
+        .contains("/api/aiMock/")
+        .contains("/chat/completions");
   }
 
   private String httpRequestLog() {
