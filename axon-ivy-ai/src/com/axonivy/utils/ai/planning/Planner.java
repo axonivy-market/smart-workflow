@@ -3,7 +3,7 @@ package com.axonivy.utils.ai.planning;
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
 
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
@@ -12,18 +12,17 @@ import dev.langchain4j.service.V;
 
 public class Planner {
 
-  private OpenAiChatModel model;
+  private ChatModel model;
   private ChatMemoryProvider memoryProvider;
   private String memoryId;
 
-  public Planner(OpenAiChatModel model, ChatMemoryProvider memoryProvider, String memoryId) {
+  public Planner(ChatModel model, ChatMemoryProvider memoryProvider, String memoryId) {
     this.model = model;
     this.memoryProvider = memoryProvider;
     this.memoryId = memoryId;
   }
 
   public Planner(ChatMemoryProvider memoryProvider, String memoryId) {
-    buildDefaultModel();
     this.memoryProvider = memoryProvider;
     this.memoryId = memoryId;
   }
@@ -33,14 +32,18 @@ public class Planner {
   }
 
   public String createPlan(String goal, String query, String toolInfos, String instructions) {
-    IPlanner plannerInstance = AiServices.builder(IPlanner.class).chatModel(model)
+    if (model == null) {
+      buildDefaultModel();
+    }
+
+    ToolExecutionPlanner plannerInstance = AiServices.builder(ToolExecutionPlanner.class).chatModel(model)
         .chatMemoryProvider(memoryProvider).build();
     String result = plannerInstance.createPlan(goal, query, toolInfos, instructions, memoryId);
 
     return result;
   }
 
-  public interface IPlanner {
+  public interface ToolExecutionPlanner {
     @SystemMessage("""
         You are a Planner agent coordinating a multi-agent system. Your task is to create a step-by-step plan to fulfill the given goal using only the provided tools.
 

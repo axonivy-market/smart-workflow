@@ -43,11 +43,9 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent with planning",
       "config" : {
-        "javaClass" : "com.axonivy.utils.ai.tools.ReactAgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.ai.planning.ReactAgenticProcessCall",
         "userConfig" : {
           "planningInstructions" : "Should create a support ticket then create a task to handle the support ticket",
-          "agentId" : "\"support-agent\"",
-          "maxIterations" : "15",
           "goal" : "create support ticket, and follow business context",
           "query" : "in.agentInput"
         }
