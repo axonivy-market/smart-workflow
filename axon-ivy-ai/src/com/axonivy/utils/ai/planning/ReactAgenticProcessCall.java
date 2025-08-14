@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools;
+package com.axonivy.utils.ai.planning;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.ai.agent.IvyToolRunner;
-import com.axonivy.utils.ai.agent.Planner;
+import com.axonivy.utils.ai.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.ai.tools.internal.IvySubProcessToolSpecs;
 import com.axonivy.utils.ai.tools.internal.IvyToolsProcesses;
 import com.axonivy.utils.ai.utils.IdGenerationUtils;
@@ -131,12 +130,7 @@ public class ReactAgenticProcessCall extends AbstractUserProcessExtension {
 
     @SuppressWarnings("restriction")
     private String toolList() {
-      IProcessModelVersion pmv = JavaConfigurationNavigationUtil.getProcessModelVersion(Editor.class);
-      List<IProcessModelVersion> user = pmv.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.DEPENDENT);
-      if (!user.isEmpty()) {
-        pmv = user.get(0); // TOOD: smarter; can I know my calling process?
-      }
-
+      IProcessModelVersion pmv = getPmv();
       try {
         return new IvyToolsProcesses(pmv).toolStarts().stream().map(CallSubStart::getSignature)
             .map(tool -> "- " + tool.getName() + tool.getInputParameters().stream().map(VariableDesc::getName).toList())
@@ -144,6 +138,19 @@ public class ReactAgenticProcessCall extends AbstractUserProcessExtension {
       } catch (Exception ex) {
         return "";
       }
+    }
+
+    private IProcessModelVersion getPmv() {
+      return Optional.ofNullable(IProcessModelVersion.current()).orElseGet(this::preDiavolezzaSprint13);
+    }
+
+    private IProcessModelVersion preDiavolezzaSprint13() {
+      var pmv = JavaConfigurationNavigationUtil.getProcessModelVersion(Editor.class);
+      List<IProcessModelVersion> user = pmv.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.DEPENDENT);
+      if (!user.isEmpty()) {
+        pmv = user.get(0); // TODO: delete me once Sprint13 is public available
+      }
+      return pmv;
     }
   }
 

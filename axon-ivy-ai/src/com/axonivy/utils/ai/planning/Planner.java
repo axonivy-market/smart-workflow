@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.agent;
+package com.axonivy.utils.ai.planning;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
 
