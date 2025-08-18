@@ -1,5 +1,8 @@
 package com.axonivy.utils.ai.output.internal;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -13,8 +16,16 @@ import com.axonivy.utils.ai.output.DynamicAgent;
  */
 public class StructuredOutputAgent {
 
+  private static final Map<Class<?>, Class<?>> CACHE = new ConcurrentHashMap<>();
+
   @SuppressWarnings("unchecked")
   public static <R> Class<? extends DynamicAgent<R>> agent(Class<R> outputType) {
+    return (Class<? extends DynamicAgent<R>>) CACHE.computeIfAbsent(outputType,
+        StructuredOutputAgent::defineAgent);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <R> Class<? extends DynamicAgent<R>> defineAgent(Class<R> outputType) {
     String interfaceName = "com/axonivy/utils/ai/output/DynamicAgentInterface";
     String methodName = "chat";
     String methodDescriptor = Type.getMethodDescriptor(Type.getType(outputType), Type.getType(String.class));
