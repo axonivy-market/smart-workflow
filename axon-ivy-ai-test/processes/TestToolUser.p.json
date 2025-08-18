@@ -80,5 +80,44 @@
       "visual" : {
         "at" : { "x" : 752, "y" : 64 }
       }
+    }, {
+      "id" : "f10",
+      "type" : "RequestStart",
+      "name" : "structuredOutput",
+      "config" : {
+        "signature" : "structuredOutput"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.ai.tools.AgenticProcessCall",
+        "userConfig" : {
+          "tools" : "[\"whoami\"]",
+          "resultType" : "com.axonivy.utils.ai.test.Person.class",
+          "resultMapping" : "in.person",
+          "query" : "\"Tell me who I am\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 160 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 160 }
+      }
     } ]
 }
