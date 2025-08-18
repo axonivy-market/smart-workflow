@@ -35,30 +35,30 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     String MAP_TO = "resultMapping";
   }
 
+  public interface SupportAgent {
+    String chat(String query);
+  }
+
   @SuppressWarnings({"unchecked"})
   @Override
   public CompositeObject perform(IRequestId requestId, CompositeObject in, IIvyScriptContext context) throws Exception {
-    String query = getConfig().get(Conf.QUERY); // execute scripted?
+    var query = execute(context, Conf.QUERY, String.class);
+    if (query.isEmpty()) {
+      Ivy.log().info("Agent call was skipped, since there was no user query");
+      return in; // early abort; user is still testing with empty values
+    }
 
     var model = new OpenAiServiceConnector()
-        .buildOpenAiModel().build();
+        .buildOpenAiModel()
+        .build();
 
-    var selectedTools = Optional.ofNullable(getConfig().get(Conf.TOOLS))
-        .filter(Predicate.not(String::isBlank));
-    List<String> toolFilter = null;
-    if (selectedTools.isPresent()) {
-      try {
-        toolFilter = (List<String>) executeIvyScript(context, selectedTools.get());
-      } catch (Exception ex) {
-        Ivy.log().error("Failed to filter tools from " + selectedTools.get(), ex);
-      }
-    }
+    List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
 
     var supporter = AiServices.builder(SupportAgent.class)
         .chatModel(model)
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter))
         .build();
-    var result = supporter.chat(query);
+    var result = supporter.chat(query.get());
 
     var mapTo = getConfig().get(Conf.MAP_TO);
     if (mapTo != null) {
@@ -75,8 +75,20 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     return in;
   }
 
-  interface SupportAgent {
-    String chat(String query);
+  private <T> Optional<T> execute(IIvyScriptContext context, String configKey, @SuppressWarnings("unused") Class<T> returnType) {
+    var value = Optional.ofNullable(getConfig().get(configKey))
+        .filter(Predicate.not(String::isBlank));
+    if (value.isEmpty()) {
+      return Optional.empty();
+    }
+    try {
+      var resolved = executeIvyScript(context, value.get());
+      return Optional.ofNullable(resolved)
+          .filter(returnType::isInstance)
+          .map(returnType::cast);
+    } catch (Exception ex) {
+      throw new RuntimeException("Failed to extract config '" + configKey + "' for value '" + value.get() + "'", ex);
+    }
   }
 
   public static class Editor extends UiEditorExtension {
