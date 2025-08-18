@@ -28,7 +28,7 @@ public class Planner {
   }
 
   private void buildDefaultModel() {
-    this.model = OpenAiServiceConnector.buildJsonOpenAiModel().build();
+    this.model = OpenAiServiceConnector.buildOpenAiModel().build();
   }
 
   public String createPlan(String goal, String query, String toolInfos, String instructions) {
@@ -45,7 +45,7 @@ public class Planner {
 
   public interface ToolExecutionPlanner {
     @SystemMessage("""
-        You are a Planner agent coordinating a multi-agent system. Your task is to create a step-by-step plan to fulfill the given goal using only the provided tools.
+        You are a Planner. Your task is to create a step-by-step plan to fulfill the given goal using only the provided tools.
 
         You will first analyze the user input, then describe a detailed plan in natural language using only the available tools. Your plan must contain no more than 10 steps. The plan should explain the use of each tool clearly in natural language, following the goal and based only on the given input.
 

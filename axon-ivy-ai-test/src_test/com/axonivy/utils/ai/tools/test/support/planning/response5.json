@@ -1,0 +1,36 @@
+{
+  "id": "chatcmpl-C4kRUvXAI1IKEbZPZbPuAS6DdzIFH",
+  "object": "chat.completion",
+  "created": 1755247872,
+  "model": "gpt-4o-mini-2024-07-18",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\r\n  \"name\" : \"Computer Beeping Issue\",\r\n  \"description\" : \"Computer started beeping after opening AxonIvy Portal.\",\r\n  \"responsible\" : \"unknown\",\r\n  \"customFields\" : null\r\n}",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 180,
+    "completion_tokens": 48,
+    "total_tokens": 228,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "service_tier": "default",
+  "system_fingerprint": "fp_560af6e559"
+}

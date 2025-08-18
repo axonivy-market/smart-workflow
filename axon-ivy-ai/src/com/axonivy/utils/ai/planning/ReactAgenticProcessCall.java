@@ -44,7 +44,7 @@ public class ReactAgenticProcessCall extends AbstractUserProcessExtension {
   @SuppressWarnings("unchecked")
   @Override
   public CompositeObject perform(IRequestId requestId, CompositeObject in, IIvyScriptContext context) throws Exception {
-    String query = parseInput(in);
+    String query = parseInput(in, context);
     Integer maxIterations = 15;
 
     var selectedTools = Optional.ofNullable(getConfig().get(Conf.TOOLS)).filter(Predicate.not(String::isBlank));
@@ -154,15 +154,16 @@ public class ReactAgenticProcessCall extends AbstractUserProcessExtension {
     }
   }
 
-  private String parseInput(CompositeObject in) {
+  private String parseInput(CompositeObject in, IIvyScriptContext context) {
     try {
-      Object inputObj = in.get(getConfig().get(Conf.QUERY).substring(3));
-      if (inputObj != null) {
+      Object inputObj = (Object) executeIvyScript(context, getConfig().get(Conf.QUERY));
+      if (inputObj != null && !(inputObj instanceof String)) {
         return Json.toJson(inputObj);
       }
       // If cannot find object, assume that the content of the field is a String
       return getConfig().get(Conf.QUERY);
-    } catch (NoSuchFieldException e) {
+    } catch (Exception ex) {
+      Ivy.log().error("Failed to parse input: ", ex);
       return StringUtils.EMPTY;
     }
   }

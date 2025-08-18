@@ -18,25 +18,7 @@
         "at" : { "x" : 336, "y" : 216 }
       },
       "connect" : [
-        { "id" : "f1", "to" : "f2" }
-      ]
-    }, {
-      "id" : "f2",
-      "type" : "Script",
-      "name" : "Init input",
-      "config" : {
-        "output" : {
-          "code" : [
-            "in.agentInput.username = ivy.session.getSessionUserName();",
-            "in.agentInput.message = \"Help me, my computer is beeping, it started after opening AxonIvy Portal.\";"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 464, "y" : 216 }
-      },
-      "connect" : [
-        { "id" : "f3", "to" : "f4", "color" : "default" }
+        { "id" : "f7", "to" : "f4" }
       ]
     }, {
       "id" : "f4",
@@ -47,11 +29,11 @@
         "userConfig" : {
           "planningInstructions" : "Should create a support ticket then create a task to handle the support ticket",
           "goal" : "create support ticket, and follow business context",
-          "query" : "in.agentInput"
+          "query" : "\"Help me, my computer is beeping, it started after opening AxonIvy Portal.\""
         }
       },
       "visual" : {
-        "at" : { "x" : 648, "y" : 216 },
+        "at" : { "x" : 488, "y" : 216 },
         "icon" : "res:/webContent/logo/agent.png"
       },
       "connect" : [
@@ -61,7 +43,7 @@
       "id" : "f6",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 776, "y" : 216 }
+        "at" : { "x" : 616, "y" : 216 }
       }
     } ]
 }
