@@ -2,10 +2,29 @@
   "model" : "gpt-4.1-mini",
   "messages" : [ {
     "role" : "user",
-    "content" : "\"Tell me who I am\"\nYou must answer strictly in the following JSON format: {\n\"firstName\": (type: string),\n\"lastName\": (type: string)\n}"
+    "content" : "Tell me who I am"
   } ],
   "temperature" : 0.0,
   "stream" : false,
+  "response_format" : {
+    "type" : "json_schema",
+    "json_schema" : {
+      "name" : "Person",
+      "strict" : false,
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ ]
+      }
+    }
+  },
   "tools" : [ {
     "type" : "function",
     "function" : {

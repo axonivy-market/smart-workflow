@@ -54,17 +54,17 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       return in; // early abort; user is still testing with empty values
     }
 
-    var model = new OpenAiServiceConnector()
-        .buildOpenAiModel()
-        .build();
+    var modelBuilder = new OpenAiServiceConnector().buildOpenAiModel();
 
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
     var structured = execute(context, Conf.OUTPUT, Class.class);
     if (structured.isPresent()) {
       agentType = StructuredOutputAgent.agent(structured.get());
+      modelBuilder.responseFormat("json_schema");
     }
 
+    var model = modelBuilder.build();
     var supporter = AiServices.builder(agentType)
         .chatModel(model)
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter))
