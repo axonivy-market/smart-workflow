@@ -82,9 +82,10 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       return Optional.empty();
     }
     try {
-      @SuppressWarnings("unchecked")
-      T resolved = (T) executeIvyScript(context, value.get());
-      return Optional.of(resolved);
+      var resolved = executeIvyScript(context, value.get());
+      return Optional.ofNullable(resolved)
+          .filter(returnType::isInstance)
+          .map(returnType::cast);
     } catch (Exception ex) {
       throw new RuntimeException("Failed to extract config '" + configKey + "' for value '" + value.get() + "'", ex);
     }
