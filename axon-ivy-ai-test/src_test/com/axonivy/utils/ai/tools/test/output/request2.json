@@ -1,0 +1,54 @@
+{
+  "model" : "gpt-4.1-mini",
+  "messages" : [ {
+    "role" : "user",
+    "content" : "Tell me who I am"
+  }, {
+    "role" : "assistant",
+    "tool_calls" : [ {
+      "id" : "call_mCVpNzBmsEZfpacaXe83iah2",
+      "type" : "function",
+      "function" : {
+        "name" : "whoami",
+        "arguments" : "{}"
+      }
+    } ]
+  }, {
+    "role" : "tool",
+    "tool_call_id" : "call_mCVpNzBmsEZfpacaXe83iah2",
+    "content" : "{\n  \"person\" : {\n    \"firstName\" : \"Unknown User (Session 2)\",\n    \"lastName\" : null\n  }\n}"
+  } ],
+  "temperature" : 0.0,
+  "stream" : false,
+  "response_format" : {
+    "type" : "json_schema",
+    "json_schema" : {
+      "name" : "Person",
+      "strict" : false,
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ ]
+      }
+    }
+  },
+  "tools" : [ {
+    "type" : "function",
+    "function" : {
+      "name" : "whoami",
+      "description" : "provides information about the current user",
+      "parameters" : {
+        "type" : "object",
+        "properties" : { },
+        "required" : [ ]
+      }
+    }
+  } ]
+}
