@@ -10,6 +10,11 @@ import org.objectweb.asm.Type;
 
 import com.axonivy.utils.ai.output.DynamicAgent;
 
+import ch.ivyteam.ivy.application.IProcessModelVersion;
+import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.java.IJavaConfiguration;
+import ch.ivyteam.ivy.java.IJavaConfigurationManager;
+
 /**
  * Dynamic Agent interface creator, that allows us to identify the structured output/return type at runtime.
  * Can be removed once the DefaultAiServices of LC4j give us more freedom to define the output without defining an Agent interface.
@@ -26,11 +31,13 @@ public class StructuredOutputAgent {
 
   @SuppressWarnings("unchecked")
   private static <R> Class<? extends DynamicAgent<R>> defineAgent(Class<R> outputType) {
-    String interfaceName = "com/axonivy/utils/ai/output/DynamicAgentInterface";
+    String interfaceName = "com/axonivy/utils/ai/output/DynamicAgentInterface" + outputType.getSimpleName();
     String methodName = "chat";
     String methodDescriptor = Type.getMethodDescriptor(Type.getType(outputType), Type.getType(String.class));
     byte[] classBytes = writeClass(interfaceName, methodName, methodDescriptor);
-    return (Class<? extends DynamicAgent<R>>) new CustomClassLoader().defineClass("com.axonivy.utils.ai.output.DynamicAgentInterface", classBytes);
+    var type = (Class<? extends DynamicAgent<R>>) new CustomClassLoader().defineClass("com.axonivy.utils.ai.output.DynamicAgentInterface" + outputType.getSimpleName(), classBytes);
+    Ivy.log().debug("defined " + type);
+    return type;
   }
 
   private static byte[] writeClass(String interfaceName, String methodName, String methodDescriptor) {
@@ -48,9 +55,20 @@ public class StructuredOutputAgent {
   }
 
   static class CustomClassLoader extends ClassLoader {
+
+    public CustomClassLoader() {
+      super(caller());
+    }
+
+    private static ClassLoader caller() {
+      IJavaConfiguration caller = IJavaConfigurationManager.instance().getJavaConfiguration(IProcessModelVersion.current());
+      return caller.getClassLoader();
+    }
+
     public Class<?> defineClass(String name, byte[] bytecode) {
       return defineClass(name, bytecode, 0, bytecode.length);
     }
+
   }
 
 }
