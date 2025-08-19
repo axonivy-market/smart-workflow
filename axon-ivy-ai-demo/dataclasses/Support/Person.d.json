@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "Person",
+  "namespace" : "Support",
+  "fields" : [ {
+    "name" : "firstName"
+  }, {
+    "name" : "lastName"
+  }, {
+    "name" : "email"
+  }, {
+    "name" : "birtDate",
+    "type" : "Date"
+  } ]
+}
