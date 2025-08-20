@@ -139,7 +139,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.ai.tools.AgenticProcessCall",
         "userConfig" : {
-          "system" : "\"You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manor\"",
+          "system" : "\"You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manner\"",
           "tools" : "[]",
           "resultMapping" : "in.result",
           "query" : "\"It's so hot, where can I cool myself down?\""
