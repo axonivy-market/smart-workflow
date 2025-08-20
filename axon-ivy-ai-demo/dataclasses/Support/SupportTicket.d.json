@@ -3,6 +3,8 @@
   "simpleName" : "SupportTicket",
   "namespace" : "Support",
   "fields" : [ {
+    "name" : "title"
+  }, {
     "name" : "request"
   }, {
     "name" : "product",

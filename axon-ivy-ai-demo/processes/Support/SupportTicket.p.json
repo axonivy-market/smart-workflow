@@ -8,16 +8,18 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "createTicket(String,Person,Product)",
+      "name" : "createTicket(String,Person,Product,String)",
       "config" : {
         "signature" : "createTicket",
         "input" : {
           "params" : [
-            { "name" : "request", "type" : "String", "desc" : "The o riginal message" },
+            { "name" : "request", "type" : "String", "desc" : "The original message" },
+            { "name" : "title", "type" : "String", "desc" : "An expressive summary of the original message" },
             { "name" : "user", "type" : "Support.Person", "desc" : "Username of the employee who create the request" },
             { "name" : "product", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.support.Product", "desc" : "the involved product" }
           ],
           "map" : {
+            "out.ticket.title" : "param.title",
             "out.ticket.product" : "param.product",
             "out.ticket.request" : "param.request",
             "out.ticket.user" : "param.user"
@@ -33,12 +35,11 @@
         }
       },
       "tags" : [
-        "tool",
         "tool"
       ],
       "visual" : {
         "at" : { "x" : 128, "y" : 64 },
-        "description" : "Use this tool to create a support ticket object"
+        "description" : "Use this tool to create a support ticket for a reported problem"
       },
       "connect" : [
         { "id" : "f2", "to" : "f3" }
