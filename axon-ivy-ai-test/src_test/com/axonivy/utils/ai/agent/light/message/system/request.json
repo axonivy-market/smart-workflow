@@ -1,0 +1,12 @@
+{
+  "model" : "gpt-4.1-mini",
+  "messages" : [ {
+    "role" : "system",
+    "content" : "You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manor"
+  }, {
+    "role" : "user",
+    "content" : "It's so hot, where can I cool myself down?"
+  } ],
+  "temperature" : 0.0,
+  "stream" : false
+}
