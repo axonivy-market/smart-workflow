@@ -32,6 +32,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
   }
 
   public interface Conf {
+    String SYSTEM = "system";
     String QUERY = "query";
     String TOOLS = "tools";
     String OUTPUT = "resultType";
@@ -65,11 +66,17 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     }
 
     var model = modelBuilder.build();
-    var supporter = AiServices.builder(agentType)
+    var agentBuilder = AiServices.builder(agentType)
         .chatModel(model)
-        .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter))
-        .build();
-    var result = supporter.chat(query.get());
+        .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
+
+    var systemMessage = execute(context, Conf.SYSTEM, String.class);
+    if (systemMessage.isPresent()) {
+      agentBuilder.systemMessageProvider(memId -> systemMessage.get());
+    }
+
+    var agent = agentBuilder.build();
+    var result = agent.chat(query.get());
 
     var mapTo = getConfig().get(Conf.MAP_TO);
     if (mapTo != null) {
@@ -86,7 +93,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     return in;
   }
 
-  private <T> Optional<T> execute(IIvyScriptContext context, String configKey, @SuppressWarnings("unused") Class<T> returnType) {
+  private <T> Optional<T> execute(IIvyScriptContext context, String configKey, Class<T> returnType) {
     var value = Optional.ofNullable(getConfig().get(configKey))
         .filter(Predicate.not(String::isBlank));
     if (value.isEmpty()) {
@@ -109,6 +116,10 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       ui.label("How can I assist you today?").create();
       ui.scriptField(Conf.QUERY)
           .multiline()
+          .requireType(String.class)
+          .create();
+      ui.label("System message:").create();
+      ui.scriptField(Conf.SYSTEM)
           .requireType(String.class)
           .create();
       ui.label("You have the following tools ready to assist you:\n" + toolList() + "\n\n"

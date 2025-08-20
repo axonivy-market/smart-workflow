@@ -119,5 +119,44 @@
       "visual" : {
         "at" : { "x" : 352, "y" : 160 }
       }
+    }, {
+      "id" : "f15",
+      "type" : "RequestStart",
+      "name" : "systemMessage",
+      "config" : {
+        "signature" : "systemMessage"
+      },
+      "visual" : {
+        "at" : { "x" : 528, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f17" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.ai.tools.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "\"You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manner\"",
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "\"It's so hot, where can I cool myself down?\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 640, "y" : 160 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f18", "to" : "f19" }
+      ]
+    }, {
+      "id" : "f19",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 752, "y" : 160 }
+      }
     } ]
 }
