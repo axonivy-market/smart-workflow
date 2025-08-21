@@ -55,7 +55,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       return in; // early abort; user is still testing with empty values
     }
 
-    var modelBuilder = new OpenAiServiceConnector().buildOpenAiModel();
+    var modelBuilder = OpenAiServiceConnector.buildOpenAiModel();
 
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;

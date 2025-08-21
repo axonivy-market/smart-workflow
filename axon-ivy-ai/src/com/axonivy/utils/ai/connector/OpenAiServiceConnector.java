@@ -10,6 +10,7 @@ import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
@@ -46,8 +47,19 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
     String TEST_HEADER = PREFIX + "Headers.test";
   }
 
-  public OpenAiChatModelBuilder buildOpenAiModel() {
-    var builder = OpenAiChatModel.builder()
+  public static OpenAiChatModelBuilder buildOpenAiModel() {
+    return initBuilder();
+  }
+
+  public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
+    var builder = initBuilder()
+        .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
+        .strictJsonSchema(true);
+    return builder;
+  }
+
+  private static OpenAiChatModelBuilder initBuilder() {
+    OpenAiChatModelBuilder builder = OpenAiChatModel.builder()
         .logRequests(true)
         .logResponses(true)
         .modelName(OpenAiChatModelName.GPT_4_1_MINI)
