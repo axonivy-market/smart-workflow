@@ -7,7 +7,7 @@
         "projects": [
           {
             "groupId": "com.axonivy.utils.ai",
-            "artifactId": "axon-ivy-ai-demo",
+            "artifactId": "smart-orchestrator-demo",
             "version": "${version}",
             "type": "iar"
           }
@@ -29,7 +29,7 @@
         "dependencies": [
           {
             "groupId": "com.axonivy.utils.ai",
-            "artifactId": "axon-ivy-ai",
+            "artifactId": "smart-orchestrator",
             "version": "${version}",
             "type": "iar"
           }
