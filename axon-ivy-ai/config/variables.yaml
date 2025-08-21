@@ -3,5 +3,5 @@ Variables:
   AI:
     OpenAI:
       #[password]
-      APIKey: ${decrypt:}
+      APIKey: ${decrypt:eNhm6tr/77YhfKYFjmuxAmlGffss7FzN0OM9Ff6tsekVURpCU9zCYSzs4QoA7rxHG2aSF3qSHZbQ5qVvS6RmhzmFvXue0NftC61kvI8h7yZo/p1O9OtViHiPlPK90ZolahJjqk2nARR/O0e+uECDxpdE7JXxjAn5hQ+nFtHdljOpxNmGEtuCUEaB9qws1oQch2HYTKiT58Ju6C2QdlVLPqd+l6r/WS61YCpjc+0ldP8=}
       BaseUrl: ""

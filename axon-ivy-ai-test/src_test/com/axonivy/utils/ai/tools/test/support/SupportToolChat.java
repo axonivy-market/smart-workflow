@@ -27,7 +27,8 @@ public class SupportToolChat {
         }
       }
 
-      if (current.toString().contains("tool_call_id")) {
+      if (current.toString().contains("tool_call_id")
+          || current.get("content").textValue().equals("Computer is beeping after opening AxonIvy Portal")) {
         return Response.ok()
             .entity(load("response3.json"))
             .build();
