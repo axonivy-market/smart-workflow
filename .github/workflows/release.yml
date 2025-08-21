@@ -11,6 +11,6 @@ on:
 
 jobs:
   build:
-    uses: axonivy-market/github-workflows/.github/workflows/release.yml@dev-release
+    uses: axonivy-market/github-workflows/.github/workflows/release.yml@v6
     with:
       mvnArgs: -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }}
