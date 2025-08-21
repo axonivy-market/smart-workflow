@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy.market</groupId><!-- your group id: e.g. com.axonivy.connector.<myconnector> or com.axonivy.utils.<myutil> -->
   <artifactId>axon-ivy-ai-product</artifactId><!-- fill your product name + a "-product" postfix e.g. my-connector-product -->
-  <version>13.2.0-SNAPSHOT</version>
+  <version>13.2.0-a2</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -47,7 +47,7 @@
                 </copy>
                 <loadfile property="variables.yaml" srcFile="${variables.yaml.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.yaml@" value="${variables.yaml}" />
-                <replace file="${project.build.directory}/README_DE.md" token="@variables.yaml@" value="${variables.yaml}"/>
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.yaml@" value="${variables.yaml}" />
               </target>
             </configuration>
             <goals>
