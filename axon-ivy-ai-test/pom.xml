@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>axon-ivy-ai-test</artifactId>
-  <version>13.2.0-a2</version>
+  <version>13.2.0-a3-SNAPSHOT</version>
   <packaging>iar</packaging>
   <dependencies>
     <dependency>
@@ -24,7 +24,7 @@
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>axon-ivy-ai-demo</artifactId>
-      <version>13.2.0-a2</version>
+      <version>13.2.0-a3-SNAPSHOT</version>
       <type>iar</type>
     </dependency>
   </dependencies>
