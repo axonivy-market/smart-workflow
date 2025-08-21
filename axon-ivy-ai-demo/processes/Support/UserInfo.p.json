@@ -1,9 +1,9 @@
 {
   "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
-  "id" : "19898DB41125BF26",
+  "id" : "198C2E0C052BDE72",
   "kind" : "CALLABLE_SUB",
   "config" : {
-    "data" : "tools.aiServantData"
+    "data" : "Support.UserInfoData"
   },
   "elements" : [ {
       "id" : "f0",
@@ -13,16 +13,20 @@
         "signature" : "whoami",
         "result" : {
           "params" : [
-            { "name" : "person", "type" : "com.axonivy.utils.ai.test.Person", "desc" : "the current user" }
+            { "name" : "user", "type" : "Support.Person", "desc" : "employee user info" }
           ],
           "map" : {
-            "result.person.firstName" : "ivy.session.getSessionUserName()"
+            "result.user.email" : "\"agent007@hollywood.com\"",
+            "result.user.firstName" : "\"James\"",
+            "result.user.lastName" : "\"Bond\""
           }
         }
       },
+      "tags" : [
+        "tool"
+      ],
       "visual" : {
-        "at" : { "x" : 96, "y" : 64 },
-        "description" : "provides information about the current user"
+        "at" : { "x" : 96, "y" : 64 }
       },
       "connect" : [
         { "id" : "f2", "to" : "f1" }

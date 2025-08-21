@@ -107,9 +107,6 @@
           }
         }
       },
-      "tags" : [
-        "tool"
-      ],
       "visual" : {
         "at" : { "x" : 88, "y" : 232 },
         "labelOffset" : { "x" : 1, "y" : 41 },
