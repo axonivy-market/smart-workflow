@@ -522,7 +522,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.ai.axon.ivy.ai.demo.agent.SupportTicketAgent;",
-            "in.targetObject = SupportTicketAgent.createSupportTicketWithoutApprovalInfo(in.query, in.instructions);"
+            "in.supportTicket = SupportTicketAgent.createSupportTicketWithoutApprovalInfo(in.query, in.instructions);"
           ]
         }
       },

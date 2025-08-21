@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.core.internal;
+package com.axonivy.utils.ai.tools.internal;
 
 import java.util.Map;
 import java.util.Optional;

@@ -1,12 +1,12 @@
-package com.axonivy.utils.ai.core;
+package com.axonivy.utils.ai.tools;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.axonivy.utils.ai.core.internal.IvySubProcessToolExecutor;
-import com.axonivy.utils.ai.core.internal.IvySubProcessToolSpecs;
-import com.axonivy.utils.ai.core.internal.IvyToolsProcesses;
+import com.axonivy.utils.ai.tools.internal.IvySubProcessToolExecutor;
+import com.axonivy.utils.ai.tools.internal.IvySubProcessToolSpecs;
+import com.axonivy.utils.ai.tools.internal.IvyToolsProcesses;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import dev.langchain4j.agent.tool.ToolSpecification;

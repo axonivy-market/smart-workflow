@@ -16,34 +16,28 @@ public class SupportToolWithPlanningChat {
     if (messages.size() >= 1) {
       var current = messages.get(messages.size() - 1);
 
-      if (current.toPrettyString().contains("Help me, my computer is beeping, it started after opening AxonIvy Portal.")) {
-        if (messages.get(1).get("role").textValue().contains("system"))
+      if (current.toPrettyString()
+          .equals("Help me, my computer is beeping, it started after opening AxonIvy Portal.")) {
         return Response.ok().entity(load("response1.json")).build();
       }
-      
-      if (messages.size() == 1) {
-        if (current.toPrettyString().contains(
-            "Add custom field: 'employeeUsername', value is the employee username")) {
-          return Response.ok().entity(load("response5.json")).build();
-        }
-        if (current.toPrettyString().contains(
-            "Example: [HR] User request a day leave\\n- description must be the whole query\\n- ticket name must be informative")) {
-          return Response.ok().entity(load("response3.json")).build();
-        }
-        if (current.toPrettyString().contains("Do not change the structure, only update the field values")) {
-          return Response.ok().entity(load("response4.json")).build();
-        }
-        if (current.toPrettyString().contains("Query:\\nMy computer is beeping")) {
-          return Response.ok().entity(load("response2.json")).build();
-        }
+
+      if (messages.size() == 2 && messages.get(0).get("content").toPrettyString()
+          .equals("Instruction to follow:\\n- Don't fill information related to approval\\n[]\\n")) {
+        return Response.ok().entity(load("response2.json")).build();
       }
 
-      if (current.toPrettyString().contains("Task is created successfully")) {
-        return Response.ok().entity(load("response6.json")).build();
+      if (current.get("role").textValue().equals("tool")
+          && current.toPrettyString().contains("\\\"id\\\" : \\\"882bb24b848b4583aca8e7cc503e807d\\\"")) {
+        return Response.ok().entity(load("response3.json")).build();
+      }
+
+      if (current.get("role").textValue().equals("user")
+          && current.toPrettyString().contains("\\\"id\\\" : \\\"882bb24b848b4583aca8e7cc503e807d\\\"")) {
+        return Response.ok().entity(load("response4.json")).build();
       }
 
       return Response.ok()
-          .entity(load("response1.json"))
+          .entity(load("response5.json"))
           .build();
     }
     return Response.status(404).build();

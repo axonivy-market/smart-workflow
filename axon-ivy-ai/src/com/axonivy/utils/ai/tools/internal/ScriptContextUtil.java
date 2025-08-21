@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.core.internal;
+package com.axonivy.utils.ai.tools.internal;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.scripting.dataclass.IDataClassManager;
