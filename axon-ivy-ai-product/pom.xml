@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <variables.yaml.file>../MY-PRODUCT-NAME/config/variables.yaml</variables.yaml.file>
+    <variables.yaml.file>../axon-ivy-ai/config/variables.yaml</variables.yaml.file>
   </properties>
 
   <build>
