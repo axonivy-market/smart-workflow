@@ -1,14 +1,14 @@
 {
-  "id": "chatcmpl-C4kRRZw0Sw3nYqp04GwHeg3Lw0JHh",
+  "id": "chatcmpl-C6Zq8BmEDr9SMoyxV64NI1r45V2SN",
   "object": "chat.completion",
-  "created": 1755247869,
+  "created": 1755683772,
   "model": "gpt-4o-mini-2024-07-18",
   "choices": [
     {
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "```json\n{\n  \"id\": \"d7d73f143aaa4757af339992130f9772\",\n  \"type\": \"TECHNICAL\",\n  \"name\": \"[TECHNICAL] Computer Beeping After Opening AxonIvy Portal\",\n  \"description\": \"Help me, my computer is beeping, it started after opening AxonIvy Portal.\\nusername : unknown\",\n  \"employeeUsername\": \"unknown\",\n  \"firstApprover\": null,\n  \"secondApprover\": null,\n  \"aiApproval\": null,\n  \"firstApproval\": null,\n  \"secondApproval\": null,\n  \"requestedDate\": null\n}\n```",
+        "content": "{\r\n  \"name\" : \"Computer beeping issue after opening AxonIvy Portal\",\r\n  \"description\" : \"The user's computer started beeping after opening AxonIvy Portal. Needs technical investigation and resolution.\",\r\n  \"responsible\" : null,\r\n  \"customFields\" : null\r\n}",
         "refusal": null,
         "annotations": []
       },
@@ -17,9 +17,9 @@
     }
   ],
   "usage": {
-    "prompt_tokens": 237,
-    "completion_tokens": 138,
-    "total_tokens": 375,
+    "prompt_tokens": 195,
+    "completion_tokens": 62,
+    "total_tokens": 257,
     "prompt_tokens_details": {
       "cached_tokens": 0,
       "audio_tokens": 0

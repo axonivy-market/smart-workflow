@@ -1,14 +1,14 @@
 {
-  "id": "chatcmpl-C4kRUvXAI1IKEbZPZbPuAS6DdzIFH",
+  "id": "chatcmpl-C6ZqAowC9yrsTqwe7Nbj7csxxeKcq",
   "object": "chat.completion",
-  "created": 1755247872,
+  "created": 1755683774,
   "model": "gpt-4o-mini-2024-07-18",
   "choices": [
     {
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "{\r\n  \"name\" : \"Computer Beeping Issue\",\r\n  \"description\" : \"Computer started beeping after opening AxonIvy Portal.\",\r\n  \"responsible\" : \"unknown\",\r\n  \"customFields\" : null\r\n}",
+        "content": "```json\n{\n  \"name\": \"Computer beeping issue after opening AxonIvy Portal\",\n  \"description\": \"The user's computer started beeping after opening AxonIvy Portal. Needs technical investigation and resolution.\",\n  \"responsible\": null,\n  \"customFields\": {\n    \"ticketId\": \"7db43efaa0684857a9dcdebdf5bb3227\",\n    \"employeeUsername\": null\n  }\n}\n```",
         "refusal": null,
         "annotations": []
       },
@@ -17,9 +17,9 @@
     }
   ],
   "usage": {
-    "prompt_tokens": 180,
-    "completion_tokens": 48,
-    "total_tokens": 228,
+    "prompt_tokens": 287,
+    "completion_tokens": 94,
+    "total_tokens": 381,
     "prompt_tokens_details": {
       "cached_tokens": 0,
       "audio_tokens": 0

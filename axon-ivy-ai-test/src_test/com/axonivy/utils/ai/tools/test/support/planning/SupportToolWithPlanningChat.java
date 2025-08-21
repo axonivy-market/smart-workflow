@@ -16,39 +16,30 @@ public class SupportToolWithPlanningChat {
     if (messages.size() >= 1) {
       var current = messages.get(messages.size() - 1);
 
-      if (current.toPrettyString().contains("Example: [HR] User request a day leave")) {
-        return Response.ok().entity(load("response4.json")).build();
+      if (current.toPrettyString().contains("Help me, my computer is beeping, it started after opening AxonIvy Portal.")) {
+        if (messages.get(1).get("role").textValue().contains("system"))
+        return Response.ok().entity(load("response1.json")).build();
+      }
+      
+      if (messages.size() == 1) {
+        if (current.toPrettyString().contains(
+            "Add custom field: 'employeeUsername', value is the employee username")) {
+          return Response.ok().entity(load("response5.json")).build();
+        }
+        if (current.toPrettyString().contains(
+            "Example: [HR] User request a day leave\\n- description must be the whole query\\n- ticket name must be informative")) {
+          return Response.ok().entity(load("response3.json")).build();
+        }
+        if (current.toPrettyString().contains("Do not change the structure, only update the field values")) {
+          return Response.ok().entity(load("response4.json")).build();
+        }
+        if (current.toPrettyString().contains("Query:\\nMy computer is beeping")) {
+          return Response.ok().entity(load("response2.json")).build();
+        }
       }
 
-      if (current.toPrettyString().contains("Query:\\nHelp me, my computer is beeping")) {
-        return Response.ok()
-            .entity(load("response3.json"))
-            .build();
-      }
-
-      if (current.toPrettyString().contains("Help me, my computer is beeping")) {
-        boolean fromAssistant = messages.get(messages.size() - 2).get("role").textValue().equals("assistant");
-        return Response.ok()
-            .entity(load(fromAssistant ? "response2.json" : "response1.json"))
-            .build();
-      }
-
-      if (current.toPrettyString().contains(
-          "\\\"type\\\":\\\"TECHNICAL\\\",\\\"name\\\":\\\"Computer Beeping Issue\\\",\\\"description\\\":\\\"Computer started beeping after opening AxonIvy Portal.\\\"")) {
-
-        String targetFile = current.toPrettyString().contains("{\\\"employeeUsername\\\" : \\\"mnhnam\\\"}")
-            ? "response6.json"
-            : "response5.json";
-
-        return Response.ok(
-            ).entity(load(targetFile))
-            .build();
-      }
-
-      if (current.toPrettyString().contains("{\\r\\n  \\\"aiResult\\\" : \\\"Task is created successfully\\\"\\r\\n}")) {
-        return Response.ok()
-            .entity(load("response7.json"))
-            .build();
+      if (current.toPrettyString().contains("Task is created successfully")) {
+        return Response.ok().entity(load("response6.json")).build();
       }
 
       return Response.ok()
