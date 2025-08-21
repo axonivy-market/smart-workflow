@@ -9,29 +9,7 @@
       "type" : "RequestStart",
       "name" : "startPlanning",
       "config" : {
-        "signature" : "startPlanning",
-        "input" : {
-          "params" : [
-            { "name" : "message", "type" : "String", "desc" : "" },
-            { "name" : "requestor", "type" : "String", "desc" : "" }
-          ],
-          "map" : {
-            "out.agentInput.message" : "param.message",
-            "out.agentInput.username" : "param.requestor"
-          }
-        },
-        "request" : {
-          "name" : "Start Support Agent with planning capability",
-          "isVisibleOnStartList" : false
-        },
-        "triggerable" : true,
-        "task" : {
-          "responsible" : {
-            "roles" : [
-              "SYSTEM"
-            ]
-          }
-        }
+        "signature" : "startPlanning"
       },
       "tags" : [
         "demo"
@@ -45,19 +23,20 @@
     }, {
       "id" : "f4",
       "type" : "ProgramInterface",
-      "name" : "Ivy Agent with planning",
+      "name" : "Ivy Agent with business instruction",
       "config" : {
-        "javaClass" : "com.axonivy.utils.ai.tools.ReactAgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.ai.tools.AgenticProcessCall",
         "userConfig" : {
           "planningInstructions" : "Should create a support ticket then create a task to handle the support ticket",
-          "agentId" : "\"support-agent\"",
-          "maxIterations" : "15",
           "goal" : "create support ticket, and follow business context",
-          "query" : "in.agentInput"
+          "system" : "\"Should create a support ticket then create a task to handle the support ticket\"",
+          "query" : "\"Help me, my computer is beeping, it started after opening AxonIvy Portal.\""
         }
       },
       "visual" : {
-        "at" : { "x" : 496, "y" : 216 },
+        "at" : { "x" : 504, "y" : 217 },
+        "size" : { "width" : 160, "height" : 62 },
+        "description" : "An agent element with business instructions to guide the AI: first create a support ticket, then create a task to handle that ticket.",
         "icon" : "res:/webContent/logo/agent.png"
       },
       "connect" : [
@@ -67,7 +46,7 @@
       "id" : "f6",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 624, "y" : 216 }
+        "at" : { "x" : 688, "y" : 216 }
       }
     } ]
 }

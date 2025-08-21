@@ -1,0 +1,9 @@
+{
+  "model" : "gpt-4o-mini",
+  "messages" : [ {
+    "role" : "user",
+    "content" : "Query:\n{\"id\":\"7db43efaa0684857a9dcdebdf5bb3227\",\"type\":\"TECHNICAL\",\"name\":\"Computer beeping issue after opening AxonIvy Portal\",\"description\":\"The user's computer started beeping after opening AxonIvy Portal. Needs technical investigation and resolution.\",\"employeeUsername\":null,\"firstApprover\":null,\"secondApprover\":null,\"aiApproval\":null,\"firstApproval\":null,\"secondApproval\":null,\"requestedDate\":null}\n-------------------------------\nInstruction:\n- Understand the content and update the fields in the following JSON object based on the information you extract:\n\n{\r\n  \"name\" : \"Computer beeping issue after opening AxonIvy Portal\",\r\n  \"description\" : \"The user's computer started beeping after opening AxonIvy Portal. Needs technical investigation and resolution.\",\r\n  \"responsible\" : null,\r\n  \"customFields\" : null\r\n}\n\nReturn exactly this JSON object with its fields updated/filled based on the content you analyzed. Do not change the structure, only update the field values.\n\n\n- Only focus on adding custom fields\n- Each custom field is a pair of name - value. Example: {\"employeeUsername\" : \"mnhnam\"}\n- Add custom field: 'ticketId', value is the support ticket id\n- Add custom field: 'employeeUsername', value is the employee username"
+  } ],
+  "temperature" : 0.0,
+  "stream" : false
+}

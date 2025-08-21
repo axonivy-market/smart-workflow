@@ -8,7 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
-import com.axonivy.utils.ai.core.internal.IvySubProcessToolExecutor;
+import com.axonivy.utils.ai.mock.MockOpenAI;
+import com.axonivy.utils.ai.tools.internal.IvySubProcessToolExecutor;
+import com.axonivy.utils.ai.tools.test.support.SupportToolChat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -22,8 +24,9 @@ class TestIvySubProcessToolExecutor {
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl());
-    fixture.var(OpenAiConf.TEST_HEADER, "tool");
+    fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
+    fixture.var(OpenAiConf.API_KEY, "");
+    MockOpenAI.defineChat(SupportToolChat::toolTest);
   }
 
   @Test

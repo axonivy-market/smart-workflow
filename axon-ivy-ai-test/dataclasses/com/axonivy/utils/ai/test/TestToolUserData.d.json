@@ -4,5 +4,8 @@
   "namespace" : "com.axonivy.utils.ai.test",
   "fields" : [ {
     "name" : "result"
+  }, {
+    "name" : "person",
+    "type" : "com.axonivy.utils.ai.test.Person"
   } ]
 }

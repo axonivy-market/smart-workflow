@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.ai.mock.MockOpenAI;
-import com.axonivy.utils.ai.tools.test.support.SupportToolChat;
+import com.axonivy.utils.ai.tools.test.support.planning.SupportToolWithPlanningChat;
 
 import AgentDemo.SupportAgentData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
@@ -18,23 +18,21 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.client.OpenAiTestClient;
 
 @IvyProcessTest(enableWebServer = true)
-class TestSupportAgentTools {
-
-  private static final BpmProcess AGENT_TOOLS = BpmProcess.name("SupportAgentTools");
+public class TestSupportAgentToolsWithPlanning {
+  private static final BpmElement AGENT_TOOLS = BpmProcess.name("SupportAgentToolsWithPlanning")
+      .elementName("startPlanning");
 
   @BeforeEach
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(SupportToolChat::toolTest);
+    MockOpenAI.defineChat(SupportToolWithPlanningChat::toolTest);
   }
 
   @Test
   void agentTicketCreation(BpmClient client) {
     var res = client.start().process(AGENT_TOOLS).execute();
     var ticketDone = (SupportAgentData) res.data().onElement(BpmElement.pid("197F7D477CB93027-f165")).getLast();
-    assertThat(ticketDone.getCategorizedResult())
-        .isEqualTo("technical");
+    assertThat(ticketDone.getCategorizedResult()).isEqualTo("technical");
   }
-
 }
