@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.axonivy.ivy.api</groupId>
     <artifactId>ivy-project-parent</artifactId>
     <version>13.2.0-SNAPSHOT</version>
-    <relativePath></relativePath>
+    <relativePath />
   </parent>
   <groupId>com.axonivy.utils.ai</groupId>
-  <artifactId>axon-ivy-ai-test</artifactId>
+  <artifactId>smart-orchestrator-test</artifactId>
   <version>13.2.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <dependencies>
@@ -24,8 +23,8 @@
     </dependency>
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
-      <artifactId>axon-ivy-ai-demo</artifactId>
-      <version>13.2.0-SNAPSHOT</version>
+      <artifactId>smart-orchestrator-demo</artifactId>
+      <version>${project.version}</version>
       <type>iar</type>
     </dependency>
   </dependencies>

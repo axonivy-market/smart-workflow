@@ -14,7 +14,7 @@ public class OpenAiTestClient {
   }
 
   public static OpenAiChatModel aiMock() {
-    return new OpenAiServiceConnector()
+    return OpenAiServiceConnector
         .buildOpenAiModel()
         .customHeaders(Map.of("X-Requested-By", "ivy"))
         .build();

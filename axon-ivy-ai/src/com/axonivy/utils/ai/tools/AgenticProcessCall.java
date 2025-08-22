@@ -12,9 +12,7 @@ import com.axonivy.utils.ai.tools.internal.IvyToolsProcesses;
 import com.axonivy.utils.ai.tools.internal.ScriptContextUtil;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import ch.ivyteam.ivy.application.ProcessModelVersionRelation;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.java.JavaConfigurationNavigationUtil;
 import ch.ivyteam.ivy.process.engine.IRequestId;
 import ch.ivyteam.ivy.process.extension.impl.AbstractUserProcessExtension;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
@@ -55,7 +53,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       return in; // early abort; user is still testing with empty values
     }
 
-    var modelBuilder = new OpenAiServiceConnector().buildOpenAiModel();
+    var modelBuilder = OpenAiServiceConnector.buildOpenAiModel();
 
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
@@ -139,29 +137,20 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
 
     @SuppressWarnings("restriction")
     private String toolList() {
-      IProcessModelVersion pmv = getPmv();
+      var toolProcesses = Optional.ofNullable(IProcessModelVersion.current()).map(IvyToolsProcesses::new);
+      if (toolProcesses.isEmpty()) {
+        return "";
+      }
       try {
-        return new IvyToolsProcesses(pmv).toolStarts().stream()
+
+        return toolProcesses.get()
+            .toolStarts().stream()
             .map(CallSubStart::getSignature)
             .map(tool -> "- " + tool.getName() + tool.getInputParameters().stream().map(VariableDesc::getName).toList())
             .collect(Collectors.joining("\n"));
       } catch (Exception ex) {
         return "";
       }
-    }
-
-    private IProcessModelVersion getPmv() {
-      return Optional.ofNullable(IProcessModelVersion.current())
-          .orElseGet(this::preDiavolezzaSprint13);
-    }
-
-    private IProcessModelVersion preDiavolezzaSprint13() {
-      var pmv = JavaConfigurationNavigationUtil.getProcessModelVersion(Editor.class);
-      List<IProcessModelVersion> user = pmv.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.DEPENDENT);
-      if (!user.isEmpty()) {
-        pmv = user.get(0); // TODO: delete me once Sprint13 is public available
-      }
-      return pmv;
     }
   }
 }

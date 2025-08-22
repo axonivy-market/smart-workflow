@@ -1,7 +1,16 @@
 name: Release-Build
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        type: string
+        required: true
+        default: 13.2.0-a1
+        description: the release to introduce (e.g. a1/b2)
 
 jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/release.yml@v6
+    with:
+      mvnArgs: -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }}

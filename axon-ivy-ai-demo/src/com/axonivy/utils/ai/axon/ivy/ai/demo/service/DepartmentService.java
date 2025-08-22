@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Department;
-import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
+import com.axonivy.utils.ai.utils.JsonUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -23,7 +23,7 @@ public class DepartmentService {
 
   public List<Department> findAll() {
     try {
-      return BusinessEntityConverter.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), Department.class);
+      return JsonUtils.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), Department.class);
     } catch (Exception e) {
       return new ArrayList<>();
     }

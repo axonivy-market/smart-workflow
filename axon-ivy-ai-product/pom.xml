@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy.market</groupId><!-- your group id: e.g. com.axonivy.connector.<myconnector> or com.axonivy.utils.<myutil> -->
-  <artifactId>axon-ivy-ai-product</artifactId><!-- fill your product name + a "-product" postfix e.g. my-connector-product -->
+  <artifactId>smart-orchestrator-product</artifactId><!-- fill your product name + a "-product" postfix e.g. my-connector-product -->
   <version>13.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <variables.yaml.file>../MY-PRODUCT-NAME/config/variables.yaml</variables.yaml.file>
+    <variables.yaml.file>../smart-orchestrator/config/variables.yaml</variables.yaml.file>
   </properties>
 
   <build>
@@ -47,7 +47,7 @@
                 </copy>
                 <loadfile property="variables.yaml" srcFile="${variables.yaml.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.yaml@" value="${variables.yaml}" />
-                <replace file="${project.build.directory}/README_DE.md" token="@variables.yaml@" value="${variables.yaml}"/>
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.yaml@" value="${variables.yaml}" />
               </target>
             </configuration>
             <goals>
