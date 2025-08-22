@@ -14,6 +14,6 @@ Alternatively, you can also examine the *smart-orchestrator/tree/master/smart-or
 
 ## Logging
 
-To see transport logs of requests/responses to AI models we have a sample [log4j2.xml](smart-orchestrator/documents/v1.0.0/configuration/log4j2.xml) config.
+To see transport logs of requests/responses to AI models we have a sample [log4j2.xml](docs/configuration/log4j2.xml) config.
 Simply copy it into your `configuration` directory of the Designer or Engine to enable it.
 The recorded logs will reside in file at `logs/ai.log`.
