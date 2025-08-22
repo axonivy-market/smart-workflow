@@ -1,0 +1,30 @@
+{
+  "model" : "gpt-4.1-mini",
+  "messages" : [ {
+    "role" : "user",
+    "content" : "Help me, my computer is beeping, it started after opening AxonIvy Portal."
+  } ],
+  "temperature" : 0.0,
+  "stream" : false,
+  "tools" : [ {
+    "type" : "function",
+    "function" : {
+      "name" : "createSupportTicket",
+      "description" : "Use this tool to create a support ticket object",
+      "parameters" : {
+        "type" : "object",
+        "properties" : {
+          "query" : {
+            "type" : "string",
+            "description" : "The original input query"
+          },
+          "employeeUsername" : {
+            "type" : "string",
+            "description" : "Username of the employee who create the request"
+          }
+        },
+        "required" : [ ]
+      }
+    }
+  } ]
+}

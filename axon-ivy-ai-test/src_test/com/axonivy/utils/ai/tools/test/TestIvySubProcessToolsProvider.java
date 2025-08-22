@@ -3,6 +3,7 @@ package com.axonivy.utils.ai.tools.test;
 import static ch.ivyteam.test.client.OpenAiTestClient.aiMock;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -15,7 +16,7 @@ import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.ai.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.ai.tools.internal.IvySubProcessToolExecutor;
 import com.axonivy.utils.ai.tools.internal.IvySubProcessToolSpecs;
-import com.axonivy.utils.ai.tools.test.support.SupportToolChat;
+import com.axonivy.utils.ai.tools.test.tools.TestIvySubProcessToolsProviderChat;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -40,15 +41,16 @@ class TestIvySubProcessToolsProvider {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(SupportToolChat::toolTest);
+    MockOpenAI.defineChat(TestIvySubProcessToolsProviderChat::toolTest);
   }
 
   @Test
   void chatWithTools() {
     var model = aiMock();
-    UserMessage init = UserMessage.from("Help me, my computer is beeping, it started after opening AxonIvy Portal.");
+    UserMessage init = UserMessage.from("Who am I?");
 
-    List<ToolSpecification> ivyTools = IvySubProcessToolSpecs.find();
+    List<ToolSpecification> ivyTools = IvySubProcessToolSpecs.find().stream()
+        .filter(spec -> spec.name().equals("whoami")).toList();
     ChatRequest request = ChatRequest.builder()
         .messages(init)
         .toolSpecifications(ivyTools)
@@ -78,9 +80,11 @@ class TestIvySubProcessToolsProvider {
 
   @Test
   void chatAgentic() {
+    List<String> selectedTools = new ArrayList<>();
+    selectedTools.add("createSupportTicket");
     var supporter = AiServices.builder(SupportAgent.class)
         .chatModel(aiMock())
-        .toolProvider(new IvySubProcessToolsProvider())
+        .toolProvider(new IvySubProcessToolsProvider().filtering(selectedTools))
         .build();
     String chat = supporter.chat("Help me, my computer is beeping, it started after opening AxonIvy Portal.");
     System.out.println(chat);

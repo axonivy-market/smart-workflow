@@ -9,7 +9,7 @@ import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.ai.tools.test.support.SupportToolChat;
 
-import AgentDemo.SupportAgentData;
+import AgentDemo.SupportAgentToolsData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
@@ -32,9 +32,9 @@ class TestSupportAgentTools {
   @Test
   void agentTicketCreation(BpmClient client) {
     var res = client.start().process(AGENT_TOOLS).execute();
-    var ticketDone = (SupportAgentData) res.data().onElement(BpmElement.pid("197F7D477CB93027-f165")).getLast();
-    assertThat(ticketDone.getCategorizedResult())
-        .isEqualTo("technical");
+    var ticketDone = (SupportAgentToolsData) res.data().onElement(BpmElement.pid("19856884121ED111-f1"))
+        .getLast();
+    assertThat(ticketDone.getSupportTicket().getType().name()).isEqualToIgnoringCase("technical");
   }
 
 }
