@@ -2,23 +2,21 @@ package com.axonivy.utils.smart.orchestrator.connector;
 
 import java.util.Map;
 
-
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 
-public class OpenAiServiceConnector extends AbstractAiServiceConnector {
-  private static final long serialVersionUID = -7887376408428122870L;
-  
+public class OpenAiServiceConnector {
+
   private static final int DEFAULT_TEMPERATURE = 0;
 
   public interface OpenAiConf {
     String PREFIX = "Ai.OpenAI.";
     String BASE_URL = PREFIX + "BaseUrl";
     String API_KEY = PREFIX + "APIKey";
-    String TEST_HEADER = PREFIX + "Headers.test";
+    String MODEL = PREFIX + "Model";
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
@@ -26,10 +24,9 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
-    var builder = initBuilder()
+    return initBuilder()
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
-    return builder;
   }
 
   private static OpenAiChatModelBuilder initBuilder() {
@@ -47,6 +44,10 @@ public class OpenAiServiceConnector extends AbstractAiServiceConnector {
       builder.apiKey(key);
     } else {
       builder.customHeaders(Map.of("X-Requested-By", "ivy")); // TODO as pure test variable
+    }
+    var modelName = Ivy.var().get(OpenAiConf.MODEL);
+    if (!modelName.isEmpty()) {
+      builder.modelName(modelName);
     }
     return builder;
   }
