@@ -1,7 +1,11 @@
-# Axon Ivy Smart Ochestrator
+# Smart Orchestrator 🪄️
 
-## Logging
+[![CI Build](https://github.com/axonivy-market/smart-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/axonivy-market/smart-orchestrator/actions/workflows/ci.yml)
 
-To see transport logs of requests/responses to AI models we have a sample [log4j2.xml](docs/configuration/log4j2.xml) config.
-Simply copy it into your `configuration` directory of the Designer or Engine to enable it.
-The recorded logs will reside in file at `logs/ai.log`.
+Let AI Agent elements drive your dynamic processes.
+
+### Documentation
+
+- [dev-docs](docs/README.md) ✍️
+- [market-product](smart-orchestrator-product/README.md) 🛒️
+
