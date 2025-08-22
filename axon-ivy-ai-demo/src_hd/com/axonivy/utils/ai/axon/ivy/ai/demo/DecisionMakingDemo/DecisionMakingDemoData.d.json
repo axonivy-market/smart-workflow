@@ -1,6 +1,0 @@
-{
-  "$schema" : "https://json-schema.axonivy.com/data-class/13.1.0/data-class.json",
-  "simpleName" : "DecisionMakingDemoData",
-  "namespace" : "com.axonivy.utils.ai.axon.ivy.ai.demo.DecisionMakingDemo",
-  "isBusinessCaseData" : false
-}

@@ -30,6 +30,8 @@
           "planningInstructions" : "Should create a support ticket then create a task to handle the support ticket",
           "goal" : "create support ticket, and follow business context",
           "system" : "\"Should create a support ticket then create a task to handle the support ticket\"",
+          "resultType" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket.class",
+          "resultMapping" : "in.supportTicket",
           "query" : "\"Help me, my computer is beeping, it started after opening AxonIvy Portal.\""
         }
       },

@@ -34,6 +34,8 @@
         "javaClass" : "com.axonivy.utils.ai.tools.AgenticProcessCall",
         "userConfig" : {
           "system" : "\"You are a Support Agent\"",
+          "resultType" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket.class",
+          "resultMapping" : "in.supportTicket",
           "query" : "\"Help me, my computer is beeping, it started after opening AxonIvy Portal.\""
         }
       },

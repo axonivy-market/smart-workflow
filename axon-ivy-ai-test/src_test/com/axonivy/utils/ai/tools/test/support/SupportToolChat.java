@@ -16,24 +16,23 @@ public class SupportToolChat {
     var messages = (ArrayNode) request.get("messages");
     if (messages.size() >= 1) {
       var current = messages.get(messages.size() - 1);
-      if (current.toString().contains("\"tool_call_id\"")) {
-        return Response.ok()
-            .entity(load("response4.json"))
-            .build();
+      if (messages.size() == 2) {
+        if (current.get("content").textValue()
+            .equals("Help me, my computer is beeping, it started after opening AxonIvy Portal.")) {
+          return Response.ok().entity(load("response1.json")).build();
+        }
+        if (current.get("content").textValue()
+            .equals("Computer is beeping after opening AxonIvy Portal. Need technical support.")) {
+          return Response.ok().entity(load("response2.json")).build();
+        }
       }
-      if (current.toPrettyString().contains("Instruction:\\n- Understand")) {
+
+      if (current.toString().contains("tool_call_id")
+          || current.get("content").textValue().equals("Computer is beeping after opening AxonIvy Portal")) {
         return Response.ok()
             .entity(load("response3.json"))
             .build();
       }
-      if (current.toPrettyString().contains("Instruction:")) {
-        return Response.ok()
-            .entity(load("response2.json"))
-            .build();
-      }
-      return Response.ok()
-          .entity(load("response1.json"))
-          .build();
     }
     return Response.status(404).build();
   }

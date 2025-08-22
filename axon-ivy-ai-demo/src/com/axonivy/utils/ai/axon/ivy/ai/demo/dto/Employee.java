@@ -5,19 +5,35 @@ import java.io.Serializable;
 import com.axonivy.utils.ai.axon.ivy.ai.demo.enums.Position;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dev.langchain4j.model.output.structured.Description;
+
 public class Employee implements Serializable {
 
   private static final long serialVersionUID = 8036880473086829722L;
 
+  @Description("Unique username of the employee")
   private String username;
+
+  @Description("Full legal name of the employee")
   private String fullName;
+
+  @Description("Position or job title of the employee within the organization")
   private Position position;
+
+  @Description("Identifier of the department the employee belongs to")
   private String departmentId;
+
+  @Description("Maximum number of leave days allocated to the employee per year")
   private Integer maxLeaveDays;
+
+  @Description("Number of leave days already used by the employee")
   private Integer usedLeaveDays;
+
+  @Description("Work email address of the employee")
   private String email;
 
   @JsonIgnore
+  @Description("Department details of the employee, ignored during JSON serialization")
   private Department department;
 
   public String getUsername() {

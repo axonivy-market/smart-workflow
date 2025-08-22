@@ -32,14 +32,14 @@ class TestIvySubProcessToolExecutor {
   @Test
   void stringMinimal() throws Exception {
     var queryOnly = ToolExecutionRequest.builder()
-        .id("call_eyP0Rh5guxfQGTRGuHpGfD5h")
+        .id("call_kcgCd6eyMWW8pYTl7d6w2IWa")
         .name("createSupportTicket")
         .arguments("{\"query\":\"Computer is beeping after opening AxonIvy Portal\"}")
         .build();
 
     var result = IvySubProcessToolExecutor.execute(queryOnly);
     assertThat(result.text())
-        .contains("[TECHNICAL]");
+        .contains("\"type\" : \"TECHNICAL\"");
 
     var jResult = (ObjectNode) new ObjectMapper().reader().readTree(result.text());
     assertThat(jResult.properties()).extracting(Entry::getKey)

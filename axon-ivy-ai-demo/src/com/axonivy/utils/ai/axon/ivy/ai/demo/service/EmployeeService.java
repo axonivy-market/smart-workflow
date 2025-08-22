@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Employee;
-import com.axonivy.utils.ai.persistence.converter.BusinessEntityConverter;
+import com.axonivy.utils.ai.utils.JsonUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -28,7 +28,7 @@ public class EmployeeService {
 
     String query = username.startsWith("#") ? username.substring(1) : username;
 
-    List<Employee> employees = BusinessEntityConverter.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), Employee.class);
+    List<Employee> employees = JsonUtils.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), Employee.class);
     Employee found = employees.stream().filter(e -> e.getUsername().equals(query)).findFirst().get();
 
     if (StringUtils.isNotBlank(found.getDepartmentId())) {

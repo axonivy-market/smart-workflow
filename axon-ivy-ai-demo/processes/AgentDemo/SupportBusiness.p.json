@@ -12,7 +12,7 @@
         "signature" : "createSupportTicket",
         "input" : {
           "params" : [
-            { "name" : "taskInfo", "type" : "com.axonivy.utils.ai.dto.ivy.TaskInfo", "desc" : "" }
+            { "name" : "taskInfo", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo", "desc" : "" }
           ],
           "map" : {
             "out.taskInfo" : "param.taskInfo"
@@ -79,8 +79,8 @@
         "signature" : "handleHrTicket",
         "input" : {
           "params" : [
-            { "name" : "taskInfo", "type" : "com.axonivy.utils.ai.dto.ivy.TaskInfo", "desc" : "" },
-            { "name" : "secondTaskInfo", "type" : "com.axonivy.utils.ai.dto.ivy.TaskInfo", "desc" : "" }
+            { "name" : "taskInfo", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo", "desc" : "" },
+            { "name" : "secondTaskInfo", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo", "desc" : "" }
           ],
           "map" : {
             "out.secondTaskInfo" : "param.secondTaskInfo",

@@ -5,7 +5,7 @@
     "content" : "Instruction to follow:\n- Don't fill information related to approval\n[]\n"
   }, {
     "role" : "user",
-    "content" : "Computer is beeping after opening AxonIvy Portal. Need technical support."
+    "content" : "Computer is beeping after opening AxonIvy Portal."
   } ],
   "temperature" : 0.0,
   "stream" : false,
