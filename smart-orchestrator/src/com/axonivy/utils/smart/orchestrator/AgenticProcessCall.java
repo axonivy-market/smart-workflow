@@ -30,10 +30,11 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     String RESULT = "result";
   }
 
-  public interface Conf {
+  interface Conf {
     String SYSTEM = "system";
     String QUERY = "query";
     String TOOLS = "tools";
+    String MODEL = "model";
     String OUTPUT = "resultType";
     String MAP_TO = "resultMapping";
   }
@@ -63,6 +64,8 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       agentType = StructuredOutputAgent.agent(structured.get());
       modelBuilder.responseFormat("json_schema");
     }
+    var modelName = execute(context, Conf.MODEL, String.class);
+    modelName.ifPresent(modelBuilder::modelName);
 
     var model = modelBuilder.build();
     var agentBuilder = AiServices.builder(agentType)
@@ -128,6 +131,9 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       ui.scriptField(Conf.TOOLS)
           .requireType(List.class)
           .create();
+
+      ui.label("Model: (optional; defaults in variables.yaml)").create();
+      ui.scriptField(Conf.MODEL).requireType(String.class).create();
 
       ui.label("Expect result of type:").create();
       ui.scriptField(Conf.OUTPUT).requireType(Class.class).create();
