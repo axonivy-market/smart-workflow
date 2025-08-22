@@ -1,0 +1,201 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "197F7D4B2B9E44C1",
+  "config" : {
+    "data" : "AgentDemo.SupportBusinessData"
+  },
+  "elements" : [ {
+      "id" : "f3",
+      "type" : "RequestStart",
+      "name" : "createSupportTicket",
+      "config" : {
+        "signature" : "createSupportTicket",
+        "input" : {
+          "params" : [
+            { "name" : "taskInfo", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo", "desc" : "" }
+          ],
+          "map" : {
+            "out.taskInfo" : "param.taskInfo"
+          }
+        },
+        "request" : {
+          "isHttpRequestable" : false,
+          "isVisibleOnStartList" : false
+        },
+        "triggerable" : true,
+        "task" : {
+          "responsible" : {
+            "roles" : [
+              "SYSTEM"
+            ]
+          }
+        },
+        "case" : {
+          "attachToBusinessCase" : false
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 240 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "TaskSwitchEvent",
+      "config" : {
+        "task" : {
+          "name" : "<%=in1.taskInfo.name%>",
+          "description" : "<%=in1.taskInfo.description%>",
+          "responsible" : {
+            "roles" : [
+              "SupportTeam"
+            ]
+          },
+          "customFields" : [
+            { "name" : "ticketId", "type" : "STRING", "value" : "in1.taskInfo.customFields.get(\"ticketId\").toString()" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 400, "y" : 240 },
+        "labelOffset" : { "x" : 14, "y" : 34 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 528, "y" : 240 },
+        "labelOffset" : { "x" : 13, "y" : 33 }
+      }
+    }, {
+      "id" : "f8",
+      "type" : "RequestStart",
+      "name" : "handleHrTicket",
+      "config" : {
+        "signature" : "handleHrTicket",
+        "input" : {
+          "params" : [
+            { "name" : "taskInfo", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo", "desc" : "" },
+            { "name" : "secondTaskInfo", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo", "desc" : "" }
+          ],
+          "map" : {
+            "out.secondTaskInfo" : "param.secondTaskInfo",
+            "out.taskInfo" : "param.taskInfo"
+          }
+        },
+        "request" : {
+          "isVisibleOnStartList" : false
+        },
+        "triggerable" : true,
+        "task" : {
+          "responsible" : {
+            "roles" : [
+              "Everybody",
+              "SYSTEM"
+            ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 352 }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "TaskSwitchEvent",
+      "name" : "First approval",
+      "config" : {
+        "task" : {
+          "name" : "<%=in1.taskInfo.name%>",
+          "description" : "<%=in1.taskInfo.description%>",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(in1.taskInfo.responsible)"
+          },
+          "customFields" : [
+            { "name" : "ticketId", "type" : "STRING", "value" : "in1.taskInfo.customFields.get(\"ticketId\").toString()" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 400, "y" : 352 },
+        "labelOffset" : { "x" : 14, "y" : 34 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f15" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "TaskSwitchEvent",
+      "name" : "Second approval",
+      "config" : {
+        "task" : {
+          "name" : "<%=in1.taskInfo.name%>",
+          "description" : "<%=in1.taskInfo.description%>",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(in1.secondTaskInfo.responsible)"
+          },
+          "customFields" : [
+            { "name" : "ticketId", "type" : "STRING", "value" : "in1.taskInfo.customFields.get(\"ticketId\").toString()" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 688, "y" : 352 },
+        "labelOffset" : { "x" : 14, "y" : 34 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f17" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 968, "y" : 352 },
+        "labelOffset" : { "x" : 13, "y" : 33 }
+      }
+    }, {
+      "id" : "f15",
+      "type" : "DialogCall",
+      "name" : "HR ticket approval",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.HrSupportTicketApproval:start(String)",
+        "call" : {
+          "map" : {
+            "param.ticketId" : "in.taskInfo.customFields.get(\"ticketId\") as String"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 544, "y" : 352 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f11", "color" : "default" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "DialogCall",
+      "name" : "HR ticket approval",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.HrSupportTicketSecondApproval:start(String)",
+        "call" : {
+          "map" : {
+            "param.ticketId" : "in.taskInfo.customFields.get(\"ticketId\") as String"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 840, "y" : 352 }
+      },
+      "connect" : [
+        { "id" : "f18", "to" : "f12", "color" : "default" }
+      ]
+    } ]
+}
