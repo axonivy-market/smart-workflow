@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools.test.support;
+package com.axonivy.utils.smart.orchestrator.demo.support.mock;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

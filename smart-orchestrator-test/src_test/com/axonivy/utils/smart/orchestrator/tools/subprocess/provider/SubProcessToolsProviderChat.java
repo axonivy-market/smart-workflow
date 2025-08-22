@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools.test.tools;
+package com.axonivy.utils.smart.orchestrator.tools.subprocess.provider;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -10,9 +10,9 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-public class TestIvySubProcessToolsProviderChat {
+class SubProcessToolsProviderChat {
 
-  public static Response toolTest(JsonNode request) {
+  static Response toolTest(JsonNode request) {
     var messages = (ArrayNode) request.get("messages");
     if (messages.size() >= 1) {
       var current = messages.get(messages.size() - 1);
@@ -40,7 +40,7 @@ public class TestIvySubProcessToolsProviderChat {
   }
 
   private static String load(String json) {
-    try (var is = TestIvySubProcessToolsProviderChat.class.getResourceAsStream(json)) {
+    try (var is = SubProcessToolsProviderChat.class.getResourceAsStream(json)) {
       if (is == null) {
         throw new RuntimeException("The json file '" + json + "' does not exist.");
       }

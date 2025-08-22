@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools.test;
+package com.axonivy.utils.smart.orchestrator.tools.subprocess;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,15 +8,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
-import com.axonivy.utils.ai.tools.test.support.SupportToolChat;
+import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
+import com.axonivy.utils.smart.orchestrator.demo.support.mock.SupportToolChat;
 import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolExecutor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.test.client.OpenAiTestClient;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 
 @IvyProcessTest(enableWebServer = true)

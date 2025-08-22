@@ -1,4 +1,4 @@
-package com.axonivy.utils.ai.tools.test;
+package com.axonivy.utils.smart.orchestrator.tools.subprocess;
 
 import static ch.ivyteam.ivy.process.model.value.scripting.VariableDesc.var;
 import static org.assertj.core.api.Assertions.assertThat;

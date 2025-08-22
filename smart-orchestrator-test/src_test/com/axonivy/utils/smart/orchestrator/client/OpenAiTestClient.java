@@ -1,4 +1,4 @@
-package ch.ivyteam.test.client;
+package com.axonivy.utils.smart.orchestrator.client;
 
 import java.util.Map;
 

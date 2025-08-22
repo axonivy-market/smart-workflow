@@ -1,6 +1,6 @@
-package com.axonivy.utils.ai.tools.test;
+package com.axonivy.utils.smart.orchestrator.tools.subprocess.provider;
 
-import static ch.ivyteam.test.client.OpenAiTestClient.aiMock;
+import static com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient.aiMock;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
-import com.axonivy.utils.ai.tools.test.tools.TestIvySubProcessToolsProviderChat;
+import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.orchestrator.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolExecutor;
@@ -20,7 +20,6 @@ import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolSpec
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.test.client.OpenAiTestClient;
 import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
@@ -41,7 +40,7 @@ class TestIvySubProcessToolsProvider {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(TestIvySubProcessToolsProviderChat::toolTest);
+    MockOpenAI.defineChat(SubProcessToolsProviderChat::toolTest);
   }
 
   @Test

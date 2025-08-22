@@ -1,6 +1,6 @@
-package com.axonivy.utils.ai.connector.test;
+package com.axonivy.utils.smart.orchestrator.connector;
 
-import static ch.ivyteam.test.client.OpenAiTestClient.aiMock;
+import static com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient.aiMock;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.ws.rs.core.Response;
@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
+import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
-import ch.ivyteam.test.client.OpenAiTestClient;
 import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
