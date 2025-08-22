@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.ai.tools.test.support.planning.SupportToolWithPlanningChat;
+import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
 
 import AgentDemo.SupportAgentToolsWithPlanningData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;

@@ -7,10 +7,10 @@ import java.util.Map.Entry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.ai.mock.MockOpenAI;
-import com.axonivy.utils.ai.tools.internal.IvySubProcessToolExecutor;
 import com.axonivy.utils.ai.tools.test.support.SupportToolChat;
+import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
+import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolExecutor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 

@@ -13,7 +13,7 @@
         "signature" : "whoami",
         "result" : {
           "params" : [
-            { "name" : "person", "type" : "com.axonivy.utils.ai.test.Person", "desc" : "the current user" }
+            { "name" : "person", "type" : "com.axonivy.utils.smart.orchestrator.test.Person", "desc" : "the current user" }
           ],
           "map" : {
             "result.person.firstName" : "ivy.session.getSessionUserName()"

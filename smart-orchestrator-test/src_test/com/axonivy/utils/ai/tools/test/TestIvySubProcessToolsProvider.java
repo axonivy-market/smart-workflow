@@ -11,12 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.ai.mock.MockOpenAI;
-import com.axonivy.utils.ai.tools.IvySubProcessToolsProvider;
-import com.axonivy.utils.ai.tools.internal.IvySubProcessToolExecutor;
-import com.axonivy.utils.ai.tools.internal.IvySubProcessToolSpecs;
 import com.axonivy.utils.ai.tools.test.tools.TestIvySubProcessToolsProviderChat;
+import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
+import com.axonivy.utils.smart.orchestrator.tools.IvySubProcessToolsProvider;
+import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolExecutor;
+import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolSpecs;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;

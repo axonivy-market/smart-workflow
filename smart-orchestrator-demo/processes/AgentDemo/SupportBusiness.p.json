@@ -12,7 +12,7 @@
         "signature" : "createSupportTicket",
         "input" : {
           "params" : [
-            { "name" : "taskInfo", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo", "desc" : "" }
+            { "name" : "taskInfo", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo", "desc" : "" }
           ],
           "map" : {
             "out.taskInfo" : "param.taskInfo"
@@ -79,8 +79,8 @@
         "signature" : "handleHrTicket",
         "input" : {
           "params" : [
-            { "name" : "taskInfo", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo", "desc" : "" },
-            { "name" : "secondTaskInfo", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo", "desc" : "" }
+            { "name" : "taskInfo", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo", "desc" : "" },
+            { "name" : "secondTaskInfo", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo", "desc" : "" }
           ],
           "map" : {
             "out.secondTaskInfo" : "param.secondTaskInfo",
@@ -166,7 +166,7 @@
       "type" : "DialogCall",
       "name" : "HR ticket approval",
       "config" : {
-        "dialog" : "com.axonivy.utils.ai.axon.ivy.ai.demo.HrSupportTicketApproval:start(String)",
+        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.HrSupportTicketApproval:start(String)",
         "call" : {
           "map" : {
             "param.ticketId" : "in.taskInfo.customFields.get(\"ticketId\") as String"
@@ -184,7 +184,7 @@
       "type" : "DialogCall",
       "name" : "HR ticket approval",
       "config" : {
-        "dialog" : "com.axonivy.utils.ai.axon.ivy.ai.demo.HrSupportTicketSecondApproval:start(String)",
+        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.HrSupportTicketSecondApproval:start(String)",
         "call" : {
           "map" : {
             "param.ticketId" : "in.taskInfo.customFields.get(\"ticketId\") as String"

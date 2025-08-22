@@ -13,7 +13,7 @@
         "signature" : "createSupportTask",
         "input" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "The task information object" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "The task information object" }
           ],
           "map" : {
             "out.supportTicket" : "param.supportTicket"
@@ -49,7 +49,7 @@
       "type" : "TriggerCall",
       "name" : "Create support ticket",
       "config" : {
-        "processCall" : "AgentDemo/SupportBusiness:createSupportTicket(com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo)",
+        "processCall" : "AgentDemo/SupportBusiness:createSupportTicket(com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo)",
         "call" : {
           "map" : {
             "param.taskInfo" : "in.taskInfo"
@@ -95,7 +95,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "support ticket object" },
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "support ticket object" },
             { "name" : "aiResult", "type" : "String", "desc" : "" }
           ],
           "map" : {
@@ -129,7 +129,7 @@
         "signature" : "chooseTicketApprover",
         "input" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "" }
           ],
           "map" : {
             "out.supportTicket" : "param.supportTicket"
@@ -137,7 +137,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "" },
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "" },
             { "name" : "aiResult", "type" : "String", "desc" : "" }
           ],
           "map" : {
@@ -159,7 +159,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.handler.SupportTicketApproverHandler;",
+            "import com.axonivy.utils.smart.orchestrator.demo.handler.SupportTicketApproverHandler;",
             "SupportTicketApproverHandler.chooseApprovers(in.supportTicket);"
           ]
         }
@@ -179,7 +179,7 @@
         "signature" : "handleHrTicket",
         "input" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket", "desc" : "" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "" }
           ],
           "map" : {
             "out.supportTicket" : "param.supportTicket"
@@ -207,7 +207,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo;",
+            "import com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo;",
             "in.taskInfo = new TaskInfo();"
           ]
         }
@@ -253,7 +253,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.decision.Option;",
+            "import com.axonivy.utils.smart.orchestrator.decision.Option;",
             "",
             "",
             "Option leaveOption = new Option(\"absent\", \"The support ticket related to asking for day off, absent, leave request\");",
@@ -300,7 +300,7 @@
       "type" : "TriggerCall",
       "name" : "Create approval case",
       "config" : {
-        "processCall" : "AgentDemo/SupportBusiness:handleHrTicket(com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo,com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo)",
+        "processCall" : "AgentDemo/SupportBusiness:handleHrTicket(com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo,com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo)",
         "call" : {
           "map" : {
             "param.taskInfo" : "in.taskInfo",
@@ -413,7 +413,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.SupportTicketService;",
+            "import com.axonivy.utils.smart.orchestrator.demo.service.SupportTicketService;",
             "",
             "Date today =  new Date();",
             "in.supportTicket.requestedDate = today.toString();",
@@ -452,7 +452,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.SupportTicketService;",
+            "import com.axonivy.utils.smart.orchestrator.demo.service.SupportTicketService;",
             "SupportTicketService.getInstance().save(in.supportTicket);"
           ]
         }
@@ -497,7 +497,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.agent.TaskInfoAgent;",
+            "import com.axonivy.utils.smart.orchestrator.demo.agent.TaskInfoAgent;",
             "",
             "in.customInstructions.add(\"Only focus on adding custom fields\");",
             "in.customInstructions.add(\"Each custom field is a pair of name - value. Example: {\\\"employeeUsername\\\" : \\\"mnhnam\\\"}\");",
@@ -521,7 +521,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.agent.SupportTicketAgent;",
+            "import com.axonivy.utils.smart.orchestrator.demo.agent.SupportTicketAgent;",
             "in.supportTicket = SupportTicketAgent.createSupportTicketWithoutApprovalInfo(in.query, in.instructions);"
           ]
         }
@@ -540,7 +540,7 @@
         "output" : {
           "code" : [
             "import dev.langchain4j.internal.Json;",
-            "import com.axonivy.utils.ai.decision.DecisionMaker;",
+            "import com.axonivy.utils.smart.orchestrator.decision.DecisionMaker;",
             "",
             "in.categorizedResult = DecisionMaker.getBuilder()",
             "    .options(in.options).build()",
@@ -561,9 +561,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.dto.Employee;",
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.EmployeeService;",
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.agent.HrTicketApprovalAgent;",
+            "import com.axonivy.utils.smart.orchestrator.demo.dto.Employee;",
+            "import com.axonivy.utils.smart.orchestrator.demo.service.EmployeeService;",
+            "import com.axonivy.utils.smart.orchestrator.demo.agent.HrTicketApprovalAgent;",
             "",
             "Employee requestor = EmployeeService.getInstance()",
             "   .findByUsername(in.supportTicket.employeeUsername);",
@@ -593,9 +593,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.service.EmployeeService;",
+            "import com.axonivy.utils.smart.orchestrator.demo.service.EmployeeService;",
             "import dev.langchain4j.internal.Json;",
-            "import com.axonivy.utils.ai.axon.ivy.ai.demo.agent.TaskInfoAgent;",
+            "import com.axonivy.utils.smart.orchestrator.demo.agent.TaskInfoAgent;",
             "",
             "String message = \"Support ticket:\" + System.lineSeparator()",
             "  + Json.toJson(in.supportTicket)",

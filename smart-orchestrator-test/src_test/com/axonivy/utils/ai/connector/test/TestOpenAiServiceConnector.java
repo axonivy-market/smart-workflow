@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import com.axonivy.utils.ai.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.ai.mock.MockOpenAI;
+import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.environment.AppFixture;

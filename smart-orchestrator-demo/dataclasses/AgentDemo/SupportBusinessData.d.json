@@ -4,14 +4,14 @@
   "namespace" : "AgentDemo",
   "fields" : [ {
     "name" : "taskInfo",
-    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo",
     "modifiers" : [ ]
   }, {
     "name" : "secondTaskInfo",
-    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo",
     "modifiers" : [ ]
   }, {
     "name" : "ticket",
-    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket"
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket"
   } ]
 }

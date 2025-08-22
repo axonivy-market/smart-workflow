@@ -2,7 +2,7 @@ package ch.ivyteam.test.client;
 
 import java.util.Map;
 
-import com.axonivy.utils.ai.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.openai.OpenAiChatModel;

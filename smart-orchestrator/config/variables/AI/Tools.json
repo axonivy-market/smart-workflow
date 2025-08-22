@@ -3,12 +3,12 @@
     "id": "create-support-task",
     "name": "Create Support Task Tool",
     "usage": "Use this tool to create an Axon Ivy task from a given task information object",
-    "signature" : "createSupportTask(com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket)",
+    "signature" : "createSupportTask(com.axonivy.utils.smart.orchestrator.axon.ivy.ai.demo.dto.SupportTicket)",
     "parameters" : [
       {
           "name" : "supportTicket",
           "value" : "",
-          "className" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
+          "className" : "com.axonivy.utils.smart.orchestrator.axon.ivy.ai.demo.dto.SupportTicket",
           "description": "Support ticket object",
           "isMandatory": "true"
       }
@@ -17,7 +17,7 @@
       {
           "name" : "taskResult",
           "value" : "",
-          "className" : "com.axonivy.utils.ai.dto.ai.AiVariable",
+          "className" : "com.axonivy.utils.smart.orchestrator.dto.ai.AiVariable",
           "description": "result of the created task"
       }
     ],
@@ -53,7 +53,7 @@
       {
           "name" : "supportTicket",
           "value" : "",
-          "className" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
+          "className" : "com.axonivy.utils.smart.orchestrator.axon.ivy.ai.demo.dto.SupportTicket",
           "description": "the created support ticket object"
       }
     ],
@@ -69,12 +69,12 @@
     "id": "choose-ticket-approvers",
     "name": "Choost Support Ticket Approvers Tool",
     "usage": "Use this tool update Support ticket object with approvers",
-    "signature" : "chooseTicketApprover(com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket)",
+    "signature" : "chooseTicketApprover(com.axonivy.utils.smart.orchestrator.axon.ivy.ai.demo.dto.SupportTicket)",
     "parameters" : [
       {
           "name" : "supportTicket",
           "value" : "",
-          "className" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
+          "className" : "com.axonivy.utils.smart.orchestrator.axon.ivy.ai.demo.dto.SupportTicket",
           "description": "the support ticket object"
       }
     ],
@@ -82,7 +82,7 @@
       {
           "name" : "supportTicket",
           "value" : "",
-          "className" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
+          "className" : "com.axonivy.utils.smart.orchestrator.axon.ivy.ai.demo.dto.SupportTicket",
           "description": "the updated support ticket object with approvers"
       }
     ],
@@ -98,12 +98,12 @@
     "id": "handle-hr-ticket",
     "name": "Handle HR Ticket Tool",
     "usage": "Use this tool to handle HR ticket",
-    "signature" : "handleHrTicket(com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket)",
+    "signature" : "handleHrTicket(com.axonivy.utils.smart.orchestrator.axon.ivy.ai.demo.dto.SupportTicket)",
     "parameters" : [
       {
           "name" : "supportTicket",
           "value" : "",
-          "className" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.SupportTicket",
+          "className" : "com.axonivy.utils.smart.orchestrator.axon.ivy.ai.demo.dto.SupportTicket",
           "description": "the support ticket object"
       }
     ],
@@ -111,7 +111,7 @@
       {
           "name" : "result",
           "value" : "",
-          "className" : "com.axonivy.utils.ai.dto.ai.AiVariable",
+          "className" : "com.axonivy.utils.smart.orchestrator.dto.ai.AiVariable",
           "description": "The result"
       }
     ],

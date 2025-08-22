@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.ai.test.Person;
-import com.axonivy.utils.ai.tools.internal.JsonToolParamBuilder;
+import com.axonivy.utils.smart.orchestrator.test.Person;
+import com.axonivy.utils.smart.orchestrator.tools.internal.JsonToolParamBuilder;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.IvyTest;
