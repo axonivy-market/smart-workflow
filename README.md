@@ -1,19 +1,11 @@
-# Axon Ivy Smart Ochestrator
+# Smart Orchestrator 🪄️
 
-## How to see the Agent prototype concept
+[![CI Build](https://github.com/axonivy-market/smart-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/axonivy-market/smart-orchestrator/actions/workflows/ci.yml)
 
-1. Open the web application [Excalidraw](https://excalidraw.com/).
+Let AI Agent elements drive your dynamic processes.
 
-2. Once you are in the Excalidraw designer, press **Ctrl + O**.
+### Documentation
 
-3. Choose the *smart-orchestrator/tree/master/smart-orchestrator/documents/v1.0.0/smart-orchestrator.excalidraw* file
+- [dev-docs](docs/README.md) ✍️
+- [market-product](smart-orchestrator-product/README.md) 🛒️
 
-Now you can see how the Agent prototype works.
-
-Alternatively, you can also examine the *smart-orchestrator/tree/master/smart-orchestrator/documents/v1.0.0/smart-orchestrator.png* image.
-
-## Logging
-
-To see transport logs of requests/responses to AI models we have a sample [log4j2.xml](smart-orchestrator/documents/v1.0.0/configuration/log4j2.xml) config.
-Simply copy it into your `configuration` directory of the Designer or Engine to enable it.
-The recorded logs will reside in file at `logs/ai.log`.
