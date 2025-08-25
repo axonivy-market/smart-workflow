@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector;
 import com.axonivy.utils.smart.orchestrator.output.DynamicAgent;
 import com.axonivy.utils.smart.orchestrator.output.internal.StructuredOutputAgent;
@@ -55,7 +57,8 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       return in; // early abort; user is still testing with empty values
     }
 
-    var modelBuilder = OpenAiServiceConnector.buildOpenAiModel();
+    String modelName = execute(context, Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+    var modelBuilder = OpenAiServiceConnector.buildOpenAiModel(modelName);
 
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
@@ -64,8 +67,6 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       agentType = StructuredOutputAgent.agent(structured.get());
       modelBuilder.responseFormat("json_schema");
     }
-    var modelName = execute(context, Conf.MODEL, String.class);
-    modelName.ifPresent(modelBuilder::modelName);
 
     var model = modelBuilder.build();
     var agentBuilder = AiServices.builder(agentType)

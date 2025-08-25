@@ -16,7 +16,7 @@ public class TestOpenAiModelConfig {
   void defaultsModel_fromIvyVariable(AppFixture fixture) {
     String legacy35 = "gpt-3.5-turbo";
     fixture.var(OpenAiConf.MODEL, legacy35);
-    var builder = OpenAiServiceConnector.buildOpenAiModel();
+    var builder = OpenAiServiceConnector.buildOpenAiModel(legacy35);
     assertThat(builder).hasFieldOrPropertyWithValue("modelName", legacy35);
   }
 
