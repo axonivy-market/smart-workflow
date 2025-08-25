@@ -8,9 +8,10 @@ import java.util.stream.Collectors;
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector;
 import com.axonivy.utils.smart.orchestrator.output.DynamicAgent;
 import com.axonivy.utils.smart.orchestrator.output.internal.StructuredOutputAgent;
+import com.axonivy.utils.smart.orchestrator.scripting.internal.MacroExpander;
+import com.axonivy.utils.smart.orchestrator.scripting.internal.ScriptContextUtil;
 import com.axonivy.utils.smart.orchestrator.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.orchestrator.tools.internal.IvyToolsProcesses;
-import com.axonivy.utils.smart.orchestrator.tools.internal.ScriptContextUtil;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.Ivy;
@@ -49,7 +50,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
   @SuppressWarnings({"unchecked"})
   @Override
   public CompositeObject perform(IRequestId requestId, CompositeObject in, IIvyScriptContext context) throws Exception {
-    var query = execute(context, Conf.QUERY, String.class);
+    var query = expand(context, Conf.QUERY);
     if (query.isEmpty()) {
       Ivy.log().info("Agent call was skipped, since there was no user query");
       return in; // early abort; user is still testing with empty values
@@ -72,7 +73,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
         .chatModel(model)
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
 
-    var systemMessage = execute(context, Conf.SYSTEM, String.class);
+    var systemMessage = expand(context, Conf.SYSTEM);
     if (systemMessage.isPresent()) {
       agentBuilder.systemMessageProvider(memId -> systemMessage.get());
     }
@@ -111,18 +112,20 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     }
   }
 
+  private Optional<String> expand(IIvyScriptContext context, String confKey) {
+    return new MacroExpander(context).expand(getConfig().get(confKey));
+  }
+
   public static class Editor extends UiEditorExtension {
 
     @Override
     public void initUiFields(ExtensionUiBuilder ui) {
       ui.label("How can I assist you today?").create();
-      ui.scriptField(Conf.QUERY)
+      ui.textField(Conf.QUERY)
           .multiline()
-          .requireType(String.class)
           .create();
       ui.label("System message:").create();
-      ui.scriptField(Conf.SYSTEM)
-          .requireType(String.class)
+      ui.textField(Conf.SYSTEM)
           .create();
       ui.label("You have the following tools ready to assist you:\n" + toolList() + "\n\n"
           + "Select the available tools, or keep empty to use all:")
