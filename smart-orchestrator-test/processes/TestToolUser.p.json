@@ -32,7 +32,7 @@
         "userConfig" : {
           "tools" : "[\"whoami\"]",
           "resultMapping" : "in.result",
-          "query" : "\"Tools options as json array\""
+          "query" : "Tools options as json array"
         }
       },
       "visual" : {
@@ -64,7 +64,7 @@
         "userConfig" : {
           "tools" : "[]",
           "resultMapping" : "in.result",
-          "query" : "\"Return the following name as result: \"+ivy.session.getSessionUserName()"
+          "query" : "Return the following name as result: <%=ivy.session.getSessionUserName()%>"
         }
       },
       "visual" : {
@@ -103,7 +103,7 @@
           "tools" : "[\"whoami\"]",
           "resultType" : "com.axonivy.utils.smart.orchestrator.test.Person.class",
           "resultMapping" : "in.person",
-          "query" : "\"Tell me who I am\""
+          "query" : "Tell me who I am"
         }
       },
       "visual" : {
@@ -139,10 +139,10 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
         "userConfig" : {
-          "system" : "\"You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manner\"",
+          "system" : "You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manner",
           "tools" : "[]",
           "resultMapping" : "in.result",
-          "query" : "\"It's so hot, where can I cool myself down?\""
+          "query" : "It's so hot, where can I cool myself down?"
         }
       },
       "visual" : {
@@ -182,7 +182,7 @@
           "system" : "",
           "tools" : "[]",
           "resultMapping" : "in.result",
-          "query" : "\"What ChatGpt Model are you running on?\""
+          "query" : "What ChatGpt Model are you running on?"
         }
       },
       "visual" : {
