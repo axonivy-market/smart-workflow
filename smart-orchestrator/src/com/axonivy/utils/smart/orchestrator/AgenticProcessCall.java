@@ -127,6 +127,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
           .create();
       ui.label("System message:").create();
       ui.textField(Conf.SYSTEM)
+          .multiline()
           .create();
       ui.label("You have the following tools ready to assist you:\n" + toolList() + "\n\n"
           + "Select the available tools, or keep empty to use all:")

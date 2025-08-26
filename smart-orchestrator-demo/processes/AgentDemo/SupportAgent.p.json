@@ -334,7 +334,7 @@
             "segment" : 1.5,
             "offset" : { "x" : -75, "y" : -58 }
           } },
-        { "id" : "f129", "to" : "f184", "label" : {
+        { "id" : "f129", "to" : "f188", "label" : {
             "name" : "approve",
             "offset" : { "x" : -3, "y" : 14 }
           } }
@@ -492,42 +492,42 @@
       }
     }, {
       "id" : "f169",
-      "type" : "Script",
+      "type" : "ProgramInterface",
       "name" : "Use AI to create task info",
       "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.agent.TaskInfoAgent;",
-            "",
-            "in.customInstructions.add(\"Only focus on adding custom fields\");",
-            "in.customInstructions.add(\"Each custom field is a pair of name - value. Example: {\\\"employeeUsername\\\" : \\\"mnhnam\\\"}\");",
-            "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");",
-            "in.customInstructions.add(\"Add custom field: 'employeeUsername', value is the employee username\");",
-            "",
-            "in.taskInfo = TaskInfoAgent.createTaskInfo(in.query, in.customInstructions);"
-          ]
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instruction to follow: \n- Only focus on adding custom fields\n- Each custom field is a pair of name - value. Example: {\\\"employeeUsername\\\" : \\\"mnhnam\\\"}\")\n- Add custom field: 'ticketId', value is the support ticket id\n- Add custom field: 'employeeUsername', value is the employee username",
+          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo.class",
+          "tools" : "[]",
+          "resultMapping" : "in.taskInfo",
+          "query" : "<%=in.query%>"
         }
       },
       "visual" : {
-        "at" : { "x" : 568, "y" : 72 }
+        "at" : { "x" : 568, "y" : 72 },
+        "icon" : "res:/webContent/logo/agent.png"
       },
       "connect" : [
         { "id" : "f170", "to" : "f3" }
       ]
     }, {
       "id" : "f177",
-      "type" : "Script",
+      "type" : "ProgramInterface",
       "name" : "Use AI to create ticket",
       "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.agent.SupportTicketAgent;",
-            "in.supportTicket = SupportTicketAgent.createSupportTicketWithoutApprovalInfo(in.query, in.instructions);"
-          ]
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instruction to follow: \n- Don't fill information related to approval\n<%=in.instructions%>",
+          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket.class",
+          "tools" : "[]",
+          "resultMapping" : "in.supportTicket",
+          "query" : "<%=in.query%>"
         }
       },
       "visual" : {
-        "at" : { "x" : 216, "y" : 232 }
+        "at" : { "x" : 216, "y" : 232 },
+        "icon" : "res:/webContent/logo/agent.png"
       },
       "connect" : [
         { "id" : "f178", "to" : "f165", "color" : "default" }
@@ -556,70 +556,89 @@
       ]
     }, {
       "id" : "f182",
-      "type" : "Script",
+      "type" : "ProgramInterface",
       "name" : "Use AI: request approval",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are acting as the approving manager for a support ticket request.\nYour goal is to make an approval decision based solely on the provided\nuser information and additional instructions. Be concise and decisive.\n\n---\nUser Information:\n<%=com.axonivy.utils.smart.orchestrator.demo.service.EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername)%>\n\n---\nAdditional Instructions to follow: \n- Analyse the provided data, make decision.\n- Set field 'decision' = APPROVE when you think that the request is reasonable, no reason to deny.\n- set field 'decision' = REJECT when you think that the request is unreasonable, it should be rejected.",
+          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.AiApprovalDecision.class",
+          "tools" : "[]",
+          "resultMapping" : "in.aiApproval",
+          "query" : "<%=in.query%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 608 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f183", "to" : "f186" }
+      ]
+    }, {
+      "id" : "f184",
+      "type" : "ProgramInterface",
+      "name" : "Use AI: Create task info",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instructions to follow: \n- Task name should be in format: <user name> requested a leave request from <from date> to <to date>,\n- from date and to date should be calculated based on content of the request,\n- Date format should be follow this locale: <%=ivy.session.formattingLocale.getDisplayCountry() %>,\n- Description should be: This request is approved by Axon Ivy AI,\n- Add custom field: 'ticketId', value is the support ticket id\n",
+          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo.class",
+          "tools" : "[]",
+          "resultMapping" : "in.taskInfo",
+          "query" : "<%=in.query%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1192, "y" : 704 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f185", "to" : "f146" }
+      ]
+    }, {
+      "id" : "f186",
+      "type" : "Script",
+      "name" : "map",
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.dto.Employee;",
-            "import com.axonivy.utils.smart.orchestrator.demo.service.EmployeeService;",
-            "import com.axonivy.utils.smart.orchestrator.demo.agent.HrTicketApprovalAgent;",
-            "",
-            "Employee requestor = EmployeeService.getInstance()",
-            "   .findByUsername(in.supportTicket.employeeUsername);",
-            "",
-            "in.customInstructions.clear();",
-            "",
-            "in.customInstructions.add(\"Analyse the provided data, make decision.\");",
-            "in.customInstructions.add(\"Set field 'decision' = APPROVE when you think that the request is reasonable, no reason to deny.\");",
-            "in.customInstructions.add(\"set field 'decision' = REJECT when you think that the request is unreasonable, it should be rejected.\");",
-            "",
-            "in.aiApproval = HrTicketApprovalAgent.createSupportTicketWithoutApprovalInfo(in.query, requestor, in.customInstructions);",
             "in.supportTicket.aiApproval = in.aiApproval;",
             "in.aiApprovalStr = in.supportTicket.aiApproval.decision.name();"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 744, "y" : 608 }
+        "at" : { "x" : 744, "y" : 704 },
+        "size" : { "width" : 32, "height" : 30 }
       },
       "connect" : [
-        { "id" : "f183", "to" : "f163", "via" : [ { "x" : 744, "y" : 704 } ] }
+        { "id" : "f187", "to" : "f163" }
       ]
     }, {
-      "id" : "f184",
+      "id" : "f188",
       "type" : "Script",
-      "name" : "Use AI: Create task info",
+      "name" : "prep",
       "config" : {
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.orchestrator.demo.service.EmployeeService;",
             "import dev.langchain4j.internal.Json;",
-            "import com.axonivy.utils.smart.orchestrator.demo.agent.TaskInfoAgent;",
             "",
-            "String message = \"Support ticket:\" + System.lineSeparator()",
+            "in.query = \"Support ticket:\" + System.lineSeparator()",
             "  + Json.toJson(in.supportTicket)",
             "  + System.lineSeparator()",
             "  + \"Requestor:\" + System.lineSeparator()",
-            "  + Json.toJson(EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername));",
-            "",
-            "in.customInstructions.clear();",
-            "",
-            "in.customInstructions.add(\"Task name should be in format: <user name> requested a leave request from <from date> to <to date>\");",
-            "in.customInstructions.add(\"from date and to date should be calculated based on content of the request\");",
-            "in.customInstructions.add(\"Date format should be follow this locale: \" + ivy.session.formattingLocale.getDisplayCountry());",
-            "in.customInstructions.add(\"Description should be: This request is approved by Axon Ivy AI\");",
-            "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");",
-            "",
-            "in.taskInfo = TaskInfoAgent.createTaskInfo(message, in.customInstructions);"
+            "  + Json.toJson(EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername));"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 1192, "y" : 704 }
+        "at" : { "x" : 1104, "y" : 704 },
+        "size" : { "width" : 40, "height" : 38 }
       },
       "connect" : [
-        { "id" : "f185", "to" : "f146" }
+        { "id" : "f189", "to" : "f184" }
       ]
     } ]
 }
