@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector;
 import com.axonivy.utils.smart.orchestrator.output.DynamicAgent;
 import com.axonivy.utils.smart.orchestrator.output.internal.StructuredOutputAgent;
@@ -30,10 +32,11 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     String RESULT = "result";
   }
 
-  public interface Conf {
+  interface Conf {
     String SYSTEM = "system";
     String QUERY = "query";
     String TOOLS = "tools";
+    String MODEL = "model";
     String OUTPUT = "resultType";
     String MAP_TO = "resultMapping";
   }
@@ -54,7 +57,8 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       return in; // early abort; user is still testing with empty values
     }
 
-    var modelBuilder = OpenAiServiceConnector.buildOpenAiModel();
+    String modelName = execute(context, Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+    var modelBuilder = OpenAiServiceConnector.buildOpenAiModel(modelName);
 
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
@@ -128,6 +132,9 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
       ui.scriptField(Conf.TOOLS)
           .requireType(List.class)
           .create();
+
+      ui.label("Model: (optional; defaults in variables.yaml)").create();
+      ui.scriptField(Conf.MODEL).requireType(String.class).create();
 
       ui.label("Expect result of type:").create();
       ui.scriptField(Conf.OUTPUT).requireType(Class.class).create();

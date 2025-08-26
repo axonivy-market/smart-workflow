@@ -158,5 +158,45 @@
       "visual" : {
         "at" : { "x" : 752, "y" : 160 }
       }
+    }, {
+      "id" : "f20",
+      "type" : "RequestStart",
+      "name" : "modelName",
+      "config" : {
+        "signature" : "modelName"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "dev.langchain4j.model.openai.OpenAiChatModelName.GPT_3_5_TURBO_1106.toString()",
+          "system" : "",
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "\"What ChatGpt Model are you running on?\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 256 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f23", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 344, "y" : 256 }
+      }
     } ]
 }

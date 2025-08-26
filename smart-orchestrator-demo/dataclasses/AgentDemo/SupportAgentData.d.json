@@ -29,7 +29,7 @@
     "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket"
   }, {
     "name" : "connector",
-    "type" : "com.axonivy.utils.smart.orchestrator.connector.AbstractAiServiceConnector",
+    "type" : "com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector",
     "modifiers" : [ ]
   }, {
     "name" : "instructions",
