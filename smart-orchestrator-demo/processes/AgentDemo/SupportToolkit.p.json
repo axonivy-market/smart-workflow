@@ -1,0 +1,504 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "198E5C633963EC5F",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "AgentDemo.SupportToolkitData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "createTask(String)",
+      "config" : {
+        "signature" : "createTask",
+        "input" : {
+          "params" : [
+            { "name" : "ticketDescription", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.ticketDescription" : "param.ticketDescription"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "responseMessage", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.responseMessage" : "in.createTaskMessage"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "description" : "Use support task"
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f35" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1736, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "CallSubStart",
+      "name" : "summarizeProblem()",
+      "config" : {
+        "signature" : "summarizeProblem"
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 296 },
+        "description" : "Use this tool to summarize problem"
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 296 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "CallSubStart",
+      "name" : "checkCompleteness()",
+      "config" : {
+        "signature" : "checkCompleteness"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 408 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 408 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "CallSubStart",
+      "name" : "classifyProblem(String)",
+      "config" : {
+        "signature" : "classifyProblem",
+        "input" : {
+          "params" : [
+            { "name" : "ticketDescription", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.ticketDescription" : "param.ticketDescription"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 184 },
+        "description" : "Use this tool to classify problem"
+      },
+      "connect" : [
+        { "id" : "f56", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 184 }
+      }
+    }, {
+      "id" : "f12",
+      "type" : "CallSubStart",
+      "name" : "askForMoreInformation()",
+      "config" : {
+        "signature" : "askForMoreInformation"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 520 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f14" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 520 }
+      }
+    }, {
+      "id" : "f15",
+      "type" : "CallSubStart",
+      "name" : "checkWithRAG()",
+      "config" : {
+        "signature" : "checkWithRAG"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 632 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f17" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 632 }
+      }
+    }, {
+      "id" : "f18",
+      "type" : "CallSubStart",
+      "name" : "validateSolution()",
+      "config" : {
+        "signature" : "validateSolution"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 760 }
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f20" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 760 }
+      }
+    }, {
+      "id" : "f21",
+      "type" : "CallSubStart",
+      "name" : "replyToCustomer()",
+      "config" : {
+        "signature" : "replyToCustomer"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 904 }
+      },
+      "connect" : [
+        { "id" : "f22", "to" : "f23" }
+      ]
+    }, {
+      "id" : "f23",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 904 }
+      }
+    }, {
+      "id" : "f24",
+      "type" : "CallSubStart",
+      "name" : "waitForApproval()",
+      "config" : {
+        "signature" : "waitForApproval"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1032 }
+      },
+      "connect" : [
+        { "id" : "f25", "to" : "f26" }
+      ]
+    }, {
+      "id" : "f26",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 1032 }
+      }
+    }, {
+      "id" : "f27",
+      "type" : "CallSubStart",
+      "name" : "escalateTo3rdLevel()",
+      "config" : {
+        "signature" : "escalateTo3rdLevel"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1160 }
+      },
+      "connect" : [
+        { "id" : "f28", "to" : "f29" }
+      ]
+    }, {
+      "id" : "f29",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 1160 }
+      }
+    }, {
+      "id" : "f32",
+      "type" : "Script",
+      "name" : "Use AI to create task info",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.agent.TaskInfoAgent;",
+            "",
+            "",
+            "in.customInstructions.add(\"Only focus on adding custom fields\");",
+            "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");",
+            "in.customInstructions.add(\"Return task detail url\");",
+            "",
+            "in.taskInfo = TaskInfoAgent.createTaskInfo(in.ticketDescription, in.customInstructions);",
+            "",
+            "in.taskInfo.responsible = in.supportTicket.type.getRoleName();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 904, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f74", "to" : "f72" }
+      ]
+    }, {
+      "id" : "f34",
+      "type" : "Script",
+      "name" : "Prepare field explanations",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import dev.langchain4j.internal.Json;",
+            "in.query = Json.toJson(in.supportTicket);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 400, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f58", "to" : "f54" }
+      ]
+    }, {
+      "id" : "f35",
+      "type" : "Script",
+      "name" : "Create Task info object",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket;",
+            "import com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo;",
+            "",
+            "",
+            "in.taskInfo = new TaskInfo();",
+            "in.supportTicket = new AxonIvySupportTicket();",
+            "in.supportTicket.setDescription(in.ticketDescription);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f36", "to" : "f34" }
+      ]
+    }, {
+      "id" : "f49",
+      "type" : "TriggerCall",
+      "name" : "Create task for support team",
+      "config" : {
+        "processCall" : "Business/AxonIvySupport:createTaskForSupportTeam(com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket,com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo)",
+        "call" : {
+          "map" : {
+            "param.supportTicket" : "in.supportTicket",
+            "param.taskInfo" : "in.taskInfo"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f50", "to" : "f60", "color" : "default" }
+      ]
+    }, {
+      "id" : "f54",
+      "type" : "Script",
+      "name" : "Use AI to create support ticket object",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.agent.AxonIvySupportTicketAgent;",
+            "",
+            "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");",
+            "",
+            "in.supportTicket = AxonIvySupportTicketAgent.createSupportTicketWithoutApprovalInfo(in.ticketDescription, in.customInstructions);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 552, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f81", "to" : "f76" }
+      ]
+    }, {
+      "id" : "f60",
+      "type" : "Script",
+      "name" : "Create response messgage",
+      "config" : {
+        "output" : {
+          "code" : "in.createTaskMessage = \"Task for support ticket is created!\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1568, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f61", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f62",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "\"You are support agent. You should: classify problem, create a task to handle it, return the task detail link, then summarize problem, check for version\"",
+          "tools" : "[\"createTask\",\"classifyProblem\"]",
+          "resultType" : "AgentDemo.AgentResponse.class",
+          "resultMapping" : "in.result",
+          "query" : "in.ticketDescription"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1056, "y" : 432 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f66", "to" : "f64" }
+      ]
+    }, {
+      "id" : "f63",
+      "type" : "CallSubStart",
+      "name" : "askAI(String,String)",
+      "config" : {
+        "signature" : "askAI",
+        "input" : {
+          "params" : [
+            { "name" : "question", "type" : "String", "desc" : "" },
+            { "name" : "username", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.ticketDescription" : "param.question + \". Reporter is: \" + param.username"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "aiResponse", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.aiResponse" : "in.result.aiResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 784, "y" : 432 }
+      },
+      "connect" : [
+        { "id" : "f75", "to" : "f62" }
+      ]
+    }, {
+      "id" : "f64",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1344, "y" : 432 }
+      }
+    }, {
+      "id" : "f67",
+      "type" : "Alternative",
+      "name" : "is task created ?",
+      "config" : {
+        "conditions" : {
+          "f68" : "!in.isTaskAlreadyCreated"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1192, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f68", "to" : "f49", "color" : "default" },
+        { "id" : "f70", "to" : "f69", "via" : [ { "x" : 1192, "y" : 184 } ] }
+      ]
+    }, {
+      "id" : "f69",
+      "type" : "Script",
+      "name" : "Create response message",
+      "config" : {
+        "output" : {
+          "code" : "in.createTaskMessage = \"No need to create task. Issue already reported: \" + in.taskDetailLink;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1568, "y" : 184 }
+      },
+      "connect" : [
+        { "id" : "f71", "to" : "f1", "via" : [ { "x" : 1736, "y" : 184 } ] }
+      ]
+    }, {
+      "id" : "f72",
+      "type" : "Script",
+      "name" : "Check task is exists",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.workflow.ITask;",
+            "import ch.ivyteam.ivy.workflow.query.TaskQuery;",
+            "",
+            "",
+            "TaskQuery taskQuery = TaskQuery.create();",
+            "List<ITask> tasks = taskQuery.where().name().isEqual(in.taskInfo.name).executor().results();",
+            "",
+            "",
+            "in.isTaskAlreadyCreated = tasks != null && tasks.size() > 0;",
+            "if (tasks.size() > 0) {",
+            "  in.taskDetailLink = tasks.get(0).getDetailLink().getAbsolute();",
+            "}"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 1064, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f73", "to" : "f67", "color" : "default" }
+      ]
+    }, {
+      "id" : "f76",
+      "type" : "Alternative",
+      "config" : {
+        "conditions" : {
+          "f77" : "in.supportTicket.version != null && !in.supportTicket.version.isBlank()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 776, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f77", "to" : "f32", "color" : "default" },
+        { "id" : "f79", "to" : "f78", "via" : [ { "x" : 776, "y" : 280 } ] }
+      ]
+    }, {
+      "id" : "f78",
+      "type" : "Script",
+      "name" : "missing version",
+      "config" : {
+        "output" : {
+          "code" : "in.createTaskMessage = \"Please provide your product version\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1568, "y" : 280 }
+      },
+      "connect" : [
+        { "id" : "f80", "to" : "f1", "via" : [ { "x" : 1736, "y" : 280 } ] }
+      ]
+    } ]
+}

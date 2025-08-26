@@ -1,0 +1,29 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "SupportToolkitData",
+  "namespace" : "AgentDemo",
+  "fields" : [ {
+    "name" : "supportTicket",
+    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.AxonIvySupportTicket"
+  }, {
+    "name" : "taskInfo",
+    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo"
+  }, {
+    "name" : "query"
+  }, {
+    "name" : "customInstructions",
+    "type" : "List<String>"
+  }, {
+    "name" : "ticketDescription"
+  }, {
+    "name" : "createTaskMessage"
+  }, {
+    "name" : "result",
+    "type" : "AgentDemo.AgentResponse"
+  }, {
+    "name" : "isTaskAlreadyCreated",
+    "type" : "Boolean"
+  }, {
+    "name" : "taskDetailLink"
+  } ]
+}
