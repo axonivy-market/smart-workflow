@@ -10,3 +10,7 @@ on:
 jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v6
+    secrets:
+      mvnArgs: |
+       | sed -E "s|[0-9]. (WARNING) in ([^ ]*) \(at line ([0-9]+)\)(.*)|::\L\1 file=\2,line=\3::build issue\n\2@\3\4|g"\
+       | sed -E "s|\[WARNING\] |::warning::|g"

@@ -1,0 +1,10 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "Person",
+  "namespace" : "com.axonivy.utils.smart.orchestrator.test",
+  "fields" : [ {
+    "name" : "firstName"
+  }, {
+    "name" : "lastName"
+  } ]
+}

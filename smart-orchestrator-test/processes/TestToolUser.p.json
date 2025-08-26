@@ -1,0 +1,202 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1987FC3259488F27",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.orchestrator.test.TestToolUserData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "reducedTools",
+      "config" : {
+        "signature" : "reducedTools"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "tools" : "[\"whoami\"]",
+          "resultMapping" : "in.result",
+          "query" : "Tools options as json array"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 64 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "RequestStart",
+      "name" : "expandQuery",
+      "config" : {
+        "signature" : "expandQuery"
+      },
+      "visual" : {
+        "at" : { "x" : 528, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "Return the following name as result: <%=ivy.session.getSessionUserName()%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 640, "y" : 64 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 752, "y" : 64 }
+      }
+    }, {
+      "id" : "f10",
+      "type" : "RequestStart",
+      "name" : "structuredOutput",
+      "config" : {
+        "signature" : "structuredOutput"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "tools" : "[\"whoami\"]",
+          "resultType" : "com.axonivy.utils.smart.orchestrator.test.Person.class",
+          "resultMapping" : "in.person",
+          "query" : "Tell me who I am"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 160 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 160 }
+      }
+    }, {
+      "id" : "f15",
+      "type" : "RequestStart",
+      "name" : "systemMessage",
+      "config" : {
+        "signature" : "systemMessage"
+      },
+      "visual" : {
+        "at" : { "x" : 528, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f17" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manner",
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "It's so hot, where can I cool myself down?"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 640, "y" : 160 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f18", "to" : "f19" }
+      ]
+    }, {
+      "id" : "f19",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 752, "y" : 160 }
+      }
+    }, {
+      "id" : "f20",
+      "type" : "RequestStart",
+      "name" : "modelName",
+      "config" : {
+        "signature" : "modelName"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "dev.langchain4j.model.openai.OpenAiChatModelName.GPT_3_5_TURBO_1106.toString()",
+          "system" : "",
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "What ChatGpt Model are you running on?"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 256 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f23", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 344, "y" : 256 }
+      }
+    } ]
+}
