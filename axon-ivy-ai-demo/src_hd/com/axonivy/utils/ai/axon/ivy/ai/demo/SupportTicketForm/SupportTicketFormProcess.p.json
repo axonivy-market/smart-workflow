@@ -1,0 +1,62 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "198C88AA8AB6D7BF",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.axon.ivy.ai.demo.SupportTicketForm.SupportTicketFormData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "result" : {
+          "params" : [
+            { "name" : "ticketDescription", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.ticketDescription" : "in.ticketDescription"
+          }
+        },
+        "guid" : "198C88AA8ABA52C2"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "198C88AA8AEE2AD5",
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.ticketDescription" : "in.ticketDescription"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    } ]
+}

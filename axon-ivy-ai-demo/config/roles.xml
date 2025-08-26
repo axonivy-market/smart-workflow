@@ -7,4 +7,13 @@
     <role>
         <identifier>TechnicalTeam</identifier>
     </role>
+    <role>
+        <identifier>PortalSupport</identifier>
+    </role>
+    <role>
+        <identifier>CoreSupport</identifier>
+    </role>
+    <role>
+        <identifier>MarketSupport</identifier>
+    </role>
 </role>

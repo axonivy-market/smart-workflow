@@ -1,0 +1,17 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "SupportDemoData",
+  "namespace" : "AgentDemo",
+  "fields" : [ {
+    "name" : "ticketDescription"
+  }, {
+    "name" : "taskInfo",
+    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.TaskInfo"
+  }, {
+    "name" : "supportTicket",
+    "type" : "com.axonivy.utils.ai.axon.ivy.ai.demo.dto.AxonIvySupportTicket"
+  }, {
+    "name" : "result",
+    "type" : "AgentDemo.AgentResponse"
+  } ]
+}
