@@ -121,30 +121,34 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
 
     @Override
     public void initUiFields(ExtensionUiBuilder ui) {
-      ui.label("How can I assist you today?").create();
-      ui.textField(Conf.QUERY)
-          .multiline()
-          .create();
-      ui.label("System message:").create();
-      ui.textField(Conf.SYSTEM)
-          .multiline()
-          .create();
-      ui.label("You have the following tools ready to assist you:\n" + toolList() + "\n\n"
-          + "Select the available tools, or keep empty to use all:")
-          .multiline()
-          .create();
-      ui.scriptField(Conf.TOOLS)
-          .requireType(List.class)
+      ui.group("Message")
+          .add(ui.label("How can I assist you today?").create())
+          .add(ui.textField(Conf.QUERY).multiline().create())
+          .add(ui.label("System message:").create())
+          .add(ui.textField(Conf.SYSTEM).multiline().create())
           .create();
 
-      ui.label("Model: (optional; defaults in variables.yaml)").create();
-      ui.scriptField(Conf.MODEL).requireType(String.class).create();
+      ui.group("Tools")
+          .add(ui.label(toolsHelp()).multiline().create())
+          .add(ui.scriptField(Conf.TOOLS).requireType(List.class).create())
+          .create();
 
-      ui.label("Expect result of type:").create();
-      ui.scriptField(Conf.OUTPUT).requireType(Class.class).create();
+      ui.group("Model")
+          .add(ui.label("Keep empty to use default from variables.yaml").create())
+          .add(ui.scriptField(Conf.MODEL).requireType(String.class).create())
+          .create();
 
-      ui.label("Map result to:").create();
-      ui.scriptField(Conf.MAP_TO).create();
+      ui.group("Output")
+          .add(ui.label("Expect result of type:").create())
+          .add(ui.scriptField(Conf.OUTPUT).requireType(Class.class).create())
+          .add(ui.label("Map result to:").create())
+          .add(ui.scriptField(Conf.MAP_TO).create())
+          .create();
+    }
+
+    private String toolsHelp() {
+      return "You have the following tools ready to assist you:\n" + toolList() + "\n\n"
+          + "Select the available tools, or keep empty to use all:";
     }
 
     @SuppressWarnings("restriction")
