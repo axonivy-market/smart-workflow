@@ -21,6 +21,7 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.log.LoggerAccess;
+import ch.ivyteam.test.log.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 
@@ -31,6 +32,8 @@ class TestOpenAiServiceModelSelection {
 
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
+  @RegisterExtension
+  ResourceResponse responder = new ResourceResponse();
 
   @BeforeEach
   void setup(AppFixture fixture) {
@@ -43,9 +46,7 @@ class TestOpenAiServiceModelSelection {
     String modelName = request.get("model").asText();
     String expect = OpenAiChatModelName.GPT_3_5_TURBO_1106.toString();
     if (Objects.equals(modelName, expect)) {
-      return Response.ok()
-          .entity(TestOpenAiServiceModelSelection.class.getResourceAsStream("completions-response.json"))
-          .build();
+      return responder.send("completions-response.json");
     }
     return Response.serverError()
         .entity("this is not the selected model from the AgentCall ui: expected " + expect + " but was " + modelName)

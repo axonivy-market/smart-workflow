@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import ch.ivyteam.test.log.LoggerAccess;
+import ch.ivyteam.test.log.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyTest(enableWebServer = true)
@@ -24,6 +25,8 @@ class TestOpenAiServiceConnector {
 
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
+  @RegisterExtension
+  ResourceResponse responder = new ResourceResponse();
 
   @BeforeEach
   void setup(AppFixture fixture) {
@@ -33,9 +36,7 @@ class TestOpenAiServiceConnector {
 
   private Response chat(JsonNode request) {
     if (request.toPrettyString().contains("ready?")) {
-      return Response.ok()
-          .entity(TestOpenAiServiceConnector.class.getResourceAsStream("completions-response.json"))
-          .build();
+      return responder.send("completions-response.json");
     }
     return Response.serverError().build();
   }

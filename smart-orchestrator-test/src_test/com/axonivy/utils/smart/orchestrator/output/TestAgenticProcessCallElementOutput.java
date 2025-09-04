@@ -2,9 +2,6 @@ package com.axonivy.utils.smart.orchestrator.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +21,7 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.log.LoggerAccess;
+import ch.ivyteam.test.log.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest(enableWebServer = true)
@@ -34,6 +32,9 @@ class TestAgenticProcessCallElementOutput {
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
+  @RegisterExtension
+  ResourceResponse response = new ResourceResponse();
+
   @BeforeEach
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("output"));
@@ -43,22 +44,12 @@ class TestAgenticProcessCallElementOutput {
   private Response structure(JsonNode request) {
     var messages = (ArrayNode) request.get("messages");
     if (messages.size() == 1) { // tool response
-      return sendResource("response1.json");
+      return response.send("response1.json");
     }
     if (messages.size() == 3) { // final response
-      return sendResource("response2.json");
+      return response.send("response2.json");
     }
     return Response.serverError().build();
-  }
-
-  private static Response sendResource(String resource) {
-    try (InputStream is = TestAgenticProcessCallElementOutput.class.getResourceAsStream(resource)) {
-      return Response.ok()
-          .entity(new String(is.readAllBytes()))
-          .build();
-    } catch (IOException ex) {
-      throw new RuntimeException("Failed to load " + resource, ex);
-    }
   }
 
   @Test
@@ -75,7 +66,7 @@ class TestAgenticProcessCallElementOutput {
 
   @Test
   void structuredOutputList(BpmClient client) {
-    MockOpenAI.defineChat(request -> sendResource("storyResponse.json"));
+    MockOpenAI.defineChat(request -> response.send("storyResponse.json"));
 
     var res = client.start().process(AGENT_TOOLS.elementName("structuredOutputList")).execute();
     TestToolUserData data = res.data().last();

@@ -2,8 +2,6 @@ package com.axonivy.utils.smart.orchestrator.tools.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.ws.rs.core.Response;
@@ -24,6 +22,7 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.log.LoggerAccess;
+import ch.ivyteam.test.log.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest(enableWebServer = true)
@@ -33,6 +32,8 @@ class TestAgenticProcessCallElement {
 
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
+  @RegisterExtension
+  ResourceResponse response = new ResourceResponse();
 
   @BeforeEach
   void setup(AppFixture fixture) {
@@ -46,19 +47,9 @@ class TestAgenticProcessCallElement {
     var toolNames = new ArrayList<String>();
     tools.forEach(tool -> toolNames.add(tool.get("function").get("name").asText()));
     if (toolNames.size() == 1 && "whoami".equals(toolNames.get(0))) {
-      return sendResource("response.json");
+      return response.send("response.json");
     }
     return Response.serverError().build();
-  }
-
-  private static Response sendResource(String resource) {
-    try (InputStream is = TestAgenticProcessCallElement.class.getResourceAsStream(resource)) {
-      return Response.ok()
-          .entity(new String(is.readAllBytes()))
-          .build();
-    } catch (IOException ex) {
-      throw new RuntimeException("Failed to load " + resource, ex);
-    }
   }
 
   @Test

@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
@@ -17,16 +18,20 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
+import ch.ivyteam.test.log.ResourceResponse;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 
 @IvyProcessTest(enableWebServer = true)
 class TestIvySubProcessToolExecutor {
 
+  @RegisterExtension
+  ResourceResponse responder = new ResourceResponse();
+
   @BeforeEach
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(SupportToolChat::toolTest);
+    MockOpenAI.defineChat(new SupportToolChat(responder)::toolTest);
   }
 
   @Test
