@@ -22,6 +22,11 @@
       <artifactId>ivy-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.axonivy.utils.ai</groupId>
+      <artifactId>smart-http-client</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j</artifactId>
       <version>${langchain4j.version}</version>
@@ -38,6 +43,10 @@
         <exclusion>
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dev.langchain4j</groupId>
+          <artifactId>langchain4j-http-client-jdk</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
