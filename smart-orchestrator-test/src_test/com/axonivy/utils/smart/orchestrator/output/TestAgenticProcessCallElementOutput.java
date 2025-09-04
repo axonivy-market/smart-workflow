@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
+import com.axonivy.utils.smart.orchestrator.test.Person;
 import com.axonivy.utils.smart.orchestrator.test.TestToolUserData;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -37,7 +38,6 @@ class TestAgenticProcessCallElementOutput {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("output"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(this::structure);
   }
 
   private Response structure(JsonNode request) {
@@ -63,12 +63,25 @@ class TestAgenticProcessCallElementOutput {
 
   @Test
   void structuredOutput(BpmClient client) {
+    MockOpenAI.defineChat(this::structure);
+
     var res = client.start().process(AGENT_TOOLS.elementName("structuredOutput")).execute();
     TestToolUserData data = res.data().last();
     assertThat(data.getPerson().getFirstName())
         .isEqualTo("James");
     assertThat(data.getPerson().getLastName())
         .isEqualTo("Bond");
+  }
+
+  @Test
+  void structuredOutputList(BpmClient client) {
+    MockOpenAI.defineChat(request -> sendResource("storyResponse.json"));
+
+    var res = client.start().process(AGENT_TOOLS.elementName("structuredOutputList")).execute();
+    TestToolUserData data = res.data().last();
+    assertThat(data.getStory().getCharacters())
+        .extracting(Person::getFirstName)
+        .containsOnly("Reto", "Bruno");
   }
 
 }
