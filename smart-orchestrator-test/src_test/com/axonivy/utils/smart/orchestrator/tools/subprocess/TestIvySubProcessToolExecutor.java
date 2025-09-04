@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
@@ -16,13 +15,11 @@ import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolExec
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.test.resource.ResourceResponse;
+import ch.ivyteam.test.RestResourceTest;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 
-@IvyProcessTest(enableWebServer = true)
-@ExtendWith(ResourceResponse.class)
+@RestResourceTest
 class TestIvySubProcessToolExecutor {
 
   @BeforeEach

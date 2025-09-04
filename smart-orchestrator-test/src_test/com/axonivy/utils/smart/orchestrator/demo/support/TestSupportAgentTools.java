@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
@@ -15,12 +14,10 @@ import AgentDemo.SupportAgentToolsData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.test.resource.ResourceResponse;
+import ch.ivyteam.test.RestResourceTest;
 
-@IvyProcessTest(enableWebServer = true)
-@ExtendWith(ResourceResponse.class)
+@RestResourceTest
 class TestSupportAgentTools {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("SupportAgentTools");

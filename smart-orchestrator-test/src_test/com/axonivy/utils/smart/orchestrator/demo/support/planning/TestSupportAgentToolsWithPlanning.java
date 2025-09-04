@@ -6,7 +6,6 @@ import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
@@ -18,13 +17,11 @@ import AgentDemo.SupportAgentToolsWithPlanningData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
+import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.resource.ResourceResponder;
-import ch.ivyteam.test.resource.ResourceResponse;
 
-@IvyProcessTest(enableWebServer = true)
-@ExtendWith(ResourceResponse.class)
+@RestResourceTest
 public class TestSupportAgentToolsWithPlanning {
 
   private static final BpmElement AGENT_TOOLS = BpmProcess.name("SupportAgentToolsWithPlanning")

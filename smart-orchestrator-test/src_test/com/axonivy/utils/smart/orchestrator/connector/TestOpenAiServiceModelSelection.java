@@ -8,7 +8,6 @@ import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -19,16 +18,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
+import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import ch.ivyteam.test.resource.ResourceResponder;
-import ch.ivyteam.test.resource.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 
-@IvyProcessTest(enableWebServer = true)
-@ExtendWith(ResourceResponse.class)
+@RestResourceTest
 class TestOpenAiServiceModelSelection {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");

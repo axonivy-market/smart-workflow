@@ -7,7 +7,6 @@ import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -15,14 +14,12 @@ import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
 
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.ivy.environment.IvyTest;
+import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import ch.ivyteam.test.resource.ResourceResponder;
-import ch.ivyteam.test.resource.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
-@IvyTest(enableWebServer = true)
-@ExtendWith(ResourceResponse.class)
+@RestResourceTest
 class TestOpenAiServiceConnector {
 
   @RegisterExtension

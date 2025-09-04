@@ -18,8 +18,8 @@ import com.axonivy.utils.smart.orchestrator.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolExecutor;
 import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolSpecs;
 
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
+import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
@@ -30,7 +30,7 @@ import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.service.AiServices;
 
-@IvyProcessTest(enableWebServer = true)
+@RestResourceTest
 class TestIvySubProcessToolsProvider {
 
   @RegisterExtension
@@ -49,7 +49,7 @@ class TestIvySubProcessToolsProvider {
     UserMessage init = UserMessage.from("Who am I?");
 
     List<ToolSpecification> ivyTools = IvySubProcessToolSpecs.find().stream()
-        .filter(spec -> spec.name().equals("whoami")).toList();
+        .filter(spec -> "whoami".equals(spec.name())).toList();
     ChatRequest request = ChatRequest.builder()
         .messages(init)
         .toolSpecifications(ivyTools)
