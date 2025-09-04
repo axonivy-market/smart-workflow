@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
@@ -20,16 +20,15 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.test.log.ResourceResponse;
+import ch.ivyteam.test.resource.ResourceResponder;
+import ch.ivyteam.test.resource.ResourceResponse;
 
 @IvyProcessTest(enableWebServer = true)
+@ExtendWith(ResourceResponse.class)
 public class TestSupportAgentToolsWithPlanning {
 
   private static final BpmElement AGENT_TOOLS = BpmProcess.name("SupportAgentToolsWithPlanning")
       .elementName("startPlanning");
-
-  @RegisterExtension
-  ResourceResponse responder = new ResourceResponse();
 
   @Test
   void agentTicketCreation(BpmClient client) {
@@ -40,13 +39,13 @@ public class TestSupportAgentToolsWithPlanning {
   }
 
   @BeforeEach
-  void setup(AppFixture fixture) {
+  void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(this::toolTest);
+    MockOpenAI.defineChat(r -> toolTest(r, responder));
   }
 
-  private Response toolTest(JsonNode request) {
+  private Response toolTest(JsonNode request, ResourceResponder responder) {
     var messages = (ArrayNode) request.get("messages");
     if (messages.size() >= 1) {
       var current = messages.get(messages.size() - 1);

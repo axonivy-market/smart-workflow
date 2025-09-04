@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
@@ -17,21 +17,19 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.test.log.ResourceResponse;
+import ch.ivyteam.test.resource.ResourceResponse;
 
 @IvyProcessTest(enableWebServer = true)
+@ExtendWith(ResourceResponse.class)
 class TestSupportAgentTools {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("SupportAgentTools");
-
-  @RegisterExtension
-  ResourceResponse responder = new ResourceResponse();
 
   @BeforeEach
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(new SupportToolChat(responder)::toolTest);
+    MockOpenAI.defineChat(new SupportToolChat()::toolTest);
   }
 
   @Test

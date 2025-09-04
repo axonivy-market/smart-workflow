@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -21,10 +22,12 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.log.LoggerAccess;
-import ch.ivyteam.test.log.ResourceResponse;
+import ch.ivyteam.test.resource.ResourceResponder;
+import ch.ivyteam.test.resource.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest(enableWebServer = true)
+@ExtendWith(ResourceResponse.class)
 class TestAgenticProcessCallElementOutput {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
@@ -32,29 +35,15 @@ class TestAgenticProcessCallElementOutput {
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
-  @RegisterExtension
-  ResourceResponse response = new ResourceResponse();
-
   @BeforeEach
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("output"));
     fixture.var(OpenAiConf.API_KEY, "");
   }
 
-  private Response structure(JsonNode request) {
-    var messages = (ArrayNode) request.get("messages");
-    if (messages.size() == 1) { // tool response
-      return response.send("response1.json");
-    }
-    if (messages.size() == 3) { // final response
-      return response.send("response2.json");
-    }
-    return Response.serverError().build();
-  }
-
   @Test
-  void structuredOutput(BpmClient client) {
-    MockOpenAI.defineChat(this::structure);
+  void structuredOutput(BpmClient client, ResourceResponder responder) {
+    MockOpenAI.defineChat(request -> structure(request, responder));
 
     var res = client.start().process(AGENT_TOOLS.elementName("structuredOutput")).execute();
     TestToolUserData data = res.data().last();
@@ -64,9 +53,20 @@ class TestAgenticProcessCallElementOutput {
         .isEqualTo("Bond");
   }
 
+  private Response structure(JsonNode request, ResourceResponder responder) {
+    var messages = (ArrayNode) request.get("messages");
+    if (messages.size() == 1) { // tool response
+      return responder.send("response1.json");
+    }
+    if (messages.size() == 3) { // final response
+      return responder.send("response2.json");
+    }
+    return Response.serverError().build();
+  }
+
   @Test
-  void structuredOutputList(BpmClient client) {
-    MockOpenAI.defineChat(request -> response.send("storyResponse.json"));
+  void structuredOutputList(BpmClient client, ResourceResponder responder) {
+    MockOpenAI.defineChat(request -> responder.send("storyResponse.json"));
 
     var res = client.start().process(AGENT_TOOLS.elementName("structuredOutputList")).execute();
     TestToolUserData data = res.data().last();

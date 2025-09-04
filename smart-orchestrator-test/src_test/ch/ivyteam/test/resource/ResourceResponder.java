@@ -1,20 +1,16 @@
-package ch.ivyteam.test.log;
+package ch.ivyteam.test.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.ws.rs.core.Response;
 
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+public class ResourceResponder {
 
-public class ResourceResponse implements BeforeEachCallback {
+  private final Class<?> testClass;
 
-  private Class<?> testClass;
-
-  @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
-    this.testClass = context.getRequiredTestClass();
+  public ResourceResponder(Class<?> testClass) {
+    this.testClass = testClass;
   }
 
   public Response send(String resource) {

@@ -7,38 +7,36 @@ import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import ch.ivyteam.test.log.LoggerAccess;
-import ch.ivyteam.test.log.ResourceResponse;
+import ch.ivyteam.test.resource.ResourceResponder;
+import ch.ivyteam.test.resource.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyTest(enableWebServer = true)
+@ExtendWith(ResourceResponse.class)
 class TestOpenAiServiceConnector {
 
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
-  @RegisterExtension
-  ResourceResponse responder = new ResourceResponse();
 
   @BeforeEach
-  void setup(AppFixture fixture) {
+  void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("chat"));
-    MockOpenAI.defineChat(this::chat);
-  }
-
-  private Response chat(JsonNode request) {
-    if (request.toPrettyString().contains("ready?")) {
-      return responder.send("completions-response.json");
-    }
-    return Response.serverError().build();
+    MockOpenAI.defineChat(request -> {
+      if (request.toPrettyString().contains("ready?")) {
+        return responder.send("completions-response.json");
+      }
+      return Response.serverError().build();
+    });
   }
 
   @Test

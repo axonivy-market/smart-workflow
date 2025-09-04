@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -21,28 +22,28 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.log.LoggerAccess;
-import ch.ivyteam.test.log.ResourceResponse;
+import ch.ivyteam.test.resource.ResourceResponder;
+import ch.ivyteam.test.resource.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 
 @IvyProcessTest(enableWebServer = true)
+@ExtendWith(ResourceResponse.class)
 class TestOpenAiServiceModelSelection {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
 
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
-  @RegisterExtension
-  ResourceResponse responder = new ResourceResponse();
 
   @BeforeEach
-  void setup(AppFixture fixture) {
+  void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("modelName"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(this::modelInfo);
+    MockOpenAI.defineChat(request -> modelInfo(request, responder));
   }
 
-  private Response modelInfo(JsonNode request) {
+  private Response modelInfo(JsonNode request, ResourceResponder responder) {
     String modelName = request.get("model").asText();
     String expect = OpenAiChatModelName.GPT_3_5_TURBO_1106.toString();
     if (Objects.equals(modelName, expect)) {

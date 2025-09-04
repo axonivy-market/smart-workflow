@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -22,32 +23,32 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.log.LoggerAccess;
-import ch.ivyteam.test.log.ResourceResponse;
+import ch.ivyteam.test.resource.ResourceResponder;
+import ch.ivyteam.test.resource.ResourceResponse;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest(enableWebServer = true)
+@ExtendWith(ResourceResponse.class)
 class TestAgenticProcessCallElement {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
 
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
-  @RegisterExtension
-  ResourceResponse response = new ResourceResponse();
 
   @BeforeEach
-  void setup(AppFixture fixture) {
+  void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tools.filter"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(this::toolsFilter);
+    MockOpenAI.defineChat(request -> toolsFilter(request, responder));
   }
 
-  private Response toolsFilter(JsonNode request) {
+  private Response toolsFilter(JsonNode request, ResourceResponder responder) {
     var tools = (ArrayNode) request.get("tools");
     var toolNames = new ArrayList<String>();
     tools.forEach(tool -> toolNames.add(tool.get("function").get("name").asText()));
     if (toolNames.size() == 1 && "whoami".equals(toolNames.get(0))) {
-      return response.send("response.json");
+      return responder.send("response.json");
     }
     return Response.serverError().build();
   }
