@@ -7,6 +7,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>smart-http-client</module>
     <module>${project.name}</module>
     <module>${project.name}-demo</module>
     <module>${project.name}-test</module>
