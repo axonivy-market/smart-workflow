@@ -6,6 +6,5 @@ Let AI Agent elements drive your dynamic processes.
 
 ### Documentation
 
-- [dev-docs](docs/README.md) ✍️
 - [market-product](smart-orchestrator-product/README.md) 🛒️
 
