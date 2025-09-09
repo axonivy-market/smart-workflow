@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.orchestrator.client.SmartHttpClientBuilderFactory;
+
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -13,7 +15,7 @@ import dev.langchain4j.model.openai.OpenAiChatModelName;
 public class OpenAiServiceConnector {
 
   private static final int DEFAULT_TEMPERATURE = 0;
-  
+
   private static final String DEFAULT_MODEL = OpenAiChatModelName.GPT_4_1_MINI.toString();
 
   public interface OpenAiConf {
@@ -43,6 +45,7 @@ public class OpenAiServiceConnector {
 
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
     OpenAiChatModelBuilder builder = OpenAiChatModel.builder()
+        .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
         .logRequests(true)
         .logResponses(true)
         .modelName(modelName);
