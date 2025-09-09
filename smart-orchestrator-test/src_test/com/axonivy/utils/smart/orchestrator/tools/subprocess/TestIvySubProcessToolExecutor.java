@@ -15,18 +15,18 @@ import com.axonivy.utils.smart.orchestrator.tools.internal.IvySubProcessToolExec
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
+import ch.ivyteam.test.RestResourceTest;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 
-@IvyProcessTest(enableWebServer = true)
+@RestResourceTest
 class TestIvySubProcessToolExecutor {
 
   @BeforeEach
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(SupportToolChat::toolTest);
+    MockOpenAI.defineChat(new SupportToolChat()::toolTest);
   }
 
   @Test

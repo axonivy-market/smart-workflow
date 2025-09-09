@@ -14,10 +14,10 @@ import AgentDemo.SupportAgentToolsData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
+import ch.ivyteam.test.RestResourceTest;
 
-@IvyProcessTest(enableWebServer = true)
+@RestResourceTest
 class TestSupportAgentTools {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("SupportAgentTools");
@@ -26,7 +26,7 @@ class TestSupportAgentTools {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(SupportToolChat::toolTest);
+    MockOpenAI.defineChat(new SupportToolChat()::toolTest);
   }
 
   @Test
