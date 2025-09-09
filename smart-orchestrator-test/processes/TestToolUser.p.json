@@ -166,7 +166,7 @@
         "signature" : "modelName"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 256 }
+        "at" : { "x" : 504, "y" : 264 }
       },
       "connect" : [
         { "id" : "f21", "to" : "f22" }
@@ -186,7 +186,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 232, "y" : 256 },
+        "at" : { "x" : 640, "y" : 264 },
         "icon" : "res:/webContent/logo/agent.png"
       },
       "connect" : [
@@ -196,7 +196,62 @@
       "id" : "f24",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 344, "y" : 256 }
+        "at" : { "x" : 752, "y" : 264 }
       }
+    }, {
+      "id" : "f25",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.orchestrator.test.Story.class",
+          "resultMapping" : "in.story",
+          "query" : "One day Reto Weiss and Bruno Bütler had a gread idea."
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 264 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f26", "to" : "f27" }
+      ]
+    }, {
+      "id" : "f27",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 264 }
+      }
+    }, {
+      "id" : "f28",
+      "type" : "RequestStart",
+      "name" : "structuredOutputList",
+      "config" : {
+        "signature" : "structuredOutputList"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 264 }
+      },
+      "connect" : [
+        { "id" : "f29", "to" : "f25" }
+      ]
+    }, {
+      "id" : "f30",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "Only complex objects are supported. ",
+        "If you need a List of values, ",
+        "a wrapping 'composite' object around these values must be provided."
+      ],
+      "visual" : {
+        "at" : { "x" : 232, "y" : 352 },
+        "size" : { "width" : 254, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f31", "to" : "f25" }
+      ]
     } ]
 }

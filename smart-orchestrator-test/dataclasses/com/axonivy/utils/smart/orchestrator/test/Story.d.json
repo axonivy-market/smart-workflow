@@ -1,0 +1,12 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "Story",
+  "namespace" : "com.axonivy.utils.smart.orchestrator.test",
+  "fields" : [ {
+    "name" : "characters",
+    "type" : "List<com.axonivy.utils.smart.orchestrator.test.Person>"
+  }, {
+    "name" : "title",
+    "comment" : "Short and expressive"
+  } ]
+}
