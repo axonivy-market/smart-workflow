@@ -178,7 +178,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
         "userConfig" : {
-          "model" : "dev.langchain4j.model.openai.OpenAiChatModelName.GPT_3_5_TURBO_1106.toString()",
+          "model" : "\"gpt-5\"",
           "system" : "",
           "tools" : "[]",
           "resultMapping" : "in.result",
