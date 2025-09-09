@@ -44,9 +44,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
 
   interface ChatAgent extends DynamicAgent<String> {
     @Override
-    default String chat(String query) {
-      return null;
-    }
+    String chat(String query);
   }
 
   @SuppressWarnings({"unchecked"})
