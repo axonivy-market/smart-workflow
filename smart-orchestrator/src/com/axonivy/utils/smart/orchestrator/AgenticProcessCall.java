@@ -44,9 +44,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
 
   interface ChatAgent extends DynamicAgent<String> {
     @Override
-    default String chat(String query) {
-      return null;
-    }
+    String chat(String query);
   }
 
   @SuppressWarnings({"unchecked"})
@@ -142,7 +140,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
           .add(ui.label("Expect result of type:").create())
           .add(ui.scriptField(Conf.OUTPUT).requireType(Class.class).create())
           .add(ui.label("Map result to:").create())
-          .add(ui.scriptField(Conf.MAP_TO).create())
+          .add(ui.scriptField(Conf.MAP_TO).requireType(Object.class).create())
           .create();
     }
 

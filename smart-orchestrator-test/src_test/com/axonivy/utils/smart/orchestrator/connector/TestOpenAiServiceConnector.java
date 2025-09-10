@@ -12,32 +12,28 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.orchestrator.client.OpenAiTestClient;
 import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector.OpenAiConf;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.ivy.environment.IvyTest;
+import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
+import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
-@IvyTest(enableWebServer = true)
+@RestResourceTest
 class TestOpenAiServiceConnector {
 
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
   @BeforeEach
-  void setup(AppFixture fixture) {
+  void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("chat"));
-    MockOpenAI.defineChat(this::chat);
-  }
-
-  private Response chat(JsonNode request) {
-    if (request.toPrettyString().contains("ready?")) {
-      return Response.ok()
-          .entity(TestOpenAiServiceConnector.class.getResourceAsStream("completions-response.json"))
-          .build();
-    }
-    return Response.serverError().build();
+    MockOpenAI.defineChat(request -> {
+      if (request.toPrettyString().contains("ready?")) {
+        return responder.send("completions-response.json");
+      }
+      return Response.serverError().build();
+    });
   }
 
   @Test

@@ -18,13 +18,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
+import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
+import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 
-@IvyProcessTest(enableWebServer = true)
+@RestResourceTest
 class TestOpenAiServiceModelSelection {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
@@ -33,19 +34,17 @@ class TestOpenAiServiceModelSelection {
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
   @BeforeEach
-  void setup(AppFixture fixture) {
+  void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("modelName"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(this::modelInfo);
+    MockOpenAI.defineChat(request -> modelInfo(request, responder));
   }
 
-  private Response modelInfo(JsonNode request) {
+  private Response modelInfo(JsonNode request, ResourceResponder responder) {
     String modelName = request.get("model").asText();
     String expect = OpenAiChatModelName.GPT_3_5_TURBO_1106.toString();
     if (Objects.equals(modelName, expect)) {
-      return Response.ok()
-          .entity(TestOpenAiServiceModelSelection.class.getResourceAsStream("completions-response.json"))
-          .build();
+      return responder.send("completions-response.json");
     }
     return Response.serverError()
         .entity("this is not the selected model from the AgentCall ui: expected " + expect + " but was " + modelName)
