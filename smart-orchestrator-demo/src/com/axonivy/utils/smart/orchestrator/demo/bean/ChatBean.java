@@ -81,9 +81,25 @@ public class ChatBean {
     chatHistory.add(new ChatMessage("user", userMessage));
     botTyping = true;
 
-    try {
+//    try {
+//      Map<String, Object> params = new HashMap<>();
+//      Ivy.log().error("send messgae is: " + getAllUserMessage());
+//      params.put("question", getAllUserMessage());
+//      params.put("username", Ivy.session().getSessionUserName());
+//      Map<String, Object> result = IvyAdapterService.startSubProcessInSecurityContext("askAI(String,String)", params);
+//      String response = result.get("aiResponse") != null ? result.get("aiResponse").toString() : "I don't get your question";
+//      chatHistory.add(new ChatMessage("bot", response));
+//    } catch (Exception e) {
+//      chatHistory.add(new ChatMessage("bot", "Error: " + e.getMessage()));
+//    }
+    botTyping = false;
+    userMessage = "";
+  }
+  
+  public void getAnswer() {
+      try {
       Map<String, Object> params = new HashMap<>();
-      Ivy.log().error("send messgae is: " + getAllUserMessage());
+      Ivy.log().error("send message is: " + getAllUserMessage());
       params.put("question", getAllUserMessage());
       params.put("username", Ivy.session().getSessionUserName());
       Map<String, Object> result = IvyAdapterService.startSubProcessInSecurityContext("askAI(String,String)", params);
@@ -92,8 +108,6 @@ public class ChatBean {
     } catch (Exception e) {
       chatHistory.add(new ChatMessage("bot", "Error: " + e.getMessage()));
     }
-    botTyping = false;
-    userMessage = "";
   }
   
   private String getAllUserMessage() {

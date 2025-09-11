@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.orchestrator.demo.dto;
 
+import java.util.Date;
+
 import com.axonivy.utils.smart.orchestrator.demo.enums.AxonIvyTicketType;
 import com.axonivy.utils.smart.orchestrator.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,8 +11,9 @@ import dev.langchain4j.model.output.structured.Description;
 public class AxonIvySupportTicket {
 
   
+  @Description("Id of support ticket, it's auto-generated")
   private String id;
-  @Description("Type of the support ticket. It's an enum field")
+  @Description("Type of the support ticket. It's an enum field. Example Ivy, Portal, Market")
   private AxonIvyTicketType type;
   @Description("Title of the support ticket. Must be start with prefix 'Axon Ivy Support: '")
   private String title;
@@ -35,6 +38,7 @@ public class AxonIvySupportTicket {
 
   public AxonIvySupportTicket() {
     setId(IdGenerationUtils.generateRandomId());
+    setRequestedDate((new Date()).toString());
   }
 
   public String getId() {

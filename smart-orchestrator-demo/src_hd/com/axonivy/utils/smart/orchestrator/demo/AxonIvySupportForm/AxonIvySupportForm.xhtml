@@ -68,9 +68,10 @@
                 placeholder="Type your question..."
                 onkeypress="if(event.keyCode==13){PF('sendBtn').jq.click();return false;}" />
               <p:commandButton id="sendBtn" value="Send" icon="pi pi-send" action="#{chatBean.sendMessage}"
-                update="chatArea userInput" process="@form" disabled="#{chatBean.botTyping}" />
+                update="chatArea userInput" process="@form" disabled="#{chatBean.botTyping}" oncomplete="getAnswer()"/>
             </h:panelGrid>
           </p:panel>
+          <p:remoteCommand name="getAnswer" actionListener="#{chatBean.getAnswer}" update="chatArea userInput"></p:remoteCommand>
         </h:form>
       </div>
       <style>

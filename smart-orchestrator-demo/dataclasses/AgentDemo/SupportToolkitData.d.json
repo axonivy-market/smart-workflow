@@ -4,26 +4,35 @@
   "namespace" : "AgentDemo",
   "fields" : [ {
     "name" : "supportTicket",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket"
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket",
+    "modifiers" : [ ]
   }, {
     "name" : "taskInfo",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo"
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo",
+    "modifiers" : [ ]
   }, {
-    "name" : "query"
+    "name" : "query",
+    "modifiers" : [ ]
   }, {
     "name" : "customInstructions",
-    "type" : "List<String>"
+    "type" : "List<String>",
+    "modifiers" : [ ]
   }, {
-    "name" : "ticketDescription"
+    "name" : "ticketDescription",
+    "modifiers" : [ ]
   }, {
-    "name" : "createTaskMessage"
+    "name" : "respnoseMessage",
+    "modifiers" : [ ]
   }, {
     "name" : "result",
-    "type" : "AgentDemo.AxonIvySupportResponse"
+    "type" : "AgentDemo.AxonIvySupportResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "isTaskAlreadyCreated",
-    "type" : "Boolean"
+    "type" : "Boolean",
+    "modifiers" : [ ]
   }, {
-    "name" : "taskDetailLink"
+    "name" : "taskDetailLink",
+    "modifiers" : [ ]
   } ]
 }

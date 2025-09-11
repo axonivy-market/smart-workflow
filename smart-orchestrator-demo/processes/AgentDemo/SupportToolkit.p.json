@@ -24,7 +24,7 @@
             { "name" : "responseMessage", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "result.responseMessage" : "in.createTaskMessage"
+            "result.responseMessage" : "in.respnoseMessage"
           }
         }
       },
@@ -239,10 +239,6 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.orchestrator.demo.agent.TaskInfoAgent;",
-            "",
-            "",
-            "in.customInstructions.add(\"Only focus on adding custom fields\");",
-            "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");",
             "in.customInstructions.add(\"Return task detail url\");",
             "",
             "in.taskInfo = TaskInfoAgent.createTaskInfo(in.ticketDescription, in.customInstructions);",
@@ -326,7 +322,7 @@
           "code" : [
             "import com.axonivy.utils.smart.orchestrator.demo.agent.AxonIvySupportTicketAgent;",
             "",
-            "in.customInstructions.add(\"Add custom field: 'ticketId', value is the support ticket id\");",
+            "in.customInstructions.add(\"Find Ivy version or Portal version\");",
             "",
             "in.supportTicket = AxonIvySupportTicketAgent.createSupportTicketWithoutApprovalInfo(in.ticketDescription, in.customInstructions);"
           ]
@@ -344,7 +340,7 @@
       "name" : "Create response messgage",
       "config" : {
         "output" : {
-          "code" : "in.createTaskMessage = \"Task for support ticket is created!\";"
+          "code" : "in.respnoseMessage = \"Task for support ticket is created!\";"
         }
       },
       "visual" : {
@@ -360,12 +356,13 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
         "userConfig" : {
-          "system" : "\"You are support agent. You should: classify problem, create a task to handle it, return the task detail link, then summarize problem, check for version\"",
+          "system" : "\"Check for missing information like version, classify problem: Portal or Core or Market product, check create a task to handle it, return the task detail link, then summarize problem, reply to question\"",
           "tools" : "[\"createTask\",\"classifyProblem\"]",
-          "resultType" : "AgentDemo.AgentResponse.class",
+          "resultType" : "AgentDemo.AxonIvySupportResponse.class",
           "resultMapping" : "in.result",
-          "query" : "in.ticketDescription"
-        }
+          "query" : "<%=in.ticketDescription%>"
+        },
+        "exceptionHandler" : "f82"
       },
       "visual" : {
         "at" : { "x" : 1056, "y" : 432 },
@@ -432,14 +429,14 @@
       "name" : "Create response message",
       "config" : {
         "output" : {
-          "code" : "in.createTaskMessage = \"No need to create task. Issue already reported: \" + in.taskDetailLink;"
+          "code" : "in.respnoseMessage = \"No need to create task. Issue already reported: \" + in.taskDetailLink;"
         }
       },
       "visual" : {
         "at" : { "x" : 1568, "y" : 184 }
       },
       "connect" : [
-        { "id" : "f71", "to" : "f1", "via" : [ { "x" : 1736, "y" : 184 } ] }
+        { "id" : "f71", "to" : "f1" }
       ]
     }, {
       "id" : "f72",
@@ -491,7 +488,7 @@
       "name" : "missing version",
       "config" : {
         "output" : {
-          "code" : "in.createTaskMessage = \"Please provide your product version\";"
+          "code" : "in.respnoseMessage = \"Do not create task. Please provide your product version\";"
         }
       },
       "visual" : {
@@ -500,5 +497,30 @@
       "connect" : [
         { "id" : "f80", "to" : "f1", "via" : [ { "x" : 1736, "y" : 280 } ] }
       ]
+    }, {
+      "id" : "f82",
+      "type" : "ErrorStartEvent",
+      "name" : "ivy:error:program:exception",
+      "config" : {
+        "errorCode" : "ivy:error:program:exception",
+        "output" : {
+          "code" : [
+            "ivy.log.error(exception);",
+            "error.printStackTrace();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 784, "y" : 560 }
+      },
+      "connect" : [
+        { "id" : "f85", "to" : "f83" }
+      ]
+    }, {
+      "id" : "f83",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1344, "y" : 560 }
+      }
     } ]
 }
