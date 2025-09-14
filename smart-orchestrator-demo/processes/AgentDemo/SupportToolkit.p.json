@@ -292,7 +292,7 @@
         "at" : { "x" : 248, "y" : 64 }
       },
       "connect" : [
-        { "id" : "f36", "to" : "f34" }
+        { "id" : "f86", "to" : "f34" }
       ]
     }, {
       "id" : "f49",
@@ -329,7 +329,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 552, "y" : 64 }
+        "at" : { "x" : 592, "y" : 64 }
       },
       "connect" : [
         { "id" : "f81", "to" : "f76" }
@@ -356,7 +356,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
         "userConfig" : {
-          "system" : "\"Check for missing information like version, classify problem: Portal or Core or Market product, check create a task to handle it, return the task detail link, then summarize problem, reply to question\"",
+          "system" : "Check for missing information like version, classify problem: Portal or Core or Market product, check create a task to handle it, return the task detail link, then summarize problem, reply to question",
           "tools" : "[\"createTask\",\"classifyProblem\"]",
           "resultType" : "AgentDemo.AxonIvySupportResponse.class",
           "resultMapping" : "in.result",

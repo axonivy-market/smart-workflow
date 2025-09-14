@@ -51,15 +51,6 @@ public class ChatBean {
 
   private String userMessage;
   private List<ChatMessage> chatHistory = new ArrayList<>();
-  private boolean botTyping = false;
-
-  public boolean isBotTyping() {
-    return botTyping;
-  }
-
-  public void setBotTyping(boolean botTyping) {
-    this.botTyping = botTyping;
-  }
 
   public String getUserMessage() {
     return userMessage;
@@ -79,25 +70,11 @@ public class ChatBean {
     }
 
     chatHistory.add(new ChatMessage("user", userMessage));
-    botTyping = true;
-
-//    try {
-//      Map<String, Object> params = new HashMap<>();
-//      Ivy.log().error("send messgae is: " + getAllUserMessage());
-//      params.put("question", getAllUserMessage());
-//      params.put("username", Ivy.session().getSessionUserName());
-//      Map<String, Object> result = IvyAdapterService.startSubProcessInSecurityContext("askAI(String,String)", params);
-//      String response = result.get("aiResponse") != null ? result.get("aiResponse").toString() : "I don't get your question";
-//      chatHistory.add(new ChatMessage("bot", response));
-//    } catch (Exception e) {
-//      chatHistory.add(new ChatMessage("bot", "Error: " + e.getMessage()));
-//    }
-    botTyping = false;
     userMessage = "";
   }
   
   public void getAnswer() {
-      try {
+    try {
       Map<String, Object> params = new HashMap<>();
       Ivy.log().error("send message is: " + getAllUserMessage());
       params.put("question", getAllUserMessage());

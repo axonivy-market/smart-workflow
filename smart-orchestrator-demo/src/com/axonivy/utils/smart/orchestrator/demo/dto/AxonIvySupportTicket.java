@@ -1,7 +1,5 @@
 package com.axonivy.utils.smart.orchestrator.demo.dto;
 
-import java.util.Date;
-
 import com.axonivy.utils.smart.orchestrator.demo.enums.AxonIvyTicketType;
 import com.axonivy.utils.smart.orchestrator.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,8 +19,6 @@ public class AxonIvySupportTicket {
   private String description;
   @Description("name of user who submits this ticket")
   private String reporter;
-  private AiApprovalDecision aiApproval;
-  private ApprovalHistory firstApproval;
   @Description("created date of the support ticket")
   private String requestedDate;
   @Description("version of the reported product. Example: ivy version, Portal version,...")
@@ -38,7 +34,6 @@ public class AxonIvySupportTicket {
 
   public AxonIvySupportTicket() {
     setId(IdGenerationUtils.generateRandomId());
-    setRequestedDate((new Date()).toString());
   }
 
   public String getId() {
@@ -71,22 +66,6 @@ public class AxonIvySupportTicket {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public AiApprovalDecision getAiApproval() {
-    return aiApproval;
-  }
-
-  public void setAiApproval(AiApprovalDecision aiApproval) {
-    this.aiApproval = aiApproval;
-  }
-
-  public ApprovalHistory getFirstApproval() {
-    return firstApproval;
-  }
-
-  public void setFirstApproval(ApprovalHistory firstApproval) {
-    this.firstApproval = firstApproval;
   }
 
   public String getRequestedDate() {

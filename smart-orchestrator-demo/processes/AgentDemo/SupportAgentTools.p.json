@@ -35,8 +35,9 @@
         "userConfig" : {
           "system" : "You are a Support Agent",
           "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket.class",
+          "tools" : "[\"sumarizeProblem\"]",
           "resultMapping" : "in.supportTicket",
-          "query" : "Help me, my computer is beeping, it started after opening AxonIvy Portal."
+          "query" : "I have error 404 in Cockpit\r\n"
         }
       },
       "visual" : {
