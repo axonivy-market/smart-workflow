@@ -12,7 +12,7 @@
             style="max-width: 80%; margin: 0 auto; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); background: #fafbfc;">
 
             <p:scrollPanel id="chatArea" mode="native"
-              style="height: 250px; overflow-y: auto; background: #f5f7fa; border-radius: 6px;">
+              style="height: 50vh; overflow-y: auto; background: #f5f7fa; border-radius: 6px;">
               <ui:repeat value="#{chatBean.chatHistory}" var="msg">
                 <p:outputPanel styleClass="msg-row #{msg.role eq 'user' ? 'user-row' : 'bot-row'}">
                   <div class="msg-bubble #{msg.role eq 'user' ? 'user-bubble' : 'bot-bubble'}">
