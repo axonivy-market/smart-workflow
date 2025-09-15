@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy.market</groupId><!-- your group id: e.g. com.axonivy.connector.<myconnector> or com.axonivy.utils.<myutil> -->
   <artifactId>smart-orchestrator-product</artifactId><!-- fill your product name + a "-product" postfix e.g. my-connector-product -->
-  <version>13.2.0-a4-SNAPSHOT</version>
+  <version>13.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
