@@ -8,5 +8,5 @@ Variables:
       # The default model, if not explicitly specified on the calling Agent.
       #
       # See dev.langchain4j.model.openai.OpenAiChatModelName for the list of all supported models
-      # [enum: gpt-4o, gpt-4.1, gpt-4.1-mini, gpt-4.1-nano]
+      # [enum: gpt-4o, gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, gpt-5]
       Model: ""

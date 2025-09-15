@@ -2,8 +2,6 @@ package com.axonivy.utils.smart.orchestrator.connector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Objects;
-
 import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -42,8 +40,8 @@ class TestOpenAiServiceModelSelection {
 
   private Response modelInfo(JsonNode request, ResourceResponder responder) {
     String modelName = request.get("model").asText();
-    String expect = OpenAiChatModelName.GPT_3_5_TURBO_1106.toString();
-    if (Objects.equals(modelName, expect)) {
+    String expect = "gpt-5";
+    if (modelName.startsWith(expect)) {
       return responder.send("completions-response.json");
     }
     return Response.serverError()
