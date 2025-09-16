@@ -1,7 +1,7 @@
 {
   "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
-  "simpleName" : "SupportToolkitData",
-  "namespace" : "AgentDemo",
+  "simpleName" : "CreateSupportTaskToolData",
+  "namespace" : "Business.AxonIvySupportDemo.Tools",
   "fields" : [ {
     "name" : "supportTicket",
     "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket",
@@ -18,14 +18,7 @@
     "type" : "List<String>",
     "modifiers" : [ ]
   }, {
-    "name" : "ticketDescription",
-    "modifiers" : [ ]
-  }, {
-    "name" : "respnoseMessage",
-    "modifiers" : [ ]
-  }, {
-    "name" : "result",
-    "type" : "AgentDemo.AxonIvySupportResponse",
+    "name" : "responseMessage",
     "modifiers" : [ ]
   }, {
     "name" : "isTaskAlreadyCreated",
@@ -34,5 +27,7 @@
   }, {
     "name" : "taskDetailLink",
     "modifiers" : [ ]
+  }, {
+    "name" : "ticketDescription"
   } ]
 }

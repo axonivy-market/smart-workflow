@@ -1,0 +1,92 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "19951D2A916A9CD0",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Business.AxonIvySupportDemo.Agents.AxonIvySupportAgentData"
+  },
+  "elements" : [ {
+      "id" : "f3",
+      "type" : "CallSubStart",
+      "name" : "askAxonIvySupport(String,String)",
+      "config" : {
+        "signature" : "askAxonIvySupport",
+        "input" : {
+          "params" : [
+            { "name" : "question", "type" : "String", "desc" : "" },
+            { "name" : "username", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.ticketDescription" : "param.question + \". Reporter is: \" + param.username"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "aiResponse", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.aiResponse" : "in.result.aiResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 104, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Classify problem then create a task if neccessary.\r\nCheck for missing information like version, classify problem: Portal or Core or Market product, check create a task to handle it, return the task detail link, then summarize problem, reply to question",
+          "tools" : "[\"createAxonIvySupportTask\"]",
+          "resultType" : "Business.AxonIvySupportDemo.AxonIvySupportResponse.class",
+          "resultMapping" : "in.result",
+          "query" : "<%=in.ticketDescription%>"
+        },
+        "exceptionHandler" : "f8"
+      },
+      "visual" : {
+        "at" : { "x" : 328, "y" : 208 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 552, "y" : 208 }
+      }
+    }, {
+      "id" : "f8",
+      "type" : "ErrorStartEvent",
+      "name" : "ivy:error:program:exception",
+      "config" : {
+        "errorCode" : "ivy:error:program:exception",
+        "output" : {
+          "code" : [
+            "ivy.log.error(exception);",
+            "error.printStackTrace();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 104, "y" : 304 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f10" }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 552, "y" : 304 }
+      }
+    } ]
+}

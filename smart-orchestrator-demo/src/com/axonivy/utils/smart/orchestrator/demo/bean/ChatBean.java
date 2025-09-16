@@ -79,7 +79,7 @@ public class ChatBean {
       Ivy.log().error("send message is: " + getAllUserMessage());
       params.put("question", getAllUserMessage());
       params.put("username", Ivy.session().getSessionUserName());
-      Map<String, Object> result = IvyAdapterService.startSubProcessInSecurityContext("askAI(String,String)", params);
+      Map<String, Object> result = IvyAdapterService.startSubProcessInSecurityContext("askAxonIvySupport(String,String)", params);
       String response = result.get("aiResponse") != null ? result.get("aiResponse").toString() : "I don't get your question";
       chatHistory.add(new ChatMessage("bot", response));
     } catch (Exception e) {
