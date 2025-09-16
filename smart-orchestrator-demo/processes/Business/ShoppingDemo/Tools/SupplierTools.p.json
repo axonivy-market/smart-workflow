@@ -1,0 +1,137 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1994B9CB483D8DE3",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Business.ShoppingDemo.Tools.SupplierToolsData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "findSupplier(SupplierSearchCriteria)",
+      "config" : {
+        "signature" : "findSupplier",
+        "input" : {
+          "params" : [
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierSearchCriteria", "desc" : "Search criteria to find supplier" }
+          ],
+          "map" : {
+            "out.searchCriteria" : "param.searchCriteria"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.result" : "in.result"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "description" : "Use this tool to find a supplier matched provided information"
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 392, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Find exact supplier",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "",
+            "import org.apache.commons.collections4.CollectionUtils;",
+            "",
+            "in.result.supplier  = SupplierRepository.getInstance().findExactSupplier(in.searchCriteria);",
+            "in.result.isSupplierExisting = in.result.supplier != null;",
+            "in.result.feedback = in.result.isSupplierExisting ? \"Supplier is found\" : \"Supplier not found\";",
+            "in.result.supplierSearchCriteria = in.searchCriteria;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "CallSubStart",
+      "name" : "createSupplier(Supplier)",
+      "config" : {
+        "signature" : "createSupplier",
+        "input" : {
+          "params" : [
+            { "name" : "supplier", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.Supplier", "desc" : "" }
+          ],
+          "map" : {
+            "out.supplier" : "param.supplier"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.result" : "in.result"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 184 },
+        "description" : "Use this tool to find a supplier matched provided information"
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Create supplier",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "",
+            "in.supplier = SupplierRepository.getInstance().create(in.supplier);",
+            "",
+            "if (in.supplier == null) {",
+            "  in.result.feedback = \"Error when create supplier\";",
+            "} else {",
+            "  in.result.feedback = \"Supplier is created successfully\";",
+            "  in.result.supplier = in.supplier;",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 184 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 392, "y" : 184 }
+      }
+    } ]
+}

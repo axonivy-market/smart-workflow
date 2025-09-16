@@ -1,0 +1,159 @@
+/* ========================================
+   PRODUCT DETAILS STYLES
+   ======================================== */
+
+/* ========================================
+   PRODUCT INFORMATION DISPLAY
+   ======================================== */
+
+/* Product rating and review styles */
+.rating-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Product price section */
+.product-price-section {
+  margin: 1rem 0;
+}
+
+/* ========================================
+   TABVIEW CUSTOMIZATIONS
+   ======================================== */
+
+/* Custom tabview styling for product details */
+.product-details-tabview {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--bg-border);
+}
+
+/* Tab content styling */
+.product-details-tabview .ui-tabs-panel {
+  padding: 1.5rem;
+}
+
+/* ========================================
+   PRODUCT IMAGE STYLING
+   ======================================== */
+
+.product-image-display {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid var(--bg-border);
+  transition: var(--transition-smooth);
+}
+
+.product-image-display:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-heavy);
+}
+
+/* Brand logo styling */
+.brand-logo {
+  max-width: 5rem;
+  max-height: 5rem;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--bg-border);
+}
+
+/* ========================================
+   PRODUCT INFORMATION SECTIONS
+   ======================================== */
+
+.product-section-header {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-color);
+  font-weight: 600;
+}
+
+.product-field-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.product-field-value {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* ========================================
+   ADDITIONAL INFORMATION TABLE
+   ======================================== */
+
+.additional-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.additional-info-table th,
+.additional-info-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--bg-border);
+}
+
+.additional-info-table th {
+  background-color: var(--bg-light);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.additional-info-table td {
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   NO DATA STATES
+   ======================================== */
+
+.no-additional-info {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+.no-additional-info i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   RESPONSIVE STYLES
+   ======================================== */
+
+@media (max-width: 768px) {
+  .product-details-tabview .ui-tabs-panel {
+    padding: 1rem;
+  }
+  
+  .product-image-display {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .brand-logo {
+    max-width: 4rem;
+    max-height: 4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-section-header {
+    font-size: 1rem;
+  }
+  
+  .additional-info-table th,
+  .additional-info-table td {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+}

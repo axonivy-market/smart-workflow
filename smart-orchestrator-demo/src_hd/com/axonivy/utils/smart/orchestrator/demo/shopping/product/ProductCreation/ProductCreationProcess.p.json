@@ -1,0 +1,490 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1994B47EF9815D17",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductCreation.ProductCreationData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "map" : {
+            "out.isShowUploadSection" : "true"
+          }
+        },
+        "guid" : "1994B7A6FDA947EB"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 640, "y" : 272 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "1994B7A6FDA74B33"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 368 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 640, "y" : 368 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "dryRun",
+      "config" : {
+        "signature" : "dryRun",
+        "input" : {
+          "map" : {
+            "out.isShowUploadSection" : "false"
+          }
+        },
+        "guid" : "1994B7A6FDAAC566"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 496 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 496 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "SubProcessCall",
+      "name" : "AI: Dry run product",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentAction)",
+        "call" : {
+          "map" : {
+            "param.productInfo" : "in.productInfo",
+            "param.action" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentAction.DRY_RUN"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.response" : "result.response"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 680, "y" : 496 }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f57" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1152, "y" : 360 }
+      }
+    }, {
+      "id" : "f12",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "handleUpload(FileUploadEvent)",
+      "config" : {
+        "signature" : "handleUpload",
+        "input" : {
+          "params" : [
+            { "name" : "event", "type" : "org.primefaces.event.FileUploadEvent", "desc" : "" }
+          ],
+          "map" : {
+            "out.uploadEvent" : "param.event"
+          }
+        },
+        "guid" : "1994B7A6FDA544E9"
+      },
+      "visual" : {
+        "at" : { "x" : 848, "y" : 360 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f14" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "Script",
+      "name" : "Extract product info",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.utils.UploadedFileUtils;",
+            "",
+            "in.productInfo = UploadedFileUtils.processUploadedFile(in.uploadEvent.getFile());"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1016, "y" : 360 }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f11", "color" : "default" }
+      ]
+    }, {
+      "id" : "f16",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "loadSimiliarSuppliers()",
+      "config" : {
+        "signature" : "loadSimiliarSuppliers",
+        "guid" : "1994B7A6FDAA2C10"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 624 }
+      },
+      "connect" : [
+        { "id" : "f59", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "loadSimiliarProductCategories()",
+      "config" : {
+        "signature" : "loadSimiliarProductCategories",
+        "guid" : "1994B7A6FDA9072F"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 744 }
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 624 }
+      }
+    }, {
+      "id" : "f21",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 744 }
+      }
+    }, {
+      "id" : "f22",
+      "type" : "Script",
+      "name" : "Find similiar suppliers",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "",
+            "//in.similiarSuppliers = SupplierRepository.getInstance().findByCriteria(in.supplierResponse.supplierSearchCriteria);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 624 }
+      },
+      "connect" : [
+        { "id" : "f23", "to" : "f20", "color" : "default" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "Script",
+      "name" : "Find similiar product categories",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
+            "",
+            "//in.similiarProductCategories = ProductCategoryRepository.getInstance().findByCriteria(in.categoryResponse.productCategorySearchCriteria);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 744 }
+      },
+      "connect" : [
+        { "id" : "f25", "to" : "f21", "color" : "default" }
+      ]
+    }, {
+      "id" : "f30",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "createProductCategory()",
+      "config" : {
+        "signature" : "createProductCategory",
+        "guid" : "1994B7A6FDA95DAB"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 992 }
+      },
+      "connect" : [
+        { "id" : "f31", "to" : "f34" }
+      ]
+    }, {
+      "id" : "f32",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "createSupplier()",
+      "config" : {
+        "signature" : "createSupplier",
+        "guid" : "1994B7A6FDB3A397"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 872 }
+      },
+      "connect" : [
+        { "id" : "f33", "to" : "f36" }
+      ]
+    }, {
+      "id" : "f34",
+      "type" : "Script",
+      "name" : "Persist product category",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
+            "",
+            "in.response.product.category = ProductCategoryRepository.getInstance().create(in.response.product.category);",
+            "in.response.isCategoryExisting = true;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 992 }
+      },
+      "connect" : [
+        { "id" : "f35", "to" : "f38" }
+      ]
+    }, {
+      "id" : "f36",
+      "type" : "Script",
+      "name" : "Persist supplier",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "",
+            "in.response.product.supplier = SupplierRepository.getInstance().create(in.response.product.supplier);",
+            "in.response.isSupplierExisting = true;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 872 }
+      },
+      "connect" : [
+        { "id" : "f37", "to" : "f39" }
+      ]
+    }, {
+      "id" : "f38",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 992 }
+      }
+    }, {
+      "id" : "f39",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 872 }
+      }
+    }, {
+      "id" : "f40",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "createBrand()",
+      "config" : {
+        "signature" : "createBrand",
+        "guid" : "1994B7A6FDB13F9A"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 1120 }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f42" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "Script",
+      "name" : "Persist brand",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.brand.BrandRepository;",
+            "",
+            "in.response.product.brand = BrandRepository.getInstance().create(in.response.product.brand);",
+            "in.response.isBrandExisting  = true;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 1120 }
+      },
+      "connect" : [
+        { "id" : "f43", "to" : "f44" }
+      ]
+    }, {
+      "id" : "f44",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 1120 }
+      }
+    }, {
+      "id" : "f45",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "createProduct()",
+      "config" : {
+        "signature" : "createProduct",
+        "guid" : "1994B7A6FDB14723"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 1240 }
+      },
+      "connect" : [
+        { "id" : "f46", "to" : "f55" }
+      ]
+    }, {
+      "id" : "f47",
+      "type" : "Script",
+      "name" : "Persist product",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductRepository;",
+            "",
+            "in.response.product = ProductRepository.getInstance().create(in.response.product);",
+            "in.isProductCreated  = true;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 1240 }
+      },
+      "connect" : [
+        { "id" : "f48", "to" : "f49" }
+      ]
+    }, {
+      "id" : "f49",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 1240 }
+      }
+    }, {
+      "id" : "f50",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "handleUploadImage(FileUploadEvent)",
+      "config" : {
+        "signature" : "handleUploadImage",
+        "input" : {
+          "params" : [
+            { "name" : "event", "type" : "org.primefaces.event.FileUploadEvent", "desc" : "" }
+          ],
+          "map" : {
+            "out.imageUploadEvent" : "param.event"
+          }
+        },
+        "guid" : "1994B7A6FDB3DBDC"
+      },
+      "visual" : {
+        "at" : { "x" : 848, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f51", "to" : "f53" }
+      ]
+    }, {
+      "id" : "f52",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1152, "y" : 272 }
+      }
+    }, {
+      "id" : "f53",
+      "type" : "Script",
+      "name" : "Convert image to Base64",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.utils.ImageUtils;",
+            "",
+            "in.imageBase64 = ImageUtils.inputStreamToBase64(in.imageUploadEvent.getFile().getInputStream(), in.imageUploadEvent.getFile().getFileName());"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1016, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f54", "to" : "f52", "color" : "default" }
+      ]
+    }, {
+      "id" : "f55",
+      "type" : "Script",
+      "name" : "Persist image",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.product.image.ProductImageRepository;",
+            "",
+            "in.response.product.imageId = ProductImageRepository.getInstance().create(in.response.product.image);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 680, "y" : 1240 }
+      },
+      "connect" : [
+        { "id" : "f56", "to" : "f47", "color" : "default" }
+      ]
+    }, {
+      "id" : "f57",
+      "type" : "Script",
+      "name" : "Post processing",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategory;",
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.Supplier;",
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.brand.Brand;",
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.utils.ImageUtils;",
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.product.image.ProductImage;",
+            "",
+            "if (in.response.product.category == null) {",
+            "  in.response.product.category = new ProductCategory();",
+            "}",
+            "",
+            "if (in.response.product.supplier == null) {",
+            "  in.response.product.supplier = new Supplier();",
+            "}",
+            "",
+            "if (in.response.product.brand == null) {",
+            "  in.response.product.brand = new Brand();",
+            "}",
+            "",
+            "in.response.product.image = new ProductImage();",
+            "in.response.product.image.content = ImageUtils.dataUrlToBase64(in.imageBase64);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 496 }
+      },
+      "connect" : [
+        { "id" : "f58", "to" : "f8", "color" : "default" }
+      ]
+    } ]
+}

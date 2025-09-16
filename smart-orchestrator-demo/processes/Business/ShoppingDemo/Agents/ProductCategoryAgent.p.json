@@ -1,0 +1,68 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1994C1D1CAB3E84D",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Business.ShoppingDemo.Agents.ProductCategoryAgentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "callProductCategoryAgent(ProductCategory,String)",
+      "config" : {
+        "signature" : "callProductCategoryAgent",
+        "input" : {
+          "params" : [
+            { "name" : "category", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategory", "desc" : "All information about supplier" },
+            { "name" : "instructions", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.category" : "param.category",
+            "out.instructions" : "param.instructions"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.response" : "in.response"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 344, "y" : 128 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "ProgramInterface",
+      "name" : "Product category Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1\"",
+          "system" : "You are an AI Agent in charge of create/update product operation for an invetory of a company.\r\nWith the given product category information, you need to perform these steps:\r\n\r\nInstructions:\r\n<%= in.instructions %>",
+          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse.class",
+          "tools" : "[\"findProductCategory\",\"createProductCategory\"]",
+          "resultMapping" : "in.response",
+          "query" : "This is supplier information\r\n---\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.category) %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 128 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f3", "to" : "f4", "color" : "default" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 728, "y" : 128 }
+      }
+    } ]
+}

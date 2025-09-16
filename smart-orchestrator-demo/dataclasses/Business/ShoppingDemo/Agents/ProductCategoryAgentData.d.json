@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "ProductCategoryAgentData",
+  "namespace" : "Business.ShoppingDemo.Agents",
+  "fields" : [ {
+    "name" : "category",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategory"
+  }, {
+    "name" : "instructions"
+  }, {
+    "name" : "response",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse"
+  } ]
+}

@@ -1,0 +1,40 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "ProductCreationData",
+  "namespace" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductCreation",
+  "fields" : [ {
+    "name" : "productInfo"
+  }, {
+    "name" : "product",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.Product"
+  }, {
+    "name" : "response",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentResponse"
+  }, {
+    "name" : "uploadEvent",
+    "type" : "org.primefaces.event.FileUploadEvent"
+  }, {
+    "name" : "similiarSuppliers",
+    "type" : "List<com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.Supplier>"
+  }, {
+    "name" : "similiarProductCategories",
+    "type" : "List<com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategory>"
+  }, {
+    "name" : "isSupplierCreated",
+    "type" : "Boolean"
+  }, {
+    "name" : "isCategoryCreated",
+    "type" : "Boolean"
+  }, {
+    "name" : "isProductCreated",
+    "type" : "Boolean"
+  }, {
+    "name" : "imageUploadEvent",
+    "type" : "org.primefaces.event.FileUploadEvent"
+  }, {
+    "name" : "imageBase64"
+  }, {
+    "name" : "isShowUploadSection",
+    "type" : "Boolean"
+  } ]
+}
