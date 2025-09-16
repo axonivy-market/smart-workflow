@@ -14,7 +14,13 @@
       <h:form id="form">
         <p:messages />
         <div class="field">
+          <h:outputText value="Created date: #{ivy.task.startTimestamp}"></h:outputText>
+        </div>
+        <div class="field">
           <h:outputText value="Version: #{data.supportTicket.version}"></h:outputText>
+        </div>
+        <div class="field">
+          <h:outputText value="OS system: #{data.supportTicket.systemOS}"></h:outputText>
         </div>
         <div class="field">
           <h:outputText value="Reporter: #{data.supportTicket.reporter}"></h:outputText>
@@ -25,6 +31,10 @@
         <div class="field">
           <p:outputLabel value="Description" />
           <p:inputTextarea value="#{data.supportTicket.description}" disabled="false" styleClass="w-full" />
+        </div>
+        <div class="field">
+          <p:outputLabel value="Stack trace" />
+          <p:inputTextarea value="#{data.supportTicket.stackTrace}" disabled="false" styleClass="w-full" />
         </div>
         
         <div class="field">

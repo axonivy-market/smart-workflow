@@ -19,14 +19,14 @@ public class AxonIvySupportTicket {
   private String description;
   @Description("name of user who submits this ticket")
   private String reporter;
-  @Description("created date of the support ticket")
-  private String requestedDate;
   @Description("version of the reported product. Example: ivy version, Portal version,...")
   private String version;
   @Description("system operating of the customer environment")
   private String systemOS;
   @Description("answer from AI")
   private String solution;
+  @Description("stack trace")
+  private String stackTrace;
 
 
   @JsonIgnore
@@ -68,14 +68,6 @@ public class AxonIvySupportTicket {
     this.description = description;
   }
 
-  public String getRequestedDate() {
-    return requestedDate;
-  }
-
-  public void setRequestedDate(String requestedDate) {
-    this.requestedDate = requestedDate;
-  }
-
   public String getVersion() {
     return version;
   }
@@ -114,6 +106,14 @@ public class AxonIvySupportTicket {
 
   public void setReporter(String reporter) {
     this.reporter = reporter;
+  }
+
+  public String getStackTrace() {
+    return stackTrace;
+  }
+
+  public void setStackTrace(String stackTrace) {
+    this.stackTrace = stackTrace;
   }
   
 }
