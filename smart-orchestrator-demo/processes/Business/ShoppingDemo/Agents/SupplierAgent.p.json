@@ -53,7 +53,7 @@
           "system" : "You are an AI Agent in charge of create/update product operation for an invetory of a company.\r\nWith the given supplier information, you need to perform these steps:\r\n\r\nInstructions:\r\n<%= in.instructions %>",
           "resultType" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse.class",
           "tools" : "[\"findSupplier\",\"createSupplier\"]",
-          "resultMapping" : "in.result",
+          "resultMapping" : "in.response",
           "query" : "This is supplier information\r\n---\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.supplier) %>"
         }
       },

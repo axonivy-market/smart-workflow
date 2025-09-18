@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.utils.smart.orchestrator.utils.IdGenerationUtils;
 
 import ch.ivyteam.ivy.business.data.store.search.Filter;
-import ch.ivyteam.ivy.business.data.store.search.Scored;
 import ch.ivyteam.ivy.environment.Ivy;
 
 public class ProductCategoryRepository {
@@ -105,25 +104,13 @@ public class ProductCategoryRepository {
         .getFirst();
   }
 
-  private List<ProductCategory> mapScore(List<Scored<ProductCategory>> withScores) {
-    List<ProductCategory> result = new ArrayList<>();
-
-    for (int i = 0; i < withScores.size(); i++) {
-      var supplier = withScores.get(i);
-      supplier.getValue().setMatchingScore(supplier.getScore());
-      result.add(supplier.getValue());
-    }
-
-    return result;
-  }
-
   /**
    * Searches product categories based on the provided criteria. Returns all
    * categories if criteria is null or has no filters.
    */
   public List<ProductCategory> findByCriteria(ProductCategorySearchCriteria criteria) {
     if (criteria == null || !criteria.hasAnyFilter()) {
-      return mapScore(Ivy.repo().search(ProductCategory.class).execute().getAllWithScore());
+      return Ivy.repo().search(ProductCategory.class).execute().getAll();
     }
 
     var search = Ivy.repo().search(ProductCategory.class);
@@ -141,14 +128,15 @@ public class ProductCategoryRepository {
 
     // Ranking results using score
     if (StringUtils.isNotBlank(criteria.getNameContains())) {
-      search.score().textField(FIELD_NAME).query(criteria.getNameContains().replace(" ", "+")).limit(100);
+      search.score().textField(FIELD_NAME).query(prepareInputForScoreSearch(criteria.getNameContains())).limit(100);
     }
 
     if (StringUtils.isNotBlank(criteria.getDescriptionContains())) {
-      search.score().textField(FIELD_DESCRIPTION).query(criteria.getDescriptionContains().replace(" ", "+")).limit(100);
+      search.score().textField(FIELD_DESCRIPTION).query(prepareInputForScoreSearch(criteria.getDescriptionContains()))
+          .limit(100);
     }
 
-    return mapScore(search.execute().getAllWithScore());
+    return search.execute().getAll();
   }
 
   /**
@@ -188,5 +176,9 @@ public class ProductCategoryRepository {
     }
 
     return search.execute().getFirst();
+  }
+
+  private String prepareInputForScoreSearch(String input) {
+    return input.replaceAll(" ", "|").replaceAll("-", "|");
   }
 }

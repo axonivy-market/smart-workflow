@@ -1,7 +1,6 @@
 package com.axonivy.utils.smart.orchestrator.demo.shopping.supplier;
 
 import com.axonivy.utils.smart.orchestrator.demo.shopping.common.Address;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dev.langchain4j.model.output.structured.Description;
 
@@ -24,9 +23,6 @@ public class Supplier {
 
   @Description("Company website URL")
   private String website;
-
-  @JsonIgnore
-  private Double matchingScore;
 
   public String getSupplierId() {
     return supplierId;
@@ -74,13 +70,5 @@ public class Supplier {
 
   public void setWebsite(String website) {
     this.website = website;
-  }
-
-  public Double getMatchingScore() {
-    return matchingScore;
-  }
-
-  public void setMatchingScore(Double matchingScore) {
-    this.matchingScore = matchingScore;
   }
 }

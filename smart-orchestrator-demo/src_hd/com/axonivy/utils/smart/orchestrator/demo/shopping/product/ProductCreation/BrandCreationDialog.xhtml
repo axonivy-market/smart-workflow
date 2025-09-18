@@ -69,7 +69,7 @@
                         onclick="PF('create-brand-dialog').hide();" 
                         styleClass="p-button-outlined" 
                         icon="pi pi-times" />
-        <p:commandButton value="Create Brand" actionListener="#{logic.createBrand}" 
+        <p:commandButton value="Resolve" actionListener="#{logic.createBrand}" 
                         process="create-brand-form" update="create-category-form #{p:resolveFirstComponentWithId('result-form', view).clientId}" 
                         oncomplete="PF('create-brand-dialog').hide();" 
                         styleClass="p-button-success" 

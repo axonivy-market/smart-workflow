@@ -38,10 +38,10 @@ public class ProductSearchCriteria {
   private String unitPrice;
 
   @Description("Minimum unit price filter. Leave null if not filtering by minimum price.")
-  private String minUnitPrice;
+  private Float minUnitPrice;
 
   @Description("Maximum unit price filter. Leave null if not filtering by maximum price.")
-  private String maxUnitPrice;
+  private Float maxUnitPrice;
 
   @Description("Active status filter. Leave null if not filtering by active status.")
   private Boolean active;
@@ -114,19 +114,19 @@ public class ProductSearchCriteria {
     this.unitPrice = unitPrice;
   }
 
-  public String getMinUnitPrice() {
+  public Float getMinUnitPrice() {
     return minUnitPrice;
   }
 
-  public void setMinUnitPrice(String minUnitPrice) {
+  public void setMinUnitPrice(Float minUnitPrice) {
     this.minUnitPrice = minUnitPrice;
   }
 
-  public String getMaxUnitPrice() {
+  public Float getMaxUnitPrice() {
     return maxUnitPrice;
   }
 
-  public void setMaxUnitPrice(String maxUnitPrice) {
+  public void setMaxUnitPrice(Float maxUnitPrice) {
     this.maxUnitPrice = maxUnitPrice;
   }
 
@@ -154,7 +154,7 @@ public class ProductSearchCriteria {
         || StringUtils.isNotBlank(descriptionContains) || category != null 
         || StringUtils.isNotBlank(categoryId) || brand != null 
         || StringUtils.isNotBlank(brandId) || StringUtils.isNotBlank(unitPrice)
-        || StringUtils.isNotBlank(minUnitPrice) || StringUtils.isNotBlank(maxUnitPrice)
+        || minUnitPrice != null || maxUnitPrice != null
         || active != null;
   }
 

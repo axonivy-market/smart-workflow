@@ -39,7 +39,7 @@ public class Product implements Serializable {
   private Brand brand;
 
   @Description("Unit price of the product as a string (e.g., '19.99')")
-  private String unitPrice;
+  private Float unitPrice;
 
   @Description("Indicates if the product is currently active/available")
   private boolean active;
@@ -100,11 +100,11 @@ public class Product implements Serializable {
     this.brand = brand;
   }
 
-  public String getUnitPrice() {
+  public Float getUnitPrice() {
     return unitPrice;
   }
 
-  public void setUnitPrice(String unitPrice) {
+  public void setUnitPrice(Float unitPrice) {
     this.unitPrice = unitPrice;
   }
 

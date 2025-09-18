@@ -132,5 +132,63 @@
       "visual" : {
         "at" : { "x" : 936, "y" : 280 }
       }
+    }, {
+      "id" : "f10",
+      "type" : "CallSubStart",
+      "name" : "findSimilarProductCategories(ProductCategorySearchCriteria)",
+      "config" : {
+        "signature" : "findSimilarProductCategories",
+        "input" : {
+          "params" : [
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategorySearchCriteria", "desc" : "Search criteria for product category" }
+          ],
+          "map" : {
+            "out.searchCriteria" : "param.searchCriteria"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.response" : "in.response"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 536, "y" : 400 },
+        "description" : "Use this tool to find similar product categories"
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Find similar product categories",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
+            "",
+            "in.response.categories  = ProductCategoryRepository.getInstance().findByCriteria(in.searchCriteria);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 400 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f13" }
+      ]
+    }, {
+      "id" : "f13",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 936, "y" : 400 }
+      }
     } ]
 }

@@ -41,15 +41,15 @@ public class CartItem implements Serializable {
     this.quantity = quantity;
   }
 
-  public double getTotalPrice() {
+  public Float getTotalPrice() {
     if (product != null && product.getUnitPrice() != null) {
       try {
-        return Double.parseDouble(product.getUnitPrice()) * quantity;
+        return product.getUnitPrice() * quantity;
       } catch (NumberFormatException e) {
-        return 0.0;
+        return 0F;
       }
     }
-    return 0.0;
+    return 0F;
   }
 
   public String getFormattedTotalPrice() {

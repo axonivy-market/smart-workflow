@@ -9,11 +9,11 @@
       <h:outputStylesheet library="css" name="shopping-common.css" />
       <h:outputStylesheet library="css" name="shopping-product-creation.css" />
       <h:outputScript name="shopping-product-creation.js" library="js" />
-      <h3>Product Creation</h3>
 
       <!-- Enhanced Upload Form -->
-      <h:form id="upload-form" rendered="#{data.isShowUploadSection}">
-        <div class="bg-white border-round-xl p-4 shadow-2 border-1 surface-border">
+      <h:form id="upload-form">
+        <h:panelGroup layout="block" styleClass="bg-white border-round-xl p-4 shadow-2 border-1 surface-border"
+          rendered="#{data.isShowUploadSection and !data.isProductCreated}">
           <h:panelGroup layout="block" styleClass="grid js-file-upload">
             <!-- Document Upload Section -->
             <div class="col-12 lg:col-6">
@@ -152,13 +152,13 @@
             </div>
           </div>
           
-        </div>
+        </h:panelGroup>
       </h:form>
 
         <h:form id="result-form">
         <!-- Blocking message when dependencies don't exist -->
         <h:panelGroup id="dependencies-missing" layout="block" styleClass="mt-4 p-4 border-round-lg surface-border bg-red-50 border-left-3 border-red-500" 
-                      rendered="#{data.response ne null and (!data.response.isSupplierExisting or !data.response.isCategoryExisting or !data.response.isBrandExisting)}">
+                      rendered="#{data.response ne null and ((data.response.isSupplierExisting eq false) or (data.response.isCategoryExisting eq false) or (data.response.isBrandExisting eq false))}">
           <div class="flex flex-column gap-4">
             <div class="flex align-items-center gap-2">
               <i class="pi pi-exclamation-triangle text-red-600 text-xl"></i>
@@ -167,7 +167,7 @@
             <p class="text-700 m-0 mb-3">You must create the required supplier and product category before creating a new product.</p>
 
             <!-- Missing Supplier -->
-            <h:panelGroup rendered="#{!data.response.isSupplierExisting}">
+            <h:panelGroup rendered="#{data.response.isSupplierExisting eq false}">
               <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
                 <div class="flex align-items-center gap-2">
                   <i class="pi pi-building text-red-500"></i>
@@ -181,7 +181,7 @@
             </h:panelGroup>
 
             <!-- Missing Category -->
-            <h:panelGroup rendered="#{!data.response.isCategoryExisting}">
+            <h:panelGroup rendered="#{data.response.isCategoryExisting eq false}">
               <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
                 <div class="flex align-items-center gap-2">
                   <i class="pi pi-tags text-red-500"></i>
@@ -195,7 +195,7 @@
             </h:panelGroup>
             
             <!-- Missing Brand -->
-            <h:panelGroup rendered="#{!data.response.isBrandExisting}">
+            <h:panelGroup rendered="#{data.response.isBrandExisting eq false}">
               <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
                 <div class="flex align-items-center gap-2">
                   <i class="pi pi-tags text-red-500"></i>
@@ -233,6 +233,18 @@
             </div>
           </div>
         </h:panelGroup>
+        
+        <!-- Success message when product is already exist-->
+        <h:panelGroup id="product-existed" layout="block" styleClass="mt-4 p-4 border-round-lg surface-border bg-green-50 border-left-3 border-green-500" 
+                      rendered="#{data.response.isProductExisting}">
+          <div class="flex align-items-center gap-3">
+            <i class="pi pi-check-circle text-green-600 text-xl"></i>
+            <div>
+              <div class="text-green-700 font-semibold text-lg">Product is existing!</div>
+              <div class="text-700 mt-1">This product is already available in our inventory.</div>
+            </div>
+          </div>
+        </h:panelGroup>
 
         <!-- Product Details Preview when all dependencies exist -->
         <h:panelGroup id="product-preview" layout="block" styleClass="mt-4" 
@@ -248,6 +260,7 @@
               <p:commandButton value="Create New Product" actionListener="#{logic.createProduct}"
                               update="@form #{p:resolveFirstComponentWithId('upload-form', view).clientId}"
                               process="@form" styleClass="p-button-success p-button-lg" 
+                              rendered="#{data.response.isProductExisting eq false}"
                               disabled="#{!(data.response.isBrandExisting and data.response.isCategoryExisting and data.response.isSupplierExisting)}"
                               icon="pi pi-plus" />
         </h:panelGroup>

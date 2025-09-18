@@ -11,9 +11,6 @@
     "name" : "searched",
     "type" : "Boolean"
   }, {
-    "name" : "showLandingPage",
-    "type" : "Boolean"
-  }, {
     "name" : "searchCriteria",
     "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductSearchCriteria"
   }, {

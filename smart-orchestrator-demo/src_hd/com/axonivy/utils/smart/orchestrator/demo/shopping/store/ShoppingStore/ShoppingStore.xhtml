@@ -11,8 +11,7 @@
       <h:outputScript name="shopping-store.js" library="js" />
       <!-- Main Search Container -->
       <h:form id="searchContainer" class="relative overflow-hidden min-h-screen">
-        <ui:include src="LandingPage.xhtml" />
-        <h:panelGroup layout="block" id="details-page" rendered="#{!data.showLandingPage}">
+        <h:panelGroup layout="block" id="details-page">
             <!-- Grid View -->
             <h:panelGroup rendered="#{not empty data.filteredProducts}">
               <div class="bg-white p-3 border-round-lg shadow-2 border-1 surface-border mb-5 flex">

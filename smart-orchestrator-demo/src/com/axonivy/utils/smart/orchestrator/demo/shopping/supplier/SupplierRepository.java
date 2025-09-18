@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.utils.smart.orchestrator.utils.IdGenerationUtils;
 
 import ch.ivyteam.ivy.business.data.store.search.Filter;
-import ch.ivyteam.ivy.business.data.store.search.Scored;
 import ch.ivyteam.ivy.environment.Ivy;
 
 public class SupplierRepository {
@@ -111,25 +110,13 @@ public class SupplierRepository {
         .getFirst();
   }
 
-  private List<Supplier> mapScore(List<Scored<Supplier>> withScores) {
-    List<Supplier> result = new ArrayList<>();
-
-    for (int i = 0; i < withScores.size(); i++) {
-      var supplier = withScores.get(i);
-      supplier.getValue().setMatchingScore(supplier.getScore());
-      result.add(supplier.getValue());
-    }
-
-    return result;
-  }
-
   /**
    * Searches suppliers based on the provided criteria. Returns all suppliers if
    * criteria is null or has no filters.
    */
   public List<Supplier> findByCriteria(SupplierSearchCriteria criteria) {
     if (criteria == null || !criteria.hasAnyFilter()) {
-      return mapScore(Ivy.repo().search(Supplier.class).execute().getAllWithScore());
+      return Ivy.repo().search(Supplier.class).execute().getAll();
     }
 
     var search = Ivy.repo().search(Supplier.class);
@@ -168,7 +155,7 @@ public class SupplierRepository {
           .limit(100);
     }
 
-    return mapScore(search.execute().getAllWithScore());
+    return search.execute().getAll();
   }
 
   public Supplier findExactSupplier(SupplierSearchCriteria criteria) {

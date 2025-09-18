@@ -15,8 +15,20 @@
           <i class="pi pi-tags text-primary"></i>
           Category Information
         </h3>
-        
+
         <div class="formgrid grid">
+          <h:panelGroup layout="block" styleClass="field col-12"
+            rendered="#{not empty data.similiarProductCategories}">
+             <h:outputText value="Choose existing category" />
+          </h:panelGroup>
+          <h:panelGroup layout="block" styleClass="field col-12"
+            rendered="#{not empty data.similiarProductCategories}">
+            <p:selectOneMenu value="#{data.response.product.category}" converter="pojoConverter">
+              <f:selectItems value="#{data.similiarProductCategories}" var="category"
+                itemValue="#{category}" itemLabel="#{category.name}" />
+              <p:ajax event="itemSelect" process="@form" update="@form" />
+            </p:selectOneMenu>
+          </h:panelGroup>
           <div class="field col-12">
             <div class="formgrid grid flex align-items-center">
               <div class="field col-12 md:col-3 mb-1">
@@ -29,9 +41,6 @@
               </div>
             </div>
           </div>
-        </div>
-        
-        <div class="formgrid grid">
           <div class="field col-12">
             <div class="formgrid grid flex align-items-top">
               <div class="field col-12 md:col-3 mb-1">
@@ -46,20 +55,20 @@
           </div>
         </div>
       </div>
-      
-      <!-- Action Buttons -->
     </h:form>
+
+    <!-- Action Buttons -->
     <f:facet name="footer">
       <div class="flex justify-content-end gap-2 pt-3 border-top-1 surface-border">
         <p:commandButton value="Cancel" type="button" 
                         onclick="PF('create-category-dialog').hide();" 
                         styleClass="p-button-outlined" 
                         icon="pi pi-times" />
-        <p:commandButton value="Create Category" actionListener="#{logic.createProductCategory}" 
-                        process="create-category-form" update="create-category-form #{p:resolveFirstComponentWithId('result-form', view).clientId}" 
-                        oncomplete="PF('create-category-dialog').hide();" 
-                        styleClass="p-button-success" 
-                        icon="pi pi-check" />
+        <p:commandButton value="Resolve" styleClass="p-button-success" icon="pi pi-check"
+                        actionListener="#{logic.createProductCategory}"
+                        process="create-category-form"
+                        update="create-category-form #{p:resolveFirstComponentWithId('result-form', view).clientId}"
+                        oncomplete="PF('create-category-dialog').hide();" />
       </div>
     </f:facet>
   </p:dialog>

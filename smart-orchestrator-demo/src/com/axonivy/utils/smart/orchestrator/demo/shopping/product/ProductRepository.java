@@ -193,8 +193,12 @@ public class ProductRepository {
       filters.add(search.textField(FIELD_BRAND + ".brandId").isEqualToIgnoringCase(criteria.getBrandId()));
     }
 
-    if (StringUtils.isNotBlank(criteria.getUnitPrice())) {
-      filters.add(search.textField(FIELD_UNIT_PRICE).isEqualToIgnoringCase(criteria.getUnitPrice()));
+    if (criteria.getMaxUnitPrice() != null) {
+      filters.add(search.numberField(FIELD_UNIT_PRICE).isLessOrEqualTo(criteria.getMaxUnitPrice()));
+    }
+
+    if (criteria.getMinUnitPrice() != null) {
+      filters.add(search.numberField(FIELD_UNIT_PRICE).isGreaterOrEqualTo(criteria.getMinUnitPrice()));
     }
 
     // For active status, we can search for the string representation
@@ -247,6 +251,20 @@ public class ProductRepository {
   }
 
   /**
+   * Finds product by SKU
+   *
+   * @param sku the product SKU
+   * @return matched product by SKU
+   */
+  public Product findBySku(String sku) {
+    if (StringUtils.isBlank(sku)) {
+      return null;
+    }
+    return loadRelatedData(
+        Ivy.repo().search(Product.class).textField(FIELD_SKU).isEqualToIgnoringCase(sku).execute().getFirst());
+  }
+
+  /**
    * Finds active products only.
    *
    * @return list of active products
@@ -254,50 +272,6 @@ public class ProductRepository {
   public List<Product> findActiveProducts() {
     return loadRelatedDataForList(
         Ivy.repo().search(Product.class).textField(FIELD_ACTIVE).isEqualToIgnoringCase("true").execute().getAll());
-  }
-
-  /**
-   * Finds products within a price range (post-processing approach). Note: This
-   * method filters results after retrieval due to Ivy search limitations.
-   *
-   * @param minPrice minimum price (inclusive)
-   * @param maxPrice maximum price (inclusive)
-   * @return list of products within the price range
-   */
-  public List<Product> findByPriceRange(String minPrice, String maxPrice) {
-    List<Product> allProducts = findAll();
-
-    if (StringUtils.isBlank(minPrice) && StringUtils.isBlank(maxPrice)) {
-      return allProducts;
-    }
-
-    return loadRelatedDataForList(allProducts.stream().filter(product -> {
-      if (StringUtils.isBlank(product.getUnitPrice())) {
-        return false;
-      }
-
-      try {
-        double productPrice = Double.parseDouble(product.getUnitPrice());
-
-        if (StringUtils.isNotBlank(minPrice)) {
-          double min = Double.parseDouble(minPrice);
-          if (productPrice < min) {
-            return false;
-          }
-        }
-
-        if (StringUtils.isNotBlank(maxPrice)) {
-          double max = Double.parseDouble(maxPrice);
-          if (productPrice > max) {
-            return false;
-          }
-        }
-
-        return true;
-      } catch (NumberFormatException e) {
-        return false; // Skip products with invalid price format
-      }
-    }).collect(java.util.stream.Collectors.toList()));
   }
 
   private Product loadRelatedData(Product product) {

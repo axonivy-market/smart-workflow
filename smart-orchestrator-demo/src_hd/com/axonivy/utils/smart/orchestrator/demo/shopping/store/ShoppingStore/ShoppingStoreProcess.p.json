@@ -13,8 +13,8 @@
         "signature" : "start",
         "input" : {
           "map" : {
-            "out.searched" : "false",
-            "out.showLandingPage" : "true"
+            "out.cartItems" : "new java.util.ArrayList()",
+            "out.searched" : "false"
           }
         },
         "guid" : "199508094EC29AC1"
@@ -23,13 +23,13 @@
         "at" : { "x" : 472, "y" : 224 }
       },
       "connect" : [
-        { "id" : "f1", "to" : "f2" }
+        { "id" : "f1", "to" : "f33" }
       ]
     }, {
       "id" : "f2",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 600, "y" : 224 }
+        "at" : { "x" : 728, "y" : 224 }
       }
     }, {
       "id" : "f3",
@@ -39,7 +39,7 @@
         "guid" : "199508094ECB63C9"
       },
       "visual" : {
-        "at" : { "x" : 472, "y" : 320 }
+        "at" : { "x" : 472, "y" : 416 }
       },
       "connect" : [
         { "id" : "f4", "to" : "f5" }
@@ -48,7 +48,7 @@
       "id" : "f5",
       "type" : "HtmlDialogExit",
       "visual" : {
-        "at" : { "x" : 600, "y" : 320 }
+        "at" : { "x" : 600, "y" : 416 }
       }
     }, {
       "id" : "f6",
@@ -58,14 +58,13 @@
         "signature" : "searchProducts",
         "input" : {
           "map" : {
-            "out.searched" : "true",
-            "out.showLandingPage" : "false"
+            "out.searched" : "true"
           }
         },
         "guid" : "199508094EC929C7"
       },
       "visual" : {
-        "at" : { "x" : 472, "y" : 432 }
+        "at" : { "x" : 472, "y" : 528 }
       },
       "connect" : [
         { "id" : "f7", "to" : "f8" }
@@ -81,7 +80,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 568, "y" : 432 },
+        "at" : { "x" : 568, "y" : 528 },
         "labelOffset" : { "x" : 24, "y" : -16 }
       },
       "connect" : [
@@ -89,7 +88,7 @@
             "name" : "no",
             "offset" : { "x" : 1, "y" : 14 }
           }, "color" : "default" },
-        { "id" : "f10", "to" : "f20", "via" : [ { "x" : 568, "y" : 528 } ], "label" : {
+        { "id" : "f10", "to" : "f20", "via" : [ { "x" : 568, "y" : 624 } ], "label" : {
             "name" : "yes",
             "segment" : 1.5,
             "offset" : { "x" : -79, "y" : 14 }
@@ -104,17 +103,11 @@
         "guid" : "199508094EE6470F"
       },
       "visual" : {
-        "at" : { "x" : 472, "y" : 616 }
+        "at" : { "x" : 472, "y" : 320 }
       },
       "connect" : [
-        { "id" : "f12", "to" : "f16" }
+        { "id" : "f35", "to" : "f33" }
       ]
-    }, {
-      "id" : "f13",
-      "type" : "HtmlDialogEnd",
-      "visual" : {
-        "at" : { "x" : 776, "y" : 616 }
-      }
     }, {
       "id" : "f14",
       "type" : "SubProcessCall",
@@ -123,7 +116,8 @@
         "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentAction)",
         "call" : {
           "map" : {
-            "param.productInfo" : "in.searchTerm"
+            "param.productInfo" : "in.searchTerm",
+            "param.action" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentAction.CREATE_CRITERIA"
           }
         },
         "output" : {
@@ -134,29 +128,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 816, "y" : 432 }
+        "at" : { "x" : 816, "y" : 528 }
       },
       "connect" : [
         { "id" : "f15", "to" : "f18" }
-      ]
-    }, {
-      "id" : "f16",
-      "type" : "Script",
-      "name" : "Find all",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductRepository;",
-            "",
-            "in.filteredProducts = ProductRepository.getInstance().findAll();"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 624, "y" : 616 }
-      },
-      "connect" : [
-        { "id" : "f17", "to" : "f13", "color" : "default" }
       ]
     }, {
       "id" : "f18",
@@ -172,7 +147,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 992, "y" : 432 }
+        "at" : { "x" : 992, "y" : 528 }
       },
       "connect" : [
         { "id" : "f19", "to" : "f22", "color" : "default" }
@@ -191,16 +166,16 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 992, "y" : 528 }
+        "at" : { "x" : 992, "y" : 624 }
       },
       "connect" : [
-        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 1120, "y" : 528 } ] }
+        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 1120, "y" : 624 } ] }
       ]
     }, {
       "id" : "f22",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1120, "y" : 432 }
+        "at" : { "x" : 1120, "y" : 528 }
       }
     }, {
       "id" : "f23",
@@ -307,6 +282,25 @@
       },
       "connect" : [
         { "id" : "f32", "to" : "f30" }
+      ]
+    }, {
+      "id" : "f33",
+      "type" : "Script",
+      "name" : "Find all",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductRepository;",
+            "",
+            "in.filteredProducts = ProductRepository.getInstance().findAll();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 600, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f34", "to" : "f2", "color" : "default" }
       ]
     } ]
 }

@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory;
 
+import java.util.List;
+
 import com.axonivy.utils.smart.orchestrator.demo.shopping.enums.Status;
 
 import dev.langchain4j.model.output.structured.Description;
@@ -14,6 +16,9 @@ public class ProductCategoryAgentResponse {
 
   @Description("Search criteria to find the product category")
   private ProductCategorySearchCriteria productCategorySearchCriteria;
+
+  @Description("The list of product categories related to the action")
+  private List<ProductCategory> categories;
 
   @Description("Status of the action")
   private Status status;
@@ -59,5 +64,13 @@ public class ProductCategoryAgentResponse {
 
   public void setFeedback(String feedback) {
     this.feedback = feedback;
+  }
+
+  public List<ProductCategory> getCategories() {
+    return categories;
+  }
+
+  public void setCategories(List<ProductCategory> categories) {
+    this.categories = categories;
   }
 }

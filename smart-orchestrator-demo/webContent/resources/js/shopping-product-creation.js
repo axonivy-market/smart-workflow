@@ -63,6 +63,7 @@ function showRunningText() {
     });
   }
   
+
   // Initialize upload form
   document.addEventListener('DOMContentLoaded', function() {
     // Add drag and drop visual feedback

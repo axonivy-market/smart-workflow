@@ -15,8 +15,21 @@
           <i class="pi pi-building text-primary"></i>
           Basic Information
         </h3>
+
         
         <div class="formgrid grid">
+          <h:panelGroup layout="block" styleClass="field col-12"
+            rendered="#{not empty data.similiarSuppliers}">
+              <h:outputText value="Choose existing supplier" />
+          </h:panelGroup>
+          <h:panelGroup layout="block" styleClass="field col-12"
+            rendered="#{not empty data.similiarSuppliers}">
+            <p:selectOneMenu value="#{data.response.product.supplier}" converter="pojoConverter">
+              <f:selectItems value="#{data.similiarSuppliers}" var="supplier"
+                itemValue="#{supplier}" itemLabel="#{supplier.businessName}" />
+              <p:ajax event="itemSelect" process="@form" update="@form" />
+            </p:selectOneMenu>
+          </h:panelGroup>
           <div class="field col-12">
             <div class="formgrid grid flex align-items-center">
               <div class="field col-12 md:col-2 mb-1">
@@ -29,8 +42,6 @@
               </div>
             </div>
           </div>
-        </div>
-                <div class="formgrid grid">
           <div class="field col-12">
             <div class="formgrid grid flex align-items-center">
               <div class="field col-12 md:col-2 mb-1">
@@ -42,8 +53,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="formgrid grid">
           <div class="field col-12 md:col-6">
             <div class="formgrid grid flex align-items-center">
               <div class="field col-12 md:col-4 mb-1">
@@ -69,7 +78,6 @@
             </div>
           </div>
         </div>
-      </div>
       
       <!-- Business Address Section -->
       <div class="mb-4">
@@ -158,7 +166,7 @@
           </div>
         </div>
       </div>
-
+    </div>
     </h:form>
 
     <!-- Action Buttons -->
@@ -168,7 +176,7 @@
                       onclick="PF('create-supplier-dialog').hide();" 
                       styleClass="p-button-outlined" 
                       icon="pi pi-times" />
-      <p:commandButton value="Create Supplier" actionListener="#{logic.createSupplier}" 
+      <p:commandButton value="Resolve" actionListener="#{logic.createSupplier}" 
                       process="create-supplier-form" update="create-supplier-form #{p:resolveFirstComponentWithId('result-form', view).clientId}" 
                       oncomplete="PF('create-supplier-dialog').hide();" 
                       styleClass="p-button-success" 

@@ -133,5 +133,68 @@
       "visual" : {
         "at" : { "x" : 392, "y" : 184 }
       }
+    }, {
+      "id" : "f10",
+      "type" : "CallSubStart",
+      "name" : "findSimilarSuppliers(SupplierSearchCriteria)",
+      "config" : {
+        "signature" : "findSimilarSuppliers",
+        "input" : {
+          "params" : [
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierSearchCriteria", "desc" : "Search criteria to find supplier" }
+          ],
+          "map" : {
+            "out.searchCriteria" : "param.searchCriteria"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.result" : "in.result"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 296 },
+        "description" : "Use this tool to find similar suppliers"
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f13" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 392, "y" : 296 }
+      }
+    }, {
+      "id" : "f13",
+      "type" : "Script",
+      "name" : "Find exact supplier",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "",
+            "import org.apache.commons.collections4.CollectionUtils;",
+            "",
+            "in.result.supplier  = SupplierRepository.getInstance().findExactSupplier(in.searchCriteria);",
+            "in.result.isSupplierExisting = in.result.supplier != null;",
+            "in.result.feedback = in.result.isSupplierExisting ? \"Supplier is found\" : \"Supplier not found\";",
+            "in.result.supplierSearchCriteria = in.searchCriteria;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 296 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f12", "color" : "default" }
+      ]
     } ]
 }

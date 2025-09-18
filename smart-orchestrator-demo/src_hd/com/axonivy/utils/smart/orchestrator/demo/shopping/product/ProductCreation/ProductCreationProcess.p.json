@@ -63,7 +63,7 @@
         "guid" : "1994B7A6FDAAC566"
       },
       "visual" : {
-        "at" : { "x" : 512, "y" : 496 }
+        "at" : { "x" : 512, "y" : 456 }
       },
       "connect" : [
         { "id" : "f7", "to" : "f9" }
@@ -72,7 +72,7 @@
       "id" : "f8",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1040, "y" : 496 }
+        "at" : { "x" : 1368, "y" : 456 }
       }
     }, {
       "id" : "f9",
@@ -94,7 +94,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 680, "y" : 496 }
+        "at" : { "x" : 680, "y" : 456 }
       },
       "connect" : [
         { "id" : "f10", "to" : "f57" }
@@ -147,84 +147,6 @@
         { "id" : "f15", "to" : "f11", "color" : "default" }
       ]
     }, {
-      "id" : "f16",
-      "type" : "HtmlDialogMethodStart",
-      "name" : "loadSimiliarSuppliers()",
-      "config" : {
-        "signature" : "loadSimiliarSuppliers",
-        "guid" : "1994B7A6FDAA2C10"
-      },
-      "visual" : {
-        "at" : { "x" : 512, "y" : 624 }
-      },
-      "connect" : [
-        { "id" : "f59", "to" : "f22" }
-      ]
-    }, {
-      "id" : "f18",
-      "type" : "HtmlDialogMethodStart",
-      "name" : "loadSimiliarProductCategories()",
-      "config" : {
-        "signature" : "loadSimiliarProductCategories",
-        "guid" : "1994B7A6FDA9072F"
-      },
-      "visual" : {
-        "at" : { "x" : 512, "y" : 744 }
-      },
-      "connect" : [
-        { "id" : "f60", "to" : "f24" }
-      ]
-    }, {
-      "id" : "f20",
-      "type" : "HtmlDialogEnd",
-      "visual" : {
-        "at" : { "x" : 1040, "y" : 624 }
-      }
-    }, {
-      "id" : "f21",
-      "type" : "HtmlDialogEnd",
-      "visual" : {
-        "at" : { "x" : 1040, "y" : 744 }
-      }
-    }, {
-      "id" : "f22",
-      "type" : "Script",
-      "name" : "Find similiar suppliers",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
-            "",
-            "//in.similiarSuppliers = SupplierRepository.getInstance().findByCriteria(in.supplierResponse.supplierSearchCriteria);"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 880, "y" : 624 }
-      },
-      "connect" : [
-        { "id" : "f23", "to" : "f20", "color" : "default" }
-      ]
-    }, {
-      "id" : "f24",
-      "type" : "Script",
-      "name" : "Find similiar product categories",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
-            "",
-            "//in.similiarProductCategories = ProductCategoryRepository.getInstance().findByCriteria(in.categoryResponse.productCategorySearchCriteria);"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 880, "y" : 744 }
-      },
-      "connect" : [
-        { "id" : "f25", "to" : "f21", "color" : "default" }
-      ]
-    }, {
       "id" : "f30",
       "type" : "HtmlDialogMethodStart",
       "name" : "createProductCategory()",
@@ -233,7 +155,7 @@
         "guid" : "1994B7A6FDA95DAB"
       },
       "visual" : {
-        "at" : { "x" : 512, "y" : 992 }
+        "at" : { "x" : 512, "y" : 680 }
       },
       "connect" : [
         { "id" : "f31", "to" : "f34" }
@@ -247,7 +169,7 @@
         "guid" : "1994B7A6FDB3A397"
       },
       "visual" : {
-        "at" : { "x" : 512, "y" : 872 }
+        "at" : { "x" : 512, "y" : 560 }
       },
       "connect" : [
         { "id" : "f33", "to" : "f36" }
@@ -267,7 +189,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 880, "y" : 992 }
+        "at" : { "x" : 880, "y" : 680 }
       },
       "connect" : [
         { "id" : "f35", "to" : "f38" }
@@ -287,7 +209,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 880, "y" : 872 }
+        "at" : { "x" : 880, "y" : 560 }
       },
       "connect" : [
         { "id" : "f37", "to" : "f39" }
@@ -296,13 +218,13 @@
       "id" : "f38",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1040, "y" : 992 }
+        "at" : { "x" : 1040, "y" : 680 }
       }
     }, {
       "id" : "f39",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1040, "y" : 872 }
+        "at" : { "x" : 1040, "y" : 560 }
       }
     }, {
       "id" : "f40",
@@ -313,7 +235,7 @@
         "guid" : "1994B7A6FDB13F9A"
       },
       "visual" : {
-        "at" : { "x" : 512, "y" : 1120 }
+        "at" : { "x" : 512, "y" : 808 }
       },
       "connect" : [
         { "id" : "f41", "to" : "f42" }
@@ -333,7 +255,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 880, "y" : 1120 }
+        "at" : { "x" : 880, "y" : 808 }
       },
       "connect" : [
         { "id" : "f43", "to" : "f44" }
@@ -342,7 +264,7 @@
       "id" : "f44",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1040, "y" : 1120 }
+        "at" : { "x" : 1040, "y" : 808 }
       }
     }, {
       "id" : "f45",
@@ -353,7 +275,7 @@
         "guid" : "1994B7A6FDB14723"
       },
       "visual" : {
-        "at" : { "x" : 512, "y" : 1240 }
+        "at" : { "x" : 512, "y" : 928 }
       },
       "connect" : [
         { "id" : "f46", "to" : "f55" }
@@ -373,7 +295,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 880, "y" : 1240 }
+        "at" : { "x" : 880, "y" : 928 }
       },
       "connect" : [
         { "id" : "f48", "to" : "f49" }
@@ -382,7 +304,7 @@
       "id" : "f49",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1040, "y" : 1240 }
+        "at" : { "x" : 1040, "y" : 928 }
       }
     }, {
       "id" : "f50",
@@ -445,7 +367,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 680, "y" : 1240 }
+        "at" : { "x" : 680, "y" : 928 }
       },
       "connect" : [
         { "id" : "f56", "to" : "f47", "color" : "default" }
@@ -481,10 +403,48 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 880, "y" : 496 }
+        "at" : { "x" : 880, "y" : 456 }
       },
       "connect" : [
-        { "id" : "f58", "to" : "f8", "color" : "default" }
+        { "id" : "f58", "to" : "f66", "color" : "default" }
+      ]
+    }, {
+      "id" : "f66",
+      "type" : "Script",
+      "name" : "Find similiar suppliers",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "",
+            "in.similiarSuppliers = SupplierRepository.getInstance().findAll();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f67", "to" : "f68", "color" : "default" }
+      ]
+    }, {
+      "id" : "f68",
+      "type" : "Script",
+      "name" : "Find similiar product categories",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
+            "",
+            "in.similiarProductCategories = ProductCategoryRepository.getInstance().findAll();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1224, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f69", "to" : "f8", "color" : "default" }
       ]
     } ]
 }

@@ -46,7 +46,7 @@
           "model" : "\"gpt-4.1\"",
           "system" : "You are an AI Agent in charge of create/update product operation for an invetory of a company.\r\nWith the given product category information, you need to perform these steps:\r\n\r\nInstructions:\r\n<%= in.instructions %>",
           "resultType" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse.class",
-          "tools" : "[\"findProductCategory\",\"createProductCategory\"]",
+          "tools" : "[\"findProductCategory\",\"createProductCategory\",\"findSimilarProductCategories\"]",
           "resultMapping" : "in.response",
           "query" : "This is supplier information\r\n---\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.category) %>"
         }
