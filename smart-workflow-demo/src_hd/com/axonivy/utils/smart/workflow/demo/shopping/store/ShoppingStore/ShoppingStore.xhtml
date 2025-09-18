@@ -1,0 +1,135 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">Purchasing</ui:define>
+    <ui:define name="content">
+      <h:outputStylesheet library="css" name="shopping-common.css" />
+      <h:outputStylesheet library="css" name="shopping-store.css" />
+      <h:outputScript name="shopping-store.js" library="js" />
+      <!-- Main Search Container -->
+      <h:form id="searchContainer" class="relative overflow-hidden min-h-screen">
+        <h:panelGroup layout="block" id="details-page">
+            <!-- Grid View -->
+            <h:panelGroup rendered="#{not empty data.filteredProducts}">
+              <div class="bg-white p-3 border-round-lg shadow-2 border-1 surface-border mb-5 flex">
+                <div class="flex-auto mr-3 fancy-search-input">
+                  <p:inputText id="secondary-search-input" 
+                              value="#{data.searchTerm}"
+                              placeholder="What are you looking for today?" 
+                              styleClass="w-full search-box"
+                              onkeypress="if(event.keyCode == 13) { performSearch(); return false; }"
+                              onfocus="addFocusEffect()"
+                              onblur="removeFocusEffect()" />
+                </div>
+                <div class="flex align-items-center">
+                  <p:commandButton value="Cart (#{data.cartItems.size()})" 
+                                  icon="pi pi-shopping-cart"
+                                  styleClass="p-button-primary border-round-xl"
+                                  type="button"
+                                  onclick="PF('cart-dialog').show();" />
+                </div>
+              </div>
+
+              <div class="grid gap-4">
+                <ui:repeat value="#{data.filteredProducts}" var="product">
+                  <div class="col-12 sm:col-6 lg:col-3 xl:col-3">
+                    <div class="bg-white border-round-xl shadow-2 overflow-hidden transition-all transition-duration-300 hover:shadow-6 hover:scale-105 relative border-1 surface-border">
+                      <div class="relative h-23rem overflow-hidden bg-gray-100">
+                        <h:panelGroup rendered="#{not empty product.imageUrl}">
+                          <img src="#{product.imageUrl}" 
+                               alt="#{product.name}" 
+                               class="w-full h-full object-fit-cover transition-all transition-duration-300" />
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{empty product.imageUrl}">
+                          <div class="h-full flex flex-column align-items-center justify-content-center bg-gray-100">
+                            <i class="pi pi-image text-4xl text-gray-400 mb-2"></i>
+                            <span class="text-sm text-gray-500">No Image</span>
+                          </div>
+                        </h:panelGroup>
+
+                        <!-- Status Badge -->
+                        <div class="absolute top-0 left-0 p-3 flex flex-column gap-2">
+                          <span class="status-badge #{product.active ? 'status-available' : 'status-unavailable'}">
+                            #{product.active ? 'In Stock' : 'Out of Stock'}
+                          </span>
+                          <span class="discount-badge" style="display: none;">-20%</span>
+                        </div>
+
+                        <!-- Wishlist Heart -->
+                        <div class="absolute top-0 right-0 p-3 w-2rem h-2rem bg-white-alpha-90 border-circle flex align-items-center justify-content-center cursor-pointer transition-all transition-duration-300 opacity-0 hover:bg-red-500 hover:text-white hover:scale-110">
+                          <i class="pi pi-heart-fill"></i>
+                        </div>
+                      </div>
+                      
+                      <div class="p-3">
+                        <div class="mb-2">
+                          <span class="category-tag">#{product.category.name}</span>
+                        </div>
+                        
+                        <h4 class="product-title">#{product.name}</h4>
+                        
+                        <div class="flex align-items-center gap-2 mb-2">
+                          <div class="flex gap-1">
+                            <i class="pi pi-star-fill text-yellow-400"></i>
+                            <i class="pi pi-star-fill text-yellow-400"></i>
+                            <i class="pi pi-star-fill text-yellow-400"></i>
+                            <i class="pi pi-star-fill text-yellow-400"></i>
+                            <i class="pi pi-star text-gray-300"></i>
+                          </div>
+                          <span class="text-sm text-600">(4.2) 128 reviews</span>
+                        </div>
+                        
+                        <p class="product-description">#{product.description}</p>
+                        
+                        <div class="mb-3">
+                          <span class="sku-tag">SKU: #{product.sku}</span>
+                        </div>
+                        
+                        <div class="my-3">
+                          <div class="flex align-items-center gap-2 mb-1">
+                            <span class="current-price">$#{product.unitPrice}</span>
+                            <span class="original-price" style="display: none;">$#{product.unitPrice * 1.2}</span>
+                          </div>
+                          <span class="savings-text" style="display: none;">Save $#{product.unitPrice * 0.2}</span>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                          <p:commandButton value="Add to Cart" 
+                                          icon="pi pi-shopping-cart" 
+                                          styleClass="p-button-primary flex-1 border-round-xl p-1 font-semibold text-uppercase"
+                                          disabled="#{!product.active}">
+                            <p:ajax listener="#{logic.addToCart(product)}" process="@this" update="@form" />
+                          </p:commandButton>
+                          <p:commandButton icon="pi pi-eye" 
+                                          styleClass="p-button-outlined w-3rem h-3rem border-circle border-2 border-primary text-primary hover:bg-primary hover:text-white"
+                                          title="View Details" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ui:repeat>
+              </div>
+            </h:panelGroup>
+
+            <!-- No Products Found -->
+            <h:panelGroup rendered="#{empty data.filteredProducts and data.searched}">
+              <div class="text-center p-6 bg-white border-round-xl shadow-2 border-1 surface-border my-4 max-w-30rem mx-auto">
+                <div class="mb-4">
+                    <i class="pi pi-search text-6xl text-primary mb-3"></i>
+                  </div>
+                  <h3 class="text-2xl font-bold text-900 mb-3">No products found</h3>
+                  <p class="text-lg text-600 mb-4">We couldn't find any products matching your search</p>
+              </div>
+            </h:panelGroup>
+        </h:panelGroup>
+        <p:remoteCommand name="performSearch" actionListener="#{logic.searchProducts}" update="@form" process="@form" />
+      </h:form>
+      <ui:include src="ShoppingCart.xhtml" />
+    </ui:define>
+  </ui:composition>
+</h:body>
+
+</html>

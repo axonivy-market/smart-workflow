@@ -1,0 +1,115 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">Support Ticket Approval</ui:define>
+    <ui:define name="content">
+
+      <h3>
+        Support Ticket Approval
+      </h3>
+
+      <h:form id="form">
+        <div class="ui-g">
+          <div class="ui-g-6 ui-g p-0">
+            <p:fieldset legend="Support ticket info" styleClass="w-full">
+              <div class="ui-g">
+                <div class="ui-g-3">
+                  <h:outputText value="Ticket Name" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <h:outputText value="#{data.supportTicket.name}" />
+                </div>
+                <div class="ui-g-3">
+                  <h:outputText value="Description" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <h:outputText value="#{data.supportTicket.description}" />
+                </div>
+                <div class="ui-g-3">
+                  <h:outputText value="Ticket Type" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <h:outputText value="#{data.supportTicket.type}" />
+                </div>
+              </div>
+            </p:fieldset>
+          </div>
+          <div class="ui-g-1" />
+          <div class="ui-g-5 ui-g p-0">
+            <p:fieldset legend="Requester" styleClass="w-full">
+              <div class="ui-g">
+                <div class="ui-g-4">
+                  <h:outputText value="Name" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-8">
+                  <h:outputText value="#{data.requestor.fullName}" />
+                </div>
+                <div class="ui-g-4">
+                  <h:outputText value="Department" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-8">
+                  <h:outputText value="#{data.requestor.department.name}" />
+                </div>
+                <div class="ui-g-4">
+                  <h:outputText value="Remaining Leave Days" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-8">
+                  <h:outputText value="#{data.requestor.remainingDays}" />
+                </div>
+              </div>
+            </p:fieldset>
+          </div>
+          <div class="ui-g-12 ui-g p-0 mt-4 ui-fluid">
+            <p:fieldset legend="AI Approval" styleClass="w-full">
+              <div class="ui-g">
+                <div class="ui-g-3">
+                  <h:outputText value="AI Decision" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <h:outputText value="#{data.supportTicket.aiApproval.decision}"
+                    styleClass="#{data.supportTicket.aiApproval.decision eq 'REJECT' ? 'text-red-800' : 'text-green-800'}" />
+                </div>
+                <div class="ui-g-3">
+                  <h:outputText value="Reason" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <h:outputText value="#{data.supportTicket.aiApproval.reason}" />
+                </div>
+              </div>
+            </p:fieldset>
+          </div>
+          <div class="ui-g-12 ui-g p-0 mt-4 ui-fluid">
+            <p:fieldset legend="First Approval" styleClass="w-full">
+              <div class="ui-g">
+                <div class="ui-g-3">
+                  <h:outputText value="Decision" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-9">
+                  <p:selectOneRadio value="#{data.supportTicket.firstApproval.isApprove}">
+                    <f:selectItem itemValue="#{true}" itemLabel="Yes" />
+                    <f:selectItem itemValue="#{false}" itemLabel="No" />
+                  </p:selectOneRadio>
+                </div>
+                <div class="ui-g-12">
+                  <h:outputText value="Comment" styleClass="font-bold" />
+                </div>
+                <div class="ui-g-12">
+                  <p:inputTextarea rows="3" autoResize="true" value="#{data.supportTicket.firstApproval.comment}" />
+                </div>
+              </div>
+            </p:fieldset>
+          </div>
+        </div>
+        <div class="w-full flex justify-content-end mt-4">
+          <p:commandButton value="Save" actionListener="#{logic.close}" process="@(form)" />
+        </div>
+      </h:form>
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+
+</html>

@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "BrandAgentData",
+  "namespace" : "Business.ShoppingDemo.Agents",
+  "fields" : [ {
+    "name" : "brand",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.Brand"
+  }, {
+    "name" : "response",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandAgentResponse"
+  }, {
+    "name" : "instructions"
+  } ]
+}
