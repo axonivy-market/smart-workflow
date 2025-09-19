@@ -8,7 +8,7 @@
   <p:dialog id="create-supplier-dialog" widgetVar="create-supplier-dialog" width="70%"
    modal="true" dynamic="true" responsive="true" appendTo="@(body)"
    header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/SupplierCreation')}">
-    <h:form id="create-supplier-form" styleClass="p-fluid">
+    <h:form id="create-supplier-form" styleClass="p-fluid product-creation-dialogs overflow-y-auto pr-3">
       <!-- Basic Information Section -->
       <div class="mb-4">
         <h3 class="text-900 font-semibold mb-3 flex align-items-center gap-2">
@@ -16,20 +16,25 @@
           #{ivy.cms.co('/Labels/BasicInformation')}
         </h3>
 
-        
         <div class="formgrid grid">
-          <h:panelGroup layout="block" styleClass="field col-12"
-            rendered="#{not empty data.similiarSuppliers}">
-              <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ChooseExistingSupplier')}" />
-          </h:panelGroup>
-          <h:panelGroup layout="block" styleClass="field col-12"
-            rendered="#{not empty data.similiarSuppliers}">
-            <p:selectOneMenu value="#{data.selectedSupplier}" converter="pojoConverter">
-              <f:selectItem noSelectionOption="true" itemValue="#{null}" />
-              <f:selectItems value="#{data.similiarSuppliers}" var="supplier"
-                itemValue="#{supplier}" itemLabel="#{supplier.businessName}" />
-              <p:ajax event="itemSelect" process="@form" update="@form" />
-            </p:selectOneMenu>
+          <h:panelGroup layout="block" styleClass="field col-12 flex"
+            rendered="#{not empty data.similiarProductCategories}">
+            <div class="col-12 md:col-3 mb-1">
+             <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ChooseExistingSupplier')}" />
+            </div>
+            <div class="col-12 md:col-9 mb-1">
+              <p:selectOneMenu value="#{data.selectedSupplier}" converter="pojoConverter">
+                <f:selectItem noSelectionOption="true" itemValue="#{null}" />
+                <f:selectItems value="#{data.similiarSuppliers}" var="supplier"
+                  itemValue="#{supplier}" itemLabel="#{supplier.businessName}" />
+                <p:ajax event="itemSelect" process="@this" update="@form"
+                  immediate="true" global="false"
+                  oncomplete="setSelectedSupplier();" />
+              </p:selectOneMenu>
+              <p:remoteCommand name="setSelectedSupplier" actionListener="#{logic.onSelectSupplier}"
+                process="@this" update="@form"
+                immediate="true" global="false" />
+            </div>
           </h:panelGroup>
           <div class="field col-12">
             <div class="formgrid grid flex align-items-center">

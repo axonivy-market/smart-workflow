@@ -8,7 +8,7 @@
   <p:dialog id="create-category-dialog" widgetVar="create-category-dialog" width="50%" height="50%"
    modal="true" dynamic="true" responsive="true"
    header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCategoryCreation')}" appendTo="@(body)">
-    <h:form id="create-category-form" styleClass="p-fluid">
+    <h:form id="create-category-form" styleClass="p-fluid product-creation-dialogs overflow-y-auto pr-3">
       <!-- Category Information Section -->
       <div class="mb-4">
         <h3 class="text-900 font-semibold mb-3 flex align-items-center gap-2">
@@ -17,18 +17,24 @@
         </h3>
 
         <div class="formgrid grid">
-          <h:panelGroup layout="block" styleClass="field col-12"
+          <h:panelGroup layout="block" styleClass="field col-12 flex"
             rendered="#{not empty data.similiarProductCategories}">
-             <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ChooseExistingCategory')}" />
-          </h:panelGroup>
-          <h:panelGroup layout="block" styleClass="field col-12"
-            rendered="#{not empty data.similiarProductCategories}">
-            <p:selectOneMenu value="#{data.selectedCategory}" converter="pojoConverter">
-              <f:selectItem noSelectionOption="true" itemValue="#{null}" />
-              <f:selectItems value="#{data.similiarProductCategories}" var="category"
-                itemValue="#{category}" itemLabel="#{category.name}" />
-              <p:ajax event="itemSelect" process="@form" update="@form" listener="#{logic.onSelectCategory}" />
-            </p:selectOneMenu>
+              <div class="col-12 md:col-3 mb-1">
+               <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ChooseExistingCategory')}" />
+              </div>
+              <div class="col-12 md:col-9 mb-1">
+                <p:selectOneMenu value="#{data.selectedCategory}" converter="pojoConverter" styleClass="w-full">
+                  <f:selectItem noSelectionOption="true" itemValue="#{null}" />
+                  <f:selectItems value="#{data.similiarProductCategories}" var="category"
+                    itemValue="#{category}" itemLabel="#{category.name}" />
+                  <p:ajax event="itemSelect" process="@this" update="@form"
+                    immediate="true" global="false"
+                    oncomplete="setSelectedCategory();" />
+                </p:selectOneMenu>
+                <p:remoteCommand name="setSelectedCategory" actionListener="#{logic.onSelectCategory}"
+                  process="@this" update="@form"
+                  immediate="true" global="false" />
+              </div>
           </h:panelGroup>
           <div class="field col-12">
             <div class="formgrid grid flex align-items-center">

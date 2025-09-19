@@ -399,6 +399,10 @@
   color: var(--blue-600);
 }
 
+.product-creation-dialogs {
+  max-height: 80vh;
+}
+
 /* ========================================
    RESPONSIVE STYLES
    ======================================== */
