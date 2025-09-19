@@ -4,7 +4,7 @@
   xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
   <ui:composition template="/layouts/frame-10-full-width.xhtml">
-    <ui:define name="title">Purchasing</ui:define>
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/Purchasing')}</ui:define>
     <ui:define name="content">
       <h:outputStylesheet library="css" name="shopping-common.css" />
       <h:outputStylesheet library="css" name="shopping-store.css" />
@@ -18,14 +18,14 @@
                 <div class="flex-auto mr-3 fancy-search-input">
                   <p:inputText id="secondary-search-input" 
                               value="#{data.searchTerm}"
-                              placeholder="What are you looking for today?" 
+                              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/SearchTooltip')}" 
                               styleClass="w-full search-box"
                               onkeypress="if(event.keyCode == 13) { performSearch(); return false; }"
                               onfocus="addFocusEffect()"
                               onblur="removeFocusEffect()" />
                 </div>
                 <div class="flex align-items-center">
-                  <p:commandButton value="Cart (#{data.cartItems.size()})" 
+                  <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/Cart')} (#{data.cartItems.size()})" 
                                   icon="pi pi-shopping-cart"
                                   styleClass="p-button-primary border-round-xl"
                                   type="button"
@@ -46,16 +46,16 @@
                         <h:panelGroup rendered="#{empty product.imageUrl}">
                           <div class="h-full flex flex-column align-items-center justify-content-center bg-gray-100">
                             <i class="pi pi-image text-4xl text-gray-400 mb-2"></i>
-                            <span class="text-sm text-gray-500">No Image</span>
+                            <span class="text-sm text-gray-500">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/NoImage')}</span>
                           </div>
                         </h:panelGroup>
 
                         <!-- Status Badge -->
                         <div class="absolute top-0 left-0 p-3 flex flex-column gap-2">
                           <span class="status-badge #{product.active ? 'status-available' : 'status-unavailable'}">
-                            #{product.active ? 'In Stock' : 'Out of Stock'}
+                            #{product.active ? ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/InStock') : ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/OutOfStock')}
                           </span>
-                          <span class="discount-badge" style="display: none;">-20%</span>
+                          <span class="discount-badge hidden">-20%</span>
                         </div>
 
                         <!-- Wishlist Heart -->
@@ -85,7 +85,7 @@
                         <p class="product-description">#{product.description}</p>
                         
                         <div class="mb-3">
-                          <span class="sku-tag">SKU: #{product.sku}</span>
+                          <span class="sku-tag">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/components/ProductDetails/SKU')}: #{product.sku}</span>
                         </div>
                         
                         <div class="my-3">
@@ -97,7 +97,7 @@
                         </div>
                         
                         <div class="flex gap-2">
-                          <p:commandButton value="Add to Cart" 
+                          <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/AddToCart')}" 
                                           icon="pi pi-shopping-cart" 
                                           styleClass="p-button-primary flex-1 border-round-xl p-1 font-semibold text-uppercase"
                                           disabled="#{!product.active}">
@@ -105,7 +105,7 @@
                           </p:commandButton>
                           <p:commandButton icon="pi pi-eye" 
                                           styleClass="p-button-outlined w-3rem h-3rem border-circle border-2 border-primary text-primary hover:bg-primary hover:text-white"
-                                          title="View Details" />
+                                          title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/ViewDetails')}" />
                         </div>
                       </div>
                     </div>
@@ -120,8 +120,8 @@
                 <div class="mb-4">
                     <i class="pi pi-search text-6xl text-primary mb-3"></i>
                   </div>
-                  <h3 class="text-2xl font-bold text-900 mb-3">No products found</h3>
-                  <p class="text-lg text-600 mb-4">We couldn't find any products matching your search</p>
+                  <h3 class="text-2xl font-bold text-900 mb-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/NoProductsFound')}</h3>
+                  <p class="text-lg text-600 mb-4">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/NoProductsFoundNote')}</p>
               </div>
             </h:panelGroup>
         </h:panelGroup>

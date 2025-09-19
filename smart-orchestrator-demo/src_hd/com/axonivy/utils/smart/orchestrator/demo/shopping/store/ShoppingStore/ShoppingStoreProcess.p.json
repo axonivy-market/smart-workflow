@@ -302,5 +302,97 @@
       "connect" : [
         { "id" : "f34", "to" : "f2", "color" : "default" }
       ]
+    }, {
+      "id" : "f36",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "decreaseQuantity(CartItem)",
+      "config" : {
+        "signature" : "decreaseQuantity",
+        "input" : {
+          "params" : [
+            { "name" : "item", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.store.CartItem", "desc" : "" }
+          ],
+          "map" : {
+            "out.selectedCartItem" : "param.item"
+          }
+        },
+        "guid" : "1996035B69249005"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 1016 }
+      },
+      "connect" : [
+        { "id" : "f39", "to" : "f37" }
+      ]
+    }, {
+      "id" : "f37",
+      "type" : "Script",
+      "name" : "decrease quantity",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.selectedCartItem.quantity--;",
+            "",
+            "if (in.selectedCartItem.quantity < 0) {",
+            "  in.cartItems.remove(in.selectedCartItem);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 1016 }
+      },
+      "connect" : [
+        { "id" : "f40", "to" : "f38" }
+      ]
+    }, {
+      "id" : "f38",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 776, "y" : 1016 }
+      }
+    }, {
+      "id" : "f41",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "increaseQuantity(CartItem)",
+      "config" : {
+        "signature" : "increaseQuantity",
+        "input" : {
+          "params" : [
+            { "name" : "item", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.store.CartItem", "desc" : "" }
+          ],
+          "map" : {
+            "out.selectedCartItem" : "param.item"
+          }
+        },
+        "guid" : "1996038E8AAA6C5B"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 1136 }
+      },
+      "connect" : [
+        { "id" : "f42", "to" : "f43" }
+      ]
+    }, {
+      "id" : "f43",
+      "type" : "Script",
+      "name" : "increase quantity",
+      "config" : {
+        "output" : {
+          "code" : "in.selectedCartItem.quantity++;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 1136 }
+      },
+      "connect" : [
+        { "id" : "f44", "to" : "f45" }
+      ]
+    }, {
+      "id" : "f45",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 776, "y" : 1136 }
+      }
     } ]
 }

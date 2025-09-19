@@ -19,5 +19,8 @@
   }, {
     "name" : "productToCart",
     "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.Product"
+  }, {
+    "name" : "selectedCartItem",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.store.CartItem"
   } ]
 }

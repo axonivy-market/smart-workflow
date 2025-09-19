@@ -5,7 +5,7 @@
   xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 <ui:composition>
-  <p:dialog header="Shopping Cart" 
+  <p:dialog header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/ShoppingCart')}" 
             widgetVar="cart-dialog" 
             modal="true"
             width="80%"
@@ -16,9 +16,9 @@
       <h:panelGroup rendered="#{empty data.cartItems}">
         <div class="empty-cart text-center p-6">
           <i class="pi pi-shopping-cart text-8xl text-gray-400 mb-4"></i>
-          <h4 class="text-2xl font-bold text-900 mb-3">Your cart is empty</h4>
-          <p class="text-gray-600 mb-5 text-lg">Start shopping to add items to your cart</p>
-          <p:link value="Close" 
+          <h4 class="text-2xl font-bold text-900 mb-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/YourCartIsEmpty')}</h4>
+          <p class="text-gray-600 mb-5 text-lg">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/StartShopping')}</p>
+          <p:link value="#{ivy.cms.co('/Labels/Close')}" 
                  styleClass="cart-close-link"
                  onclick="PF('cart-dialog').hide(); return false;" />
         </div>
@@ -29,9 +29,9 @@
           <p:dataTable value="#{data.cartItems}" 
                       var="cartItem" 
                       styleClass="cart-table p-datatable-striped p-datatable-hoverable-rows"
-                      emptyMessage="No items in cart"
+                      emptyMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/NoItemsInCart')}"
                       rowStyleClass="cart-row">
-            <p:column headerText="Product" styleClass="product-column" width="70%">
+            <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/Product')}" styleClass="product-column" width="70%">
               <div class="cart-product-info flex align-items-center gap-3">
                 <h:panelGroup rendered="#{not empty cartItem.product.imageUrl}">
                   <img src="#{cartItem.product.imageUrl}" 
@@ -50,11 +50,11 @@
               </div>
             </p:column>
             
-            <p:column headerText="Total" styleClass="text-center">
+            <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/Total')}" styleClass="text-center">
               <span class="item-total font-bold text-primary">$#{cartItem.formattedTotalPrice}</span>
             </p:column>
             
-            <p:column headerText="Quantity" styleClass="text-center">
+            <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/Quantity')}" styleClass="text-center">
               <span class="quantity-display font-bold text-900">#{cartItem.quantity}</span>
             </p:column>
             
@@ -75,12 +75,12 @@
         
         <div class="cart-summary mt-5 p-4 border-round bg-white shadow-1">
           <div class="flex justify-content-between align-items-center">
-            <h4 class="cart-total-text">Total: $#{logic.getCartTotal()}</h4>
+            <h4 class="cart-total-text">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/store/ShoppingStore/Total')}: $#{logic.getCartTotal()}</h4>
             <div class="flex gap-3">
-              <p:link value="Close" 
+              <p:link value="#{ivy.cms.co('/Labels/Close')}" 
                      styleClass="cart-close-link"
                      onclick="PF('cart-dialog').hide(); return false;" />
-              <p:commandButton value="Finish" 
+              <p:commandButton value="#{ivy.cms.co('/Labels/Finish')}" 
                               styleClass="p-button-primary p-button-lg"
                               disabled="#{empty data.cartItems}" />
             </div>

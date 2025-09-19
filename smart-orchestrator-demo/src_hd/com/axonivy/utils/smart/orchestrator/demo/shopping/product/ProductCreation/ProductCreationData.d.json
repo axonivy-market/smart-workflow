@@ -36,5 +36,11 @@
   }, {
     "name" : "isShowUploadSection",
     "type" : "Boolean"
+  }, {
+    "name" : "selectedSupplier",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.Supplier"
+  }, {
+    "name" : "selectedCategory",
+    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategory"
   } ]
 }

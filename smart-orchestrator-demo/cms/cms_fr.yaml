@@ -1,0 +1,113 @@
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        smart:
+          orchestrator:
+            demo:
+              shopping:
+                product:
+                  ProductCreation:
+                    AIAgentProcessingNote: L’agent IA traite vos documents
+                    AIAgentProcessingSecondNote: Notre système intelligent analyse votre spécification produit et votre image. Cela peut prendre quelques minutes…
+                    AllDependenciesMatched: Toutes les dépendances sont satisfaites
+                    AnalyzeAndCreateProduct: Analyser et créer le produit
+                    BrandCreation: Création de marque
+                    BrandInformation: Informations sur la marque
+                    BrandName: Nom de la marque
+                    BrandNotExist: La marque n’existe pas
+                    BusinessAddress: Adresse professionnelle
+                    BusinessName: Nom de l’entreprise
+                    CategoryInformation: Informations sur la catégorie
+                    CategoryName: Nom de la catégorie
+                    ChooseDocument: Choisir le document
+                    ChooseExistingCategory: Choisir une catégorie existante
+                    ChooseExistingSupplier: Choisir un fournisseur existant
+                    ChooseImage: Choisir l’image
+                    City: Ville
+                    Country: Pays
+                    CreateProductConfirmQuestion: Toutes les dépendances requises sont disponibles. Voulez-vous créer un nouveau produit avec les détails ci-dessous ?
+                    Description: Description
+                    DragAndDropImageNote: Glisse ton image ici ou clique pour parcourir
+                    DragAndDropNote: Glisse ton document ici ou clique pour parcourir
+                    Email: E-Mail
+                    ExtractingProductNote: 🔍 Extraction des détails du produit
+                    MissingDependencies: Impossible de créer le produit – dépendances manquantes
+                    MissingDependenciesSecondNote: Vous devez créer le fournisseur et la catégorie de produit requis avant de créer un nouveau produit.
+                    Phone: Téléphone
+                    PreparingDataNote: ✅ Préparation des données du produit
+                    ProcessingProductImageNote: 🖼️ Traitement de l’image du produit
+                    ProductCategoryCreation: Création de catégorie de produit
+                    ProductCategoryNotExist: La catégorie de produit n’existe pas
+                    ProductCreated: Produit créé avec succès !
+                    ProductCreatedNote: Votre produit a été créé et ajouté à l’inventaire.
+                    ProductCreation: Création de produit
+                    ProductExisting: Le produit existe déjà !
+                    ProductExistingNote: Ce produit est déjà disponible dans notre inventaire.
+                    ProductImage: Image du produit
+                    ProductImageFormatsNote: 'Formats pris en charge : PNG (Min : 800x600px, Max : 5MB)'
+                    ProductImageNote: Une image produit de haute qualité pour le catalogue
+                    ProductPreview: Aperçu du produit
+                    ProductSpecification: Spécification du produit
+                    ProductSpecificationDocument: Document produit avec spécifications détaillées
+                    ProductSpecificationFormatsNote: 'Formats pris en charge : MD (Max : 10MB)'
+                    ReadingProductNote: 📄 Reading product specification
+                    ShowRequirements: Afficher les exigences
+                    StateProvince: État/Province
+                    StreetAddress1: Adresse rue 1
+                    StreetAddress2: Adresse rue 2
+                    SupplierCreation: Création de fournisseur
+                    SupplierNotExist: Le fournisseur n’existe pas
+                    UploadDocument: Télécharger le document
+                    UploadImage: Importer l’image
+                    Website: Site web
+                    ZipPostalCode: Code postal
+                  components:
+                    ProductDetails:
+                      AdditionalInfo: Informations supplémentaires
+                      BrandDescription: Description de la marque
+                      BrandID: ID de marque
+                      BrandInformation: Informations sur la marque
+                      BrandLogo: Logo de la marque
+                      BrandName: Nom de la marque
+                      CategoryAndBrand: Catégorie et marque
+                      CategoryDescription: Description de la catégorie
+                      CategoryID: ID de catégorie
+                      CategoryName: Nom de la catégorie
+                      NoAdditionalInformation: Aucune information supplémentaire disponible
+                      NoLogoAvailable: Aucun logo disponible
+                      ProductCategory: Catégorie de produit
+                      ProductName: Nom du produit
+                      Property: Propriété
+                      SKU: SKU
+                      UnitPrice: Prix unitaire
+                      Value: Valeur
+                store:
+                  ShoppingStore:
+                    AddToCart: Ajouter au panier
+                    Cart: Panier
+                    InStock: En stock
+                    NoImage: Pas d’image
+                    NoItemsInCart: Aucun article dans le panier
+                    NoProductsFound: Aucun produit trouvé
+                    NoProductsFoundNote: Nous n’avons trouvé aucun produit correspondant à votre recherche
+                    OutOfStock: En rupture de stock
+                    Product: Produit
+                    Purchasing: Achats
+                    Quantity: Quantité
+                    SearchTooltip: Que recherchez-vous aujourd’hui ?
+                    ShoppingCart: Panier
+                    StartShopping: Commencez vos achats pour ajouter des articles à votre panier
+                    Total: Total
+                    ViewDetails: Voir les détails
+                    YourCartIsEmpty: Votre panier est vide
+Labels:
+  Actions: Actions
+  Active: Actif
+  BasicInformation: Informations de base
+  Cancel: Annuler
+  Close: Fermer
+  Description: Description
+  Finish: Terminer
+  Resolve: Résoudre
+  Status: Statut

@@ -183,6 +183,8 @@
           "code" : [
             "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
             "",
+            "ivy.log.error(in.response.product.category.name);",
+            "",
             "in.response.product.category = ProductCategoryRepository.getInstance().create(in.response.product.category);",
             "in.response.isCategoryExisting = true;"
           ]
@@ -446,5 +448,75 @@
       "connect" : [
         { "id" : "f69", "to" : "f8", "color" : "default" }
       ]
+    }, {
+      "id" : "f70",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "onSelectCategory()",
+      "config" : {
+        "signature" : "onSelectCategory",
+        "guid" : "1995C2BF19561018"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 1048 }
+      },
+      "connect" : [
+        { "id" : "f72", "to" : "f73" }
+      ]
+    }, {
+      "id" : "f71",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 1048 }
+      }
+    }, {
+      "id" : "f73",
+      "type" : "Script",
+      "name" : "Select category",
+      "config" : {
+        "output" : {
+          "code" : "in.response.product.category = in.selectedCategory;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 680, "y" : 1048 }
+      },
+      "connect" : [
+        { "id" : "f74", "to" : "f71", "color" : "default" }
+      ]
+    }, {
+      "id" : "f75",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "onSelectSupplier()",
+      "config" : {
+        "signature" : "onSelectSupplier",
+        "guid" : "1995C2F540BFBB5B"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 1168 }
+      },
+      "connect" : [
+        { "id" : "f76", "to" : "f77" }
+      ]
+    }, {
+      "id" : "f77",
+      "type" : "Script",
+      "name" : "Select supplier",
+      "config" : {
+        "output" : {
+          "code" : "in.response.product.supplier = in.selectedSupplier;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 680, "y" : 1168 }
+      },
+      "connect" : [
+        { "id" : "f78", "to" : "f79", "color" : "default" }
+      ]
+    }, {
+      "id" : "f79",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 1168 }
+      }
     } ]
 }

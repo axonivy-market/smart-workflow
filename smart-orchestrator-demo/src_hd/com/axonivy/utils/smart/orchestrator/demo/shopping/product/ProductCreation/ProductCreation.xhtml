@@ -4,7 +4,9 @@
   xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
   <ui:composition template="/layouts/frame-10-full-width.xhtml">
-    <ui:define name="title">ProductCreation</ui:define>
+    <ui:define name="title">
+      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCreation')}
+    </ui:define>
     <ui:define name="content">
       <h:outputStylesheet library="css" name="shopping-common.css" />
       <h:outputStylesheet library="css" name="shopping-product-creation.css" />
@@ -23,18 +25,22 @@
                     <i class="pi pi-file-text text-xl"></i>
                   </div>
                   <div class="flex-1">
-                    <h5 class="m-0 mb-1 text-lg font-semibold text-900">Product Specification</h5>
-                    <p class="m-0 text-600 text-sm">Product document with detailed specifications</p>
+                    <h5 class="m-0 mb-1 text-lg font-semibold text-900">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductSpecification')}
+                    </h5>
+                    <p class="m-0 text-600 text-sm">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductSpecificationDocument')}
+                    </p>
                   </div>
                   <div>
                     <i class="pi pi-info-circle text-primary cursor-pointer hover:text-primary-600 transition-colors transition-duration-300" 
                        onclick="PF('doc-info-dialog').show();" 
-                       title="Show requirements"></i>
+                       title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ShowRequirements')}"></i>
                   </div>
                 </div>
                 
                 <div class="p-4 text-center transition-all transition-duration-300">
-                <p:fileUpload label="Choose Document" 
+                <p:fileUpload label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ChooseDocument')}" 
                               listener="#{logic.handleUpload}" 
                               multiple="false"
                               mode="advanced" 
@@ -45,17 +51,19 @@
                               onerror="updateUploadStatus('doc', 'error')"
                               dragDropSupport="true"
                               allowTypes="/(\.|\/)(pdf|md)$/"
-                              uploadLabel="Upload Document"
-                              cancelLabel="Cancel" />
+                              uploadLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/UploadDocument')}"
+                              cancelLabel="#{ivy.cms.co('/Labels/Cancel')}" />
                 
                   <div class="flex flex-column gap-2 mt-3">
                     <div class="flex align-items-center justify-content-center gap-2 text-sm text-600">
                       <i class="pi pi-upload text-primary"></i>
-                      <span>Drag and drop your document here, or click to browse</span>
+                      <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/DragAndDropNote')}</span>
                     </div>
                     <div class="flex align-items-center justify-content-center gap-2 text-sm text-500">
                       <i class="pi pi-info-circle"></i>
-                      <span>Supported formats: PDF, MD (Max: 10MB)</span>
+                      <span>
+                        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductSpecificationFormatsNote')}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -70,18 +78,22 @@
                     <i class="pi pi-image text-xl"></i>
                   </div>
                   <div class="flex-1">
-                    <h5 class="m-0 mb-1 text-lg font-semibold text-900">Product Image</h5>
-                    <p class="m-0 text-600 text-sm">A high-quality product image for the catalog</p>
+                    <h5 class="m-0 mb-1 text-lg font-semibold text-900">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductImage')}
+                    </h5>
+                    <p class="m-0 text-600 text-sm">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductImageNote')}
+                    </p>
                   </div>
                   <div>
                     <i class="pi pi-info-circle text-primary cursor-pointer hover:text-primary-600 transition-colors transition-duration-300" 
                        onclick="PF('image-info-dialog').show();" 
-                       title="Show requirements"></i>
+                       title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ShowRequirements')}"></i>
                   </div>
                 </div>
 
                 <div class="p-4 text-center transition-all transition-duration-300">
-                <p:fileUpload label="Choose Image" 
+                <p:fileUpload label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ChooseImage')}" 
                               listener="#{logic.handleUploadImage}" 
                               multiple="false"
                               mode="advanced" 
@@ -92,17 +104,17 @@
                               onerror="updateUploadStatus('image', 'error')"
                               dragDropSupport="true"
                               allowTypes="/(\.|\/)(png)$/"
-                              uploadLabel="Upload Image"
-                              cancelLabel="Cancel" />
+                              uploadLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/UploadImage')}"
+                              cancelLabel="#{ivy.cms.co('/Labels/Cancel')}" />
 
                   <div class="flex flex-column gap-2 mt-3">
                     <div class="flex align-items-center justify-content-center gap-2 text-sm text-600">
                       <i class="pi pi-upload text-primary"></i>
-                      <span>Drag and drop your image here, or click to browse</span>
+                      <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/DragAndDropImageNote')}</span>
                     </div>
                     <div class="flex align-items-center justify-content-center gap-2 text-sm text-500">
                       <i class="pi pi-info-circle"></i>
-                      <span>Supported formats: PNG (Min: 800x600px, Max: 5MB)</span>
+                      <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductImageFormatsNote')}</span>
                     </div>
                   </div>
                 </div>
@@ -115,7 +127,7 @@
             rendered="#{data.isShowUploadSection}">
             <div class="flex justify-content-center gap-3 mt-3">
               <p:commandButton id="proceed-button"
-                              value="Analyze and Create Product" 
+                              value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/AnalyzeAndCreateProduct')}" 
                               actionListener="#{logic.dryRun}" 
                               process="@form" 
                               styleClass="p-button-primary p-button-lg proceed-btn js-proceed-button"
@@ -141,13 +153,21 @@
               </div>
             </div>
             <div>
-              <h4 class="text-900 mb-3 text-xl font-semibold">AI Agent is Processing Your Documents</h4>
-              <p class="text-600 mb-4 text-lg line-height-3">Our intelligent system is analyzing your product specification and image. This may take a few minutes...</p>
+              <h4 class="text-900 mb-3 text-xl font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/AIAgentProcessingNote')}</h4>
+              <p class="text-600 mb-4 text-lg line-height-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/AIAgentProcessingSecondNote')}</p>
               <div class="flex flex-column gap-3 text-left max-w-25rem mx-auto">
-                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">📄 Reading product specification</div>
-                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">🔍 Extracting product details</div>
-                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">🖼️ Processing product image</div>
-                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">✅ Preparing product data</div>
+                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ReadingProductNote')}
+                </div>
+                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/Extracting')}
+                </div>
+                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProcessingProductImageNote')}
+                </div>
+                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/PreparingDataNote')}
+                </div>
               </div>
             </div>
           </div>
@@ -162,18 +182,24 @@
           <div class="flex flex-column gap-4">
             <div class="flex align-items-center gap-2">
               <i class="pi pi-exclamation-triangle text-red-600 text-xl"></i>
-              <span class="text-red-700 font-semibold text-lg">Cannot create product - missing dependencies</span>
+              <span class="text-red-700 font-semibold text-lg">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/MissingDependencies')}
+              </span>
             </div>
-            <p class="text-700 m-0 mb-3">You must create the required supplier and product category before creating a new product.</p>
+            <p class="text-700 m-0 mb-3">
+              #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/MissingDependenciesSecondNote')}
+            </p>
 
             <!-- Missing Supplier -->
             <h:panelGroup rendered="#{data.response.isSupplierExisting eq false}">
               <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
                 <div class="flex align-items-center gap-2">
                   <i class="pi pi-building text-red-500"></i>
-                  <span class="text-800 font-medium">Supplier does not exist</span>
+                  <span class="text-800 font-medium">
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/SupplierNotExist')}
+                  </span>
                 </div>
-                <p:commandButton value="Resolve" type="button" 
+                <p:commandButton value="#{ivy.cms.co('/Labels/Resolve')}" type="button" 
                                 onclick="PF('create-supplier-dialog').show();" 
                                 styleClass="p-button-sm p-button-success" 
                                 icon="pi pi-check" />
@@ -185,9 +211,11 @@
               <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
                 <div class="flex align-items-center gap-2">
                   <i class="pi pi-tags text-red-500"></i>
-                  <span class="text-800 font-medium">Product category does not exist</span>
+                  <span class="text-800 font-medium">
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCategoryNotExist')}
+                  </span>
                 </div>
-                <p:commandButton value="Resolve" type="button" 
+                <p:commandButton value="#{ivy.cms.co('/Labels/Resolve')}" type="button" 
                                 onclick="PF('create-category-dialog').show();" 
                                 styleClass="p-button-sm p-button-success" 
                                 icon="pi pi-check" />
@@ -199,9 +227,11 @@
               <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
                 <div class="flex align-items-center gap-2">
                   <i class="pi pi-tags text-red-500"></i>
-                  <span class="text-800 font-medium">Brand does not exist</span>
+                  <span class="text-800 font-medium">
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/BrandNotExist')}
+                  </span>
                 </div>
-                <p:commandButton value="Resolve" type="button" 
+                <p:commandButton value="#{ivy.cms.co('/Labels/Resolve')}" type="button" 
                                 onclick="PF('create-brand-dialog').show();" 
                                 styleClass="p-button-sm p-button-success" 
                                 icon="pi pi-check" />
@@ -216,9 +246,11 @@
           <div class="flex flex-column gap-4">
             <div class="flex align-items-center gap-2">
               <i class="pi pi-check-circle text-green-600 text-xl"></i>
-              <span class="text-green-700 font-semibold text-lg">All dependencies matched</span>
+              <span class="text-green-700 font-semibold text-lg">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/AllDependenciesMatched')}
+              </span>
             </div>
-            <p class="text-700 m-0 mb-3">All required dependencies are available. Do you want to create a new product with the details below?</p>
+            <p class="text-700 m-0 mb-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/CreateProductConfirmQuestion')}</p>
           </div>
         </h:panelGroup>
 
@@ -228,8 +260,12 @@
           <div class="flex align-items-center gap-3">
             <i class="pi pi-check-circle text-green-600 text-xl"></i>
             <div>
-              <div class="text-green-700 font-semibold text-lg">Product created successfully!</div>
-              <div class="text-700 mt-1">Your product has been created and added to the inventory.</div>
+              <div class="text-green-700 font-semibold text-lg">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCreated')}
+              </div>
+              <div class="text-700 mt-1">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCreatedNote')}
+              </div>
             </div>
           </div>
         </h:panelGroup>
@@ -240,8 +276,12 @@
           <div class="flex align-items-center gap-3">
             <i class="pi pi-check-circle text-green-600 text-xl"></i>
             <div>
-              <div class="text-green-700 font-semibold text-lg">Product is existing!</div>
-              <div class="text-700 mt-1">This product is already available in our inventory.</div>
+              <div class="text-green-700 font-semibold text-lg">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductExisting')}
+              </div>
+              <div class="text-700 mt-1">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductExistingNote')}
+              </div>
             </div>
           </div>
         </h:panelGroup>
@@ -250,7 +290,7 @@
         <h:panelGroup id="product-preview" layout="block" styleClass="mt-4" 
                       rendered="#{data.response.isSupplierExisting and data.response.isCategoryExisting and data.response.isBrandExisting and !data.response.isProductExisting and !(data.response ne null and data.isProductCreated)}">
           <div class="card">
-            <h4 class="mb-3">Product Preview</h4>
+            <h4 class="mb-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductPreview')}</h4>
             <ic:com.axonivy.utils.smart.orchestrator.demo.shopping.product.components.ProductDetails
               product="#{data.response.product}" tempImg="#{data.imageBase64}" />
           </div>
@@ -268,79 +308,6 @@
     <ui:include src="SupplierCreationDialog.xhtml" />
     <ui:include src="ProductCategoryCreationDialog.xhtml" />
     <ui:include src="BrandCreationDialog.xhtml" />
-
-    <!-- Product Specification Info Modal -->
-    <p:dialog id="spec-info-modal" header="Product Specification Requirements" 
-              widgetVar="doc-info-dialog" modal="true" resizable="false" 
-              styleClass="info-modal" width="600">
-      <div class="p-4">
-        <h4><i class="pi pi-file-text"></i> Product Specification Document</h4>
-        <p>Please upload a comprehensive document containing the product's technical details.</p>
-        
-        <h5>Required Information:</h5>
-        <ul>
-          <li><strong>Product Name:</strong> Clear, descriptive product title</li>
-          <li><strong>Detailed Description:</strong> Features, benefits, use cases</li>
-          <li><strong>Technical Specifications:</strong> Dimensions, weight, materials</li>
-          <li><strong>Performance Metrics:</strong> Speed, capacity, efficiency ratings</li>
-          <li><strong>Compatibility:</strong> System requirements, compatible products</li>
-          <li><strong>Safety Information:</strong> Warnings, certifications, compliance</li>
-        </ul>
-        
-        <h5>Accepted Formats:</h5>
-        <div class="format-tags">
-          <span class="bg-primary-100 text-primary-700 px-3 py-2 border-round-lg text-sm font-medium border-1 border-primary-300">PDF</span>
-          <span class="bg-primary-100 text-primary-700 px-3 py-2 border-round-lg text-sm font-medium border-1 border-primary-300">MD</span>
-        </div>
-        
-        <div class="bg-blue-50 p-4 border-round mt-4 border-left-3 border-blue-400">
-          <h5><i class="pi pi-lightbulb"></i> Tips for Better Results:</h5>
-          <ul>
-            <li>Use clear, structured formatting with headings</li>
-            <li>Include bullet points for features and specifications</li>
-            <li>Ensure text is machine-readable (not scanned images)</li>
-            <li>Maximum file size: 10MB</li>
-          </ul>
-        </div>
-      </div>
-    </p:dialog>
-
-    <!-- Product Image Info Modal -->
-    <p:dialog id="image-info-modal" header="Product Image Requirements" 
-              widgetVar="imageInfoDialog" modal="true" resizable="false" 
-              styleClass="info-modal" width="600">
-      <div class="p-4">
-        <h4><i class="pi pi-image"></i> Product Image</h4>
-        <p>Upload a high-quality image that best represents your product.</p>
-        
-        <h5>Image Guidelines:</h5>
-        <ul>
-          <li><strong>Quality:</strong> High resolution (minimum 800x600 pixels)</li>
-          <li><strong>Format:</strong> Clear, well-lit, professional appearance</li>
-          <li><strong>Background:</strong> Plain or neutral background preferred</li>
-          <li><strong>Focus:</strong> Product should be the main subject</li>
-          <li><strong>Angle:</strong> Show product from the most informative angle</li>
-          <li><strong>Lighting:</strong> Even lighting without harsh shadows</li>
-        </ul>
-        
-        <h5>Accepted Formats:</h5>
-        <div class="format-tags">
-          <span class="bg-primary-100 text-primary-700 px-3 py-2 border-round-lg text-sm font-medium border-1 border-primary-300">PNG</span>
-        </div>
-        
-        <div class="bg-blue-50 p-4 border-round mt-4 border-left-3 border-blue-400">
-          <h5><i class="pi pi-lightbulb"></i> Tips for Better Results:</h5>
-          <ul>
-            <li>Use natural lighting or professional photography setup</li>
-            <li>Avoid blurry or pixelated images</li>
-            <li>Ensure product fills most of the frame</li>
-            <li>Maximum file size: 5MB</li>
-            <li>Consider multiple angles if product has complex features</li>
-          </ul>
-        </div>
-      </div>
-    </p:dialog>
-
     </ui:define>
   </ui:composition>
 </h:body>
