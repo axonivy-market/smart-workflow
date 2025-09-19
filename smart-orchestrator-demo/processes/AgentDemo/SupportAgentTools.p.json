@@ -37,7 +37,7 @@
           "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket.class",
           "tools" : "[\"sumarizeProblem\"]",
           "resultMapping" : "in.supportTicket",
-          "query" : "I have error 404 in Cockpit\r\n"
+          "query" : "I have error 404 in Cockpit"
         }
       },
       "visual" : {

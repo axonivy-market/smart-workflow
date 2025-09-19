@@ -20,6 +20,9 @@
           }
         }
       },
+      "tags" : [
+        "tool"
+      ],
       "visual" : {
         "at" : { "x" : 96, "y" : 64 },
         "description" : "provides information about the current user"
