@@ -37,7 +37,7 @@ This demo showcases how to use the Axon Ivy Support Agent, an AI-powered agent i
 
 **Technical Details:**
 
-- The agent is implemented as a callable sub-process (`AxonIvySupportAgent.p.json`) and uses the `com.axonivy.utils.smart.orchestrator.AgenticProcessCall` Java bean.
+- The agent is implemented as a callable sub-process (`AxonIvySupportAgent.p.json`) and uses the `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java bean.
 - The agent is configured to use a specific tool (`createAxonIvySupportTask`), which allows it to create support tasks automatically within the workflow. This is achieved by specifying the tool name in the agent's configuration (see example below).
 - The agent's output is mapped to a structured Java object (`AxonIvySupportResponse`), making it easy to use the AI-generated result directly in Axon Ivy processes. This object typically contains details such as the classification, created task link, and a summary of the support issue.
 
@@ -45,21 +45,13 @@ This demo showcases how to use the Axon Ivy Support Agent, an AI-powered agent i
 
 To configure the agent, define a program element with the following settings:
 
-```java
-javaClass: com.axonivy.utils.smart.orchestrator.AgenticProcessCall
-userConfig:
-  system: "Classify problem then create a task if necessary. Check for missing information like version, classify problem: Portal or Core or Market product, check create a task to handle it, return the task detail link, then summarize problem, reply to question."
-  tools: ["createAxonIvySupportTask"]
-  resultType: Business.AxonIvySupportDemo.AxonIvySupportResponse.class
-  resultMapping: in.result
-  query: <%=in.ticketDescription%>
-```
+![Support Ticket exanmple](img/support-ticket-example.png)
 
 This configuration ensures the agent uses only the specified tool and returns its output as a structured Java object.
 
 **Demo Run Example:**
 
-Suppose a user submits a support question: "The portal is not loading for user JohnDoe."
+Suppose a user submits a support question: "I have NPE when open Case Details in Portal 12.0.9"
 
 1. The agent receives the question and username.
 2. It checks for missing information (e.g., version), classifies the issue as a Portal problem, and determines that a support task should be created.
@@ -68,8 +60,7 @@ Suppose a user submits a support question: "The portal is not loading for user J
 
 ```text
 Classification: Portal
-Task Created: https://support.axonivy.com/task/12345
-Summary: The portal is not loading for user JohnDoe. A support task has been created to investigate the issue.
+Summary: The problem is a NullPointerException (NPE) occurring when opening Case Details in Portal version 12.0.9. Since the issue is related to the Portal product and the version is provided, a support task has been created to address this problem.
 ```
 
 This response is mapped to the `AxonIvySupportResponse` object and can be used directly in subsequent workflow steps.
@@ -84,7 +75,7 @@ How to Run the Demo:
 
 ### Configurations
 
-Before start working with Smart Ochrestator, you need to provide some configurations using Axon Ivy variables:
+Before start working with Smart Workflow, you need to provide some configurations using Axon Ivy variables:
 
 - `AI.OpenAI.APIKey`: API key of your OpenAI account.
 - `AI.OpenAI.Model`: Default OpenAI model. Currently we are supporting `gpt-4o`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, and `gpt-5` models.
@@ -99,7 +90,7 @@ To select the appropriate tool, AI agents rely on the descriptions of callable p
 
 ### Defining AI agent
 
-To define an AI agent, create a program element backed by the `com.axonivy.utils.smart.orchestrator.AgenticProcessCall` Java bean. In the `Configuration` tab, you can access and customize detailed settings for your AI agent.
+To define an AI agent, create a program element backed by the `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java bean. In the `Configuration` tab, you can access and customize detailed settings for your AI agent.
 
 #### Message
 
