@@ -1,0 +1,113 @@
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        smart:
+          orchestrator:
+            demo:
+              shopping:
+                product:
+                  ProductCreation:
+                    AIAgentProcessingNote: KI-Agent verarbeitet deine Dokumente
+                    AIAgentProcessingSecondNote: Unser intelligentes System analysiert deine Produktspezifikation und dein Bild. Dies kann ein paar Minuten dauern …
+                    AllDependenciesMatched: Alle Abhängigkeiten erfüllt
+                    AnalyzeAndCreateProduct: Produkt analysieren und erstellen
+                    BrandCreation: Markenerstellung
+                    BrandInformation: Markeninformationen
+                    BrandName: Markenname
+                    BrandNotExist: Marke existiert nicht
+                    BusinessAddress: Geschäftsadresse
+                    BusinessName: Firmenname
+                    CategoryInformation: Kategorieninformationen
+                    CategoryName: Kategorienname
+                    ChooseDocument: Dokument auswählen
+                    ChooseExistingCategory: Vorhandene Kategorie auswählen
+                    ChooseExistingSupplier: Vorhandenen Lieferanten auswählen
+                    ChooseImage: Bild auswählen
+                    City: Stadt
+                    Country: Land
+                    CreateProductConfirmQuestion: Alle erforderlichen Abhängigkeiten sind verfügbar. Möchtest du ein neues Produkt mit den untenstehenden Details erstellen?
+                    Description: Beschreibung
+                    DragAndDropImageNote: Ziehe dein Bild hierher oder klicke, um zu durchsuchen
+                    DragAndDropNote: Ziehe dein Dokument hierher oder klicke, um zu browsen
+                    Email: E-Mail
+                    ExtractingProductNote: 🔍 Produktdetails werden extrahiert
+                    MissingDependencies: Produkt kann nicht erstellt werden – fehlende Abhängigkeiten
+                    MissingDependenciesSecondNote: Du musst den erforderlichen Lieferanten und die erforderliche Produktkategorie erstellen, bevor du ein neues Produkt erstellst.
+                    Phone: Telefon
+                    PreparingDataNote: ✅ Produktdaten werden vorbereitet
+                    ProcessingProductImageNote: 🖼️ Produktbild wird verarbeitet
+                    ProductCategoryCreation: Erstellung der Produktkategorie
+                    ProductCategoryNotExist: Produktkategorie existiert nicht
+                    ProductCreated: Produkt erfolgreich erstellt!
+                    ProductCreatedNote: Dein Produkt wurde erstellt und zum Bestand hinzugefügt.
+                    ProductCreation: Produkterstellung
+                    ProductExisting: Produkt existiert bereits!
+                    ProductExistingNote: Dieses Produkt ist bereits in unserem Bestand verfügbar.
+                    ProductImage: Produktbild
+                    ProductImageFormatsNote: 'Unterstützte Formate: PNG (Min: 800x600px, Max: 5MB)'
+                    ProductImageNote: Ein hochwertiges Produktbild für den Katalog
+                    ProductPreview: Produktvorschau
+                    ProductSpecification: Produktspezifikation
+                    ProductSpecificationDocument: Produktdokument mit detaillierten Spezifikationen
+                    ProductSpecificationFormatsNote: 'Unterstützte Formate: MD (Max: 10MB)'
+                    ReadingProductNote: 📄 Produktspezifikation wird gelesen
+                    ShowRequirements: Anforderungen anzeigen
+                    StateProvince: Bundesland/Provinz
+                    StreetAddress1: Straßenadresse 1
+                    StreetAddress2: Straßenadresse 2
+                    SupplierCreation: Lieferantenerstellung
+                    SupplierNotExist: Lieferant existiert nicht
+                    UploadDocument: Dokument hochladen
+                    UploadImage: Bild hochladen
+                    Website: Webseite
+                    ZipPostalCode: PLZ / Postleitzahl
+                  components:
+                    ProductDetails:
+                      AdditionalInfo: Zusätzliche Informationen
+                      BrandDescription: Markenbeschreibung
+                      BrandID: Marken-ID
+                      BrandInformation: Markeninformationen
+                      BrandLogo: Markenlogo
+                      BrandName: Markenname
+                      CategoryAndBrand: Kategorie und Marke
+                      CategoryDescription: Kategoriebeschreibung
+                      CategoryID: Kategorie-ID
+                      CategoryName: Kategorienname
+                      NoAdditionalInformation: Keine zusätzlichen Informationen verfügbar
+                      NoLogoAvailable: Kein Logo verfügbar
+                      ProductCategory: Produktkategorie
+                      ProductName: Produktname
+                      Property: Eigenschaft
+                      SKU: SKU
+                      UnitPrice: Einzelpreis
+                      Value: Wert
+                store:
+                  ShoppingStore:
+                    AddToCart: In den Warenkorb
+                    Cart: Warenkorb
+                    InStock: Auf Lager
+                    NoImage: Kein Bild
+                    NoItemsInCart: Keine Artikel im Warenkorb
+                    NoProductsFound: Keine Produkte gefunden
+                    NoProductsFoundNote: Wir konnten keine Produkte finden, die Ihrer Suche entsprechen
+                    OutOfStock: Nicht auf Lager
+                    Product: Produkt
+                    Purchasing: Einkauf
+                    Quantity: Menge
+                    SearchTooltip: Wonach suchst du heute?
+                    ShoppingCart: Warenkorb
+                    StartShopping: Fang an zu shoppen, um Artikel in deinen Warenkorb zu legen
+                    Total: Gesamt
+                    ViewDetails: Details anzeigen
+                    YourCartIsEmpty: Dein Warenkorb ist leer
+Labels:
+  Actions: Aktionen
+  Active: Aktiv
+  BasicInformation: Grundinformationen
+  Cancel: Abbrechen
+  Close: Schließen
+  Description: Beschreibung
+  Finish: Fertig
+  Resolve: Beheben
+  Status: Status

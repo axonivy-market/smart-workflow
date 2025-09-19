@@ -1,0 +1,315 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">
+      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCreation')}
+    </ui:define>
+    <ui:define name="content">
+      <h:outputStylesheet library="css" name="shopping-common.css" />
+      <h:outputStylesheet library="css" name="shopping-product-creation.css" />
+      <h:outputScript name="shopping-product-creation.js" library="js" />
+
+      <!-- Enhanced Upload Form -->
+      <h:form id="upload-form">
+        <h:panelGroup layout="block" styleClass="bg-white border-round-xl p-4 shadow-2 border-1 surface-border"
+          rendered="#{data.isShowUploadSection and !data.isProductCreated}">
+          <h:panelGroup layout="block" styleClass="grid js-file-upload">
+            <!-- Document Upload Section -->
+            <div class="col-12 lg:col-6">
+              <div class="bg-gray-50 border-round-lg overflow-hidden border-2 surface-border transition-all transition-duration-300 hover:border-primary">
+                <div class="p-3 bg-white border-bottom-1 surface-border flex align-items-center gap-3">
+                  <div class="w-3rem h-3rem border-circle flex align-items-center justify-content-center text-white" style="background: linear-gradient(45deg, #3498db, #2980b9);">
+                    <i class="pi pi-file-text text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h5 class="m-0 mb-1 text-lg font-semibold text-900">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductSpecification')}
+                    </h5>
+                    <p class="m-0 text-600 text-sm">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductSpecificationDocument')}
+                    </p>
+                  </div>
+                  <div>
+                    <i class="pi pi-info-circle text-primary cursor-pointer hover:text-primary-600 transition-colors transition-duration-300" 
+                       onclick="PF('doc-info-dialog').show();" 
+                       title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ShowRequirements')}"></i>
+                  </div>
+                </div>
+                
+                <div class="p-4 text-center transition-all transition-duration-300">
+                <p:fileUpload label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ChooseDocument')}" 
+                              listener="#{logic.handleUpload}" 
+                              multiple="false"
+                              mode="advanced" 
+                              auto="true" 
+                              update="@form"
+                              styleClass="upload-component doc-upload"
+                              onupload="updateUploadStatus('doc', 'success')"
+                              onerror="updateUploadStatus('doc', 'error')"
+                              dragDropSupport="true"
+                              allowTypes="/(\.|\/)(pdf|md)$/"
+                              uploadLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/UploadDocument')}"
+                              cancelLabel="#{ivy.cms.co('/Labels/Cancel')}" />
+                
+                  <div class="flex flex-column gap-2 mt-3">
+                    <div class="flex align-items-center justify-content-center gap-2 text-sm text-600">
+                      <i class="pi pi-upload text-primary"></i>
+                      <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/DragAndDropNote')}</span>
+                    </div>
+                    <div class="flex align-items-center justify-content-center gap-2 text-sm text-500">
+                      <i class="pi pi-info-circle"></i>
+                      <span>
+                        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductSpecificationFormatsNote')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image Upload Section -->
+            <div class="col-12 lg:col-6">
+              <div class="bg-gray-50 border-round-lg overflow-hidden border-2 surface-border transition-all transition-duration-300 hover:border-primary">
+                <div class="p-3 bg-white border-bottom-1 surface-border flex align-items-center gap-3">
+                  <div class="w-3rem h-3rem border-circle flex align-items-center justify-content-center text-white" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
+                    <i class="pi pi-image text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h5 class="m-0 mb-1 text-lg font-semibold text-900">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductImage')}
+                    </h5>
+                    <p class="m-0 text-600 text-sm">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductImageNote')}
+                    </p>
+                  </div>
+                  <div>
+                    <i class="pi pi-info-circle text-primary cursor-pointer hover:text-primary-600 transition-colors transition-duration-300" 
+                       onclick="PF('image-info-dialog').show();" 
+                       title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ShowRequirements')}"></i>
+                  </div>
+                </div>
+
+                <div class="p-4 text-center transition-all transition-duration-300">
+                <p:fileUpload label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ChooseImage')}" 
+                              listener="#{logic.handleUploadImage}" 
+                              multiple="false"
+                              mode="advanced" 
+                              auto="true" 
+                              update="@form"
+                              styleClass="upload-component image-upload"
+                              onupload="updateUploadStatus('image', 'success')"
+                              onerror="updateUploadStatus('image', 'error')"
+                              dragDropSupport="true"
+                              allowTypes="/(\.|\/)(png)$/"
+                              uploadLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/UploadImage')}"
+                              cancelLabel="#{ivy.cms.co('/Labels/Cancel')}" />
+
+                  <div class="flex flex-column gap-2 mt-3">
+                    <div class="flex align-items-center justify-content-center gap-2 text-sm text-600">
+                      <i class="pi pi-upload text-primary"></i>
+                      <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/DragAndDropImageNote')}</span>
+                    </div>
+                    <div class="flex align-items-center justify-content-center gap-2 text-sm text-500">
+                      <i class="pi pi-info-circle"></i>
+                      <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductImageFormatsNote')}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </h:panelGroup>
+
+          <!-- Action Buttons -->
+          <h:panelGroup layout="block" styleClass="flex flex-column gap-3 js-proceed-button"
+            rendered="#{data.isShowUploadSection}">
+            <div class="flex justify-content-center gap-3 mt-3">
+              <p:commandButton id="proceed-button"
+                              value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/AnalyzeAndCreateProduct')}" 
+                              actionListener="#{logic.dryRun}" 
+                              process="@form" 
+                              styleClass="p-button-primary p-button-lg proceed-btn js-proceed-button"
+                              update="@form result-form"
+                              global="false"
+                              onstart="showRunningText();"
+                              oncomplete="hideRunningText();"
+                              disabled="#{empty data.productInfo}"
+                              icon="pi pi-cog" />
+            </div>
+          </h:panelGroup>
+          
+          <!-- AI Processing Indicator -->
+          <div class="text-center p-6 bg-gray-50 border-round-xl border-2 surface-border js-processing-text hidden">
+            <div class="ai-animation mb-4 relative flex justify-content-center align-items-center" style="height: 120px;">
+              <div class="ai-brain w-5rem h-5rem bg-primary border-circle flex align-items-center justify-content-center text-white text-2xl relative z-2">
+                <i class="pi pi-android"></i>
+              </div>
+              <div class="ai-waves absolute top-50 left-50 transform-translate-50">
+                <div class="wave wave-1"></div>
+                <div class="wave wave-2"></div>
+                <div class="wave wave-3"></div>
+              </div>
+            </div>
+            <div>
+              <h4 class="text-900 mb-3 text-xl font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/AIAgentProcessingNote')}</h4>
+              <p class="text-600 mb-4 text-lg line-height-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/AIAgentProcessingSecondNote')}</p>
+              <div class="flex flex-column gap-3 text-left max-w-25rem mx-auto">
+                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ReadingProductNote')}
+                </div>
+                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ExtractingProductNote')}
+                </div>
+                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProcessingProductImageNote')}
+                </div>
+                <div class="ai-step p-3 bg-white border-round border-left-3 surface-border text-600 transition-all transition-duration-500 opacity-50">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/PreparingDataNote')}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </h:panelGroup>
+      </h:form>
+
+        <h:form id="result-form">
+        <!-- Blocking message when dependencies don't exist -->
+        <h:panelGroup id="dependencies-missing" layout="block" styleClass="mt-4 p-4 border-round-lg surface-border bg-red-50 border-left-3 border-red-500" 
+                      rendered="#{data.response ne null and ((data.response.isSupplierExisting eq false) or (data.response.isCategoryExisting eq false) or (data.response.isBrandExisting eq false))}">
+          <div class="flex flex-column gap-4">
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-red-600 text-xl"></i>
+              <span class="text-red-700 font-semibold text-lg">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/MissingDependencies')}
+              </span>
+            </div>
+            <p class="text-700 m-0 mb-3">
+              #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/MissingDependenciesSecondNote')}
+            </p>
+
+            <!-- Missing Supplier -->
+            <h:panelGroup rendered="#{data.response.isSupplierExisting eq false}">
+              <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
+                <div class="flex align-items-center gap-2">
+                  <i class="pi pi-building text-red-500"></i>
+                  <span class="text-800 font-medium">
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/SupplierNotExist')}
+                  </span>
+                </div>
+                <p:commandButton value="#{ivy.cms.co('/Labels/Resolve')}" type="button" 
+                                onclick="PF('create-supplier-dialog').show();" 
+                                styleClass="p-button-sm p-button-success" 
+                                icon="pi pi-check" />
+              </div>
+            </h:panelGroup>
+
+            <!-- Missing Category -->
+            <h:panelGroup rendered="#{data.response.isCategoryExisting eq false}">
+              <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
+                <div class="flex align-items-center gap-2">
+                  <i class="pi pi-tags text-red-500"></i>
+                  <span class="text-800 font-medium">
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCategoryNotExist')}
+                  </span>
+                </div>
+                <p:commandButton value="#{ivy.cms.co('/Labels/Resolve')}" type="button" 
+                                onclick="PF('create-category-dialog').show();" 
+                                styleClass="p-button-sm p-button-success" 
+                                icon="pi pi-check" />
+              </div>
+            </h:panelGroup>
+            
+            <!-- Missing Brand -->
+            <h:panelGroup rendered="#{data.response.isBrandExisting eq false}">
+              <div class="flex align-items-center justify-content-between p-3 bg-white border-round surface-border border-1">
+                <div class="flex align-items-center gap-2">
+                  <i class="pi pi-tags text-red-500"></i>
+                  <span class="text-800 font-medium">
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/BrandNotExist')}
+                  </span>
+                </div>
+                <p:commandButton value="#{ivy.cms.co('/Labels/Resolve')}" type="button" 
+                                onclick="PF('create-brand-dialog').show();" 
+                                styleClass="p-button-sm p-button-success" 
+                                icon="pi pi-check" />
+              </div>
+            </h:panelGroup>
+          </div>
+        </h:panelGroup>
+
+        <!-- Success message when all dependencies exist -->
+        <h:panelGroup id="dependencies-ready" layout="block" styleClass="mt-4 p-4 border-round-lg surface-border bg-green-50 border-left-3 border-green-500" 
+                      rendered="#{(data.response.isSupplierExisting and data.response.isCategoryExisting and data.response.isBrandExisting and !data.response.isProductExisting) and !(data.response ne null and data.isProductCreated)}">
+          <div class="flex flex-column gap-4">
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-check-circle text-green-600 text-xl"></i>
+              <span class="text-green-700 font-semibold text-lg">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/AllDependenciesMatched')}
+              </span>
+            </div>
+            <p class="text-700 m-0 mb-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/CreateProductConfirmQuestion')}</p>
+          </div>
+        </h:panelGroup>
+
+        <!-- Success message when product is created -->
+        <h:panelGroup id="product-created-success" layout="block" styleClass="mt-4 p-4 border-round-lg surface-border bg-green-50 border-left-3 border-green-500" 
+                      rendered="#{data.response ne null and data.isProductCreated}">
+          <div class="flex align-items-center gap-3">
+            <i class="pi pi-check-circle text-green-600 text-xl"></i>
+            <div>
+              <div class="text-green-700 font-semibold text-lg">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCreated')}
+              </div>
+              <div class="text-700 mt-1">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductCreatedNote')}
+              </div>
+            </div>
+          </div>
+        </h:panelGroup>
+        
+        <!-- Success message when product is already exist-->
+        <h:panelGroup id="product-existed" layout="block" styleClass="mt-4 p-4 border-round-lg surface-border bg-green-50 border-left-3 border-green-500" 
+                      rendered="#{data.response.isProductExisting}">
+          <div class="flex align-items-center gap-3">
+            <i class="pi pi-check-circle text-green-600 text-xl"></i>
+            <div>
+              <div class="text-green-700 font-semibold text-lg">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductExisting')}
+              </div>
+              <div class="text-700 mt-1">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductExistingNote')}
+              </div>
+            </div>
+          </div>
+        </h:panelGroup>
+
+        <!-- Product Details Preview when all dependencies exist -->
+        <h:panelGroup id="product-preview" layout="block" styleClass="mt-4" 
+                      rendered="#{data.response.isSupplierExisting and data.response.isCategoryExisting and data.response.isBrandExisting and !data.response.isProductExisting and !(data.response ne null and data.isProductCreated)}">
+          <div class="card">
+            <h4 class="mb-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/orchestrator/demo/shopping/product/ProductCreation/ProductPreview')}</h4>
+            <ic:com.axonivy.utils.smart.orchestrator.demo.shopping.product.components.ProductDetails
+              product="#{data.response.product}" tempImg="#{data.imageBase64}" />
+          </div>
+        </h:panelGroup>
+        <h:panelGroup class="flex justify-content-end mt-3"
+          rendered="#{data.response ne null and !(data.response ne null and data.isProductCreated)}" layout="block">
+              <p:commandButton value="Create New Product" actionListener="#{logic.createProduct}"
+                              update="@form #{p:resolveFirstComponentWithId('upload-form', view).clientId}"
+                              process="@form" styleClass="p-button-success p-button-lg" 
+                              rendered="#{data.response.isProductExisting eq false}"
+                              disabled="#{!(data.response.isBrandExisting and data.response.isCategoryExisting and data.response.isSupplierExisting)}"
+                              icon="pi pi-plus" />
+        </h:panelGroup>
+      </h:form>
+    <ui:include src="SupplierCreationDialog.xhtml" />
+    <ui:include src="ProductCategoryCreationDialog.xhtml" />
+    <ui:include src="BrandCreationDialog.xhtml" />
+    </ui:define>
+  </ui:composition>
+</h:body>
+
+</html>

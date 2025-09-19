@@ -1,0 +1,68 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1994C67C3EE5A12F",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Business.ShoppingDemo.Agents.BrandAgentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "callBrandAgent(Brand,String)",
+      "config" : {
+        "signature" : "callBrandAgent",
+        "input" : {
+          "params" : [
+            { "name" : "brand", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.brand.Brand", "desc" : "All information about a product brand" },
+            { "name" : "instructions", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.brand" : "param.brand",
+            "out.instructions" : "param.instructions"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.brand.BrandAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.response" : "in.response"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 456, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "ProgramInterface",
+      "name" : "Product brand Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1\"",
+          "system" : "You are an AI Agent in charge of create/update product operation for an invetory of a company.\r\nWith the given product brand information, you need to perform these steps:\r\n\r\nInstructions:\r\n<%= in.instructions %>",
+          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.shopping.brand.BrandAgentResponse.class",
+          "tools" : "[\"findProductBrand\",\"createProductBrand\"]",
+          "resultMapping" : "in.response",
+          "query" : "This is supplier information\r\n---\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.brand) %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 272, "y" : 64 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}

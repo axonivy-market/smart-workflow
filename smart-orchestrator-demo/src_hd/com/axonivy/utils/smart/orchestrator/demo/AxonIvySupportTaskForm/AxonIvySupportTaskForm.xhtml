@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">Support Ticket</ui:define>
+    <ui:define name="content">
+
+      <h3>
+        #{data.supportTicket.title}
+      </h3>
+
+      <h:form id="form">
+        <p:messages />
+        <div class="field">
+          <h:outputText value="Created date: #{ivy.task.startTimestamp}"></h:outputText>
+        </div>
+        <div class="field">
+          <h:outputText value="Version: #{data.supportTicket.version}"></h:outputText>
+        </div>
+        <div class="field">
+          <h:outputText value="OS system: #{data.supportTicket.systemOS}"></h:outputText>
+        </div>
+        <div class="field">
+          <h:outputText value="Reporter: #{data.supportTicket.reporter}"></h:outputText>
+        </div>
+        <div class="field">
+          <h:outputText value="Category: #{data.supportTicket.type}"></h:outputText>
+        </div>
+        <div class="field">
+          <p:outputLabel value="Description" />
+          <p:inputTextarea value="#{data.supportTicket.description}" disabled="false" styleClass="w-full" />
+        </div>
+        <div class="field">
+          <p:outputLabel value="Stack trace" />
+          <p:inputTextarea value="#{data.supportTicket.stackTrace}" disabled="false" styleClass="w-full" />
+        </div>
+        
+        <div class="field">
+          <p:outputLabel for="solution" value="Solution" />
+          <p:inputTextarea id="solution" value="#{data.supportTicket.solution}" styleClass="w-full" required="true"/> 
+        </div>
+        <br />
+        <div class="command-btns">
+          <p:commandLink id="cancel" actionListener="#{ivyWorkflowView.cancel()}" process="@this" value="Cancel" />
+          <p:commandButton id="proceed" actionListener="#{logic.close}" value="Proceed" update="form" icon="pi pi-check" />
+        </div>
+      </h:form>
+
+    </ui:define> 
+  </ui:composition>
+</h:body>
+
+</html>

@@ -1,0 +1,12 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "AxonIvySupportAgentData",
+  "namespace" : "Business.AxonIvySupportDemo.Agents",
+  "fields" : [ {
+    "name" : "ticketDescription",
+    "modifiers" : [ ]
+  }, {
+    "name" : "result",
+    "type" : "Business.AxonIvySupportDemo.AxonIvySupportResponse"
+  } ]
+}

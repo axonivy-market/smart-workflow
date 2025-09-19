@@ -1,0 +1,117 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "198E60A0B959326C",
+  "config" : {
+    "data" : "Business.AxonIvySupportData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "AxonIvySupport",
+      "config" : {
+        "signature" : "AxonIvySupport"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 560, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "DialogCall",
+      "name" : "Axon ivy support",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.AxonIvySupportForm:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "RequestStart",
+      "name" : "createTaskForSupportTeam",
+      "config" : {
+        "signature" : "createTaskForSupportTeam",
+        "input" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket", "desc" : "" },
+            { "name" : "taskInfo", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo", "desc" : "" }
+          ],
+          "map" : {
+            "out.supportTicket" : "param.supportTicket",
+            "out.taskInfo" : "param.taskInfo"
+          }
+        },
+        "request" : {
+          "isVisibleOnStartList" : false
+        },
+        "triggerable" : true,
+        "task" : {
+          "responsible" : {
+            "roles" : [
+              "SYSTEM"
+            ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 560, "y" : 224 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "TaskSwitchEvent",
+      "config" : {
+        "task" : {
+          "name" : "<%=in1.taskInfo.name%>",
+          "description" : "<%=in1.taskInfo.description%>",
+          "responsible" : {
+            "type" : "ROLE_FROM_ATTRIBUTE",
+            "script" : "in1.taskInfo.responsible"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "DialogCall",
+      "name" : "Open support task",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.AxonIvySupportTaskForm:start(com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket)",
+        "call" : {
+          "map" : {
+            "param.supportTicket" : "in.supportTicket"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f8" }
+      ]
+    } ]
+}

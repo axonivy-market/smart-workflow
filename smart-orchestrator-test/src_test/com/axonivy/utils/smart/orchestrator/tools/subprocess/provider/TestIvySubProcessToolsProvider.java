@@ -87,6 +87,7 @@ class TestIvySubProcessToolsProvider {
         .build();
     String chat = supporter.chat("Help me, my computer is beeping, it started after opening AxonIvy Portal.");
     System.out.println(chat);
+    assertThat(!chat.isEmpty());
   }
 
 }

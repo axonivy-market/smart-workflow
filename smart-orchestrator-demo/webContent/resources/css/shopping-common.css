@@ -1,0 +1,191 @@
+/* ========================================
+   COMMON STYLES & COLOR DEFINITIONS
+   ======================================== */
+
+/* CSS Variables for consistent theming */
+:root {
+  /* Primary Colors */
+  --primary-gradient: linear-gradient(45deg, #667eea, #764ba2);
+  --primary-color: #667eea;
+  --primary-hover: #5a6fd8;
+  
+  /* Status Colors */
+  --success-gradient: linear-gradient(45deg, #4CAF50, #45a049);
+  --danger-gradient: linear-gradient(45deg, #f44336, #da190b);
+  --warning-gradient: linear-gradient(45deg, #ff6b6b, #ee5a52);
+  
+  /* Text Colors */
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --text-muted: #95a5a6;
+  
+  /* Background Colors */
+  --bg-light: #f8f9fa;
+  --bg-border: #e9ecef;
+  
+  /* Shadow Definitions */
+  --shadow-light: 0 5px 25px rgba(0,0,0,0.08);
+  --shadow-medium: 0 10px 40px rgba(0,0,0,0.1);
+  --shadow-heavy: 0 15px 60px rgba(0,0,0,0.3);
+  
+  /* Transition Definitions */
+  --transition-smooth: all 0.3s ease;
+  --transition-bounce: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ========================================
+   LOADING & PROCESSING ANIMATIONS
+   ======================================== */
+
+/* Loading text styles */
+.loading-text {
+  color: #6366f1;
+}
+
+.loading-dots {
+  animation: loading-animation 1.5s infinite;
+}
+
+@keyframes loading-animation {
+  0%, 20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Processing spinner */
+.js-processing-text::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 2px solid #e0f2fe;
+  border-top: 2px solid #0ea5e9;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   COMMON ANIMATIONS
+   ======================================== */
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+  }
+}
+
+/* ========================================
+   COMMON UTILITY CLASSES
+   ======================================== */
+
+/* Transition utilities */
+.product-card-animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Common button styles */
+.btn-gradient-primary {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  color: white !important;
+  transition: var(--transition-smooth) !important;
+}
+
+.btn-gradient-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* Common styled button - applied to all buttons */
+.btn-common,
+.ui-button,
+.p-button,
+button[class*="p-button"],
+.ui-fileupload-choose {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 5px 10px !important;
+  font-weight: 600 !important;
+  color: white !important;
+  transition: var(--transition-smooth) !important;
+}
+
+.btn-common:hover,
+.ui-button:hover,
+.p-button:hover,
+button[class*="p-button"]:hover,
+.ui-fileupload-choose:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+
+@media (max-width: 768px) {
+  .suggestion-tags {
+    justify-content: center;
+  }
+  
+  .features-showcase {
+    margin-top: 3rem;
+  }
+  
+  .feature-item {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2.5rem !important;
+  }
+}

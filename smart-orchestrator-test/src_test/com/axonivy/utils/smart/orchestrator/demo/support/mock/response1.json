@@ -1,35 +1,25 @@
 {
-  "id": "chatcmpl-C6s6ghQqTjCt2RoF9F6GTuRqTSU16",
+  "id": "chatcmpl-CHP4hXsK7QXW1MxIU8C4g0w7vXMbR",
   "object": "chat.completion",
-  "created": 1755753990,
+  "created": 1758263999,
   "model": "gpt-4.1-mini-2025-04-14",
   "choices": [
     {
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": null,
-        "tool_calls": [
-          {
-            "id": "call_kcgCd6eyMWW8pYTl7d6w2IWa",
-            "type": "function",
-            "function": {
-              "name": "createSupportTicket",
-              "arguments": "{\"query\":\"Computer is beeping after opening AxonIvy Portal. Need technical support.\"}"
-            }
-          }
-        ],
+        "content": "{\"id\":\"1\",\"type\":\"TECHNICAL\",\"name\":\"Support ticket: Error 404 in Cockpit\",\"description\":\"User reports encountering a 404 error when accessing Cockpit. Needs investigation to identify the cause and resolve the issue.\",\"employeeUsername\":\"user\",\"firstApprover\":\"\",\"secondApprover\":\"\",\"aiApproval\":{\"decision\":\"WARNING\",\"reason\":\"The issue is a technical error that requires further investigation by the technical team.\"},\"firstApproval\":{},\"secondApproval\":{},\"requestor\":{\"username\":\"user\",\"fullName\":\"User\",\"position\":\"JUNIOR\",\"departmentId\":\"dept1\",\"maxLeaveDays\":20,\"usedLeaveDays\":5,\"email\":\"user@example.com\",\"department\":{\"id\":\"dept1\",\"name\":\"IT\",\"firstLevelManager\":\"manager1\",\"secondLevelManager\":\"manager2\",\"firstLevelManagerEmp\":{\"username\":\"manager1\",\"fullName\":\"Manager One\",\"position\":\"MANAGER\",\"departmentId\":\"dept1\",\"maxLeaveDays\":30,\"usedLeaveDays\":10,\"email\":\"manager1@example.com\",\"department\":{}},\"secondLevelManagerEmp\":{\"username\":\"manager2\",\"fullName\":\"Manager Two\",\"position\":\"MANAGER\",\"departmentId\":\"dept1\",\"maxLeaveDays\":30,\"usedLeaveDays\":10,\"email\":\"manager2@example.com\",\"department\":{}}}}}",
         "refusal": null,
         "annotations": []
       },
       "logprobs": null,
-      "finish_reason": "tool_calls"
+      "finish_reason": "stop"
     }
   ],
   "usage": {
-    "prompt_tokens": 1506,
-    "completion_tokens": 30,
-    "total_tokens": 1536,
+    "prompt_tokens": 971,
+    "completion_tokens": 266,
+    "total_tokens": 1237,
     "prompt_tokens_details": {
       "cached_tokens": 0,
       "audio_tokens": 0
@@ -42,5 +32,5 @@
     }
   },
   "service_tier": "default",
-  "system_fingerprint": "fp_37c45ea698"
+  "system_fingerprint": "fp_a150906e27"
 }
