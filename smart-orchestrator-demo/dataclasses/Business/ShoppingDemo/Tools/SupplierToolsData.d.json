@@ -4,12 +4,12 @@
   "namespace" : "Business.ShoppingDemo.Tools",
   "fields" : [ {
     "name" : "searchCriteria",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierSearchCriteria"
   }, {
     "name" : "result",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierAgentResponse"
   }, {
     "name" : "supplier",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.Supplier"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier"
   } ]
 }

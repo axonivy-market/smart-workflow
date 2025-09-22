@@ -13,7 +13,7 @@
         "signature" : "findSupplier",
         "input" : {
           "params" : [
-            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierSearchCriteria", "desc" : "Search criteria to find supplier" }
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierSearchCriteria", "desc" : "Search criteria to find supplier" }
           ],
           "map" : {
             "out.searchCriteria" : "param.searchCriteria"
@@ -21,7 +21,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "result", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
+            { "name" : "result", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.result" : "in.result"
@@ -51,7 +51,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierRepository;",
             "",
             "import org.apache.commons.collections4.CollectionUtils;",
             "",
@@ -76,7 +76,7 @@
         "signature" : "createSupplier",
         "input" : {
           "params" : [
-            { "name" : "supplier", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.Supplier", "desc" : "" }
+            { "name" : "supplier", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier", "desc" : "" }
           ],
           "map" : {
             "out.supplier" : "param.supplier"
@@ -84,7 +84,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "result", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
+            { "name" : "result", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.result" : "in.result"
@@ -108,7 +108,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierRepository;",
             "",
             "in.supplier = SupplierRepository.getInstance().create(in.supplier);",
             "",
@@ -141,7 +141,7 @@
         "signature" : "findSimilarSuppliers",
         "input" : {
           "params" : [
-            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierSearchCriteria", "desc" : "Search criteria to find supplier" }
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierSearchCriteria", "desc" : "Search criteria to find supplier" }
           ],
           "map" : {
             "out.searchCriteria" : "param.searchCriteria"
@@ -149,7 +149,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "result", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
+            { "name" : "result", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.result" : "in.result"
@@ -179,7 +179,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierRepository;",
             "",
             "import org.apache.commons.collections4.CollectionUtils;",
             "",

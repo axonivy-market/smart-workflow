@@ -45,8 +45,8 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket;",
-            "import com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo;",
+            "import com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket;",
+            "import com.axonivy.utils.smart.workflow.demo.dto.TaskInfo;",
             "",
             "",
             "in.taskInfo = new TaskInfo();",
@@ -86,7 +86,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.agent.AxonIvySupportTicketAgent;",
+            "import com.axonivy.utils.smart.workflow.demo.agent.AxonIvySupportTicketAgent;",
             "",
             "in.customInstructions.add(\"Find Ivy version or Portal version or Core version\");",
             "",
@@ -138,7 +138,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.agent.TaskInfoAgent;",
+            "import com.axonivy.utils.smart.workflow.demo.agent.TaskInfoAgent;",
             "in.customInstructions.add(\"Return task detail url\");",
             "",
             "in.taskInfo = TaskInfoAgent.createTaskInfo(in.ticketDescription, in.customInstructions);",
@@ -203,7 +203,7 @@
       "type" : "TriggerCall",
       "name" : "Create task for support team",
       "config" : {
-        "processCall" : "Business/AxonIvySupport:createTaskForSupportTeam(com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket,com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo)",
+        "processCall" : "Business/AxonIvySupport:createTaskForSupportTeam(com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket,com.axonivy.utils.smart.workflow.demo.dto.TaskInfo)",
         "call" : {
           "map" : {
             "param.supportTicket" : "in.supportTicket",

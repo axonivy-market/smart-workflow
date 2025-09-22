@@ -31,10 +31,10 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are a Support Agent",
-          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket.class",
           "tools" : "[\"sumarizeProblem\"]",
           "resultMapping" : "in.supportTicket",
           "query" : "I have error 404 in Cockpit"
