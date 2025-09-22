@@ -1,0 +1,113 @@
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        smart:
+          workflow:
+            demo:
+              shopping:
+                product:
+                  ProductCreation:
+                    AIAgentProcessingNote: El agente de IA está procesando tus documentos
+                    AIAgentProcessingSecondNote: Nuestro sistema inteligente está analizando tu especificación del producto y tu imagen. Esto puede tardar unos minutos…
+                    AllDependenciesMatched: Todas las dependencias coinciden
+                    AnalyzeAndCreateProduct: Analizar y crear el producto
+                    BrandCreation: Creación de marca
+                    BrandInformation: Información de la marca
+                    BrandName: Nombre de la marca
+                    BrandNotExist: La marca no existe
+                    BusinessAddress: Dirección comercial
+                    BusinessName: Nombre de la empresa
+                    CategoryInformation: Información de la categoría
+                    CategoryName: Nombre de la categoría
+                    ChooseDocument: Elegir el documento
+                    ChooseExistingCategory: Elegir una categoría existente
+                    ChooseExistingSupplier: Elegir un proveedor existente
+                    ChooseImage: Elegir la imagen
+                    City: Ciudad
+                    Country: País
+                    CreateProductConfirmQuestion: Todas las dependencias requeridas están disponibles. ¿Quieres crear un nuevo producto con los detalles a continuación?
+                    Description: Descripción
+                    DragAndDropImageNote: Arrastra tu imagen aquí o haz clic para explorar
+                    DragAndDropNote: Arrastra tu documento aquí o haz clic para explorar
+                    Email: Correo electrónico
+                    ExtractingProductNote: 🔍 Extrayendo los detalles del producto
+                    MissingDependencies: 'No se puede crear el producto: faltan dependencias'
+                    MissingDependenciesSecondNote: Debes crear el proveedor y la categoría de producto requeridos antes de crear un nuevo producto.
+                    Phone: Teléfono
+                    PreparingDataNote: ✅ Preparando los datos del producto
+                    ProcessingProductImageNote: 🖼️ Procesando la imagen del producto
+                    ProductCategoryCreation: Creación de categoría de producto
+                    ProductCategoryNotExist: La categoría de producto no existe
+                    ProductCreated: ¡Producto creado con éxito!
+                    ProductCreatedNote: Tu producto ha sido creado y añadido al inventario.
+                    ProductCreation: Creación de producto
+                    ProductExisting: ¡El producto ya existe!
+                    ProductExistingNote: Este producto ya está disponible en nuestro inventario.
+                    ProductImage: Imagen del producto
+                    ProductImageFormatsNote: 'Formatos compatibles: PNG (Mín: 800x600px, Máx: 5MB)'
+                    ProductImageNote: Una imagen de producto de alta calidad para el catálogo
+                    ProductPreview: Vista previa del producto
+                    ProductSpecification: Especificación del producto
+                    ProductSpecificationDocument: Documento del producto con especificaciones detalladas
+                    ProductSpecificationFormatsNote: 'Formatos compatibles: MD (Máx.: 10MB)'
+                    ReadingProductNote: 📄 Reading product specification
+                    ShowRequirements: Mostrar los requisitos
+                    StateProvince: Estado/Provincia
+                    StreetAddress1: Dirección de la calle 1
+                    StreetAddress2: Dirección de la calle 2
+                    SupplierCreation: Creación de proveedor
+                    SupplierNotExist: El proveedor no existe
+                    UploadDocument: Subir el documento
+                    UploadImage: Subir la imagen
+                    Website: Sitio web
+                    ZipPostalCode: Código postal
+                  components:
+                    ProductDetails:
+                      AdditionalInfo: Información adicional
+                      BrandDescription: Descripción de la marca
+                      BrandID: ID de marca
+                      BrandInformation: Información de la marca
+                      BrandLogo: Logo de la marca
+                      BrandName: Nombre de la marca
+                      CategoryAndBrand: Categoría y marca
+                      CategoryDescription: Descripción de la categoría
+                      CategoryID: ID de categoría
+                      CategoryName: Nombre de la categoría
+                      NoAdditionalInformation: No hay información adicional disponible
+                      NoLogoAvailable: No hay logo disponible
+                      ProductCategory: Categoría de producto
+                      ProductName: Nombre del producto
+                      Property: Propiedad
+                      SKU: SKU
+                      UnitPrice: Precio unitario
+                      Value: Valor
+                store:
+                  ShoppingStore:
+                    AddToCart: Añadir al carrito
+                    Cart: Carrito
+                    InStock: En inventario
+                    NoImage: Sin imagen
+                    NoItemsInCart: No hay artículos en el carrito
+                    NoProductsFound: No se encontraron productos
+                    NoProductsFoundNote: No pudimos encontrar ningún producto que coincida con tu búsqueda
+                    OutOfStock: Agotado
+                    Product: Producto
+                    Purchasing: Compras
+                    Quantity: Cantidad
+                    SearchTooltip: ¿Qué estás buscando hoy?
+                    ShoppingCart: Carrito de compras
+                    StartShopping: Empieza a comprar para añadir artículos a tu carrito
+                    Total: Total
+                    ViewDetails: Ver detalles
+                    YourCartIsEmpty: Tu carrito está vacío
+Labels:
+  Actions: Acciones
+  Active: Activo
+  BasicInformation: Información básica
+  Cancel: Cancelar
+  Close: Cerrar
+  Description: Descripción
+  Finish: Finalizar
+  Resolve: Resolver
+  Status: Estado

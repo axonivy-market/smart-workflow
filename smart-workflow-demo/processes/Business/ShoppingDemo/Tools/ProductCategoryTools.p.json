@@ -1,0 +1,194 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1994C5CBA3C33F91",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Business.ShoppingDemo.Tools.ProductCategoryToolsData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "findProductCategory(ProductCategorySearchCriteria)",
+      "config" : {
+        "signature" : "findProductCategory",
+        "input" : {
+          "params" : [
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategorySearchCriteria", "desc" : "Search criteria to find product category" }
+          ],
+          "map" : {
+            "out.searchCriteria" : "param.searchCriteria"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.response" : "in.response"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 536, "y" : 160 },
+        "description" : "Use this tool to find a product category matched provided information"
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 936, "y" : 160 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Find exact product category",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
+            "import org.apache.commons.collections4.CollectionUtils;",
+            "",
+            "in.response.category  = ProductCategoryRepository.getInstance().findExactProductCategory(in.searchCriteria);",
+            "in.response.isCategoryExisting = in.response.category != null;",
+            "in.response.feedback = in.response.isCategoryExisting ? \"Product category is found\" : \"Product category not found\";",
+            "in.response.productCategorySearchCriteria = in.searchCriteria;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f2", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "CallSubStart",
+      "name" : "createProductCategory(ProductCategory)",
+      "config" : {
+        "signature" : "createProductCategory",
+        "input" : {
+          "params" : [
+            { "name" : "category", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory", "desc" : "All information about a product category" }
+          ],
+          "map" : {
+            "out.category" : "param.category"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.response" : "in.response"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 536, "y" : 280 },
+        "description" : "Use this tool to create a product category"
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Create product category",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
+            "",
+            "in.category = ProductCategoryRepository.getInstance().create(in.category);",
+            "",
+            "if (in.category == null) {",
+            "  in.response.feedback = \"Error when create product category\";",
+            "} else {",
+            "  in.response.feedback = \"Product category is created successfully\";",
+            "  in.response.category = in.category;",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 280 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 936, "y" : 280 }
+      }
+    }, {
+      "id" : "f10",
+      "type" : "CallSubStart",
+      "name" : "findSimilarProductCategories(ProductCategorySearchCriteria)",
+      "config" : {
+        "signature" : "findSimilarProductCategories",
+        "input" : {
+          "params" : [
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategorySearchCriteria", "desc" : "Search criteria for product category" }
+          ],
+          "map" : {
+            "out.searchCriteria" : "param.searchCriteria"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+          ],
+          "map" : {
+            "result.response" : "in.response"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 536, "y" : 400 },
+        "description" : "Use this tool to find similar product categories"
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Find similar product categories",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
+            "",
+            "in.response.categories  = ProductCategoryRepository.getInstance().findByCriteria(in.searchCriteria);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 400 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f13" }
+      ]
+    }, {
+      "id" : "f13",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 936, "y" : 400 }
+      }
+    } ]
+}

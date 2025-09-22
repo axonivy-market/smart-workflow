@@ -1,0 +1,78 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "1994B45A9E9EBB43",
+  "config" : {
+    "data" : "Business.ShoppingDemo.ShoppingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Create Product",
+      "config" : {
+        "signature" : "createProduct",
+        "request" : {
+          "name" : "Create new product"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 360, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "DialogCall",
+      "name" : "Product creation",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductCreation:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "RequestStart",
+      "name" : "Shopping Store",
+      "config" : {
+        "signature" : "shoppingStore",
+        "request" : {
+          "name" : "Shopping Store"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 360, "y" : 216 }
+      }
+    }, {
+      "id" : "f7",
+      "type" : "DialogCall",
+      "name" : "Shopping store",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.shopping.store.ShoppingStore:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f6" }
+      ]
+    } ]
+}
