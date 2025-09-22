@@ -16,4 +16,4 @@ lib/mvn-deps/
 logs/
 src_dataClasses/
 src_wsproc/
-smart-orchestrator-test/config/variables.yaml
+smart-workflow-test/config/variables.yaml

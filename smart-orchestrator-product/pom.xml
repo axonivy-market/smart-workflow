@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.axonivy.market</groupId><!-- your group id: e.g. com.axonivy.connector.<myconnector> or com.axonivy.utils.<myutil> -->
-  <artifactId>smart-orchestrator-product</artifactId><!-- fill your product name + a "-product" postfix e.g. my-connector-product -->
+  <groupId>com.axonivy.market</groupId>
+  <artifactId>smart-workflow-product</artifactId>
   <version>13.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <variables.yaml.file>../smart-orchestrator/config/variables.yaml</variables.yaml.file>
+    <variables.yaml.file>../smart-workflow/config/variables.yaml</variables.yaml.file>
   </properties>
 
   <build>
