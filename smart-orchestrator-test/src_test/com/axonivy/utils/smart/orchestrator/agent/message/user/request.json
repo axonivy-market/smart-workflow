@@ -1,9 +1,0 @@
-{
-  "model" : "gpt-4.1-mini",
-  "messages" : [ {
-    "role" : "user",
-    "content" : "Return the following name as result: Unknown User (Session 2)"
-  } ],
-  "temperature" : 0.0,
-  "stream" : false
-}

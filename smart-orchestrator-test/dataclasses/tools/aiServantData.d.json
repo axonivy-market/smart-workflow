@@ -4,6 +4,6 @@
   "namespace" : "tools",
   "fields" : [ {
     "name" : "person",
-    "type" : "com.axonivy.utils.smart.orchestrator.test.Person"
+    "type" : "com.axonivy.utils.smart.workflow.test.Person"
   } ]
 }
