@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "HrSupportTicketApprovalData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.HrSupportTicketApproval",
+  "fields" : [ {
+    "name" : "supportTicket",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
+  }, {
+    "name" : "requestor",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee"
+  }, {
+    "name" : "supportTicketId"
+  } ]
+}
