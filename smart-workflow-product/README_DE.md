@@ -1,9 +1,3 @@
-<!--
-Lieber Entwickler!     
-
-Wenn du deine wertvolle Dokumentation erstellst, beachte bitte, dass diese README.md nicht nur auf GitHub veröffentlicht wird. Diese Dokumentation wird auch automatisch verarbeitet und auf unserer Website veröffentlicht. Damit dies funktioniert, dürfen die beiden Überschriften "Demo" und "Setup" nicht geändert werden. Ändere auch nicht die Reihenfolge der Überschriften. Du kannst gerne überall Unterabschnitte hinzufügen.
--->
-
 # Smart Workflow
 
 **Smart Workflow** bringt KI direkt in Axon Ivy, sodass du KI-Agenten in bestehenden Axon-Prozessen erstellen, ausführen und verbessern kannst. Es ermöglicht Geschäftsprozessen, große Sprachmodelle zu nutzen, um natürliche Sprache zu verstehen, autonome Entscheidungen zu treffen und sich an verändernde Anforderungen anzupassen — alles ohne schwerwiegende architektonische Änderungen.
