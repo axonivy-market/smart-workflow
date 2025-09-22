@@ -1,0 +1,45 @@
+{
+  "model" : "gpt-4.1-mini",
+  "messages" : [ {
+    "role" : "system",
+    "content" : "Instruction to follow:\n[Only focus on adding custom fields, Each custom field is a pair of name - value. Example: {\"employeeUsername\" : \"mnhnam\"}, Add custom field: 'ticketId', value is the support ticket id, Add custom field: 'employeeUsername', value is the employee username]\n"
+  }, {
+    "role" : "user",
+    "content" : "{\r\n  \"id\" : \"a87e24a81bd74455add60d7560ee8cc8\",\r\n  \"type\" : \"TECHNICAL\",\r\n  \"name\" : \"Support ticket: Computer beeping after opening AxonIvy Portal\",\r\n  \"description\" : \"My computer started beeping after I opened the AxonIvy Portal. Please help diagnose and resolve the issue.\",\r\n  \"employeeUsername\" : null,\r\n  \"firstApprover\" : null,\r\n  \"secondApprover\" : null,\r\n  \"aiApproval\" : null,\r\n  \"firstApproval\" : null,\r\n  \"secondApproval\" : null,\r\n  \"requestedDate\" : null\r\n}"
+  } ],
+  "temperature" : 0.0,
+  "stream" : false,
+  "response_format" : {
+    "type" : "json_schema",
+    "json_schema" : {
+      "name" : "TaskInfo",
+      "strict" : true,
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : [ "string", "null" ],
+            "description" : "The display name of the Axon Ivy task. This is a human-readable title that summarizes the task purpose."
+          },
+          "description" : {
+            "type" : [ "string", "null" ],
+            "description" : "A detailed explanation of what the task is about, including relevant context or objectives."
+          },
+          "responsible" : {
+            "type" : [ "string", "null" ],
+            "description" : "The username or identifier of the person currently responsible for performing or managing the task."
+          },
+          "customFields" : {
+            "type" : [ "object", "null" ],
+            "description" : "Custom key-value pairs containing additional task metadata. The key is the field name, and the value is its content. Represented as Map<String, String> in Java.",
+            "properties" : { },
+            "required" : [ ],
+            "additionalProperties" : false
+          }
+        },
+        "required" : [ "name", "description", "responsible", "customFields" ],
+        "additionalProperties" : false
+      }
+    }
+  }
+}

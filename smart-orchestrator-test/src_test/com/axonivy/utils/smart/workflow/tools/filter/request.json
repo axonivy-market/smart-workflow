@@ -1,0 +1,20 @@
+{
+  "model" : "gpt-4.1-mini",
+  "messages" : [ {
+    "role" : "user",
+    "content" : "\"Tools options as json array\""
+  } ],
+  "temperature" : 0.0,
+  "stream" : false,
+  "tools" : [ {
+    "type" : "function",
+    "function" : {
+      "name" : "whoami",
+      "parameters" : {
+        "type" : "object",
+        "properties" : { },
+        "required" : [ ]
+      }
+    }
+  } ]
+}
