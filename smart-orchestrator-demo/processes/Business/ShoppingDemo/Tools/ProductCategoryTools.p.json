@@ -13,7 +13,7 @@
         "signature" : "findProductCategory",
         "input" : {
           "params" : [
-            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategorySearchCriteria", "desc" : "Search criteria to find product category" }
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategorySearchCriteria", "desc" : "Search criteria to find product category" }
           ],
           "map" : {
             "out.searchCriteria" : "param.searchCriteria"
@@ -21,7 +21,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -51,7 +51,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
             "import org.apache.commons.collections4.CollectionUtils;",
             "",
             "in.response.category  = ProductCategoryRepository.getInstance().findExactProductCategory(in.searchCriteria);",
@@ -75,7 +75,7 @@
         "signature" : "createProductCategory",
         "input" : {
           "params" : [
-            { "name" : "category", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategory", "desc" : "All information about a product category" }
+            { "name" : "category", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory", "desc" : "All information about a product category" }
           ],
           "map" : {
             "out.category" : "param.category"
@@ -83,7 +83,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -107,7 +107,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
             "",
             "in.category = ProductCategoryRepository.getInstance().create(in.category);",
             "",
@@ -140,7 +140,7 @@
         "signature" : "findSimilarProductCategories",
         "input" : {
           "params" : [
-            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategorySearchCriteria", "desc" : "Search criteria for product category" }
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategorySearchCriteria", "desc" : "Search criteria for product category" }
           ],
           "map" : {
             "out.searchCriteria" : "param.searchCriteria"
@@ -148,7 +148,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -172,7 +172,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
             "",
             "in.response.categories  = ProductCategoryRepository.getInstance().findByCriteria(in.searchCriteria);"
           ]

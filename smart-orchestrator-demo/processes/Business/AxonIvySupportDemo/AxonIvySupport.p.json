@@ -33,7 +33,7 @@
       "type" : "DialogCall",
       "name" : "Axon ivy support",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.AxonIvySupportForm:start()"
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.AxonIvySupportForm:start()"
       },
       "visual" : {
         "at" : { "x" : 312, "y" : 64 }
@@ -49,8 +49,8 @@
         "signature" : "createTaskForSupportTeam",
         "input" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket", "desc" : "" },
-            { "name" : "taskInfo", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo", "desc" : "" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket", "desc" : "" },
+            { "name" : "taskInfo", "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo", "desc" : "" }
           ],
           "map" : {
             "out.supportTicket" : "param.supportTicket",
@@ -111,7 +111,7 @@
       "type" : "DialogCall",
       "name" : "Open support task",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.AxonIvySupportTaskForm:start(com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.AxonIvySupportTaskForm:start(com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket)",
         "call" : {
           "map" : {
             "param.supportTicket" : "in.supportTicket"

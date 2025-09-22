@@ -31,7 +31,7 @@
       "type" : "DialogCall",
       "name" : "Product creation",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductCreation:start()"
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductCreation:start()"
       },
       "visual" : {
         "at" : { "x" : 232, "y" : 64 }
@@ -66,7 +66,7 @@
       "type" : "DialogCall",
       "name" : "Shopping store",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.orchestrator.demo.shopping.store.ShoppingStore:start()"
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.shopping.store.ShoppingStore:start()"
       },
       "visual" : {
         "at" : { "x" : 232, "y" : 216 }

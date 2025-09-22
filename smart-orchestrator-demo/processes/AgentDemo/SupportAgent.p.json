@@ -13,7 +13,7 @@
         "signature" : "createSupportTask",
         "input" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "The task information object" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "The task information object" }
           ],
           "map" : {
             "out.supportTicket" : "param.supportTicket"
@@ -49,7 +49,7 @@
       "type" : "TriggerCall",
       "name" : "Create support ticket",
       "config" : {
-        "processCall" : "AgentDemo/SupportBusiness:createSupportTicket(com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo)",
+        "processCall" : "AgentDemo/SupportBusiness:createSupportTicket(com.axonivy.utils.smart.workflow.demo.dto.TaskInfo)",
         "call" : {
           "map" : {
             "param.taskInfo" : "in.taskInfo"
@@ -95,7 +95,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "support ticket object" },
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "support ticket object" },
             { "name" : "aiResult", "type" : "String", "desc" : "" }
           ],
           "map" : {
@@ -129,7 +129,7 @@
         "signature" : "chooseTicketApprover",
         "input" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "" }
           ],
           "map" : {
             "out.supportTicket" : "param.supportTicket"
@@ -137,7 +137,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "" },
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "" },
             { "name" : "aiResult", "type" : "String", "desc" : "" }
           ],
           "map" : {
@@ -159,7 +159,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.handler.SupportTicketApproverHandler;",
+            "import com.axonivy.utils.smart.workflow.demo.handler.SupportTicketApproverHandler;",
             "SupportTicketApproverHandler.chooseApprovers(in.supportTicket);"
           ]
         }
@@ -179,7 +179,7 @@
         "signature" : "handleHrTicket",
         "input" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket", "desc" : "" }
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "" }
           ],
           "map" : {
             "out.supportTicket" : "param.supportTicket"
@@ -207,7 +207,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo;",
+            "import com.axonivy.utils.smart.workflow.demo.dto.TaskInfo;",
             "in.taskInfo = new TaskInfo();"
           ]
         }
@@ -253,7 +253,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.decision.Option;",
+            "import com.axonivy.utils.smart.workflow.decision.Option;",
             "",
             "",
             "Option leaveOption = new Option(\"absent\", \"The support ticket related to asking for day off, absent, leave request\");",
@@ -300,7 +300,7 @@
       "type" : "TriggerCall",
       "name" : "Create approval case",
       "config" : {
-        "processCall" : "AgentDemo/SupportBusiness:handleHrTicket(com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo,com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo)",
+        "processCall" : "AgentDemo/SupportBusiness:handleHrTicket(com.axonivy.utils.smart.workflow.demo.dto.TaskInfo,com.axonivy.utils.smart.workflow.demo.dto.TaskInfo)",
         "call" : {
           "map" : {
             "param.taskInfo" : "in.taskInfo",
@@ -413,7 +413,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.service.SupportTicketService;",
+            "import com.axonivy.utils.smart.workflow.demo.service.SupportTicketService;",
             "",
             "Date today =  new Date();",
             "in.supportTicket.requestedDate = today.toString();",
@@ -452,7 +452,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.service.SupportTicketService;",
+            "import com.axonivy.utils.smart.workflow.demo.service.SupportTicketService;",
             "SupportTicketService.getInstance().save(in.supportTicket);"
           ]
         }
@@ -495,10 +495,10 @@
       "type" : "ProgramInterface",
       "name" : "Use AI to create task info",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Instruction to follow: \n- Only focus on adding custom fields\n- Each custom field is a pair of name - value. Example: {\\\"employeeUsername\\\" : \\\"mnhnam\\\"}\")\n- Add custom field: 'ticketId', value is the support ticket id\n- Add custom field: 'employeeUsername', value is the employee username",
-          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
           "tools" : "[]",
           "resultMapping" : "in.taskInfo",
           "query" : "<%=in.query%>"
@@ -516,10 +516,10 @@
       "type" : "ProgramInterface",
       "name" : "Use AI to create ticket",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Instruction to follow: \n- Don't fill information related to approval\n<%=in.instructions%>",
-          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket.class",
           "tools" : "[]",
           "resultMapping" : "in.supportTicket",
           "query" : "<%=in.query%>"
@@ -540,7 +540,7 @@
         "output" : {
           "code" : [
             "import dev.langchain4j.internal.Json;",
-            "import com.axonivy.utils.smart.orchestrator.decision.DecisionMaker;",
+            "import com.axonivy.utils.smart.workflow.decision.DecisionMaker;",
             "",
             "in.categorizedResult = DecisionMaker.getBuilder()",
             "    .options(in.options).build()",
@@ -559,10 +559,10 @@
       "type" : "ProgramInterface",
       "name" : "Use AI: request approval",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "You are acting as the approving manager for a support ticket request.\nYour goal is to make an approval decision based solely on the provided\nuser information and additional instructions. Be concise and decisive.\n\n---\nUser Information:\n<%=com.axonivy.utils.smart.orchestrator.demo.service.EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername)%>\n\n---\nAdditional Instructions to follow: \n- Analyse the provided data, make decision.\n- Set field 'decision' = APPROVE when you think that the request is reasonable, no reason to deny.\n- set field 'decision' = REJECT when you think that the request is unreasonable, it should be rejected.",
-          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.AiApprovalDecision.class",
+          "system" : "You are acting as the approving manager for a support ticket request.\nYour goal is to make an approval decision based solely on the provided\nuser information and additional instructions. Be concise and decisive.\n\n---\nUser Information:\n<%=com.axonivy.utils.smart.workflow.demo.service.EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername)%>\n\n---\nAdditional Instructions to follow: \n- Analyse the provided data, make decision.\n- Set field 'decision' = APPROVE when you think that the request is reasonable, no reason to deny.\n- set field 'decision' = REJECT when you think that the request is unreasonable, it should be rejected.",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.AiApprovalDecision.class",
           "tools" : "[]",
           "resultMapping" : "in.aiApproval",
           "query" : "<%=in.query%>"
@@ -580,10 +580,10 @@
       "type" : "ProgramInterface",
       "name" : "Use AI: Create task info",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Instructions to follow: \n- Task name should be in format: <user name> requested a leave request from <from date> to <to date>,\n- from date and to date should be calculated based on content of the request,\n- Date format should be follow this locale: <%=ivy.session.formattingLocale.getDisplayCountry() %>,\n- Description should be: This request is approved by Axon Ivy AI,\n- Add custom field: 'ticketId', value is the support ticket id\n",
-          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
           "tools" : "[]",
           "resultMapping" : "in.taskInfo",
           "query" : "<%=in.query%>"
@@ -622,7 +622,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.service.EmployeeService;",
+            "import com.axonivy.utils.smart.workflow.demo.service.EmployeeService;",
             "import dev.langchain4j.internal.Json;",
             "",
             "in.query = \"Support ticket:\" + System.lineSeparator()",

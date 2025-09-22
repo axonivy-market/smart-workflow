@@ -4,10 +4,10 @@
   "namespace" : "Business.ShoppingDemo.Agents",
   "fields" : [ {
     "name" : "supplier",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.Supplier"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier"
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierAgentResponse"
   }, {
     "name" : "instructions"
   } ]
