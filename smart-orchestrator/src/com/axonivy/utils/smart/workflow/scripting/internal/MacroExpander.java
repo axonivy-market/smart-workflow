@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator.scripting.internal;
+package com.axonivy.utils.smart.workflow.scripting.internal;
 
 import java.util.Optional;
 import java.util.function.Predicate;

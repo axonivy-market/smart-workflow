@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator.output.internal;
+package com.axonivy.utils.smart.workflow.output.internal;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,7 +8,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import com.axonivy.utils.smart.orchestrator.output.DynamicAgent;
+import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -28,12 +28,12 @@ public class StructuredOutputAgent {
 
   @SuppressWarnings("unchecked")
   private static <R> Class<? extends DynamicAgent<R>> defineAgent(Class<R> outputType) {
-    String interfaceName = "com/axonivy/utils/smart/orchestrator/output/DynamicAgentInterface" + outputType.getSimpleName();
+    String interfaceName = "com/axonivy/utils/smart/workflow/output/DynamicAgentInterface" + outputType.getSimpleName();
     String methodName = "chat";
     String methodDescriptor = Type.getMethodDescriptor(Type.getType(outputType), Type.getType(String.class));
     byte[] classBytes = writeClass(interfaceName, methodName, methodDescriptor);
     var type = (Class<? extends DynamicAgent<R>>) new CustomClassLoader(outputType.getClassLoader())
-        .defineClass("com.axonivy.utils.smart.orchestrator.output.DynamicAgentInterface" + outputType.getSimpleName(), classBytes);
+        .defineClass("com.axonivy.utils.smart.workflow.output.DynamicAgentInterface" + outputType.getSimpleName(), classBytes);
     Ivy.log().debug("defined " + type);
     return type;
   }
@@ -41,7 +41,7 @@ public class StructuredOutputAgent {
   private static byte[] writeClass(String interfaceName, String methodName, String methodDescriptor) {
     ClassWriter cw = new ClassWriter(0);
     cw.visit(Opcodes.V21, Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE,
-        interfaceName, null, "java/lang/Object", new String[] {"com/axonivy/utils/smart/orchestrator/output/DynamicAgent"});
+        interfaceName, null, "java/lang/Object", new String[] {"com/axonivy/utils/smart/workflow/output/DynamicAgent"});
     MethodVisitor methods = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT,
         methodName,
         methodDescriptor,

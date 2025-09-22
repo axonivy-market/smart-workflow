@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator.decision;
+package com.axonivy.utils.smart.workflow.decision;
 
 public class Option {
   private String id;

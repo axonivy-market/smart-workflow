@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator.scripting.internal;
+package com.axonivy.utils.smart.workflow.scripting.internal;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.scripting.dataclass.IDataClassManager;

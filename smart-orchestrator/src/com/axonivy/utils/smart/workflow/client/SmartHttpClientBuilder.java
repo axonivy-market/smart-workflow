@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator.client;
+package com.axonivy.utils.smart.workflow.client;
 
 import java.time.Duration;
 import java.util.UUID;

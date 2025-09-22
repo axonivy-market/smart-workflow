@@ -1,11 +1,11 @@
-package com.axonivy.utils.smart.orchestrator.connector;
+package com.axonivy.utils.smart.workflow.connector;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import com.axonivy.utils.smart.orchestrator.client.SmartHttpClientBuilderFactory;
+import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 import com.google.common.base.Objects;
 
 import ch.ivyteam.ivy.environment.Ivy;

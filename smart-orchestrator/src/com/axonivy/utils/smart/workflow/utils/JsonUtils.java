@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator.utils;
+package com.axonivy.utils.smart.workflow.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator;
+package com.axonivy.utils.smart.workflow;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector;
-import com.axonivy.utils.smart.orchestrator.output.DynamicAgent;
-import com.axonivy.utils.smart.orchestrator.output.internal.StructuredOutputAgent;
-import com.axonivy.utils.smart.orchestrator.scripting.internal.MacroExpander;
-import com.axonivy.utils.smart.orchestrator.scripting.internal.ScriptContextUtil;
-import com.axonivy.utils.smart.orchestrator.tools.IvySubProcessToolsProvider;
-import com.axonivy.utils.smart.orchestrator.tools.internal.IvyToolsProcesses;
+import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.output.DynamicAgent;
+import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
+import com.axonivy.utils.smart.workflow.scripting.internal.MacroExpander;
+import com.axonivy.utils.smart.workflow.scripting.internal.ScriptContextUtil;
+import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
+import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.Ivy;

@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator.tools.internal;
+package com.axonivy.utils.smart.workflow.tools.internal;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

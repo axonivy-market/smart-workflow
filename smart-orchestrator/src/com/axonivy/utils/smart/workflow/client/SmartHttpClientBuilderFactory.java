@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.orchestrator.client;
+package com.axonivy.utils.smart.workflow.client;
 
 import dev.langchain4j.http.client.HttpClientBuilder;
 
