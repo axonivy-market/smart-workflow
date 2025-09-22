@@ -1,0 +1,398 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "199507587214AFDA",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.demo.shopping.store.ShoppingStore.ShoppingStoreData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "map" : {
+            "out.cartItems" : "new java.util.ArrayList()",
+            "out.searched" : "false"
+          }
+        },
+        "guid" : "199508094EC29AC1"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f33" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 728, "y" : 224 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "199508094ECB63C9"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 416 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 600, "y" : 416 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "searchProducts()",
+      "config" : {
+        "signature" : "searchProducts",
+        "input" : {
+          "map" : {
+            "out.searched" : "true"
+          }
+        },
+        "guid" : "199508094EC929C7"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Alternative",
+      "name" : "empty search term ?",
+      "config" : {
+        "conditions" : {
+          "f10" : "org.apache.commons.lang3.StringUtils.isBlank(in.searchTerm)",
+          "f9" : ""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 568, "y" : 528 },
+        "labelOffset" : { "x" : 24, "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f14", "label" : {
+            "name" : "no",
+            "offset" : { "x" : 1, "y" : 14 }
+          }, "color" : "default" },
+        { "id" : "f10", "to" : "f20", "via" : [ { "x" : 568, "y" : 624 } ], "label" : {
+            "name" : "yes",
+            "segment" : 1.5,
+            "offset" : { "x" : -79, "y" : 14 }
+          } }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "clearSearch()",
+      "config" : {
+        "signature" : "clearSearch",
+        "guid" : "199508094EE6470F"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "f35", "to" : "f33" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "SubProcessCall",
+      "name" : "Create search criteria",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction)",
+        "call" : {
+          "map" : {
+            "param.productInfo" : "in.searchTerm",
+            "param.action" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction.CREATE_CRITERIA"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.searchCriteria" : "result.response.productSearchCriteria"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 816, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f18" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "Script",
+      "name" : "Find by criteria",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "",
+            "in.filteredProducts = ProductRepository.getInstance().findByCriteria(in.searchCriteria);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 992, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f22", "color" : "default" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "Script",
+      "name" : "Find all",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "",
+            "in.filteredProducts = ProductRepository.getInstance().findAll();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 992, "y" : 624 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 1120, "y" : 624 } ] }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1120, "y" : 528 }
+      }
+    }, {
+      "id" : "f23",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "addToCart(Product)",
+      "config" : {
+        "signature" : "addToCart",
+        "input" : {
+          "params" : [
+            { "name" : "product", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product", "desc" : "" }
+          ],
+          "map" : {
+            "out.productToCart" : "param.product"
+          }
+        },
+        "guid" : "199508094EE4FA45"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 752 }
+      },
+      "connect" : [
+        { "id" : "f24", "to" : "f26" }
+      ]
+    }, {
+      "id" : "f25",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 776, "y" : 752 }
+      }
+    }, {
+      "id" : "f26",
+      "type" : "Script",
+      "name" : "Add item to cart",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem;",
+            "",
+            "boolean existingInCart = false;",
+            "if (in.cartItems.size() > 0) {",
+            "  for (int i = 0; i < in.cartItems.size(); i++) {",
+            "    if (in.cartItems.get(i).product.sku == in.productToCart.sku) {",
+            "      in.cartItems.get(i).quantity++;",
+            "      existingInCart = true;",
+            "      break;",
+            "    }",
+            "  }",
+            "}",
+            "if (!existingInCart) {",
+            "  in.cartItems.add(new CartItem(in.productToCart));",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 752 }
+      },
+      "connect" : [
+        { "id" : "f27", "to" : "f25" }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "getCartTotal()",
+      "config" : {
+        "signature" : "getCartTotal",
+        "result" : {
+          "params" : [
+            { "name" : "total", "type" : "String", "desc" : "" }
+          ],
+          "map" : { },
+          "code" : [
+            "if (in.cartItems.size() == 0) {",
+            "  result.total = \"0\";",
+            "} else {",
+            "  Float totalAmount = 0;",
+            "  for (int i = 0; i < in.cartItems.size(); i++) {",
+            "    totalAmount += in.cartItems.get(i).quantity * Float.valueOf(in.cartItems.get(i).getProduct().getUnitPrice());",
+            "  }",
+            "  result.total = Float.toString(totalAmount);",
+            "}"
+          ]
+        },
+        "guid" : "199508094EE602A0"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 880 }
+      },
+      "connect" : [
+        { "id" : "f29", "to" : "f31" }
+      ]
+    }, {
+      "id" : "f30",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 776, "y" : 880 }
+      }
+    }, {
+      "id" : "f31",
+      "type" : "Script",
+      "name" : "calculate total",
+      "visual" : {
+        "at" : { "x" : 624, "y" : 880 }
+      },
+      "connect" : [
+        { "id" : "f32", "to" : "f30" }
+      ]
+    }, {
+      "id" : "f33",
+      "type" : "Script",
+      "name" : "Find all",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "",
+            "in.filteredProducts = ProductRepository.getInstance().findAll();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 600, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f34", "to" : "f2", "color" : "default" }
+      ]
+    }, {
+      "id" : "f36",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "decreaseQuantity(CartItem)",
+      "config" : {
+        "signature" : "decreaseQuantity",
+        "input" : {
+          "params" : [
+            { "name" : "item", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem", "desc" : "" }
+          ],
+          "map" : {
+            "out.selectedCartItem" : "param.item"
+          }
+        },
+        "guid" : "1996035B69249005"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 1016 }
+      },
+      "connect" : [
+        { "id" : "f39", "to" : "f37" }
+      ]
+    }, {
+      "id" : "f37",
+      "type" : "Script",
+      "name" : "decrease quantity",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.selectedCartItem.quantity--;",
+            "",
+            "if (in.selectedCartItem.quantity < 0) {",
+            "  in.cartItems.remove(in.selectedCartItem);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 1016 }
+      },
+      "connect" : [
+        { "id" : "f40", "to" : "f38" }
+      ]
+    }, {
+      "id" : "f38",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 776, "y" : 1016 }
+      }
+    }, {
+      "id" : "f41",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "increaseQuantity(CartItem)",
+      "config" : {
+        "signature" : "increaseQuantity",
+        "input" : {
+          "params" : [
+            { "name" : "item", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem", "desc" : "" }
+          ],
+          "map" : {
+            "out.selectedCartItem" : "param.item"
+          }
+        },
+        "guid" : "1996038E8AAA6C5B"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 1136 }
+      },
+      "connect" : [
+        { "id" : "f42", "to" : "f43" }
+      ]
+    }, {
+      "id" : "f43",
+      "type" : "Script",
+      "name" : "increase quantity",
+      "config" : {
+        "output" : {
+          "code" : "in.selectedCartItem.quantity++;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 1136 }
+      },
+      "connect" : [
+        { "id" : "f44", "to" : "f45" }
+      ]
+    }, {
+      "id" : "f45",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 776, "y" : 1136 }
+      }
+    } ]
+}

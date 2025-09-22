@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "SupplierAgentData",
+  "namespace" : "Business.ShoppingDemo.Agents",
+  "fields" : [ {
+    "name" : "supplier",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier"
+  }, {
+    "name" : "response",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierAgentResponse"
+  }, {
+    "name" : "instructions"
+  } ]
+}

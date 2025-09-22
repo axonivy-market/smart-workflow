@@ -1,0 +1,644 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "197F7D477CB93027",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "AgentDemo.SupportAgentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "Create task",
+      "config" : {
+        "signature" : "createSupportTask",
+        "input" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "The task information object" }
+          ],
+          "map" : {
+            "out.supportTicket" : "param.supportTicket"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "aiResult", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.aiResult" : "in.aiResult"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 88, "y" : 72 },
+        "description" : "Use this tool to create a support ticket task"
+      },
+      "connect" : [
+        { "id" : "f83", "to" : "f76" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1104, "y" : 72 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "TriggerCall",
+      "name" : "Create support ticket",
+      "config" : {
+        "processCall" : "AgentDemo/SupportBusiness:createSupportTicket(com.axonivy.utils.smart.workflow.demo.dto.TaskInfo)",
+        "call" : {
+          "map" : {
+            "param.taskInfo" : "in.taskInfo"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 72 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "Script",
+      "name" : "Prepare result",
+      "config" : {
+        "output" : {
+          "code" : "in.aiResult = \"Task is created successfully\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 904, "y" : 72 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "CallSubStart",
+      "name" : "Create SupportTicket object",
+      "config" : {
+        "signature" : "createSupportTicket",
+        "input" : {
+          "params" : [
+            { "name" : "query", "type" : "String", "desc" : "The original input query" },
+            { "name" : "employeeUsername", "type" : "String", "desc" : "Username of the employee who create the request" }
+          ],
+          "map" : {
+            "out.employeeUsername" : "param.employeeUsername",
+            "out.query" : "param.query"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "support ticket object" },
+            { "name" : "aiResult", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.supportTicket" : "in.supportTicket",
+            "result.aiResult" : "in.aiResult"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 88, "y" : 232 },
+        "labelOffset" : { "x" : 1, "y" : 41 },
+        "description" : "Use this tool to create a support ticket object"
+      },
+      "connect" : [
+        { "id" : "f179", "to" : "f177" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 496, "y" : 232 }
+      }
+    }, {
+      "id" : "f61",
+      "type" : "CallSubStart",
+      "name" : "chooseTicketApprover(SupportTicket)",
+      "config" : {
+        "signature" : "chooseTicketApprover",
+        "input" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "" }
+          ],
+          "map" : {
+            "out.supportTicket" : "param.supportTicket"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "" },
+            { "name" : "aiResult", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.supportTicket" : "in.supportTicket",
+            "result.aiResult" : "in.aiResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 384 }
+      },
+      "connect" : [
+        { "id" : "f74", "to" : "f63" }
+      ]
+    }, {
+      "id" : "f63",
+      "type" : "Script",
+      "name" : "Choose approvers programmatically",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.handler.SupportTicketApproverHandler;",
+            "SupportTicketApproverHandler.chooseApprovers(in.supportTicket);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 384 },
+        "size" : { "width" : 160 }
+      },
+      "connect" : [
+        { "id" : "f65", "to" : "f148" }
+      ]
+    }, {
+      "id" : "f68",
+      "type" : "CallSubStart",
+      "name" : "handleHrTicket(SupportTicket)",
+      "config" : {
+        "signature" : "handleHrTicket",
+        "input" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket", "desc" : "" }
+          ],
+          "map" : {
+            "out.supportTicket" : "param.supportTicket"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "aiResult", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.aiResult" : "in.aiResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 512 }
+      },
+      "connect" : [
+        { "id" : "f86", "to" : "f91" }
+      ]
+    }, {
+      "id" : "f76",
+      "type" : "Script",
+      "name" : "Create Task info object",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.dto.TaskInfo;",
+            "in.taskInfo = new TaskInfo();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 216, "y" : 72 }
+      },
+      "connect" : [
+        { "id" : "f77", "to" : "f78" }
+      ]
+    }, {
+      "id" : "f78",
+      "type" : "Script",
+      "name" : "Prepare field explanations",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import dev.langchain4j.internal.Json;",
+            "in.query = Json.toJson(in.supportTicket);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 376, "y" : 72 }
+      },
+      "connect" : [
+        { "id" : "f79", "to" : "f169", "color" : "default" }
+      ]
+    }, {
+      "id" : "f87",
+      "type" : "Script",
+      "name" : "To be continued...",
+      "visual" : {
+        "at" : { "x" : 976, "y" : 512 }
+      },
+      "connect" : [
+        { "id" : "f141", "to" : "f140" }
+      ]
+    }, {
+      "id" : "f91",
+      "type" : "Script",
+      "name" : "prepare options",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.decision.Option;",
+            "",
+            "",
+            "Option leaveOption = new Option(\"absent\", \"The support ticket related to asking for day off, absent, leave request\");",
+            "Option infoOption = new Option(\"info\", \"The support ticket related to personal information update\");",
+            "",
+            "in.options.clear();",
+            "in.options.add(leaveOption);",
+            "in.options.add(infoOption);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 511 },
+        "size" : { "height" : 63 }
+      },
+      "connect" : [
+        { "id" : "f92", "to" : "f180", "color" : "default" }
+      ]
+    }, {
+      "id" : "f93",
+      "type" : "Alternative",
+      "name" : "request type?",
+      "config" : {
+        "conditions" : {
+          "f94" : "in.categorizedResult == \"info\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 512 },
+        "labelOffset" : { "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "f94", "to" : "f87", "label" : {
+            "name" : "update personal info",
+            "offset" : { "x" : 1, "y" : 14 }
+          }, "color" : "default" },
+        { "id" : "f107", "to" : "f182", "label" : {
+            "name" : "leave request",
+            "offset" : { "x" : -47, "y" : 1 }
+          } }
+      ]
+    }, {
+      "id" : "f98",
+      "type" : "TriggerCall",
+      "name" : "Create approval case",
+      "config" : {
+        "processCall" : "AgentDemo/SupportBusiness:handleHrTicket(com.axonivy.utils.smart.workflow.demo.dto.TaskInfo,com.axonivy.utils.smart.workflow.demo.dto.TaskInfo)",
+        "call" : {
+          "map" : {
+            "param.taskInfo" : "in.taskInfo",
+            "param.secondTaskInfo" : "in.secondTaskInfo"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1704, "y" : 704 }
+      },
+      "connect" : [
+        { "id" : "f151", "to" : "f143", "via" : [ { "x" : 1800, "y" : 704 } ] }
+      ]
+    }, {
+      "id" : "f103",
+      "type" : "Alternative",
+      "name" : "status of the request?",
+      "config" : {
+        "conditions" : {
+          "f125" : "in.aiApprovalStr == \"REJECT\"",
+          "f129" : "in.aiApprovalStr == \"APPROVE\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1048, "y" : 704 },
+        "labelOffset" : { "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "f125", "to" : "f113", "via" : [ { "x" : 1048, "y" : 816 } ], "label" : {
+            "name" : "reject",
+            "segment" : 1.5,
+            "offset" : { "x" : -75, "y" : -58 }
+          } },
+        { "id" : "f129", "to" : "f188", "label" : {
+            "name" : "approve",
+            "offset" : { "x" : -3, "y" : 14 }
+          } }
+      ]
+    }, {
+      "id" : "f113",
+      "type" : "EMail",
+      "name" : "Send reject email",
+      "visual" : {
+        "at" : { "x" : 1192, "y" : 816 }
+      },
+      "connect" : [
+        { "id" : "f116", "to" : "f143" }
+      ]
+    }, {
+      "id" : "f115",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 2032, "y" : 816 }
+      }
+    }, {
+      "id" : "f140",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1224, "y" : 512 }
+      }
+    }, {
+      "id" : "f142",
+      "type" : "Script",
+      "name" : "Prepare result",
+      "config" : {
+        "output" : {
+          "code" : "in.aiResult = \"Task is created successfully. The HR ticket will be proceed by another employee, you don't need to care about it. The request of user is handled correctly.\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1912, "y" : 816 }
+      },
+      "connect" : [
+        { "id" : "f145", "to" : "f115", "color" : "default" }
+      ]
+    }, {
+      "id" : "f143",
+      "type" : "Alternative",
+      "visual" : {
+        "at" : { "x" : 1800, "y" : 816 }
+      },
+      "connect" : [
+        { "id" : "f144", "to" : "f142", "color" : "default" }
+      ]
+    }, {
+      "id" : "f146",
+      "type" : "Script",
+      "name" : "Create the second task info",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.secondTaskInfo.customFields = in.taskInfo.customFields;",
+            "in.secondTaskInfo.name = in.taskInfo.name;",
+            "in.secondTaskInfo.description = in.taskInfo.description;",
+            "in.secondTaskInfo.responsible = in.taskInfo.responsible;",
+            "in.secondTaskInfo.customFields = in.taskInfo.customFields;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 704 }
+      },
+      "connect" : [
+        { "id" : "f147", "to" : "f152", "color" : "default" }
+      ]
+    }, {
+      "id" : "f148",
+      "type" : "Script",
+      "name" : "Save to database",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.service.SupportTicketService;",
+            "",
+            "Date today =  new Date();",
+            "in.supportTicket.requestedDate = today.toString();",
+            "SupportTicketService.getInstance().save(in.supportTicket);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 384 }
+      },
+      "connect" : [
+        { "id" : "f149", "to" : "f167", "color" : "default" }
+      ]
+    }, {
+      "id" : "f152",
+      "type" : "Script",
+      "name" : "Update task responsibles",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.taskInfo.responsible = in.supportTicket.firstApprover;",
+            "in.secondTaskInfo.responsible = in.supportTicket.secondApprover;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1528, "y" : 704 }
+      },
+      "connect" : [
+        { "id" : "f153", "to" : "f98", "color" : "default" }
+      ]
+    }, {
+      "id" : "f163",
+      "type" : "Script",
+      "name" : "Save Support Ticket to DB",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.service.SupportTicketService;",
+            "SupportTicketService.getInstance().save(in.supportTicket);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 904, "y" : 704 }
+      },
+      "connect" : [
+        { "id" : "f164", "to" : "f103", "color" : "default" }
+      ]
+    }, {
+      "id" : "f165",
+      "type" : "Script",
+      "name" : "Prepare result",
+      "config" : {
+        "output" : {
+          "code" : "in.aiResult = \"The support ticket is created\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 376, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f166", "to" : "f9", "color" : "default" }
+      ]
+    }, {
+      "id" : "f167",
+      "type" : "Script",
+      "name" : "Prepare result",
+      "config" : {
+        "output" : {
+          "code" : "in.aiResult = \"Assigned approvers for the support ticket\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 696, "y" : 384 }
+      }
+    }, {
+      "id" : "f169",
+      "type" : "ProgramInterface",
+      "name" : "Use AI to create task info",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instruction to follow: \n- Only focus on adding custom fields\n- Each custom field is a pair of name - value. Example: {\\\"employeeUsername\\\" : \\\"mnhnam\\\"}\")\n- Add custom field: 'ticketId', value is the support ticket id\n- Add custom field: 'employeeUsername', value is the employee username",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
+          "tools" : "[]",
+          "resultMapping" : "in.taskInfo",
+          "query" : "<%=in.query%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 568, "y" : 72 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f170", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f177",
+      "type" : "ProgramInterface",
+      "name" : "Use AI to create ticket",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instruction to follow: \n- Don't fill information related to approval\n<%=in.instructions%>",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket.class",
+          "tools" : "[]",
+          "resultMapping" : "in.supportTicket",
+          "query" : "<%=in.query%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 216, "y" : 232 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f178", "to" : "f165", "color" : "default" }
+      ]
+    }, {
+      "id" : "f180",
+      "type" : "Script",
+      "name" : "Use AI: categorize request type",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import dev.langchain4j.internal.Json;",
+            "import com.axonivy.utils.smart.workflow.decision.DecisionMaker;",
+            "",
+            "in.categorizedResult = DecisionMaker.getBuilder()",
+            "    .options(in.options).build()",
+            "    .makeDecision(Json.toJson(in.supportTicket)).id;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 512 }
+      },
+      "connect" : [
+        { "id" : "f181", "to" : "f93" }
+      ]
+    }, {
+      "id" : "f182",
+      "type" : "ProgramInterface",
+      "name" : "Use AI: request approval",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are acting as the approving manager for a support ticket request.\nYour goal is to make an approval decision based solely on the provided\nuser information and additional instructions. Be concise and decisive.\n\n---\nUser Information:\n<%=com.axonivy.utils.smart.workflow.demo.service.EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername)%>\n\n---\nAdditional Instructions to follow: \n- Analyse the provided data, make decision.\n- Set field 'decision' = APPROVE when you think that the request is reasonable, no reason to deny.\n- set field 'decision' = REJECT when you think that the request is unreasonable, it should be rejected.",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.AiApprovalDecision.class",
+          "tools" : "[]",
+          "resultMapping" : "in.aiApproval",
+          "query" : "<%=in.query%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 608 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f183", "to" : "f186" }
+      ]
+    }, {
+      "id" : "f184",
+      "type" : "ProgramInterface",
+      "name" : "Use AI: Create task info",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instructions to follow: \n- Task name should be in format: <user name> requested a leave request from <from date> to <to date>,\n- from date and to date should be calculated based on content of the request,\n- Date format should be follow this locale: <%=ivy.session.formattingLocale.getDisplayCountry() %>,\n- Description should be: This request is approved by Axon Ivy AI,\n- Add custom field: 'ticketId', value is the support ticket id\n",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
+          "tools" : "[]",
+          "resultMapping" : "in.taskInfo",
+          "query" : "<%=in.query%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1192, "y" : 704 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f185", "to" : "f146" }
+      ]
+    }, {
+      "id" : "f186",
+      "type" : "Script",
+      "name" : "map",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.supportTicket.aiApproval = in.aiApproval;",
+            "in.aiApprovalStr = in.supportTicket.aiApproval.decision.name();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 704 },
+        "size" : { "width" : 32, "height" : 30 }
+      },
+      "connect" : [
+        { "id" : "f187", "to" : "f163" }
+      ]
+    }, {
+      "id" : "f188",
+      "type" : "Script",
+      "name" : "prep",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.service.EmployeeService;",
+            "import dev.langchain4j.internal.Json;",
+            "",
+            "in.query = \"Support ticket:\" + System.lineSeparator()",
+            "  + Json.toJson(in.supportTicket)",
+            "  + System.lineSeparator()",
+            "  + \"Requestor:\" + System.lineSeparator()",
+            "  + Json.toJson(EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1104, "y" : 704 },
+        "size" : { "width" : 40, "height" : 38 }
+      },
+      "connect" : [
+        { "id" : "f189", "to" : "f184" }
+      ]
+    } ]
+}

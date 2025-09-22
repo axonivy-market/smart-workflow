@@ -1,5 +1,0 @@
-{
-  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
-  "simpleName" : "ProductDetailsData",
-  "namespace" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.components.ProductDetails"
-}
