@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.axonivy.com/market/10.0.0/product.json",
+  "installers": [
+    {
+      "id": "maven-import",
+      "data": {
+        "projects": [
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-demo",
+            "version": "${version}",
+            "type": "iar"
+          }
+        ],
+        "repositories": [
+          {
+            "id": "maven.axonivy.com",
+            "url": "https://maven.axonivy.com",
+            "snapshots": {
+              "enabled": "true"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "maven-dependency",
+      "data": {
+        "dependencies": [
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow",
+            "version": "${version}",
+            "type": "iar"
+          }
+        ],
+        "repositories": [
+          {
+            "id": "maven.axonivy.com",
+            "url": "https://maven.axonivy.com",
+            "snapshots": {
+              "enabled": "true"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

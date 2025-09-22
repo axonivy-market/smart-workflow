@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "BrandToolsData",
+  "namespace" : "Business.ShoppingDemo.Tools",
+  "fields" : [ {
+    "name" : "searchCriteria",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandSearchCriteria"
+  }, {
+    "name" : "brand",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.Brand"
+  }, {
+    "name" : "response",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandAgentResponse"
+  } ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "SupportBusinessData",
+  "namespace" : "AgentDemo",
+  "fields" : [ {
+    "name" : "taskInfo",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo",
+    "modifiers" : [ ]
+  }, {
+    "name" : "secondTaskInfo",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo",
+    "modifiers" : [ ]
+  }, {
+    "name" : "ticket",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
+  } ]
+}
