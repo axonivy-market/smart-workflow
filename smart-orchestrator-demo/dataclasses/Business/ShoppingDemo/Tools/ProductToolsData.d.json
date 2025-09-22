@@ -4,30 +4,30 @@
   "namespace" : "Business.ShoppingDemo.Tools",
   "fields" : [ {
     "name" : "product",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.Product"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product"
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentResponse"
   }, {
     "name" : "productSearchCriteria",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductSearchCriteria"
   }, {
     "name" : "supplierResponse",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierAgentResponse"
   }, {
     "name" : "supplierSearchCriteria",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.SupplierSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierSearchCriteria"
   }, {
     "name" : "categorySearchCriteria",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategorySearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategorySearchCriteria"
   }, {
     "name" : "brandSearchCriteria",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.brand.BrandSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandSearchCriteria"
   }, {
     "name" : "productCategoryResponse",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse"
   }, {
     "name" : "brandResponse",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.brand.BrandAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandAgentResponse"
   } ]
 }

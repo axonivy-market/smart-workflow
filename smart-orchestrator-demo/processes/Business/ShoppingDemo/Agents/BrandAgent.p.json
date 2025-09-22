@@ -13,7 +13,7 @@
         "signature" : "callBrandAgent",
         "input" : {
           "params" : [
-            { "name" : "brand", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.brand.Brand", "desc" : "All information about a product brand" },
+            { "name" : "brand", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.Brand", "desc" : "All information about a product brand" },
             { "name" : "instructions", "type" : "String", "desc" : "" }
           ],
           "map" : {
@@ -23,7 +23,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.brand.BrandAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -47,11 +47,11 @@
       "type" : "ProgramInterface",
       "name" : "Product brand Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "model" : "\"gpt-4.1\"",
           "system" : "You are an AI Agent in charge of create/update product operation for an invetory of a company.\r\nWith the given product brand information, you need to perform these steps:\r\n\r\nInstructions:\r\n<%= in.instructions %>",
-          "resultType" : "com.axonivy.utils.smart.orchestrator.demo.shopping.brand.BrandAgentResponse.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandAgentResponse.class",
           "tools" : "[\"findProductBrand\",\"createProductBrand\"]",
           "resultMapping" : "in.response",
           "query" : "This is supplier information\r\n---\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.brand) %>"

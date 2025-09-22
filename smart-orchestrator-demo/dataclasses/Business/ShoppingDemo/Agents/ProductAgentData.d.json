@@ -6,9 +6,9 @@
     "name" : "productInfo"
   }, {
     "name" : "result",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentResponse"
   }, {
     "name" : "action",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentAction"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction"
   } ]
 }
