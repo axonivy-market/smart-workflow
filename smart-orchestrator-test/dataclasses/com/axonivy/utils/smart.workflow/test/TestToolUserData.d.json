@@ -1,0 +1,17 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "TestToolUserData",
+  "namespace" : "com.axonivy.utils.smart.workflow.test",
+  "fields" : [ {
+    "name" : "result"
+  }, {
+    "name" : "person",
+    "type" : "com.axonivy.utils.smart.workflow.test.Person"
+  }, {
+    "name" : "persons",
+    "type" : "List<com.axonivy.utils.smart.workflow.test.Person>"
+  }, {
+    "name" : "story",
+    "type" : "com.axonivy.utils.smart.workflow.test.Story"
+  } ]
+}
