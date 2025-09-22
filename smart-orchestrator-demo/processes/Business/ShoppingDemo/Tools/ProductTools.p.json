@@ -13,7 +13,7 @@
         "signature" : "findProduct",
         "input" : {
           "params" : [
-            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductSearchCriteria", "desc" : "Search criteria to find products" }
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductSearchCriteria", "desc" : "Search criteria to find products" }
           ],
           "map" : {
             "out.productSearchCriteria" : "param.searchCriteria"
@@ -21,7 +21,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -45,7 +45,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
             "import org.apache.commons.lang3.StringUtils;",
             "",
             "in.response.product = ProductRepository.getInstance().findBySku(in.productSearchCriteria.sku);",
@@ -73,7 +73,7 @@
         "signature" : "createProduct",
         "input" : {
           "params" : [
-            { "name" : "product", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.Product", "desc" : "All information of a product" }
+            { "name" : "product", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product", "desc" : "All information of a product" }
           ],
           "map" : {
             "out.product" : "param.product"
@@ -81,7 +81,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -117,8 +117,8 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.enums.Status;",
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.enums.Status;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
             "",
             "in.response.product = ProductRepository.getInstance().create(in.product);",
             "in.response.feedback = String.format(\"Product has ID %s is created successfully\", in.response.product.productId);",
@@ -140,7 +140,7 @@
         "signature" : "checkProductDependencies",
         "input" : {
           "params" : [
-            { "name" : "product", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.Product", "desc" : "All information of a product" }
+            { "name" : "product", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product", "desc" : "All information of a product" }
           ],
           "map" : {
             "out.product" : "param.product"
@@ -148,7 +148,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -179,7 +179,7 @@
         "signature" : "createProductSearchCriteria",
         "input" : {
           "params" : [
-            { "name" : "productSearchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductSearchCriteria", "desc" : "Search criteria to find products" }
+            { "name" : "productSearchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductSearchCriteria", "desc" : "Search criteria to find products" }
           ],
           "map" : {
             "out.productSearchCriteria" : "param.productSearchCriteria"
@@ -187,7 +187,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.product.ProductSearchCriteria", "desc" : "Search criteria to find products" }
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductSearchCriteria", "desc" : "Search criteria to find products" }
           ],
           "map" : {
             "result.searchCriteria" : "in.productSearchCriteria"
@@ -215,7 +215,7 @@
       "type" : "SubProcessCall",
       "name" : "Call Supplier agent",
       "config" : {
-        "processCall" : "Business/ShoppingDemo/Agents/SupplierAgent:callSupplierAgent(com.axonivy.utils.smart.orchestrator.demo.shopping.supplier.Supplier,String)",
+        "processCall" : "Business/ShoppingDemo/Agents/SupplierAgent:callSupplierAgent(com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier,String)",
         "call" : {
           "map" : {
             "param.supplier" : "in.product.supplier",
@@ -243,7 +243,7 @@
         "output" : {
           "code" : [
             "import org.apache.commons.lang3.StringUtils;",
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.enums.Status;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.enums.Status;",
             "in.response.isSupplierExisting = false;",
             "",
             "if (in.supplierResponse.status == Status.SUCCESS",
@@ -266,7 +266,7 @@
       "type" : "SubProcessCall",
       "name" : "Call Category agent",
       "config" : {
-        "processCall" : "Business/ShoppingDemo/Agents/ProductCategoryAgent:callProductCategoryAgent(com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategory,String)",
+        "processCall" : "Business/ShoppingDemo/Agents/ProductCategoryAgent:callProductCategoryAgent(com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory,String)",
         "call" : {
           "map" : {
             "param.category" : "in.product.category",
@@ -294,7 +294,7 @@
         "output" : {
           "code" : [
             "import org.apache.commons.lang3.StringUtils;",
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.enums.Status;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.enums.Status;",
             "in.response.isCategoryExisting = false;",
             "",
             "if (in.productCategoryResponse.status == Status.SUCCESS",
@@ -317,7 +317,7 @@
       "type" : "SubProcessCall",
       "name" : "Call Brand agent",
       "config" : {
-        "processCall" : "Business/ShoppingDemo/Agents/BrandAgent:callBrandAgent(com.axonivy.utils.smart.orchestrator.demo.shopping.brand.Brand,String)",
+        "processCall" : "Business/ShoppingDemo/Agents/BrandAgent:callBrandAgent(com.axonivy.utils.smart.workflow.demo.shopping.brand.Brand,String)",
         "call" : {
           "map" : {
             "param.brand" : "in.product.brand",
@@ -345,7 +345,7 @@
         "output" : {
           "code" : [
             "import org.apache.commons.lang3.StringUtils;",
-            "import com.axonivy.utils.smart.orchestrator.demo.shopping.enums.Status;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.enums.Status;",
             "",
             "in.response.isBrandExisting = false;",
             "",

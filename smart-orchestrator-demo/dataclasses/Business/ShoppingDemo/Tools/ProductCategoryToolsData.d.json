@@ -4,12 +4,12 @@
   "namespace" : "Business.ShoppingDemo.Tools",
   "fields" : [ {
     "name" : "searchCriteria",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategorySearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategorySearchCriteria"
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategoryAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse"
   }, {
     "name" : "category",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.shopping.productcategory.ProductCategory"
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory"
   } ]
 }

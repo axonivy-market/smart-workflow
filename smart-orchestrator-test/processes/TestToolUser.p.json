@@ -2,7 +2,7 @@
   "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
   "id" : "1987FC3259488F27",
   "config" : {
-    "data" : "com.axonivy.utils.smart.orchestrator.test.TestToolUserData"
+    "data" : "com.axonivy.utils.smart.workflow.test.TestToolUserData"
   },
   "elements" : [ {
       "id" : "f0",
@@ -28,7 +28,7 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "tools" : "[\"whoami\"]",
           "resultMapping" : "in.result",
@@ -60,7 +60,7 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "tools" : "[]",
           "resultMapping" : "in.result",
@@ -98,10 +98,10 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "tools" : "[\"whoami\"]",
-          "resultType" : "com.axonivy.utils.smart.orchestrator.test.Person.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.Person.class",
           "resultMapping" : "in.person",
           "query" : "Tell me who I am"
         }
@@ -137,7 +137,7 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manner",
           "tools" : "[]",
@@ -176,7 +176,7 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "model" : "\"gpt-5\"",
           "system" : "",
@@ -203,11 +203,11 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "",
           "tools" : "[]",
-          "resultType" : "com.axonivy.utils.smart.orchestrator.test.Story.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
           "resultMapping" : "in.story",
           "query" : "One day Reto Weiss and Bruno Bütler had a gread idea."
         }

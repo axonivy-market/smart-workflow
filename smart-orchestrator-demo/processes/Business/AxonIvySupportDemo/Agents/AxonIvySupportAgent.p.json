@@ -40,7 +40,7 @@
       "type" : "ProgramInterface",
       "name" : "Ivy Agent",
       "config" : {
-        "javaClass" : "com.axonivy.utils.smart.orchestrator.AgenticProcessCall",
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Classify problem then create a task if neccessary.\r\nCheck for missing information like version, classify problem: Portal or Core or Market product, check create a task to handle it, return the task detail link, then summarize problem, reply to question",
           "tools" : "[\"createAxonIvySupportTask\"]",

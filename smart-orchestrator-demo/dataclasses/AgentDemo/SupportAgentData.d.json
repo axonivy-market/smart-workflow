@@ -4,21 +4,21 @@
   "namespace" : "AgentDemo",
   "fields" : [ {
     "name" : "taskInfo",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo",
     "modifiers" : [ ]
   }, {
     "name" : "query",
     "modifiers" : [ ]
   }, {
     "name" : "options",
-    "type" : "List<com.axonivy.utils.smart.orchestrator.decision.Option>",
+    "type" : "List<com.axonivy.utils.smart.workflow.decision.Option>",
     "modifiers" : [ ]
   }, {
     "name" : "categorizedResult",
     "modifiers" : [ ]
   }, {
     "name" : "targetObject",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
     "modifiers" : [ ]
   }, {
     "name" : "customInstructions",
@@ -26,10 +26,10 @@
     "modifiers" : [ ]
   }, {
     "name" : "supportTicket",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.SupportTicket"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
   }, {
     "name" : "connector",
-    "type" : "com.axonivy.utils.smart.orchestrator.connector.OpenAiServiceConnector",
+    "type" : "com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector",
     "modifiers" : [ ]
   }, {
     "name" : "instructions",
@@ -39,14 +39,14 @@
     "name" : "employeeUsername"
   }, {
     "name" : "employeeInfo",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.Employee",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee",
     "modifiers" : [ ]
   }, {
     "name" : "secondTaskInfo",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo"
   }, {
     "name" : "aiApproval",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.AiApprovalDecision",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.AiApprovalDecision",
     "modifiers" : [ ]
   }, {
     "name" : "aiApprovalStr",

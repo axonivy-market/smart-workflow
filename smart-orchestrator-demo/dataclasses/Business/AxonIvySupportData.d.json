@@ -4,9 +4,9 @@
   "namespace" : "Business",
   "fields" : [ {
     "name" : "supportTicket",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket"
   }, {
     "name" : "taskInfo",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.TaskInfo"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo"
   } ]
 }

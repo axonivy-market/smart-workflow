@@ -3,7 +3,7 @@ Dialogs:
     axonivy:
       utils:
         smart:
-          orchestrator:
+          workflow:
             demo:
               shopping:
                 product:

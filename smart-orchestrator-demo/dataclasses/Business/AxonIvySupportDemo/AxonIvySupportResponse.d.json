@@ -6,6 +6,6 @@
     "name" : "aiResult"
   }, {
     "name" : "ticket",
-    "type" : "com.axonivy.utils.smart.orchestrator.demo.dto.AxonIvySupportTicket"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket"
   } ]
 }
