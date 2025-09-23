@@ -116,29 +116,3 @@ Um diesem Bedarf gerecht zu werden, kann der Smart Workflow KI-Agent Ausgaben al
 Du kannst dies einfach konfigurieren, indem du sowohl den erwarteten Ergebnistyp als auch das Zielobjekt, auf das das Ergebnis abgebildet werden soll, im `Output`-Bereich angibst.
 
 ![Andere Konfigurationen](img/agent-other-configurations.png)
-
-### KI-Aktivitäten-Protokollierung aktivieren
-
-Um KI-Aktivitäten zu überwachen und zu verwalten, kannst du eine dedizierte Protokollierung für Smart Workflows KI-Agenten aktivieren.
-Dies geschieht durch Änderung der Standard-`configuration\log4j2.xml`-Datei in deiner Designer- oder Engine-Installation wie folgt:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
-  <Appenders>
-    <RollingRandomAccessFile name="AIlog" fileName="logs/ai.log" filePattern="logs/ai-%d{yyyy-MM-dd}.log.gz" ignoreExceptions="false">
-      <PatternLayout pattern="${pattern}" />
-      <TimeBasedTriggeringPolicy />
-    </RollingRandomAccessFile>
-  </Appenders>
-
-  <Loggers>
-    <Logger name="dev.langchain4j.http.client.log.LoggingHttpClient" level="trace" includeLocation="false" additivity="false">
-      <AppenderRef ref="AIlog" />
-      <AppenderRef ref="ConsoleLog" />
-    </Logger>
-  </Loggers>
-</Configuration>
-```
-
-Nach dem Neustart von Axon Ivy werden alle KI-Aktivitäten in der `logs/ai.log`-Datei zur einfachen Verfolgung und Analyse aufgezeichnet.

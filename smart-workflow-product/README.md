@@ -116,29 +116,3 @@ To address this need, the Smart Workflow AI agent can produce output as a Java o
 You can easily configure this by specifying both the expected result type and the target object to map the result to in the `Output` section.
 
 ![Other configurations](img/agent-other-configurations.png)
-
-### Enable AI activies logging
-
-To monitor and manage AI activities, you can enable dedicated logging for Smart Workflow's AI agents.
-This is done by modifying the default `configuration\log4j2.xml` file in your Designer or Engine installation as follows:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
-  <Appenders>
-    <RollingRandomAccessFile name="AIlog" fileName="logs/ai.log" filePattern="logs/ai-%d{yyyy-MM-dd}.log.gz" ignoreExceptions="false">
-      <PatternLayout pattern="${pattern}" />
-      <TimeBasedTriggeringPolicy />
-    </RollingRandomAccessFile>
-  </Appenders>
-
-  <Loggers>
-    <Logger name="dev.langchain4j.http.client.log.LoggingHttpClient" level="trace" includeLocation="false" additivity="false">
-      <AppenderRef ref="AIlog" />
-      <AppenderRef ref="ConsoleLog" />
-    </Logger>
-  </Loggers>
-</Configuration>
-```
-
-After restarting Axon Ivy, all AI activities will be recorded in the `logs/ai.log` file for easy tracking and analysis.
