@@ -16,6 +16,14 @@ Key benefits of Smart Workflow:
 
 - **Natural language handling:** Accept unstructured input and return human-friendly output.
 
+**Disclaimer**
+
+This connector is provided as an **Alpha version** and is intended for testing and evaluation purposes only. It may contain errors, incomplete features, or other issues that could affect stability, performance, or functionality. Use of this connector is at your own risk.
+
+The **user is solely responsible** for the configuration, deployment, and operation of the AI and its associated agents. Any decisions, actions, or outcomes resulting from the use of this connector are entirely the responsibility of the user.
+
+We provide only the **technical capability** to enable such configurations and expressly disclaim any liability for misuse, misconfiguration, or unintended consequences arising from its use. By using this connector, you acknowledge and accept these limitations.
+
 ## Demo
 
 ### Axon Ivy Support Agent Demo
@@ -64,6 +72,75 @@ How to Run the Demo:
 1. Ensure you have completed the [Configurations](#configurations) section.
 2. Trigger the Axon Ivy Support Agent process with a support question and username.
 3. Review the agent's response, which includes classification, task creation (if needed), and a summary.
+
+### Shopping Demo
+
+This demo showcases how AI can transform the operations of a small e-commerce fashion store. It’s more advanced and combines two mini-demos: one on product creation and another on semantic search. Because of its complexity, we won’t dive into the detailed code or step-by-step instructions here. If you’d like to explore the implementation, please check out the demo project `smart-workflow-demo`.
+
+**Product creation**
+
+Traditionally, adding a product requires the store operator to manually fill many fields and to validate or create dependent records (supplier, brand, category). For a small store this process can take hours or a full day: manual data entry, hunting for missing info, and re-checking for mistakes.
+
+With Smart Workflow agents, the operator simply imports the product specification and image files. The agents handle parsing, validation, dependency resolution, and product creation — significantly reducing manual work and time-to-publish.
+
+Developers need to create four agents
+
+1. Product agent
+
+- Input: parsed product specification
+- Tools:
+  - Find product: Find product in the system
+  - Create product: Create a new product using the provided specification
+  - Check product dependencies: Call other agents to find and validate dependencies (supplier, brand, and category)
+
+2. Supplier agent
+
+- Input: supplier information
+- Tools:
+  - Find supplier: Find supplier in the system
+  - Create supplier: Create a new supplier using the provided information
+
+3. Category agent
+
+- Input: product category information
+- Tools:
+  - Find category: Find category in the system
+  - Create category: Create a new category using the provided information
+
+4. Brand agent
+
+- Input: product brand information
+- Tools:
+  - Find brand: Find brand in the system
+  - Create brand: Create a new brand using the provided information
+
+Demo flow
+
+1. Operator uploads product specification and image files.
+2. Smart Workflow parses the files, extracts product attributes (title, SKU, description, price, supplier info, brand, category, images).
+3. Validators check semantics and constraints (required fields, formats, SKU uniqueness, image requirements).
+4. For each dependency (supplier, brand, category), Smart Workflow asks the appropriate agent:
+  if the entity exists → return the ID,
+  if missing → create it using the provided spec.
+5. Product agent creates the product with validated attributes and links to dependency IDs.
+6. System returns a summary and optionally opens a human-review screen with prefilled fields for final approval.
+
+The new AI-powered process resulted in fewer errors, far less manual work, and a much faster time-to-publish.
+
+**Semantic search**
+
+Before AI, shoppers typed keyword queries like “red dress,” then manually applied filters (price, brand, category) and scanned the results. This process was not only slow and rigid but also often failed to capture synonyms, styles, or intent (e.g., party vs. work).
+
+With semantic search the user speaks or types a natural request. AI understands intent and constraints (color, price, occasion, urgency), converts that into a structured criteria object. The backend then converts that object into SQL predicates and returns matched results. Offers explainability, familiar tooling, and easier deployment.
+
+Developers need to add an additional `Find product by criteria` tool to the `Product agent` with input is the search criteria.
+
+Demo flow
+
+1. Shopper: types or says “I need a $100 red dress for a party tonight.”
+2. `Product agent` extracts attributes and expands the query (synonyms, acceptable price range: $80–$120).
+3. Axon Ivy Business Data turns criteria into an optimized filters and search for the products.
+4. Return the top products matched criteria.
 
 ## Setup
 
