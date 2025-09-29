@@ -136,7 +136,9 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.shopping.utils.UploadedFileUtils;",
             "",
-            "in.productInfo = UploadedFileUtils.processUploadedFile(in.uploadEvent.getFile());"
+            "in.productInfo = UploadedFileUtils.processUploadedFile(in.uploadEvent.getFile());",
+            "",
+            "in.originalFileName = in.uploadEvent.getFile().getFileName();"
           ]
         }
       },
@@ -345,7 +347,9 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.shopping.utils.ImageUtils;",
             "",
-            "in.imageBase64 = ImageUtils.inputStreamToBase64(in.imageUploadEvent.getFile().getInputStream(), in.imageUploadEvent.getFile().getFileName());"
+            "in.imageBase64 = ImageUtils.inputStreamToBase64(in.imageUploadEvent.getFile().getInputStream(), in.imageUploadEvent.getFile().getFileName());",
+            "",
+            "in.originalImageName = in.imageUploadEvent.getFile().getFileName();"
           ]
         }
       },

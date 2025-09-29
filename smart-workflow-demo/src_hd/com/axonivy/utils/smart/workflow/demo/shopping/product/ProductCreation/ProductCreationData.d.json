@@ -42,5 +42,9 @@
   }, {
     "name" : "selectedCategory",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory"
+  }, {
+    "name" : "originalFileName"
+  }, {
+    "name" : "originalImageName"
   } ]
 }

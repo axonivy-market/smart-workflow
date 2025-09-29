@@ -22,5 +22,7 @@
   }, {
     "name" : "selectedCartItem",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem"
+  }, {
+    "name" : "translatedSearchTerm"
   } ]
 }

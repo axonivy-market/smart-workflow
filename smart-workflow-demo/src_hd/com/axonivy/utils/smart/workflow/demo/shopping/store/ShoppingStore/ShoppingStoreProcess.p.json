@@ -84,7 +84,7 @@
         "labelOffset" : { "x" : 24, "y" : -16 }
       },
       "connect" : [
-        { "id" : "f9", "to" : "f14", "label" : {
+        { "id" : "f9", "to" : "f46", "label" : {
             "name" : "no",
             "offset" : { "x" : 1, "y" : 14 }
           }, "color" : "default" },
@@ -116,7 +116,7 @@
         "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction)",
         "call" : {
           "map" : {
-            "param.productInfo" : "in.searchTerm",
+            "param.productInfo" : "in.translatedSearchTerm",
             "param.action" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction.CREATE_CRITERIA"
           }
         },
@@ -128,7 +128,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 816, "y" : 528 }
+        "at" : { "x" : 944, "y" : 528 }
       },
       "connect" : [
         { "id" : "f15", "to" : "f18" }
@@ -147,7 +147,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 992, "y" : 528 }
+        "at" : { "x" : 1120, "y" : 528 }
       },
       "connect" : [
         { "id" : "f19", "to" : "f22", "color" : "default" }
@@ -166,16 +166,16 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 992, "y" : 624 }
+        "at" : { "x" : 1120, "y" : 624 }
       },
       "connect" : [
-        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 1120, "y" : 624 } ] }
+        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 1248, "y" : 624 } ] }
       ]
     }, {
       "id" : "f22",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1120, "y" : 528 }
+        "at" : { "x" : 1248, "y" : 528 }
       }
     }, {
       "id" : "f23",
@@ -394,5 +394,29 @@
       "visual" : {
         "at" : { "x" : 776, "y" : 1136 }
       }
+    }, {
+      "id" : "f46",
+      "type" : "SubProcessCall",
+      "name" : "Translate search term",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/TranslationAgent:translationAgent(String)",
+        "call" : {
+          "map" : {
+            "param.message" : "in.searchTerm"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.translatedSearchTerm" : "result.result"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 760, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f47", "to" : "f14", "color" : "default" }
+      ]
     } ]
 }
