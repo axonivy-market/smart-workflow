@@ -1,0 +1,37 @@
+body .ui-scrollpanel.chat-panel {
+  background-color: #fafbfc;
+}
+
+.chat-area {
+  height: 50vh;
+}
+
+.msg-bubble {
+  border-radius: 12px;
+  padding: 10px 14px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.user-bubble {
+  background-color: #daf0ff;
+  color: #003366;
+}
+
+.bot-bubble {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.msg-sender {
+  font-size: 0.9em;
+}
+
+.msg-content {
+  white-space: pre-wrap;
+}
+
+.msg-time {
+  font-size: 0.75em;
+  color: #888;
+}

@@ -4,97 +4,48 @@
   xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
   <ui:composition template="/layouts/frame-10-full-width.xhtml">
-    <ui:define name="title">Support ticket</ui:define>
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvySupportForm/AxonIvySupport')}</ui:define>
     <ui:define name="content">
+      <!-- Include support chat JavaScript -->
+      <h:outputScript library="js" name="support-chat.js" />
+      <h:outputStylesheet library="css" name="shopping-common.css" />
+      <h:outputStylesheet library="css" name="support-chat.css" />
+
       <div class="card">
         <h:form id="chatForm">
-          <p:panel header="Axon Ivy Support" 
-            style="max-width: 80%; margin: 0 auto; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); background: #fafbfc;">
+          <p:panel header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvySupportForm/AxonIvySupport')}" 
+            styleClass="w-full max-w-4xl mx-auto border-round-2xl shadow-2">
 
             <p:scrollPanel id="chatArea" mode="native"
-              style="height: 50vh; overflow-y: auto; background: #f5f7fa; border-radius: 6px;">
+              styleClass="overflow-y-auto chat-panel border-round chat-area">
               <ui:repeat value="#{chatBean.chatHistory}" var="msg">
-                <p:outputPanel styleClass="msg-row #{msg.role eq 'user' ? 'user-row' : 'bot-row'}">
-                  <div class="msg-bubble #{msg.role eq 'user' ? 'user-bubble' : 'bot-bubble'}">
-                    <span class="msg-sender">#{msg.role eq 'user' ? 'You' : 'Axon Ivy Support'}</span> <span class="msg-content">
+                <p:outputPanel styleClass="flex align-items-end mb-3 #{msg.role eq 'user' ? 'flex-row-reverse' : 'flex-row'}">
+                  <div class="msg-bubble inline-block #{msg.role eq 'user' ? 'user-bubble ml-auto' : 'bot-bubble mr-auto text-left'}">
+                    <span class="msg-sender font-bold block mb-1">#{msg.role eq 'user' ? 'You' : 'Axon Ivy Support'}</span> 
+                    <span class="msg-content">
                       <h:outputText value="#{msg.htmlContent}" escape="#{msg.role eq 'user'}" />
-                    </span> <span class="msg-time">#{msg.timestamp}</span>
+                    </span> 
+                    <span class="msg-time block mt-1 text-right">#{msg.timestamp}</span>
                   </div>
                 </p:outputPanel>
               </ui:repeat>
             </p:scrollPanel>
 
-            <div class="field">
-              <p:inputTextarea id="userInput" value="#{chatBean.userMessage}" styleClass="w-full mt-2" 
-                placeholder="Type your question..."
-                onkeypress="if(event.keyCode==13){PF('sendBtn').jq.click();return false;}" />
-              <p:commandButton id="sendBtn" value="Send" icon="pi pi-send" action="#{chatBean.sendMessage}"
-                styleClass="mt-2" update="chatArea userInput" process="@form" oncomplete="getAnswer()"/>
+            <div class="field flex align-items-center mt-3">
+              <p:inputTextarea id="userInput" value="#{chatBean.userMessage}" styleClass="flex-auto mr-3" 
+                placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvySupportForm/InputPlaceholder')}"
+                onkeydown="return handleChatInputKeyDown(event);" />
+              <p:commandButton id="sendBtn" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvySupportForm/Send')}"
+                icon="pi pi-send" onclick="return sendMessageWithValidation();" />
             </div>
           </p:panel>
-          <p:remoteCommand name="getAnswer" actionListener="#{chatBean.getAnswer}" update="chatArea userInput"></p:remoteCommand>
+          <p:remoteCommand name="sendMessage" actionListener="#{chatBean.sendMessage}" global="false"
+            update="chatArea userInput" process="@form" oncomplete="getAnswer(); scrollChatToBottom();" />
+          <p:remoteCommand name="getAnswer" actionListener="#{chatBean.getAnswer}" update="chatArea userInput"
+            global="false" oncomplete="scrollChatToBottom();" />
         </h:form>
       </div>
-      <style>
-.msg-row {
-  display: flex;
-  align-items: flex-end;
-  margin-bottom: 10px;
-}
-
-.user-row {
-  flex-direction: row-reverse;
-}
-
-.bot-row {
-  flex-direction: row;
-}
-
-.msg-bubble {
-  border-radius: 12px;
-  padding: 10px 14px;
-  max-width: 80%;
-  display: inline-block;
-  word-wrap: break-word;
-}
-
-.user-bubble {
-  background-color: #daf0ff;
-  color: #003366;
-  margin-left: auto;
-  text-align: right;
-}
-
-.bot-bubble {
-  background-color: #f0f0f0;
-  color: #333;
-  margin-right: auto;
-  text-align: left;
-}
-
-.msg-sender {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
-  font-size: 0.9em;
-}
-
-.msg-content {
-  white-space: pre-wrap;
-}
-
-.msg-time {
-  display: block;
-  font-size: 0.75em;
-  color: #888;
-  margin-top: 4px;
-  text-align: right;
-}
-</style>
-    </ui:define> 
-    
-    
-    
+    </ui:define>
   </ui:composition>
 </h:body>
 

@@ -5,6 +5,10 @@ Dialogs:
         smart:
           workflow:
             demo:
+              AxonIvySupportForm:
+                AxonIvySupport: Axon Ivy Support
+                InputPlaceholder: Tippe deine Frage... (Umschalt+Eingabetaste zum Senden)
+                Send: Senden
               shopping:
                 product:
                   ProductCreation:
