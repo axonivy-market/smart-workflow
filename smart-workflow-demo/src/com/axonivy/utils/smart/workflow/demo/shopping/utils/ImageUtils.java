@@ -62,7 +62,7 @@ public final class ImageUtils {
    * Converts a clean base64 string back to data URL for HTML display.
    *
    * @param base64String the clean base64 string (stored in database)
-   * @param mimeType     the MIME type (e.g., "image/png")
+   * @param mimeType     the MIME type (e.g., "image/jpeg")
    * @return base64 data URL string ready for HTML img src
    */
   public static String base64ToDataUrl(String base64String, String mimeType) {
@@ -71,7 +71,7 @@ public final class ImageUtils {
     }
 
     if (StringUtils.isBlank(mimeType)) {
-      mimeType = "image/png"; // default
+      mimeType = "image/jpeg"; // default
     }
 
     return String.format("data:%s;base64,%s", mimeType, base64String);
@@ -84,7 +84,7 @@ public final class ImageUtils {
    * @return base64 data URL string ready for HTML img src
    */
   public static String base64ToDataUrl(String base64String) {
-    return base64ToDataUrl(base64String, "image/png");
+    return base64ToDataUrl(base64String, "image/jpeg");
   }
 
   /**
@@ -103,7 +103,7 @@ public final class ImageUtils {
 
     try {
       // Use PNG as the default MIME type and filename
-      String mimeType = "image/png";
+      String mimeType = "image/jpeg";
       String fileName = "image.png";
 
       // Clean the base64 string (remove data URL prefix if present)
@@ -139,7 +139,7 @@ public final class ImageUtils {
     case "jpeg":
       return "image/jpeg";
     case "png":
-      return "image/png";
+      return "image/jpeg";
     case "gif":
       return "image/gif";
     case "bmp":
@@ -156,7 +156,7 @@ public final class ImageUtils {
    *
    * @param base64String the base64 encoded image
    * @param filename     the original filename (used to determine MIME type)
-   * @return data URL string (e.g., "data:image/png;base64,...")
+   * @return data URL string (e.g., "data:image/jpeg;base64,...")
    */
   public static String createDataUrl(String base64String, String filename) {
     if (StringUtils.isBlank(base64String)) {
@@ -198,7 +198,7 @@ public final class ImageUtils {
       return base64String;
     }
 
-    // Remove data URL prefix if present (e.g., "data:image/png;base64,")
+    // Remove data URL prefix if present (e.g., "data:image/jpeg;base64,")
     if (base64String.startsWith("data:")) {
       int commaIndex = base64String.indexOf(',');
       if (commaIndex != -1 && commaIndex < base64String.length() - 1) {
