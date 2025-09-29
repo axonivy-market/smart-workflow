@@ -1,0 +1,616 @@
+[
+    {
+        "productId": "0777da0ae80940be9f5b75908213e4af",
+        "sku": "EF-VES-612-NVY-{SIZE}",
+        "supplier": null,
+        "name": "ELITEFORM Classic Navy Veston",
+        "description": "Prestige Navy Suit Jacket, a masterpiece of modern tailoring designed for those who value refinement, comfort, and versatility. Crafted from a luxurious blend of 90% wool and 10% silk, this jacket delivers a smooth, lustrous finish with excellent breathability and drape, ideal for year-round wear. The slim tailored fit and single-breasted, two-button silhouette create a sharp, contemporary profile, while peak lapels and mother-of-pearl buttons add a touch of sophistication. Practical design details such as side vents, multiple interior pockets, and flap pockets with a ticket pocket combine style with functionality. Perfect for a range of business and formal occasions, this jacket excels at corporate meetings, networking events, weddings, evening galas, and exclusive dinner engagements. Pair with matching trousers for a refined suit look or mix with contrasting dress pants for semi-formal gatherings or cocktail receptions.",
+        "category": null,
+        "brand": null,
+        "unitPrice": 68.0,
+        "active": true,
+        "imageId": "e02b0371ee6f4a31b75587f6b0172e3a",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Executive Line — 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "EF-EXEC"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8934567800016"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6203.31.00"
+            },
+            {
+                "name": "Fabric",
+                "value": "90% wool, 10% silk"
+            },
+            {
+                "name": "Fabric Weight",
+                "value": "270 GSM (±5%)"
+            },
+            {
+                "name": "Lining",
+                "value": "100% viscose satin"
+            },
+            {
+                "name": "Trims",
+                "value": "Mother-of-pearl buttons, woven brand label, satin care label"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100, Woolmark certified"
+            },
+            {
+                "name": "Color",
+                "value": "Navy"
+            },
+            {
+                "name": "Pantone / Reference",
+                "value": "Pantone 2965 C"
+            },
+            {
+                "name": "Color Code",
+                "value": "EF-612-NVY"
+            },
+            {
+                "name": "Size Range",
+                "value": "46, 48, 50, 52, 54"
+            },
+            {
+                "name": "Tolerances",
+                "value": "±1.5 cm overall"
+            }
+        ],
+        "supplierId": "TW-2025-827",
+        "categoryId": "aecf938962264bba855ea44c307ea124",
+        "brandId": "350ec2bb-db1e-413d-b91f-00bd043d931a"
+    },
+    {
+        "productId": "125dc1c03aa54d80acefcb63aa452074",
+        "sku": "MS-VES-613-CHR-{SIZE}",
+        "supplier": null,
+        "name": "METROSTYLE Charcoal Business Veston",
+        "description": "METROSTYLE Executive Charcoal Suit Jacket (Men). Regular tailored fit, single-breasted, two-button closure, notch lapel, full lining, double back vent, two flap pockets, chest welt pocket, two interior welt pockets. Fabric: 80% wool, 20% polyester, 255 GSM. Lining: 100% polyester satin. Color: Charcoal (Pantone 432 C).",
+        "category": null,
+        "brand": null,
+        "unitPrice": 54.0,
+        "active": true,
+        "imageId": "7e9742e6c82644e9ac8b3218c5e85672",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Business Line — 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "MS-BIZ"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8934567800027"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6203.31.00"
+            },
+            {
+                "name": "Fit",
+                "value": "Regular tailored fit"
+            },
+            {
+                "name": "Silhouette",
+                "value": "Single-breasted, two-button closure"
+            },
+            {
+                "name": "Key Features",
+                "value": "Notch lapel with pick stitching, full lining, double back vent, two flap pockets + chest welt pocket, two interior welt pockets (one with button)"
+            },
+            {
+                "name": "Fabric",
+                "value": "80% wool, 20% polyester"
+            },
+            {
+                "name": "Fabric Weight",
+                "value": "255 GSM (±5%)"
+            },
+            {
+                "name": "Lining",
+                "value": "100% polyester satin"
+            },
+            {
+                "name": "Trims",
+                "value": "Matte-finish buttons, woven brand label, satin care label"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100"
+            },
+            {
+                "name": "Colorway",
+                "value": "Charcoal Pantone 432 C (MS-613-CHR)"
+            },
+            {
+                "name": "Size Range",
+                "value": "46, 48, 50, 52, 54"
+            },
+            {
+                "name": "Measurements",
+                "value": "See specification sheet"
+            },
+            {
+                "name": "Tolerances",
+                "value": "±1.5 cm overall"
+            }
+        ],
+        "supplierId": "TW-2025-717",
+        "categoryId": "aecf938962264bba855ea44c307ea124",
+        "brandId": "1d57d0e9-9922-49e5-8743-5d4513b14e3b"
+    },
+    {
+        "productId": "d0588422f8d047cab939242dc71b66cc",
+        "sku": "MS-PNT-616-GRY-{SIZE}",
+        "supplier": null,
+        "name": "METROSTYLE Classic Gray Dress Pant",
+        "description": "Modern slim fit, flat-front dress pant. Hidden hook-and-bar closure with zip fly, two slanted side pockets, two back welt pockets (one with button), belt loops (3.5 cm width), half-lined to the knee. Fabric: 55% wool, 45% polyester, 245 GSM. Lining: 100% polyester. Tonal matte buttons, reinforced hook-and-bar, woven brand label. Certifications: Oeko-Tex Standard 100, Woolmark certified. Color: Pantone Cool Gray 10 C. Size range: 76-92 cm waist. HS Code: 6203.33.00. EAN: 8934567800050.",
+        "category": null,
+        "brand": null,
+        "unitPrice": 32.0,
+        "active": true,
+        "imageId": "a6d912ff2d0f4518a7222f397ba93860",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Business Line — 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "MS-BIZ"
+            },
+            {
+                "name": "Retail Name",
+                "value": "METROSTYLE Executive Gray Formal Trousers (Men)"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8934567800050"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6203.33.00"
+            },
+            {
+                "name": "Color Code",
+                "value": "MS-616-GRY"
+            },
+            {
+                "name": "Fabric",
+                "value": "55% wool, 45% polyester"
+            },
+            {
+                "name": "Fabric Weight",
+                "value": "245 GSM (±5%)"
+            },
+            {
+                "name": "Lining",
+                "value": "100% polyester"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100, Woolmark certified"
+            },
+            {
+                "name": "Prepared by",
+                "value": "Taichung Tailoring Works Ltd."
+            },
+            {
+                "name": "Document Version",
+                "value": "1.0"
+            },
+            {
+                "name": "Date",
+                "value": "September 16, 2025"
+            }
+        ],
+        "supplierId": "TW-2025-616",
+        "categoryId": "0029e782eaa64d3d8b7df7ece92a2bc6",
+        "brandId": "1d57d0e9-9922-49e5-8743-5d4513b14e3b"
+    },
+    {
+        "productId": "5e1c063a11c34413bdcdcb83ad4bf439",
+        "sku": "WH-TSH-001-WHT-M",
+        "supplier": null,
+        "name": "WHITEHUE Classic Crew Neck T-shirt",
+        "description": "WHITEHUE Classic White Tee (Unisex) - Regular fit, crew neck, short sleeve, 100% ring-spun combed cotton, 180 GSM, Oeko-Tex Standard 100 certified. Features: 1x1 ribbed neckline, shoulder-to-shoulder taping, double-needle sleeve & hem stitching, side-seamed construction. Color: White (Pantone White / WH-001-WHT). Size: M. Unit weight: ~200g. Care: Machine wash cold, tumble dry low, warm iron inside-out, do not bleach/dry clean. MOQ: 500 pcs. Unit Price: USD 3.50 FOB Ho Chi Minh.",
+        "category": null,
+        "brand": null,
+        "unitPrice": 7.0,
+        "active": true,
+        "imageId": "1f4619f61718419aad9e78cf9ca674bf",
+        "otherInformations": [
+            {
+                "name": "Fit",
+                "value": "Regular fit (unisex, true to size)"
+            },
+            {
+                "name": "Silhouette",
+                "value": "Crew neck, short sleeve"
+            },
+            {
+                "name": "Fabric",
+                "value": "100% ring-spun combed cotton, single jersey"
+            },
+            {
+                "name": "Fabric Weight",
+                "value": "180 GSM (±5%)"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100"
+            },
+            {
+                "name": "Color",
+                "value": "White"
+            },
+            {
+                "name": "Pantone",
+                "value": "Pantone White / WH-001-WHT"
+            },
+            {
+                "name": "Size",
+                "value": "M"
+            },
+            {
+                "name": "HS Code",
+                "value": "6109.10.00"
+            },
+            {
+                "name": "MOQ",
+                "value": "500 pcs"
+            },
+            {
+                "name": "Net Unit Weight",
+                "value": "~200g"
+            },
+            {
+                "name": "Care Instructions",
+                "value": "Machine wash cold, tumble dry low, warm iron inside-out, do not bleach/dry clean"
+            }
+        ],
+        "supplierId": "LTU-2025-001",
+        "categoryId": "4e2a1cc0cda94fbdbcccd95c38edabca",
+        "brandId": "218a06dc-62bc-4ddc-9657-00da2963048a"
+    },
+    {
+        "productId": "0419f083cb70490d83dc011a55dd0053",
+        "sku": "EF-PNT-717-BLK-{SIZE}",
+        "supplier": null,
+        "name": "ELITEFORM Classic Black Dress Pant",
+        "description": "Slim tailored fit, Flat-front dress pant, Extended tab waistband with hook-and-bar + button, YKK zipper fly, Two slanted side pockets, Two back welt pockets with buttons, Belt loops (3.5 cm width), Half-lined to the knee. Fabric: 60% wool, 38% polyester, 2% elastane. Fabric Weight: 250 GSM (±5%). Lining: 100% viscose (pocketing + knee lining). Trims: Polished horn-effect buttons, premium hook-and-bar, woven brand label. Certifications: Oeko-Tex Standard 100, Woolmark certified. Color: Black (Pantone Black C, Code: EF-717-BLK). Size Range: 76-92 cm waist. HS Code: 6203.33.00. EAN: 8934567800061.",
+        "category": null,
+        "brand": null,
+        "unitPrice": 28.0,
+        "active": true,
+        "imageId": "d8254f4bcf004a149d613a05e69f1782",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Executive Line — 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "EF-EXEC"
+            },
+            {
+                "name": "Retail Name",
+                "value": "ELITEFORM Prestige Black Formal Trousers (Men)"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8934567800061"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6203.33.00"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100, Woolmark certified"
+            },
+            {
+                "name": "Color Code",
+                "value": "EF-717-BLK"
+            },
+            {
+                "name": "Prepared by",
+                "value": "Kaohsiung Apparel Industries Ltd."
+            },
+            {
+                "name": "Document Version",
+                "value": "1.0"
+            },
+            {
+                "name": "Date",
+                "value": "September 16, 2025"
+            }
+        ],
+        "supplierId": "TW-2025-717",
+        "categoryId": "0029e782eaa64d3d8b7df7ece92a2bc6",
+        "brandId": "350ec2bb-db1e-413d-b91f-00bd043d931a"
+    },
+    {
+        "productId": "90d0117f6d7243548dc643e8a2df5f4b",
+        "sku": "UE-VES-511-BLK-{SIZE}",
+        "supplier": null,
+        "name": "URBANEDGE Classic Black Veston",
+        "description": "URBANEDGE Executive Black Suit Jacket (Men): Modern tailored fit, premium wool-rich blend (85% wool, 15% polyester), single-breasted, notch lapel, two-button closure, full lining, double back vents, interior welt pockets, exterior flap pockets, chest welt pocket. Formalwear Series — 2025. Color: Pantone Black C. Sizes: 46-54. Certifications: Oeko-Tex Standard 100.",
+        "category": null,
+        "brand": null,
+        "unitPrice": 0.0,
+        "active": false,
+        "imageId": "e13033d6cb07408088cb4e0738a20ac5",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Formalwear Series — 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "UE-FORMAL"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8934567800005"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6203.31.00"
+            },
+            {
+                "name": "Fabric",
+                "value": "85% wool, 15% polyester"
+            },
+            {
+                "name": "Fabric Weight",
+                "value": "260 GSM (±5%)"
+            },
+            {
+                "name": "Lining",
+                "value": "100% polyester satin"
+            },
+            {
+                "name": "Trims",
+                "value": "Horn-style buttons, woven brand label, satin care label"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100"
+            },
+            {
+                "name": "Color",
+                "value": "Pantone Black C"
+            },
+            {
+                "name": "Code",
+                "value": "UE-511-BLK"
+            },
+            {
+                "name": "Size Range",
+                "value": "46, 48, 50, 52, 54"
+            }
+        ],
+        "supplierId": "TW-2025-616",
+        "categoryId": "aecf938962264bba855ea44c307ea124",
+        "brandId": "ad6eaf49-45fa-433e-b8e8-2f96d676e1e2"
+    },
+    {
+        "productId": "0e142d662e6644eca7f9177f9afffa2c",
+        "sku": "UE-TSH-101-WHT-M",
+        "supplier": null,
+        "name": "URBANEDGE Basic Crew Neck T-shirt",
+        "description": "Modern regular fit (unisex) crew neck, short sleeve. Soft-touch cotton finish, shoulder reinforcement tape, double-stitched hems, side seams. 100% ring-spun cotton, 170 GSM. Oeko-Tex Standard 100 certified. Color: White (Pantone White / UE-001-WHT).",
+        "category": null,
+        "brand": null,
+        "unitPrice": 18.0,
+        "active": true,
+        "imageId": "9ef71975771c4d3d9701f9a7c74f95e1",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Everyday Basics --- Spring/Summer 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "UE-BASIC"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8859876543210"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6109.10.00"
+            },
+            {
+                "name": "Fabric",
+                "value": "100% ring-spun cotton, single jersey"
+            },
+            {
+                "name": "Fabric Weight",
+                "value": "170 GSM (±5%)"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100 certified"
+            },
+            {
+                "name": "Color Code",
+                "value": "UE-001-WHT"
+            },
+            {
+                "name": "Net Unit Weight",
+                "value": "~190 g"
+            },
+            {
+                "name": "Packed Weight",
+                "value": "~205 g"
+            },
+            {
+                "name": "Primary Packaging",
+                "value": "Clear PE polybag, resealable, size/SKU sticker"
+            }
+        ],
+        "supplierId": "LTU-2025-001",
+        "categoryId": "4e2a1cc0cda94fbdbcccd95c38edabca",
+        "brandId": "ad6eaf49-45fa-433e-b8e8-2f96d676e1e2"
+    },
+    {
+        "productId": "c77300702c25478f97fe988ddfa2aba1",
+        "sku": "MS-PNT-614-BLK-{SIZE}",
+        "supplier": null,
+        "name": "METROSTYLE Classic Black Dress Pant",
+        "description": "Slim fit, straight leg. Flat-front dress pant. Hook-and-bar closure with zip fly, two slanted side pockets, two back welt pockets with button, belt loops (3.5 cm width), half-lined to the knee. Fabric: 70% polyester, 30% viscose, 240 GSM (±5%). Lining: 100% polyester. Trims: Matte-finish hook-and-bar, plastic buttons, woven brand label. Certifications: Oeko-Tex Standard 100. Color: Black (Pantone Black C, MS-614-BLK).",
+        "category": null,
+        "brand": null,
+        "unitPrice": 27.0,
+        "active": true,
+        "imageId": "e7d9e37d090144f6aca17c76c7b70b9f",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Business Line — 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "MS-BIZ"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8934567800038"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6203.33.00"
+            },
+            {
+                "name": "Color Code",
+                "value": "MS-614-BLK"
+            },
+            {
+                "name": "Prepared by",
+                "value": "Taichung Tailoring Works Ltd."
+            },
+            {
+                "name": "Document Version",
+                "value": "1.0"
+            },
+            {
+                "name": "Date",
+                "value": "September 16, 2025"
+            }
+        ],
+        "supplierId": "TW-2025-616",
+        "categoryId": "0029e782eaa64d3d8b7df7ece92a2bc6",
+        "brandId": "1d57d0e9-9922-49e5-8743-5d4513b14e3b"
+    },
+    {
+        "productId": "edb6c044b1d342a9928e15943372e54d",
+        "sku": "SW-TSH-201-BLK-{SIZE}",
+        "supplier": null,
+        "name": "STREETWAVE Black Crew Neck T-shirt",
+        "description": "Oversized street fit (unisex), Crew neck, short sleeve, 1x1 rib collar, Dropped shoulders, Double-stitched hems, Heavyweight cotton. Fabric: 100% ring-spun cotton, single jersey, 220 GSM (±5%). Color: Black (Pantone Black 6 C). Size range: S-XXL. Certifications: Oeko-Tex Standard 100. HS Code: 6109.10.00.",
+        "category": null,
+        "brand": null,
+        "unitPrice": 12.0,
+        "active": true,
+        "imageId": "3a9301acc2924367ad3fc22ede4f5707",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Urban Streetwear --- 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "SW-BASIC"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8901234500001"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6109.10.00"
+            },
+            {
+                "name": "Fabric Weight",
+                "value": "220 GSM (±5%)"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100"
+            },
+            {
+                "name": "Color Code",
+                "value": "SW-201-BLK"
+            }
+        ],
+        "supplierId": "SGN-2025-101",
+        "categoryId": "4e2a1cc0cda94fbdbcccd95c38edabca",
+        "brandId": "98f93eaa-35d6-4486-9be7-151c4fd74f75"
+    },
+    {
+        "productId": "0fb0113e8ee646a18d6b00d477f7f034",
+        "sku": "CP-TSH-301-RED-{SIZE}",
+        "supplier": null,
+        "name": "CRIMSONPULSE Performance Red T-shirt",
+        "description": "Athletic fit (unisex), Crew neck, short sleeve, Moisture-wicking finish, Side-seamed, Reinforced neckline, Breathable cotton blend. Fabric: 95% cotton, 5% elastane, 180 GSM. Color: Red (Pantone 186 C).",
+        "category": null,
+        "brand": null,
+        "unitPrice": 7.4,
+        "active": true,
+        "imageId": "1c019df46ea442e4b8a617075427554a",
+        "otherInformations": [
+            {
+                "name": "Collection",
+                "value": "Activewear Series --- 2025"
+            },
+            {
+                "name": "Line Code",
+                "value": "CP-ACTIVE"
+            },
+            {
+                "name": "EAN / Barcode",
+                "value": "8912345600002"
+            },
+            {
+                "name": "HS / Tariff Code",
+                "value": "6109.10.00"
+            },
+            {
+                "name": "Certifications",
+                "value": "Oeko-Tex Standard 100"
+            },
+            {
+                "name": "Fabric Weight",
+                "value": "180 GSM (±5%)"
+            },
+            {
+                "name": "Trims",
+                "value": "Woven label, printed satin care label"
+            },
+            {
+                "name": "Color Code",
+                "value": "CP-301-RED"
+            }
+        ],
+        "supplierId": "HN-2025-301",
+        "categoryId": "4e2a1cc0cda94fbdbcccd95c38edabca",
+        "brandId": "ae9f5aa9-018b-4955-ac8d-9962ecf25613"
+    }
+]

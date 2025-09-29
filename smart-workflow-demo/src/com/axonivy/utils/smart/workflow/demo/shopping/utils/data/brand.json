@@ -1,0 +1,39 @@
+[
+  {
+    "brandId" : "98f93eaa-35d6-4486-9be7-151c4fd74f75",
+    "name" : "STREETWAVE",
+    "description" : "",
+    "logoBase64" : null,
+    "website" : ""
+  }, {
+    "brandId" : "ad6eaf49-45fa-433e-b8e8-2f96d676e1e2",
+    "name" : "URBANEDGE",
+    "description" : "",
+    "logoBase64" : null,
+    "website" : ""
+  }, {
+    "brandId" : "218a06dc-62bc-4ddc-9657-00da2963048a",
+    "name" : "WHITEHUE",
+    "description" : "Classic Essentials — All Season 2025",
+    "logoBase64" : null,
+    "website" : ""
+  }, {
+    "brandId" : "ae9f5aa9-018b-4955-ac8d-9962ecf25613",
+    "name" : "CRIMSONPULSE",
+    "description" : "",
+    "logoBase64" : null,
+    "website" : ""
+  }, {
+    "brandId" : "350ec2bb-db1e-413d-b91f-00bd043d931a",
+    "name" : "ELITEFORM",
+    "description" : "",
+    "logoBase64" : null,
+    "website" : ""
+  }, {
+    "brandId" : "1d57d0e9-9922-49e5-8743-5d4513b14e3b",
+    "name" : "METROSTYLE",
+    "description" : "",
+    "logoBase64" : null,
+    "website" : ""
+  }
+]

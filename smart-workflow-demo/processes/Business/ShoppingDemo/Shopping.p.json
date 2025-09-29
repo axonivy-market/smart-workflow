@@ -74,5 +74,46 @@
       "connect" : [
         { "id" : "f9", "to" : "f6" }
       ]
+    }, {
+      "id" : "f10",
+      "type" : "RequestStart",
+      "name" : "Create data for shopping demo",
+      "config" : {
+        "signature" : "createData",
+        "request" : {
+          "name" : "Create data for shopping demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Create data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.utils.DataGenerationUtils;",
+            "DataGenerationUtils.createData();"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 720, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 880, "y" : 64 }
+      }
     } ]
 }

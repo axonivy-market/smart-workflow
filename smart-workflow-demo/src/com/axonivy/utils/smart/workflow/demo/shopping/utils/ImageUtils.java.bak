@@ -104,7 +104,7 @@ public final class ImageUtils {
     try {
       // Use PNG as the default MIME type and filename
       String mimeType = "image/jpeg";
-      String fileName = "image.jpg";
+      String fileName = "image.png";
 
       // Clean the base64 string (remove data URL prefix if present)
       String cleanBase64 = cleanBase64String(base64String);

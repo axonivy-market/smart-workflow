@@ -2,6 +2,9 @@ package com.axonivy.utils.smart.workflow.demo.shopping.product;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.demo.shopping.brand.Brand;
 import com.axonivy.utils.smart.workflow.demo.shopping.common.OtherInformation;
@@ -174,6 +177,9 @@ public class Product implements Serializable {
 
   @JsonIgnore
   public String getImageUrl() {
+    if (Optional.ofNullable(image).map(ProductImage::getContent).isEmpty()) {
+      return StringUtils.EMPTY;
+    }
     return ImageUtils.base64ToDataUrl(this.image.getContent());
   }
 
