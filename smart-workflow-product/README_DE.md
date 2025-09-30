@@ -145,6 +145,8 @@ Demo-Ablauf
 3. Axon Ivy Business Data wandelt die Kriterien in optimierte Filter um und sucht nach passenden Produkten.
 4. Rückgabe der Top-Produkte, die den Kriterien entsprechen.
 
+Um die Demodaten zu initialisieren, öffne die Prozessliste und starte `Create data for shopping demo`.
+
 ## Setup
 
 ### Konfigurationen
