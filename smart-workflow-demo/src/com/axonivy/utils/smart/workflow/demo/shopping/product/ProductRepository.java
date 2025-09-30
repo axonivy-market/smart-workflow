@@ -76,6 +76,14 @@ public class ProductRepository {
     return findById(product.getProductId());
   }
 
+  public void createFromFile(Product product) {
+    if (product == null) {
+      return;
+    }
+
+    Ivy.repo().save(product);
+  }
+
   /**
    * Retrieves all products.
    *
@@ -209,6 +217,19 @@ public class ProductRepository {
     // Apply collected filters
     for (Filter<Product> f : filters) {
       search.filter(f).and();
+    }
+
+    return loadRelatedDataForList(search.execute().getAll());
+  }
+
+  public List<Product> findByCategories(List<String> categories) {
+    if (CollectionUtils.isEmpty(categories)) {
+      return null;
+    }
+
+    var search = Ivy.repo().search(Product.class);
+    for (String category : categories) {
+      search.textField("categoryId").containsAllWords(category).or();
     }
 
     return loadRelatedDataForList(search.execute().getAll());

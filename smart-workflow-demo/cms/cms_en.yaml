@@ -99,6 +99,7 @@ Dialogs:
                     Product: Product
                     Purchasing: Purchasing
                     Quantity: Quantity
+                    Search: Search
                     SearchTooltip: What are you looking for today?
                     ShoppingCart: Shopping Cart
                     StartShopping: Start shopping to add items to your cart

@@ -24,7 +24,11 @@
                               onfocus="addFocusEffect()"
                               onblur="removeFocusEffect()" />
                 </div>
-                <div class="flex align-items-center">
+                <div class="flex align-items-center gap-2">
+                  <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/store/ShoppingStore/Search')}" 
+                                  icon="pi pi-search"
+                                  styleClass="p-button-outlined border-round-xl"
+                                  onclick="performSearch();" />
                   <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/store/ShoppingStore/Cart')} (#{data.cartItems.size()})" 
                                   icon="pi pi-shopping-cart"
                                   styleClass="p-button-primary border-round-xl"

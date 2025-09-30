@@ -66,7 +66,7 @@
             {
                 "name": "Tolerances",
                 "value": "±1.5 cm overall"
-            }
+            }   
         ],
         "supplierId": "TW-2025-827",
         "categoryId": "aecf938962264bba855ea44c307ea124",
@@ -354,7 +354,7 @@
         "brand": null,
         "unitPrice": 0.0,
         "active": false,
-        "imageId": "e13033d6cb07408088cb4e0738a20ac5",
+        "imageId": "e7d9e37d090144f6aca17c76c7b70b9f",
         "otherInformations": [
             {
                 "name": "Collection",
@@ -480,7 +480,7 @@
         "brand": null,
         "unitPrice": 27.0,
         "active": true,
-        "imageId": "e7d9e37d090144f6aca17c76c7b70b9f",
+        "imageId": "e13033d6cb07408088cb4e0738a20ac5",
         "otherInformations": [
             {
                 "name": "Collection",

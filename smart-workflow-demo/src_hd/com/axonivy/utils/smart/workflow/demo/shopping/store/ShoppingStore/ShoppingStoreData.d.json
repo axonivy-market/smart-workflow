@@ -24,5 +24,11 @@
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem"
   }, {
     "name" : "translatedSearchTerm"
+  }, {
+    "name" : "categories",
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>"
+  }, {
+    "name" : "searchResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.SearchResponse"
   } ]
 }

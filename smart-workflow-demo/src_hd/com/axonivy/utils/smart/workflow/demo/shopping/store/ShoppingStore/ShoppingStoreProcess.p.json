@@ -109,48 +109,23 @@
         { "id" : "f35", "to" : "f33" }
       ]
     }, {
-      "id" : "f14",
-      "type" : "SubProcessCall",
-      "name" : "Create search criteria",
-      "config" : {
-        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction)",
-        "call" : {
-          "map" : {
-            "param.productInfo" : "in.translatedSearchTerm",
-            "param.action" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction.CREATE_CRITERIA"
-          }
-        },
-        "output" : {
-          "map" : {
-            "out" : "in",
-            "out.searchCriteria" : "result.response.productSearchCriteria"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 944, "y" : 528 }
-      },
-      "connect" : [
-        { "id" : "f15", "to" : "f18" }
-      ]
-    }, {
       "id" : "f18",
       "type" : "Script",
-      "name" : "Find by criteria",
+      "name" : "Find by category",
       "config" : {
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
             "",
-            "in.filteredProducts = ProductRepository.getInstance().findByCriteria(in.searchCriteria);"
+            "in.filteredProducts =  ProductRepository.getInstance().findByCategories(in.searchResponse.categoryIds);"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 1120, "y" : 528 }
+        "at" : { "x" : 1288, "y" : 528 }
       },
       "connect" : [
-        { "id" : "f19", "to" : "f22", "color" : "default" }
+        { "id" : "f19", "to" : "f59", "color" : "default" }
       ]
     }, {
       "id" : "f20",
@@ -166,16 +141,16 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1120, "y" : 624 }
+        "at" : { "x" : 1456, "y" : 624 }
       },
       "connect" : [
-        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 1248, "y" : 624 } ] }
+        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 1736, "y" : 624 } ] }
       ]
     }, {
       "id" : "f22",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1248, "y" : 528 }
+        "at" : { "x" : 1736, "y" : 528 }
       }
     }, {
       "id" : "f23",
@@ -416,7 +391,116 @@
         "at" : { "x" : 760, "y" : 528 }
       },
       "connect" : [
-        { "id" : "f47", "to" : "f14", "color" : "default" }
+        { "id" : "f58", "to" : "f50" }
+      ]
+    }, {
+      "id" : "f50",
+      "type" : "Script",
+      "name" : "Find all related categories",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
+            "",
+            "in.categories = ProductCategoryRepository.getInstance().findAll();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 944, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f51", "to" : "f52" }
+      ]
+    }, {
+      "id" : "f52",
+      "type" : "ProgramInterface",
+      "name" : "Semantic search category",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1\"",
+          "system" : "Role:\r\nYou are a Product Category Extraction Agent. Your job is to analyze a user’s message and return the most relevant product categories from a predefined list.\r\n\r\nCategory data in JSON:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.categories) %>\r\n\r\nInstructions:\r\n\r\nConsider the user message and the provided product categories.\r\n\r\nSelect all categories that best match the user’s intent or described product needs.\r\n\r\nIf no category matches, return an empty list.\r\n\r\nDo not create new categories; only use the ones given in the list.\r\n\r\nAlways return the result as a list category ID\r\n\r\nExample result: [\"asdq34dskfsdf234\",\"34234lkn2lk34234\"]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.store.SearchResponse.class",
+          "tools" : "[]",
+          "resultMapping" : "in.searchResponse",
+          "query" : "<%= in.searchTerm %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1120, "y" : 528 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f57", "to" : "f18" }
+      ]
+    }, {
+      "id" : "f59",
+      "type" : "Alternative",
+      "name" : "found products by categories?",
+      "config" : {
+        "conditions" : {
+          "f60" : "org.apache.commons.collections4.CollectionUtils.isNotEmpty(in.filteredProducts)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1456, "y" : 528 },
+        "labelOffset" : { "x" : 24, "y" : 40 }
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f22", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : -4, "y" : -10 }
+          }, "color" : "default" },
+        { "id" : "f62", "to" : "f61", "label" : {
+            "name" : "no",
+            "offset" : { "x" : 17, "y" : 3 }
+          } }
+      ]
+    }, {
+      "id" : "f61",
+      "type" : "SubProcessCall",
+      "name" : "Create search criteria",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction)",
+        "call" : {
+          "map" : {
+            "param.productInfo" : "in.translatedSearchTerm",
+            "param.action" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction.CREATE_CRITERIA"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.searchCriteria" : "result.response.productSearchCriteria"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1456, "y" : 424 }
+      },
+      "connect" : [
+        { "id" : "f64", "to" : "f63" }
+      ]
+    }, {
+      "id" : "f63",
+      "type" : "Script",
+      "name" : "Find by criteria",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "",
+            "in.filteredProducts = ProductRepository.getInstance().findAll();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1632, "y" : 424 }
+      },
+      "connect" : [
+        { "id" : "f65", "to" : "f22", "via" : [ { "x" : 1736, "y" : 424 } ] }
       ]
     } ]
 }

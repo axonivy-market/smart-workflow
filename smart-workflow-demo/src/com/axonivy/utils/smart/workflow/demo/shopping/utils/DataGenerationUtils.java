@@ -146,7 +146,7 @@ public final class DataGenerationUtils {
       
       ProductRepository repository = ProductRepository.getInstance();
       for (Product product : products) {
-        repository.create(product);
+        repository.createFromFile(product);
         Ivy.log().debug("Created product: " + product.getName() + " (ID: " + product.getProductId() + ")");
       }
       
