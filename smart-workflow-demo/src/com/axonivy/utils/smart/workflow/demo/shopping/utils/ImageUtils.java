@@ -12,21 +12,8 @@ import org.primefaces.model.StreamedContent;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
-/**
- * Utility class for image processing and base64 conversion operations. Provides
- * methods to convert images to/from base64 strings, resize images, and validate
- * image formats.
- */
 public final class ImageUtils {
 
-  /**
-   * Converts an InputStream containing image data to a base64 string.
-   *
-   * @param inputStream the input stream containing image data
-   * @param fileName    the name of the file
-   * @return base64 data URL string ready for HTML img src, or null if conversion
-   *         fails
-   */
   public static String inputStreamToBase64(InputStream inputStream, String fileName) {
     if (inputStream == null) {
       Ivy.log().warn("Input stream is null");
@@ -42,14 +29,6 @@ public final class ImageUtils {
     }
   }
 
-  /**
-   * Converts a base64 data URL string to clean base64 string for storage. Removes
-   * the "data:image/type;base64," prefix.
-   *
-   * @param base64DataUrl the base64 data URL string (from inputStreamToBase64)
-   * @return clean base64 string without data URL prefix, or null if conversion
-   *         fails
-   */
   public static String dataUrlToBase64(String base64DataUrl) {
     if (StringUtils.isBlank(base64DataUrl)) {
       return null;
@@ -58,13 +37,6 @@ public final class ImageUtils {
     return cleanBase64String(base64DataUrl);
   }
 
-  /**
-   * Converts a clean base64 string back to data URL for HTML display.
-   *
-   * @param base64String the clean base64 string (stored in database)
-   * @param mimeType     the MIME type (e.g., "image/jpeg")
-   * @return base64 data URL string ready for HTML img src
-   */
   public static String base64ToDataUrl(String base64String, String mimeType) {
     if (StringUtils.isBlank(base64String)) {
       return null;
@@ -77,24 +49,10 @@ public final class ImageUtils {
     return String.format("data:%s;base64,%s", mimeType, base64String);
   }
 
-  /**
-   * Converts a clean base64 string back to data URL with PNG format.
-   *
-   * @param base64String the clean base64 string (stored in database)
-   * @return base64 data URL string ready for HTML img src
-   */
   public static String base64ToDataUrl(String base64String) {
     return base64ToDataUrl(base64String, "image/jpeg");
   }
 
-  /**
-   * Converts a base64 string to StreamedContent. Assumes PNG format for all
-   * images.
-   *
-   * @param base64String the base64 encoded image with data URL prefix (from
-   *                     inputStreamToBase64)
-   * @return StreamedContent object for the image, or null if conversion fails
-   */
   public static StreamedContent base64ToStreamedContent(String base64String) {
     if (StringUtils.isBlank(base64String)) {
       Ivy.log().warn("Base64 string is null or empty");
@@ -102,17 +60,14 @@ public final class ImageUtils {
     }
 
     try {
-      // Use PNG as the default MIME type and filename
+      // Use JPG as the default MIME type and filename
       String mimeType = "image/jpeg";
       String fileName = "image.jpg";
 
-      // Clean the base64 string (remove data URL prefix if present)
       String cleanBase64 = cleanBase64String(base64String);
 
-      // Decode base64 to bytes
       byte[] imageBytes = Base64.getDecoder().decode(cleanBase64);
 
-      // Build and return StreamedContent
       return DefaultStreamedContent.builder().name(fileName).contentType(mimeType)
           .stream(() -> new ByteArrayInputStream(imageBytes)).build();
 
@@ -122,12 +77,6 @@ public final class ImageUtils {
     }
   }
 
-  /**
-   * Gets the MIME type for an image based on its filename.
-   *
-   * @param filename the filename
-   * @return MIME type string, or "application/octet-stream" if unknown
-   */
   private static String getMimeType(String filename) {
     if (StringUtils.isBlank(filename)) {
       return "application/octet-stream";
@@ -139,7 +88,7 @@ public final class ImageUtils {
     case "jpeg":
       return "image/jpeg";
     case "png":
-      return "image/jpeg";
+      return "image/png";
     case "gif":
       return "image/gif";
     case "bmp":
@@ -151,13 +100,6 @@ public final class ImageUtils {
     }
   }
 
-  /**
-   * Creates a data URL from base64 string and filename.
-   *
-   * @param base64String the base64 encoded image
-   * @param filename     the original filename (used to determine MIME type)
-   * @return data URL string (e.g., "data:image/jpeg;base64,...")
-   */
   public static String createDataUrl(String base64String, String filename) {
     if (StringUtils.isBlank(base64String)) {
       return null;
@@ -168,12 +110,6 @@ public final class ImageUtils {
     return String.format("data:%s;base64,%s", mimeType, cleanBase64);
   }
 
-  /**
-   * Extracts the file extension from a filename.
-   *
-   * @param filename the filename
-   * @return file extension without the dot, or empty string if no extension
-   */
   private static String getFileExtension(String filename) {
     if (StringUtils.isBlank(filename)) {
       return "";
@@ -187,18 +123,11 @@ public final class ImageUtils {
     return filename.substring(lastDotIndex + 1);
   }
 
-  /**
-   * Removes data URL prefix from base64 string if present.
-   *
-   * @param base64String the base64 string that might contain data URL prefix
-   * @return clean base64 string without prefix
-   */
   private static String cleanBase64String(String base64String) {
     if (StringUtils.isBlank(base64String)) {
       return base64String;
     }
 
-    // Remove data URL prefix if present (e.g., "data:image/jpeg;base64,")
     if (base64String.startsWith("data:")) {
       int commaIndex = base64String.indexOf(',');
       if (commaIndex != -1 && commaIndex < base64String.length() - 1) {
