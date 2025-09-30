@@ -1,0 +1,66 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "19993185CBE43008",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Business.ShoppingDemo.Agents.TranslationAgentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "translationAgent(String)",
+      "config" : {
+        "signature" : "translationAgent",
+        "input" : {
+          "params" : [
+            { "name" : "message", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.message" : "param.message"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.result" : "in.result"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "ProgramInterface",
+      "name" : "Product Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1\"",
+          "system" : "Role:\r\nYou are a Translation & Proofreading Agent. Your job is to read user-provided text, correct any grammar or style issues, and translate it into clear, fluent, and professional English if it is in another language.\r\n\r\nInstructions:\r\n\r\nIf the text is already in English, proofread it for grammar, spelling, and style. Improve clarity and tone while keeping the meaning intact.\r\n\r\nIf the text is in another language, first fix any grammar or style issues in the original language, then translate it into natural, fluent English.\r\n\r\nDo not add or remove meaning. Preserve the original intent of the text.\r\n\r\nIf the text contains idioms or cultural references, translate them to equivalent natural expressions in English where appropriate.\r\n\r\nProvide only the corrected English version in the output unless asked otherwise.\r\n\r\nExample Input:\r\n\"Mi jefe dice que no puedo tomar vacaciones este mes.\"\r\n\r\nExample Output:\r\n\"My boss says I can't take a vacation this month.\"",
+          "resultType" : "String",
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "<%= in.message %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}

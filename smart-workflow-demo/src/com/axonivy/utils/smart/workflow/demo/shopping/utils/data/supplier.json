@@ -1,0 +1,87 @@
+[
+  {
+    "supplierId" : "SGN-2025-101",
+    "businessName" : "Saigon Apparel Manufacturing Co., Ltd.",
+    "businessAddress" : {
+      "street1" : "Lot B7, Tan Tao Industrial Park",
+      "street2" : "",
+      "city" : "Ho Chi Minh City",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Vietnam"
+    },
+    "phone" : "+84 28 3899 8888",
+    "email" : "sales@saigonapparel.vn",
+    "website" : "https://www.saigonapparel.vn"
+  }, {
+    "supplierId" : "LTU-2025-001",
+    "businessName" : "Liberty Threads USA, Inc.",
+    "businessAddress" : {
+      "street1" : "2500 Freedom Blvd",
+      "street2" : "",
+      "city" : "San Francisco",
+      "state" : "CA",
+      "zipCode" : "94110",
+      "country" : "USA"
+    },
+    "phone" : "+1 (415) 555-7890",
+    "email" : "sales@libertythreadsusa.example",
+    "website" : "https://www.libertythreadsusa.example"
+  }, {
+    "supplierId" : "HN-2025-301",
+    "businessName" : "Hanoi Garment Export JSC",
+    "businessAddress" : {
+      "street1" : "Lot C1, Thang Long Industrial Park",
+      "street2" : "",
+      "city" : "Hanoi",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Vietnam"
+    },
+    "phone" : "+84 24 3777 7777",
+    "email" : "export@hanoigarment.vn",
+    "website" : "https://www.hanoigarment.vn"
+  }, {
+    "supplierId" : "TW-2025-717",
+    "businessName" : "Kaohsiung Apparel Industries Ltd.",
+    "businessAddress" : {
+      "street1" : "No. 120, Chenggong 1st Road",
+      "street2" : "",
+      "city" : "Kaohsiung City",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Taiwan"
+    },
+    "phone" : "+886 7 331 2255",
+    "email" : "export@kaohsiungapparel.tw",
+    "website" : "https://www.kaohsiungapparel.tw"
+  }, {
+    "supplierId" : "TW-2025-827",
+    "businessName" : "Kaohsiung Precision Textiles Co., Ltd.",
+    "businessAddress" : {
+      "street1" : "No. 78, Huaxing Street",
+      "street2" : "",
+      "city" : "Kaohsiung City",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Taiwan"
+    },
+    "phone" : "+88673456789",
+    "email" : "contact@kaohsiungtextiles.tw",
+    "website" : "https://www.kaohsiungtextiles.tw"
+  }, {
+    "supplierId" : "TW-2025-616",
+    "businessName" : "Taichung Tailoring Works Ltd.",
+    "businessAddress" : {
+      "street1" : "No. 55, Zhonggang Road",
+      "street2" : "",
+      "city" : "Taichung City",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Taiwan"
+    },
+    "phone" : "+886 4 2323 8899",
+    "email" : "contact@taichungtailor.tw",
+    "website" : "https://www.taichungtailor.tw"
+  }
+]

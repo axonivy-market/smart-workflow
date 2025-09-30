@@ -51,12 +51,13 @@
       "config" : {
         "output" : {
           "code" : [
+            "import org.apache.commons.lang3.StringUtils;",
             "import com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierRepository;",
             "",
             "import org.apache.commons.collections4.CollectionUtils;",
             "",
             "in.result.supplier  = SupplierRepository.getInstance().findExactSupplier(in.searchCriteria);",
-            "in.result.isSupplierExisting = in.result.supplier != null;",
+            "in.result.isSupplierExisting = in.result.supplier != null && StringUtils.isNotBlank(in.result.supplier.supplierId);",
             "in.result.feedback = in.result.isSupplierExisting ? \"Supplier is found\" : \"Supplier not found\";",
             "in.result.supplierSearchCriteria = in.searchCriteria;"
           ]

@@ -11,5 +11,13 @@
   }, {
     "name" : "category",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory"
+  }, {
+    "name" : "message"
+  }, {
+    "name" : "categoryIds",
+    "type" : "List<String>"
+  }, {
+    "name" : "categories",
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>"
   } ]
 }

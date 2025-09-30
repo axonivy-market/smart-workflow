@@ -5,6 +5,10 @@ Dialogs:
         smart:
           workflow:
             demo:
+              AxonIvySupportForm:
+                AxonIvySupport: Axon Ivy Support
+                InputPlaceholder: Tippe deine Frage... (Umschalt+Eingabetaste zum Senden)
+                Send: Senden
               shopping:
                 product:
                   ProductCreation:
@@ -95,6 +99,7 @@ Dialogs:
                     Product: Produkt
                     Purchasing: Einkauf
                     Quantity: Menge
+                    Search: Suchen
                     SearchTooltip: Wonach suchst du heute?
                     ShoppingCart: Warenkorb
                     StartShopping: Fang an zu shoppen, um Artikel in deinen Warenkorb zu legen

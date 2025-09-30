@@ -1,0 +1,15 @@
+[
+  {
+    "categoryId" : "4e2a1cc0cda94fbdbcccd95c38edabca",
+    "name" : "T-shirt",
+    "description" : ""
+  }, {
+    "categoryId" : "0029e782eaa64d3d8b7df7ece92a2bc6",
+    "name" : "Dress pants",
+    "description" : "Dress pants are tailored trousers made from quality fabrics such as wool or polyester blends, designed for formal or semi-formal occasions and often feature a structured fit, creased fronts, and belt loops."
+  }, {
+    "categoryId" : "aecf938962264bba855ea44c307ea124",
+    "name" : "Veston",
+    "description" : "Veston (Vest/Waistcoat):\nA veston is a sleeveless, close-fitting garment that forms part of a formal suit, typically worn over a dress shirt and under a suit jacket. It is designed to add elegance and structure to an outfit, often featuring a buttoned front, adjustable back strap, and materials like wool, polyester, or blends to match or complement a suit. Vests are popular for business attire, weddings, and other formal occasions, offering both style and versatility."
+  }
+]

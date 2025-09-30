@@ -142,6 +142,8 @@ Demo flow
 3. Axon Ivy Business Data turns criteria into an optimized filters and search for the products.
 4. Return the top products matched criteria.
 
+To quickly set up the demo data, run the process `Create data for shopping demo` from the process list.
+
 ## Setup
 
 ### Configurations

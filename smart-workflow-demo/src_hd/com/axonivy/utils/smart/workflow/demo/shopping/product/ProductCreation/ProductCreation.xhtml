@@ -19,7 +19,7 @@
           <h:panelGroup layout="block" styleClass="grid js-file-upload">
             <!-- Document Upload Section -->
             <div class="col-12 lg:col-6">
-              <div class="bg-gray-50 border-round-lg overflow-hidden border-2 surface-border transition-all transition-duration-300 hover:border-primary">
+              <div class="bg-gray-50 border-round-lg overflow-hidden border-2 transition-all transition-duration-300 #{not empty data.productInfo ? 'border-green-300 bg-green-50' : 'surface-border hover:border-primary'}">
                 <div class="p-3 bg-white border-bottom-1 surface-border flex align-items-center gap-3">
                   <div class="w-3rem h-3rem border-circle flex align-items-center justify-content-center text-white" style="background: linear-gradient(45deg, #3498db, #2980b9);">
                     <i class="pi pi-file-text text-xl"></i>
@@ -45,7 +45,7 @@
                               multiple="false"
                               mode="advanced" 
                               auto="true" 
-                              update="@form"
+                              update="@form doc-upload-status"
                               styleClass="upload-component doc-upload"
                               onupload="updateUploadStatus('doc', 'success')"
                               onerror="updateUploadStatus('doc', 'error')"
@@ -53,6 +53,19 @@
                               allowTypes="/(\.|\/)(pdf|md)$/"
                               uploadLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/ProductCreation/UploadDocument')}"
                               cancelLabel="#{ivy.cms.co('/Labels/Cancel')}" />
+                
+                <!-- Document Upload Status Indicator -->
+                <h:panelGroup id="doc-upload-status" layout="block" styleClass="mt-3" rendered="#{not empty data.productInfo}">
+                  <div class="flex align-items-center justify-content-center gap-2 p-3 bg-green-50 border-round border-1 border-green-200">
+                    <i class="pi pi-check-circle text-green-600"></i>
+                    <span class="text-green-700 font-medium">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/ProductCreation/DocumentUploaded')}
+                    </span>
+                    <span class="text-green-600 text-sm">
+                      (#{data.originalFileName})
+                    </span>
+                  </div>
+                </h:panelGroup>
                 
                   <div class="flex flex-column gap-2 mt-3">
                     <div class="flex align-items-center justify-content-center gap-2 text-sm text-600">
@@ -72,7 +85,7 @@
 
             <!-- Image Upload Section -->
             <div class="col-12 lg:col-6">
-              <div class="bg-gray-50 border-round-lg overflow-hidden border-2 surface-border transition-all transition-duration-300 hover:border-primary">
+              <div class="bg-gray-50 border-round-lg overflow-hidden border-2 transition-all transition-duration-300 #{not empty data.imageBase64 ? 'border-green-300 bg-green-50' : 'surface-border hover:border-primary'}">
                 <div class="p-3 bg-white border-bottom-1 surface-border flex align-items-center gap-3">
                   <div class="w-3rem h-3rem border-circle flex align-items-center justify-content-center text-white" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
                     <i class="pi pi-image text-xl"></i>
@@ -98,14 +111,27 @@
                               multiple="false"
                               mode="advanced" 
                               auto="true" 
-                              update="@form"
+                              update="@form img-upload-status"
                               styleClass="upload-component image-upload"
                               onupload="updateUploadStatus('image', 'success')"
                               onerror="updateUploadStatus('image', 'error')"
                               dragDropSupport="true"
-                              allowTypes="/(\.|\/)(png)$/"
+                              allowTypes="/(\.|\/)(jpg)$/"
                               uploadLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/ProductCreation/UploadImage')}"
                               cancelLabel="#{ivy.cms.co('/Labels/Cancel')}" />
+
+                <!-- Image Upload Status Indicator -->
+                <h:panelGroup id="img-upload-status" layout="block" styleClass="mt-3" rendered="#{not empty data.imageBase64}">
+                  <div class="flex align-items-center justify-content-center gap-2 p-3 bg-green-50 border-round border-1 border-green-200">
+                    <i class="pi pi-check-circle text-green-600"></i>
+                    <span class="text-green-700 font-medium">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/ProductCreation/ImageUploaded')}
+                    </span>
+                    <span class="text-green-600 text-sm">
+                      (#{data.originalImageName})
+                    </span>
+                  </div>
+                </h:panelGroup>
 
                   <div class="flex flex-column gap-2 mt-3">
                     <div class="flex align-items-center justify-content-center gap-2 text-sm text-600">
