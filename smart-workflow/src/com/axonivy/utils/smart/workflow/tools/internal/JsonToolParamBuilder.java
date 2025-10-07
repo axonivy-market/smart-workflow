@@ -27,7 +27,7 @@ public class JsonToolParamBuilder {
   private final JsonObjectSchema.Builder builder = JsonObjectSchema.builder();
 
   public JsonToolParamBuilder(IProcessModelVersion pmv) {
-    this.repo = IProjectDataClassManager.of(pmv).getIvyScriptClassRepository();
+    this.repo = IProjectDataClassManager.of(pmv.project()).getIvyScriptClassRepository();
   }
 
   public JsonObjectSchema toParams(List<VariableDesc> variables) {

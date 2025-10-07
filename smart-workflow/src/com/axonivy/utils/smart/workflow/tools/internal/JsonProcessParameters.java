@@ -24,7 +24,7 @@ public class JsonProcessParameters {
   private final QualifiedTypeLoader loader;
 
   public JsonProcessParameters(IProcessModelVersion pmv) {
-    var repo = IProjectDataClassManager.of(pmv).getIvyScriptClassRepository();
+    var repo = IProjectDataClassManager.of(pmv.project()).getIvyScriptClassRepository();
     this.loader = new QualifiedTypeLoader(repo);
   }
 
