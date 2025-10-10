@@ -6,11 +6,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.loader.github.GitHubDocumentLoader;
+import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
@@ -56,6 +59,12 @@ public class TestEasyRag {
 
   interface Assistant {
     String chat(String userMessage);
+  }
+
+  @Test
+  void github() {
+    var ghLoader = new GitHubDocumentLoader(Ivy.var().get("AI.RAG.Github.Token"), "axonivy-market");
+    var ghDocs = ghLoader.loadDocuments("axonivy-market", "smart-workflow", "master", new ApacheTikaDocumentParser());
   }
 
 }
