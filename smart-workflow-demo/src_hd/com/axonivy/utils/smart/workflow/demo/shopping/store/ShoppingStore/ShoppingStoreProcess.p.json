@@ -75,7 +75,7 @@
       "name" : "empty search term ?",
       "config" : {
         "conditions" : {
-          "f10" : "org.apache.commons.lang3.StringUtils.isBlank(in.searchTerm)",
+          "f10" : "org.apache.commons.lang3.StringUtils.isBlank(in.customerRequest.originalQuery)",
           "f9" : ""
         }
       },
@@ -122,7 +122,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1288, "y" : 528 }
+        "at" : { "x" : 1744, "y" : 528 }
       },
       "connect" : [
         { "id" : "f19", "to" : "f59", "color" : "default" }
@@ -141,16 +141,16 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1456, "y" : 624 }
+        "at" : { "x" : 1808, "y" : 624 }
       },
       "connect" : [
-        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 1736, "y" : 624 } ] }
+        { "id" : "f21", "to" : "f22", "via" : [ { "x" : 2192, "y" : 624 } ] }
       ]
     }, {
       "id" : "f22",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 1736, "y" : 528 }
+        "at" : { "x" : 2192, "y" : 528 }
       }
     }, {
       "id" : "f23",
@@ -265,9 +265,13 @@
       "config" : {
         "output" : {
           "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.shopping.store.CustomerRequest;",
             "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
             "",
-            "in.filteredProducts = ProductRepository.getInstance().findAll();"
+            "in.filteredProducts = ProductRepository.getInstance().findAll();",
+            "",
+            "in.customerRequest = new CustomerRequest();",
+            "in.customerRequest.originalQuery = \"\";"
           ]
         }
       },
@@ -377,13 +381,13 @@
         "processCall" : "Business/ShoppingDemo/Agents/TranslationAgent:translationAgent(String)",
         "call" : {
           "map" : {
-            "param.message" : "in.searchTerm"
+            "param.message" : "in.customerRequest.originalQuery"
           }
         },
         "output" : {
           "map" : {
             "out" : "in",
-            "out.translatedSearchTerm" : "result.result"
+            "out.customerRequest.translatedQuery" : "result.result"
           }
         }
       },
@@ -391,7 +395,7 @@
         "at" : { "x" : 760, "y" : 528 }
       },
       "connect" : [
-        { "id" : "f58", "to" : "f50" }
+        { "id" : "f58", "to" : "f70" }
       ]
     }, {
       "id" : "f50",
@@ -408,7 +412,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 944, "y" : 528 }
+        "at" : { "x" : 1400, "y" : 528 }
       },
       "connect" : [
         { "id" : "f51", "to" : "f52" }
@@ -425,11 +429,11 @@
           "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.store.SearchResponse.class",
           "tools" : "[]",
           "resultMapping" : "in.searchResponse",
-          "query" : "<%= in.searchTerm %>"
+          "query" : "<%= in.customerRequest.translatedQuery %>"
         }
       },
       "visual" : {
-        "at" : { "x" : 1120, "y" : 528 },
+        "at" : { "x" : 1576, "y" : 528 },
         "icon" : "res:/webContent/logo/agent.png"
       },
       "connect" : [
@@ -445,7 +449,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1456, "y" : 528 },
+        "at" : { "x" : 1912, "y" : 528 },
         "labelOffset" : { "x" : 24, "y" : 40 }
       },
       "connect" : [
@@ -466,7 +470,7 @@
         "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction)",
         "call" : {
           "map" : {
-            "param.productInfo" : "in.translatedSearchTerm",
+            "param.productInfo" : "in.customerRequest.translatedQuery",
             "param.action" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction.CREATE_CRITERIA"
           }
         },
@@ -478,7 +482,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1456, "y" : 424 }
+        "at" : { "x" : 1912, "y" : 424 }
       },
       "connect" : [
         { "id" : "f64", "to" : "f63" }
@@ -497,10 +501,94 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1632, "y" : 424 }
+        "at" : { "x" : 2088, "y" : 424 }
       },
       "connect" : [
-        { "id" : "f65", "to" : "f22", "via" : [ { "x" : 1736, "y" : 424 } ] }
+        { "id" : "f65", "to" : "f22", "via" : [ { "x" : 2192, "y" : 424 } ] }
+      ]
+    }, {
+      "id" : "f70",
+      "type" : "ProgramInterface",
+      "name" : "Detect user request type",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1-mini\"",
+          "system" : "Detect type of user request",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.enums.CustomerRequestType.class",
+          "tools" : "[]",
+          "resultMapping" : "in.customerRequest.requestType",
+          "query" : "<%= in.customerRequest.translatedQuery %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 936, "y" : 528 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f71", "to" : "f72", "color" : "default" }
+      ]
+    }, {
+      "id" : "f72",
+      "type" : "Alternative",
+      "name" : "Request type?",
+      "config" : {
+        "conditions" : {
+          "f75" : "in.customerRequest.requestType == com.axonivy.utils.smart.workflow.demo.shopping.enums.CustomerRequestType.FIND",
+          "f74" : ""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1064, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f74", "to" : "f81", "via" : [ { "x" : 1064, "y" : 341 } ], "label" : {
+            "name" : "suggest",
+            "segment" : 1.5,
+            "offset" : { "x" : -533, "y" : 83 }
+          } },
+        { "id" : "f75", "to" : "f50", "label" : {
+            "name" : "find",
+            "offset" : { "x" : -75, "y" : -10 }
+          } }
+      ]
+    }, {
+      "id" : "f77",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 776, "y" : 1264 }
+      }
+    }, {
+      "id" : "f79",
+      "type" : "HtmlDialogEventStart",
+      "name" : "createSuggestion",
+      "config" : {
+        "guid" : "199DC901B3ABA0E3"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 1264 }
+      },
+      "connect" : [
+        { "id" : "f80", "to" : "f77" }
+      ]
+    }, {
+      "id" : "f81",
+      "type" : "Script",
+      "name" : "Execute create suggestion remote command",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import org.primefaces.PrimeFaces;",
+            "PrimeFaces.current().executeScript(\"performSuggestion()\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1268, "y" : 341 },
+        "size" : { "width" : 152, "height" : 54 }
+      },
+      "connect" : [
+        { "id" : "f82", "to" : "f22", "via" : [ { "x" : 2192, "y" : 344 } ], "color" : "default" }
       ]
     } ]
 }

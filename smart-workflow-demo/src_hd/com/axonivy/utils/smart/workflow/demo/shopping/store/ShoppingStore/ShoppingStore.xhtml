@@ -13,11 +13,11 @@
       <h:form id="searchContainer" class="relative overflow-hidden min-h-screen">
         <h:panelGroup layout="block" id="details-page">
             <!-- Grid View -->
-            <h:panelGroup rendered="#{not empty data.filteredProducts}">
+            <h:panelGroup rendered="#{(not empty data.filteredProducts) or data.customerRequest.requestType eq 'SUGGESTION'}">
               <div class="bg-white p-3 border-round-lg shadow-2 border-1 surface-border mb-5 flex">
                 <div class="flex-auto mr-3 fancy-search-input">
                   <p:inputText id="secondary-search-input" 
-                              value="#{data.searchTerm}"
+                              value="#{data.customerRequest.originalQuery}"
                               placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/store/ShoppingStore/SearchTooltip')}" 
                               styleClass="w-full search-box"
                               onkeypress="if(event.keyCode == 13) { performSearch(); return false; }"
@@ -37,7 +37,7 @@
                 </div>
               </div>
 
-              <div class="grid gap-4">
+              <h:panelGroup id="found-products-panel" layout="block" styleClass="grid gap-4" rendered="#{data.customerRequest.requestType ne 'SUGGESTION'}">
                 <ui:repeat value="#{data.filteredProducts}" var="product">
                   <div class="col-12 sm:col-6 lg:col-3 xl:col-3">
                     <div class="bg-white border-round-xl shadow-2 overflow-hidden transition-all transition-duration-300 hover:shadow-6 hover:scale-105 relative border-1 surface-border">
@@ -115,7 +115,10 @@
                     </div>
                   </div>
                 </ui:repeat>
-              </div>
+              </h:panelGroup>
+              <h:panelGroup id="suggestion-container" rendered="#{data.customerRequest.requestType eq 'SUGGESTION'}">
+                <ui:include src="Suggestion.xhtml" />
+              </h:panelGroup>
             </h:panelGroup>
 
             <!-- No Products Found -->
@@ -129,7 +132,10 @@
               </div>
             </h:panelGroup>
         </h:panelGroup>
-        <p:remoteCommand name="performSearch" actionListener="#{logic.searchProducts}" update="@form" process="@form" />
+        <p:remoteCommand name="performSearch" actionListener="#{logic.searchProducts}"
+          update="@form" process="@form" />
+        <p:remoteCommand name="performSuggestion" actionListener="#{logic.createSuggestion}"
+          update="@form" process="@form" />
       </h:form>
       <ui:include src="ShoppingCart.xhtml" />
     </ui:define>

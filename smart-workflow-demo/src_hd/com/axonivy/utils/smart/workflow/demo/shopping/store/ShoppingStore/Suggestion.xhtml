@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+<ui:composition>
+  <div class="suggestion-container">
+    <div class="suggestion-content-inline">
+      <div class="suggestion-content">
+        <!-- Title -->
+        <h2 class="suggestion-title">AI Shopping Assistant</h2>
+
+        <!-- Loading State -->
+        <div class="suggestion-progress">
+          <div class="flex align-items-center justify-content-center">
+            <i class="sparkle-icon pi pi-sparkles"></i>
+            <span class="font-medium text-lg">Preparing your personalized suggestions</span>
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Loading Messages -->
+        <div class="text-center text-sm text-600 mt-3">
+          <p class="mb-2">
+            <i class="pi pi-search mr-2 text-primary"></i>
+            Analyzing your query: "<strong>#{data.customerRequest.originalQuery}</strong>"
+          </p>
+          <p class="mb-2">
+            <i class="pi pi-cog mr-2 text-primary"></i>
+            Processing with advanced AI algorithms
+          </p>
+          <p>
+            <i class="pi pi-heart mr-2 text-primary"></i>
+            Finding products you'll love
+          </p>
+        </div>
+      </div>
+      
+      <div class="suggestion-footer">
+        <p:commandButton value="Cancel" 
+                        icon="pi pi-times" 
+                        styleClass="p-button-secondary p-button-outlined"
+                        action="#{logic.clearSearch()}"
+                        update="@form" />
+      </div>
+    </div>
+  </div>
+</ui:composition>
+</html>

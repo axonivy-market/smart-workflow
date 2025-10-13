@@ -3,8 +3,6 @@
   "simpleName" : "ShoppingStoreData",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.shopping.store.ShoppingStore",
   "fields" : [ {
-    "name" : "searchTerm"
-  }, {
     "name" : "filteredProducts",
     "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.product.Product>"
   }, {
@@ -23,12 +21,13 @@
     "name" : "selectedCartItem",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem"
   }, {
-    "name" : "translatedSearchTerm"
-  }, {
     "name" : "categories",
     "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>"
   }, {
     "name" : "searchResponse",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.SearchResponse"
+  }, {
+    "name" : "customerRequest",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CustomerRequest"
   } ]
 }
