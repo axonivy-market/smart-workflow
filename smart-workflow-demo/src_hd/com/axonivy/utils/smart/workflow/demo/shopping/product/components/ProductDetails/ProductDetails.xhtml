@@ -167,7 +167,7 @@
   </p:tab>
   
   <!-- Additional Information Tab -->
-  <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/components/ProductDetails/AdditionalInfo')}">
+  <p:tab id="additionalInfoTab" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/components/ProductDetails/AdditionalInfo')}">
     <div class="p-3">
       <h:panelGroup rendered="#{not empty product.otherInformations}">
         <p:dataTable value="#{product.otherInformations}"
@@ -204,7 +204,20 @@
           <p class="text-500 m-0">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/components/ProductDetails/NoAdditionalInformation')}</p>
         </div>
       </h:panelGroup>
-    </div>
+
+        <h:panelGroup id="keywords" class="keywords flex align-items-center gap-2 w-full pt-1">
+          <label
+            class="font-semibold text-900 white-space-nowrap mb-0 keyword-label">Keywords:</label>
+          <div class="flex align-items-center flex-1">
+            <p:chips 
+              rendered="#{data.productKeywords.keywords != null}"
+              value="#{data.productKeywords.keywords}" unique="true"
+              styleClass="scroll-chips w-full surface-border border-round-md p-2"
+              style="min-height: 3rem; max-height: 5rem;" />
+          </div>
+          <p:commandButton actionListener="#{logic.generateKeyWord(product)}" value="Generate Key Word" update="keywords" />
+        </h:panelGroup>
+      </div>
   </p:tab>
 </p:tabView>
 </cc:implementation>

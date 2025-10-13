@@ -1,12 +1,12 @@
 {
   "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
-  "simpleName" : "ProductDetailsData",
-  "namespace" : "com.axonivy.utils.smart.workflow.demo.shopping.product.components.ProductDetails",
+  "simpleName" : "KeywordAgentData",
+  "namespace" : "Business.ShoppingDemo.Agents",
   "fields" : [ {
     "name" : "product",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product"
   }, {
-    "name" : "productKeywords",
+    "name" : "result",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.searchkeyword.ProductKeywords"
   } ]
 }

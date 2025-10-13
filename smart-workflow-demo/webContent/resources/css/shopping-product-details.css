@@ -157,3 +157,28 @@
     font-size: 0.875rem;
   }
 }
+
+
+/* Keep chips stacked inside and allow vertical scroll */
+.scroll-chips .ui-chips-container {
+  display: flex;
+  flex-wrap: wrap;         /* allow chips to wrap into rows */
+  overflow-y: auto;        /* vertical scroll when too many chips */
+  overflow-x: hidden;      /* no horizontal scroll */
+  max-height: 5rem;        /* fixed height limit */
+  scrollbar-width: thin;   /* Firefox support */
+}
+
+/* Optional: nice scroll bar for Chrome/Safari */
+.scroll-chips .ui-chips-container::-webkit-scrollbar {
+  width: 100%;
+}
+.scroll-chips .ui-chips-container::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 3px;
+}
+
+.keyword-label {
+	padding-left: 6px;
+}
+

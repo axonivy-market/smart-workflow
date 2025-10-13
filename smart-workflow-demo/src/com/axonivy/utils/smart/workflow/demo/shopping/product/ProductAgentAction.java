@@ -15,7 +15,6 @@ public enum ProductAgentAction {
       1.2. Otherwise continue step 2
       2. Check dependencies of the given product
       3. Should return all details of the product even if it not exist or has errors.
-      IMPORTANT: skip using field 'keywords'
       """),
   CREATE_CRITERIA("""
       1. ONLY run the tool to create search criteria.

@@ -44,5 +44,77 @@
       "visual" : {
         "at" : { "x" : 224, "y" : 160 }
       }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "generateKeyWord(Product)",
+      "config" : {
+        "signature" : "generateKeyWord",
+        "input" : {
+          "params" : [
+            { "name" : "product", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product", "desc" : "" }
+          ],
+          "map" : {
+            "out.product" : "param.product"
+          }
+        },
+        "guid" : "199C82A393197C84"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 264 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 760, "y" : 264 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "SubProcessCall",
+      "name" : "Use AI to extract keywords",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/KeywordAgent:keyboardAgent(com.axonivy.utils.smart.workflow.demo.shopping.product.Product)",
+        "call" : {
+          "map" : {
+            "param.product" : "in.product"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.productKeywords" : "result.productKeywords",
+            "out.productKeywords.keywords" : "result.productKeywords.keywords",
+            "out.productKeywords.productId" : "result.productKeywords.productId"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 264 }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Update keywords for products",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.environment.Ivy;",
+            "Ivy.repo().save(in.productKeywords);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 536, "y" : 264 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f7", "color" : "default" }
+      ]
     } ]
 }

@@ -522,5 +522,47 @@
       "visual" : {
         "at" : { "x" : 1040, "y" : 1168 }
       }
+    }, {
+      "id" : "f80",
+      "type" : "ProgramInterface",
+      "name" : "Keyword Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1\"",
+          "system" : "You are an AI Agent in charge of create/update product operation for an invetory of a company.\r\nWith the given product information, you need to perform these steps:\r\n\r\nChoosen action: <%= in.action.name() %>\r\n\r\nInstructions:\r\n<%= in.action.systemInstruction %>",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentResponse.class",
+          "tools" : "[\"findProduct\",\"createProduct\",\"checkProductDependencies\", \"createProductSearchCriteria\"]",
+          "resultMapping" : "in.result",
+          "query" : "This is product information\r\n---\r\n\r\n<%= in.productInfo %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 680, "y" : 1280 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f84", "to" : "f83" }
+      ]
+    }, {
+      "id" : "f81",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "onSelectSupplier2()",
+      "config" : {
+        "signature" : "onSelectSupplier2",
+        "guid" : "199C73348305A211"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 1280 }
+      },
+      "connect" : [
+        { "id" : "f82", "to" : "f80" }
+      ]
+    }, {
+      "id" : "f83",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 1280 }
+      }
     } ]
 }

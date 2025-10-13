@@ -1,0 +1,67 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.1.2/process.json",
+  "id" : "199C732430965B6F",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Business.ShoppingDemo.Agents.KeywordAgentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "Keyboard Agent(com.axonivy.utils.smart.workflow.demo.shopping.product.Product)",
+      "config" : {
+        "signature" : "keyboardAgent",
+        "input" : {
+          "params" : [
+            { "name" : "product", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product", "desc" : "Product information" }
+          ],
+          "map" : {
+            "out.product" : "param.product"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "productKeywords", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.searchkeyword.ProductKeywords", "desc" : "" }
+          ],
+          "map" : {
+            "result.productKeywords" : "in.result"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 208 },
+        "description" : "The agent in charge of generating keyword from product information"
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 864, "y" : 208 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "ProgramInterface",
+      "name" : "Keyword Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1\"",
+          "system" : "You are an AI Agent specialized in detecting and generating relevant keywords (tags) for products in the company inventory.\r\n\r\nYour role is to analyze the provided product information — including name, category, brand, supplier, description, and specifications — and return a concise set of descriptive tags that best represent the product.\r\n\r\nInstructions:\r\n1. Analyze the given product information, including name, category, brand, supplier, description, specifications, and other attributes.\r\n2. Detect and extract the most relevant descriptive tags that represent the product.\r\n3. Tags must include aspects such as:\r\n\t- Visual: Color, shape, pattern, style\r\n\t- Material: e.g., leather, cotton, metal, plastic\r\n\t- Type or style: e.g., shoes, jacket, handbag, casual, formal\r\n\t- Price or quality level: e.g., expensive, luxury, premium, affordable, budget\r\n\t- Usage or purpose: e.g., running, outdoor, formal, travel, work, school\r\n\t- Target customer: e.g., men, women, kids, teens, adults, seniors\r\n\t- Recommended activities: e.g., hiking, sports, business, party, daily wear\r\n\t- Age group: e.g., children, teens, adults, elderly\r\n\t- Emotional appeal: e.g., comfortable, stylish, cozy, elegant, safe\r\n4. Always generate at least 5 keywords that are highly suitable and attractive to potential customers, considering their likely age range, interests, and activities.\r\n5. The output must be a single string of comma-separated tags.\r\n6. Example output format: red, running shoes, breathable, lightweight, men, adults, sports, outdoor, comfortable, affordable",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.searchkeyword.ProductKeywords.class",
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "This is product information\r\n---\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.product) %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 616, "y" : 208 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f2" }
+      ]
+    } ]
+}
