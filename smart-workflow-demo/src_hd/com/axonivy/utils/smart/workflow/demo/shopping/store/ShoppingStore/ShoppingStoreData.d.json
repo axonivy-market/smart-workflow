@@ -29,5 +29,11 @@
   }, {
     "name" : "customerRequest",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CustomerRequest"
+  }, {
+    "name" : "keywords",
+    "type" : "java.util.Set"
+  }, {
+    "name" : "suitableProducts",
+    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductList"
   } ]
 }

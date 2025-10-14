@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.demo.shopping.product;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -326,5 +327,10 @@ public class ProductRepository {
 
     products.forEach(this::loadRelatedData);
     return products;
+  }
+  
+  public List<Product> findProductsByIds(Set<String> productId) {
+    return Ivy.repo().search(Product.class).textField(FIELD_SKU).containsAllWords(productId.toArray(new String[0]))
+        .execute().getAll();
   }
 }

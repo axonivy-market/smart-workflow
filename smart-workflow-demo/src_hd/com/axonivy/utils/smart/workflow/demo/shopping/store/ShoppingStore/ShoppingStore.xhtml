@@ -37,7 +37,7 @@
                 </div>
               </div>
 
-              <h:panelGroup id="found-products-panel" layout="block" styleClass="grid gap-4" rendered="#{data.customerRequest.requestType ne 'SUGGESTION'}">
+              <h:panelGroup id="found-products-panel" layout="block" styleClass="grid gap-4 foundProductsWidget" rendered="#{data.customerRequest.requestType ne 'SUGGESTION'}">
                 <ui:repeat value="#{data.filteredProducts}" var="product">
                   <div class="col-12 sm:col-6 lg:col-3 xl:col-3">
                     <div class="bg-white border-round-xl shadow-2 overflow-hidden transition-all transition-duration-300 hover:shadow-6 hover:scale-105 relative border-1 surface-border">
@@ -116,7 +116,7 @@
                   </div>
                 </ui:repeat>
               </h:panelGroup>
-              <h:panelGroup id="suggestion-container" rendered="#{data.customerRequest.requestType eq 'SUGGESTION'}">
+              <h:panelGroup id="suggestion-container" rendered="#{empty data.suitableProducts.products and data.customerRequest.requestType eq 'SUGGESTION'}">
                 <ui:include src="Suggestion.xhtml" />
               </h:panelGroup>
             </h:panelGroup>
@@ -135,7 +135,7 @@
         <p:remoteCommand name="performSearch" actionListener="#{logic.searchProducts}"
           update="@form" process="@form" />
         <p:remoteCommand name="performSuggestion" actionListener="#{logic.createSuggestion}"
-          update="@form" process="@form" />
+          update="@form" process="@form" oncomplete="PF('foundProductsWidget').refresh()"/>
       </h:form>
       <ui:include src="ShoppingCart.xhtml" />
     </ui:define>

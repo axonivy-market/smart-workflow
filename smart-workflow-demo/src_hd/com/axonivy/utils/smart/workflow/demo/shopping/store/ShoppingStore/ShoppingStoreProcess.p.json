@@ -116,7 +116,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
-            "",
+            "import ch.ivyteam.ivy.environment.Ivy;",
             "in.filteredProducts =  ProductRepository.getInstance().findByCategories(in.searchResponse.categoryIds);"
           ]
         }
@@ -556,7 +556,7 @@
       "id" : "f77",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 776, "y" : 1264 }
+        "at" : { "x" : 1712, "y" : 1264 }
       }
     }, {
       "id" : "f79",
@@ -569,7 +569,7 @@
         "at" : { "x" : 472, "y" : 1264 }
       },
       "connect" : [
-        { "id" : "f80", "to" : "f77" }
+        { "id" : "f80", "to" : "f94" }
       ]
     }, {
       "id" : "f81",
@@ -589,6 +589,129 @@
       },
       "connect" : [
         { "id" : "f82", "to" : "f22", "via" : [ { "x" : 2192, "y" : 344 } ], "color" : "default" }
+      ]
+    }, {
+      "id" : "f83",
+      "type" : "ProgramInterface",
+      "name" : "Create suggestion items",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1\"",
+          "system" : "Role:\r\nYou are an Item Suggestion Agent.\r\nYour task is to analyze a user’s input and suggest the most suitable keyword from a predefined keyword list.\r\nHere is my keywords list I have in the database. Please choose the most suitable keyword items\r\n<%= in.keywords %>\r\nInstructions:\r\n  1.Carefully read and understand the user’s input, including preferences, context, and intent.\r\n  2.Compare the user input with all provided items in the list.\r\n  3.Select items that best match the user’s needs or intent, based on relevance, similarity, or feature alignment.\r\n  4.You may return multiple items if they are strong matches.\r\n  5.If no item matches the user’s input, return an empty list.\r\n  6.Do not invent or modify items; only use those provided in the input list.\r\n  7.Always return the result as a list of keyword.",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.store.SearchResponse.class",
+          "tools" : "[]",
+          "resultMapping" : "in.searchResponse",
+          "query" : "<%= in.customerRequest.translatedQuery %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 896, "y" : 1264 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f84", "to" : "f85", "color" : "default" }
+      ]
+    }, {
+      "id" : "f85",
+      "type" : "Alternative",
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 1264 }
+      },
+      "connect" : [
+        { "id" : "f86", "to" : "f87", "color" : "default" }
+      ]
+    }, {
+      "id" : "f87",
+      "type" : "Script",
+      "name" : "find items",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import org.apache.commons.lang3.ObjectUtils;",
+            "import com.sun.org.apache.xalan.internal.xsltc.compiler.If;",
+            "import ch.ivyteam.ivy.environment.Ivy;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.searchkeyword.ProductKeywordRepository;",
+            "import java.util.Set;",
+            "",
+            "Set<String> productIds = ProductKeywordRepository.getInstance().findProductIdByKeyWords(in.keywords);",
+            "if (ObjectUtils.isNotEmpty(productIds)) {",
+            "  in.filteredProducts = ProductRepository.getInstance().findProductsByIds(productIds);",
+            "} else {",
+            "  in.filteredProducts = [];",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1184, "y" : 1264 }
+      },
+      "connect" : [
+        { "id" : "f88", "to" : "f92", "color" : "default" }
+      ]
+    }, {
+      "id" : "f92",
+      "type" : "ProgramInterface",
+      "name" : "Find most suitable",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "\"gpt-4.1\"",
+          "system" : "Role:\r\nYou are a Product Recommendation Agent.\r\nYour job is to analyze a customer’s input <%= in.customerRequest.translatedQuery %> and suggest the most suitable products from a predefined product list <<%= in.filteredProducts %>. \r\n\r\nInstructions:\r\n  1. Carefully understand what the user is looking for (e.g., style, color, gender, season, or occasion).\r\n  2. If the user’s input is about clothing, recommend not just one item but a complete matching outfit — for example:\r\n    - Top: shirt, blouse, t-shirt, or jacket\r\n    - Bottom: trousers, jeans, skirt, or shorts\r\n    - Footwear: shoes, sneakers, sandals, or boots\r\n    - Optionally, include accessories (e.g., belt, hat, or bag) if relevant.\r\n  3. Ensure all recommended items complement each other in:\r\n    - Style (e.g., formal, casual, sporty)\r\n    - Color palette\r\n    - Occasion suitability (e.g., work, travel, party)\r\n  4. Rank the products by overall outfit suitability, user intent match, and visual harmony.\r\n  5. If the user input doesn’t specify enough detail, infer missing information logically (e.g., if they say “summer outfit,” prefer light fabrics and bright colors).\r\n  6. Return a concise and clear recommendation list, highlighting why the products fit well together.",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductList.class",
+          "tools" : "[]",
+          "resultMapping" : "in.suitableProducts",
+          "query" : "<%= in.customerRequest.translatedQuery %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1384, "y" : 1264 },
+        "icon" : "res:/webContent/logo/agent.png"
+      },
+      "connect" : [
+        { "id" : "f93", "to" : "f96", "color" : "default" }
+      ]
+    }, {
+      "id" : "f94",
+      "type" : "Script",
+      "name" : "Extract Keywords input from users",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.environment.Ivy;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.searchkeyword.ProductKeywordRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.shopping.common.KeywordRepository;",
+            "",
+            "in.keywords = ProductKeywordRepository.getInstance().extractKeywords();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 664, "y" : 1264 }
+      },
+      "connect" : [
+        { "id" : "f95", "to" : "f83", "color" : "default" }
+      ]
+    }, {
+      "id" : "f96",
+      "type" : "Script",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.environment.Ivy;",
+            "",
+            "in.filteredProducts = in.suitableProducts.products;",
+            "",
+            "Ivy.log().warn(in.filteredProducts.size());"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1568, "y" : 1264 }
+      },
+      "connect" : [
+        { "id" : "f97", "to" : "f77" }
       ]
     } ]
 }
