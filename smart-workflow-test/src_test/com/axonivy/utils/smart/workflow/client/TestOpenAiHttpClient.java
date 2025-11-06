@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilder;
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 

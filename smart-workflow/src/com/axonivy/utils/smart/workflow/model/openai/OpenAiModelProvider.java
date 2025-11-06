@@ -3,7 +3,7 @@ package com.axonivy.utils.smart.workflow.model.openai;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 import dev.langchain4j.model.chat.ChatModel;

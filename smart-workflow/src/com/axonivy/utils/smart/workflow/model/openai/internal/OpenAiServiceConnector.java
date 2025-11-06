@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.connector;
+package com.axonivy.utils.smart.workflow.model.openai.internal;
 
 import java.util.Arrays;
 import java.util.Map;

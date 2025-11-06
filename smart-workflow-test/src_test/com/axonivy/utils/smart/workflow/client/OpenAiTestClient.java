@@ -2,7 +2,7 @@ package com.axonivy.utils.smart.workflow.client;
 
 import java.util.Map;
 
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.openai.OpenAiChatModel;
