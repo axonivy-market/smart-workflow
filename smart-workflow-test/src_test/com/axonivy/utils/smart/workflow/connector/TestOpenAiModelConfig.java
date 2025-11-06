@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
 import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector.OpenAiConf;
 
 import ch.ivyteam.ivy.environment.AppFixture;
