@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.connector;
+package com.axonivy.utils.smart.workflow.model.openai;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
