@@ -2,6 +2,7 @@ package com.axonivy.utils.smart.workflow;
 
 import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -23,13 +24,14 @@ import ch.ivyteam.ivy.process.engine.IRequestId;
 import ch.ivyteam.ivy.process.extension.impl.AbstractUserProcessExtension;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
 import ch.ivyteam.ivy.process.extension.ui.UiEditorExtension;
+import ch.ivyteam.ivy.process.model.diagram.icon.IconDecorator;
 import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
 import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import dev.langchain4j.service.AiServices;
 
-public class AgenticProcessCall extends AbstractUserProcessExtension {
+public class AgenticProcessCall extends AbstractUserProcessExtension implements IconDecorator {
 
   interface Variable {
     String RESULT = "result";
@@ -168,5 +170,10 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
         return "";
       }
     }
+  }
+
+  @Override
+  public URI icon() {
+    return URI.create("res:/webContent/logo/agent.png");
   }
 }
