@@ -183,9 +183,24 @@ By default, if no tools are specified, Smart Workflow assumes the agent can use 
 
 #### Model
 
-Not all AI agents are created equal. In Axon Ivy, we recognize that AI agents handle tasks of varying complexity. Some agents perform simple tasks, such as creating leave requests or gathering user information, while others must search databases for products and evaluate dependencies like suppliers and brands. Therefore, Smart Workflow allows developers to select the underlying AI model based on the use case.
+Not all AI agents are created equal. 
+In Axon Ivy, we recognize that AI agents handle tasks of varying complexity. 
+Some agents perform simple tasks, such as creating leave requests or gathering user information, 
+while others must search databases for products and evaluate dependencies like suppliers and brands. 
+Therefore, Smart Workflow allows developers to select the underlying AI model based on the use case.
 
-To do this, simply enter the desired AI model in the `Model` section. By default, if no model is specified, Smart Workflow uses the model defined in the variable `AI.OpenAI.Model`.
+To do this, simply enter the desired AI model in the `Model` section. 
+By default, if no model is specified, Smart Workflow uses the model defined in the variable `AI.OpenAI.Model`.
+
+##### Providers
+
+Smart-Workflow is open to run with any AI model. 
+The selection of your provider is done with the variable `AI.DefaultProvider`. 
+
+For the time being we support the following as first-class citizens:
+- OpenAI
+
+To enroll other AI model providers, please ask for it on Github or file use a Pull-Request.
 
 #### Output
 

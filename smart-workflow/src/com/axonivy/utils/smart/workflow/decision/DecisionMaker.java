@@ -3,7 +3,7 @@ package com.axonivy.utils.smart.workflow.decision;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;

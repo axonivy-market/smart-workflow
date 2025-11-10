@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.workflow;
 
+import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -7,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.scripting.internal.MacroExpander;
@@ -57,17 +59,17 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     }
 
     String modelName = execute(context, Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
-    var modelBuilder = OpenAiServiceConnector.buildOpenAiModel(modelName);
-
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
     var structured = execute(context, Conf.OUTPUT, Class.class);
     if (structured.isPresent()) {
       agentType = StructuredOutputAgent.agent(structured.get());
-      modelBuilder.responseFormat("json_schema");
     }
+    var modelOptions = options()
+        .modelName(modelName)
+        .structuredOutput(structured.isPresent());
+    var model = ChatModelFactory.createModel(modelOptions);
 
-    var model = modelBuilder.build();
     var agentBuilder = AiServices.builder(agentType)
         .chatModel(model)
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));

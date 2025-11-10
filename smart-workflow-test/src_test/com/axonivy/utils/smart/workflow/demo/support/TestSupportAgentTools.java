@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.demo.support.mock.SupportToolChat;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 
 import AgentDemo.SupportAgentToolsData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
