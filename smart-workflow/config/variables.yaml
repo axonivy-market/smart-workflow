@@ -10,5 +10,5 @@ Variables:
       # See dev.langchain4j.model.openai.OpenAiChatModelName for the list of all supported models
       # [enum: gpt-4o, gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, gpt-5]
       Model: ""
-    # [enum: OpenAI]
+    # [enum: OpenAI, AzureOpenAI]
     defaultProvider: ""
