@@ -197,8 +197,17 @@ By default, if no model is specified, Smart Workflow uses the model defined in t
 Smart-Workflow is open to run with any AI model. 
 The selection of your provider is done with the variable `AI.DefaultProvider`. 
 
-For the time being we support the following as first-class citizens:
-- OpenAI
+```yaml
+@variables.yaml@
+```
+
+###### OpenAI Models
+
+OpenAI models are natively supported. If you wish to use them import the `smart-workflow-openai` project and define your OpenAI key.
+
+```yaml
+@variables.openai@
+```
 
 To enroll other AI model providers, please ask for it on Github or file use a Pull-Request.
 

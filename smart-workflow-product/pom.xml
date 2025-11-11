@@ -7,6 +7,7 @@
 
   <properties>
     <variables.yaml.file>../smart-workflow/config/variables.yaml</variables.yaml.file>
+    <variables.openai.file>../models/smart-workflow-openai/config/variables.yaml</variables.openai.file>
   </properties>
 
   <build>
@@ -48,6 +49,9 @@
                 <loadfile property="variables.yaml" srcFile="${variables.yaml.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.yaml@" value="${variables.yaml}" />
                 <replace file="${project.build.directory}/README_DE.md" token="@variables.yaml@" value="${variables.yaml}" />
+                <loadfile property="variables.openai" srcFile="${variables.openai.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.openai@" value="${variables.openai}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.openai@" value="${variables.openai}" />
               </target>
             </configuration>
             <goals>

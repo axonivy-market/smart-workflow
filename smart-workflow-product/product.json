@@ -11,6 +11,13 @@
             "artifactId": "smart-workflow-demo",
             "version": "${version}",
             "type": "iar"
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-openai",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": true
           }
         ],
         "repositories": [
