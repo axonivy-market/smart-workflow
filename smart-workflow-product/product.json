@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.axonivy.com/market/10.0.0/product.json",
+  "minimumIvyVersion": "13.2.0",
   "installers": [
     {
       "id": "maven-import",
