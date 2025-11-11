@@ -7,7 +7,7 @@ In this directory we maintain projects that supply a ChatModelProvider.
 We are open to support more ChatModels from any provider.
 If you miss your favourite one, simply contribute it to this space.
 
-Call the directory `models/smart-workflow-PROVIDER`, replacing PROVIDER with your concrete vendor.
+Create a directory `models/smart-workflow-PROVIDER`, replacing PROVIDER with your concrete vendor.
 For the project coordinates, please align to our existing workspace:
 
 ```xml
@@ -16,9 +16,21 @@ For the project coordinates, please align to our existing workspace:
   <packaging>iar</packaging>
 ```
 
+Make sure to include your project in the build by adding your provider 
+in the main [module build](../pom.xml).
+
+## Implementation
+
+Implement your custom [ChatModelProvider](../smart-workflow/src/com/axonivy/utils/smart/workflow/model/spi/ChatModelProvider.java) within your project.
+
+You need to register your implementation in a file:
+`src/META-INF/services/com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider`
+The file must contain a single line, stating your implementation type name.
+
 ## Variables
 
-Every provider has its own set of variables. Please contribute your ChatModel provider variables to.
+Every provider has its own set of variables. Please contribute your ChatModel provider variables to
+the `Variables.AI.Providers.PROVIDER`.
 
 ```yaml
 Variables:
@@ -30,18 +42,22 @@ Variables:
         ...
 ```
 
+Your custom `variables.yaml` should also be copied and listed into the README.md setup description,
+that invites users to use this provider.
+
 Furthermore, please enrich the global enumeration of available providers [variables.yaml](../smart-workflow/config/variables.yaml) to list your provider.
 See the enumeration called `AI.DefaultProvider`.
+
+### Checklist
+
+- [] custom variables.yaml in your provider
+- [] list your provider in `AI.DefaultProvider` of [variables.yaml](../smart-workflow/config/variables.yaml)
+- [] list your model in the Model section of the product [README.md](../smart-workflow-product/REAMDE.md)
+- [] extend the product [build](../smart-workflow-product/pom.xml) to interpolate your variables into README.md
 
 ## Libraries
 
 Smart-workflow providers are built upon existing LangChain4j providers.
-Please exclude dependencies from your pom.xml, which are already part of smart-workflow.
-Classically this will be the 'langchain4j-core' and 'langchain4j-http-client'
-
-## Registration
-
-You need to register your implementation in a file:
-`src/META-INF/services/com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider`
-The file must contain a single line, stating your implementation type name.
+Please exclude dependencies from your `pom.xml`, which are already part of smart-workflow.
+Classically this will be the `langchain4j-core` and `langchain4j-http-client`
 
