@@ -51,8 +51,7 @@
         "exceptionHandler" : "f8"
       },
       "visual" : {
-        "at" : { "x" : 328, "y" : 208 },
-        "icon" : "res:/webContent/logo/agent.png"
+        "at" : { "x" : 328, "y" : 208 }
       },
       "connect" : [
         { "id" : "f6", "to" : "f7" }

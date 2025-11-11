@@ -38,8 +38,7 @@
       "visual" : {
         "at" : { "x" : 504, "y" : 217 },
         "size" : { "width" : 160, "height" : 62 },
-        "description" : "An agent element with business instructions to guide the AI: first create a support ticket, then create a task to handle that ticket.",
-        "icon" : "res:/webContent/logo/agent.png"
+        "description" : "An agent element with business instructions to guide the AI: first create a support ticket, then create a task to handle that ticket."
       },
       "connect" : [
         { "id" : "f5", "to" : "f6", "color" : "default" }

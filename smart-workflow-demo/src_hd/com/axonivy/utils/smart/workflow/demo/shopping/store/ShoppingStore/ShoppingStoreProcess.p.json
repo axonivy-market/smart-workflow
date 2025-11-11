@@ -429,8 +429,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1120, "y" : 528 },
-        "icon" : "res:/webContent/logo/agent.png"
+        "at" : { "x" : 1120, "y" : 528 }
       },
       "connect" : [
         { "id" : "f57", "to" : "f18" }

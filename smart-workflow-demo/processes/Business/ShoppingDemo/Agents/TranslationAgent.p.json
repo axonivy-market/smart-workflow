@@ -56,8 +56,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 64 },
-        "icon" : "res:/webContent/logo/agent.png"
+        "at" : { "x" : 224, "y" : 64 }
       },
       "connect" : [
         { "id" : "f4", "to" : "f1", "color" : "default" }
