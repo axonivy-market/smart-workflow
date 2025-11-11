@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.model.openai.internal;
+package com.axonivy.utils.smart.workflow.model.spi.internal;
 
 import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
 

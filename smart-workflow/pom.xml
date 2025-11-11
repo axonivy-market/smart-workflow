@@ -25,15 +25,25 @@
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j</artifactId>
       <version>${langchain4j.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.langchain4j</groupId>
-      <artifactId>langchain4j-open-ai</artifactId>
-      <version>${langchain4j.version}</version>
       <exclusions>
         <exclusion>
           <groupId>com.fasterxml.jackson.core</groupId>
           <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-http-client</artifactId>
+      <version>${langchain4j.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>dev.langchain4j</groupId>
+          <artifactId>langchain4j-core</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.slf4j</groupId>
