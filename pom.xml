@@ -8,6 +8,7 @@
 
   <modules>
     <module>${project.name}</module>
+    <module>models/${project.name}-openai</module>
     <module>${project.name}-demo</module>
     <module>${project.name}-test</module>
     <module>${project.name}-product</module>
