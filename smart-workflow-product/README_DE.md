@@ -1,200 +1,312 @@
 # Smart Workflow
 
-**Smart Workflow** bringt KI direkt in Axon Ivy, sodass du KI-Agenten in bestehenden Axon-Prozessen erstellen, ausführen und verbessern kannst. Es ermöglicht Geschäftsprozessen, große Sprachmodelle zu nutzen, um natürliche Sprache zu verstehen, autonome Entscheidungen zu treffen und sich an verändernde Anforderungen anzupassen — alles ohne schwerwiegende architektonische Änderungen.
+**Smart Workflow** brings AI directly into Axon Ivy, so developers can build,
+run, and improve AI agents inside existing Axon processes. It lets business
+workflows leverage large language models to understand natural language, make
+autonomous decisions, and adapt to changing requirements — all without heavy
+architectural changes.
 
-Hauptvorteile von Smart Workflow:
+Key benefits of Smart Workflow:
 
-- **Vertraute Einrichtung:** Setze KI-Agenten in BPMN-Prozesse ein, ohne strukturelle Änderungen vorzunehmen, und konfiguriere alles über Axon Ivys Standardschnittstellen.
+- **Familiar setup:** Drop AI agents into BPMN processes with no structural
+  changes and configure everything through Axon Ivy’s standard interfaces.
 
-- **Unternehmenstauglich:** Entwickelt für Unternehmensanforderungen mit Protokollierung, Überwachung und Konfigurationskontrollen.
+- **Enterprise-ready:** Built for enterprise needs with logging, monitoring, and
+  configuration controls.
 
-- **Flexible Tools:** Verwandle jeden aufrufbaren Prozess in ein KI-erkennbares Tool.
+- **Flexible tools:** Turn any callable process into an AI-discoverable tool.
 
-- **Multi-Modell-Unterstützung:** Verwende je nach Aufgabe leichtgewichtige oder erweiterte Modelle.
+- **Multi-model support:** Use lightweight or advanced models depending on the
+  task.
 
-- **Typsichere Ausgaben:** Erzeuge strukturierte Java-Objekte aus KI-Antworten für die sofortige Verwendung.
+- **Type-safe outputs:** Produce structured Java objects from AI responses for
+  immediate use.
 
-- **Natürliche Sprachverarbeitung:** Akzeptiere unstrukturierte Eingaben und gib benutzerfreundliche Ausgaben zurück.
+- **Natural language handling:** Accept unstructured input and return
+  human-friendly output.
 
-**Haftungsausschluss**
+**Disclaimer**
 
-Dieser Connector wird als Alpha-Version bereitgestellt und dient ausschließlich zu Test- und Evaluierungszwecken. Er kann Fehler, unvollständige Funktionen oder andere Probleme enthalten, die die Stabilität, Leistung oder Funktionalität beeinträchtigen könnten. Die Nutzung dieses Connectors erfolgt auf dein eigenes Risiko.
+This connector is provided as an **Alpha version** and is intended for testing
+and evaluation purposes only. It may contain errors, incomplete features, or
+other issues that could affect stability, performance, or functionality. Use of
+this connector is at your own risk.
 
-**Du bist allein verantwortlich** für die Konfiguration, Bereitstellung und den Betrieb der KI und ihrer zugehörigen Agenten. Alle Entscheidungen, Handlungen oder Ergebnisse, die sich aus der Nutzung dieses Connectors ergeben, liegen vollständig in deiner Verantwortung.
+The **user is solely responsible** for the configuration, deployment, and
+operation of the AI and its associated agents. Any decisions, actions, or
+outcomes resulting from the use of this connector are entirely the
+responsibility of the user.
 
-Wir stellen lediglich die **technische Möglichkeit** für solche Konfigurationen bereit und lehnen ausdrücklich jegliche Haftung für Missbrauch, Fehlkonfiguration oder unbeabsichtigte Folgen ab, die sich aus der Nutzung ergeben könnten. Mit der Nutzung dieses Connectors erkennst du diese Einschränkungen an und akzeptierst sie.
+We provide only the **technical capability** to enable such configurations and
+expressly disclaim any liability for misuse, misconfiguration, or unintended
+consequences arising from its use. By using this connector, you acknowledge and
+accept these limitations.
 
 ## Demo
 
 ### Axon Ivy Support Agent Demo
 
-Diese Demo zeigt dir, wie du den Axon Ivy Support Agent verwendest, einen KI-gestützten Agenten, der in einen Geschäftsprozess integriert ist. Der Agent ist darauf ausgelegt, Support-Probleme zu klassifizieren, fehlende Informationen zu überprüfen und automatisch Support-Aufgaben zu erstellen.
+This demo showcases how to use the Axon Ivy Support Agent, an AI-powered agent
+integrated into a business workflow. The agent is designed to classify support
+problems, check for missing information, and create support tasks automatically.
 
-**Workflow-Übersicht:**
+**Workflow Overview:**
 
-1. **Eingabe:** Der Agent erhält eine Support-Frage und den Benutzernamen des Meldenden.
-2. **Klassifizierung:** Er analysiert das Problem, bestimmt, ob Informationen fehlen (wie die Version), und klassifiziert das Problem (Portal, Core oder Market-Produkt).
-3. **Aufgabenerstellung:** Falls erforderlich, erstellt der Agent eine Support-Aufgabe mit dem `createAxonIvySupportTask`-Tool und stellt einen Link zur erstellten Aufgabe bereit.
-4. **Zusammenfassung & Antwort:** Der Agent fasst das Problem zusammen und antwortet dem Benutzer mit einer detaillierten Antwort.
+1. **Input:** The agent receives a support question and the username of the
+   reporter.
+2. **Classification:** It analyzes the problem, determines if information is
+   missing (such as version), and classifies the issue (Portal, Core, or Market
+   product).
+3. **Task Creation:** If necessary, the agent creates a support task using the
+   `createAxonIvySupportTask` tool and provides a link to the created task.
+4. **Summary & Response:** The agent summarizes the problem and replies to the
+   user with a detailed response.
 
-**Technische Details:**
+**Technical Details:**
 
-- Der Agent ist als aufrufbarer Unterprozess (`AxonIvySupportAgent.p.json`) implementiert und verwendet die `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java Bean.
-- Der Agent ist so konfiguriert, dass er ein spezifisches Tool (`createAxonIvySupportTask`) verwendet, das es ihm ermöglicht, automatisch Support-Aufgaben innerhalb des Workflows zu erstellen. Dies wird erreicht, indem der Tool-Name in der Konfiguration des Agenten angegeben wird (siehe Beispiel unten).
-- Die Ausgabe des Agenten wird auf ein strukturiertes Java-Objekt (`AxonIvySupportResponse`) abgebildet, was es einfach macht, das KI-generierte Ergebnis direkt in Axon Ivy-Prozessen zu verwenden. Dieses Objekt enthält typischerweise Details wie die Klassifizierung, den Link zur erstellten Aufgabe und eine Zusammenfassung des Support-Problems.
+- The agent is implemented as a callable sub-process
+  (`AxonIvySupportAgent.p.json`) and uses the
+  `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java bean.
+- The agent is configured to use a specific tool (`createAxonIvySupportTask`),
+  which allows it to create support tasks automatically within the workflow.
+  This is achieved by specifying the tool name in the agent's configuration (see
+  example below).
+- The agent's output is mapped to a structured Java object
+  (`AxonIvySupportResponse`), making it easy to use the AI-generated result
+  directly in Axon Ivy processes. This object typically contains details such as
+  the classification, created task link, and a summary of the support issue.
 
-**Beispiel für Agent-Konfiguration:**
+**Agent Configuration Example:**
 
-Um den Agenten zu konfigurieren, definiere ein Programmelement mit den folgenden Einstellungen:
+To configure the agent, define a program element with the following settings:
 
-![Support Ticket Beispiel](img/support-ticket-example.png)
+![Support Ticket exanmple](img/support-ticket-example.png)
 
-Diese Konfiguration stellt sicher, dass der Agent nur das angegebene Tool verwendet und seine Ausgabe als strukturiertes Java-Objekt zurückgibt.
+This configuration ensures the agent uses only the specified tool and returns
+its output as a structured Java object.
 
-**Demo-Ausführungsbeispiel:**
+**Demo Run Example:**
 
-Angenommen, ein Benutzer stellt eine Support-Frage: "Ich habe eine NPE beim Öffnen der Case Details im Portal 12.0.9"
+Suppose a user submits a support question: "I have NPE when open Case Details in
+Portal 12.0.9"
 
-1. Der Agent erhält die Frage und den Benutzernamen.
-2. Er überprüft fehlende Informationen (z.B. Version), klassifiziert das Problem als Portal-Problem und bestimmt, dass eine Support-Aufgabe erstellt werden sollte.
-3. Der Agent ruft das `createAxonIvySupportTask`-Tool auf, das eine neue Support-Aufgabe erstellt und einen Link dazu zurückgibt.
-4. Der Agent fasst das Problem zusammen und gibt eine Antwort wie diese:
+1. The agent receives the question and username.
+2. It checks for missing information (e.g., version), classifies the issue as a
+   Portal problem, and determines that a support task should be created.
+3. The agent calls the `createAxonIvySupportTask` tool, which creates a new
+   support task and returns a link to it.
+4. The agent summarizes the problem and provides a response such as:
 
 ```text
-Klassifizierung: Portal
-Zusammenfassung: Das Problem ist eine NullPointerException (NPE), die beim Öffnen der Case Details in Portal Version 12.0.9 auftritt. Da das Problem mit dem Portal-Produkt zusammenhängt und die Version angegeben ist, wurde eine Support-Aufgabe erstellt, um dieses Problem zu behandeln.
+Classification: Portal
+Summary: The problem is a NullPointerException (NPE) occurring when opening Case Details in Portal version 12.0.9. Since the issue is related to the Portal product and the version is provided, a support task has been created to address this problem.
 ```
 
-Diese Antwort wird auf das `AxonIvySupportResponse`-Objekt abgebildet und kann direkt in nachfolgenden Workflow-Schritten verwendet werden.
+This response is mapped to the `AxonIvySupportResponse` object and can be used
+directly in subsequent workflow steps.
 
-So führst du die Demo aus:
+How to Run the Demo:
 
-1. Stelle sicher, dass du den Abschnitt [Konfigurationen](#konfigurationen) abgeschlossen hast.
-2. Löse den Axon Ivy Support Agent-Prozess mit einer Support-Frage und einem Benutzernamen aus.
-3. Überprüfe die Antwort des Agenten, die Klassifizierung, Aufgabenerstellung (falls erforderlich) und eine Zusammenfassung enthält.
+1. Ensure you have completed the [Configurations](#configurations) section.
+2. Trigger the Axon Ivy Support Agent process with a support question and
+   username.
+3. Review the agent's response, which includes classification, task creation (if
+   needed), and a summary.
 
-### Shopping-Demo
+### Shopping Demo
 
-Diese Demo zeigt, wie KI die Abläufe eines kleinen E-Commerce-Modegeschäfts transformieren kann. Sie ist etwas fortgeschrittener und kombiniert zwei Mini-Demos: eine zur Produkterstellung und eine zur semantischen Suche. Aufgrund der Komplexität gehen wir hier nicht auf den detaillierten Code oder Schritt-für-Schritt-Anleitungen ein. Wenn du die Implementierung näher kennenlernen möchtest, schau dir bitte das Demo-Projekt `smart-workflow-demo` an.
+This demo showcases how AI can transform the operations of a small e-commerce
+fashion store. It’s more advanced and combines two mini-demos: one on product
+creation and another on semantic search. Because of its complexity, we won’t
+dive into the detailed code or step-by-step instructions here. If you’d like to
+explore the implementation, please check out the demo project
+`smart-workflow-demo`.
 
-**Produkterstellung**
+**Product creation**
 
-Traditionell muss der Shopbetreiber beim Hinzufügen eines Produkts viele Felder manuell ausfüllen und abhängige Datensätze (Lieferant, Marke, Kategorie) prüfen oder erstellen. Für einen kleinen Shop kann dieser Prozess Stunden oder sogar einen ganzen Tag dauern: manuelle Dateneingabe, Suche nach fehlenden Informationen und wiederholtes Prüfen auf Fehler.
+Traditionally, adding a product requires the store operator to manually fill
+many fields and to validate or create dependent records (supplier, brand,
+category). For a small store this process can take hours or a full day: manual
+data entry, hunting for missing info, and re-checking for mistakes.
 
-Mit den Smart-Workflow-Agenten importierst du einfach die Produktspezifikation und die Bilddateien. Die Agenten übernehmen das Parsen, die Validierung, die Auflösung von Abhängigkeiten und die Produkterstellung – und reduzieren so den manuellen Aufwand und die Zeit bis zur Veröffentlichung erheblich.
+With Smart Workflow agents, the operator simply imports the product
+specification and image files. The agents handle parsing, validation, dependency
+resolution, and product creation — significantly reducing manual work and
+time-to-publish.
 
-Entwickler müssen vier Agenten erstellen:
+Developers need to create four agents
 
-1. Produkt-Agent
+1. Product agent
 
-Input: geparste Produktspezifikation
-
+- Input: parsed product specification
 - Tools:
-  - Produkt finden: Findet ein Produkt im System
-  - Produkt erstellen: Erstellt ein neues Produkt anhand der bereitgestellten Spezifikation
-  - Produktabhängigkeiten prüfen: Ruft andere Agenten auf, um Abhängigkeiten (Lieferant, Marke, Kategorie) zu finden und zu validieren
+  - Find product: Find product in the system
+  - Create product: Create a new product using the provided specification
+  - Check product dependencies: Call other agents to find and validate
+    dependencies (supplier, brand, and category)
 
-2. Lieferanten-Agent
+2. Supplier agent
 
-- Input: Lieferanteninformationen
+- Input: supplier information
 - Tools:
-  - Lieferant finden: Findet einen Lieferanten im System
-  - Lieferant erstellen: Erstellt einen neuen Lieferanten mit den bereitgestellten Informationen
+  - Find supplier: Find supplier in the system
+  - Create supplier: Create a new supplier using the provided information
 
-3. Kategorie-Agent
+3. Category agent
 
-- Input: Produktkategorie-Informationen
+- Input: product category information
 - Tools:
-  - Kategorie finden: Findet eine Kategorie im System
-  - Kategorie erstellen: Erstellt eine neue Kategorie mit den bereitgestellten Informationen
+  - Find category: Find category in the system
+  - Create category: Create a new category using the provided information
 
-4. Marken-Agent
+4. Brand agent
 
-- Input: Markeninformationen
+- Input: product brand information
 - Tools:
-  - Marke finden: Findet eine Marke im System
-  - Marke erstellen: Erstellt eine neue Marke mit den bereitgestellten Informationen
+  - Find brand: Find brand in the system
+  - Create brand: Create a new brand using the provided information
 
-Demo-Ablauf
+Demo flow
 
-1. Du lädst die Produktspezifikation und die Bilddateien hoch.
-2. Smart Workflow parst die Dateien und extrahiert Produktattribute (Titel, SKU, Beschreibung, Preis, Lieferant, Marke, Kategorie, Bilder).
-3. Validatoren prüfen Semantik und Anforderungen (Pflichtfelder, Formate, SKU-Eindeutigkeit, Bildanforderungen).
-4. Für jede Abhängigkeit (Lieferant, Marke, Kategorie) fragt Smart Workflow den entsprechenden Agenten:
-  Wenn die Entität existiert → ID zurückgeben
-  Wenn nicht → mit der bereitgestellten Spezifikation erstellen
-5. Der Produkt-Agent erstellt das Produkt mit den validierten Attributen und verknüpft die Abhängigkeits-IDs.
-6. Das System gibt eine Zusammenfassung zurück und öffnet optional eine Review-Ansicht mit vorausgefüllten Feldern zur finalen Freigabe.
+1. Operator uploads product specification and image files.
+2. Smart Workflow parses the files, extracts product attributes (title, SKU,
+   description, price, supplier info, brand, category, images).
+3. Validators check semantics and constraints (required fields, formats, SKU
+   uniqueness, image requirements).
+4. For each dependency (supplier, brand, category), Smart Workflow asks the
+   appropriate agent: if the entity exists → return the ID, if missing → create
+   it using the provided spec.
+5. Product agent creates the product with validated attributes and links to
+   dependency IDs.
+6. System returns a summary and optionally opens a human-review screen with
+   prefilled fields for final approval.
 
-Der neue KI-gestützte Prozess führt zu weniger Fehlern, deutlich weniger manueller Arbeit und einer viel schnelleren Veröffentlichung.
+The new AI-powered process resulted in fewer errors, far less manual work, and a
+much faster time-to-publish.
 
-**Semantische Suche**
+**Semantic search**
 
-Vor der KI haben Käufer Stichwortsuchen wie „rotes Kleid“ eingegeben, dann manuell Filter (Preis, Marke, Kategorie) gesetzt und die Ergebnisse durchsucht. Das war nicht nur langsam und starr, sondern hat oft Synonyme, Stile oder die Absicht (z. B. Party vs. Arbeit) nicht richtig erfasst.
+Before AI, shoppers typed keyword queries like “red dress,” then manually
+applied filters (price, brand, category) and scanned the results. This process
+was not only slow and rigid but also often failed to capture synonyms, styles,
+or intent (e.g., party vs. work).
 
-Mit semantischer Suche kannst du einfach eine natürliche Anfrage sprechen oder eingeben. Die KI versteht Absicht und Einschränkungen (Farbe, Preis, Anlass, Dringlichkeit), wandelt sie in ein strukturiertes Kriterien-Objekt um. Das Backend übersetzt dieses Objekt in SQL-Filter und liefert passende Ergebnisse zurück. Das bietet Erklärbarkeit, vertraute Tools und eine einfache Implementierung.
+With semantic search the user speaks or types a natural request. AI understands
+intent and constraints (color, price, occasion, urgency), converts that into a
+structured criteria object. The backend then converts that object into SQL
+predicates and returns matched results. Offers explainability, familiar tooling,
+and easier deployment.
 
-Developers need to add an additional `Find product by criteria` tool to the `Product agent` with input is the search criteria.
+Developers need to add an additional `Find product by criteria` tool to the
+`Product agent` with input is the search criteria.
 
-Entwickler müssen dem Produkt-Agenten ein zusätzliches Tool `Find product by criteria` hinzufügen, dessen Input die Suchkriterien sind.
+Demo flow
 
-Demo-Ablauf
+1. Shopper: types or says “I need a $100 red dress for a party tonight.”
+2. `Product agent` extracts attributes and expands the query (synonyms,
+   acceptable price range: $80–$120).
+3. Axon Ivy Business Data turns criteria into an optimized filters and search
+   for the products.
+4. Return the top products matched criteria.
 
-1. Käufer: Gibt ein oder sagt „Ich brauche ein rotes Kleid für 100 $ für eine Party heute Abend.“
-2. Der `Product agent` extrahiert Attribute und erweitert die Anfrage (Synonyme, akzeptable Preisspanne: 80–120 $).
-3. Axon Ivy Business Data wandelt die Kriterien in optimierte Filter um und sucht nach passenden Produkten.
-4. Rückgabe der Top-Produkte, die den Kriterien entsprechen.
-
-Um die Demodaten zu initialisieren, öffne die Prozessliste und starte `Create data for shopping demo`.
+To quickly set up the demo data, run the process `Create data for shopping demo`
+from the process list.
 
 ## Setup
 
-### Konfigurationen
+### Configurations
 
-Bevor du mit Smart Workflow arbeitest, musst du einige Konfigurationen mit Axon Ivy-Variablen bereitstellen:
+Before start working with Smart Workflow, you need to provide some
+configurations using Axon Ivy variables:
 
-- `AI.OpenAI.APIKey`: API-Schlüssel deines OpenAI-Kontos.
-- `AI.OpenAI.Model`: Standard-OpenAI-Modell. Derzeit unterstützen wir die Modelle `gpt-4o`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano` und `gpt-5`.
+- `AI.OpenAI.APIKey`: API key of your OpenAI account.
+- `AI.OpenAI.Model`: Default OpenAI model. Currently we are supporting `gpt-4o`,
+  `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, and `gpt-5` models.
 
-### Tools mit aufrufbaren Prozessen definieren
+### Defining Tools with Callable Processes
 
-Um effektiv zu funktionieren, benötigen KI-Agenten Tools zur Ausführung von Aufgaben. Mit Smart Workflow ist das Erstellen eines Tools einfach: Definiere einfach einen aufrufbaren Prozess und füge das `tool`-Tag hinzu.
+To function effectively, AI agents require tools to perform tasks. With Smart
+Workflow, creating a tool is straightforward: simply define a callable process
+and add the `tool` tag to it.
 
-Um das geeignete Tool auszuwählen, verlassen sich KI-Agenten auf die Beschreibungen aufrufbarer Prozesse. Um eine effiziente Tool-Auswahl zu gewährleisten, beschreibe den Zweck des Tools klar im `description`-Feld.
+To select the appropriate tool, AI agents rely on the descriptions of callable
+processes. To ensure efficient tool selection, clearly describe the tool's
+purpose in the `description` field.
 
-![Tool-Konfigurationen](img/tool-configurations.png)
+![Tool configurations](img/tool-configurations.png)
 
-### KI-Agent definieren
+### Defining AI agent
 
-Um einen KI-Agenten zu definieren, erstelle ein Programmelement, das von der `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java Bean unterstützt wird. Im `Configuration`-Tab kannst du auf detaillierte Einstellungen für deinen KI-Agenten zugreifen und diese anpassen.
+To define an AI agent, create a program element backed by the
+`com.axonivy.utils.smart.workflow.AgenticProcessCall` Java bean. In the
+`Configuration` tab, you can access and customize detailed settings for your AI
+agent.
 
-#### Nachricht
+#### Message
 
-Im `Message`-Bereich kannst du die Benutzernachricht und Systemnachricht für den Agenten angeben. Durch die Möglichkeit, Code-Injection direkt in diese Felder zu ermöglichen, bietet Smart Workflow Entwicklern eine bequeme Möglichkeit, Nachrichten zu definieren, bevor sie an den KI-Service gesendet werden.
+In the `Message` section, you can specify the user message and system message
+for the agent. By allowing code injection directly into these fields, Smart
+Workflow offers a convenient way for developers to define messages before they
+are sent to the AI service.
 
-![Nachrichten-Konfigurationen](img/agent-message-configurations.png)
+![Message configurations](img/agent-message-configurations.png)
 
 #### Tools
 
-Unter dem `Messages`-Bereich befindet sich der `Tools`-Bereich, wo du die Menge der Tools definieren kannst, die der Agent als String-Array verwenden soll. Zum Beispiel:
+Below the `Messages` section is the `Tools` section, where you can define the
+set of tools the agent should use as a String array. For example:
 
 ```java
 ["findProduct","createProduct","checkProductDependencies", "createProductSearchCriteria"]
 ```
 
-Standardmäßig, wenn keine Tools angegeben sind, geht Smart Workflow davon aus, dass der Agent alle verfügbaren Tools verwenden kann. Daher wird empfohlen, eine spezifische Menge von Tools für jeden Agenten zu definieren, um die Antwortgeschwindigkeit zu verbessern und die Verwendung ungeeigneter Tools zu verhindern.
+By default, if no tools are specified, Smart Workflow assumes the agent can use
+all available tools. Therefore, it is recommended to define a specific set of
+tools for each agent to improve response speed and prevent the use of
+inappropriate tools.
 
-#### Modell
+#### Model
 
-Nicht alle KI-Agenten sind gleich. In Axon Ivy erkennen wir, dass KI-Agenten Aufgaben unterschiedlicher Komplexität bewältigen. Einige Agenten führen einfache Aufgaben aus, wie das Erstellen von Urlaubsanträgen oder das Sammeln von Benutzerinformationen, während andere Datenbanken nach Produkten durchsuchen und Abhängigkeiten wie Lieferanten und Marken bewerten müssen. Daher ermöglicht Smart Workflow Entwicklern, das zugrunde liegende KI-Modell basierend auf dem Anwendungsfall auszuwählen.
+Not all AI agents are created equal. In Axon Ivy, we recognize that AI agents
+handle tasks of varying complexity. Some agents perform simple tasks, such as
+creating leave requests or gathering user information, while others must search
+databases for products and evaluate dependencies like suppliers and brands.
+Therefore, Smart Workflow allows developers to select the underlying AI model
+based on the use case.
 
-Gib dazu einfach das gewünschte KI-Modell im `Model`-Bereich ein. Standardmäßig, wenn kein Modell angegeben ist, verwendet Smart Workflow das in der Variable `AI.OpenAI.Model` definierte Modell.
+To do this, simply enter the desired AI model in the `Model` section. By
+default, if no model is specified, Smart Workflow uses the model defined in the
+variable `AI.OpenAI.Model`.
 
-#### Ausgabe
+##### Providers
 
-Für KI-Anwendungen auf Unternehmensebene ist es üblich, das Ergebnis des KI-Agenten in Form eines verwendbaren Objekts zu benötigen.
-Um diesem Bedarf gerecht zu werden, kann der Smart Workflow KI-Agent Ausgaben als Java-Objekt erzeugen, das direkt von Axon Ivy-Prozessen verwendet werden kann.
+Smart-Workflow is open to run with any AI model. The selection of your provider
+is done with the variable `AI.DefaultProvider`.
 
-Du kannst dies einfach konfigurieren, indem du sowohl den erwarteten Ergebnistyp als auch das Zielobjekt, auf das das Ergebnis abgebildet werden soll, im `Output`-Bereich angibst.
+```yaml
+@variables.yaml@
+```
 
-![Andere Konfigurationen](img/agent-other-configurations.png)
+###### OpenAI Models
+
+OpenAI models are natively supported. If you wish to use them import the
+`smart-workflow-openai` project and define your OpenAI key.
+
+```yaml
+@variables.openai@
+```
+
+To enroll other AI model providers, please ask for it on Github or file use a
+Pull-Request.
+
+#### Output
+
+For enterprise-level AI applications, it is common to require the AI agent’s
+result in the form of a usable object. To address this need, the Smart Workflow
+AI agent can produce output as a Java object, ready to be used directly by Axon
+Ivy processes.
+
+You can easily configure this by specifying both the expected result type and
+the target object to map the result to in the `Output` section.
+
+![Other configurations](img/agent-other-configurations.png)
