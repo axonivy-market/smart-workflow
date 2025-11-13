@@ -5,10 +5,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.axonivy.utils.smart.workflow.model.openai.OpenAiModelProvider;
-import com.axonivy.utils.smart.workflow.model.openai.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.internal.SpiLoader;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ProcessModelVersionRelation;
@@ -18,9 +17,9 @@ import dev.langchain4j.model.chat.ChatModel;
 public class ChatModelFactory {
 
   public static ChatModel createModel(ModelOptions modelOptions) {
-    String vendor = Optional.ofNullable(Ivy.var().get("AI.defaultProvider"))
+    String vendor = Optional.ofNullable(Ivy.var().get("AI.DefaultProvider"))
         .filter(Predicate.not(String::isEmpty))
-        .orElse(OpenAiModelProvider.NAME);
+        .orElse("OpenAI");
     var provider = ChatModelFactory.create(vendor)
         .orElseThrow(() -> new IllegalArgumentException("Unknown model provider " + vendor));
     return provider.setup(modelOptions);

@@ -31,7 +31,7 @@ Variables:
 ```
 
 Furthermore, please enrich the global enumeration of available providers [variables.yaml](../smart-workflow/config/variables.yaml) to list your provider.
-See the enumeration called `AI.defaultProvider`.
+See the enumeration called `AI.DefaultProvider`.
 
 ## Libraries
 
