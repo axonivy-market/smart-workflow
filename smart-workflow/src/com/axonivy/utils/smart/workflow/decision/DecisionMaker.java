@@ -3,7 +3,8 @@ package com.axonivy.utils.smart.workflow.decision;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
@@ -63,7 +64,7 @@ public class DecisionMaker {
   }
 
   public static class Builder {
-    private ChatModel model = OpenAiServiceConnector.buildJsonOpenAiModel().build();;
+    private ChatModel model = ChatModelFactory.create("OpenAI").get().setup(new ModelOptions(null, true));
     private List<Option> options = new ArrayList<>();
     private List<String> instructions = new ArrayList<>();
 
