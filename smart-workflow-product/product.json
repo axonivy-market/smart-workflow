@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.axonivy.com/market/10.0.0/product.json",
+  "minimumIvyVersion": "13.2.0",
   "installers": [
     {
       "id": "maven-import",
@@ -10,6 +11,13 @@
             "artifactId": "smart-workflow-demo",
             "version": "${version}",
             "type": "iar"
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-openai",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": true
           }
         ],
         "repositories": [

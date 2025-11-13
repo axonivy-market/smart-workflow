@@ -9,7 +9,7 @@
     <relativePath></relativePath>
   </parent>
   <groupId>com.axonivy.utils.ai</groupId>
-  <artifactId>smart-workflow-test</artifactId>
+  <artifactId>smart-workflow-openai</artifactId>
   <version>13.2.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <dependencies>
@@ -18,21 +18,33 @@
       <artifactId>ivy-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.axonivy.ivy.api.test</groupId>
-      <artifactId>ivy-test-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
-      <artifactId>smart-workflow-demo</artifactId>
-      <version>${project.version}</version>
+      <artifactId>smart-workflow</artifactId>
+      <version>13.2.0-SNAPSHOT</version>
       <type>iar</type>
     </dependency>
     <dependency>
-      <groupId>com.axonivy.utils.ai</groupId>
-      <artifactId>smart-workflow-openai</artifactId>
-      <version>${project.version}</version>
-      <type>iar</type>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-open-ai</artifactId>
+      <version>1.8.0</version>
+      <exclusions>
+       <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dev.langchain4j</groupId>
+          <artifactId>langchain4j-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dev.langchain4j</groupId>
+          <artifactId>langchain4j-http-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dev.langchain4j</groupId>
+          <artifactId>langchain4j-http-client-jdk</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <repositories>
@@ -52,7 +64,6 @@
     </repository>
   </repositories>
   <build>
-    <testSourceDirectory>src_test</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
