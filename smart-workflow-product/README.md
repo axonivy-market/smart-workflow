@@ -209,7 +209,21 @@ OpenAI models are natively supported. If you wish to use them import the `smart-
 @variables.openai@
 ```
 
-To enroll other AI model providers, please ask for it on Github or file use a Pull-Request.
+###### Azure OpenAI Models
+
+Azure OpenAI models are supported. To use Azure OpenAI, import the `smart-workflow-azure-openai` project and configure your Azure OpenAI endpoint and deployments.
+
+Each deployment in Azure OpenAI represents a model instance with its own API key. You can configure multiple deployments to use different models for different tasks.
+
+```yaml
+@variables.azureopenai@
+```
+
+**Example Configuration:**
+
+```yaml
+@variables.azureopenai.example@
+```
 
 #### Output
 
