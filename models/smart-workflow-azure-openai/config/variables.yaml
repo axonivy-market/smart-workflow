@@ -11,4 +11,4 @@ Variables:
         # - Use lowercase letters, numbers, and hyphens (kebab-case).
         # - Avoid spaces, special characters, and starting with digits.
         # For example: 'Deployment_1', 'test-gpt-4-1-mini'
-        Deployments:
+        Deployments: ""

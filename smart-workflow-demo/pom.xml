@@ -31,7 +31,7 @@
     </dependency>
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
-      <artifactId>smart-workflow-azure-open-ai</artifactId>
+      <artifactId>smart-workflow-azure-openai</artifactId>
       <version>${project.version}</version>
       <type>iar</type>
     </dependency>

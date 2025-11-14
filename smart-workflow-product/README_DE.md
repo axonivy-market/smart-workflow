@@ -190,6 +190,43 @@ Nicht alle KI-Agenten sind gleich. In Axon Ivy erkennen wir, dass KI-Agenten Auf
 
 Gib dazu einfach das gewünschte KI-Modell im `Model`-Bereich ein. Standardmäßig, wenn kein Modell angegeben ist, verwendet Smart Workflow das in der Variable `AI.OpenAI.Model` definierte Modell.
 
+##### Provider
+
+Smart-Workflow ist offen für die Verwendung mit jedem KI-Modell.
+Die Auswahl deines Providers erfolgt über die Variable `AI.DefaultProvider`.
+
+```yaml
+@variables.yaml@
+```
+
+###### OpenAI-Modelle
+
+OpenAI-Modelle werden nativ unterstützt. Wenn du sie verwenden möchtest, importiere das Projekt `smart-workflow-openai` und definiere deinen OpenAI-Schlüssel.
+
+```yaml
+@variables.openai@
+```
+
+###### Azure OpenAI-Modelle
+
+Azure OpenAI-Modelle werden ebenfalls unterstützt. Um Azure OpenAI zu verwenden, importiere das Projekt `smart-workflow-azure-openai` und konfiguriere deinen Azure OpenAI-Endpunkt und deine Deployments.
+
+Jedes Deployment in Azure OpenAI repräsentiert eine Modellinstanz mit eigenem API-Schlüssel. Du kannst mehrere Deployments konfigurieren, um verschiedene Modelle für unterschiedliche Aufgaben zu verwenden.
+
+```yaml
+@variables.azureopenai@
+```
+
+**Konfigurationshinweise:**
+
+- `Endpoint`: Dein Azure OpenAI-Ressourcen-Endpunkt (z.B. `https://my-resource.openai.azure.com/`)
+- `Deployments`: Definiere ein oder mehrere Modell-Deployments. Jedes Deployment benötigt:
+  - Einen eindeutigen Deployment-Namen (verwende Kebab-Case: Kleinbuchstaben, Zahlen, Bindestriche)
+  - `Model`: Den Modellnamen (z.B. `gpt-4o`, `gpt-4`)
+  - `APIKey`: Den API-Schlüssel für dieses Deployment (verwende die `#[password]`-Annotation für Sicherheit)
+
+Um weitere KI-Modell-Provider einzubinden, frage bitte auf Github danach oder reiche einen Pull-Request ein.
+
 #### Ausgabe
 
 Für KI-Anwendungen auf Unternehmensebene ist es üblich, das Ergebnis des KI-Agenten in Form eines verwendbaren Objekts zu benötigen.

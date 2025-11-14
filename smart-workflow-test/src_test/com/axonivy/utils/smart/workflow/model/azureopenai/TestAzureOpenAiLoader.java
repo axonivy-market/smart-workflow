@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.azureopenai.internal.AzureOpenAiServiceConnector.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
@@ -21,29 +20,18 @@ import dev.langchain4j.model.chat.ChatModel;
 @IvyTest
 public class TestAzureOpenAiLoader {
 
-  private static String TEST_DEPLOYMENT_NAME = "test-gpt-4-1-mini";
-  private static String TEST_DEPLOYMENTS = """
-      test-gpt-4-1-mini:
-        Model: gpt-4.1-mini
-        #[password]
-        APIKey: ${decrypt:test}
-      test-o4-mini:
-        Model: o4-mini
-        #[password]
-        APIKey: ${decrypt:test}
-      test-gpt-5-mini:
-        Model: gpt-5-mini
-        #[password]
-        APIKey: ${decrypt:test}
-      """;
+  private static final String DEPLOYMENTS_PREFIX = "AI.Providers.AzureOpenAI.Deployments";
+  private static final String TEST_DEPLOYMENT_NAME = "test-gpt-4-1-mini";
+  private static final String MODEL = "gpt-4.1-mini";
+  private static final String API_KEY = "${decrypt:test-key-1}";
 
   private ChatModelProvider provider;
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    fixture.var("AI.DefaultProvider", "AzureOpenAI");
-    fixture.var(AzureOpenAiConf.ENDPOINT, "https://test.localhost.com");
-    fixture.var(AzureOpenAiConf.DEPLOYMENTS, TEST_DEPLOYMENTS);
+    // Setup test deployments with Model and APIKey fields
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", MODEL);
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".APIKey", API_KEY);
     provider = loadModel();
   }
 

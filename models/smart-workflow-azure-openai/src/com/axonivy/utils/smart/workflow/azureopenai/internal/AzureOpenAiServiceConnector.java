@@ -22,7 +22,7 @@ public class AzureOpenAiServiceConnector {
   public interface AzureOpenAiConf {
     String PREFIX = "AI.Providers.AzureOpenAI.";
     String ENDPOINT = PREFIX + "Endpoint";
-    String DEPLOYMENTS = PREFIX + "Deployments.";
+    String DEPLOYMENTS = PREFIX + "Deployments";
   }
 
   public static AzureOpenAiChatModel.Builder buildOpenAiModel(String deploymentName) {
