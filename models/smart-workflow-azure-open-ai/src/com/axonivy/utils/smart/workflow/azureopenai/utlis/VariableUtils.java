@@ -14,7 +14,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.vars.Variable;
 
 public final class VariableUtils {
-  private static final String AZURE_DEPLOYMENTS_PREFIX = "AI.AzureOpenAI.Deployments";
+  private static final String AZURE_DEPLOYMENTS_PREFIX = "AI.Providers.AzureOpenAI.Deployments";
   private static final String MODEL_FIELD = "Model";
   private static final String API_KEY_FIELD = "APIKey";
 
@@ -30,9 +30,9 @@ public final class VariableUtils {
     Map<String, AzureAiDeployment> deploymentMap = new HashMap<>();
     for (Variable variable : deploymentVariables) {
       String[] parts = variable.name().split("\\.");
-      if (parts.length == 5) {
-        String deploymentName = parts[3];
-        String fieldName = parts[4]; // e.g., "Model" or "APIKey"
+      if (parts.length == 6) {
+        String deploymentName = parts[4];
+        String fieldName = parts[5]; // e.g., "Model" or "APIKey"
         deploymentMap.computeIfAbsent(deploymentName, depployment -> new AzureAiDeployment(deploymentName));
         AzureAiDeployment deployment = deploymentMap.get(deploymentName);
         if (MODEL_FIELD.equals(fieldName)) {

@@ -1,13 +1,14 @@
 # yaml-language-server: $schema=https://json-schema.axonivy.com/app/13.2.1/variables.json
 Variables:
   AI:
-    AzureOpenAI:
-      # The endpoint of your Azure OpenAI resource, e.g., "https://my-openai-resource.openai.azure.com/"
-      Endpoint:
-      # Model deployments configured in your Azure OpenAI resource.
-      # Each deployment is a variable consist of 'Model' and 'APIKey' fields.
-      # Because each deployment is a YAML variable, they should follow these naming rules:
-      # - Use lowercase letters, numbers, and hyphens (kebab-case).
-      # - Avoid spaces, special characters, and starting with digits.
-      # For example: 'Deployment_1', 'test-gpt-4-1-mini'
-      Deployments:
+    Providers:
+      AzureOpenAI:
+        # The endpoint of your Azure OpenAI resource, e.g., "https://my-openai-resource.openai.azure.com/"
+        Endpoint: https://axonivyai.openai.azure.com/
+        # Model deployments configured in your Azure OpenAI resource.
+        # Each deployment is a variable consist of 'Model' and 'APIKey' fields.
+        # Because each deployment is a YAML variable, they should follow these naming rules:
+        # - Use lowercase letters, numbers, and hyphens (kebab-case).
+        # - Avoid spaces, special characters, and starting with digits.
+        # For example: 'Deployment_1', 'test-gpt-4-1-mini'
+        Deployments:

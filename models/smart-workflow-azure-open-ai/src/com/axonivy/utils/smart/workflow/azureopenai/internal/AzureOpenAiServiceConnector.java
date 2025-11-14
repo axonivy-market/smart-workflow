@@ -21,7 +21,7 @@ public class AzureOpenAiServiceConnector {
   private static final int DEFAULT_TEMPERATURE_GPT_5 = 1;
 
   public interface AzureOpenAiConf {
-    String PREFIX = "Ai.AzureOpenAI.";
+    String PREFIX = "AI.Providers.AzureOpenAI.";
     String ENDPOINT = PREFIX + "Endpoint";
     String API_KEY = PREFIX + "APIKey";
     String DEPLOYMENTS = PREFIX + "Deployments";
