@@ -50,10 +50,10 @@ See the enumeration called `AI.DefaultProvider`.
 
 ### Checklist
 
-- [] custom variables.yaml in your provider
-- [] list your provider in `AI.DefaultProvider` of [variables.yaml](../smart-workflow/config/variables.yaml)
-- [] list your model in the Model section of the product [README.md](../smart-workflow-product/REAMDE.md)
-- [] extend the product [build](../smart-workflow-product/pom.xml) to interpolate your variables into README.md
+- [ ] custom variables.yaml in your provider
+- [ ] list your provider in `AI.DefaultProvider` of [variables.yaml](../smart-workflow/config/variables.yaml)
+- [ ] list your model in the Model section of the product [README.md](../smart-workflow-product/REAMDE.md)
+- [ ] extend the product [build](../smart-workflow-product/pom.xml) to interpolate your variables into README.md
 
 ## Libraries
 
