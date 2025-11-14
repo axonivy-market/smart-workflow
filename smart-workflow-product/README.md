@@ -219,15 +219,11 @@ Each deployment in Azure OpenAI represents a model instance with its own API key
 @variables.azureopenai@
 ```
 
-**Configuration Notes:**
+**Example Configuration:**
 
-- `Endpoint`: Your Azure OpenAI resource endpoint (e.g., `https://my-resource.openai.azure.com/`)
-- `Deployments`: Define one or more model deployments. Each deployment requires:
-  - A unique deployment name (use kebab-case: lowercase, numbers, hyphens)
-  - `Model`: The model name (e.g., `gpt-4o`, `gpt-4`)
-  - `APIKey`: The API key for this deployment (use `#[password]` annotation for security)
-
-To enroll other AI model providers, please ask for it on Github or file use a Pull-Request.
+```yaml
+@variables.azureopenai.example@
+```
 
 #### Output
 

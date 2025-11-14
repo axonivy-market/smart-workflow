@@ -9,6 +9,7 @@
     <variables.yaml.file>../smart-workflow/config/variables.yaml</variables.yaml.file>
     <variables.openai.file>../models/smart-workflow-openai/config/variables.yaml</variables.openai.file>
     <variables.azureopenai.file>../models/smart-workflow-azure-openai/config/variables.yaml</variables.azureopenai.file>
+    <variables.azureopenai.example.file>../models/smart-workflow-azure-openai/config/variables.example.yaml</variables.azureopenai.example.file>
   </properties>
 
   <build>
@@ -55,7 +56,11 @@
                 <replace file="${project.build.directory}/README_DE.md" token="@variables.openai@" value="${variables.openai}" />
                 <loadfile property="variables.azureopenai" srcFile="${variables.azureopenai.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.azureopenai@" value="${variables.azureopenai}" />
-                <replace file="${project.build.directory}/README_DE.md" token="@variables.azureopenai@" value="${variables.azureopenai}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.azureopenai@
+                " value="${variables.azureopenai}" />
+                <loadfile property="variables.azureopenai.example" srcFile="${variables.azureopenai.example.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.azureopenai.example@" value="${variables.azureopenai.example}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.azureopenai.example@" value="${variables.azureopenai.example}" />
               </target>
             </configuration>
             <goals>

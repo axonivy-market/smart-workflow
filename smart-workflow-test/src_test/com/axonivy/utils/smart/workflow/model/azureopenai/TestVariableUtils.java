@@ -37,7 +37,7 @@ public class TestVariableUtils {
   }
 
   @Test
-  void testGetAllDeployments() {
+  void getAllDeployments() {
     List<AzureAiDeployment> deployments = VariableUtils.getDeployments();
 
     assertThat(deployments).isNotNull();
@@ -49,7 +49,7 @@ public class TestVariableUtils {
   }
 
   @Test
-  void testContainCorrectModelAndApiKey() {
+  void containCorrectModelAndApiKey() {
     List<AzureAiDeployment> deployments = VariableUtils.getDeployments();
 
     AzureAiDeployment deployment1 = deployments.stream().filter(d -> TEST_DEPLOYMENT_1.equals(d.getName())).findFirst()
@@ -62,21 +62,21 @@ public class TestVariableUtils {
   }
 
   @Test
-  void testNonExistentDeployment() {
+  void nonExistentDeployment() {
     AzureAiDeployment deployment = VariableUtils.getDeploymentByName("non-existent-deployment");
 
     assertThat(deployment).isNull();
   }
 
   @Test
-  void testReturnNullForBlankName() {
+  void returnNullForBlankName() {
     assertThat(VariableUtils.getDeploymentByName("")).isNull();
     assertThat(VariableUtils.getDeploymentByName("   ")).isNull();
     assertThat(VariableUtils.getDeploymentByName(null)).isNull();
   }
 
   @Test
-  void testShouldFilterOutEmptyNameDeployments(AppFixture fixture) {
+  void shouldFilterOutEmptyNameDeployments(AppFixture fixture) {
     // This test verifies that deployments with empty names are filtered out
     List<AzureAiDeployment> deployments = VariableUtils.getDeployments();
 
@@ -85,7 +85,7 @@ public class TestVariableUtils {
   }
 
   @Test
-  void testMatchExactName() {
+  void matchExactName() {
     // Test exact name matching
     AzureAiDeployment deployment1 = VariableUtils.getDeploymentByName(TEST_DEPLOYMENT_1);
     AzureAiDeployment deployment2 = VariableUtils.getDeploymentByName(TEST_DEPLOYMENT_2);
