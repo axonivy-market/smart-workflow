@@ -1,0 +1,9 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "AzureDemoData",
+  "namespace" : "AgentDemo",
+  "fields" : [ {
+    "name" : "supportTicket",
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
+  } ]
+}
