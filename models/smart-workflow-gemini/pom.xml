@@ -37,12 +37,17 @@
           <groupId>com.fasterxml.jackson.core</groupId>
           <artifactId>jackson-core</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.datatype</groupId>
+          <artifactId>jackson-datatype-jsr310</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>smart-workflow</artifactId>
       <version>${project.version}</version>
+      <type>iar</type>
     </dependency>
   </dependencies>
   <repositories>

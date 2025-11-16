@@ -1,15 +1,15 @@
 package com.axonivy.utils.smart.workflow.model.gemini;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import com.axonivy.utils.smart.workflow.gemini.GeminiServiceConnector;
 import com.axonivy.utils.smart.workflow.gemini.enums.GoogleAiGeminiChatModelName;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
-import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
+import dev.langchain4j.model.chat.request.ResponseFormat;
 
 public class GeminiModelProvider implements ChatModelProvider {
 
@@ -23,9 +23,8 @@ public class GeminiModelProvider implements ChatModelProvider {
   @Override
   public ChatModel setup(ModelOptions options) {
     var builder = GeminiServiceConnector.buildGeminiModel(options.modelName());
-    
     if (options.structuredOutput()) {
-      builder.supportedCapabilities(Set.of(Capability.RESPONSE_FORMAT_JSON_SCHEMA));
+      builder.defaultRequestParameters(ChatRequestParameters.builder().responseFormat(ResponseFormat.JSON).build());
     }
     return builder.build();
   }
