@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.azureopenai.utlis;
+package com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.azureopenai.AzureAiDeployment;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.vars.Variable;
