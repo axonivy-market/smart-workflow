@@ -318,7 +318,9 @@ different tasks.
 
 ###### Google Gemini Models
 
-Google Gemini models are supported. To use Google Gemini, import the `smart-workflow-gemini` project and configure your Gemini API key and default model.
+Google Gemini models are supported. To use Google Gemini, import the
+`smart-workflow-gemini` project and configure your Gemini API key and default
+model.
 
 ```yaml
 @variables.gemini@
@@ -330,7 +332,8 @@ Google Gemini models are supported. To use Google Gemini, import the `smart-work
 @variables.gemini.example@
 ```
 
-To enroll other AI model providers, please ask for it on Github or file use a Pull-Request.
+To enroll other AI model providers, please ask for it on Github or file use a
+Pull-Request.
 
 #### Output
 
