@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.azureopenai;
+package com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity;
 
 public class AzureAiDeployment {
   private String name;

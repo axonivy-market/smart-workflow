@@ -7,8 +7,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.azureopenai.AzureAiDeployment;
-import com.axonivy.utils.smart.workflow.azureopenai.utlis.VariableUtils;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
