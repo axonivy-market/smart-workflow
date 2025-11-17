@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import com.axonivy.utils.smart.workflow.azureopenai.internal.AzureOpenAiServiceConnector.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory.AiConf;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiServiceConnector.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.test.utils.TestUtils;
 

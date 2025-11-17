@@ -1,12 +1,12 @@
-package com.axonivy.utils.smart.workflow.azureopenai.internal;
+package com.axonivy.utils.smart.workflow.model.azureopenai.internal;
 
 import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.azureopenai.AzureAiDeployment;
-import com.axonivy.utils.smart.workflow.azureopenai.utlis.VariableUtils;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.azure.AzureOpenAiChatModel;
@@ -32,16 +32,12 @@ public class AzureOpenAiServiceConnector {
   private static AzureOpenAiChatModel.Builder initBuilder(String deploymentName) {
 
     String endpoint = Ivy.var().get(AzureOpenAiConf.ENDPOINT);
-    AzureOpenAiChatModel.Builder builder = AzureOpenAiChatModel.builder()
-        .endpoint(endpoint)
+    AzureOpenAiChatModel.Builder builder = AzureOpenAiChatModel.builder().endpoint(endpoint)
         .logRequestsAndResponses(true);
 
     // TODO as pure test variable
     if (StringUtils.isBlank(deploymentName)) {
-      return builder
-          .customHeaders(Map.of("X-Requested-By", "ivy"))
-          .deploymentName("test")
-          .apiKey("test");
+      return builder.customHeaders(Map.of("X-Requested-By", "ivy")).deploymentName("test").apiKey("test");
     }
 
     AzureAiDeployment deployment = VariableUtils.getDeploymentByName(deploymentName);
@@ -49,7 +45,6 @@ public class AzureOpenAiServiceConnector {
       return null;
     }
 
-    
     builder.deploymentName(deployment.getName()).apiKey(deployment.getApiKey());
 
     // Only set temperature if not using the "o" series

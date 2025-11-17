@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.axonivy.utils.smart.workflow.azureopenai.AzureAiDeployment;
-import com.axonivy.utils.smart.workflow.azureopenai.internal.AzureOpenAiServiceConnector;
-import com.axonivy.utils.smart.workflow.azureopenai.utlis.VariableUtils;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 import dev.langchain4j.model.chat.Capability;
