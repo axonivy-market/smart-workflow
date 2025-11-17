@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.model.openai;
+package com.axonivy.utils.smart.workflow.model.azureopenai;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import com.axonivy.utils.smart.workflow.azureopenai.internal.AzureOpenAiServiceConnector.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory.AiConf;
-import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.test.utils.TestUtils;
 
@@ -20,7 +20,7 @@ import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest
-class OpenAiModelIT {
+public class AzureOpenAiModelIT {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
 
@@ -29,20 +29,19 @@ class OpenAiModelIT {
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    fixture.var(AiConf.DEFAULT_PROVIDER, OpenAiModelProvider.NAME); // enforce OpenAI!
-    fixture.var(OpenAiConf.API_KEY, TestUtils.getSystemProperty("OPEN_AI_API_KEY"));
+    fixture.var(AiConf.DEFAULT_PROVIDER, AzureOpenAiModelProvider.NAME);
+    fixture.var(AzureOpenAiConf.ENDPOINT, TestUtils.getSystemProperty("AZURE_OPEN_AI_ENDPOINT"));
+    fixture.var(AzureOpenAiConf.DEPLOYMENTS + TestUtils.getSystemProperty("AZURE_OPEN_AI_DEPLOYMENT") + ".Model",
+        TestUtils.getSystemProperty("AZURE_OPEN_AI_MODEL"));
+    fixture.var(AzureOpenAiConf.DEPLOYMENTS + TestUtils.getSystemProperty("AZURE_OPEN_AI_DEPLOYMENT") + ".APIKey",
+        TestUtils.getSystemProperty("AZURE_OPEN_AI_API_KEY"));
   }
 
   @Test
   void structuredOutput_e2e(BpmClient client) {
     Ivy.session().loginSessionUser("James", "secret");
-    var res = client.start()
-        .process(AGENT_TOOLS.elementName("structuredOutput"))
-        .as().session(Ivy.session())
-        .execute();
+    var res = client.start().process(AGENT_TOOLS.elementName("structuredOutput")).as().session(Ivy.session()).execute();
     TestToolUserData data = res.data().last();
-    assertThat(data.getPerson().getFirstName())
-        .isEqualTo("James");
+    assertThat(data.getPerson().getFirstName()).isEqualTo("James");
   }
-
 }
