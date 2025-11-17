@@ -25,7 +25,7 @@
     "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
   }, {
     "name" : "connector",
-    "type" : "com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector",
+    "type" : "com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector",
     "modifiers" : [ ]
   }, {
     "name" : "instructions",

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector.OpenAiConf;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.fasterxml.jackson.databind.JsonNode;
 

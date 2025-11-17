@@ -2,8 +2,8 @@ package com.axonivy.utils.smart.workflow.demo.agent;
 
 import java.util.List;
 
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
 import com.axonivy.utils.smart.workflow.demo.dto.TaskInfo;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
 
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;

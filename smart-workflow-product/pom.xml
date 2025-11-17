@@ -2,11 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-product</artifactId>
-  <version>13.2.0-a6-SNAPSHOT</version>
+  <version>13.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
     <variables.yaml.file>../smart-workflow/config/variables.yaml</variables.yaml.file>
+    <variables.openai.file>../models/smart-workflow-openai/config/variables.yaml</variables.openai.file>
+    <variables.azureopenai.file>../models/smart-workflow-azure-openai/config/variables.yaml</variables.azureopenai.file>
+    <variables.azureopenai.example.file>../models/smart-workflow-azure-openai/config/variables.example.yaml</variables.azureopenai.example.file>
   </properties>
 
   <build>
@@ -48,6 +51,16 @@
                 <loadfile property="variables.yaml" srcFile="${variables.yaml.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.yaml@" value="${variables.yaml}" />
                 <replace file="${project.build.directory}/README_DE.md" token="@variables.yaml@" value="${variables.yaml}" />
+                <loadfile property="variables.openai" srcFile="${variables.openai.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.openai@" value="${variables.openai}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.openai@" value="${variables.openai}" />
+                <loadfile property="variables.azureopenai" srcFile="${variables.azureopenai.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.azureopenai@" value="${variables.azureopenai}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.azureopenai@
+                " value="${variables.azureopenai}" />
+                <loadfile property="variables.azureopenai.example" srcFile="${variables.azureopenai.example.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.azureopenai.example@" value="${variables.azureopenai.example}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.azureopenai.example@" value="${variables.azureopenai.example}" />
               </target>
             </configuration>
             <goals>

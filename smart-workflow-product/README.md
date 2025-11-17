@@ -183,9 +183,47 @@ By default, if no tools are specified, Smart Workflow assumes the agent can use 
 
 #### Model
 
-Not all AI agents are created equal. In Axon Ivy, we recognize that AI agents handle tasks of varying complexity. Some agents perform simple tasks, such as creating leave requests or gathering user information, while others must search databases for products and evaluate dependencies like suppliers and brands. Therefore, Smart Workflow allows developers to select the underlying AI model based on the use case.
+Not all AI agents are created equal. 
+In Axon Ivy, we recognize that AI agents handle tasks of varying complexity. 
+Some agents perform simple tasks, such as creating leave requests or gathering user information, 
+while others must search databases for products and evaluate dependencies like suppliers and brands. 
+Therefore, Smart Workflow allows developers to select the underlying AI model based on the use case.
 
-To do this, simply enter the desired AI model in the `Model` section. By default, if no model is specified, Smart Workflow uses the model defined in the variable `AI.OpenAI.Model`.
+To do this, simply enter the desired AI model in the `Model` section. 
+By default, if no model is specified, Smart Workflow uses the model defined in the variable `AI.OpenAI.Model`.
+
+##### Providers
+
+Smart-Workflow is open to run with any AI model. 
+The selection of your provider is done with the variable `AI.DefaultProvider`. 
+
+```yaml
+@variables.yaml@
+```
+
+###### OpenAI Models
+
+OpenAI models are natively supported. If you wish to use them import the `smart-workflow-openai` project and define your OpenAI key.
+
+```yaml
+@variables.openai@
+```
+
+###### Azure OpenAI Models
+
+Azure OpenAI models are supported. To use Azure OpenAI, import the `smart-workflow-azure-openai` project and configure your Azure OpenAI endpoint and deployments.
+
+Each deployment in Azure OpenAI represents a model instance with its own API key. You can configure multiple deployments to use different models for different tasks.
+
+```yaml
+@variables.azureopenai@
+```
+
+**Example Configuration:**
+
+```yaml
+@variables.azureopenai.example@
+```
 
 #### Output
 

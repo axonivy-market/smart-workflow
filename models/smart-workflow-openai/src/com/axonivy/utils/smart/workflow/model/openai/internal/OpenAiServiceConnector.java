@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.connector;
+package com.axonivy.utils.smart.workflow.model.openai.internal;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -18,14 +18,14 @@ public class OpenAiServiceConnector {
 
   private static final int DEFAULT_TEMPERATURE = 0;
 
-  //Temporary model name and temperature for GPT-5. Will remove once LangChain4j fully support GPT-5
+  // Temporary model name and temperature for GPT-5. Will remove once LangChain4j fully support GPT-5
   private static final String GPT_5 = "gpt-5";
   private static final int DEFAULT_TEMPERATURE_GPT_5 = 1;
 
   private static final String DEFAULT_MODEL = OpenAiChatModelName.GPT_4_1_MINI.toString();
 
   public interface OpenAiConf {
-    String PREFIX = "Ai.OpenAI.";
+    String PREFIX = "Ai.Providers.OpenAI.";
     String BASE_URL = PREFIX + "BaseUrl";
     String API_KEY = PREFIX + "APIKey";
     String MODEL = PREFIX + "Model";
@@ -50,11 +50,22 @@ public class OpenAiServiceConnector {
   }
 
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
+    OpenAiChatModelBuilder builder = initBuilder();
+    builder.modelName(modelName);
+    // Only set temperature if not using the "o" series
+    if (!modelName.startsWith("o")) {
+      Double temperature = Double.valueOf(GPT_5.equalsIgnoreCase(modelName) ? DEFAULT_TEMPERATURE_GPT_5 : DEFAULT_TEMPERATURE);
+      builder.temperature(temperature);
+    }
+
+    return builder;
+  }
+
+  private static OpenAiChatModelBuilder initBuilder() {
     OpenAiChatModelBuilder builder = OpenAiChatModel.builder()
         .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
         .logRequests(true)
-        .logResponses(true)
-        .modelName(modelName);
+        .logResponses(true);
     var baseUrl = Ivy.var().get(OpenAiConf.BASE_URL);
     if (!baseUrl.isBlank()) {
       builder.baseUrl(baseUrl);
@@ -65,14 +76,6 @@ public class OpenAiServiceConnector {
     } else {
       builder.customHeaders(Map.of("X-Requested-By", "ivy")); // TODO as pure test variable
     }
-
-    // Only set temperature if not using the "o" series
-    if (!modelName.startsWith("o")) {
-      Double temperature = Double.valueOf(GPT_5.equalsIgnoreCase(modelName) ?
-          DEFAULT_TEMPERATURE_GPT_5 : DEFAULT_TEMPERATURE);
-      builder.temperature(temperature);
-    }
-
     return builder;
   }
 

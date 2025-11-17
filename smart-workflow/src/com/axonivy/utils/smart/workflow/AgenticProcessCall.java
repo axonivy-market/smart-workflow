@@ -1,5 +1,8 @@
 package com.axonivy.utils.smart.workflow;
 
+import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
+
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -7,7 +10,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.connector.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.scripting.internal.MacroExpander;
@@ -21,13 +24,14 @@ import ch.ivyteam.ivy.process.engine.IRequestId;
 import ch.ivyteam.ivy.process.extension.impl.AbstractUserProcessExtension;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
 import ch.ivyteam.ivy.process.extension.ui.UiEditorExtension;
+import ch.ivyteam.ivy.process.model.diagram.icon.IconDecorator;
 import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
 import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import dev.langchain4j.service.AiServices;
 
-public class AgenticProcessCall extends AbstractUserProcessExtension {
+public class AgenticProcessCall extends AbstractUserProcessExtension implements IconDecorator {
 
   interface Variable {
     String RESULT = "result";
@@ -57,17 +61,17 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
     }
 
     String modelName = execute(context, Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
-    var modelBuilder = OpenAiServiceConnector.buildOpenAiModel(modelName);
-
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
     var structured = execute(context, Conf.OUTPUT, Class.class);
     if (structured.isPresent()) {
       agentType = StructuredOutputAgent.agent(structured.get());
-      modelBuilder.responseFormat("json_schema");
     }
+    var modelOptions = options()
+        .modelName(modelName)
+        .structuredOutput(structured.isPresent());
+    var model = ChatModelFactory.createModel(modelOptions);
 
-    var model = modelBuilder.build();
     var agentBuilder = AiServices.builder(agentType)
         .chatModel(model)
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
@@ -166,5 +170,10 @@ public class AgenticProcessCall extends AbstractUserProcessExtension {
         return "";
       }
     }
+  }
+
+  @Override
+  public URI icon() {
+    return URI.create("res:/webContent/logo/agent.png");
   }
 }
