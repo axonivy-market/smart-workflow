@@ -18,6 +18,7 @@
     "type" : "List<String>"
   }, {
     "name" : "categories",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>"
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>",
+    "modifiers" : [ ]
   } ]
 }

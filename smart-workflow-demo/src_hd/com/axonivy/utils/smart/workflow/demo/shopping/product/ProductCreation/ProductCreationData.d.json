@@ -15,10 +15,12 @@
     "type" : "org.primefaces.event.FileUploadEvent"
   }, {
     "name" : "similiarSuppliers",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier>"
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier>",
+    "modifiers" : [ ]
   }, {
     "name" : "similiarProductCategories",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>"
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>",
+    "modifiers" : [ ]
   }, {
     "name" : "isSupplierCreated",
     "type" : "Boolean"
