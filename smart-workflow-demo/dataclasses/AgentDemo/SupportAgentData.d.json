@@ -10,13 +10,6 @@
     "name" : "query",
     "modifiers" : [ ]
   }, {
-    "name" : "options",
-    "type" : "List<com.axonivy.utils.smart.workflow.decision.Option>",
-    "modifiers" : [ ]
-  }, {
-    "name" : "categorizedResult",
-    "modifiers" : [ ]
-  }, {
     "name" : "targetObject",
     "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
     "modifiers" : [ ]

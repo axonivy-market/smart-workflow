@@ -3,8 +3,8 @@ package com.axonivy.utils.smart.workflow.model.gemini;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.axonivy.utils.smart.workflow.gemini.GeminiServiceConnector;
-import com.axonivy.utils.smart.workflow.gemini.enums.GoogleAiGeminiChatModelName;
+import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 import dev.langchain4j.model.chat.ChatModel;

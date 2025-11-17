@@ -1,11 +1,11 @@
-package com.axonivy.utils.smart.workflow.gemini;
+package com.axonivy.utils.smart.workflow.model.gemini.internal;
 
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
-import com.axonivy.utils.smart.workflow.gemini.enums.GoogleAiGeminiChatModelName;
+import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
 import com.google.common.base.Objects;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -38,8 +38,7 @@ public class GeminiServiceConnector {
   }
 
   public static GoogleAiGeminiChatModelBuilder buildJsonGeminiModel(String modelName) {
-    return initBuilder(validateModelName(modelName))
-        .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
+    return initBuilder(validateModelName(modelName)).supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 
   private static GoogleAiGeminiChatModelBuilder initBuilder(String modelName) {
@@ -51,14 +50,13 @@ public class GeminiServiceConnector {
 
   private static GoogleAiGeminiChatModelBuilder initBuilder() {
     GoogleAiGeminiChatModelBuilder builder = GoogleAiGeminiChatModel.builder()
-        .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
-        .logRequestsAndResponses(true);
-    
+        .httpClientBuilder(new SmartHttpClientBuilderFactory().create()).logRequestsAndResponses(true);
+
     var baseUrl = Ivy.var().get(GeminiConf.BASE_URL);
     if (!baseUrl.isBlank()) {
       builder.baseUrl(baseUrl);
     }
-    
+
     String key = Ivy.var().get(GeminiConf.API_KEY);
     if (!key.isBlank()) {
       builder.apiKey(key);
@@ -69,16 +67,12 @@ public class GeminiServiceConnector {
   }
 
   private static String validateModelName(String modelName) {
-    String selected = Optional.ofNullable(modelName)
-        .filter(Predicate.not(String::isBlank))
-        .or(() -> Optional.of(Ivy.var().get(GeminiConf.MODEL)))
-        .filter(Predicate.not(String::isBlank))
+    String selected = Optional.ofNullable(modelName).filter(Predicate.not(String::isBlank))
+        .or(() -> Optional.of(Ivy.var().get(GeminiConf.MODEL))).filter(Predicate.not(String::isBlank))
         .orElse(DEFAULT_MODEL);
 
-    var known = Arrays.stream(GoogleAiGeminiChatModelName.values())
-        .map(GoogleAiGeminiChatModelName::toString)
-        .filter(name -> Objects.equal(name, selected))
-        .findAny();
+    var known = Arrays.stream(GoogleAiGeminiChatModelName.values()).map(GoogleAiGeminiChatModelName::toString)
+        .filter(name -> Objects.equal(name, selected)).findAny();
     if (known.isEmpty()) {
       Ivy.log().warn("The compatibility of model '" + selected + "' is unknown.");
     }

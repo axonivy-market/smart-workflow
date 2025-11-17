@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.gemini.enums;
+package com.axonivy.utils.smart.workflow.model.gemini.internal.enums;
 
 public enum GoogleAiGeminiChatModelName {
   // Gemini 2.5 Models

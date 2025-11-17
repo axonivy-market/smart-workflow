@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.gemini.GeminiServiceConnector.GeminiConf;
-import com.axonivy.utils.smart.workflow.gemini.enums.GoogleAiGeminiChatModelName;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector.GeminiConf;
+import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 

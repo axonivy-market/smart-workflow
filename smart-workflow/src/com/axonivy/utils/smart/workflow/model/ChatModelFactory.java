@@ -16,8 +16,12 @@ import dev.langchain4j.model.chat.ChatModel;
 
 public class ChatModelFactory {
 
+  public interface AiConf {
+    String DEFAULT_PROVIDER = "AI.DefaultProvider";
+  }
+
   public static ChatModel createModel(ModelOptions modelOptions) {
-    String vendor = Optional.ofNullable(Ivy.var().get("AI.DefaultProvider"))
+    String vendor = Optional.ofNullable(Ivy.var().get(AiConf.DEFAULT_PROVIDER))
         .filter(Predicate.not(String::isEmpty))
         .orElse("OpenAI");
     var provider = ChatModelFactory.create(vendor)

@@ -18,6 +18,20 @@
             "version": "${version}",
             "type": "iar",
             "importInWorkspace": true
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-azure-openai",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": false
+          },
+                    {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-gemini",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": false
           }
         ],
         "repositories": [
