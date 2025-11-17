@@ -30,7 +30,7 @@
     </dependency>
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
-      <artifactId>smart-workflow-openai</artifactId>
+      <artifactId>smart-workflow-azure-openai</artifactId>
       <version>${project.version}</version>
       <type>iar</type>
     </dependency>
