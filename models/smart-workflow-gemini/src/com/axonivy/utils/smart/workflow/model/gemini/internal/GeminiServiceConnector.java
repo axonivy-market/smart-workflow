@@ -16,7 +16,7 @@ import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel.GoogleAiGeminiChat
 public class GeminiServiceConnector {
 
   private static final int DEFAULT_TEMPERATURE = 0;
-  private static final String DEFAULT_MODEL = GoogleAiGeminiChatModelName.GEMINI_1_5_FLASH.toString();
+  private static final String DEFAULT_MODEL = GoogleAiGeminiChatModelName.GEMINI_2_5_FLASH.toString();
 
   public interface GeminiConf {
     String PREFIX = "AI.Providers.Gemini.";
