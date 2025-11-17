@@ -6,7 +6,8 @@
     "name" : "searchTerm"
   }, {
     "name" : "filteredProducts",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.product.Product>"
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.product.Product>",
+    "modifiers" : [ ]
   }, {
     "name" : "searched",
     "type" : "Boolean"
@@ -15,7 +16,8 @@
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductSearchCriteria"
   }, {
     "name" : "cartItems",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem>"
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem>",
+    "modifiers" : [ ]
   }, {
     "name" : "productToCart",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product"
@@ -26,7 +28,8 @@
     "name" : "translatedSearchTerm"
   }, {
     "name" : "categories",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>"
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>",
+    "modifiers" : [ ]
   }, {
     "name" : "searchResponse",
     "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.SearchResponse"

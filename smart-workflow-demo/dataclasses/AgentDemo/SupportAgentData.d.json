@@ -10,9 +10,6 @@
     "name" : "query",
     "modifiers" : [ ]
   }, {
-    "name" : "categorizedResult",
-    "modifiers" : [ ]
-  }, {
     "name" : "targetObject",
     "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
     "modifiers" : [ ]
