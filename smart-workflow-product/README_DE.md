@@ -315,6 +315,22 @@ Each deployment in Azure OpenAI represents a model instance with its own API key
 @variables.azureopenai.example@
 ```
 
+###### Google Gemini Models
+
+Google Gemini models are supported. To use Google Gemini, import the `smart-workflow-gemini` project and configure your Gemini API key and default model.
+
+```yaml
+@variables.gemini@
+```
+
+**Example Configuration:**
+
+```yaml
+@variables.gemini.example@
+```
+
+To enroll other AI model providers, please ask for it on Github or file use a Pull-Request.
+
 #### Output
 
 For enterprise-level AI applications, it is common to require the AI agent’s
