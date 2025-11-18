@@ -13,7 +13,6 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
-import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 @IvyTest
 public class TestGeminiLoader {
@@ -60,7 +59,7 @@ public class TestGeminiLoader {
     assertThat(normal.supportedCapabilities()).isEmpty();
 
     ChatModel structured = provider.setup(new ModelOptions(MODEL, true));
-    assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
+    assertThat(structured.supportedCapabilities().isEmpty());
   }
 
   private static ChatModelProvider loadModel() {
