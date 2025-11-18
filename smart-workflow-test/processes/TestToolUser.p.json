@@ -247,5 +247,55 @@
       "connect" : [
         { "id" : "f31", "to" : "f25" }
       ]
+    }, {
+      "id" : "f32",
+      "type" : "RequestStart",
+      "name" : "structuredOutputAzure",
+      "config" : {
+        "signature" : "structuredOutputAzure",
+        "input" : {
+          "params" : [
+            { "name" : "deployment", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.deployment" : "param.deployment"
+          }
+        },
+        "request" : {
+          "isVisibleOnStartList" : false
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 392 }
+      },
+      "connect" : [
+        { "id" : "f33", "to" : "f34" }
+      ]
+    }, {
+      "id" : "f34",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "model" : "in.deployment",
+          "tools" : "[\"whoami\"]",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.Person.class",
+          "resultMapping" : "in.person",
+          "query" : "Tell me who I am"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 648, "y" : 392 }
+      },
+      "connect" : [
+        { "id" : "f35", "to" : "f36" }
+      ]
+    }, {
+      "id" : "f36",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 768, "y" : 392 }
+      }
     } ]
 }

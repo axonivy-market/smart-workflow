@@ -13,5 +13,7 @@
   }, {
     "name" : "story",
     "type" : "com.axonivy.utils.smart.workflow.test.Story"
+  }, {
+    "name" : "deployment"
   } ]
 }
