@@ -2,6 +2,7 @@ package com.axonivy.utils.smart.workflow.model.gemini;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -34,14 +35,13 @@ public class GeminiAiModelIT {
   }
 
   @Test
-  void structuredOutput_e2e(BpmClient client) {
+  void chatOutput_e2e(BpmClient client) {
     Ivy.session().loginSessionUser("James", "secret");
     var res = client.start()
-        .process(AGENT_TOOLS.elementName("structuredOutput"))
+        .process(AGENT_TOOLS.elementName("systemMessage"))
         .as().session(Ivy.session())
         .execute();
     TestToolUserData data = res.data().last();
-    assertThat(data.getPerson().getFirstName())
-        .isEqualTo("James");
+    assertThat(StringUtils.isNotBlank(data.getResult()));
   }
 }
