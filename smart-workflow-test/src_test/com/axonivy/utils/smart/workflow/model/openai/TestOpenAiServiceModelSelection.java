@@ -51,7 +51,7 @@ class TestOpenAiServiceModelSelection {
 
   @Test
   void customModel(BpmClient client, AppFixture fixture) {
-    fixture.var(OpenAiConf.MODEL, OpenAiChatModelName.O3.toString());
+    fixture.var(OpenAiConf.DEFAULT_MODEL, OpenAiChatModelName.O3.toString());
 
     var res = client.start().process(AGENT_TOOLS.elementName("modelName")).execute();
     TestToolUserData data = res.data().last();

@@ -5,6 +5,8 @@ Variables:
       AzureOpenAI:
         # The endpoint of your Azure OpenAI resource, e.g., "https://my-openai-resource.openai.azure.com/"
         Endpoint: https://axonivyai.openai.azure.com/
+        # The deployment name to use by default.
+        DefaultDeployment: ""
         # Model deployments configured in your Azure OpenAI resource.
         # Each deployment is a variable consist of 'Model' and 'APIKey' fields.
         # Because each deployment is a YAML variable, they should follow these naming rules:

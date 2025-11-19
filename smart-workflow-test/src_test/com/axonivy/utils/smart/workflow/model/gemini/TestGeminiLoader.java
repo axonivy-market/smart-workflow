@@ -24,7 +24,7 @@ public class TestGeminiLoader {
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    fixture.var(GeminiConf.MODEL, MODEL);
+    fixture.var(GeminiConf.DEFAULT_MODEL, MODEL);
     fixture.var(GeminiConf.API_KEY, API_KEY);
     provider = loadModel();
   }

@@ -16,14 +16,14 @@ public class TestOpenAiModelConfig {
   @Test
   void defaultsModel_fromIvyVariable(AppFixture fixture) {
     String legacy35 = "gpt-3.5-turbo";
-    fixture.var(OpenAiConf.MODEL, legacy35);
+    fixture.var(OpenAiConf.DEFAULT_MODEL, legacy35);
     var builder = OpenAiServiceConnector.buildOpenAiModel(legacy35);
     assertThat(builder).hasFieldOrPropertyWithValue("modelName", legacy35);
   }
 
   @Test
   void defaultsModel(AppFixture fixture) {
-    fixture.var(OpenAiConf.MODEL, "");
+    fixture.var(OpenAiConf.DEFAULT_MODEL, "");
     var builder = OpenAiServiceConnector.buildOpenAiModel();
     assertThat(builder).hasFieldOrPropertyWithValue("modelName", "gpt-4.1-mini");
   }
