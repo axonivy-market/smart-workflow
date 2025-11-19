@@ -2,11 +2,10 @@ package com.axonivy.utils.smart.workflow.model.openai.internal;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
-import com.google.common.base.Objects;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
@@ -28,7 +27,7 @@ public class OpenAiServiceConnector {
     String PREFIX = "Ai.Providers.OpenAI.";
     String BASE_URL = PREFIX + "BaseUrl";
     String API_KEY = PREFIX + "APIKey";
-    String MODEL = PREFIX + "Model";
+    String DEFAULT_MODEL = PREFIX + "DefaultModel";
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
@@ -40,11 +39,11 @@ public class OpenAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel(String modelName) {
-    return initBuilder(validateModelName(modelName));
+    return initBuilder(resolveModelName(modelName));
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel(String modelName) {
-    return initBuilder(validateModelName(modelName))
+    return initBuilder(resolveModelName(modelName))
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
@@ -79,21 +78,20 @@ public class OpenAiServiceConnector {
     return builder;
   }
 
-  private static String validateModelName(String modelName) {
-    String selected = Optional.ofNullable(modelName)
-        .filter(Predicate.not(String::isBlank))
-        .or(() -> Optional.of(Ivy.var().get(OpenAiConf.MODEL)))
-        .filter(Predicate.not(String::isBlank))
-        .orElse(DEFAULT_MODEL);
+  private static String resolveModelName(String modelName) {
+    String selected = StringUtils.defaultIfBlank(modelName,
+        StringUtils.defaultIfBlank(Ivy.var().get(OpenAiConf.DEFAULT_MODEL), DEFAULT_MODEL));
 
-    var known = Arrays.stream(OpenAiChatModelName.values())
-        .map(OpenAiChatModelName::toString)
-        .filter(name -> Objects.equal(name, selected))
-        .findAny();
-    if (known.isEmpty()) {
-      Ivy.log().warn("The compatibility of model '" + selected + "' is unknown.");
-    }
-
+    validateModel(selected);
     return selected;
+  }
+
+  private static void validateModel(String modelName) {
+    boolean isKnown = Arrays.stream(OpenAiChatModelName.values()).map(Enum::toString)
+        .anyMatch(name -> name.equals(modelName));
+
+    if (!isKnown) {
+      Ivy.log().warn("The compatibility of model '" + modelName + "' is unknown.");
+    }
   }
 }

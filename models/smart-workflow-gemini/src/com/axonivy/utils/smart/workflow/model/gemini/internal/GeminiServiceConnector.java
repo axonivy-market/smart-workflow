@@ -1,15 +1,13 @@
 package com.axonivy.utils.smart.workflow.model.gemini.internal;
 
 import java.util.Arrays;
-import java.util.Optional;
-import java.util.function.Predicate;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
-import com.google.common.base.Objects;
 
 import ch.ivyteam.ivy.environment.Ivy;
-import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel.GoogleAiGeminiChatModelBuilder;
 
@@ -22,23 +20,11 @@ public class GeminiServiceConnector {
     String PREFIX = "AI.Providers.Gemini.";
     String BASE_URL = PREFIX + "BaseUrl";
     String API_KEY = PREFIX + "APIKey";
-    String MODEL = PREFIX + "Model";
-  }
-
-  public static GoogleAiGeminiChatModelBuilder buildGeminiModel() {
-    return buildGeminiModel(DEFAULT_MODEL);
-  }
-
-  public static GoogleAiGeminiChatModelBuilder buildJsonGeminiModel() {
-    return buildJsonGeminiModel(DEFAULT_MODEL);
+    String DEFAULT_MODEL = PREFIX + "DefaultModel";
   }
 
   public static GoogleAiGeminiChatModelBuilder buildGeminiModel(String modelName) {
-    return initBuilder(validateModelName(modelName));
-  }
-
-  public static GoogleAiGeminiChatModelBuilder buildJsonGeminiModel(String modelName) {
-    return initBuilder(validateModelName(modelName)).supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
+    return initBuilder(resolveModelName(modelName));
   }
 
   private static GoogleAiGeminiChatModelBuilder initBuilder(String modelName) {
@@ -66,17 +52,21 @@ public class GeminiServiceConnector {
     return builder;
   }
 
-  private static String validateModelName(String modelName) {
-    String selected = Optional.ofNullable(modelName).filter(Predicate.not(String::isBlank))
-        .or(() -> Optional.of(Ivy.var().get(GeminiConf.MODEL))).filter(Predicate.not(String::isBlank))
-        .orElse(DEFAULT_MODEL);
+  private static String resolveModelName(String modelName) {
+    String selected = StringUtils.defaultIfBlank(modelName,
+        StringUtils.defaultIfBlank(Ivy.var().get(GeminiConf.DEFAULT_MODEL), DEFAULT_MODEL));
 
-    var known = Arrays.stream(GoogleAiGeminiChatModelName.values()).map(GoogleAiGeminiChatModelName::toString)
-        .filter(name -> Objects.equal(name, selected)).findAny();
-    if (known.isEmpty()) {
-      Ivy.log().warn("The compatibility of model '" + selected + "' is unknown.");
-    }
-
+    validateModel(selected);
     return selected;
   }
+
+  private static void validateModel(String modelName) {
+    boolean isKnown = Arrays.stream(GoogleAiGeminiChatModelName.values()).map(Enum::toString)
+        .anyMatch(name -> name.equals(modelName));
+
+    if (!isKnown) {
+      Ivy.log().warn("Unknown Gemini model: '" + modelName + "'. Compatibility not guaranteed.");
+    }
+  }
+
 }
