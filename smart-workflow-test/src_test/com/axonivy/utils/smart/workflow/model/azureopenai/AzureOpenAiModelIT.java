@@ -24,15 +24,14 @@ public class AzureOpenAiModelIT {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
 
-  private String deployment;
-
   @RegisterExtension
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    deployment = TestUtils.getSystemProperty("AZURE_OPEN_AI_DEPLOYMENT");
+    String deployment = TestUtils.getSystemProperty("AZURE_OPEN_AI_DEPLOYMENT");
     fixture.var(AiConf.DEFAULT_PROVIDER, AzureOpenAiModelProvider.NAME);
+    fixture.var(AzureOpenAiConf.DEFAULT_DEPLOYMENT, deployment);
     fixture.var(AzureOpenAiConf.ENDPOINT, TestUtils.getSystemProperty("AZURE_OPEN_AI_ENDPOINT"));
     fixture.var(AzureOpenAiConf.DEPLOYMENTS + "." + deployment + ".Model",
         TestUtils.getSystemProperty("AZURE_OPEN_AI_MODEL"));
@@ -44,7 +43,6 @@ public class AzureOpenAiModelIT {
   void structuredOutput_e2e(BpmClient client) {
     Ivy.session().loginSessionUser("James", "secret");
     var res = client.start().process(AGENT_TOOLS.elementName("structuredOutputAzure")).as().session(Ivy.session())
-        .withParam("deployment", deployment)
         .execute();
     TestToolUserData data = res.data().last();
     assertThat(data.getPerson().getFirstName()).isEqualTo("James");

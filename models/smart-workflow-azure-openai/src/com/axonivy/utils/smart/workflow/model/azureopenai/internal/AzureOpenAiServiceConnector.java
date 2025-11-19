@@ -23,14 +23,14 @@ public class AzureOpenAiServiceConnector {
     String PREFIX = "AI.Providers.AzureOpenAI.";
     String ENDPOINT = PREFIX + "Endpoint";
     String DEPLOYMENTS = PREFIX + "Deployments";
+    String DEFAULT_DEPLOYMENT = PREFIX + "DefaultDeployment";
   }
 
   public static AzureOpenAiChatModel.Builder buildOpenAiModel(String deploymentName) {
-    return initBuilder(deploymentName);
+    return initBuilder(StringUtils.defaultIfBlank(deploymentName, Ivy.var().get(AzureOpenAiConf.DEFAULT_DEPLOYMENT)));
   }
 
   private static AzureOpenAiChatModel.Builder initBuilder(String deploymentName) {
-
     String endpoint = Ivy.var().get(AzureOpenAiConf.ENDPOINT);
     AzureOpenAiChatModel.Builder builder = AzureOpenAiChatModel.builder().endpoint(endpoint)
         .logRequestsAndResponses(true);
