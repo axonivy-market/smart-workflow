@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.tools.subprocess;
 
-import static ch.ivyteam.ivy.process.model.value.scripting.VariableDesc.var;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -14,10 +13,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.IvyTest;
-import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
-import ch.ivyteam.ivy.process.model.value.scripting.VariableInfo;
+import ch.ivyteam.ivy.process.call.StartParameter;
+import ch.ivyteam.ivy.process.call.impl.DefaultStartParameter;
 
 @IvyTest
 @SuppressWarnings("restriction")
@@ -25,9 +23,9 @@ class TestJsonProcessParameters {
 
   @Test
   void complexParams() {
-    List<VariableDesc> userVars = List.of(
-        var("id", "Integer").setInfo(new VariableInfo("the user id")),
-        var("person", Person.class.getName()));
+    List<StartParameter> userVars = List.of(
+        new DefaultStartParameter("id", Integer.class.getName(), "the user id"),
+        new DefaultStartParameter("person", Person.class.getName(), null));
 
     var jPayload = JsonNodeFactory.instance.objectNode();
     jPayload.put("id", 123);
@@ -45,8 +43,8 @@ class TestJsonProcessParameters {
         .isEqualTo("Ford");
   }
 
-  private static Map<String, Object> paramsOf(List<VariableDesc> userVars, JsonNode payload) {
-    return new JsonProcessParameters(IProcessModelVersion.current()).toParams(userVars, payload);
+  private static Map<String, Object> paramsOf(List<StartParameter> userVars, JsonNode payload) {
+    return new JsonProcessParameters().toParams(userVars, payload);
   }
 
 }
