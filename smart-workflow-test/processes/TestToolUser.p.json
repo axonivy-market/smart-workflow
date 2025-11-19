@@ -253,14 +253,6 @@
       "name" : "structuredOutputAzure",
       "config" : {
         "signature" : "structuredOutputAzure",
-        "input" : {
-          "params" : [
-            { "name" : "deployment", "type" : "String", "desc" : "" }
-          ],
-          "map" : {
-            "out.deployment" : "param.deployment"
-          }
-        },
         "request" : {
           "isVisibleOnStartList" : false
         }
@@ -278,7 +270,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "model" : "in.deployment",
+          "model" : "",
           "tools" : "[\"whoami\"]",
           "resultType" : "com.axonivy.utils.smart.workflow.test.Person.class",
           "resultMapping" : "in.person",
