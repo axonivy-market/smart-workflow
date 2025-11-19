@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
+import ch.ivyteam.ivy.process.call.StartMethod.Parameter;
 import ch.ivyteam.ivy.scripting.dataclass.IProjectDataClassManager;
 import ch.ivyteam.ivy.scripting.system.IIvyScriptClassRepository;
 import ch.ivyteam.ivy.scripting.types.QualifiedTypeLoader;
@@ -30,16 +30,16 @@ public class JsonToolParamBuilder {
     this.repo = IProjectDataClassManager.of(pmv.project()).getIvyScriptClassRepository();
   }
 
-  public JsonObjectSchema toParams(List<VariableDesc> variables) {
+  public JsonObjectSchema toParams(List<Parameter> variables) {
     variables.stream().forEach(this::toJsonParam);
     return builder.build();
   }
 
-  public void toJsonParam(VariableDesc variable) {
+  public void toJsonParam(Parameter variable) {
     try {
-      var type = new QualifiedTypeLoader(repo).load(new QType(variable.getType().getName()));
-      var schema = JsonSchemaElementUtils.jsonSchemaElementFrom(toRawType(type), type, variable.getInfo().getDescription(), false, visited);
-      builder.addProperty(variable.getName(), schema);
+      var type = new QualifiedTypeLoader(repo).load(new QType(variable.type()));
+      var schema = JsonSchemaElementUtils.jsonSchemaElementFrom(toRawType(type), type, variable.description(), false, visited);
+      builder.addProperty(variable.name(), schema);
       return;
     } catch (ClassNotFoundException | IllegalStateException ex) {
       LOGGER.error("Failed to define json parameter for tool parameter " + variable);

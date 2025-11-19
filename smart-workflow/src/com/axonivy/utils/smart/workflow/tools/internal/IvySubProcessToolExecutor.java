@@ -4,11 +4,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import ch.ivyteam.ivy.process.call.SubProcessCall;
 import ch.ivyteam.ivy.process.call.SubProcessCallResult;
 import ch.ivyteam.ivy.process.call.SubProcessCallStart;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartParamCaller;
-import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.internal.Json;
@@ -19,8 +17,9 @@ public class IvySubProcessToolExecutor {
   public static ToolExecutionResultMessage execute(ToolExecutionRequest execTool) {
     String name = execTool.name();
 
-    Optional<CallSubStart> startable = new IvyToolsProcesses(IProcessModelVersion.current()).toolStarts().stream()
-        .filter(start -> start.getSignature().getName().equals(name))
+    Optional<SubProcessCallStart> startable = IvyToolsProcesses
+        .toolStarts().stream()
+        .filter(start -> start.description().name().equals(name))
         .findFirst();
 
     if (startable.isEmpty()) {
@@ -28,16 +27,10 @@ public class IvySubProcessToolExecutor {
       return ToolExecutionResultMessage.from(execTool, "failed to execut tool; unknown ivy-process function");
     }
 
-    var signature = startable.get().getSignature();
-
-    var callable = SubProcessCall
-        .withPid(startable.get().getRootProcess().getPid().getProcessGuid())
-        .withStartSignature(signature.toSimpleNameSignature());
-
     var parameters = new JsonProcessParameters(IProcessModelVersion.current())
-        .readParams(signature.getInputParameters(), execTool.arguments());
+        .readParams(startable.get().description().in(), execTool.arguments());
 
-    SubProcessCallResult res = call(callable, parameters);
+    SubProcessCallResult res = call(startable.get(), parameters);
 
     return ToolExecutionResultMessage.from(execTool, Json.toJson(res.asMap()));
   }
