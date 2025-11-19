@@ -3,7 +3,6 @@ package com.axonivy.utils.smart.workflow.tools.internal;
 import java.util.Map;
 import java.util.Optional;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.process.call.SubProcessCallResult;
 import ch.ivyteam.ivy.process.call.SubProcessCallStart;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartParamCaller;
@@ -27,7 +26,7 @@ public class IvySubProcessToolExecutor {
       return ToolExecutionResultMessage.from(execTool, "failed to execut tool; unknown ivy-process function");
     }
 
-    var parameters = new JsonProcessParameters(IProcessModelVersion.current())
+    var parameters = new JsonProcessParameters()
         .readParams(startable.get().description().in(), execTool.arguments());
 
     SubProcessCallResult res = call(startable.get(), parameters);

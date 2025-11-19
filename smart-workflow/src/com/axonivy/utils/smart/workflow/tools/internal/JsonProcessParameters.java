@@ -10,23 +10,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.process.call.StartMethod.Parameter;
-import ch.ivyteam.ivy.scripting.dataclass.IProjectDataClassManager;
-import ch.ivyteam.ivy.scripting.types.QualifiedTypeLoader;
-import ch.ivyteam.ivy.scripting.types.QualifiedTypeLoader.QType;
 
 @SuppressWarnings("restriction")
 public class JsonProcessParameters {
 
   private static final Logger LOGGER = Logger.getLogger(JsonProcessParameters.class);
   private static final ObjectMapper MAPPER = new ObjectMapper();
-  private final QualifiedTypeLoader loader;
 
-  public JsonProcessParameters(IProcessModelVersion pmv) {
-    var repo = IProjectDataClassManager.of(pmv.project()).getIvyScriptClassRepository();
-    this.loader = new QualifiedTypeLoader(repo);
-  }
+  public JsonProcessParameters() {}
 
   public Map<String, Object> readParams(List<Parameter> ins, String rawJsonArgs) {
     try {
@@ -50,7 +42,7 @@ public class JsonProcessParameters {
 
   private Object toValue(Parameter in, JsonNode rawArgs) {
     try {
-      var typed = loader.load(new QType(in.type()));
+      var typed = in.type().get();
       var jArg = rawArgs.get(in.name());
       if (jArg == null) {
         return null;
