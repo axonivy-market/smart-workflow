@@ -289,5 +289,101 @@
       "visual" : {
         "at" : { "x" : 768, "y" : 392 }
       }
+    }, {
+      "id" : "f37",
+      "type" : "RequestStart",
+      "name" : "multiAgentsDoMath",
+      "config" : {
+        "signature" : "multiAgentsDoMath"
+      },
+      "tags" : [
+        "demo"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f38", "to" : "f39" }
+      ]
+    }, {
+      "id" : "f39",
+      "type" : "ProgramInterface",
+      "name" : [
+        "Gemini:",
+        "1 + 1"
+      ],
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a Math Agent",
+          "provider" : "\"Gemini\"",
+          "resultType" : "",
+          "tools" : "[\"sumarizeProblem\"]",
+          "resultMapping" : "in.result",
+          "query" : "Do a simple math: 1 + 1"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f40", "to" : "f41", "color" : "default" }
+      ]
+    }, {
+      "id" : "f41",
+      "type" : "ProgramInterface",
+      "name" : [
+        "Open AI:",
+        "2 + 1"
+      ],
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a Math Agent",
+          "provider" : "\"OpenAI\"",
+          "resultMapping" : "in.mathObj",
+          "query" : "I have a math calculation:\r\n<%= in.result %>\r\nNow I want you to use the result of that calculation to do the simple math:\r\n<above_result > + 1",
+          "model" : "",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.MathData.class",
+          "tools" : "[\"sumarizeProblem\"]"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 408, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f42", "to" : "f44", "color" : "default" }
+      ]
+    }, {
+      "id" : "f43",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 768, "y" : 544 }
+      }
+    }, {
+      "id" : "f44",
+      "type" : "ProgramInterface",
+      "name" : [
+        "Azure OpenAI:",
+        "3 + 1"
+      ],
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a Math Agent",
+          "provider" : "\"AzureOpenAI\"",
+          "resultMapping" : "in.mathObj",
+          "query" : "Do a simple math: <%= in.mathObj.mathResult.toString() %> + 1",
+          "model" : "\"test-gpt-4-1-mini\"",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.MathData.class",
+          "tools" : "[\"sumarizeProblem\"]"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f45", "to" : "f43" }
+      ]
     } ]
 }

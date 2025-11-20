@@ -1,0 +1,9 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "MathData",
+  "namespace" : "com.axonivy.utils.smart.workflow.test",
+  "fields" : [ {
+    "name" : "mathResult",
+    "type" : "java.lang.Integer"
+  } ]
+}

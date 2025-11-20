@@ -42,6 +42,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     String QUERY = "query";
     String TOOLS = "tools";
     String MODEL = "model";
+    String PROVIDER = "provider";
     String OUTPUT = "resultType";
     String MAP_TO = "resultMapping";
   }
@@ -60,7 +61,9 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
       return in; // early abort; user is still testing with empty values
     }
 
+    String providerName = execute(context, Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     String modelName = execute(context, Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+
     List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
     var structured = execute(context, Conf.OUTPUT, Class.class);
@@ -70,7 +73,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     var modelOptions = options()
         .modelName(modelName)
         .structuredOutput(structured.isPresent());
-    var model = ChatModelFactory.createModel(modelOptions);
+    var model = ChatModelFactory.createModel(modelOptions, providerName);
 
     var agentBuilder = AiServices.builder(agentType)
         .chatModel(model)
@@ -135,6 +138,12 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
           .add(ui.scriptField(Conf.TOOLS).requireType(List.class).create())
           .create();
 
+      ui.group("Provider")
+          .add(ui.label(providersHelp()).multiline().create())
+          .add(ui.label("Keep empty to use default from variables.yaml").create())
+          .add(ui.scriptField(Conf.PROVIDER).requireType(String.class).create())
+          .create();
+
       ui.group("Model")
           .add(ui.label("Keep empty to use default from variables.yaml").create())
           .add(ui.scriptField(Conf.MODEL).requireType(String.class).create())
@@ -153,11 +162,15 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
           + "Select the available tools, or keep empty to use all:";
     }
 
+    private String providersHelp() {
+      return "You can select one of these AI providers:\n" + providersList();
+    }
+
     @SuppressWarnings("restriction")
     private String toolList() {
       var toolProcesses = Optional.ofNullable(IProcessModelVersion.current()).map(IvyToolsProcesses::new);
       if (toolProcesses.isEmpty()) {
-        return "";
+        return StringUtils.EMPTY;
       }
       try {
 
@@ -169,6 +182,15 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
       } catch (Exception ex) {
         return "";
       }
+    }
+
+    private String providersList() {
+      var providers = Optional.ofNullable(ChatModelFactory.providers());
+      if (providers.isEmpty()) {
+        return StringUtils.EMPTY;
+      }
+      return providers.get().stream().map(provider -> "- " + provider.name()).distinct()
+          .collect(Collectors.joining("\n"));
     }
   }
 
