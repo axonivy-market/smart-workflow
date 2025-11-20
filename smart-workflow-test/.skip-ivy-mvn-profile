@@ -1,0 +1,5 @@
+uses internal APIs to:
+- call subs
+- expand macros
+- execute ivy-script with own context
+- load classloaders of dependent projects (spi)
