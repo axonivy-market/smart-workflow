@@ -1,21 +1,16 @@
 package com.axonivy.utils.smart.workflow.model.spi.internal;
 
-import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import ch.ivyteam.ivy.application.ReleaseState;
 
 public class SpiLoader {
 
@@ -26,25 +21,10 @@ public class SpiLoader {
   }
 
   public <T> Set<T> load(Class<T> type) {
-    return projectsInScope()
-        .flatMap(p -> findImpl(p, type).stream())
-        .distinct()
-        .collect(Collectors.toSet());
+    return findImpl(SpiLoader.class.getClassLoader(), type);
   }
 
-  private Stream<IProcessModelVersion> projectsInScope() {
-    var dependendees = pmv.getAllRelatedProcessModelVersions(DEPENDENT)
-        .stream()
-        .filter(candidate -> ReleaseState.RELEASED.equals(candidate.getReleaseState()));
-    return Stream.concat(Stream.of(pmv), dependendees);
-  }
-
-  private static <T> List<T> findImpl(IProcessModelVersion pmv, Class<T> type) {
-    var javaInternal = ch.ivyteam.ivy.java.IJavaConfiguration.of(pmv.project());
-    return findImpl(type, javaInternal.getClassLoader());
-  }
-
-  private static <T> List<T> findImpl(Class<T> type, ClassLoader loader) {
+  private static <T> Set<T> findImpl(ClassLoader loader, Class<T> type) {
     var refs = loadRefs(type, loader);
     var implNames = refs.stream()
         .flatMap(ref -> ref.lines().findFirst().stream())
@@ -53,7 +33,7 @@ public class SpiLoader {
       Optional<T> impl = load(loader, ref);
       return impl.stream();
     })
-        .toList();
+        .collect(Collectors.toSet());
   }
 
   private static <T> Optional<T> load(ClassLoader loader, String typeName) {
