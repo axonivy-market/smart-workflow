@@ -36,8 +36,7 @@ public class ChatModelFactory {
   }
 
   public static Set<ChatModelProvider> providers() {
-    var project = myPmv().project(); // TODO: caching?
-    return new SpiLoader(project).load(ChatModelProvider.class);
+    return new SpiLoader(myPmv()).load(ChatModelProvider.class);
   }
 
   private static IProcessModelVersion myPmv() {

@@ -16,15 +16,13 @@ import java.util.stream.Stream;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ReleaseState;
-import ch.ivyteam.ivy.java.IJavaConfiguration;
-import ch.ivyteam.ivy.project.model.Project;
 
 public class SpiLoader {
 
-  private final Project project;
+  private final IProcessModelVersion pmv;
 
-  public SpiLoader(Project project) {
-    this.project = project;
+  public SpiLoader(IProcessModelVersion myPmv) {
+    this.pmv = myPmv;
   }
 
   public <T> Set<T> load(Class<T> type) {
@@ -34,18 +32,19 @@ public class SpiLoader {
         .collect(Collectors.toSet());
   }
 
-  private Stream<Project> projectsInScope() {
-    var pmv = IProcessModelVersion.of(project);
+  private Stream<IProcessModelVersion> projectsInScope() {
     var dependendees = pmv.getAllRelatedProcessModelVersions(DEPENDENT)
         .stream()
-        .filter(candidate -> ReleaseState.RELEASED.equals(candidate.getReleaseState()))
-        .map(IProcessModelVersion::project);
-    return Stream.concat(Stream.of(project), dependendees);
+        .filter(candidate -> ReleaseState.RELEASED.equals(candidate.getReleaseState()));
+    return Stream.concat(Stream.of(pmv), dependendees);
   }
 
-  private static <T> List<T> findImpl(Project project, Class<T> type) {
-    IJavaConfiguration java = IJavaConfiguration.of(project);
-    ClassLoader loader = java.getClassLoader();
+  private static <T> List<T> findImpl(IProcessModelVersion pmv, Class<T> type) {
+    var javaInternal = ch.ivyteam.ivy.java.IJavaConfiguration.of(pmv.project());
+    return findImpl(type, javaInternal.getClassLoader());
+  }
+
+  private static <T> List<T> findImpl(Class<T> type, ClassLoader loader) {
     var refs = loadRefs(type, loader);
     var implNames = refs.stream()
         .flatMap(ref -> ref.lines().findFirst().stream())
@@ -75,8 +74,7 @@ public class SpiLoader {
       var it = enumeration.asIterator();
       while (it.hasNext()) {
         var uri = it.next();
-        var in = uri.openStream();
-        var what = read(in);
+        var what = read(uri.openStream());
         implRefs.add(what);
       }
     } catch (Exception ex) {
