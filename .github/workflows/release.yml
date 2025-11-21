@@ -18,4 +18,4 @@ jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/release.yml@v6
     with:
-      mvnArgs: -P-ivy -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }}
+      mvnArgs: -P -ivy -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }}
