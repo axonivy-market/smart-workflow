@@ -292,9 +292,9 @@
     }, {
       "id" : "f37",
       "type" : "RequestStart",
-      "name" : "multiAgentsDoMath",
+      "name" : "createStory",
       "config" : {
-        "signature" : "multiAgentsDoMath"
+        "signature" : "createStory"
       },
       "tags" : [
         "demo"
@@ -309,81 +309,82 @@
       "id" : "f39",
       "type" : "ProgramInterface",
       "name" : [
-        "Gemini:",
-        "1 + 1"
+        "Dummy:",
+        "create story title"
       ],
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "You are a Math Agent",
-          "provider" : "\"Gemini\"",
+          "system" : "",
+          "provider" : "\"dummy\"",
+          "resultMapping" : "in.story.title",
+          "query" : "One day Reto Weiss and Bruno Bütler had a gread idea.",
+          "model" : "\"Genious\"",
           "resultType" : "",
-          "tools" : "[\"sumarizeProblem\"]",
-          "resultMapping" : "in.result",
-          "query" : "Do a simple math: 1 + 1"
+          "tools" : "[]"
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 544 }
+        "at" : { "x" : 232, "y" : 544 }
       },
       "connect" : [
-        { "id" : "f40", "to" : "f41", "color" : "default" }
+        { "id" : "f49", "to" : "f41" }
       ]
     }, {
       "id" : "f41",
       "type" : "ProgramInterface",
       "name" : [
         "Open AI:",
-        "2 + 1"
+        "Add characters"
       ],
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "You are a Math Agent",
+          "system" : "Only extract characters",
           "provider" : "\"OpenAI\"",
-          "resultMapping" : "in.mathObj",
-          "query" : "I have a math calculation:\r\n<%= in.result %>\r\nNow I want you to use the result of that calculation to do the simple math:\r\n<above_result > + 1",
-          "model" : "",
-          "resultType" : "com.axonivy.utils.smart.workflow.test.MathData.class",
+          "resultMapping" : "in.story",
+          "query" : "Story idea:\r\nOne day Reto Weiss and Bruno Bütler had a gread idea.\r\nStory object:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.story) %>",
+          "model" : "\"gpt-4.1-mini\"",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
           "tools" : "[\"sumarizeProblem\"]"
         }
       },
       "visual" : {
-        "at" : { "x" : 408, "y" : 544 }
+        "at" : { "x" : 400, "y" : 544 }
       },
       "connect" : [
-        { "id" : "f42", "to" : "f44", "color" : "default" }
+        { "id" : "f44", "to" : "f47" }
       ]
     }, {
       "id" : "f43",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 768, "y" : 544 }
+        "at" : { "x" : 688, "y" : 544 }
       }
     }, {
-      "id" : "f44",
+      "id" : "f47",
       "type" : "ProgramInterface",
       "name" : [
-        "Azure OpenAI:",
-        "3 + 1"
+        "Default provider:",
+        "Add genre"
       ],
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "You are a Math Agent",
-          "provider" : "\"AzureOpenAI\"",
-          "resultMapping" : "in.mathObj",
-          "query" : "Do a simple math: <%= in.mathObj.mathResult.toString() %> + 1",
-          "model" : "\"test-gpt-4-1-mini\"",
-          "resultType" : "com.axonivy.utils.smart.workflow.test.MathData.class",
+          "system" : "Only generate the genre field",
+          "provider" : "",
+          "resultMapping" : "in.story",
+          "query" : "Story object:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.story) %>",
+          "model" : "",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
           "tools" : "[\"sumarizeProblem\"]"
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 544 }
+        "at" : { "x" : 568, "y" : 544 }
       },
       "connect" : [
-        { "id" : "f45", "to" : "f43" }
+        { "id" : "f48", "to" : "f43", "color" : "default" }
       ]
     } ]
 }

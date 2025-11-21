@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.scripting.internal.MacroExpander;
@@ -138,15 +139,14 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
           .add(ui.scriptField(Conf.TOOLS).requireType(List.class).create())
           .create();
 
-      ui.group("Provider")
-          .add(ui.label(providersHelp()).multiline().create())
-          .add(ui.label("Keep empty to use default from variables.yaml").create())
-          .add(ui.scriptField(Conf.PROVIDER).requireType(String.class).create())
-          .create();
-
       ui.group("Model")
-          .add(ui.label("Keep empty to use default from variables.yaml").create())
+          .add(ui.label("Provider").create())
+          .add(ui.label(providersHelp()).multiline().create())
+          .add(ui.scriptField(Conf.PROVIDER).requireType(String.class).create())
+          .add(ui.label("Keep empty to use default from variables.yaml\r\n" + "").create())
+          .add(ui.label("Model").create())
           .add(ui.scriptField(Conf.MODEL).requireType(String.class).create())
+          .add(ui.label("Keep empty to use default from variables.yaml").create())
           .create();
 
       ui.group("Output")
@@ -163,7 +163,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     }
 
     private String providersHelp() {
-      return "You can select one of these AI providers:\n" + providersList();
+      return "Choose one of the supported AI providers:\n" + providersList();
     }
 
     @SuppressWarnings("restriction")
@@ -189,8 +189,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
       if (providers.isEmpty()) {
         return StringUtils.EMPTY;
       }
-      return providers.get().stream().map(provider -> "- " + provider.name()).distinct()
-          .collect(Collectors.joining("\n"));
+      return providers.get().stream().map(ChatModelProvider::name).distinct().collect(Collectors.joining(", "));
     }
   }
 

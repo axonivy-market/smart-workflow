@@ -1,12 +1,17 @@
 package com.axonivy.utils.smart.workflow.model.dummy;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.response.ChatResponse;
 
 public class DummyChatModelProvider implements ChatModelProvider {
 
@@ -54,6 +59,17 @@ public class DummyChatModelProvider implements ChatModelProvider {
       return Set.of();
     }
 
+    @Override
+    public ChatResponse doChat(ChatRequest chatRequest) {
+      UserMessage lastMessage = (UserMessage) Optional.ofNullable(chatRequest).map(ChatRequest::messages)
+          .map(List::getLast)
+          .orElse(new UserMessage("Test"));
+      AiMessage result = "One day Reto Weiss and Bruno Bütler had a gread idea.".equals(lastMessage.singleText())
+          ? AiMessage.aiMessage("The Spark of Innovation")
+          : AiMessage.aiMessage("Not implemented!");
+
+      return ChatResponse.builder().aiMessage(result).build();
+    }
   }
 
 }

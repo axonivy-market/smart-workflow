@@ -1,0 +1,46 @@
+{
+  "model" : "gpt-4.1-mini",
+  "messages" : [ {
+    "role" : "system",
+    "content" : "Generate genre field for the story"
+  }, {
+    "role" : "user",
+    "content" : "Story object:\r\n\r\n{\r\n  \"characters\" : [ {\r\n    \"firstName\" : \"Reto\",\r\n    \"lastName\" : \"Weiss\"\r\n  }, {\r\n    \"firstName\" : \"Bruno\",\r\n    \"lastName\" : \"Bütler\"\r\n  } ],\r\n  \"title\" : \"The Spark of Innovation\",\r\n  \"genre\" : \"\"\r\n}"
+  } ],
+  "temperature" : 0.0,
+  "stream" : false,
+  "response_format" : {
+    "type" : "json_schema",
+    "json_schema" : {
+      "name" : "Story",
+      "strict" : false,
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "characters" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "firstName" : {
+                  "type" : "string"
+                },
+                "lastName" : {
+                  "type" : "string"
+                }
+              },
+              "required" : [ ]
+            }
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "genre" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ ]
+      }
+    }
+  }
+}

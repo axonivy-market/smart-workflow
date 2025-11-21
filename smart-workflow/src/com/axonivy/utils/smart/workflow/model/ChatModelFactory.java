@@ -19,7 +19,7 @@ import dev.langchain4j.model.chat.ChatModel;
 public class ChatModelFactory {
 
   private static final String FALLBACK_PROVIDER = "OpenAI";
-  private static final String SMART_WORKFLOW_PROJECT_PREFIX = "smart-workflow";
+  private static final String SMART_WORKFLOW_PROJECT = "smart-workflow";
 
   public interface AiConf {
     String DEFAULT_PROVIDER = "AI.DefaultProvider";
@@ -46,7 +46,7 @@ public class ChatModelFactory {
   }
 
   private static IProcessModelVersion myPmv() {
-    Predicate<IProcessModelVersion> smartWorkflow = pmv -> SMART_WORKFLOW_PROJECT_PREFIX.equals(pmv.getName());
+    Predicate<IProcessModelVersion> smartWorkflow = pmv -> SMART_WORKFLOW_PROJECT.equals(pmv.getName());
     var current = IProcessModelVersion.current();
     if (smartWorkflow.test(current)) {
       return current;

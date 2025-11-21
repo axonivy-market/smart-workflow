@@ -13,8 +13,5 @@
   }, {
     "name" : "story",
     "type" : "com.axonivy.utils.smart.workflow.test.Story"
-  }, {
-    "name" : "mathObj",
-    "type" : "com.axonivy.utils.smart.workflow.test.MathData"
   } ]
 }
