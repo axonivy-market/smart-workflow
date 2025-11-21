@@ -14,12 +14,12 @@ import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
-import com.axonivy.utils.smart.workflow.scripting.internal.MacroExpander;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.macro.MacroException;
 import ch.ivyteam.ivy.process.engine.IRequestId;
 import ch.ivyteam.ivy.process.extension.impl.AbstractUserProcessExtension;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
@@ -119,7 +119,12 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
   }
 
   private Optional<String> expand(IIvyScriptContext context, String confKey) {
-    return new MacroExpander(context).expand(getConfig().get(confKey));
+    try {
+      var expanded = expandMacros(context, getConfig().get(confKey));
+      return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
+    } catch (MacroException ex) {
+      return Optional.empty();
+    }
   }
 
   public static class Editor extends UiEditorExtension {
