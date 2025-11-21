@@ -289,5 +289,102 @@
       "visual" : {
         "at" : { "x" : 768, "y" : 392 }
       }
+    }, {
+      "id" : "f37",
+      "type" : "RequestStart",
+      "name" : "createStory",
+      "config" : {
+        "signature" : "createStory"
+      },
+      "tags" : [
+        "demo"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f38", "to" : "f39" }
+      ]
+    }, {
+      "id" : "f39",
+      "type" : "ProgramInterface",
+      "name" : [
+        "Dummy:",
+        "create story title"
+      ],
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "",
+          "provider" : "\"dummy\"",
+          "resultMapping" : "in.story.title",
+          "query" : "One day Reto Weiss and Bruno Bütler had a gread idea.",
+          "model" : "\"Genious\"",
+          "resultType" : "",
+          "tools" : "[]"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f49", "to" : "f41" }
+      ]
+    }, {
+      "id" : "f41",
+      "type" : "ProgramInterface",
+      "name" : [
+        "Open AI:",
+        "Add characters"
+      ],
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Only extract characters",
+          "provider" : "\"OpenAI\"",
+          "resultMapping" : "in.story",
+          "query" : "Story idea:\r\nOne day Reto Weiss and Bruno Bütler had a gread idea.\r\nStory object:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.story) %>",
+          "model" : "\"gpt-4.1-mini\"",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
+          "tools" : "[\"sumarizeProblem\"]"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 400, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f44", "to" : "f47" }
+      ]
+    }, {
+      "id" : "f43",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 688, "y" : 544 }
+      }
+    }, {
+      "id" : "f47",
+      "type" : "ProgramInterface",
+      "name" : [
+        "Default provider:",
+        "Add genre"
+      ],
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Only generate the genre field",
+          "provider" : "",
+          "resultMapping" : "in.story",
+          "query" : "Story object:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.story) %>",
+          "model" : "",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
+          "tools" : "[\"sumarizeProblem\"]"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 568, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f48", "to" : "f43", "color" : "default" }
+      ]
     } ]
 }

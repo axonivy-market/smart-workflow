@@ -1,0 +1,43 @@
+{
+  "model" : "gpt-4.1-mini",
+  "messages" : [ {
+    "role" : "system",
+    "content" : "Only extract characters"
+  }, {
+    "role" : "user",
+    "content" : "Story idea:\r\nOne day Reto Weiss and Bruno Bütler had a gread idea.\r\nStory object:\r\n\r\n{\r\n  \"characters\" : null,\r\n  \"title\" : \"The Spark of Innovation\"\r\n}"
+  } ],
+  "temperature" : 0.0,
+  "stream" : false,
+  "response_format" : {
+    "type" : "json_schema",
+    "json_schema" : {
+      "name" : "Story",
+      "strict" : false,
+      "schema" : {
+        "type" : "object",
+        "properties" : {
+          "characters" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "firstName" : {
+                  "type" : "string"
+                },
+                "lastName" : {
+                  "type" : "string"
+                }
+              },
+              "required" : [ ]
+            }
+          },
+          "title" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ ]
+      }
+    }
+  }
+}

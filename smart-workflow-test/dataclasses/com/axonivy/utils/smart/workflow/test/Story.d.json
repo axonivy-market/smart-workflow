@@ -8,5 +8,8 @@
   }, {
     "name" : "title",
     "comment" : "Short and expressive"
+  }, {
+    "name" : "genre",
+    "comment" : "The story category"
   } ]
 }
