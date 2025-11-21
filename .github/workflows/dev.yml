@@ -14,3 +14,5 @@ permissions:
 jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/dev.yml@v6
+    with:
+      mvnArgs: -P-ivy
