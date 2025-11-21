@@ -15,7 +15,6 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.scripting.internal.MacroExpander;
-import com.axonivy.utils.smart.workflow.scripting.internal.ScriptContextUtil;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 
@@ -92,7 +91,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     if (mapTo != null) {
       String mapIt = mapTo + "=result";
       try {
-        new ScriptContextUtil(context).declareVariable(Variable.RESULT, result);
+	    declareAndInitializeVariable(context, Variable.RESULT, result.getClass().getName(), result);
         executeIvyScript(context, mapIt);
       } catch (Exception ex) {
         Ivy.log().error("Failed to map result to " + mapTo, ex);
