@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-azure-openai</artifactId>
-  <version>13.2.0-a7-SNAPSHOT</version>
+  <version>13.2.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <properties>
     <langchain4j.version>1.8.0</langchain4j.version>
