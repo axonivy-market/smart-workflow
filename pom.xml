@@ -3,7 +3,7 @@
   <groupId>com.axonivy.utils.ai</groupId>
   <name>smart-workflow</name>
   <artifactId>smart-workflow-modules</artifactId>
-  <version>13.2.0-SNAPSHOT</version>
+  <version>13.2.0-a6</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -18,7 +18,7 @@
 
   <scm>
     <developerConnection>scm:git:https://github.com/axonivy-market/${project.name}.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>v13.2.0-a6</tag>
   </scm>
 
   <build>
