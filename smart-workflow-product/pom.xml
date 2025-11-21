@@ -58,8 +58,7 @@
                 <replace file="${project.build.directory}/README_DE.md" token="@variables.openai@" value="${variables.openai}" />
                 <loadfile property="variables.azureopenai" srcFile="${variables.azureopenai.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.azureopenai@" value="${variables.azureopenai}" />
-                <replace file="${project.build.directory}/README_DE.md" token="@variables.azureopenai@
-                " value="${variables.azureopenai}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.azureopenai@ " value="${variables.azureopenai}" />
                 <loadfile property="variables.azureopenai.example" srcFile="${variables.azureopenai.example.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.azureopenai.example@" value="${variables.azureopenai.example}" />
                 <replace file="${project.build.directory}/README_DE.md" token="@variables.azureopenai.example@" value="${variables.azureopenai.example}" />
