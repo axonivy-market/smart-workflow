@@ -1,13 +1,12 @@
 package com.axonivy.utils.smart.workflow.model.dummy;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
@@ -38,12 +37,20 @@ public class DummyChatModelProvider implements ChatModelProvider {
     String CLASSIC = "Classic";
   }
 
+  public static void defineChat(Function<ChatRequest, ChatResponse> chat) {
+    DummyChatModel.CHAT = chat;
+  }
+
+  public static void defineChatText(Function<ChatRequest, String> chat) {
+    DummyChatModel.CHAT = r -> ChatResponse.builder().aiMessage(AiMessage.aiMessage(chat.apply(r))).build();
+  }
+
   private static class DummyChatModel implements ChatModel {
 
     private static final String DEFAULT_CHAT_RESPONSE_TEMPLATE = "Hey I'm %s. My Smartness is under development.";
-    private static final String DEFAULT_DO_CHAT_REQUEST = "One day Reto Weiss and Bruno Bütler had a gread idea.";
-    private static final String DEFAULT_DO_CHAT_RESPONSE = "The Spark of Innovation";
     private static final String NOT_IMPLEMENTED = "Not implemented!";
+    private static Function<ChatRequest, ChatResponse> CHAT = request -> ChatResponse.builder()
+        .aiMessage(AiMessage.aiMessage(DummyChatModel.NOT_IMPLEMENTED)).build();
 
     private final ModelOptions options;
 
@@ -66,14 +73,7 @@ public class DummyChatModelProvider implements ChatModelProvider {
 
     @Override
     public ChatResponse doChat(ChatRequest chatRequest) {
-      UserMessage lastMessage = (UserMessage) Optional.ofNullable(chatRequest).map(ChatRequest::messages)
-          .map(List::getLast)
-          .orElse(new UserMessage("Test"));
-      AiMessage result = DEFAULT_DO_CHAT_REQUEST.equals(lastMessage.singleText())
-          ? AiMessage.aiMessage(DEFAULT_DO_CHAT_RESPONSE)
-          : AiMessage.aiMessage(NOT_IMPLEMENTED);
-
-      return ChatResponse.builder().aiMessage(result).build();
+      return CHAT.apply(chatRequest);
     }
   }
 

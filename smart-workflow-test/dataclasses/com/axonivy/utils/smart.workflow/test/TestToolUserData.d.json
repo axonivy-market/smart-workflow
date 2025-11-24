@@ -13,5 +13,8 @@
   }, {
     "name" : "story",
     "type" : "com.axonivy.utils.smart.workflow.test.Story"
+  }, {
+    "name" : "storyTmp",
+    "type" : "com.axonivy.utils.smart.workflow.test.Story"
   } ]
 }
