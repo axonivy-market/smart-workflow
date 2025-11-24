@@ -8,8 +8,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.guardrails.internal.GuardrailFinder;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
@@ -24,12 +26,15 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.engine.IRequestId;
 import ch.ivyteam.ivy.process.extension.impl.AbstractUserProcessExtension;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
+import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder.GroupBuilder;
 import ch.ivyteam.ivy.process.extension.ui.UiEditorExtension;
 import ch.ivyteam.ivy.process.model.diagram.icon.IconDecorator;
 import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
 import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
 import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
+import dev.langchain4j.guardrail.InputGuardrail;
+import dev.langchain4j.guardrail.OutputGuardrail;
 import dev.langchain4j.service.AiServices;
 
 public class AgenticProcessCall extends AbstractUserProcessExtension implements IconDecorator {
@@ -46,6 +51,8 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     String PROVIDER = "provider";
     String OUTPUT = "resultType";
     String MAP_TO = "resultMapping";
+    String INPUT_GUARD_RAILS = "inputGuardrails";
+    String OUTPUT_GUARD_RAILS = "outputGuardrails";
   }
 
   interface ChatAgent extends DynamicAgent<String> {
@@ -83,6 +90,18 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     var systemMessage = expand(context, Conf.SYSTEM);
     if (systemMessage.isPresent()) {
       agentBuilder.systemMessageProvider(memId -> systemMessage.get());
+    }
+
+    List<InputGuardrail> inputClasses = GuardrailFinder
+        .findInputGuardrailsByClassNames(execute(context, Conf.INPUT_GUARD_RAILS, List.class).orElse(null));
+    if (CollectionUtils.isNotEmpty(inputClasses)) {
+      agentBuilder.inputGuardrails(inputClasses);
+    }
+
+    List<OutputGuardrail> outputClasses = GuardrailFinder
+        .findOutputGuardrailsByClassNames(execute(context, Conf.OUTPUT_GUARD_RAILS, List.class).orElse(null));
+    if (CollectionUtils.isNotEmpty(outputClasses)) {
+      agentBuilder.outputGuardrails(outputClasses);
     }
 
     var agent = agentBuilder.build();
@@ -139,6 +158,28 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
           .add(ui.scriptField(Conf.TOOLS).requireType(List.class).create())
           .create();
 
+      List<String> inputGuardrails = guardrailList(true);
+      List<String> outputGuardrails = guardrailList(false);
+
+      if (CollectionUtils.isNotEmpty(inputGuardrails) || CollectionUtils.isNotEmpty(outputGuardrails)) {
+        GroupBuilder guardrailGroupBuilder = ui.group("Guardrails")
+            .add(ui.label("Available guardrails:\n").create());
+        
+        if (CollectionUtils.isNotEmpty(inputGuardrails)) {
+          guardrailGroupBuilder
+              .add(ui.label(guardrailsHelp(true, inputGuardrails)).multiline().create())
+              .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create());
+        }
+        
+        if (CollectionUtils.isNotEmpty(outputGuardrails)) {
+          guardrailGroupBuilder
+              .add(ui.label(guardrailsHelp(false, outputGuardrails)).multiline().create())
+              .add(ui.scriptField(Conf.OUTPUT_GUARD_RAILS).requireType(List.class).create());
+        }
+        guardrailGroupBuilder.add(ui.label("Select the guardrails to apply, or keep empty to use none").create())
+            .create();
+      }
+
       ui.group("Model")
           .add(ui.label("Provider").create())
           .add(ui.label(providersHelp()).multiline().create())
@@ -160,6 +201,12 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     private String toolsHelp() {
       return "You have the following tools ready to assist you:\n" + toolList() + "\n\n"
           + "Select the available tools, or keep empty to use all:";
+    }
+
+    private String guardrailsHelp(boolean isInput, List<String> guardrails) {
+      String type = isInput ? "Input" : "Output";
+      return String.format("%s guardrails:\n%s", type,
+          guardrails.stream().map(g -> "- " + g).collect(Collectors.joining("\n")));
     }
 
     private String providersHelp() {
@@ -191,6 +238,11 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
       }
       return providers.get().stream().map(ChatModelProvider::name).distinct().collect(Collectors.joining(", "));
     }
+  }
+
+  private static List<String> guardrailList(boolean isInput) {
+    return isInput ? GuardrailFinder.findInputGuardrailClassNames()
+        : GuardrailFinder.findOutputGuardrailClassNames();
   }
 
   @Override
