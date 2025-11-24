@@ -35,7 +35,7 @@ import dev.langchain4j.guardrail.OutputGuardrail;
  */
 public class GuardrailFinder extends ClassVisitor {
 
-  private static final String ANNOTATION_DESC = "Lcom/axonivy/utils/smart/workflow/guardrails/internal/SmartWorkflowGuardrail;";
+  private static final String ANNOTATION_DESC = "Lcom/axonivy/utils/smart/workflow/guardrails/internal/annotation/SmartWorkflowGuardrail;";
 
   private boolean annotated = false;
   private String className;
