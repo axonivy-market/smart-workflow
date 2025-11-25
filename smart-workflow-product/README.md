@@ -240,7 +240,9 @@ This provider does not support the structured output feature because Google Gemi
 @variables.gemini.example@
 ```
 
-To enroll other AI model providers, please ask for it on Github or file use a Pull-Request.
+To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
+
+When contributing, make sure to follow the [Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
 
 #### Output
 

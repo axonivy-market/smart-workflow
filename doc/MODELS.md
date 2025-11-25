@@ -61,7 +61,6 @@ Smart-workflow providers are built upon existing LangChain4j providers.
 Please exclude dependencies from your `pom.xml`, which are already part of smart-workflow.
 Classically this will be the `langchain4j-core` and `langchain4j-http-client`
 
-
 ## Testing
 
 Tests for your model provider should be written in the common `smart-workflow-test` project. Provider specific functionality
@@ -72,9 +71,6 @@ to your new model provider.
 
 ## Demo
 
-We expect all providers to work in the same manor, therefore
-no extra demonstration process needs to be added in the demo project.
+We expect all providers to work in the same manor, therefore no extra demonstration process needs to be added in the demo project.
 
-Do not add dependencies to additional model providers to 
-the `smart-workflow-demo` project.
-
+Do not add dependencies to additional model providers to the `smart-workflow-demo` project.
