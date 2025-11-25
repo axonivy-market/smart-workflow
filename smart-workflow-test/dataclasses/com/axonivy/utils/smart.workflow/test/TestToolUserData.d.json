@@ -16,5 +16,10 @@
   }, {
     "name" : "storyTmp",
     "type" : "com.axonivy.utils.smart.workflow.test.Story"
+  }, {
+    "name" : "guardrailResult",
+    "type" : "com.axonivy.utils.smart.workflow.guardrails.GuardrailResult"
+  }, {
+    "name" : "message"
   } ]
 }
