@@ -10,16 +10,16 @@ public class GuardrailResult {
     SUCCESS, FAIL;
   }
 
-  private String message;
+  private String resultMessage;
   private List<String> errors;
   private ResultStatus status;
 
-  public String getMessage() {
-    return message;
+  public String getResultMessage() {
+    return resultMessage;
   }
 
-  public void setMessage(String message) {
-    this.message = message;
+  public void setResultMessage(String resultMessage) {
+    this.resultMessage = resultMessage;
   }
 
   public List<String> getErrors() {
@@ -38,17 +38,17 @@ public class GuardrailResult {
     this.status = status;
   }
 
-  public static GuardrailResult success(String message) {
+  public static GuardrailResult success(String resultMessage) {
     GuardrailResult result = new GuardrailResult();
     result.setErrors(null);
-    result.setMessage(message);
+    result.setResultMessage(resultMessage);
     result.setStatus(ResultStatus.SUCCESS);
     return result;
   }
 
   public static GuardrailResult fail(String message, List<String> errors) {
     GuardrailResult result = new GuardrailResult();
-    result.setMessage(StringUtils.EMPTY);
+    result.setResultMessage(StringUtils.EMPTY);
     result.setErrors(errors);
     result.setStatus(ResultStatus.FAIL);
     return result;
