@@ -236,7 +236,7 @@ Demo-Ablauf
 Um die Demodaten schnell einzurichten, führen Sie den Prozess „ `“ aus.
 Erstellen Sie Daten für die Shopping-Demo „` “ aus der Prozessliste.
 
-## Einrichtung
+## Setup
 
 ### Konfigurationen
 
