@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: smart-workflow
-Bundle-SymbolicName: smart-workflow
-Bundle-Version: 13.2.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-21
-Automatic-Module-Name: axon.ivy.ai
-Require-Bundle: ch.ivyteam.ivy.java

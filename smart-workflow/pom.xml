@@ -76,48 +76,8 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>exclude.p2.from.classpath</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <copy todir="${project.build.directory}/p2.hacks">
-                  <fileset dir=".">
-                    <include name=".classpath" />
-                  </fileset>
-                </copy>
-                <!--workaround: Designer crash with p2 refs in IAR mode-->
-                <replace file="${project.build.directory}/p2.hacks/.classpath">
-                  <replacetoken><![CDATA[<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>]]></replacetoken>
-                  <replacevalue><![CDATA[<!-- <classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/> -->]]></replacevalue>
-                </replace>
-              </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
-        <configuration>
-          <iarExcludes>
-            <iarExclude>.classpath</iarExclude>
-          </iarExcludes>
-          <iarFileSets>
-            <iarFileSet>
-              <directory>${project.build.directory}/p2.hacks</directory>
-              <includes>
-                <include>.classpath</include>
-              </includes>
-            </iarFileSet>
-          </iarFileSets>
-        </configuration>
       </plugin>
     </plugins>
   </build>
