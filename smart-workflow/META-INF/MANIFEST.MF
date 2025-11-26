@@ -5,7 +5,5 @@ Bundle-SymbolicName: smart-workflow
 Bundle-Version: 13.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: axon.ivy.ai
-Require-Bundle: ch.ivyteam.ivy.process.rdm,
- ch.ivyteam.ivy.java,
- ch.ivyteam.ivy.scripting.dataclass,
+Require-Bundle: ch.ivyteam.ivy.java,
  ch.ivyteam.ivy.macro

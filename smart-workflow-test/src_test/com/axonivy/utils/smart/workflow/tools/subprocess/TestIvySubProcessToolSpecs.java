@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.tools.subprocess;
 
-import static ch.ivyteam.ivy.process.model.value.scripting.VariableDesc.var;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -10,10 +9,9 @@ import org.junit.jupiter.api.Test;
 import com.axonivy.utils.smart.workflow.test.Person;
 import com.axonivy.utils.smart.workflow.tools.internal.JsonToolParamBuilder;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.IvyTest;
-import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
-import ch.ivyteam.ivy.process.model.value.scripting.VariableInfo;
+import ch.ivyteam.ivy.process.call.StartParameter;
+import ch.ivyteam.ivy.process.call.impl.DefaultStartParameter;
 import dev.langchain4j.model.chat.request.json.JsonArraySchema;
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
@@ -25,9 +23,9 @@ class TestIvySubProcessToolSpecs {
 
   @Test
   void complexParams() {
-    List<VariableDesc> userVars = List.of(
-        var("id", "Integer").setInfo(new VariableInfo("the user id")),
-        var("person", Person.class.getName()));
+    List<StartParameter> userVars = List.of(
+        new DefaultStartParameter("id", Integer.class.getName(), "the user id"),
+        new DefaultStartParameter("person", Person.class.getName(), null));
     var params = paramsOf(userVars);
 
     assertThat(params.properties().keySet())
@@ -48,7 +46,8 @@ class TestIvySubProcessToolSpecs {
 
   @Test
   void collectionParams() {
-    List<VariableDesc> userVars = List.of(var("users", "List<" + Person.class.getName() + ">"));
+    List<StartParameter> userVars = List.of(
+        new DefaultStartParameter("users", "java.util.List<" + Person.class.getName() + ">", null));
     var params = paramsOf(userVars);
 
     assertThat(params.properties().keySet()).containsOnly("users");
@@ -62,8 +61,8 @@ class TestIvySubProcessToolSpecs {
         .containsOnly("firstName", "lastName");
   }
 
-  private static JsonObjectSchema paramsOf(List<VariableDesc> userVars) {
-    return new JsonToolParamBuilder(IProcessModelVersion.current()).toParams(userVars);
+  private static JsonObjectSchema paramsOf(List<StartParameter> userVars) {
+    return new JsonToolParamBuilder().toParams(userVars);
   }
 
 }
