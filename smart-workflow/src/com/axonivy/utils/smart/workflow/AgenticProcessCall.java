@@ -16,21 +16,18 @@ import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
-import com.axonivy.utils.smart.workflow.scripting.internal.MacroExpander;
-import com.axonivy.utils.smart.workflow.scripting.internal.ScriptContextUtil;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.process.call.StartParameter;
+import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import ch.ivyteam.ivy.process.engine.IRequestId;
 import ch.ivyteam.ivy.process.extension.impl.AbstractUserProcessExtension;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder.GroupBuilder;
 import ch.ivyteam.ivy.process.extension.ui.UiEditorExtension;
 import ch.ivyteam.ivy.process.model.diagram.icon.IconDecorator;
-import ch.ivyteam.ivy.process.model.element.event.start.CallSubStart;
-import ch.ivyteam.ivy.process.model.value.scripting.VariableDesc;
 import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import dev.langchain4j.guardrail.InputGuardrail;
@@ -111,7 +108,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     if (mapTo != null) {
       String mapIt = mapTo + "=result";
       try {
-        new ScriptContextUtil(context).declareVariable(Variable.RESULT, result);
+        declareAndInitializeVariable(context, Variable.RESULT, result.getClass().getName(), result);
         executeIvyScript(context, mapIt);
       } catch (Exception ex) {
         Ivy.log().error("Failed to map result to " + mapTo, ex);
@@ -139,7 +136,12 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
   }
 
   private Optional<String> expand(IIvyScriptContext context, String confKey) {
-    return new MacroExpander(context).expand(getConfig().get(confKey));
+    try {
+      var expanded = expandMacros(context, getConfig().get(confKey));
+      return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
+    } catch (Exception ex) {
+      return Optional.empty();
+    }
   }
 
   public static class Editor extends UiEditorExtension {
@@ -215,16 +217,11 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
 
     @SuppressWarnings("restriction")
     private String toolList() {
-      var toolProcesses = Optional.ofNullable(IProcessModelVersion.current()).map(IvyToolsProcesses::new);
-      if (toolProcesses.isEmpty()) {
-        return StringUtils.EMPTY;
-      }
       try {
-
-        return toolProcesses.get()
+        return IvyToolsProcesses
             .toolStarts().stream()
-            .map(CallSubStart::getSignature)
-            .map(tool -> "- " + tool.getName() + tool.getInputParameters().stream().map(VariableDesc::getName).toList())
+            .map(SubProcessCallStartEvent::description)
+            .map(tool -> "- " + tool.name() + tool.in().stream().map(StartParameter::name).toList())
             .collect(Collectors.joining("\n"));
       } catch (Exception ex) {
         return "";

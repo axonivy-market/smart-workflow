@@ -342,7 +342,7 @@
         "userConfig" : {
           "system" : "Only extract characters",
           "provider" : "\"OpenAI\"",
-          "resultMapping" : "in.story",
+          "resultMapping" : "in.storyTmp",
           "query" : "Story idea:\r\nOne day Reto Weiss and Bruno Bütler had a gread idea.\r\nStory object:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.story) %>",
           "model" : "\"gpt-4.1-mini\"",
           "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
@@ -353,13 +353,13 @@
         "at" : { "x" : 400, "y" : 544 }
       },
       "connect" : [
-        { "id" : "f44", "to" : "f47" }
+        { "id" : "f44", "to" : "f50" }
       ]
     }, {
       "id" : "f43",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 688, "y" : 544 }
+        "at" : { "x" : 1008, "y" : 544 }
       }
     }, {
       "id" : "f47",
@@ -373,7 +373,7 @@
         "userConfig" : {
           "system" : "Only generate the genre field",
           "provider" : "",
-          "resultMapping" : "in.story",
+          "resultMapping" : "in.storyTmp",
           "query" : "Story object:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.story) %>",
           "model" : "",
           "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
@@ -381,10 +381,46 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 568, "y" : 544 }
+        "at" : { "x" : 720, "y" : 544 }
       },
       "connect" : [
-        { "id" : "f48", "to" : "f43", "color" : "default" }
+        { "id" : "f48", "to" : "f52", "color" : "default" }
+      ]
+    }, {
+      "id" : "f50",
+      "type" : "Script",
+      "name" : "Use Characters",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.story.characters" : "in.storyTmp.characters"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f51", "to" : "f47", "color" : "default" }
+      ]
+    }, {
+      "id" : "f52",
+      "type" : "Script",
+      "name" : "Use Genre",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.story.genre" : "in.storyTmp.genre"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f53", "to" : "f43", "color" : "default" }
       ]
     } ]
 }

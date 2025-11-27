@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory.AiConf;
+import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.test.Person;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
@@ -39,6 +40,8 @@ public class TestMultiModelsOutput {
     fixture.var(OpenAiConf.API_KEY, "");
     fixture.var(AiConf.DEFAULT_PROVIDER, "");
     fixture.var(OpenAiConf.DEFAULT_MODEL, "");
+
+    DummyChatModelProvider.defineChatText(r -> "The Spark of Innovation");
   }
 
   @Test
@@ -47,9 +50,15 @@ public class TestMultiModelsOutput {
 
     var res = client.start().process(AGENT_TOOLS.elementName("createStory")).execute();
     TestToolUserData data = res.data().last();
-    assertThat(data.getStory().getTitle()).isEqualTo("The Spark of Innovation");
-    assertThat(data.getStory().getGenre()).isEqualTo("Science Fiction");
-    assertThat(data.getStory().getCharacters()).extracting(Person::getFirstName).containsOnly("Reto", "Bruno");
+    assertThat(data.getStory().getTitle())
+        .as("got title from first model: DummyProvider")
+        .isEqualTo("The Spark of Innovation");
+    assertThat(data.getStory().getCharacters())
+        .as("got characters from second model: OpenAI")
+        .extracting(Person::getFirstName).containsOnly("Reto", "Bruno");
+    assertThat(data.getStory().getGenre())
+        .as("got genre from default model: OpenAI")
+        .isEqualTo("Science Fiction");
   }
 
   private Response multiModel(JsonNode request, ResourceResponder responder) {

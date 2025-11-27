@@ -14,9 +14,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.reflect.MethodUtils;
+
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ReleaseState;
-import ch.ivyteam.ivy.java.IJavaConfiguration;
 import ch.ivyteam.ivy.project.model.Project;
 
 public class SpiLoader {
@@ -44,8 +45,7 @@ public class SpiLoader {
   }
 
   private static <T> List<T> findImpl(Project project, Class<T> type) {
-    IJavaConfiguration java = IJavaConfiguration.of(project);
-    ClassLoader loader = java.getClassLoader();
+    ClassLoader loader = loaderOf(project);
     var refs = loadRefs(type, loader);
     var implNames = refs.stream()
         .flatMap(ref -> ref.lines().findFirst().stream())
@@ -55,6 +55,18 @@ public class SpiLoader {
       return impl.stream();
     })
         .toList();
+  }
+
+  private static ClassLoader loaderOf(Project project) {
+    try {
+      var javaConf = Class.forName("ch.ivyteam.ivy.java.IJavaConfiguration");
+      var of = MethodUtils.getMethodObject(javaConf, "of", Project.class);
+      var local = of.invoke(null, project);
+      var loader = MethodUtils.getMethodObject(javaConf, "getClassLoader");
+      return (ClassLoader) loader.invoke(local);
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   private static <T> Optional<T> load(ClassLoader loader, String typeName) {
