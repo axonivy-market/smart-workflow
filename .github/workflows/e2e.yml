@@ -13,6 +13,6 @@ jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v6
     with:
-      mvnArgs: -P e2e.test -P-ivy
+      mvnArgs: -P e2e.test
     secrets:
       mvnArgs: -DOPEN_AI_API_KEY=${{ secrets.OPEN_AI_API_KEY }} -DAZURE_OPEN_AI_API_KEY=${{ secrets.AZURE_OPEN_AI_API_KEY }} -DAZURE_OPEN_AI_MODEL=${{ secrets.AZURE_OPEN_AI_MODEL }} -DAZURE_OPEN_AI_DEPLOYMENT=${{ secrets.AZURE_OPEN_AI_DEPLOYMENT }} -DAZURE_OPEN_AI_ENDPOINT=${{ secrets.AZURE_OPEN_AI_ENDPOINT }} -DGEMINI_AI_API_KEY=${{ secrets.GEMINI_AI_API_KEY }}
