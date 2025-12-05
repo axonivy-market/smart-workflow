@@ -21,11 +21,14 @@ import ch.ivyteam.ivy.process.extension.impl.AbstractUserProcessExtension;
 import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
 import ch.ivyteam.ivy.process.extension.ui.UiEditorExtension;
 import ch.ivyteam.ivy.process.model.diagram.icon.IconDecorator;
+import ch.ivyteam.ivy.process.program.activity.AbortableExecution;
+import ch.ivyteam.ivy.process.program.activity.ProgramExecutor;
+import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import dev.langchain4j.service.AiServices;
 
-public class AgenticProcessCall extends AbstractUserProcessExtension implements IconDecorator {
+public class AgenticProcessCall implements ProgramExecutor, IconDecorator {
 
   interface Variable {
     String RESULT = "result";
@@ -41,85 +44,97 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
     String MAP_TO = "resultMapping";
   }
 
-  interface ChatAgent extends DynamicAgent<String> {
-    @Override
-    String chat(String query);
+  @Override
+  public AbortableExecution newExecution() {
+    return context -> new AgentCallExecutor(context).execute();
   }
 
-  @SuppressWarnings({"unchecked"})
-  @Override
-  public CompositeObject perform(IRequestId requestId, CompositeObject in, IIvyScriptContext context) throws Exception {
-    var query = expand(context, Conf.QUERY);
-    if (query.isEmpty()) {
-      Ivy.log().info("Agent call was skipped, since there was no user query");
-      return in; // early abort; user is still testing with empty values
+  public static class AgentCallExecutor {
+
+    private ProgramContext context;
+
+    public AgentCallExecutor(ProgramContext context){
+      this.context = context;
     }
 
-    String providerName = execute(context, Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
-    String modelName = execute(context, Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
-
-    List<String> toolFilter = execute(context, Conf.TOOLS, List.class).orElse(null);
-    Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
-    var structured = execute(context, Conf.OUTPUT, Class.class);
-    if (structured.isPresent()) {
-      agentType = StructuredOutputAgent.agent(structured.get());
-    }
-    var modelOptions = options()
-        .modelName(modelName)
-        .structuredOutput(structured.isPresent());
-    var model = ChatModelFactory.createModel(modelOptions, providerName);
-
-    var agentBuilder = AiServices.builder(agentType)
-        .chatModel(model)
-        .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
-
-    var systemMessage = expand(context, Conf.SYSTEM);
-    if (systemMessage.isPresent()) {
-      agentBuilder.systemMessageProvider(memId -> systemMessage.get());
+    interface ChatAgent extends DynamicAgent<String> {
+      @Override
+      String chat(String query);
     }
 
-    var agent = agentBuilder.build();
-    var result = agent.chat(query.get());
+    @SuppressWarnings("unchecked")
+    public void execute() {
+      var query = expand(Conf.QUERY);
+      if (query.isEmpty()) {
+        Ivy.log().info("Agent call was skipped, since there was no user query");
+        return; // early abort; user is still testing with empty values
+      }
+  
+      String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
+      String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+  
+      List<String> toolFilter = execute(Conf.TOOLS, List.class).orElse(null);
+      Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
+      var structured = execute(Conf.OUTPUT, Class.class);
+      if (structured.isPresent()) {
+        agentType = StructuredOutputAgent.agent(structured.get());
+      }
+      var modelOptions = options()
+          .modelName(modelName)
+          .structuredOutput(structured.isPresent());
+      var model = ChatModelFactory.createModel(modelOptions, providerName);
+  
+      var agentBuilder = AiServices.builder(agentType)
+          .chatModel(model)
+          .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
+  
+      var systemMessage = expand(Conf.SYSTEM);
+      if (systemMessage.isPresent()) {
+        agentBuilder.systemMessageProvider(memId -> systemMessage.get());
+      }
+  
+      var agent = agentBuilder.build();
+      var result = agent.chat(query.get());
+  
+      var mapTo = context.config().get(Conf.MAP_TO);
+      if (mapTo != null) {
+        String mapIt = mapTo + "=result";
+        try {
+          context.script().variable(Variable.RESULT, result).executeScript(mapIt);
+        } catch (Exception ex) {
+          Ivy.log().error("Failed to map result to " + mapTo, ex);
+        }
+      }
+  
+      Ivy.log().info("Agent response: " + result);
+    }
 
-    var mapTo = getConfig().get(Conf.MAP_TO);
-    if (mapTo != null) {
-      String mapIt = mapTo + "=result";
+    private <T> Optional<T> execute(String configKey, Class<T> returnType) {
+      var value = Optional.ofNullable(context.config().get(configKey))
+          .filter(Predicate.not(String::isBlank));
+      if (value.isEmpty()) {
+        return Optional.empty();
+      }
       try {
-        declareAndInitializeVariable(context, Variable.RESULT, result.getClass().getName(), result);
-        executeIvyScript(context, mapIt);
+        return context.script().executeExpression(value.get(), returnType);
       } catch (Exception ex) {
-        Ivy.log().error("Failed to map result to " + mapTo, ex);
+        throw new RuntimeException("Failed to extract config '" + configKey + "' for value '" + value.get() + "'", ex);
       }
     }
 
-    Ivy.log().info("Agent response: " + result);
-    return in;
+    private Optional<String> expand(String confKey) {
+      try {
+        var template = context.config().get(confKey);
+        var expanded = context.script().expandMacro(template);
+        return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
+      } catch (Exception ex) {
+        return Optional.empty();
+      }
+    }
+      
   }
 
-  private <T> Optional<T> execute(IIvyScriptContext context, String configKey, Class<T> returnType) {
-    var value = Optional.ofNullable(getConfig().get(configKey))
-        .filter(Predicate.not(String::isBlank));
-    if (value.isEmpty()) {
-      return Optional.empty();
-    }
-    try {
-      var resolved = executeIvyScript(context, value.get());
-      return Optional.ofNullable(resolved)
-          .filter(returnType::isInstance)
-          .map(returnType::cast);
-    } catch (Exception ex) {
-      throw new RuntimeException("Failed to extract config '" + configKey + "' for value '" + value.get() + "'", ex);
-    }
-  }
-
-  private Optional<String> expand(IIvyScriptContext context, String confKey) {
-    try {
-      var expanded = expandMacros(context, getConfig().get(confKey));
-      return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
-    } catch (Exception ex) {
-      return Optional.empty();
-    }
-  }
+  
 
   public static class Editor extends UiEditorExtension {
     @Override
