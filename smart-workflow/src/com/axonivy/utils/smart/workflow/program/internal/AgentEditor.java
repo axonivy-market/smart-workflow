@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.ui;
+package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.AgenticProcessCall.Conf;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
