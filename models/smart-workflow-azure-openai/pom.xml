@@ -44,6 +44,10 @@
           <groupId>dev.langchain4j</groupId>
           <artifactId>langchain4j-core</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>com.azure</groupId>
+          <artifactId>azure-core-http-netty</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
