@@ -13,13 +13,17 @@
   <packaging>iar</packaging>
 
   <properties>
-    <langchain4j.version>1.8.0</langchain4j.version>
+    <langchain4j.version>1.9.1</langchain4j.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.axonivy.ivy.api</groupId>
       <artifactId>ivy-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.axonivy.ivy.spi</groupId>
+      <artifactId>ivy-process-extension-spi</artifactId>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
