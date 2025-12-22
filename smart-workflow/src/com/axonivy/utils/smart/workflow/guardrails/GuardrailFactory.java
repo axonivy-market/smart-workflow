@@ -7,7 +7,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.entity.AbstractInputGuardrail;
-import com.axonivy.utils.smart.workflow.internal.spi.SpiLoader;
+import com.axonivy.utils.smart.workflow.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.utils.IvyUtils;
 
 public class GuardrailFactory {
@@ -30,17 +30,6 @@ public class GuardrailFactory {
 
   public static Set<AbstractInputGuardrail> providers() {
     var project = IvyUtils.getSmartWorkflowPmv().project();
-    Set<AbstractInputGuardrail> inputGuardrails = new SpiLoader(project).load(AbstractInputGuardrail.class);
-
-    Class<?> className = null;
-
-    for (var guardrail : inputGuardrails) {
-      if (className == null || inputGuardrails.getClass() != className) {
-        className = inputGuardrails.getClass();
-        continue;
-      }
-
-      inputGuardrails.remove(guardrail);
-    }
+    return new SpiLoader(project).load(AbstractInputGuardrail.class);
   }
 }

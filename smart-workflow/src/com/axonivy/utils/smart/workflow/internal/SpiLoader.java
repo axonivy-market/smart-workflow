@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/spi/SpiLoader.java
-package com.axonivy.utils.smart.workflow.internal.spi;
-========
 package com.axonivy.utils.smart.workflow.internal;
->>>>>>>> 66fe56ffc4f425a26b5782fa4f7a167fc46cce64:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/SpiLoader.java
 
 import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
 
@@ -18,22 +14,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ReleaseState;
 import ch.ivyteam.ivy.project.model.Project;
 
-<<<<<<<< HEAD:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/spi/SpiLoader.java
-public final class SpiLoader {
-
-  private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
-  private static final String JAVA_CONFIGURATION_CLASS_NAME = "ch.ivyteam.ivy.java.IJavaConfiguration";
-
-========
 public class SpiLoader {
->>>>>>>> 66fe56ffc4f425a26b5782fa4f7a167fc46cce64:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/SpiLoader.java
   private final Project project;
 
   private static final String IJAVA_CONFIGURATION = "ch.ivyteam.ivy.java.IJavaConfiguration";
@@ -48,7 +35,6 @@ public class SpiLoader {
     return projectsInScope()
         .flatMap(p -> findImpl(p, type).stream())
         .distinct()
-        .sorted((a, b) -> Strings.CS.compare(a.getClass().getName(), b.getClass().getName()))
         .collect(Collectors.toSet());
   }
 
@@ -76,11 +62,7 @@ public class SpiLoader {
 
   private static ClassLoader loaderOf(Project project) {
     try {
-<<<<<<<< HEAD:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/spi/SpiLoader.java
-      var javaConf = Class.forName(JAVA_CONFIGURATION_CLASS_NAME);
-========
       var javaConf = Class.forName(IJAVA_CONFIGURATION);
->>>>>>>> 66fe56ffc4f425a26b5782fa4f7a167fc46cce64:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/SpiLoader.java
       var of = MethodUtils.getMethodObject(javaConf, "of", Project.class);
       var local = of.invoke(null, project);
       var loader = MethodUtils.getMethodObject(javaConf, "getClassLoader");
