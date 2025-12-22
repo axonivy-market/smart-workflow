@@ -1,6 +1,6 @@
 # Chat Models
 
-In this directory we maintain projects that supply a ChatModelProvider.
+In the `models` directory we maintain projects that supply a ChatModelProvider.
 
 ## Contributing
 
