@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/spi/SpiLoader.java
 package com.axonivy.utils.smart.workflow.internal.spi;
+========
+package com.axonivy.utils.smart.workflow.internal;
+>>>>>>>> 66fe56ffc4f425a26b5782fa4f7a167fc46cce64:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/SpiLoader.java
 
 import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
 
@@ -21,12 +25,20 @@ import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ReleaseState;
 import ch.ivyteam.ivy.project.model.Project;
 
+<<<<<<<< HEAD:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/spi/SpiLoader.java
 public final class SpiLoader {
 
   private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
   private static final String JAVA_CONFIGURATION_CLASS_NAME = "ch.ivyteam.ivy.java.IJavaConfiguration";
 
+========
+public class SpiLoader {
+>>>>>>>> 66fe56ffc4f425a26b5782fa4f7a167fc46cce64:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/SpiLoader.java
   private final Project project;
+
+  private static final String IJAVA_CONFIGURATION = "ch.ivyteam.ivy.java.IJavaConfiguration";
+  private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
+  private static final String EXCEPTION_PATTERN = "Failed to read service descriptor %s";
 
   public SpiLoader(Project project) {
     this.project = project;
@@ -64,7 +76,11 @@ public final class SpiLoader {
 
   private static ClassLoader loaderOf(Project project) {
     try {
+<<<<<<<< HEAD:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/spi/SpiLoader.java
       var javaConf = Class.forName(JAVA_CONFIGURATION_CLASS_NAME);
+========
+      var javaConf = Class.forName(IJAVA_CONFIGURATION);
+>>>>>>>> 66fe56ffc4f425a26b5782fa4f7a167fc46cce64:smart-workflow/src/com/axonivy/utils/smart/workflow/internal/SpiLoader.java
       var of = MethodUtils.getMethodObject(javaConf, "of", Project.class);
       var local = of.invoke(null, project);
       var loader = MethodUtils.getMethodObject(javaConf, "getClassLoader");
@@ -106,7 +122,7 @@ public final class SpiLoader {
     try (service) {
       return new String(service.readAllBytes(), StandardCharsets.UTF_8);
     } catch (IOException ex) {
-      throw new RuntimeException("Failed to read service descriptor " + service, ex);
+      throw new RuntimeException(String.format(EXCEPTION_PATTERN, service, ex));
     }
   }
 }

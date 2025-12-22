@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.internal.spi.SpiLoader;
+import com.axonivy.utils.smart.workflow.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 import com.axonivy.utils.smart.workflow.utils.IvyUtils;
@@ -38,10 +38,7 @@ public class ChatModelFactory {
   }
 
   public static Set<ChatModelProvider> providers() {
-    var project = IvyUtils.getSmartWorkflowPmv().project(); // TODO: caching?
+    var project = IvyUtils.getSmartWorlflowPmv().project(); // TODO: caching?
     return new SpiLoader(project).load(ChatModelProvider.class);
   }
-
-  
-
 }
