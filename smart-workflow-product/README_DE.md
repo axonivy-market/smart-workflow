@@ -12,19 +12,14 @@ Die wichtigsten Vorteile von Smart Workflow:
 - **Vertraute Einrichtung:** Fügen Sie KI-Agenten ohne strukturelle Änderungen
   in BPMN-Prozesse ein und konfigurieren Sie alles über die
   Standardschnittstellen von Axon Ivy.
-
 - **Unternehmensfähig:** Entwickelt für Unternehmensanforderungen mit
   Protokollierung, Überwachung und Konfigurationskontrollen.
-
 - **Flexible Tools:** Verwandeln Sie jeden aufrufbaren Prozess in ein
   KI-erkennbares Tool.
-
 - **Unterstützung mehrerer Modelle:** Verwenden Sie je nach Aufgabe einfache
   oder erweiterte Modelle.
-
 - **Typsichere Ausgaben:** Erstellen Sie strukturierte Java-Objekte aus
   KI-Antworten zur sofortigen Verwendung.
-
 - **Umgang mit natürlicher Sprache:** Akzeptiert unstrukturierte Eingaben und
   gibt menschenfreundliche Ausgaben zurück.
 
@@ -186,7 +181,7 @@ Entwickler müssen vier Agenten erstellen.
   - Marke erstellen: Erstellen Sie anhand der bereitgestellten Informationen
     eine neue Marke.
 
-Demo-Ablauf
+Demo flow
 
 1. Der Betreiber lädt Produktspezifikationen und Bilddateien hoch.
 2. Smart Workflow analysiert die Dateien und extrahiert Produktattribute (Titel,
@@ -223,7 +218,7 @@ eine einfachere Bereitstellung.
 Entwickler müssen ein zusätzliches `Tool „Produkt nach Kriterien finden”` zum
 `Produkt-Agenten` hinzufügen, wobei die Eingabe die Suchkriterien sind.
 
-Demo-Ablauf
+Demo flow
 
 1. Käufer: tippt oder sagt „Ich brauche ein rotes Kleid für 100 Dollar für eine
    Party heute Abend.“
@@ -238,14 +233,81 @@ Erstellen Sie Daten für die Shopping-Demo „` “ aus der Prozessliste.
 
 ## Setup
 
-### Konfigurationen
+Um Ihre AI-Initiative zu starten, müssen wir die Modelle und Werkzeuge im Voraus
+definieren.
 
-Bevor Sie mit Smart Workflow arbeiten können, müssen Sie einige Konfigurationen
-mithilfe von Axon Ivy-Variablen vornehmen:
+### Models
 
-- `AI.OpenAI.APIKey`: API-Schlüssel Ihres OpenAI-Kontos.
-- `AI.OpenAI.Model`: Standard-OpenAI-Modell. Derzeit unterstützen wir die
-  Modelle `gpt-4o`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano` und `gpt-5`.
+Smart Workflow ist nicht an einen bestimmten KI-Anbieter gebunden. Sie können
+Ihre bevorzugten Modellanbieter zum Installationszeitpunkt auswählen.
+
+Nach der Installation wählen Sie bitte Ihren Standardmodellanbieter
+
+Die Auswahl Ihres Anbieters erfolgt mit der Variablen `AI.DefaultProvider`.
+Darüber hinaus benötigen die meisten Modellanbieter eine ApiKey oder eine andere
+eindeutige Kennung. Überprüfen Sie Ihren Anbieter unten, um zu sehen, welche
+Variablen zusätzlich gesetzt werden müssen.
+
+```yaml
+@variables.yaml@
+```
+
+#### OpenAI-Modelle
+
+OpenAI-Modelle werden nativ unterstützt. Wenn Sie diese verwenden möchten,
+importieren Sie das Projekt „ `” smart-workflow-openai` und definieren Sie Ihren
+OpenAI-Schlüssel.
+
+```yaml
+@variables.openai@
+```
+
+#### Azure OpenAI-Modelle
+
+Azure OpenAI-Modelle werden unterstützt. Um Azure OpenAI zu verwenden,
+importieren Sie das Projekt „ `” smart-workflow-azure-openai`, konfigurieren Sie
+Ihren Azure OpenAI-Endpunkt und Ihre Bereitstellungen.
+
+Jede Bereitstellung in Azure OpenAI stellt eine Modellinstanz mit einem eigenen
+API-Schlüssel dar. Sie können mehrere Bereitstellungen konfigurieren, um
+verschiedene Modelle für unterschiedliche Aufgaben zu verwenden.
+
+```yaml
+@variables.azureopenai@
+```
+
+Beispiel Konfiguration:
+
+```yaml
+@variables.azureopenai.example@
+```
+
+#### Google Gemini-Modelle
+
+Google Gemini Modelle werden unterstützt. Um Google Gemini zu verwenden,
+importieren Sie das `smart-workflow-gemini`-Projekt und konfigurieren Sie Ihren
+Gemini API-Schlüssel und Standardmodell. Dieser Anbieter unterstützt nicht die
+strukturierte Ausgabefunktion, da Google Gemini-Modelle keine strukturierten
+JSON-Reaktionen unterstützen.
+
+```yaml
+@variables.gemini@
+```
+
+Beispiel Konfiguration:
+
+```yaml
+@variables.gemini.example@
+```
+
+Um Unterstützung für zusätzliche AI-Modellanbieter zu verlangen, öffnen Sie
+bitte ein GitHub Issue oder PR.
+
+Stellen Sie sicher, dass Sie der [Models Contribution
+Guideline](../doc/MODELS.md) folgen, um Ihren Anbieter auf das Smart
+Workflow-Ökosystem auszurichten.
+
+
 
 ### Definition von Tools mit aufrufbaren Prozessen
 
@@ -307,68 +369,6 @@ auf dem Anwendungsfall auszuwählen.
 Geben Sie dazu einfach das gewünschte KI-Modell in den Abschnitt „ `-Modell“`
 ein. Wenn kein Modell angegeben ist, verwendet Smart Workflow standardmäßig das
 in der Variablen „ `“ definierte Modell AI.OpenAI.Model`.
-
-##### Anbieter
-
-Smart-Workflow kann mit jedem KI-Modell ausgeführt werden. Die Auswahl Ihres
-Anbieters erfolgt über die Variable `AI.DefaultProvider`.
-
-```yaml
-@variables.yaml@
-```
-
-###### OpenAI-Modelle
-
-OpenAI-Modelle werden nativ unterstützt. Wenn Sie diese verwenden möchten,
-importieren Sie das Projekt „ `” smart-workflow-openai` und definieren Sie Ihren
-OpenAI-Schlüssel.
-
-```yaml
-@variables.openai@
-```
-
-###### Azure OpenAI-Modelle
-
-Azure OpenAI-Modelle werden unterstützt. Um Azure OpenAI zu verwenden,
-importieren Sie das Projekt „ `” smart-workflow-azure-openai`, konfigurieren Sie
-Ihren Azure OpenAI-Endpunkt und Ihre Bereitstellungen.
-
-Jede Bereitstellung in Azure OpenAI stellt eine Modellinstanz mit einem eigenen
-API-Schlüssel dar. Sie können mehrere Bereitstellungen konfigurieren, um
-verschiedene Modelle für unterschiedliche Aufgaben zu verwenden.
-
-```yaml
-@variables.azureopenai@
-```
-
-**Beispielkonfiguration:**
-
-```yaml
-@variables.azureopenai.example@
-```
-
-###### Google Gemini-Modelle
-
-Google Gemini-Modelle werden unterstützt. Um Google Gemini zu verwenden,
-importieren Sie das Projekt „ `” smart-workflow-gemini` und konfigurieren Sie
-Ihren Gemini-API-Schlüssel und Ihr Standardmodell.
-
-This provider does not support the structured output feature because Google Gemini models do not support structured JSON responses.
-
-```yaml
-@variables.gemini@
-```
-
-**Beispielkonfiguration:**
-
-```yaml
-@variables.gemini.example@
-```
-
-Um andere KI-Modellanbieter zu registrieren, fragen Sie bitte auf Github danach
-oder reichen Sie einen Pull-Request ein.
-
-When contributing, make sure to follow the [Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
 
 #### Ausgabe
 
