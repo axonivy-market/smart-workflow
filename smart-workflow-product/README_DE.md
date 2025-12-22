@@ -233,18 +233,20 @@ Erstellen Sie Daten für die Shopping-Demo „` “ aus der Prozessliste.
 
 ## Setup
 
-To start your AI initiative, we need to define the Models and Tools in advance.
+Um Ihre AI-Initiative zu starten, müssen wir die Modelle und Werkzeuge im Voraus
+definieren.
 
 ### Models
 
-Smart Workflow isn't bound to a specific AI vendor. You can select your
-preferred model providers at installation time.
+Smart Workflow ist nicht an einen bestimmten KI-Anbieter gebunden. Sie können
+Ihre bevorzugten Modellanbieter zum Installationszeitpunkt auswählen.
 
-After installation, please choose your default model provider
+Nach der Installation wählen Sie bitte Ihren Standardmodellanbieter
 
-The selection of your provider is done with the variable `AI.DefaultProvider`.
-Furthermore, most model providers need an ApiKey or another unique identifier.
-Check your provider below, to see which variables need to be set in addition.
+Die Auswahl Ihres Anbieters erfolgt mit der Variablen `AI.DefaultProvider`.
+Darüber hinaus benötigen die meisten Modellanbieter eine ApiKey oder eine andere
+eindeutige Kennung. Überprüfen Sie Ihren Anbieter unten, um zu sehen, welche
+Variablen zusätzlich gesetzt werden müssen.
 
 ```yaml
 @variables.yaml@
@@ -274,7 +276,7 @@ verschiedene Modelle für unterschiedliche Aufgaben zu verwenden.
 @variables.azureopenai@
 ```
 
-Example Configuration:
+Beispiel Konfiguration:
 
 ```yaml
 @variables.azureopenai.example@
@@ -282,27 +284,28 @@ Example Configuration:
 
 #### Google Gemini-Modelle
 
-Google Gemini models are supported. To use Google Gemini, import the
-`smart-workflow-gemini` project and configure your Gemini API key and default
-model. This provider does not support the structured output feature because
-Google Gemini models do not support structured JSON responses.
+Google Gemini Modelle werden unterstützt. Um Google Gemini zu verwenden,
+importieren Sie das `smart-workflow-gemini`-Projekt und konfigurieren Sie Ihren
+Gemini API-Schlüssel und Standardmodell. Dieser Anbieter unterstützt nicht die
+strukturierte Ausgabefunktion, da Google Gemini-Modelle keine strukturierten
+JSON-Reaktionen unterstützen.
 
 ```yaml
 @variables.gemini@
 ```
 
-Example Configuration:
+Beispiel Konfiguration:
 
 ```yaml
 @variables.gemini.example@
 ```
 
-To request support for additional AI model providers, please open an issue or
-submit a pull request on GitHub.
+Um Unterstützung für zusätzliche AI-Modellanbieter zu verlangen, öffnen Sie
+bitte ein GitHub Issue oder PR.
 
-When contributing, make sure to follow the [Models Contribution
-Guideline](../doc/MODELS.md) to keep your provider aligned with the Smart
-Workflow ecosystem.
+Stellen Sie sicher, dass Sie der [Models Contribution
+Guideline](../doc/MODELS.md) folgen, um Ihren Anbieter auf das Smart
+Workflow-Ökosystem auszurichten.
 
 
 
