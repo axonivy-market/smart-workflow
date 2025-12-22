@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.guardrails.internal.GuardrailFinder;
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailFactory;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
@@ -31,7 +32,6 @@ import ch.ivyteam.ivy.process.model.diagram.icon.IconDecorator;
 import ch.ivyteam.ivy.scripting.language.IIvyScriptContext;
 import ch.ivyteam.ivy.scripting.objects.CompositeObject;
 import dev.langchain4j.guardrail.InputGuardrail;
-import dev.langchain4j.guardrail.OutputGuardrail;
 import dev.langchain4j.service.AiServices;
 
 public class AgenticProcessCall extends AbstractUserProcessExtension implements IconDecorator {
@@ -89,16 +89,9 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
       agentBuilder.systemMessageProvider(memId -> systemMessage.get());
     }
 
-    List<InputGuardrail> inputClasses = GuardrailFinder
-        .findInputGuardrailsByClassNames(execute(context, Conf.INPUT_GUARD_RAILS, List.class).orElse(null));
+    List<InputGuardrail> inputClasses = GuardrailFactory.providers().stream().collect(Collectors.toList());
     if (CollectionUtils.isNotEmpty(inputClasses)) {
       agentBuilder.inputGuardrails(inputClasses);
-    }
-
-    List<OutputGuardrail> outputClasses = GuardrailFinder
-        .findOutputGuardrailsByClassNames(execute(context, Conf.OUTPUT_GUARD_RAILS, List.class).orElse(null));
-    if (CollectionUtils.isNotEmpty(outputClasses)) {
-      agentBuilder.outputGuardrails(outputClasses);
     }
 
     var agent = agentBuilder.build();
@@ -238,8 +231,7 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
   }
 
   private static List<String> guardrailList(boolean isInput) {
-    return isInput ? GuardrailFinder.findInputGuardrailClassNames()
-        : GuardrailFinder.findOutputGuardrailClassNames();
+    return isInput ? GuardrailFactory.providers().stream().map(SmartWorkflowInputGuardrail::name).collect(Collectors.toList()) : null;
   }
 
   @Override

@@ -11,6 +11,7 @@
     <module>models/smart-workflow-openai</module>
     <module>models/smart-workflow-azure-openai</module>
     <module>models/smart-workflow-gemini</module>
+    <module>addons/smart-workflow-guardrails</module>
     <module>smart-workflow-demo</module>
     <module>smart-workflow-test</module>
     <module>smart-workflow-product</module>

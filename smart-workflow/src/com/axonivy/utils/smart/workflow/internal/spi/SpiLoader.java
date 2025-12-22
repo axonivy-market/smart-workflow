@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.model.spi.internal;
+package com.axonivy.utils.smart.workflow.internal.spi;
 
 import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
 
@@ -14,13 +14,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ReleaseState;
 import ch.ivyteam.ivy.project.model.Project;
 
-public class SpiLoader {
+public final class SpiLoader {
+
+  private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
+  private static final String JAVA_CONFIGURATION_CLASS_NAME = "ch.ivyteam.ivy.java.IJavaConfiguration";
 
   private final Project project;
 
@@ -32,6 +36,7 @@ public class SpiLoader {
     return projectsInScope()
         .flatMap(p -> findImpl(p, type).stream())
         .distinct()
+        .sorted((a, b) -> Strings.CS.compare(a.getClass().getName(), b.getClass().getName()))
         .collect(Collectors.toSet());
   }
 
@@ -59,7 +64,7 @@ public class SpiLoader {
 
   private static ClassLoader loaderOf(Project project) {
     try {
-      var javaConf = Class.forName("ch.ivyteam.ivy.java.IJavaConfiguration");
+      var javaConf = Class.forName(JAVA_CONFIGURATION_CLASS_NAME);
       var of = MethodUtils.getMethodObject(javaConf, "of", Project.class);
       var local = of.invoke(null, project);
       var loader = MethodUtils.getMethodObject(javaConf, "getClassLoader");
@@ -83,7 +88,7 @@ public class SpiLoader {
   private static Set<String> loadRefs(Class<?> type, ClassLoader loader) {
     Set<String> implRefs = new HashSet<>();
     try {
-      Enumeration<URL> enumeration = loader.getResources("META-INF/services/" + type.getName());
+      Enumeration<URL> enumeration = loader.getResources(String.format(SERVICES_LOCATION_PATTERN, type.getName()));
       var it = enumeration.asIterator();
       while (it.hasNext()) {
         var uri = it.next();
