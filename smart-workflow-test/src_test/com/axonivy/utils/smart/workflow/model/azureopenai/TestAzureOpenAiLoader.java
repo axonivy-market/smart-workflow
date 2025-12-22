@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
-import com.axonivy.utils.smart.workflow.model.spi.internal.SpiLoader;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.AppFixture;

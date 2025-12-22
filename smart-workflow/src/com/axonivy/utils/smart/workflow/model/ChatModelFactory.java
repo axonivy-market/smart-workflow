@@ -3,23 +3,20 @@ package com.axonivy.utils.smart.workflow.model;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
-import com.axonivy.utils.smart.workflow.model.spi.internal.SpiLoader;
+import com.axonivy.utils.smart.workflow.utils.IvyUtils;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
-import ch.ivyteam.ivy.application.ProcessModelVersionRelation;
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.ChatModel;
 
 public class ChatModelFactory {
 
   private static final String FALLBACK_PROVIDER = "OpenAI";
-  private static final String SMART_WORKFLOW_PROJECT = "smart-workflow";
 
   public interface AiConf {
     String DEFAULT_PROVIDER = "AI.DefaultProvider";
@@ -41,19 +38,7 @@ public class ChatModelFactory {
   }
 
   public static Set<ChatModelProvider> providers() {
-    var project = myPmv().project(); // TODO: caching?
+    var project = IvyUtils.getSmartWorlflowPmv().project(); // TODO: caching?
     return new SpiLoader(project).load(ChatModelProvider.class);
   }
-
-  private static IProcessModelVersion myPmv() {
-    Predicate<IProcessModelVersion> smartWorkflow = pmv -> SMART_WORKFLOW_PROJECT.equals(pmv.getName());
-    var current = IProcessModelVersion.current();
-    if (smartWorkflow.test(current)) {
-      return current;
-    }
-    return current.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.REQUIRED)
-        .stream().filter(smartWorkflow)
-        .findAny().orElseThrow();
-  }
-
 }

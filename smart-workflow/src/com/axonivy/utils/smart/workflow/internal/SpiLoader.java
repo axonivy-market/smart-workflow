@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.model.spi.internal;
+package com.axonivy.utils.smart.workflow.internal;
 
 import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
 
@@ -21,8 +21,11 @@ import ch.ivyteam.ivy.application.ReleaseState;
 import ch.ivyteam.ivy.project.model.Project;
 
 public class SpiLoader {
-
   private final Project project;
+
+  private static final String IJAVA_CONFIGURATION = "ch.ivyteam.ivy.java.IJavaConfiguration";
+  private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
+  private static final String EXCEPTION_PATTERN = "Failed to read service descriptor %s";
 
   public SpiLoader(Project project) {
     this.project = project;
@@ -59,7 +62,7 @@ public class SpiLoader {
 
   private static ClassLoader loaderOf(Project project) {
     try {
-      var javaConf = Class.forName("ch.ivyteam.ivy.java.IJavaConfiguration");
+      var javaConf = Class.forName(IJAVA_CONFIGURATION);
       var of = MethodUtils.getMethodObject(javaConf, "of", Project.class);
       var local = of.invoke(null, project);
       var loader = MethodUtils.getMethodObject(javaConf, "getClassLoader");
@@ -83,7 +86,7 @@ public class SpiLoader {
   private static Set<String> loadRefs(Class<?> type, ClassLoader loader) {
     Set<String> implRefs = new HashSet<>();
     try {
-      Enumeration<URL> enumeration = loader.getResources("META-INF/services/" + type.getName());
+      Enumeration<URL> enumeration = loader.getResources(String.format(SERVICES_LOCATION_PATTERN, type.getName()));
       var it = enumeration.asIterator();
       while (it.hasNext()) {
         var uri = it.next();
@@ -101,7 +104,7 @@ public class SpiLoader {
     try (service) {
       return new String(service.readAllBytes(), StandardCharsets.UTF_8);
     } catch (IOException ex) {
-      throw new RuntimeException("Failed to read service descriptor " + service, ex);
+      throw new RuntimeException(String.format(EXCEPTION_PATTERN, service, ex));
     }
   }
 }
