@@ -38,7 +38,7 @@ public class ChatModelFactory {
   }
 
   public static Set<ChatModelProvider> providers() {
-    var project = IvyUtils.getSmartWorlflowPmv().project(); // TODO: caching?
+    var project = IvyUtils.getSmartWorkflowPmv().project(); // TODO: caching?
     return new SpiLoader(project).load(ChatModelProvider.class);
   }
 }
