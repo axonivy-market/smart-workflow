@@ -3,7 +3,9 @@ package com.axonivy.utils.smart.workflow;
 import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -89,9 +91,13 @@ public class AgenticProcessCall extends AbstractUserProcessExtension implements 
       agentBuilder.systemMessageProvider(memId -> systemMessage.get());
     }
 
-    List<InputGuardrail> inputClasses = GuardrailFactory.providers().stream().collect(Collectors.toList());
-    if (CollectionUtils.isNotEmpty(inputClasses)) {
-      agentBuilder.inputGuardrails(inputClasses);
+    List<String> inputGuardrailNames = execute(context, Conf.INPUT_GUARD_RAILS, List.class).orElse(new ArrayList<>());
+    List<InputGuardrail> inputGuardrails = inputGuardrailNames.stream()
+        .map(guardrailName -> GuardrailFactory.create(guardrailName).orElse(null)).filter(Objects::nonNull)
+        .collect(Collectors.toList());
+
+    if (CollectionUtils.isNotEmpty(inputGuardrails)) {
+      agentBuilder.inputGuardrails(inputGuardrails);
     }
 
     var agent = agentBuilder.build();
