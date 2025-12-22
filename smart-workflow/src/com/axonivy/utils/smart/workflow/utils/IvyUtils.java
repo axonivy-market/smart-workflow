@@ -8,7 +8,7 @@ import ch.ivyteam.ivy.application.ProcessModelVersionRelation;
 public final class IvyUtils {
   private static final String SMART_WORKFLOW_PROJECT = "smart-workflow";
 
-  public static IProcessModelVersion getSmartWorlflowPmv() {
+  public static IProcessModelVersion getSmartWorkflowPmv() {
     Predicate<IProcessModelVersion> smartWorkflow = pmv -> SMART_WORKFLOW_PROJECT.equals(pmv.getName());
     var current = IProcessModelVersion.current();
     if (smartWorkflow.test(current)) {
