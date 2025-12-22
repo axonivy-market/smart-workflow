@@ -160,14 +160,21 @@ Check your provider below, to see which variables need to be set in addition.
 
 #### OpenAI Models
 
+<details>
+
+<summary>OpenAI setup instructions</summary>
 OpenAI models are natively supported. If you wish to use them import the `smart-workflow-openai` project and define your OpenAI key.
 
 ```yaml
 @variables.openai@
 ```
+</details>
 
 #### Azure OpenAI Models
 
+<details>
+
+<summary>Azure OpenAI setup instructions</summary>
 Azure OpenAI models are supported. To use Azure OpenAI, import the `smart-workflow-azure-openai` project and configure your Azure OpenAI endpoint and deployments.
 
 Each deployment in Azure OpenAI represents a model instance with its own API key. You can configure multiple deployments to use different models for different tasks.
@@ -181,9 +188,13 @@ Example Configuration:
 ```yaml
 @variables.azureopenai.example@
 ```
+</details>
 
 #### Google Gemini Models
 
+<details>
+
+<summary>Google Gemini setup instructions</summary>
 Google Gemini models are supported. To use Google Gemini, import the `smart-workflow-gemini` project and configure your Gemini API key and default model.
 This provider does not support the structured output feature because Google Gemini models do not support structured JSON responses.
 
@@ -196,6 +207,7 @@ Example Configuration:
 ```yaml
 @variables.gemini.example@
 ```
+</details>
 
 To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
 
