@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.internal;
+package com.axonivy.utils.smart.workflow.spi.internal;
 
 import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
 
