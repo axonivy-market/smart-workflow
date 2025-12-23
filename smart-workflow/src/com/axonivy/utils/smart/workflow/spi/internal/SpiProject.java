@@ -1,12 +1,12 @@
-package com.axonivy.utils.smart.workflow.utils;
+package com.axonivy.utils.smart.workflow.spi.internal;
 
 import java.util.function.Predicate;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.application.ProcessModelVersionRelation;
 
-public final class IvyUtils {
-  private static final String SMART_WORKFLOW_PROJECT = "smart-workflow";
+public final class SpiProject {
+  static String SMART_WORKFLOW_PROJECT = "smart-workflow";
 
   public static IProcessModelVersion getSmartWorkflowPmv() {
     Predicate<IProcessModelVersion> smartWorkflow = pmv -> SMART_WORKFLOW_PROJECT.equals(pmv.getName());
