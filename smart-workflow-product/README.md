@@ -5,15 +5,10 @@
 Key benefits of Smart Workflow:
 
 - **Familiar setup:** Drop AI agents into BPMN processes with no structural changes and configure everything through Axon Ivy’s standard interfaces.
-
 - **Enterprise-ready:** Built for enterprise needs with logging, monitoring, and configuration controls.
-
 - **Flexible tools:** Turn any callable process into an AI-discoverable tool.
-
 - **Multi-model support:** Use lightweight or advanced models depending on the task.
-
 - **Type-safe outputs:** Produce structured Java objects from AI responses for immediate use.
-
 - **Natural language handling:** Accept unstructured input and return human-friendly output.
 
 **Disclaimer**
@@ -146,12 +141,67 @@ To quickly set up the demo data, run the process `Create data for shopping demo`
 
 ## Setup
 
-### Configurations
+To start your AI initiative, we need to define the Models and Tools in advance.
 
-Before start working with Smart Workflow, you need to provide some configurations using Axon Ivy variables:
+### Models
 
-- `AI.OpenAI.APIKey`: API key of your OpenAI account.
-- `AI.OpenAI.Model`: Default OpenAI model. Currently we are supporting `gpt-4o`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, and `gpt-5` models.
+Smart Workflow isn't bound to a specific AI vendor. 
+You can select your preferred model providers at installation time.
+
+After installation, please choose your default model provider
+
+The selection of your provider is done with the variable `AI.DefaultProvider`. 
+Furthermore, most model providers need an ApiKey or another unique identifier.
+Check your provider below, to see which variables need to be set in addition.
+
+```yaml
+@variables.yaml@
+```
+
+#### OpenAI Models
+
+OpenAI models are natively supported. If you wish to use them import the `smart-workflow-openai` project and define your OpenAI key.
+
+```yaml
+@variables.openai@
+```
+
+#### Azure OpenAI Models
+
+Azure OpenAI models are supported. To use Azure OpenAI, import the `smart-workflow-azure-openai` project and configure your Azure OpenAI endpoint and deployments.
+
+Each deployment in Azure OpenAI represents a model instance with its own API key. You can configure multiple deployments to use different models for different tasks.
+
+```yaml
+@variables.azureopenai@
+```
+
+Example Configuration:
+
+```yaml
+@variables.azureopenai.example@
+```
+
+#### Google Gemini Models
+
+Google Gemini models are supported. To use Google Gemini, import the `smart-workflow-gemini` project and configure your Gemini API key and default model.
+This provider does not support the structured output feature because Google Gemini models do not support structured JSON responses.
+
+```yaml
+@variables.gemini@
+```
+
+Example Configuration:
+
+```yaml
+@variables.gemini.example@
+```
+
+To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
+
+When contributing, make sure to follow the [Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
+
+
 
 ### Defining Tools with Callable Processes
 
@@ -191,58 +241,6 @@ Therefore, Smart Workflow allows developers to select the underlying AI model ba
 
 To do this, simply enter the desired AI model in the `Model` section. 
 By default, if no model is specified, Smart Workflow uses the model defined in the variable `AI.OpenAI.Model`.
-
-##### Providers
-
-Smart-Workflow is open to run with any AI model. 
-The selection of your provider is done with the variable `AI.DefaultProvider`. 
-
-```yaml
-@variables.yaml@
-```
-
-###### OpenAI Models
-
-OpenAI models are natively supported. If you wish to use them import the `smart-workflow-openai` project and define your OpenAI key.
-
-```yaml
-@variables.openai@
-```
-
-###### Azure OpenAI Models
-
-Azure OpenAI models are supported. To use Azure OpenAI, import the `smart-workflow-azure-openai` project and configure your Azure OpenAI endpoint and deployments.
-
-Each deployment in Azure OpenAI represents a model instance with its own API key. You can configure multiple deployments to use different models for different tasks.
-
-```yaml
-@variables.azureopenai@
-```
-
-**Example Configuration:**
-
-```yaml
-@variables.azureopenai.example@
-```
-
-###### Google Gemini Models
-
-Google Gemini models are supported. To use Google Gemini, import the `smart-workflow-gemini` project and configure your Gemini API key and default model.
-This provider does not support the structured output feature because Google Gemini models do not support structured JSON responses.
-
-```yaml
-@variables.gemini@
-```
-
-**Example Configuration:**
-
-```yaml
-@variables.gemini.example@
-```
-
-To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
-
-When contributing, make sure to follow the [Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
 
 #### Output
 
