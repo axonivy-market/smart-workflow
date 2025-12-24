@@ -29,12 +29,6 @@
       <version>${project.version}</version>
       <type>iar</type>
     </dependency>
-    <dependency>
-      <groupId>smart.workflow.guardrails</groupId>
-      <artifactId>smart-workflow-guardrails</artifactId>
-      <version>${project.version}</version>
-      <type>iar</type>
-    </dependency>
   </dependencies>
   <repositories>
     <repository>

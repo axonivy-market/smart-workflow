@@ -38,8 +38,7 @@ public class PromptInjectionGuardrail extends AbstractInputGuardrail {
   @Override
   public GuardrailResult evaluate(String message) {
     boolean isInvalid = PROMPT_INJECTION_PATTERN.matcher(message).find()
-        || EXCESSIVE_SPECIAL_CHARS.matcher(message).find()
-        || CONTROL_CHARS.matcher(message).find();
+        || EXCESSIVE_SPECIAL_CHARS.matcher(message).find() || CONTROL_CHARS.matcher(message).find();
 
     return isInvalid ? GuardrailResult.block(FAILURE_MESSAGE) : GuardrailResult.allow();
   }

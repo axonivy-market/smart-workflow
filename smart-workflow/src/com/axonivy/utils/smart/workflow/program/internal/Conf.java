@@ -8,4 +8,5 @@ public interface Conf {
   String PROVIDER = "provider";
   String OUTPUT = "resultType";
   String MAP_TO = "resultMapping";
+  String INPUT_GUARD_RAILS = "inputGuardrails";
 }
