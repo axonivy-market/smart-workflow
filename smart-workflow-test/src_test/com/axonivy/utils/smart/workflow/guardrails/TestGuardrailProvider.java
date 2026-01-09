@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
+import com.axonivy.utils.smart.workflow.guardrails.dummy.DummyGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionGuardrail;
 
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -31,8 +32,10 @@ public class TestGuardrailProvider {
   @Test
   void providersListWithFilters() {
     var adapters = GuardrailProvider
-        .providersList(List.of("PromptInjectionGuardrail", "PromptInjectionGuardrail", "InvalidGuardrail"));
-    assertThat(adapters).hasSize(1); // duplicates and non-existed should be filtered
+        .providersList(
+            List.of("PromptInjectionGuardrail", "PromptInjectionGuardrail", "InvalidGuardrail", "DummyGuardrail"));
+    assertThat(adapters).hasSize(2); // duplicates and non-existed should be filtered
     assertThat(adapters.get(0).getDelegate()).isInstanceOf(PromptInjectionGuardrail.class);
+    assertThat(adapters.get(1).getDelegate()).isInstanceOf(DummyGuardrail.class);
   }
 }
