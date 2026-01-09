@@ -2,10 +2,10 @@ package com.axonivy.utils.smart.workflow.guardrails.input;
 
 import java.util.regex.Pattern;
 
-import com.axonivy.utils.smart.workflow.guardrails.entity.AbstractInputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 
-public class PromptInjectionGuardrail extends AbstractInputGuardrail {
+public class PromptInjectionGuardrail implements SmartWorkflowInputGuardrail {
 
   private static final String NAME = "Prompt Injection Detector";
 

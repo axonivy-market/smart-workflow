@@ -1,15 +1,25 @@
-package com.axonivy.utils.smart.workflow.guardrails.entity;
+package com.axonivy.utils.smart.workflow.guardrails.adapter;
 
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrail;
 import dev.langchain4j.guardrail.InputGuardrailRequest;
 import dev.langchain4j.guardrail.InputGuardrailResult;
 
-public abstract class AbstractInputGuardrail implements SmartWorkflowInputGuardrail, InputGuardrail {
+public class InputGuardrailAdapter implements InputGuardrail {
+
+  private SmartWorkflowInputGuardrail delegate;
+
+  public InputGuardrailAdapter(SmartWorkflowInputGuardrail delegate) {
+    this.delegate = delegate;
+  }
+
   @Override
   public InputGuardrailResult validate(UserMessage userMessage) {
     String message = Optional.ofNullable(userMessage).map(UserMessage::singleText).orElse(StringUtils.EMPTY);
@@ -22,20 +32,17 @@ public abstract class AbstractInputGuardrail implements SmartWorkflowInputGuardr
         .orElse(StringUtils.EMPTY);
     return doValidate(message);
   }
-  
+
   private InputGuardrailResult doValidate(String message) {
-    GuardrailResult result = evaluate(message);
+    GuardrailResult result = delegate.evaluate(message);
 
     if (!result.isAllowed()) {
-      failure(result.getReason());
       return this.failure(result.getReason());
     }
     return this.success();
   }
 
-  @Override
-  public abstract String name();
-
-  @Override
-  public abstract GuardrailResult evaluate(String message);
+  public SmartWorkflowInputGuardrail getDelegate() {
+    return delegate;
+  }
 }

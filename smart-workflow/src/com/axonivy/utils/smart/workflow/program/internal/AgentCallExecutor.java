@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
-import static com.axonivy.utils.smart.workflow.guardrails.GuardrailFactory.USE_GUARDRAIL;
+import static com.axonivy.utils.smart.workflow.guardrails.GuardrailProvider.USE_GUARDRAIL;
 import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.guardrails.GuardrailFactory;
-import com.axonivy.utils.smart.workflow.guardrails.entity.AbstractInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailProvider;
+import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
@@ -65,7 +65,7 @@ public class AgentCallExecutor {
 
     if (Boolean.parseBoolean(Ivy.var().get(USE_GUARDRAIL))) {
       List<String> guardraiFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
-      List<AbstractInputGuardrail> inputGuardrails = GuardrailFactory.providersList(guardraiFilters);
+      List<InputGuardrailAdapter> inputGuardrails = GuardrailProvider.providersList(guardraiFilters);
 
       if (CollectionUtils.isNotEmpty(inputGuardrails)) {
         agentBuilder.inputGuardrails(inputGuardrails);
