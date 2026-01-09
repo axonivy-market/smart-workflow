@@ -3,3 +3,5 @@ Variables:
   AI:
     # [enum: OpenAI, AzureOpenAI, Gemini]
     DefaultProvider: ""
+    # If set to true, built-in guardrails will be applied.
+    UseGuardrails: true
