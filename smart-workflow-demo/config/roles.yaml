@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/app/14.0.0/roles.json
+Roles:
+- Id: SupportTeam
+- Id: TechnicalTeam
+- Id: PortalSupport
+- Id: CoreSupport
+- Id: MarketSupport
