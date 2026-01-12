@@ -1,7 +1,9 @@
-# yaml-language-server: $schema=https://json-schema.axonivy.com/app/13.2.1/variables.json
+# yaml-language-server: $schema=https://json-schema.axonivy.com/app/14.0.0/variables.json
 Variables:
   AI:
     # [enum: OpenAI, AzureOpenAI, Gemini]
     DefaultProvider: ""
-    # If set to true, built-in guardrails will be applied.
-    UseGuardrails: true
+    # Guardrails designed to ensure that AI operate safely ethical, and legal
+    Guardrails:
+      # Default input guardrails. Separated by comma. Example: "GuardrailOne, GuardrailTwo"
+      DefaultInput: PromptInjectionGuardrail

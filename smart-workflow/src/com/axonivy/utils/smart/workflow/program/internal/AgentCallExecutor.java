@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
-import static com.axonivy.utils.smart.workflow.guardrails.GuardrailProvider.USE_GUARDRAIL;
 import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 
 import java.util.List;
@@ -63,13 +62,11 @@ public class AgentCallExecutor {
     var agentBuilder = AiServices.builder(agentType).chatModel(model)
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
 
-    if (Boolean.parseBoolean(Ivy.var().get(USE_GUARDRAIL))) {
-      List<String> guardraiFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
-      List<InputGuardrailAdapter> inputGuardrails = GuardrailProvider.providersList(guardraiFilters);
 
-      if (CollectionUtils.isNotEmpty(inputGuardrails)) {
-        agentBuilder.inputGuardrails(inputGuardrails);
-      }
+    List<String> guardraiFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
+    List<InputGuardrailAdapter> inputGuardrails = GuardrailProvider.providersList(guardraiFilters);
+    if (CollectionUtils.isNotEmpty(inputGuardrails)) {
+      agentBuilder.inputGuardrails(inputGuardrails);
     }
 
     var systemMessage = expand(Conf.SYSTEM);

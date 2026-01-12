@@ -7,8 +7,6 @@ import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuar
 
 public class PromptInjectionGuardrail implements SmartWorkflowInputGuardrail {
 
-  private static final String NAME = "Prompt Injection Detector";
-
   private static final String FAILURE_MESSAGE = "Input was rejected: message is empty or contains malicious content";
 
   // Pattern for common prompt injection attempts
@@ -29,11 +27,6 @@ public class PromptInjectionGuardrail implements SmartWorkflowInputGuardrail {
   // Examples: "malicious\x00hidden" (null byte injection),
   // "\x1B[2J" (ANSI escape codes to clear screen)
   private static final Pattern CONTROL_CHARS = Pattern.compile("[\\x00-\\x1F\\x7F]");
-
-  @Override
-  public String name() {
-    return NAME;
-  }
 
   @Override
   public GuardrailResult evaluate(String message) {

@@ -33,10 +33,10 @@ public class AgentEditor {
 
     String guardrailList = guardrailsList();
     if (StringUtils.isNotBlank(guardrailList)) {
-      ui.group("Input guardrails").add(ui.label("Available input guardrails:\n").create())
+      ui.group("Guardrails").add(ui.label("Available guardrails:\n").create())
           .add(ui.label(guardrailList).multiline().create())
           .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create())
-          .add(ui.label("Select the guardrails to apply, or keep empty to use none").create()).create();
+          .add(ui.label("Select the guardrails to apply, or keep empty to use default guardrails").create()).create();
     }
 
     ui.group("Model")
@@ -92,7 +92,8 @@ public class AgentEditor {
     if (providers.isEmpty()) {
       return StringUtils.EMPTY;
     }
-    return providers.get().stream().map(SmartWorkflowInputGuardrail::getDisplayName).distinct()
-        .collect(Collectors.joining(", "));
+    return providers.get().stream().map(SmartWorkflowInputGuardrail::name).distinct()
+        .map(name -> String.format("- %s", name))
+        .collect(Collectors.joining("\n"));
   }
 }

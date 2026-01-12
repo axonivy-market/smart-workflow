@@ -6,11 +6,6 @@ import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuar
 public class DummyGuardrail implements SmartWorkflowInputGuardrail {
 
   @Override
-  public String name() {
-    return "Dummy Guardrail";
-  }
-
-  @Override
   public GuardrailResult evaluate(String message) {
     return GuardrailResult.block("Dummy error");
   }
