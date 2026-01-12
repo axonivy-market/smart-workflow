@@ -64,7 +64,7 @@ public class AgentCallExecutor {
 
 
     List<String> guardraiFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
-    List<InputGuardrailAdapter> inputGuardrails = GuardrailProvider.providersList(guardraiFilters);
+    List<InputGuardrailAdapter> inputGuardrails = GuardrailProvider.providers(guardraiFilters);
     if (CollectionUtils.isNotEmpty(inputGuardrails)) {
       agentBuilder.inputGuardrails(inputGuardrails);
     }

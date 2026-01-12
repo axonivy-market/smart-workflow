@@ -21,39 +21,30 @@ public class GuardrailProvider {
   public static final String DEFAULT_INPUT_GUARDRAILS = "AI.Guardrails.DefaultInput";
 
   private static Optional<SmartWorkflowInputGuardrail> create(String name) {
-    return getAllProviders().stream().filter(impl -> impl.name().equals(name)).findFirst();
+    return allProviders().stream().filter(impl -> impl.name().equals(name)).findFirst();
   }
 
-  private static Set<SmartWorkflowInputGuardrail> getAllProviders() {
+  public static Set<SmartWorkflowInputGuardrail> allProviders() {
     var project = SpiProject.getSmartWorkflowPmv().project();
     return new SpiLoader(project).load(SmartWorkflowInputGuardrail.class);
   }
 
-  /**
-   * Load default providers If the default providers variable is empty, return
-   * empty list
-   * 
-   */
-  public static List<SmartWorkflowInputGuardrail> providers() {
+  private static List<SmartWorkflowInputGuardrail> defaultProviders() {
     String defaultGuardrails = Ivy.var().get(DEFAULT_INPUT_GUARDRAILS);
     if (StringUtils.isBlank(defaultGuardrails)) {
       return new ArrayList<>();
     }
 
-    List<String> guardrailNames = List.of(StringUtils.split(Ivy.var().get(DEFAULT_INPUT_GUARDRAILS), ",")).stream()
+    List<String> guardrailNames = List.of(StringUtils.split(defaultGuardrails, ",")).stream()
         .distinct().filter(StringUtils::isNotBlank).map(String::strip).toList();
-    return getAllProviders().stream()
+    return allProviders().stream()
         .filter(g -> guardrailNames.contains(g.name())).collect(Collectors.toList());
   }
 
-  /**
-   * Load provider list If the filters list is empty, use the default providers
-   * instead
-   * 
-   */
-  public static List<InputGuardrailAdapter> providersList(List<String> filters) {
+
+  public static List<InputGuardrailAdapter> providers(List<String> filters) {
     if (CollectionUtils.isEmpty(filters)) {
-      return providers().stream().map(InputGuardrailAdapter::new).collect(Collectors.toList());
+      return defaultProviders().stream().map(InputGuardrailAdapter::new).collect(Collectors.toList());
     }
 
     return filters.stream().distinct()

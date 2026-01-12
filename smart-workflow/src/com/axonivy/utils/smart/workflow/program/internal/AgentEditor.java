@@ -88,12 +88,11 @@ public class AgentEditor {
   }
 
   private String guardrailsList() {
-    var providers = Optional.ofNullable(GuardrailProvider.providers());
+    var providers = Optional.ofNullable(GuardrailProvider.allProviders());
     if (providers.isEmpty()) {
       return StringUtils.EMPTY;
     }
     return providers.get().stream().map(SmartWorkflowInputGuardrail::name).distinct()
-        .map(name -> String.format("- %s", name))
-        .collect(Collectors.joining("\n"));
+        .map(name -> String.format("- %s", name)).collect(Collectors.joining("\n"));
   }
 }

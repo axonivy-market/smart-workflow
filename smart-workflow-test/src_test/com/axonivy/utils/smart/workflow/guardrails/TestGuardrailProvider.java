@@ -25,14 +25,14 @@ public class TestGuardrailProvider {
 
   @Test
   void providersListWithoutFilters(AppFixture fixture) {
-    var adapters = GuardrailProvider.providersList(null);
+    var adapters = GuardrailProvider.providers(null);
     assertThat(adapters).hasSize(1);
     assertThat(adapters.get(0).getDelegate()).isInstanceOf(PromptInjectionGuardrail.class);
   }
 
   @Test
   void providersListWithFilters() {
-    var adapters = GuardrailProvider.providersList(
+    var adapters = GuardrailProvider.providers(
         List.of("PromptInjectionGuardrail", "PromptInjectionGuardrail", "InvalidGuardrail", "DummyGuardrail"));
     assertThat(adapters).hasSize(2); // duplicates and non-existed should be filtered
     List<SmartWorkflowInputGuardrail> delegates = adapters.stream().map(InputGuardrailAdapter::getDelegate).toList();
