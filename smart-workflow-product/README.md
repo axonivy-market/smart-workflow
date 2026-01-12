@@ -260,6 +260,17 @@ public class MyCustomGuardrail implements SmartWorkflowInputGuardrail {
 com.example.guardrails.MyCustomGuardrail
 ```
 
+### Handling Guardrail Error
+
+When a guardrail blocks the input, a `GuardrailException` is thrown. You can handle this easily using Axon Ivy’s error boundary elements:
+
+1. Add an **Error Start Event** to your process.
+2. Configure it to catch your custom error code, such as `ivy:error:agent:guardrails:demo`.
+3. In the `AgenticProcessCall` element, open the **Error** tab and select the matching error code.
+4. Implement your error handling logic (e.g., display a user-friendly message, log the incident, retry with different input).
+
+For a working example, see the `GuardrailDemo` process in the `smart-workflow-demo` project.
+
 ### Defining Tools with Callable Processes
 
 To function effectively, AI agents require tools to perform tasks. With Smart Workflow, creating a tool is straightforward: simply define a callable process and add the `tool` tag to it.
