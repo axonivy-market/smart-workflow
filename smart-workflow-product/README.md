@@ -227,49 +227,7 @@ In the agent configuration, specify guardrails as a String array:
 
 If no guardrails are specified, the agent uses the default guardrails from `variables.yaml`.
 
-#### Implementing Custom Guardrails
-
-1. Create a class implementing `SmartWorkflowInputGuardrail`:
-
-```java
-package com.example.guardrails;
-
-import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
-import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
-
-public class MyCustomGuardrail implements SmartWorkflowInputGuardrail {
-
-  @Override
-  public GuardrailResult evaluate(String message) {
-    if (containsSensitiveData(message)) {
-      return GuardrailResult.block("Message contains sensitive data");
-    }
-    return GuardrailResult.allow();
-  }
-
-  private boolean containsSensitiveData(String message) {
-    // Your validation logic
-    return false;
-  }
-}
-```
-
-2. Register the guardrail in `src/META-INF/services/com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail`:
-
-```
-com.example.guardrails.MyCustomGuardrail
-```
-
-### Handling Guardrail Error
-
-When a guardrail blocks the input, a `GuardrailException` is thrown. You can handle this easily using Axon Ivy’s error boundary elements:
-
-1. Add an **Error Start Event** to your process.
-2. Configure it to catch your custom error code, such as `ivy:error:agent:guardrails:demo`.
-3. In the `AgenticProcessCall` element, open the **Error** tab and select the matching error code.
-4. Implement your error handling logic (e.g., display a user-friendly message, log the incident, retry with different input).
-
-For a working example, see the `GuardrailDemo` process in the `smart-workflow-demo` project.
+Smart Workflow also lets you implement custom guardrails and handle guardrail errors. For more details, see the [Guardrails Guideline](../doc/GUARDRAILS.md).
 
 ### Defining Tools with Callable Processes
 
