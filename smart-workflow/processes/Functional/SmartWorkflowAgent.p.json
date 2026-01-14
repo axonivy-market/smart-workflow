@@ -1,0 +1,78 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
+  "id" : "19BBA9599B5DABF9",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.SmartWorkflowAgentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "invokeAgent(String,String,List<String>,String,String,Class,String)",
+      "config" : {
+        "signature" : "invokeAgent",
+        "input" : {
+          "params" : [
+            { "name" : "query", "type" : "String", "desc" : "The user query/message to send to the AI agent" },
+            { "name" : "systemMessage", "type" : "String", "desc" : "System message to define agent behavior" },
+            { "name" : "tools", "type" : "List<String>", "desc" : "List of tool names available to the agent. Keep empty to use all tools" },
+            { "name" : "provider", "type" : "String", "desc" : "AI provider name. Keep empty to use default from variables.yaml" },
+            { "name" : "model", "type" : "String", "desc" : "AI model name. Keep empty to use default from variables.yaml" },
+            { "name" : "resultType", "type" : "Class", "desc" : "Expected result type class for structured output. Keep null for String result" },
+            { "name" : "resultMapping", "type" : "String", "desc" : "IvyScript expression to map result (e.g. in.result)" }
+          ],
+          "map" : {
+            "out.model" : "param.model",
+            "out.provider" : "param.provider",
+            "out.query" : "param.query",
+            "out.resultType" : "param.resultType",
+            "out.systemMessage" : "param.systemMessage",
+            "out.tools" : "param.tools"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "resultObject", "type" : "Object", "desc" : "The AI agent response result" }
+          ],
+          "map" : {
+            "result.resultObject" : "in.resultObject"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "labelOffset" : { "x" : 17, "y" : 49 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 536, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "ProgramInterface",
+      "name" : "Smart Workflow Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "<%=in.systemMessage%>",
+          "provider" : "in.provider",
+          "resultMapping" : "in.resultObject",
+          "query" : "<%=in.query%>",
+          "model" : "in.model",
+          "tools" : "in.tools",
+          "resultType" : "in.resultType"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 344, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f1" }
+      ]
+    } ]
+}
