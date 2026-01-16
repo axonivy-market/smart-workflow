@@ -8,7 +8,7 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "invokeAgent(String,String,List<String>,String,String,Class,String)",
+      "name" : "invokeAgent(String,String,List<String>,String,String,String,String)",
       "config" : {
         "signature" : "invokeAgent",
         "input" : {
@@ -18,7 +18,7 @@
             { "name" : "tools", "type" : "List<String>", "desc" : "List of tool names available to the agent. Keep empty to use all tools" },
             { "name" : "provider", "type" : "String", "desc" : "AI provider name. Keep empty to use default from variables.yaml" },
             { "name" : "model", "type" : "String", "desc" : "AI model name. Keep empty to use default from variables.yaml" },
-            { "name" : "resultType", "type" : "Class", "desc" : "Expected result type class for structured output. Keep null for String result" },
+            { "name" : "resultType", "type" : "String", "desc" : "Expected result type class for structured output. Keep null for String result" },
             { "name" : "resultMapping", "type" : "String", "desc" : "IvyScript expression to map result (e.g. in.result)" }
           ],
           "map" : {
