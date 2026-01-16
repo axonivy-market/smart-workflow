@@ -20,6 +20,7 @@
     "comment" : "AI model name. Keep empty to use default from variables.yaml"
   }, {
     "name" : "resultType",
+    "type" : "Class",
     "comment" : "Expected result type class for structured output. Keep null for String result"
   }, {
     "name" : "resultObject",

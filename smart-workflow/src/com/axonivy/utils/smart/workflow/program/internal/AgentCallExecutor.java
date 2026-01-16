@@ -47,9 +47,7 @@ public class AgentCallExecutor {
 
     List<String> toolFilter = execute(Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
-
-    // Changed: resolve class from string using the process class loader
-    var structured = resolveOutputClass();
+    var structured = execute(Conf.OUTPUT, Class.class);
     if (structured.isPresent()) {
       agentType = StructuredOutputAgent.agent(structured.get());
     }
@@ -110,19 +108,4 @@ public class AgentCallExecutor {
     }
   }
 
-  @SuppressWarnings("rawtypes")
-  private Optional<Class> resolveOutputClass() {
-    var result = execute(Conf.OUTPUT, Class.class);
-    if (result.isPresent()) {
-      return result;
-    }
-
-    try {
-      String className = Optional.ofNullable(context.config().get(Conf.OUTPUT))
-        .orElse("").replace(".class", "");
-      return Optional.ofNullable(Class.forName(className, true, context.getClass().getClassLoader()));
-    } catch(ClassNotFoundException e) {
-      return Optional.empty();
-    }
-  }
 }
