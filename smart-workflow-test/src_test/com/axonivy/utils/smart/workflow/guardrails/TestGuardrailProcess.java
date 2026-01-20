@@ -29,6 +29,6 @@ public class TestGuardrailProcess {
         .execute();
     GuardrailDemoData data = res.data().last();
     assertThat(data.getResult().contains(
-        "PromptInjectionGuardrail: The input message is rejected because it's empty or contains malicious content"));
+        "The input message is rejected because it's empty or contains malicious content"));
   }
 }

@@ -9,4 +9,5 @@ public interface Conf {
   String OUTPUT = "resultType";
   String MAP_TO = "resultMapping";
   String INPUT_GUARD_RAILS = "inputGuardrails";
+  String ERROR_CODE = "errorCode";
 }
