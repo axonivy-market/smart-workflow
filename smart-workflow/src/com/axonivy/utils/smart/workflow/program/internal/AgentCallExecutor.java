@@ -6,18 +6,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailProvider;
+import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
 
+import dev.langchain4j.guardrail.InputGuardrailException;
+
+import ch.ivyteam.ivy.bpm.error.BpmError;
+import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
+  private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
 
   private final ProgramContext context;
 
@@ -56,9 +64,14 @@ public class AgentCallExecutor {
         .structuredOutput(structured.isPresent());
     var model = ChatModelFactory.createModel(modelOptions, providerName);
 
-    var agentBuilder = AiServices.builder(agentType)
-        .chatModel(model)
+    var agentBuilder = AiServices.builder(agentType).chatModel(model)
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
+
+    List<String> guardraiFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
+    List<InputGuardrailAdapter> inputGuardrails = GuardrailProvider.providers(guardraiFilters);
+    if (CollectionUtils.isNotEmpty(inputGuardrails)) {
+      agentBuilder.inputGuardrails(inputGuardrails);
+    }
 
     var systemMessage = expand(Conf.SYSTEM);
     if (systemMessage.isPresent()) {
@@ -66,19 +79,22 @@ public class AgentCallExecutor {
     }
 
     var agent = agentBuilder.build();
-    var result = agent.chat(query.get());
 
-    var mapTo = context.config().get(Conf.MAP_TO);
-    if (mapTo != null) {
+    try {
+      Object result = agent.chat(query.get());
+      var mapTo = context.config().get(Conf.MAP_TO);
+      if (mapTo != null) {
       String mapIt = mapTo + "=result";
-      try {
-        context.script().variable(Variable.RESULT, result).executeScript(mapIt);
-      } catch (Exception ex) {
-        Ivy.log().error("Failed to map result to " + mapTo, ex);
+        try {
+          context.script().variable(Variable.RESULT, result).executeScript(mapIt);
+        } catch (Exception ex) {
+          Ivy.log().error("Failed to map result to " + mapTo, ex);
+        }
       }
+      Ivy.log().info("Agent response: " + result);
+    } catch (InputGuardrailException ex) {
+      throwGuardrailError(ex);
     }
-
-    Ivy.log().info("Agent response: " + result);
   }
 
   private <T> Optional<T> execute(String configKey, Class<T> returnType) {
@@ -108,4 +124,10 @@ public class AgentCallExecutor {
     }
   }
 
+  private void throwGuardrailError(InputGuardrailException ex) {
+    BpmPublicErrorBuilder errorBuilder = BpmError.create(GUARDRAIL_ERROR_CODE);
+      Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
+      Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
+      errorBuilder.throwError();
+  }
 }
