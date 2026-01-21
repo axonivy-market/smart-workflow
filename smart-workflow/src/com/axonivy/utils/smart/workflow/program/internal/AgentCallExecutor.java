@@ -25,6 +25,7 @@ import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
+  private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
 
   private final ProgramContext context;
 
@@ -92,15 +93,7 @@ public class AgentCallExecutor {
       }
       Ivy.log().info("Agent response: " + result);
     } catch (InputGuardrailException ex) {
-      String errorCode = execute(Conf.ERROR_CODE, String.class).orElse("");
-      Ivy.log().error(errorCode + "  123");
-      if (StringUtils.isNotBlank(errorCode)) {
-        BpmPublicErrorBuilder errorBuilder = BpmError.create(errorCode);
-        Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
-        Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
-        errorBuilder.throwError();
-      }
-      Ivy.log().error("Guardrail violation found: " + ex.getMessage(), ex);
+      throwGuardrailError(ex);
     }
   }
 
@@ -131,4 +124,10 @@ public class AgentCallExecutor {
     }
   }
 
+  private void throwGuardrailError(InputGuardrailException ex) {
+    BpmPublicErrorBuilder errorBuilder = BpmError.create(GUARDRAIL_ERROR_CODE);
+      Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
+      Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
+      errorBuilder.throwError();
+  }
 }

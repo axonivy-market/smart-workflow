@@ -36,9 +36,7 @@ public class AgentEditor {
       ui.group("Guardrails").add(ui.label("Available guardrails:\n").create())
           .add(ui.label(guardrailList).multiline().create())
           .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create())
-          .add(ui.label("Select the guardrails to apply, or keep empty to use default guardrails").create())
-          .add(ui.label("Error code").create())
-          .add(ui.scriptField(Conf.ERROR_CODE).requireType(String.class).create()).create();
+          .add(ui.label("Select the guardrails to apply, or keep empty to use default guardrails").create()).create();
     }
 
     ui.group("Model")

@@ -47,7 +47,7 @@
           "type" : "ErrorBoundaryEvent",
           "name" : "Guardrail problem detected",
           "config" : {
-            "errorCode" : "ivy:error:agent:guardrails:prompt:injection",
+            "errorCode" : "smartworkflow:guardrail:violation",
             "output" : {
               "map" : {
                 "out" : "in",
