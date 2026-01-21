@@ -44,7 +44,7 @@ public class GuardrailProvider {
 
   public static List<InputGuardrailAdapter> providers(List<String> filters) {
     if (CollectionUtils.isEmpty(filters)) {
-      return defaultProviders().stream().map(InputGuardrailAdapter::new).collect(Collectors.toList());
+      return defaultProviders().stream().map(InputGuardrailAdapter::new).distinct().collect(Collectors.toList());
     }
 
     return filters.stream().distinct()

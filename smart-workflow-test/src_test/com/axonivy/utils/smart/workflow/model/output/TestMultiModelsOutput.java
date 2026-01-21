@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory.AiConf;
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
@@ -40,6 +41,7 @@ public class TestMultiModelsOutput {
     fixture.var(OpenAiConf.API_KEY, "");
     fixture.var(AiConf.DEFAULT_PROVIDER, "");
     fixture.var(OpenAiConf.DEFAULT_MODEL, "");
+    fixture.var(GuardrailProvider.DEFAULT_INPUT_GUARDRAILS, "");
 
     DummyChatModelProvider.defineChatText(r -> "The Spark of Innovation");
   }
