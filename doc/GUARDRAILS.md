@@ -57,13 +57,12 @@ public class MyCustomGuardrail implements SmartWorkflowInputGuardrail {
 com.example.guardrails.MyCustomGuardrail
 ```
 
-## Handling Guardrail Error
+## Handling Guardrail Errors
 
-When a guardrail blocks the input, a `GuardrailException` is thrown. You can handle this easily using Error Start Event element:
+When a guardrail blocks the input, an `InputGuardrailException` is thrown with the error code `smartworkflow:guardrail:violation`. You can handle this using an Error Boundary Event:
 
-1. Add an **Error Start Event** element to your process.
-2. Configure it to catch your custom error code, such as `ivy:error:agent:guardrails:demo`.
-3. In the `AgenticProcessCall` element, open the **Error** tab and select the matching error code.
-4. Implement your error handling logic (e.g., display a user-friendly message, log the incident, retry with different input).
+1. Add an **Error Boundary Event** to your `AgenticProcessCall` element.
+2. Configure it to catch the error code: `smartworkflow:guardrail:violation`.
+3. Implement your error handling logic (e.g., display a user-friendly message, log the incident, retry with different input).
 
 For a working example, see the `GuardrailDemo` process in the `smart-workflow-demo` project.

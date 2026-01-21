@@ -30,7 +30,6 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "errorCode" : "\"ivy:error:agent:guardrails:prompt:injection\"",
           "inputGuardrails" : "[\"PromptInjectionGuardrail\"]",
           "provider" : "",
           "resultType" : "",
