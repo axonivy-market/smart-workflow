@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailProvider;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
@@ -28,6 +30,14 @@ public class AgentEditor {
         .add(ui.label(toolsHelp()).multiline().create())
         .add(ui.scriptField(Conf.TOOLS).requireType(List.class).create())
         .create();
+
+    String guardrailList = guardrailsList();
+    if (StringUtils.isNotBlank(guardrailList)) {
+      ui.group("Guardrails").add(ui.label("Available guardrails:\n").create())
+          .add(ui.label(guardrailList).multiline().create())
+          .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create())
+          .add(ui.label("Select the guardrails to apply, or keep empty to use default guardrails").create()).create();
+    }
 
     ui.group("Model")
         .add(ui.label("Provider").create())
@@ -75,5 +85,14 @@ public class AgentEditor {
       return StringUtils.EMPTY;
     }
     return providers.get().stream().map(ChatModelProvider::name).distinct().collect(Collectors.joining(", "));
+  }
+
+  private String guardrailsList() {
+    var providers = Optional.ofNullable(GuardrailProvider.allProviders());
+    if (providers.isEmpty()) {
+      return StringUtils.EMPTY;
+    }
+    return providers.get().stream().map(SmartWorkflowInputGuardrail::name).distinct()
+        .map(name -> String.format("- %s", name)).collect(Collectors.joining("\n"));
   }
 }
