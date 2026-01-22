@@ -6,9 +6,9 @@
     "data" : "com.axonivy.utils.ai.SmartWorkflowAgentData"
   },
   "elements" : [ {
-      "id" : "f0",
+      "id" : "f1",
       "type" : "CallSubStart",
-      "name" : "invokeAgent(String,String,List<String>,String,String,Class,String)",
+      "name" : "invokeAgent(String,String,List<String>,Class)",
       "config" : {
         "signature" : "invokeAgent",
         "input" : {
@@ -16,14 +16,9 @@
             { "name" : "query", "type" : "String", "desc" : "The user query/message to send to the AI agent" },
             { "name" : "systemMessage", "type" : "String", "desc" : "System message to define agent behavior" },
             { "name" : "tools", "type" : "List<String>", "desc" : "List of tool names available to the agent. Keep empty to use all tools" },
-            { "name" : "provider", "type" : "String", "desc" : "AI provider name. Keep empty to use default from variables.yaml" },
-            { "name" : "model", "type" : "String", "desc" : "AI model name. Keep empty to use default from variables.yaml" },
-            { "name" : "resultType", "type" : "Class", "desc" : "Expected result type class for structured output. Keep null for String result" },
-            { "name" : "resultMapping", "type" : "String", "desc" : "IvyScript expression to map result (e.g. in.result)" }
+            { "name" : "resultType", "type" : "Class", "desc" : "Expected result type class for structured output. Keep null for String result" }
           ],
           "map" : {
-            "out.model" : "param.model",
-            "out.provider" : "param.provider",
             "out.query" : "param.query",
             "out.resultType" : "param.resultType",
             "out.systemMessage" : "param.systemMessage",
@@ -32,10 +27,12 @@
         },
         "result" : {
           "params" : [
-            { "name" : "resultObject", "type" : "Object", "desc" : "The AI agent response result" }
+            { "name" : "resultObject", "type" : "Object", "desc" : "The AI agent response result" },
+            { "name" : "guardrailViolation", "type" : "String", "desc" : "Guardrail violation error" }
           ],
           "map" : {
-            "result.resultObject" : "in.resultObject"
+            "result.resultObject" : "in.resultObject",
+            "result.guardrailViolation" : "in.guardrailViolation"
           }
         }
       },
@@ -44,35 +41,57 @@
         "labelOffset" : { "x" : 17, "y" : 49 }
       },
       "connect" : [
-        { "id" : "f7", "to" : "f3" }
+        { "id" : "f2", "to" : "f4" }
       ]
     }, {
-      "id" : "f1",
+      "id" : "f3",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 536, "y" : 64 }
+        "at" : { "x" : 540, "y" : 63 }
       }
     }, {
-      "id" : "f3",
+      "id" : "f4",
       "type" : "ProgramInterface",
       "name" : "Smart Workflow Agent",
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "<%=in.systemMessage%>",
-          "provider" : "in.provider",
+          "provider" : "",
           "resultMapping" : "in.resultObject",
           "query" : "<%=in.query%>",
-          "model" : "in.model",
+          "model" : "",
           "tools" : "in.tools",
           "resultType" : "in.resultType"
         }
       },
       "visual" : {
-        "at" : { "x" : 344, "y" : 64 }
+        "at" : { "x" : 348, "y" : 63 }
       },
+      "boundaries" : [ {
+          "id" : "f5",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "Guardrail violation",
+          "config" : {
+            "errorCode" : "smartworkflow:guardrail:violation",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.guardrailViolation" : "error.getMessage()"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 380, "y" : 97 },
+            "labelOffset" : { "x" : -39, "y" : 33 },
+            "icon" : "http://localhost:8080/~Developer-smart-workflow-callable/Developer-smart-workflow-callable/faces/javax.faces.resource/icons/shield.png?ln=xpertivy-5-webContent"
+          },
+          "connect" : [
+            { "id" : "f6", "to" : "f3", "via" : [ { "x" : 380, "y" : 151 }, { "x" : 540, "y" : 151 } ] }
+          ]
+        } ],
       "connect" : [
-        { "id" : "f8", "to" : "f1" }
+        { "id" : "f7", "to" : "f3" }
       ]
     } ]
 }

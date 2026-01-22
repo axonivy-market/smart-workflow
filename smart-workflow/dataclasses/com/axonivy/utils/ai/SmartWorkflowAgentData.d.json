@@ -4,27 +4,30 @@
   "namespace" : "com.axonivy.utils.ai",
   "fields" : [ {
     "name" : "query",
-    "comment" : "The user query/message to send to the AI agent"
+    "comment" : "The user query/message to send to the AI agent",
+    "modifiers" : [ ]
   }, {
     "name" : "systemMessage",
-    "comment" : "System message to define agent behavior"
+    "comment" : "System message to define agent behavior",
+    "modifiers" : [ ]
   }, {
     "name" : "tools",
     "type" : "List<String>",
-    "comment" : "List of tool names available to the agent. Keep empty to use all tools"
-  }, {
-    "name" : "provider",
-    "comment" : "AI provider name. Keep empty to use default from variables.yaml"
-  }, {
-    "name" : "model",
-    "comment" : "AI model name. Keep empty to use default from variables.yaml"
+    "comment" : "List of tool names available to the agent. Keep empty to use all tools",
+    "modifiers" : [ ]
   }, {
     "name" : "resultType",
     "type" : "Class",
-    "comment" : "Expected result type class for structured output. Keep null for String result"
+    "comment" : "Expected result type class for structured output. Keep null for String result",
+    "modifiers" : [ ]
   }, {
     "name" : "resultObject",
     "type" : "Object",
-    "comment" : "The AI agent response result"
+    "comment" : "The AI agent response result",
+    "modifiers" : [ ]
+  }, {
+    "name" : "guardrailViolation",
+    "comment" : "Guardrail violation message",
+    "modifiers" : [ ]
   } ]
 }
