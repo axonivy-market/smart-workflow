@@ -254,19 +254,22 @@ Variablen zusätzlich gesetzt werden müssen.
 
 #### OpenAI-Modelle
 
-OpenAI-Modelle werden nativ unterstützt. Wenn Sie diese verwenden möchten,
-importieren Sie das Projekt „ `” smart-workflow-openai` und definieren Sie Ihren
-OpenAI-Schlüssel.
+<details>
+
+<summary>OpenAI setup instructions</summary>
+OpenAI models are natively supported. If you wish to use them import the `smart-workflow-openai` project and define your OpenAI key.
 
 ```yaml
 @variables.openai@
 ```
+</details>
 
 #### Azure OpenAI-Modelle
 
-Azure OpenAI-Modelle werden unterstützt. Um Azure OpenAI zu verwenden,
-importieren Sie das Projekt „ `” smart-workflow-azure-openai`, konfigurieren Sie
-Ihren Azure OpenAI-Endpunkt und Ihre Bereitstellungen.
+<details>
+
+<summary>Azure OpenAI setup instructions</summary>
+Azure OpenAI models are supported. To use Azure OpenAI, import the `smart-workflow-azure-openai` project and configure your Azure OpenAI endpoint and deployments.
 
 Jede Bereitstellung in Azure OpenAI stellt eine Modellinstanz mit einem eigenen
 API-Schlüssel dar. Sie können mehrere Bereitstellungen konfigurieren, um
@@ -276,29 +279,31 @@ verschiedene Modelle für unterschiedliche Aufgaben zu verwenden.
 @variables.azureopenai@
 ```
 
-Beispiel Konfiguration:
+Example Configuration:
 
 ```yaml
 @variables.azureopenai.example@
 ```
+</details>
 
 #### Google Gemini-Modelle
 
-Google Gemini Modelle werden unterstützt. Um Google Gemini zu verwenden,
-importieren Sie das `smart-workflow-gemini`-Projekt und konfigurieren Sie Ihren
-Gemini API-Schlüssel und Standardmodell. Dieser Anbieter unterstützt nicht die
-strukturierte Ausgabefunktion, da Google Gemini-Modelle keine strukturierten
-JSON-Reaktionen unterstützen.
+<details>
+
+<summary>Google Gemini setup instructions</summary>
+Google Gemini models are supported. To use Google Gemini, import the `smart-workflow-gemini` project and configure your Gemini API key and default model.
+This provider does not support the structured output feature because Google Gemini models do not support structured JSON responses.
 
 ```yaml
 @variables.gemini@
 ```
 
-Beispiel Konfiguration:
+Example Configuration:
 
 ```yaml
 @variables.gemini.example@
 ```
+</details>
 
 Um Unterstützung für zusätzliche AI-Modellanbieter zu verlangen, öffnen Sie
 bitte ein GitHub Issue oder PR.
