@@ -13,8 +13,6 @@ Key benefits of Smart Workflow:
 
 **Disclaimer**
 
-This connector is provided as an **Alpha version** and is intended for testing and evaluation purposes only. It may contain errors, incomplete features, or other issues that could affect stability, performance, or functionality. Use of this connector is at your own risk.
-
 The **user is solely responsible** for the configuration, deployment, and operation of the AI and its associated agents. Any decisions, actions, or outcomes resulting from the use of this connector are entirely the responsibility of the user.
 
 We provide only the **technical capability** to enable such configurations and expressly disclaim any liability for misuse, misconfiguration, or unintended consequences arising from its use. By using this connector, you acknowledge and accept these limitations.
