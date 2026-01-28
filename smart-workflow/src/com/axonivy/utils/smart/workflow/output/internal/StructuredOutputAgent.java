@@ -58,6 +58,14 @@ public class StructuredOutputAgent {
       super(parent);
     }
 
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+      if (DynamicAgent.class.getName().equals(name)) {
+        return DynamicAgent.class;
+      }
+      return super.findClass(name);
+    }
+
     public Class<?> defineClass(String name, byte[] bytecode) {
       return defineClass(name, bytecode, 0, bytecode.length);
     }
