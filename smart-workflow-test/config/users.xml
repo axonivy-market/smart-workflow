@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<userConfig>
-    <user>
-        <username>James</username>
-        <password>secret</password>
-        <fullName>James Bond</fullName>
-        <emailAddress>007@gov.co.uk</emailAddress>
-    </user>
-</userConfig>
