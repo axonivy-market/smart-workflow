@@ -25,12 +25,6 @@ Die wichtigsten Vorteile von Smart Workflow:
 
 **Haftungsausschluss**
 
-Dieser Konnektor wird als Alpha-Version **** bereitgestellt und ist nur für
-Test- und Evaluierungszwecke vorgesehen. Er kann Fehler, unvollständige
-Funktionen oder andere Probleme enthalten, die die Stabilität, Leistung oder
-Funktionalität beeinträchtigen können. Die Verwendung dieses Konnektors erfolgt
-auf eigene Gefahr.
-
 Der Benutzer „ **“ ist allein verantwortlich** für die Konfiguration,
 Bereitstellung und den Betrieb der KI und der damit verbundenen Agenten. Alle
 Entscheidungen, Handlungen oder Ergebnisse, die sich aus der Verwendung dieses
