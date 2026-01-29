@@ -6,8 +6,8 @@ on:
       releaseVersion:
         type: string
         required: true
-        default: 13.2.0-a1
-        description: the release to introduce (e.g. a1/b2)
+        default: 14.0.0-b1
+        description: the release to introduce (e.g. b1/b2)
 
 permissions:
   contents: write
