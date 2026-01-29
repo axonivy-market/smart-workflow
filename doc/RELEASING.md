@@ -35,13 +35,13 @@ Check for [Renovate bot PR](https://github.com/axonivy-market/smart-workflow/pul
 1. Run the [Release](https://github.com/axonivy-market/smart-workflow/actions/workflows/release.yml) build with the following parameters:
    - **Branch:** `master`
    - **Version:** Verify the upcoming version from the [Releases](https://github.com/axonivy-market/smart-workflow/releases) page
-   - **Format example:** `13.2.0-a1` → Displays as `13.2.0-alpha1` on the Releases page
+   - **Format example:** `14.0.0-b1` → Displays as `14.0.0-beta1` on the Releases page
 
 ### Step 6: Merge Release PR
 
 1. After the build from Step 5 completes successfully, a "Release" PR will be created
 2. Review all `pom.xml` files and revert the snapshot version:
-   - **Example:** `13.2.0-a1-SNAPSHOT` → `13.2.0-SNAPSHOT`
+   - **Example:** `14.0.0-b1-SNAPSHOT` → `14.0.0-SNAPSHOT`
 3. Merge the PR to the `master` branch
 
 ### Step 7: Publish Release Notes
@@ -50,7 +50,7 @@ Check for [Renovate bot PR](https://github.com/axonivy-market/smart-workflow/pul
 2. Edit the "Next Release" with:
    - **Tag:** The target release version
    - **Release title:** The release version in full format
-   - **Example:** For version `13.2.0-a1`, use title `13.2.0-alpha1`
+   - **Example:** For version `14.0.0-b1`, use title `14.0.0-beta1`
 3. Publish the release
 
 ## Notes
