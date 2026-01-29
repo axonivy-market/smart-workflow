@@ -1,14 +1,14 @@
 package com.axonivy.utils.smart.workflow.guardrails;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.dummy.DummyGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.dummy.SecondDummyGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionGuardrail;
 
@@ -33,10 +33,11 @@ public class TestGuardrailProvider {
   @Test
   void providersListWithFilters() {
     var adapters = GuardrailProvider.providers(
-        List.of("PromptInjectionGuardrail", "PromptInjectionGuardrail", "InvalidGuardrail", "DummyGuardrail"));
-    assertThat(adapters).hasSize(2); // duplicates and non-existed should be filtered
+        List.of("PromptInjectionGuardrail", "PromptInjectionGuardrail", "InvalidGuardrail", "DummyGuardrail", "SecondDummyGuardrail"));
+    assertThat(adapters).hasSize(3); // duplicates and non-existed should be filtered
     List<SmartWorkflowInputGuardrail> delegates = adapters.stream().map(InputGuardrailAdapter::getDelegate).toList();
     assertThat(delegates.get(0)).isInstanceOf(PromptInjectionGuardrail.class);
     assertThat(delegates.get(1)).isInstanceOf(DummyGuardrail.class);
+    assertThat(delegates.get(2)).isInstanceOf(SecondDummyGuardrail.class);
   }
 }
