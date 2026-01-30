@@ -1,7 +1,5 @@
 package com.axonivy.utils.smart.workflow.spi.internal;
 
-import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -17,7 +15,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import ch.ivyteam.ivy.application.ReleaseState;
+import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
 import ch.ivyteam.ivy.project.model.Project;
 
 public class SpiLoader {
@@ -42,7 +40,6 @@ public class SpiLoader {
     var pmv = IProcessModelVersion.of(project);
     var dependendees = pmv.getAllRelatedProcessModelVersions(DEPENDENT)
         .stream()
-        .filter(candidate -> ReleaseState.RELEASED.equals(candidate.getReleaseState()))
         .map(IProcessModelVersion::project);
     return Stream.concat(Stream.of(project), dependendees);
   }
