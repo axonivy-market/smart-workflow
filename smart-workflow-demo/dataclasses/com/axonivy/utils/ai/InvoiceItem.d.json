@@ -1,0 +1,22 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "InvoiceItem",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "description",
+    "type" : "String",
+    "comment" : "The description of the invoice item"
+  }, {
+    "name" : "quantity",
+    "type" : "Number",
+    "comment" : "The quantity of the invoice item"
+  }, {
+    "name" : "unitPrice",
+    "type" : "Number",
+    "comment" : "The unit price of the invoice item"
+  }, {
+    "name" : "total",
+    "type" : "Number",
+    "comment" : "The total price for this item (quantity * unitPrice)"
+  } ]
+}
