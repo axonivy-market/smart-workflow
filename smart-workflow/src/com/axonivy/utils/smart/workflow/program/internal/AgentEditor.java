@@ -6,8 +6,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.guardrails.GuardrailProvider;
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
@@ -88,11 +89,12 @@ public class AgentEditor {
   }
 
   private String guardrailsList() {
-    var providers = Optional.ofNullable(GuardrailProvider.allProviders());
-    if (providers.isEmpty()) {
+    var guardrails = Optional.ofNullable(GuardrailCollector.inputGuardrailAdapters(null));
+    if (guardrails.isEmpty()) {
       return StringUtils.EMPTY;
     }
-    return providers.get().stream().map(SmartWorkflowInputGuardrail::name).distinct()
-        .map(name -> String.format("- %s", name)).collect(Collectors.joining("\n"));
+    return guardrails.get().stream()
+      .map(name -> String.format("- %s", name))
+      .collect(Collectors.joining("\n"));
   }
 }
