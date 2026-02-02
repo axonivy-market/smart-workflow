@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/config/14.0.0/users.json
+Users:
+  - Name: john.doe
+    FullName: John Doe
+  - Name: jane.smith
+    FullName: Jane Smith
+  - Name: mike.johnson
+    FullName: Mike Johnson
+  - Name: sarah.wilson
+    FullName: Sarah Wilson
+  - Name: tom.brown
+    FullName: Tom Brown
+  - Name: lisa.davis
+    FullName: Lisa Davis
+  - Name: robert.miller
+    FullName: Robert Miller
+  - Name: emma.garcia
+    FullName: Emma Garcia
+  - Name: alex.martinez
+    FullName: Alex Martinez
+  - Name: anna.lee
+    FullName: Anna Lee
+  - Name: nam.mai
+    Roles:
+      - TechnicalTeam
