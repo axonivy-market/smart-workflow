@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.workflow.spi.internal;
 
+import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -12,11 +14,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
+import ch.ivyteam.ivy.application.ReleaseState;
 import ch.ivyteam.ivy.project.model.Project;
 
 public class SpiLoader {
@@ -41,17 +42,22 @@ public class SpiLoader {
     var pmv = IProcessModelVersion.of(project);
     var dependendees = pmv.getAllRelatedProcessModelVersions(DEPENDENT)
         .stream()
+        .filter(candidate -> ReleaseState.RELEASED.equals(candidate.getReleaseState()))
         .map(IProcessModelVersion::project);
     return Stream.concat(Stream.of(project), dependendees);
   }
 
   private static <T> List<T> findImpl(Project project, Class<T> type) {
     ClassLoader loader = loaderOf(project);
-    Set<String> refs = loadRefs(type, loader);
-    return refs.stream().flatMap(className -> {
-      Optional<T> impl = load(loader, className);
+    var refs = loadRefs(type, loader);
+    var implNames = refs.stream()
+        .flatMap(ref -> ref.lines().findFirst().stream())
+        .toList();
+    return implNames.stream().flatMap(ref -> {
+      Optional<T> impl = load(loader, ref);
       return impl.stream();
-    }).toList();
+    })
+        .toList();
   }
 
   private static ClassLoader loaderOf(Project project) {
@@ -85,21 +91,18 @@ public class SpiLoader {
       while (it.hasNext()) {
         var uri = it.next();
         var in = uri.openStream();
-        Set<String> what = read(in);
-        implRefs.addAll(what);
+        var what = read(in);
+        implRefs.add(what);
       }
     } catch (Exception ex) {
-      return Set.of();
+
     }
     return implRefs;
   }
 
-  private static Set<String> read(InputStream service) {
+  private static String read(InputStream service) {
     try (service) {
-      String services = new String(service.readAllBytes(), StandardCharsets.UTF_8);
-      return services.lines()
-          .filter(line -> StringUtils.isNotBlank(line))
-          .collect(Collectors.toSet());
+      return new String(service.readAllBytes(), StandardCharsets.UTF_8);
     } catch (IOException ex) {
       throw new RuntimeException(String.format(EXCEPTION_PATTERN, service, ex));
     }
