@@ -51,11 +51,37 @@ public class MyCustomGuardrail implements SmartWorkflowInputGuardrail {
 }
 ```
 
-2. Register the guardrail in `src/META-INF/services/com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail`:
+2. Create a `GuardrailProvider` to provide your custom guardrails:
 
+> **Important:** Your project must register a `GuardrailProvider` via SPI for Smart Workflow to discover and load your custom guardrails. Without a registered provider, your guardrails will not be available to agents.
+
+```java
+package com.example.guardrails;
+
+import java.util.List;
+
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
+
+public class MyGuardrailProvider implements GuardrailProvider {
+
+  @Override
+  public List<SmartWorkflowInputGuardrail> getInputGuardrails() {
+    return List.of(
+      new MyCustomGuardrail(),
+      new AnotherCustomGuardrail()
+    );
+  }
+}
 ```
-com.example.guardrails.MyCustomGuardrail
-```
+
+3. Register the provider in `src/META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`:
+
+   ```text
+   com.example.guardrails.MyGuardrailProvider
+   ```
+
+   This SPI registration is **required** for Smart Workflow to discover and load your guardrails. The provider will be automatically loaded when agents request guardrails by name.
 
 ## Handling Guardrail Errors
 

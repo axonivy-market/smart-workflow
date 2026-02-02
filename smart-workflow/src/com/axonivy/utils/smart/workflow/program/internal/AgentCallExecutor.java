@@ -1,7 +1,5 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
-import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -9,19 +7,19 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.guardrails.GuardrailProvider;
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
-
-import dev.langchain4j.guardrail.InputGuardrailException;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
@@ -68,7 +66,7 @@ public class AgentCallExecutor {
         .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
 
     List<String> guardraiFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
-    List<InputGuardrailAdapter> inputGuardrails = GuardrailProvider.providers(guardraiFilters);
+    List<InputGuardrailAdapter> inputGuardrails= GuardrailCollector.inputGuardrailAdapters(guardraiFilters);
     if (CollectionUtils.isNotEmpty(inputGuardrails)) {
       agentBuilder.inputGuardrails(inputGuardrails);
     }
