@@ -35,7 +35,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 64 },
+        "at" : { "x" : 160, "y" : 144 },
         "labelOffset" : { "x" : 17, "y" : 49 }
       },
       "connect" : [
@@ -45,7 +45,7 @@
       "id" : "f3",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 540, "y" : 63 }
+        "at" : { "x" : 604, "y" : 143 }
       }
     }, {
       "id" : "f4",
@@ -64,10 +64,21 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 348, "y" : 63 }
+        "at" : { "x" : 412, "y" : 143 }
       },
       "connect" : [
         { "id" : "f7", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "ProcessAnnotation",
+      "name" : "This callable subprocess is the bridge that make smart-workflow invocations from Portal possible",
+      "visual" : {
+        "at" : { "x" : 160, "y" : 48 },
+        "size" : { "width" : 246, "height" : 86 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f1" }
       ]
     } ]
 }
