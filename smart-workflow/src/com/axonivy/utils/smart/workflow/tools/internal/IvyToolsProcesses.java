@@ -6,7 +6,6 @@ import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 
-@SuppressWarnings("restriction")
 public class IvyToolsProcesses {
 
   public static List<SubProcessCallStartEvent> toolStarts() {

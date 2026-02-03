@@ -48,36 +48,19 @@ public class AgentCallExecutor {
       return; // early abort; user is still testing with empty values
     }
 
-    String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
-    String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
-
-    List<String> toolFilter = execute(Conf.TOOLS, List.class).orElse(null);
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
     var structured = execute(Conf.OUTPUT, Class.class);
     if (structured.isPresent()) {
       agentType = StructuredOutputAgent.agent(structured.get());
     }
-    var modelOptions = options()
-        .modelName(modelName)
-        .structuredOutput(structured.isPresent());
-    var model = ChatModelFactory.createModel(modelOptions, providerName);
 
-    var agentBuilder = AiServices.builder(agentType).chatModel(model)
-        .toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
-
-    List<String> guardraiFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
-    List<InputGuardrailAdapter> inputGuardrails= GuardrailCollector.inputGuardrailAdapters(guardraiFilters);
-    if (CollectionUtils.isNotEmpty(inputGuardrails)) {
-      agentBuilder.inputGuardrails(inputGuardrails);
-    }
-
-    var systemMessage = expand(Conf.SYSTEM);
-    if (systemMessage.isPresent()) {
-      agentBuilder.systemMessageProvider(memId -> systemMessage.get());
-    }
+    var agentBuilder = AiServices.builder(agentType);
+    configureModel(agentBuilder, structured.isPresent());
+    configureToolProvider(agentBuilder);
+    configureInputGuardrails(agentBuilder);
+    configureSystemMessage(agentBuilder);
 
     var agent = agentBuilder.build();
-
     try {
       Object result = agent.chat(query.get());
       var mapTo = context.config().get(Conf.MAP_TO);
@@ -119,6 +102,38 @@ public class AgentCallExecutor {
       return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
     } catch (Exception ex) {
       return Optional.empty();
+    }
+  }
+
+  private void configureSystemMessage(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    var systemMessage = expand(Conf.SYSTEM);
+    if (systemMessage.isPresent()) {
+      agentBuilder.systemMessageProvider(memId -> systemMessage.get());
+    }
+  }
+
+  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean isStructured) {
+    String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
+    String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+    var modelOptions = options()
+        .modelName(modelName)
+        .structuredOutput(isStructured);
+    agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
+  }
+
+  @SuppressWarnings("unchecked")
+  private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    List<String> toolFilter = execute(Conf.TOOLS, List.class).orElse(null);
+    agentBuilder.toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
+  }
+
+  @SuppressWarnings("unchecked")
+  private void configureInputGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    List<String> guardrailFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
+    List<InputGuardrailAdapter> inputGuardrails = GuardrailCollector.inputGuardrailAdapters(guardrailFilters);
+    
+    if (CollectionUtils.isNotEmpty(inputGuardrails)) {
+      agentBuilder.inputGuardrails(inputGuardrails);
     }
   }
 

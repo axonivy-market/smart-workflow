@@ -8,7 +8,6 @@ import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.agent.tool.ToolSpecification.Builder;
 
-@SuppressWarnings("restriction")
 public class IvySubProcessToolSpecs {
 
   public static List<ToolSpecification> find() {

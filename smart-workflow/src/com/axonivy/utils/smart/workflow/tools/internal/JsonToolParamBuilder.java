@@ -14,7 +14,6 @@ import dev.langchain4j.internal.JsonSchemaElementUtils;
 import dev.langchain4j.internal.JsonSchemaElementUtils.VisitedClassMetadata;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 
-@SuppressWarnings("restriction")
 public class JsonToolParamBuilder {
 
   private static final Logger LOGGER = Logger.getLogger(JsonToolParamBuilder.class);

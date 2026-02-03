@@ -18,7 +18,6 @@ import ch.ivyteam.ivy.process.call.StartParameter;
 import ch.ivyteam.ivy.process.call.impl.DefaultStartParameter;
 
 @IvyTest
-@SuppressWarnings("restriction")
 class TestJsonProcessParameters {
 
   @Test
