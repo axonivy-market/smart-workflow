@@ -1,0 +1,88 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
+  "id" : "19C21B84E5BC9247",
+  "config" : {
+    "data" : "Features.SmartWorkflowAgentDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "start",
+      "config" : {
+        "signature" : "start"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 728, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Prepare demo data",
+      "config" : {
+        "output" : {
+          "code" : "in.query = \"Invoice Number: INV-001, Customer: John Doe, Invoice Date: 2024-07-30, Due Date: 2024-08-15. Items: Product A (Quantity 2, Unit Price 50.00, Total 100.00), Product B (Quantity 1, Unit Price 200.00, Total 200.00). Total Amount: 300.00\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "SubProcessCall",
+      "name" : "Invoke agent using callable",
+      "config" : {
+        "processCall" : "Portal/SmartWorkflowAgent:invokeAgent(String,String,List<String>,Class)",
+        "call" : {
+          "map" : {
+            "param.query" : "in.query",
+            "param.systemMessage" : "\"You are an AI assistant that extracts structured invoice data from text. Parse the invoice information and create an Invoice object with all items. Ensure all numeric values are properly extracted and the total amount is calculated correctly.\"",
+            "param.resultType" : "com.axonivy.utils.ai.Invoice.class"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.resultObject" : "result.resultObject"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 400, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Parse result JSON to invoice",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.ai.Invoice;",
+            "",
+            "in.invoice = in.resultObject as Invoice;",
+            "ivy.log.warn(\"Generated Invoice: {0}\", in.invoice);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}

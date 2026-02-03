@@ -1,0 +1,30 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "Invoice",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "invoiceNumber",
+    "type" : "String",
+    "comment" : "The unique identifier for the invoice"
+  }, {
+    "name" : "customerName",
+    "type" : "String",
+    "comment" : "The name of the customer being invoiced"
+  }, {
+    "name" : "invoiceDate",
+    "type" : "String",
+    "comment" : "The date the invoice was issued"
+  }, {
+    "name" : "dueDate",
+    "type" : "String",
+    "comment" : "The date the invoice is due"
+  }, {
+    "name" : "items",
+    "type" : "List<com.axonivy.utils.ai.InvoiceItem>",
+    "comment" : "A list of items included in the invoice"
+  }, {
+    "name" : "totalAmount",
+    "type" : "Number",
+    "comment" : "The total amount of the invoice"
+  } ]
+}

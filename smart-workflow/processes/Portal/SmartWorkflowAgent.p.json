@@ -1,0 +1,84 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
+  "id" : "19C21A85CA32917C",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Portal.SmartWorkflowAgentData"
+  },
+  "elements" : [ {
+      "id" : "f1",
+      "type" : "CallSubStart",
+      "name" : "invokeAgent(String,String,List<String>,Class)",
+      "config" : {
+        "signature" : "invokeAgent",
+        "input" : {
+          "params" : [
+            { "name" : "query", "type" : "String", "desc" : "The user query/message to send to the AI agent" },
+            { "name" : "systemMessage", "type" : "String", "desc" : "System message to define agent behavior" },
+            { "name" : "tools", "type" : "List<String>", "desc" : "List of tool names available to the agent. Keep empty to use all tools" },
+            { "name" : "resultType", "type" : "Class", "desc" : "Expected result type class for structured output. Keep null for String result" }
+          ],
+          "map" : {
+            "out.query" : "param.query",
+            "out.resultType" : "param.resultType",
+            "out.systemMessage" : "param.systemMessage",
+            "out.tools" : "param.tools"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "resultObject", "type" : "Object", "desc" : "The AI agent response result" }
+          ],
+          "map" : {
+            "result.resultObject" : "in.resultObject"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 160, "y" : 144 },
+        "labelOffset" : { "x" : 17, "y" : 49 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 604, "y" : 143 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "ProgramInterface",
+      "name" : "Smart Workflow Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "<%=in.systemMessage%>",
+          "provider" : "",
+          "resultMapping" : "in.resultObject",
+          "query" : "<%=in.query%>",
+          "model" : "",
+          "tools" : "in.tools",
+          "resultType" : "in.resultType"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 412, "y" : 143 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "ProcessAnnotation",
+      "name" : "This callable subprocess is the bridge that make smart-workflow invocations from Portal possible",
+      "visual" : {
+        "at" : { "x" : 160, "y" : 48 },
+        "size" : { "width" : 246, "height" : 86 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f1" }
+      ]
+    } ]
+}

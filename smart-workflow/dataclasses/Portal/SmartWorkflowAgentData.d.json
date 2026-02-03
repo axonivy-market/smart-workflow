@@ -1,0 +1,29 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "SmartWorkflowAgentData",
+  "namespace" : "Portal",
+  "fields" : [ {
+    "name" : "query",
+    "comment" : "The user query/message to send to the AI agent",
+    "modifiers" : [ ]
+  }, {
+    "name" : "systemMessage",
+    "comment" : "System message to define agent behavior",
+    "modifiers" : [ ]
+  }, {
+    "name" : "tools",
+    "type" : "List<String>",
+    "comment" : "List of tool names available to the agent. Keep empty to use all tools",
+    "modifiers" : [ ]
+  }, {
+    "name" : "resultType",
+    "type" : "Class",
+    "comment" : "Expected result type class for structured output. Keep null for String result",
+    "modifiers" : [ ]
+  }, {
+    "name" : "resultObject",
+    "type" : "Object",
+    "comment" : "The AI agent response result",
+    "modifiers" : [ ]
+  } ]
+}
