@@ -1,8 +1,8 @@
 {
   "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
-  "id" : "19BBA9B7FDFAFD8F",
+  "id" : "19C21B84E5BC9247",
   "config" : {
-    "data" : "Features.CallableDemoData"
+    "data" : "Features.SmartWorkflowAgentDemoData"
   },
   "elements" : [ {
       "id" : "f0",
@@ -29,19 +29,7 @@
       "name" : "Prepare demo data",
       "config" : {
         "output" : {
-          "code" : [
-            "String invoiceMarkdown = \"\"\"",
-            "  Invoice Number: INV-001",
-            "  Customer: John Doe",
-            "  Invoice Date: 2024-07-30",
-            "  Due Date: 2024-08-15",
-            "  Items:",
-            "  - Description: Product A, Quantity: 2, Unit Price: 50.00, Total: 100.00",
-            "  - Description: Product B, Quantity: 1, Unit Price: 200.00, Total: 200.00",
-            "  Total Amount: 300.00",
-            "\"\"\";",
-            "in.query = invoiceMarkdown;"
-          ]
+          "code" : "in.query = \"Invoice Number: INV-001, Customer: John Doe, Invoice Date: 2024-07-30, Due Date: 2024-08-15. Items: Product A (Quantity 2, Unit Price 50.00, Total 100.00), Product B (Quantity 1, Unit Price 200.00, Total 200.00). Total Amount: 300.00\";"
         }
       },
       "visual" : {
@@ -55,7 +43,7 @@
       "type" : "SubProcessCall",
       "name" : "Invoke agent using callable",
       "config" : {
-        "processCall" : "Functional/SmartWorkflowAgent:invokeAgent(String,String,List<String>,String,String,Class,String)",
+        "processCall" : "Portal/SmartWorkflowAgent:invokeAgent(String,String,List<String>,Class)",
         "call" : {
           "map" : {
             "param.query" : "in.query",

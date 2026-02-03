@@ -1,9 +1,9 @@
 {
   "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
-  "id" : "19BBA9599B5DABF9",
+  "id" : "19C21A85CA32917C",
   "kind" : "CALLABLE_SUB",
   "config" : {
-    "data" : "com.axonivy.utils.ai.SmartWorkflowAgentData"
+    "data" : "Portal.SmartWorkflowAgentData"
   },
   "elements" : [ {
       "id" : "f1",
@@ -27,12 +27,10 @@
         },
         "result" : {
           "params" : [
-            { "name" : "resultObject", "type" : "Object", "desc" : "The AI agent response result" },
-            { "name" : "guardrailViolation", "type" : "String", "desc" : "Guardrail violation error" }
+            { "name" : "resultObject", "type" : "Object", "desc" : "The AI agent response result" }
           ],
           "map" : {
-            "result.resultObject" : "in.resultObject",
-            "result.guardrailViolation" : "in.guardrailViolation"
+            "result.resultObject" : "in.resultObject"
           }
         }
       },
@@ -68,28 +66,6 @@
       "visual" : {
         "at" : { "x" : 348, "y" : 63 }
       },
-      "boundaries" : [ {
-          "id" : "f5",
-          "type" : "ErrorBoundaryEvent",
-          "name" : "Guardrail violation",
-          "config" : {
-            "errorCode" : "smartworkflow:guardrail:violation",
-            "output" : {
-              "map" : {
-                "out" : "in",
-                "out.guardrailViolation" : "error.getMessage()"
-              }
-            }
-          },
-          "visual" : {
-            "at" : { "x" : 380, "y" : 97 },
-            "labelOffset" : { "x" : -39, "y" : 33 },
-            "icon" : "http://localhost:8080/~Developer-smart-workflow-callable/Developer-smart-workflow-callable/faces/javax.faces.resource/icons/shield.png?ln=xpertivy-5-webContent"
-          },
-          "connect" : [
-            { "id" : "f6", "to" : "f3", "via" : [ { "x" : 380, "y" : 151 }, { "x" : 540, "y" : 151 } ] }
-          ]
-        } ],
       "connect" : [
         { "id" : "f7", "to" : "f3" }
       ]

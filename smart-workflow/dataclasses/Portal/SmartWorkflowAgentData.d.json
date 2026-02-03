@@ -1,7 +1,7 @@
 {
   "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
   "simpleName" : "SmartWorkflowAgentData",
-  "namespace" : "com.axonivy.utils.ai",
+  "namespace" : "Portal",
   "fields" : [ {
     "name" : "query",
     "comment" : "The user query/message to send to the AI agent",
@@ -24,10 +24,6 @@
     "name" : "resultObject",
     "type" : "Object",
     "comment" : "The AI agent response result",
-    "modifiers" : [ ]
-  }, {
-    "name" : "guardrailViolation",
-    "comment" : "Guardrail violation message",
     "modifiers" : [ ]
   } ]
 }
