@@ -18,7 +18,6 @@ import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 import dev.langchain4j.model.chat.request.json.JsonStringSchema;
 
 @IvyTest
-@SuppressWarnings("restriction")
 class TestIvySubProcessToolSpecs {
 
   @Test

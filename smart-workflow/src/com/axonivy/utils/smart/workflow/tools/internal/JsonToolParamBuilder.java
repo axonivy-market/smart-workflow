@@ -14,7 +14,6 @@ import dev.langchain4j.internal.JsonSchemaElementUtils;
 import dev.langchain4j.internal.JsonSchemaElementUtils.VisitedClassMetadata;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 
-@SuppressWarnings("restriction")
 public class JsonToolParamBuilder {
 
   private static final Logger LOGGER = Logger.getLogger(JsonToolParamBuilder.class);
@@ -34,7 +33,6 @@ public class JsonToolParamBuilder {
       var type = new QualifiedTypeLoader().load(new QType(variable.typeName()));
       var schema = JsonSchemaElementUtils.jsonSchemaElementFrom(toRawType(type), type, variable.description(), false, visited);
       builder.addProperty(variable.name(), schema);
-      return;
     } catch (Exception ex) {
       LOGGER.error("Failed to define json parameter for tool parameter " + variable);
       builder.additionalProperties(true); // hint: more parameters which we can't describe

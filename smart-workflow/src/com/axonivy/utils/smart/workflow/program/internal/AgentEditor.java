@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
-import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
-import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
@@ -44,7 +42,7 @@ public class AgentEditor {
         .add(ui.label("Provider").create())
         .add(ui.label(providersHelp()).multiline().create())
         .add(ui.scriptField(Conf.PROVIDER).requireType(String.class).create())
-        .add(ui.label("Keep empty to use default from variables.yaml\r\n" + "").create())
+        .add(ui.label("Keep empty to use default from variables.yaml").create())
         .add(ui.label("Model").create())
         .add(ui.scriptField(Conf.MODEL).requireType(String.class).create())
         .add(ui.label("Keep empty to use default from variables.yaml").create())
@@ -67,7 +65,6 @@ public class AgentEditor {
     return "Choose one of the supported AI providers:\n" + providersList();
   }
 
-  @SuppressWarnings("restriction")
   private String toolList() {
     try {
       return IvyToolsProcesses

@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ivyteam.ivy.process.call.StartParameter;
 
-@SuppressWarnings("restriction")
 public class JsonProcessParameters {
 
   private static final Logger LOGGER = Logger.getLogger(JsonProcessParameters.class);
