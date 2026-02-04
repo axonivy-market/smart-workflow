@@ -92,6 +92,14 @@ public class AgentCallExecutor {
     }
   }
 
+  private Optional<List<String>> executeListOfStrings(String configKey) {
+    return execute(configKey, List.class)
+      .map(rawList -> ((List<?>) rawList).stream()
+        .filter(String.class::isInstance)
+        .map(String.class::cast)
+        .toList());
+  }
+
   private Optional<String> expand(String confKey) {
     try {
       var template = context.config().get(confKey);
@@ -121,15 +129,13 @@ public class AgentCallExecutor {
     agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
   }
 
-  @SuppressWarnings("unchecked")
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    List<String> toolFilter = execute(Conf.TOOLS, List.class).orElse(null);
+    List<String> toolFilter = executeListOfStrings(Conf.TOOLS).orElse(null);
     agentBuilder.toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
   }
 
-  @SuppressWarnings("unchecked")
   private void configureInputGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    List<String> guardrailFilters = execute(Conf.INPUT_GUARD_RAILS, List.class).orElse(null);
+    List<String> guardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
     List<InputGuardrailAdapter> inputGuardrails = GuardrailCollector.inputGuardrailAdapters(guardrailFilters);
     
     if (CollectionUtils.isNotEmpty(inputGuardrails)) {

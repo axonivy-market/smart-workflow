@@ -33,7 +33,6 @@ public class JsonToolParamBuilder {
       var type = new QualifiedTypeLoader().load(new QType(variable.typeName()));
       var schema = JsonSchemaElementUtils.jsonSchemaElementFrom(toRawType(type), type, variable.description(), false, visited);
       builder.addProperty(variable.name(), schema);
-      return;
     } catch (Exception ex) {
       LOGGER.error("Failed to define json parameter for tool parameter " + variable);
       builder.additionalProperties(true); // hint: more parameters which we can't describe
