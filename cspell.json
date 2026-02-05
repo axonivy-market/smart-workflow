@@ -1,0 +1,31 @@
+{
+  "version": "0.2",
+  "files": [
+    "**/*.md",
+    "**/*_en.yaml",
+    "**/variables.yaml",
+    "**/*.xhtml"
+  ],
+  "ignorePaths": [
+    "**/*_de.md",
+    "**/*_DE.md",
+    "**/webContent/layouts/frame*.xhtml",
+    "**/webContent/layouts/basic*.xhtml",
+    "**/webContent/layouts/includes/*.xhtml"
+  ],
+  "words": [
+    "AxonIvy", "axonactive", "ivy", "ivyteam", "wawa", "Up2date",
+    "e2e", "panelgrid", "toggleable", "orderlist", "tablewrapper",
+    "hoverable", "gridlines", "formgrid", "maxdate", "mindate",
+    "chkbox", "confirmdialog", "maximizable", "outputlabel",
+    "webcontent", "Unsorting", "nogutter", "navicon", "HANA",
+    "Recordset", "Recordsets", "fileref", "newkey", "keyout", "inkey",
+    "primeflex", "primefaces", "dynaForm", "dyna",
+    "Startable", "caseprocessviewer", "EMLX", "webservice", "apikey",
+    "Successfactors", "statefuldatatable", "datatable", "Keypair",
+    "azureopenai", "rebex", "sshkey", "Keyphrase", "sshpassphrase",
+    "chartjs", "datalabels", "masterdetail", "Weblate", "XOAUTH", "sasl",
+    "imap", "imaps", "clazz", "daemonless", "npipe", "glassfish", "HSQL",
+    "hsqldb", "chatbots", "SOQL"
+  ]
+}
