@@ -86,12 +86,12 @@ public class AgentEditor {
   }
 
   private String guardrailsList() {
-    var guardrails = Optional.ofNullable(GuardrailCollector.inputGuardrailAdapters(null));
+    var guardrails = Optional.ofNullable(GuardrailCollector.allInputGuardrailNames());
     if (guardrails.isEmpty()) {
       return StringUtils.EMPTY;
     }
     return guardrails.get().stream()
-      .map(guardrail -> String.format("- %s", guardrail.getDelegate().name()))
+      .map(guardrail -> String.format("- %s", guardrail))
       .collect(Collectors.joining("\n"));
   }
 }
