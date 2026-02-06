@@ -19,6 +19,7 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.service.AiServices;
 
@@ -33,7 +34,7 @@ public class AgentCallExecutor {
 
   interface ChatAgent extends DynamicAgent<String> {
     @Override
-    String chat(String query);
+    String chat(UserMessage query);
   }
 
   interface Variable {
@@ -62,7 +63,7 @@ public class AgentCallExecutor {
 
     var agent = agentBuilder.build();
     try {
-      Object result = agent.chat(query.get());
+      Object result = agent.chat(new UserMessage(query.get()));
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
       String mapIt = mapTo + "=result";
