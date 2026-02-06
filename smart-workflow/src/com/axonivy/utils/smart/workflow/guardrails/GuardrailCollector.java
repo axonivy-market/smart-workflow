@@ -21,7 +21,7 @@ public class GuardrailCollector {
   }
 
   public static List<InputGuardrailAdapter> inputGuardrailAdapters(List<String> filters) {
-    List<SmartWorkflowInputGuardrail> inputGuardrails = new DefaultGuardrailProvider().getDefaultInputGuardrails();
+    List<SmartWorkflowInputGuardrail> inputGuardrails = new DefaultGuardrailProvider().getInputGuardrails();
 
     if (CollectionUtils.isEmpty(filters)) {
       return inputGuardrails.stream()

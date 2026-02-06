@@ -91,7 +91,7 @@ public class AgentEditor {
       return StringUtils.EMPTY;
     }
     return guardrails.get().stream()
-      .map(name -> String.format("- %s", name))
+      .map(guardrail -> String.format("- %s", guardrail.getDelegate().name()))
       .collect(Collectors.joining("\n"));
   }
 }

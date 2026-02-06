@@ -1,7 +1,6 @@
 package com.axonivy.utils.smart.workflow.guardrails.provider;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,11 +14,14 @@ import ch.ivyteam.ivy.environment.Ivy;
 public class DefaultGuardrailProvider implements GuardrailProvider {
     public static final String DEFAULT_INPUT_GUARDRAILS = "AI.Guardrails.DefaultInput";
 
-    public List<SmartWorkflowInputGuardrail> getDefaultInputGuardrails() {
-        String defaultGuardrails = Ivy.var().get(DEFAULT_INPUT_GUARDRAILS);
-        if (StringUtils.isBlank(defaultGuardrails)) {
-            return new ArrayList<>();
+    public List<SmartWorkflowInputGuardrail> getFilteredDefaultInputGuardrails() {
+        String defaultGuardrails = "";
+        try {
+            defaultGuardrails = Ivy.var().get(DEFAULT_INPUT_GUARDRAILS);
+        } catch (Exception e) {
+            Ivy.log().error(e.getMessage());
         }
+
         List<String> guardrailNames = List.of(StringUtils.split(defaultGuardrails, ",")).stream()
         .distinct().filter(StringUtils::isNotBlank).map(String::strip).toList();
         return getInputGuardrails().stream().filter(g -> guardrailNames.contains(g.name())).collect(Collectors.toList());
@@ -27,8 +29,8 @@ public class DefaultGuardrailProvider implements GuardrailProvider {
 
     @Override
     public List<SmartWorkflowInputGuardrail> getInputGuardrails() {
-        return Arrays.asList(
-            new PromptInjectionGuardrail()
-        );
+        List<SmartWorkflowInputGuardrail> guardrails = new ArrayList<>();
+        guardrails.add(new PromptInjectionGuardrail());
+        return guardrails;
     }
 }
