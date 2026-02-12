@@ -1,0 +1,17 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/13.2.0/data-class.json",
+  "simpleName" : "FileExtractionDemoData",
+  "namespace" : "Features",
+  "fields" : [ {
+    "name" : "firstInvoice",
+    "type" : "java.io.File"
+  }, {
+    "name" : "invoiceList",
+    "type" : "com.axonivy.utils.ai.InvoiceList"
+  }, {
+    "name" : "text"
+  }, {
+    "name" : "secondInvoice",
+    "type" : "java.io.File"
+  } ]
+}

@@ -20,6 +20,7 @@ import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.guardrail.InputGuardrailException;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
@@ -42,12 +43,6 @@ public class AgentCallExecutor {
 
   @SuppressWarnings("unchecked")
   public void execute() {
-    var query = expand(Conf.QUERY);
-    if (query.isEmpty()) {
-      Ivy.log().info("Agent call was skipped, since there was no user query");
-      return; // early abort; user is still testing with empty values
-    }
-
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
     var structured = execute(Conf.OUTPUT, Class.class);
     if (structured.isPresent()) {
@@ -55,14 +50,23 @@ public class AgentCallExecutor {
     }
 
     var agentBuilder = AiServices.builder(agentType);
-    configureModel(agentBuilder, structured.isPresent());
+    ChatModel model = initModel(structured.isPresent());
+    agentBuilder.chatModel(model);
+
     configureToolProvider(agentBuilder);
     configureInputGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
+    var query = QueryExpander.expandMacro(Conf.QUERY, context);
+    if (query.isEmpty()) {
+      Ivy.log().info("Agent call was skipped, since there was no user query");
+      return; // early abort; user is still testing with empty values
+    }
+
+    String finalQuery = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context, model).orElse(query.get());
     var agent = agentBuilder.build();
     try {
-      Object result = agent.chat(query.get());
+      Object result = agent.chat(finalQuery);
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
       String mapIt = mapTo + "=result";
@@ -100,33 +104,20 @@ public class AgentCallExecutor {
         .toList());
   }
 
-  private Optional<String> expand(String confKey) {
-    try {
-      var template = context.config().get(confKey);
-      if (template == null || template.isBlank()) {
-        return Optional.empty();
-      }
-      var expanded = context.script().expandMacro(template);
-      return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
-    } catch (Exception ex) {
-      return Optional.empty();
-    }
-  }
-
   private void configureSystemMessage(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    var systemMessage = expand(Conf.SYSTEM);
+    var systemMessage = QueryExpander.expandMacro(Conf.SYSTEM, context);
     if (systemMessage.isPresent()) {
       agentBuilder.systemMessageProvider(memId -> systemMessage.get());
     }
   }
 
-  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean isStructured) {
+  private ChatModel initModel(boolean isStructured) {
     String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var modelOptions = options()
         .modelName(modelName)
         .structuredOutput(isStructured);
-    agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
+        return ChatModelFactory.createModel(modelOptions, providerName);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {

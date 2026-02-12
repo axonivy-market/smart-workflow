@@ -1,0 +1,112 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/13.2.0/process.json",
+  "id" : "19C4072A47E6F420",
+  "config" : {
+    "data" : "Features.FileExtractionDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "extractFromImage",
+      "config" : {
+        "signature" : "extractFromImage"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 928, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Load image from CMS",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.utils.FileProcessingUtils;",
+            "",
+            "in.firstInvoice = FileProcessingUtils.loadFileFromCms(\"/Features/FileExtractionDemo/InvoiceImage\", \"InvoiceImage\", \"png\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f11", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Extract Invoice from image",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "file" : "in.demoFile",
+          "system" : "Extract Invoice from image",
+          "resultType" : "com.axonivy.utils.ai.InvoiceList.class",
+          "resultMapping" : "in.invoiceList",
+          "query" : "The image of an invoice:\r\n<%=in.firstInvoice%>\r\n\r\nAnd this is pdf file of the second invoice:\r\n<%=in.secondInvoice%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 600, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Show extracted invoice",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import dev.langchain4j.internal.Json;",
+            "",
+            "ivy.log.warn(\"Generated Invoices: {0}\", Json.toJson(in.invoiceList));",
+            "",
+            "// Clean up temp files",
+            "if (in.firstInvoice != null && in.firstInvoice.exists()) {",
+            "  in.firstInvoice.delete();",
+            "}",
+            "if (in.secondInvoice != null && in.secondInvoice.exists()) {",
+            "  in.secondInvoice.delete();",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 776, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Load PDF from CMS",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.utils.FileProcessingUtils;",
+            "",
+            "in.secondInvoice = FileProcessingUtils.loadFileFromCms(\"/Features/FileExtractionDemo/InvoicePdf\", \"InvoicePdf\", \"pdf\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 408, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f5" }
+      ]
+    } ]
+}
