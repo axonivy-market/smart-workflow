@@ -4,19 +4,21 @@
   "namespace" : "com.axonivy.utils.ai",
   "fields" : [ {
     "name" : "description",
-    "type" : "String",
     "comment" : "The description of the invoice item"
   }, {
     "name" : "quantity",
-    "type" : "Number",
-    "comment" : "The quantity of the invoice item"
+    "type" : "java.lang.Integer",
+    "comment" : "The quantity of the invoice item. Zero if not defined"
   }, {
     "name" : "unitPrice",
-    "type" : "Number",
-    "comment" : "The unit price of the invoice item"
+    "type" : "java.lang.Double",
+    "comment" : "The unit price of the invoice item. MUST be number"
   }, {
     "name" : "total",
-    "type" : "Number",
+    "type" : "java.lang.Double",
     "comment" : "The total price for this item (quantity * unitPrice)"
+  }, {
+    "name" : "currency",
+    "comment" : "The currency for unit price. Default value is \"USD\""
   } ]
 }

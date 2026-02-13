@@ -4,19 +4,15 @@
   "namespace" : "com.axonivy.utils.ai",
   "fields" : [ {
     "name" : "invoiceNumber",
-    "type" : "String",
     "comment" : "The unique identifier for the invoice"
   }, {
     "name" : "customerName",
-    "type" : "String",
     "comment" : "The name of the customer being invoiced"
   }, {
     "name" : "invoiceDate",
-    "type" : "String",
     "comment" : "The date the invoice was issued"
   }, {
     "name" : "dueDate",
-    "type" : "String",
     "comment" : "The date the invoice is due"
   }, {
     "name" : "items",
@@ -24,7 +20,7 @@
     "comment" : "A list of items included in the invoice"
   }, {
     "name" : "totalAmount",
-    "type" : "Number",
+    "type" : "java.lang.Double",
     "comment" : "The total amount of the invoice"
   } ]
 }
