@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.guardrails;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,8 +21,24 @@ public class GuardrailCollector {
     return new SpiLoader(project).load(GuardrailProvider.class);
   }
 
+  public static List<String> allInputGuardrailNames() {
+    List<SmartWorkflowInputGuardrail> inputGuardrails = new ArrayList<>(new DefaultGuardrailProvider().getInputGuardrails());
+
+    inputGuardrails.addAll(
+        allProviders().stream()
+          .flatMap(provider -> provider.getInputGuardrails().stream())
+          .collect(Collectors.toList())
+      );
+
+    return inputGuardrails.stream()
+        .map(InputGuardrailAdapter::new)
+        .distinct()
+        .map(mapper -> mapper.getDelegate().name())
+        .collect(Collectors.toList());
+  }
+
   public static List<InputGuardrailAdapter> inputGuardrailAdapters(List<String> filters) {
-    List<SmartWorkflowInputGuardrail> inputGuardrails = new DefaultGuardrailProvider().getDefaultInputGuardrails();
+    List<SmartWorkflowInputGuardrail> inputGuardrails = new DefaultGuardrailProvider().getFilteredDefaultInputGuardrails();
 
     if (CollectionUtils.isEmpty(filters)) {
       return inputGuardrails.stream()
