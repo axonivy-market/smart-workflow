@@ -19,7 +19,7 @@ public class AgentEditor {
 
   public void initUiFields(ExtensionUiBuilder ui) {
     ui.group("Message")
-        .add(ui.label("How can I assist you today?").create())
+        .add(ui.label("User message:").create())
         .add(ui.textField(Conf.QUERY).multiline().create())
         .add(ui.label("System message:").create())
         .add(ui.textField(Conf.SYSTEM).multiline().create())
