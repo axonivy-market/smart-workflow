@@ -1,6 +1,6 @@
-# Axon Ivy Smart Workflow
+# Intelligenter Workflow
 
-**Axon Ivy Smart Workflow** bringt KI direkt in Axon Ivy, sodass Entwickler KI-Agenten
+**Smart Workflow** bringt KI direkt in Axon Ivy, sodass Entwickler KI-Agenten
 innerhalb bestehender Axon-Prozesse erstellen, ausführen und verbessern können.
 Damit können Geschäftsabläufe große Sprachmodelle nutzen, um natürliche Sprache
 zu verstehen, autonome Entscheidungen zu treffen und sich an veränderte
