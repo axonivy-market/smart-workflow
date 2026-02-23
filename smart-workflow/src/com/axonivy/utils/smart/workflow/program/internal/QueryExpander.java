@@ -46,10 +46,6 @@ public class QueryExpander {
 
         String expanded = expandFileExpressions(template.get(),
             expr -> context.script().executeExpression(expr, Object.class), model);
-        // Final pass to expand any remaining script variables after file extraction
-        if (SCRIPT_VARIABLE_PATTERN.matcher(expanded).find()) {
-            expanded = context.script().expandMacro(expanded);
-        }
         return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
     } catch (Exception ex) {
       return Optional.empty();
@@ -73,19 +69,17 @@ public class QueryExpander {
     return result.toString();
   }
 
-  /** 
-   * Returns AI-extracted content if the expression resolves to a file-like resource.
-   */
+  /** Returns AI-extracted content for file types, or the string value for all others. */
   private static Optional<String> extractFromExpression(String expression, Function<String, Optional<Object>> resolver, ChatModel model) {
     if (StringUtils.isBlank(expression)) {
       return Optional.empty();
     }
     Object target = resolver.apply(expression).orElse(null);
     Path path = toPath(target);
-    if (path == null) {
-      return Optional.empty();
+    if (path != null) {
+      return Optional.ofNullable(performExtraction(path, model));
     }
-    return Optional.ofNullable(performExtraction(path, model));
+    return Optional.ofNullable(target).map(String::valueOf);
   }
 
   private static String performExtraction(Path path, ChatModel model) {

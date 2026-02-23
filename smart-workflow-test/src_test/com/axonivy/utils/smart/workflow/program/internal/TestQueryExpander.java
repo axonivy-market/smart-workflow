@@ -59,13 +59,13 @@ class TestQueryExpander {
   }
 
   @Test
-  void nonFileExpressionIsLeftUnchanged() {
+  void nonFileExpressionIsExpandedAsString() {
     String result = QueryExpander.expandFileExpressions(
         "Hello <%=in.name%>",
         expr -> Optional.of("John"),
         model);
 
-    assertThat(result).isEqualTo("Hello <%=in.name%>");
+    assertThat(result).isEqualTo("Hello John");
   }
 
   @Test
