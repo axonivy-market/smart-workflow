@@ -3,7 +3,6 @@ package com.axonivy.utils.smart.workflow.spi.internal;
 import java.util.function.Predicate;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import ch.ivyteam.ivy.application.ProcessModelVersionRelation;
 
 public final class SpiProject {
   static String SMART_WORKFLOW_PROJECT = "smart-workflow";
@@ -14,7 +13,7 @@ public final class SpiProject {
     if (smartWorkflow.test(current)) {
       return current;
     }
-    return current.getAllRelatedProcessModelVersions(ProcessModelVersionRelation.REQUIRED).stream()
+    return current.getAllRequiredProcessModelVersions()
         .filter(smartWorkflow).findAny().orElseThrow();
   }
 }
