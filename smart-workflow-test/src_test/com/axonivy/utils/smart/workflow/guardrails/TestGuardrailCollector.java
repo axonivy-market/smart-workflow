@@ -17,7 +17,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
-public class TestGuardrailProvider {
+public class TestGuardrailCollector {
 
   @BeforeEach
   void setup(AppFixture fixture) {
@@ -40,5 +40,12 @@ public class TestGuardrailProvider {
     assertThat(delegates.get(0)).isInstanceOf(PromptInjectionGuardrail.class);
     assertThat(delegates.get(1)).isInstanceOf(DummyGuardrail.class);
     assertThat(delegates.get(2)).isInstanceOf(SecondDummyGuardrail.class);
+  }
+
+  @Test
+  void allInputGuardrailNames() {
+    var names = GuardrailCollector.allInputGuardrailNames();
+    assertThat(names).containsExactlyInAnyOrder(
+        "PromptInjectionGuardrail", "DummyGuardrail", "SecondDummyGuardrail");
   }
 }

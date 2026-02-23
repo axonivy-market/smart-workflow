@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.guardrails.provider;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,8 +28,6 @@ public class DefaultGuardrailProvider implements GuardrailProvider {
 
     @Override
     public List<SmartWorkflowInputGuardrail> getInputGuardrails() {
-        List<SmartWorkflowInputGuardrail> guardrails = new ArrayList<>();
-        guardrails.add(new PromptInjectionGuardrail());
-        return guardrails;
+        return List.of(new PromptInjectionGuardrail()) ;
     }
 }
