@@ -1,10 +1,12 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,38 +44,10 @@ public class QueryExpander {
           return Optional.empty();
         }
 
-        Matcher matcher = SCRIPT_VARIABLE_PATTERN.matcher(template.get());
-
-        // Step 1: Replace all <%=expr%> with UUID placeholders
-        Map<String, String> placeholders = new LinkedHashMap<>();
-        StringBuilder result = new StringBuilder();
-
-        while (matcher.find()) {
-            String expression = matcher.group(1).trim();
-            String uuid = UUID.randomUUID().toString();
-            placeholders.put(uuid, expression);
-            matcher.appendReplacement(result, uuid);
-        }
-        matcher.appendTail(result);
-
-        // Step 2: Resolve each placeholder
-        String expanded = result.toString();
-        boolean hasOtherExpressions = false;
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            File file = getFile(entry.getValue(), context);
-            if (file != null) {
-                // File expression: extract content using AI and replace
-                String content = new FileExtractor(model).extract(file);
-                expanded = expanded.replace(entry.getKey(), content);
-            } else {
-                // Non-file expression: restore original <%=expr%>
-                expanded = expanded.replace(entry.getKey(), "<%=" + entry.getValue() + "%>");
-                hasOtherExpressions = true;
-            }
-        }
-
-        // If there are still unreplaced <%=expr%> patterns, delegate to macro engine for final expansion
-        if (hasOtherExpressions) {
+        String expanded = expandFileExpressions(template.get(),
+            expr -> context.script().executeExpression(expr, Object.class), model);
+        // Final pass to expand any remaining script variables after file extraction
+        if (SCRIPT_VARIABLE_PATTERN.matcher(expanded).find()) {
             expanded = context.script().expandMacro(expanded);
         }
         return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
@@ -82,20 +56,55 @@ public class QueryExpander {
     }
   }
 
-  private static File getFile(String expression, ProgramContext context) {
+  /**
+   * Iterates each {@code <%=expr%>} in the template and replaces it via {@link #extractFromExpression}.
+   */
+  static String expandFileExpressions(String template, Function<String, Optional<Object>> resolver, ChatModel model) {
+    Matcher matcher = SCRIPT_VARIABLE_PATTERN.matcher(template);
+    StringBuilder result = new StringBuilder();
+    while (matcher.find()) {
+      String expression = matcher.group(1).trim();
+      Optional<String> extracted = extractFromExpression(expression, resolver, model);
+      if (extracted.isPresent()) {
+        matcher.appendReplacement(result, Matcher.quoteReplacement(extracted.get()));
+      }
+    }
+    matcher.appendTail(result);
+    return result.toString();
+  }
+
+  /** 
+   * Returns AI-extracted content if the expression resolves to a file-like resource.
+   */
+  private static Optional<String> extractFromExpression(String expression, Function<String, Optional<Object>> resolver, ChatModel model) {
     if (StringUtils.isBlank(expression)) {
-      return null;
+      return Optional.empty();
     }
+    Object target = resolver.apply(expression).orElse(null);
+    Path path = toPath(target);
+    if (path == null) {
+      return Optional.empty();
+    }
+    return Optional.ofNullable(performExtraction(path, model));
+  }
+
+  private static String performExtraction(Path path, ChatModel model) {
     try {
-      Object returnValue = context.script().executeExpression(expression, Object.class).orElse(null);
-      return switch (returnValue) {
-        case null -> null;
-        case File javaFile -> javaFile;
-        case ch.ivyteam.ivy.scripting.objects.File ivyFile -> ivyFile.getJavaFile();
-        default -> null;
-      };
-    } catch (RuntimeException ex) {
-      throw new RuntimeException("Failed to read '" + expression + "'", ex);
+      InputStream stream = Files.newInputStream(path);
+      String fileName = path.getFileName().toString();
+      return new FileExtractor(model).extract(stream, fileName);
+    } catch (IOException ex) {
+      throw new RuntimeException("Failed to open stream for path: " + path, ex);
     }
+  }
+
+  private static Path toPath(Object value) {
+    return switch (value) {
+      case null -> null;
+      case File javaFile -> javaFile.toPath();
+      case Path path -> path;
+      case ch.ivyteam.ivy.scripting.objects.File ivyFile -> ivyFile.getJavaFile().toPath();
+      default -> null;
+    };
   }
 }

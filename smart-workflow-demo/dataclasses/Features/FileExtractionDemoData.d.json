@@ -13,5 +13,11 @@
   }, {
     "name" : "secondInvoice",
     "type" : "java.io.File"
+  }, {
+    "name" : "pdfAsPath",
+    "type" : "java.nio.file.Path"
+  }, {
+    "name" : "pdfAsIvyFile",
+    "type" : "ch.ivyteam.ivy.scripting.objects.File"
   } ]
 }

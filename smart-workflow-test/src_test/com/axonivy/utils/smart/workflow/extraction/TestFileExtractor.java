@@ -1,10 +1,10 @@
 package com.axonivy.utils.smart.workflow.extraction;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -40,21 +40,21 @@ class TestFileExtractor {
     var extractor = new FileExtractor(model);
     for (String extension : new String[]{"png", "jpg", "jpeg", "pdf"}) {
       var file = createTempFile("test." + extension, DUMMY_CONTENT);
-      assertThat(extractor.extract(file)).isEqualTo(EXTRACTED_TEXT);
+      InputStream stream = Files.newInputStream(file.toPath());
+      assertThat(extractor.extract(stream, file.getName())).isEqualTo(EXTRACTED_TEXT);
     }
   }
 
   @Test
-  void invalidFiles() throws IOException {
-    File unsupported = createTempFile("test.txt", DUMMY_CONTENT);
-    assertThatThrownBy(() -> new FileExtractor(model).extract(unsupported))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("Unsupported file type");
+  void nullStreamReturnsEmpty() {
+    assertThat(new FileExtractor(model).extract(null, "test.png")).isEmpty();
+  }
 
-    File missing = new File(tempDir, "missing.png");
-    assertThatThrownBy(() -> new FileExtractor(model).extract(missing))
-        .isInstanceOf(RuntimeException.class)
-        .hasMessageContaining("Failed to read file");
+  @Test
+  void unsupportedFileTypeReturnsEmpty() throws IOException {
+    var file = createTempFile("test.txt", DUMMY_CONTENT);
+    InputStream stream = Files.newInputStream(file.toPath());
+    assertThat(new FileExtractor(model).extract(stream, file.getName())).isEmpty();
   }
 
   private File createTempFile(String name, byte[] content) throws IOException {
