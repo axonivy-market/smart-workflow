@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/config/variables.json
+Variables:
+  AI:
+    Providers:
+      xAI:
+        #[password]
+        APIKey: ${decrypt:}
+        BaseUrl: ""
+        # The default model, if not explicitly specified on the calling Agent.
+        #
+        # [enum: grok-4-1-fast, grok-4-1-mini, grok-4-1-large, grok-4-1-max, grok-4-1-mini-code, grok-4-1-large-code, grok-4-1-max-code]
+        DefaultModel: ""

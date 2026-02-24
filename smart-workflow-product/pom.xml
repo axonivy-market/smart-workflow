@@ -12,6 +12,7 @@
     <variables.azureopenai.example.file>../models/smart-workflow-azure-openai/config/variables.example.yaml</variables.azureopenai.example.file>
     <variables.gemini.file>../models/smart-workflow-gemini/config/variables.yaml</variables.gemini.file>
     <variables.gemini.example.file>../models/smart-workflow-gemini/config/variables.example.yaml</variables.gemini.example.file>
+    <variables.xai.file>../models/smart-workflow-xai/config/variables.yaml</variables.xai.file>
   </properties>
 
   <build>
@@ -68,6 +69,9 @@
                 <loadfile property="variables.gemini.example" srcFile="${variables.gemini.example.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.gemini.example@" value="${variables.gemini.example}" />
                 <replace file="${project.build.directory}/README_DE.md" token="@variables.gemini.example@" value="${variables.gemini.example}" />
+                <loadfile property="variables.xai" srcFile="${variables.xai.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.xai@" value="${variables.xai}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.xai@" value="${variables.xai}" />
               </target>
             </configuration>
             <goals>
