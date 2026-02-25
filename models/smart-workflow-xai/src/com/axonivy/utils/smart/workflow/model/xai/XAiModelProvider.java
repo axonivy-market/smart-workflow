@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector;
+import static com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector.SUPPORTED_MODELS;
 
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
@@ -30,15 +31,7 @@ public class XAiModelProvider implements ChatModelProvider {
 
   @Override
   public List<String> models() {
-    return List.of(
-        "grok-4-1-fast",
-        "grok-4-1-mini",
-        "grok-4-1-large",
-        "grok-4-1-max",
-        "grok-4-1-mini-code",
-        "grok-4-1-large-code",
-        "grok-4-1-max-code"
-    );
+    return SUPPORTED_MODELS;
   }
 
 }

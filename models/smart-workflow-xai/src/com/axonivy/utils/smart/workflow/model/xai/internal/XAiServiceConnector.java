@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.model.xai.internal;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,8 +14,19 @@ import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 
 public class XAiServiceConnector {
 
+  private static final int DEFAULT_TEMPERATURE = 0;
   private static final String DEFAULT_MODEL = "grok-4-1-fast";
   private static final String DEFAULT_BASE_URL = "https://api.x.ai/v1/";
+
+  public static final List<String> SUPPORTED_MODELS = List.of(
+      "grok-4-1-fast",
+      "grok-4-1-mini",
+      "grok-4-1-large",
+      "grok-4-1-max",
+      "grok-4-1-mini-code",
+      "grok-4-1-large-code",
+      "grok-4-1-max-code"
+  );
 
   public interface XAiConf {
     String PREFIX = "Ai.Providers.xAI.";
@@ -44,6 +56,7 @@ public class XAiServiceConnector {
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
     OpenAiChatModelBuilder builder = initBuilder();
     builder.modelName(modelName);
+    builder.temperature(Double.valueOf(DEFAULT_TEMPERATURE));
     return builder;
   }
 
@@ -66,6 +79,13 @@ public class XAiServiceConnector {
   private static String resolveModelName(String modelName) {
     String selected = StringUtils.defaultIfBlank(modelName,
         StringUtils.defaultIfBlank(Ivy.var().get(XAiConf.DEFAULT_MODEL), DEFAULT_MODEL));
+    validateModel(selected);
     return selected;
+  }
+
+  private static void validateModel(String modelName) {
+    if (!SUPPORTED_MODELS.contains(modelName)) {
+      Ivy.log().warn("Unknown xAI model: '" + modelName + "'. Compatibility not guaranteed.");
+    }
   }
 }

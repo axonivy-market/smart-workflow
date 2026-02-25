@@ -222,6 +222,12 @@ x.AI models are supported, import the `smart-workflow-xai` to work with these.
 @variables.xai@
 ```
 
+Example Configuration:
+
+```yaml
+@variables.xai.example@
+```
+
 </details>
 
 ### Guardrails
