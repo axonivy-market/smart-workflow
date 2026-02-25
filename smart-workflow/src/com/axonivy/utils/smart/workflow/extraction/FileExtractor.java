@@ -9,17 +9,10 @@ import org.apache.commons.io.FilenameUtils;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.PdfFileContent;
-import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatModel;
 
 public class FileExtractor {
-
-  private static final SystemMessage SYSTEM_PROMPT = SystemMessage.from("""
-      Please analyze the attached file and extract relevant information.
-      If the file is a PDF, extract the text content from all pages.
-      The format should be in Markdown, and if the file contains tabular data, please represent it in a markdown table for better readability.
-  """);
 
   private final ChatModel model;
 
@@ -35,7 +28,7 @@ public class FileExtractor {
       byte[] bytes = stream.readAllBytes();
       Content content = createContent(bytes, fileName);
       if (content != null) {
-        return model.chat(SYSTEM_PROMPT, UserMessage.from(content)).aiMessage().text();
+        return model.chat(UserMessage.from(content)).aiMessage().text();
       }
       return "";
     } catch (IOException e) {
