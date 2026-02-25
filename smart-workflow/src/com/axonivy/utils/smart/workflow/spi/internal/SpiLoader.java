@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import static ch.ivyteam.ivy.application.ProcessModelVersionRelation.DEPENDENT;
 import ch.ivyteam.ivy.project.model.Project;
 
 public class SpiLoader {
@@ -38,8 +37,7 @@ public class SpiLoader {
 
   private Stream<Project> projectsInScope() {
     var pmv = IProcessModelVersion.of(project);
-    var dependendees = pmv.getAllRelatedProcessModelVersions(DEPENDENT)
-        .stream()
+    var dependendees = pmv.getAllDependentProcessModelVersions()
         .map(IProcessModelVersion::project);
     return Stream.concat(Stream.of(project), dependendees);
   }
