@@ -242,6 +242,11 @@ Darüber hinaus benötigen die meisten Modellanbieter eine ApiKey oder eine ande
 eindeutige Kennung. Überprüfen Sie Ihren Anbieter unten, um zu sehen, welche
 Variablen zusätzlich gesetzt werden müssen.
 
+To request support for additional AI model providers, please open an issue or
+submit a pull request on GitHub. When contributing, make sure to follow the
+[Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned
+with the Smart Workflow ecosystem.
+
 ```yaml
 @variables.yaml@
 ```
@@ -299,12 +304,25 @@ Example Configuration:
 ```
 </details>
 
-Um Unterstützung für zusätzliche AI-Modellanbieter zu verlangen, öffnen Sie
-bitte ein GitHub Issue oder PR.
+#### x.AI Models
 
-Stellen Sie sicher, dass Sie der [Models Contribution
-Guideline](../doc/MODELS.md) folgen, um Ihren Anbieter auf das Smart
-Workflow-Ökosystem auszurichten.
+<details>
+
+<summary>x.AI setup instructions</summary>
+x.AI models are supported, import the `smart-workflow-xai` to work with these.
+
+
+```yaml
+@variables.xai@
+```
+
+Example Configuration:
+
+```yaml
+@variables.xai.example@
+```
+
+</details>
 
 ### Guardrails
 
