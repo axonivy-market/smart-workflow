@@ -152,6 +152,9 @@ The selection of your provider is done with the variable `AI.DefaultProvider`.
 Furthermore, most model providers need an ApiKey or another unique identifier.
 Check your provider below, to see which variables need to be set in addition.
 
+To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
+When contributing, make sure to follow the [Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
+
 ```yaml
 @variables.yaml@
 ```
@@ -207,9 +210,25 @@ Example Configuration:
 ```
 </details>
 
-To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
+#### x.AI Models
 
-When contributing, make sure to follow the [Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
+<details>
+
+<summary>x.AI setup instructions</summary>
+x.AI models are supported, import the `smart-workflow-xai` to work with these.
+
+
+```yaml
+@variables.xai@
+```
+
+Example Configuration:
+
+```yaml
+@variables.xai.example@
+```
+
+</details>
 
 ### Guardrails
 
