@@ -19,3 +19,4 @@ jobs:
     uses: axonivy-market/github-workflows/.github/workflows/release.yml@v6
     with:
       mvnArgs: -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }}
+      javaVersion: 25
