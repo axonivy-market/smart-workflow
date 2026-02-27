@@ -98,7 +98,7 @@ public class QueryExpander {
     return switch (cmsValue) {
       case String str -> Optional.of(str);
       case InputStream stream -> Optional.ofNullable(new FileExtractor(model).extract(stream, null));
-      case null, default -> throw new RuntimeException("CMS path '" + cmsPath + "' did not resolve to a valid content object.");
+      case null, default -> Optional.of("");
     };
   }
 
