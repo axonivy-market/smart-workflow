@@ -35,7 +35,7 @@ public class FileExtractor {
     String resolvedFilename = Optional.ofNullable(fileName).orElse("unknown file name");
     try {
       byte[] bytes = stream.readAllBytes();
-      Content content = createContent(bytes, resolvedFilename);
+      Content content = createContent(bytes, fileName);
       if (content != null) {
         return model.chat(UserMessage.from(content)).aiMessage().text();
       }
