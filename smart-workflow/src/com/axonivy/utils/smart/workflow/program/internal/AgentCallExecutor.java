@@ -63,10 +63,14 @@ public class AgentCallExecutor {
       return; // early abort; user is still testing with empty values
     }
 
-    String finalQuery = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context, model).orElse(query.get());
+    Optional<String> finalQuery = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context, model);
+    if (finalQuery.isEmpty()) {
+      return;
+    }
+
     var agent = agentBuilder.build();
     try {
-      Object result = agent.chat(finalQuery);
+      Object result = agent.chat(finalQuery.get());
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
       String mapIt = mapTo + "=result";

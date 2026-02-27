@@ -31,9 +31,18 @@ class TestFileExtractionDemo {
   }
 
   @Test
+  void extractInvoiceFromBinary(BpmClient client) {
+    performTest(client, "extractFromBinary");
+  }
+
+  @Test
   void extractInvoiceFromFiles(BpmClient client) {
+    performTest(client, "extractFromImage");
+  }
+
+  private void performTest(BpmClient client, String elementName) {
     var result = client.start()
-        .process(FILE_EXTRACTION_DEMO.elementName("extractFromImage"))
+        .process(FILE_EXTRACTION_DEMO.elementName(elementName))
         .execute();
 
     FileExtractionDemoData data = result.data().last();

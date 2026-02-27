@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,13 +16,29 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.extraction.FileExtractor;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import ch.ivyteam.ivy.scripting.objects.Binary;
+import ch.ivyteam.ivy.workflow.document.IDocument;
 import dev.langchain4j.model.chat.ChatModel;
 
 public class QueryExpander {
 
-  // Matches Ivy script variables like <%=in.demoFile%>
   private static final Pattern SCRIPT_VARIABLE_PATTERN = Pattern.compile("<%=(.+?)%>");
+
+  private record InputStreamWithName(InputStream stream, String name) implements AutoCloseable {
+    InputStreamWithName(Path path) throws IOException {
+      this(Files.newInputStream(path), path.getFileName().toString());
+    }
+    InputStreamWithName(byte[] bytes) {
+      this(new ByteArrayInputStream(bytes), null);
+    }
+
+    @Override
+    public void close() throws IOException {
+      stream.close();
+    }
+  }
 
   public static Optional<String> expandMacro(String confKey, ProgramContext context) {
     try {
@@ -33,6 +50,7 @@ public class QueryExpander {
       var expanded = context.script().expandMacro(template.get());
       return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
     } catch (Exception ex) {
+      Ivy.log().error(ex.getMessage(), ex);
       return Optional.empty();
     }
   }
@@ -48,13 +66,11 @@ public class QueryExpander {
             expr -> context.script().executeExpression(expr, Object.class), model);
         return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
     } catch (Exception ex) {
+      Ivy.log().error(ex.getMessage(), ex);
       return Optional.empty();
     }
   }
 
-  /**
-   * Iterates each {@code <%=expr%>} in the template and replaces it via {@link #extractFromExpression}.
-   */
   static String expandFileExpressions(String template, Function<String, Optional<Object>> resolver, ChatModel model) {
     Matcher matcher = SCRIPT_VARIABLE_PATTERN.matcher(template);
     StringBuilder result = new StringBuilder();
@@ -69,36 +85,42 @@ public class QueryExpander {
     return result.toString();
   }
 
-  /** Returns AI-extracted content for file types, or the string value for all others. */
   private static Optional<String> extractFromExpression(String expression, Function<String, Optional<Object>> resolver, ChatModel model) {
     if (StringUtils.isBlank(expression)) {
       return Optional.empty();
     }
     Object target = resolver.apply(expression).orElse(null);
-    Path path = toPath(target);
-    if (path != null) {
-      return Optional.ofNullable(performExtraction(path, model));
+    InputStreamWithName source = toInputStreamWithName(target);
+    if (source != null) {
+      try (source) {
+        return Optional.ofNullable(new FileExtractor(model).extract(source.stream(), source.name()));
+      } catch (IOException e) {
+        throw new RuntimeException("Failed to close stream for expression '" + expression + "'", e);
+      }
     }
     return Optional.ofNullable(target).map(String::valueOf);
   }
 
-  private static String performExtraction(Path path, ChatModel model) {
+  private static InputStreamWithName toInputStreamWithName(Object value) {
     try {
-      InputStream stream = Files.newInputStream(path);
-      String fileName = path.getFileName().toString();
-      return new FileExtractor(model).extract(stream, fileName);
+      return switch (value) {
+        case null -> null;
+        case InputStream stream
+          -> new InputStreamWithName(stream, null);
+        case Path path
+          -> new InputStreamWithName(path);
+        case File javaFile
+          -> new InputStreamWithName(javaFile.toPath());
+        case ch.ivyteam.ivy.scripting.objects.File ivyFile
+          -> new InputStreamWithName(ivyFile.getJavaFile().toPath());
+        case IDocument document
+          -> new InputStreamWithName(document.read().asStream(), document.getName());
+        case Binary binary
+          -> new InputStreamWithName(binary.toByteArray());
+        default -> null;
+      };
     } catch (IOException ex) {
-      throw new RuntimeException("Failed to open stream for path: " + path, ex);
+      throw new RuntimeException("Failed to open stream for value: " + value, ex);
     }
-  }
-
-  private static Path toPath(Object value) {
-    return switch (value) {
-      case null -> null;
-      case File javaFile -> javaFile.toPath();
-      case Path path -> path;
-      case ch.ivyteam.ivy.scripting.objects.File ivyFile -> ivyFile.getJavaFile().toPath();
-      default -> null;
-    };
   }
 }

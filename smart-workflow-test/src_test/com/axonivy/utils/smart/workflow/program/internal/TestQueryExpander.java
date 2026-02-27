@@ -2,8 +2,11 @@ package com.axonivy.utils.smart.workflow.program.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Optional;
 
@@ -56,6 +59,19 @@ class TestQueryExpander {
     } finally {
       Files.deleteIfExists(javaFile.toPath());
     }
+  }
+
+  @Test
+  void binaryIsResolved() {
+    var pdfBytes = "%PDF-1.4".getBytes(StandardCharsets.US_ASCII);
+    var binary = new ch.ivyteam.ivy.scripting.objects.Binary(pdfBytes);
+    assertFileTypeResolved(binary);
+  }
+
+  @Test
+  void inputStreamIsResolved() {
+    InputStream stream = new ByteArrayInputStream("%PDF-1.4".getBytes(StandardCharsets.US_ASCII));
+    assertFileTypeResolved(stream);
   }
 
   @Test

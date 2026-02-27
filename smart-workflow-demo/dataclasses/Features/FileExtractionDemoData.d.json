@@ -19,5 +19,11 @@
   }, {
     "name" : "pdfAsIvyFile",
     "type" : "ch.ivyteam.ivy.scripting.objects.File"
+  }, {
+    "name" : "firstStream",
+    "type" : "java.io.InputStream"
+  }, {
+    "name" : "secondBinary",
+    "type" : "ch.ivyteam.ivy.scripting.objects.Binary"
   } ]
 }
