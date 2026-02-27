@@ -9,8 +9,6 @@ import ch.ivyteam.ivy.cm.ContentObject;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.Binary;
 
-import com.axonivy.utils.smart.workflow.exception.SmartWorkflowException;
-
 public class FileProcessingUtils {
 
   private static final String FAILED_TO_LOAD_CMS_FILE_MSG = "Failed to load file from CMS: %s/%s%s";
@@ -37,7 +35,7 @@ public class FileProcessingUtils {
     } catch (IOException e) {
       String message = String.format(FAILED_TO_LOAD_CMS_FILE_MSG, cmsPath, "", "");
       Ivy.log().error(message, e);
-      throw new SmartWorkflowException(message, e);
+      throw new RuntimeException(message, e);
     }
   }
 
@@ -60,7 +58,7 @@ public class FileProcessingUtils {
     } catch (IOException e) {
       String message = String.format(FAILED_TO_LOAD_CMS_FILE_MSG, cmsPath, filename, fileExtension);
       Ivy.log().error(message, e);
-      throw new SmartWorkflowException(message, e);
+      throw new RuntimeException(message, e);
     }
     return null;
   }

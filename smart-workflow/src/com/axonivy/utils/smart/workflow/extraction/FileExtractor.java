@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 
-import com.axonivy.utils.smart.workflow.exception.SmartWorkflowException;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.PdfFileContent;
@@ -21,6 +20,8 @@ import dev.langchain4j.model.chat.ChatModel;
 public class FileExtractor {
 
   private static final byte[] PDF_PREFIX = "%PDF-".getBytes(StandardCharsets.US_ASCII);
+  private static final String UNSUPPORTED_FILE_TYPE_MSG = "Unsupported file type for '%s'. Consider converting to PDF, PNG or JPEG, or open a support request.";
+  private static final String FAILED_TO_READ_FILE_MSG = "Failed to read file '%s'";
   private final ChatModel model;
 
   public FileExtractor(ChatModel model) {
@@ -31,16 +32,16 @@ public class FileExtractor {
     if (stream == null) {
       return "";
     }
+    String resolvedFilename = Optional.ofNullable(fileName).orElse("unknown file name");
     try {
       byte[] bytes = stream.readAllBytes();
-      Content content = createContent(bytes, fileName);
+      Content content = createContent(bytes, resolvedFilename);
       if (content != null) {
         return model.chat(UserMessage.from(content)).aiMessage().text();
       }
-      throw new SmartWorkflowException("Unsupported file type for '" + fileName
-          + "'. Consider converting to PDF, PNG or JPEG, or open a support request.");
+      throw new RuntimeException(String.format(UNSUPPORTED_FILE_TYPE_MSG, resolvedFilename));
     } catch (IOException e) {
-      throw new SmartWorkflowException("Failed to read file '" + fileName + "'", e);
+      throw new RuntimeException(String.format(FAILED_TO_READ_FILE_MSG, resolvedFilename), e);
     }
   }
 

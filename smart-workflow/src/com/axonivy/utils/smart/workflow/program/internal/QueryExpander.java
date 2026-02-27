@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.exception.SmartWorkflowException;
 import com.axonivy.utils.smart.workflow.extraction.FileExtractor;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -51,6 +50,7 @@ public class QueryExpander {
       var expanded = context.script().expandMacro(template.get());
       return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
     } catch (Exception ex) {
+      Ivy.log().error(ex.getMessage(), ex);
       return Optional.empty();
     }
   }
@@ -65,7 +65,7 @@ public class QueryExpander {
         String expanded = expandFileExpressions(template.get(),
             expr -> context.script().executeExpression(expr, Object.class), model);
         return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
-    } catch (SmartWorkflowException ex) {
+    } catch (Exception ex) {
       Ivy.log().error(ex.getMessage(), ex);
       return Optional.empty();
     }
@@ -95,7 +95,7 @@ public class QueryExpander {
       try (source) {
         return Optional.ofNullable(new FileExtractor(model).extract(source.stream(), source.name()));
       } catch (IOException e) {
-        throw new SmartWorkflowException("Failed to close stream for expression '" + expression + "'", e);
+        throw new RuntimeException("Failed to close stream for expression '" + expression + "'", e);
       }
     }
     return Optional.ofNullable(target).map(String::valueOf);
@@ -120,7 +120,7 @@ public class QueryExpander {
         default -> null;
       };
     } catch (IOException ex) {
-      throw new SmartWorkflowException("Failed to open stream for value: " + value, ex);
+      throw new RuntimeException("Failed to open stream for value: " + value, ex);
     }
   }
 }

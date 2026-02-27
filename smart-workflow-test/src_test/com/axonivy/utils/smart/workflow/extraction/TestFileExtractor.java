@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.axonivy.utils.smart.workflow.exception.SmartWorkflowException;
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider.ModelNames;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
@@ -29,7 +28,7 @@ class TestFileExtractor {
   private static final byte[] DUMMY_CONTENT = new byte[]{0x01, 0x02, 0x03, 0x04};
   private static final byte[] PDF_PREFIX = "%PDF-".getBytes(StandardCharsets.US_ASCII); // PDF signature bytes
   private static final byte[] PNG_PREFIX = HexFormat.of().parseHex("89504E470D0A1A0A"); // PNG signature bytes
-  private static final byte[] JPEG_PREFIX = HexFormat.of().parseHex("FFD8FFE0"); // JPEG signature bytes
+  private static final byte[] JPEG_PREFIX = HexFormat.of().parseHex("FFD8FFE0"); // JPEG signature bytes, JPEG has several valid signatures, this is one of the most common ones
 
   private ChatModel model;
 
@@ -62,7 +61,7 @@ class TestFileExtractor {
     var file = createTempFile("test.txt", DUMMY_CONTENT);
     InputStream stream = Files.newInputStream(file.toPath());
     assertThatThrownBy(() -> new FileExtractor(model).extract(stream, file.getName()))
-        .isInstanceOf(SmartWorkflowException.class)
+        .isInstanceOf(RuntimeException.class)
         .hasMessageContaining("test.txt");
   }
 
@@ -72,7 +71,7 @@ class TestFileExtractor {
     assertThat(new FileExtractor(model).extract(new ByteArrayInputStream(PNG_PREFIX), null)).isEqualTo(EXTRACTED_TEXT);
     assertThat(new FileExtractor(model).extract(new ByteArrayInputStream(JPEG_PREFIX), null)).isEqualTo(EXTRACTED_TEXT);
     assertThatThrownBy(() -> new FileExtractor(model).extract(new ByteArrayInputStream(DUMMY_CONTENT), null))
-        .isInstanceOf(SmartWorkflowException.class);
+        .isInstanceOf(RuntimeException.class);
   }
 
   private File createTempFile(String name, byte[] content) throws IOException {

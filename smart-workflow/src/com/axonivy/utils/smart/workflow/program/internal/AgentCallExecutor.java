@@ -70,7 +70,7 @@ public class AgentCallExecutor {
 
     var agent = agentBuilder.build();
     try {
-      Object result = agent.chat(finalQuery.orElse(query.get()));
+      Object result = agent.chat(finalQuery.get());
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
       String mapIt = mapTo + "=result";
