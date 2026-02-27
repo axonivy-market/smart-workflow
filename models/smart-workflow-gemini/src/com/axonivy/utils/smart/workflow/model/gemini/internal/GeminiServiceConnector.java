@@ -1,11 +1,13 @@
 package com.axonivy.utils.smart.workflow.model.gemini.internal;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
+import com.axonivy.utils.smart.workflow.model.observer.ChatSpan;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
@@ -36,7 +38,9 @@ public class GeminiServiceConnector {
 
   private static GoogleAiGeminiChatModelBuilder initBuilder() {
     GoogleAiGeminiChatModelBuilder builder = GoogleAiGeminiChatModel.builder()
-        .httpClientBuilder(new SmartHttpClientBuilderFactory().create()).logRequestsAndResponses(true);
+        .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
+        .logRequestsAndResponses(true)
+        .listeners(List.of(new ChatSpan()));
 
     var baseUrl = Ivy.var().get(GeminiConf.BASE_URL);
     if (!baseUrl.isBlank()) {

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
+import com.axonivy.utils.smart.workflow.model.observer.ChatSpan;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
@@ -64,7 +65,8 @@ public class XAiServiceConnector {
     OpenAiChatModelBuilder builder = OpenAiChatModel.builder()
         .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
         .logRequests(true)
-        .logResponses(true);
+        .logResponses(true)
+        .listeners(List.of(new ChatSpan()));
     var baseUrl = StringUtils.defaultIfBlank(Ivy.var().get(XAiConf.BASE_URL) , DEFAULT_BASE_URL);
     builder.baseUrl(baseUrl);
     String key = Ivy.var().get(XAiConf.API_KEY);

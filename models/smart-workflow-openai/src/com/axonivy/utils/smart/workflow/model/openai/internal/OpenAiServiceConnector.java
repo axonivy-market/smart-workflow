@@ -1,11 +1,13 @@
 package com.axonivy.utils.smart.workflow.model.openai.internal;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
+import com.axonivy.utils.smart.workflow.model.observer.ChatSpan;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
@@ -64,7 +66,8 @@ public class OpenAiServiceConnector {
     OpenAiChatModelBuilder builder = OpenAiChatModel.builder()
         .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
         .logRequests(true)
-        .logResponses(true);
+        .logResponses(true)
+        .listeners(List.of(new ChatSpan()));
     var baseUrl = Ivy.var().get(OpenAiConf.BASE_URL);
     if (!baseUrl.isBlank()) {
       builder.baseUrl(baseUrl);
