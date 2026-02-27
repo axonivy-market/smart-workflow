@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 
+import com.axonivy.utils.smart.workflow.exception.SmartWorkflowException;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.PdfFileContent;
@@ -19,20 +20,13 @@ import dev.langchain4j.model.chat.ChatModel;
 
 public class FileExtractor {
 
-  // Signature bytes of PDF file: "%PDF-"
   private static final byte[] PDF_PREFIX = "%PDF-".getBytes(StandardCharsets.US_ASCII);
-
   private final ChatModel model;
 
   public FileExtractor(ChatModel model) {
     this.model = model;
   }
 
-  /**
-   * Extracts content from a stream.
-   * When {@code fileName} is blank, the format is detected via magic bytes (PDF, PNG, JPEG).
-   * Otherwise the file extension is used.
-   */
   public String extract(InputStream stream, String fileName) {
     if (stream == null) {
       return "";
@@ -43,9 +37,10 @@ public class FileExtractor {
       if (content != null) {
         return model.chat(UserMessage.from(content)).aiMessage().text();
       }
-      return "";
+      throw new SmartWorkflowException("Unsupported file type for '" + fileName
+          + "'. Consider converting to PDF, PNG or JPEG, or open a support request.");
     } catch (IOException e) {
-      throw new RuntimeException("Failed to read: " + e.getMessage(), e);
+      throw new SmartWorkflowException("Failed to read file '" + fileName + "'", e);
     }
   }
 
@@ -54,7 +49,8 @@ public class FileExtractor {
     String extension = Optional.ofNullable(fileName)
         .map(FilenameUtils::getExtension)
         .map(String::toLowerCase)
-        .orElseGet(() -> detectExtension(bytes));
+        .or(() -> detectExtension(bytes))
+        .orElse("");
 
     return switch (extension) {
       case "png" -> ImageContent.from(base64, "image/png", ImageContent.DetailLevel.HIGH);
@@ -64,29 +60,26 @@ public class FileExtractor {
     };
   }
 
-  /**
-   * Detects file type based on magic bytes. Currently supports PDF, PNG, JPEG.
-   */
-  private static String detectExtension(byte[] data) {
+  private static Optional<String> detectExtension(byte[] data) {
     try {
       String mime = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(data));
       return switch (mime != null ? mime : "") {
-        case "image/png"  -> "png";
-        case "image/jpeg" -> "jpeg";
+        case "image/png"  -> Optional.of("png");
+        case "image/jpeg" -> Optional.of("jpeg");
         default -> resolvePdfExtension(data);
       };
     } catch (IOException e) {
-      return "";
+      return Optional.empty();
     }
   }
 
   /**
    * PDF files cannot be reliably detected via URLConnection, so we check the prefix bytes for "%PDF-".
    */
-  private static String resolvePdfExtension (byte[] data) {
+  private static Optional<String> resolvePdfExtension(byte[] data) {
     return data.length >= PDF_PREFIX.length
         && Arrays.equals(data, 0, PDF_PREFIX.length,
-          PDF_PREFIX, 0, PDF_PREFIX.length) 
-          ? "pdf" : "";
+          PDF_PREFIX, 0, PDF_PREFIX.length)
+        ? Optional.of("pdf") : Optional.empty();
   }
 }

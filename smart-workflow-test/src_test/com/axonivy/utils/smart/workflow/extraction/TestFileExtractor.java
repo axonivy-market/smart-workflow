@@ -9,10 +9,12 @@ import java.nio.file.Files;
 import java.util.HexFormat;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.axonivy.utils.smart.workflow.exception.SmartWorkflowException;
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider.ModelNames;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
@@ -56,10 +58,12 @@ class TestFileExtractor {
   }
 
   @Test
-  void unsupportedFileTypeReturnsEmpty() throws IOException {
+  void unsupportedFileTypeThrowsException() throws IOException {
     var file = createTempFile("test.txt", DUMMY_CONTENT);
     InputStream stream = Files.newInputStream(file.toPath());
-    assertThat(new FileExtractor(model).extract(stream, file.getName())).isEmpty();
+    assertThatThrownBy(() -> new FileExtractor(model).extract(stream, file.getName()))
+        .isInstanceOf(SmartWorkflowException.class)
+        .hasMessageContaining("test.txt");
   }
 
   @Test
@@ -67,7 +71,8 @@ class TestFileExtractor {
     assertThat(new FileExtractor(model).extract(new ByteArrayInputStream(PDF_PREFIX), null)).isEqualTo(EXTRACTED_TEXT);
     assertThat(new FileExtractor(model).extract(new ByteArrayInputStream(PNG_PREFIX), null)).isEqualTo(EXTRACTED_TEXT);
     assertThat(new FileExtractor(model).extract(new ByteArrayInputStream(JPEG_PREFIX), null)).isEqualTo(EXTRACTED_TEXT);
-    assertThat(new FileExtractor(model).extract(new ByteArrayInputStream(DUMMY_CONTENT), null)).isEmpty();
+    assertThatThrownBy(() -> new FileExtractor(model).extract(new ByteArrayInputStream(DUMMY_CONTENT), null))
+        .isInstanceOf(SmartWorkflowException.class);
   }
 
   private File createTempFile(String name, byte[] content) throws IOException {

@@ -9,6 +9,8 @@ import ch.ivyteam.ivy.cm.ContentObject;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.Binary;
 
+import com.axonivy.utils.smart.workflow.exception.SmartWorkflowException;
+
 public class FileProcessingUtils {
 
   private static final String FAILED_TO_LOAD_CMS_FILE_MSG = "Failed to load file from CMS: %s/%s%s";
@@ -28,10 +30,14 @@ public class FileProcessingUtils {
       if (!contentObject.exists()) {
         return null;
       }
-      byte[] bytes = contentObject.values().getFirst().read().inputStream().readAllBytes();
-      return bytes != null ? new Binary(bytes) : null;
+      try (InputStream is = contentObject.values().getFirst().read().inputStream()) {
+        byte[] bytes = is.readAllBytes();
+        return bytes != null ? new Binary(bytes) : null;
+      }
     } catch (IOException e) {
-      throw new RuntimeException(String.format(FAILED_TO_LOAD_CMS_FILE_MSG, cmsPath, "", ""), e);
+      String message = String.format(FAILED_TO_LOAD_CMS_FILE_MSG, cmsPath, "", "");
+      Ivy.log().error(message, e);
+      throw new SmartWorkflowException(message, e);
     }
   }
 
@@ -42,14 +48,19 @@ public class FileProcessingUtils {
         return null;
       }
 
-      byte[] bytes = contentObject.values().getFirst().read().inputStream().readAllBytes();
+      byte[] bytes;
+      try (InputStream is = contentObject.values().getFirst().read().inputStream()) {
+        bytes = is.readAllBytes();
+      }
       if (bytes != null) {
         File tempFile = Files.createTempFile(TEMP_FILE_PREFIX, "." + fileExtension).toFile();
         Files.write(tempFile.toPath(), bytes);
         return tempFile;
       }
     } catch (IOException e) {
-      throw new RuntimeException(String.format(FAILED_TO_LOAD_CMS_FILE_MSG, cmsPath, filename, fileExtension), e);
+      String message = String.format(FAILED_TO_LOAD_CMS_FILE_MSG, cmsPath, filename, fileExtension);
+      Ivy.log().error(message, e);
+      throw new SmartWorkflowException(message, e);
     }
     return null;
   }

@@ -14,24 +14,30 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.exception.SmartWorkflowException;
 import com.axonivy.utils.smart.workflow.extraction.FileExtractor;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import ch.ivyteam.ivy.scripting.objects.Binary;
+import ch.ivyteam.ivy.workflow.document.IDocument;
 import dev.langchain4j.model.chat.ChatModel;
 
 public class QueryExpander {
 
-  // Matches Ivy script variables like <%=in.demoFile%>
   private static final Pattern SCRIPT_VARIABLE_PATTERN = Pattern.compile("<%=(.+?)%>");
 
-  // Record to hold an InputStream along with an optional name (e.g. file name) for better extraction context
-  private record InputStreamWithName(InputStream stream, String name) {
+  private record InputStreamWithName(InputStream stream, String name) implements AutoCloseable {
     InputStreamWithName(Path path) throws IOException {
       this(Files.newInputStream(path), path.getFileName().toString());
     }
     InputStreamWithName(byte[] bytes) {
       this(new ByteArrayInputStream(bytes), null);
+    }
+
+    @Override
+    public void close() throws IOException {
+      stream.close();
     }
   }
 
@@ -59,14 +65,12 @@ public class QueryExpander {
         String expanded = expandFileExpressions(template.get(),
             expr -> context.script().executeExpression(expr, Object.class), model);
         return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
-    } catch (Exception ex) {
+    } catch (SmartWorkflowException ex) {
+      Ivy.log().error(ex.getMessage(), ex);
       return Optional.empty();
     }
   }
 
-  /**
-   * Iterates each {@code <%=expr%>} in the template and replaces it via {@link #extractFromExpression}.
-   */
   static String expandFileExpressions(String template, Function<String, Optional<Object>> resolver, ChatModel model) {
     Matcher matcher = SCRIPT_VARIABLE_PATTERN.matcher(template);
     StringBuilder result = new StringBuilder();
@@ -81,9 +85,6 @@ public class QueryExpander {
     return result.toString();
   }
 
-  /** 
-   * Returns AI-extracted content for file types, or the string value for all others.
-   */
   private static Optional<String> extractFromExpression(String expression, Function<String, Optional<Object>> resolver, ChatModel model) {
     if (StringUtils.isBlank(expression)) {
       return Optional.empty();
@@ -91,15 +92,15 @@ public class QueryExpander {
     Object target = resolver.apply(expression).orElse(null);
     InputStreamWithName source = toInputStreamWithName(target);
     if (source != null) {
-      return Optional.ofNullable(new FileExtractor(model).extract(source.stream(), source.name()));
+      try (source) {
+        return Optional.ofNullable(new FileExtractor(model).extract(source.stream(), source.name()));
+      } catch (IOException e) {
+        throw new SmartWorkflowException("Failed to close stream for expression '" + expression + "'", e);
+      }
     }
     return Optional.ofNullable(target).map(String::valueOf);
   }
 
-  /**
-   * Converts various types of file references (InputStream, Path, File, Ivy File, Binary) into an 
-   * InputStreamWithName for extraction.
-   */
   private static InputStreamWithName toInputStreamWithName(Object value) {
     try {
       return switch (value) {
@@ -112,12 +113,14 @@ public class QueryExpander {
           -> new InputStreamWithName(javaFile.toPath());
         case ch.ivyteam.ivy.scripting.objects.File ivyFile
           -> new InputStreamWithName(ivyFile.getJavaFile().toPath());
+        case IDocument document
+          -> new InputStreamWithName(document.read().asStream(), document.getName());
         case Binary binary
           -> new InputStreamWithName(binary.toByteArray());
         default -> null;
       };
     } catch (IOException ex) {
-      throw new RuntimeException("Failed to open stream for value: " + value, ex);
+      throw new SmartWorkflowException("Failed to open stream for value: " + value, ex);
     }
   }
 }
