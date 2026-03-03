@@ -12,3 +12,7 @@ starting the dev-engine:
 - launch the engine with the agent in place
 - launch VSC afterwards  (reload windows)
 
+verify phoenix otel/packages introspection
+```bash
+docker compose run --rm --entrypoint python phoenix -c "import importlib.metadata as m; keys=['arize-phoenix-otel','openinference-instrumentation','openinference-instrumentation-openai','opentelemetry-sdk','opentelemetry-exporter-otlp']; [print(f'{k}=={m.version(k)}') if m.version(k) else None for k in keys]"
+```
