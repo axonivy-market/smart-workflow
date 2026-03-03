@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.extraction;
+package com.axonivy.utils.smart.workflow.extraction.internal;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

@@ -1,7 +1,6 @@
-package com.axonivy.utils.smart.workflow.extraction;
+package com.axonivy.utils.smart.workflow.extraction.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.extraction.CmsLoader;
-import com.axonivy.utils.smart.workflow.extraction.FileExtractor;
+import com.axonivy.utils.smart.workflow.extraction.internal.CmsLoader;
+import com.axonivy.utils.smart.workflow.extraction.internal.FileExtractor;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
