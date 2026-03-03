@@ -106,6 +106,9 @@ Dialogs:
                     Total: Total
                     ViewDetails: View Details
                     YourCartIsEmpty: Your cart is empty
+Features:
+  FileExtractionDemo:
+    ExtractFromImagePrompt: Extract Invoice from image
 Labels:
   Actions: Actions
   Active: Active

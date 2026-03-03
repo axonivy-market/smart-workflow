@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.extraction.FileExtractor;
+import com.axonivy.utils.smart.workflow.extraction.internal.CmsLoader;
+import com.axonivy.utils.smart.workflow.extraction.internal.FileExtractor;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
@@ -25,6 +26,7 @@ import dev.langchain4j.model.chat.ChatModel;
 public class QueryExpander {
 
   private static final Pattern SCRIPT_VARIABLE_PATTERN = Pattern.compile("<%=(.+?)%>");
+  private static final Pattern CMS_EXPRESSION_PATTERN = Pattern.compile("^ivy\\.cms\\.co\\([\"'](.+?)[\"']\\)$");
 
   private record InputStreamWithName(InputStream stream, String name) implements AutoCloseable {
     InputStreamWithName(Path path) throws IOException {
@@ -62,8 +64,12 @@ public class QueryExpander {
           return Optional.empty();
         }
 
-        String expanded = expandFileExpressions(template.get(),
-            expr -> context.script().executeExpression(expr, Object.class), model);
+        String expanded = expandFileExpressions(
+          template.get(),
+          model,
+          expr -> context.script().executeExpression(expr, Object.class),
+          CmsLoader::load);
+
         return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
     } catch (Exception ex) {
       Ivy.log().error(ex.getMessage(), ex);
@@ -71,18 +77,29 @@ public class QueryExpander {
     }
   }
 
-  static String expandFileExpressions(String template, Function<String, Optional<Object>> resolver, ChatModel model) {
+  static String expandFileExpressions(String template, ChatModel model, Function<String, Optional<Object>> resolver, Function<String, Object> cmsLoader) {
     Matcher matcher = SCRIPT_VARIABLE_PATTERN.matcher(template);
     StringBuilder result = new StringBuilder();
     while (matcher.find()) {
       String expression = matcher.group(1).trim();
-      Optional<String> extracted = extractFromExpression(expression, resolver, model);
-      if (extracted.isPresent()) {
-        matcher.appendReplacement(result, Matcher.quoteReplacement(extracted.get()));
-      }
+
+      String cmsPath = extractCmsPath(expression);
+      Optional<String> value = cmsPath != null
+          ? extractFromCms(cmsPath, model, cmsLoader)
+          : extractFromExpression(expression, resolver, model);
+      value.ifPresent(v -> matcher.appendReplacement(result, Matcher.quoteReplacement(v)));
     }
     matcher.appendTail(result);
     return result.toString();
+  }
+
+  private static Optional<String> extractFromCms(String cmsPath, ChatModel model, Function<String, Object> cmsLoader) {
+    Object cmsValue = cmsLoader.apply(cmsPath);
+    return switch (cmsValue) {
+      case String str -> Optional.of(str);
+      case InputStream stream -> Optional.ofNullable(new FileExtractor(model).extract(stream, null));
+      case null, default -> Optional.of("");
+    };
   }
 
   private static Optional<String> extractFromExpression(String expression, Function<String, Optional<Object>> resolver, ChatModel model) {
@@ -122,5 +139,10 @@ public class QueryExpander {
     } catch (IOException ex) {
       throw new RuntimeException("Failed to open stream for value: " + value, ex);
     }
+  }
+
+  private static String extractCmsPath(String expression) {
+    Matcher matcher = CMS_EXPRESSION_PATTERN.matcher(expression.trim());
+    return matcher.matches() ? matcher.group(1) : null;
   }
 }
