@@ -11,6 +11,7 @@ import org.objectweb.asm.Type;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.data.message.UserMessage;
 
 /**
  * Dynamic Agent interface creator, that allows us to identify the structured output/return type at runtime.
@@ -30,7 +31,7 @@ public class StructuredOutputAgent {
   private static <R> Class<? extends DynamicAgent<R>> defineAgent(Class<R> outputType) {
     String interfaceName = "com/axonivy/utils/smart/workflow/output/DynamicAgentInterface" + outputType.getSimpleName();
     String methodName = "chat";
-    String methodDescriptor = Type.getMethodDescriptor(Type.getType(outputType), Type.getType(String.class));
+    String methodDescriptor = Type.getMethodDescriptor(Type.getType(outputType), Type.getType(UserMessage.class));
     byte[] classBytes = writeClass(interfaceName, methodName, methodDescriptor);
     var type = (Class<? extends DynamicAgent<R>>) new CustomClassLoader(outputType.getClassLoader())
         .defineClass("com.axonivy.utils.smart.workflow.output.DynamicAgentInterface" + outputType.getSimpleName(), classBytes);

@@ -19,6 +19,7 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
@@ -34,7 +35,7 @@ public class AgentCallExecutor {
 
   interface ChatAgent extends DynamicAgent<String> {
     @Override
-    String chat(String query);
+    String chat(UserMessage query);
   }
 
   interface Variable {
@@ -63,7 +64,7 @@ public class AgentCallExecutor {
       return; // early abort; user is still testing with empty values
     }
 
-    Optional<String> finalQuery = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context, model);
+    Optional<UserMessage> finalQuery = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context, model);
     if (finalQuery.isEmpty()) {
       return;
     }

@@ -14,7 +14,6 @@ import org.apache.commons.io.FilenameUtils;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.PdfFileContent;
-import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatModel;
 
 public class FileExtractor {
@@ -28,24 +27,20 @@ public class FileExtractor {
     this.model = model;
   }
 
-  public String extract(InputStream stream, String fileName) {
+  public Optional<Content> extract(InputStream stream, String fileName) {
     if (stream == null) {
-      return "";
+      return Optional.empty();
     }
     String resolvedFilename = Optional.ofNullable(fileName).orElse("unknown file name");
     try {
       byte[] bytes = stream.readAllBytes();
-      Content content = createContent(bytes, fileName);
-      if (content != null) {
-        return model.chat(UserMessage.from(content)).aiMessage().text();
-      }
-      throw new RuntimeException(String.format(UNSUPPORTED_FILE_TYPE_MSG, resolvedFilename));
+      return performCreateContent(bytes, fileName);
     } catch (IOException e) {
       throw new RuntimeException(String.format(FAILED_TO_READ_FILE_MSG, resolvedFilename), e);
     }
   }
 
-  private static Content createContent(byte[] bytes, String fileName) {
+  private static Optional<Content> performCreateContent(byte[] bytes, String fileName) {
     String base64 = Base64.getEncoder().encodeToString(bytes);
     String extension = Optional.ofNullable(fileName)
         .map(FilenameUtils::getExtension)
@@ -54,10 +49,10 @@ public class FileExtractor {
         .orElse("");
 
     return switch (extension) {
-      case "png" -> ImageContent.from(base64, "image/png", ImageContent.DetailLevel.HIGH);
-      case "jpg", "jpeg" -> ImageContent.from(base64, "image/jpeg", ImageContent.DetailLevel.HIGH);
-      case "pdf" -> PdfFileContent.from(base64, "application/pdf");
-      default -> null;
+      case "png" -> Optional.of(ImageContent.from(base64, "image/png", ImageContent.DetailLevel.HIGH));
+      case "jpg", "jpeg" -> Optional.of(ImageContent.from(base64, "image/jpeg", ImageContent.DetailLevel.HIGH));
+      case "pdf" -> Optional.of(PdfFileContent.from(base64, "application/pdf"));
+      default -> Optional.empty();
     };
   }
 

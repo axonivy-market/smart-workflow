@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.axonivy.utils.smart.workflow.extraction.internal.FileExtractor;
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider.ModelNames;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;

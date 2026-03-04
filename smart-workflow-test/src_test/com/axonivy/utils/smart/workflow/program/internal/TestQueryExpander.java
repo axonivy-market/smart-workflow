@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,8 @@ import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider.Model
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+import dev.langchain4j.data.message.TextContent;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatModel;
 
 @IvyTest
@@ -75,85 +78,93 @@ class TestQueryExpander {
 
   @Test
   void nonFileExpressionIsExpandedAsString() {
-    String result = QueryExpander.expandFileExpressions(
+    UserMessage result = QueryExpander.expandFileExpressions(
         "Hello <%=in.name%>",
         model,
         expr -> Optional.of("John"),
         cmsExpr -> null);
 
-    assertThat(result).isEqualTo("Hello John");
+    assertThat(textOf(result)).isEqualTo("Hello John");
   }
 
   @Test
   void templateWithNoExpressionsIsReturnedAsIs() {
-    String result = QueryExpander.expandFileExpressions(
+    UserMessage result = QueryExpander.expandFileExpressions(
         "Plain text",
         model,
         expr -> Optional.empty(),
         cmsExpr -> null);
 
-    assertThat(result).isEqualTo("Plain text");
+    assertThat(textOf(result)).isEqualTo("Plain text");
   }
 
   @Test
   void emptyResolverResultLeavesExpressionInPlace() {
-    String result = QueryExpander.expandFileExpressions(
+    UserMessage result = QueryExpander.expandFileExpressions(
         "Value: <%=in.missing%>",
         model,
         expr -> Optional.empty(),
         cmsExpr -> null);
 
-    assertThat(result).isEqualTo("Value: <%=in.missing%>");
+    assertThat(textOf(result)).isEqualTo("Value: <%=in.missing%>");
   }
 
   @Test
   void cmsTextIsReturnedAsString() {
-    String result = QueryExpander.expandFileExpressions(
+    UserMessage result = QueryExpander.expandFileExpressions(
         "Prompt: <%=ivy.cms.co(\"/Texts/SystemPrompt\")%>",
         model,
         expr -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
         cmsExpr -> "You are Smart Workflow.");
-    assertThat(result).isEqualTo("Prompt: You are Smart Workflow.");
+    assertThat(textOf(result)).isEqualTo("Prompt: You are Smart Workflow.");
   }
 
   @Test
   void cmsSingleQuoteIsSupported() {
-    String result = QueryExpander.expandFileExpressions(
+    UserMessage result = QueryExpander.expandFileExpressions(
         "<%=ivy.cms.co('/Texts/Note')%>",
         model,
         expr -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
         cmsExpr -> "Note text");
-    assertThat(result).isEqualTo("Note text");
+    assertThat(textOf(result)).isEqualTo("Note text");
   }
 
   @Test
   void cmsBinaryIsExtractedViaFileExtractor() {
     byte[] pdfBytes = "%PDF-1.4 binary".getBytes(StandardCharsets.US_ASCII);
-    String result = QueryExpander.expandFileExpressions(
+    UserMessage result = QueryExpander.expandFileExpressions(
         "Invoice: <%=ivy.cms.co(\"/Docs/Invoice\")%>",
         model,
         expr -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
         cmsExpr -> new ByteArrayInputStream(pdfBytes));
-    assertThat(result).isEqualTo("Invoice: " + EXTRACTED);
+    assertThat(textOf(result)).isEqualTo("Invoice: " + EXTRACTED);
   }
 
   @Test
   void cmsPathNotFoundReturnsEmptyString() {
-    String result = QueryExpander.expandFileExpressions(
+    UserMessage result = QueryExpander.expandFileExpressions(
         "Value: <%=ivy.cms.co(\"/Missing/Path\")%>",
         model,
         expr -> Optional.empty(),
         cmsExpr -> null);
-    assertThat(result).isEqualTo("Value: ");
+    assertThat(textOf(result)).isEqualTo("Value: ");
   }
 
   private void assertFileTypeResolved(Object fileArg) {
-    String result = QueryExpander.expandFileExpressions(
+    UserMessage result = QueryExpander.expandFileExpressions(
         "Summary: <%=in.file%>",
         model,
         expr -> Optional.of(fileArg),
         cmsExpr -> null);
-    assertThat(result).isEqualTo("Summary: " + EXTRACTED);
+    assertThat(textOf(result)).isEqualTo("Summary: " + EXTRACTED);
+  }
+
+  private static String textOf(UserMessage msg) {
+    return msg.contents().stream()
+        .filter(TextContent.class::isInstance)
+        .map(TextContent.class::cast)
+        .map(TextContent::text)
+        .collect(Collectors.joining());
   }
 
   private File createTempFile(String name) throws IOException {
