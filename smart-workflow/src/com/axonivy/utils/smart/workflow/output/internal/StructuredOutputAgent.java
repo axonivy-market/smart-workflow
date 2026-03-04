@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.output.internal;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,7 +31,7 @@ public class StructuredOutputAgent {
   private static <R> Class<? extends DynamicAgent<R>> defineAgent(Class<R> outputType) {
     String interfaceName = "com/axonivy/utils/smart/workflow/output/DynamicAgentInterface" + outputType.getSimpleName();
     String methodName = "chat";
-    String methodDescriptor = Type.getMethodDescriptor(Type.getType(outputType), Type.getType(String.class));
+    String methodDescriptor = Type.getMethodDescriptor(Type.getType(outputType), Type.getType(List.class));
     byte[] classBytes = writeClass(interfaceName, methodName, methodDescriptor);
     var type = (Class<? extends DynamicAgent<R>>) new CustomClassLoader(outputType.getClassLoader())
         .defineClass("com.axonivy.utils.smart.workflow.output.DynamicAgentInterface" + outputType.getSimpleName(), classBytes);
