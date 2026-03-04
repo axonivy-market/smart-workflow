@@ -65,7 +65,7 @@ public class AgentCallExecutor {
       return; // early abort; user is still testing with empty values
     }
 
-    Optional<UserMessage> finalQuery = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context, model);
+    Optional<UserMessage> finalQuery = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context);
     if (finalQuery.isEmpty()) {
       return;
     }
