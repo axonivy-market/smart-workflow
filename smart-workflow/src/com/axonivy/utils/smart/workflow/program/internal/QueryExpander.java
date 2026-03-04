@@ -16,8 +16,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.extraction.internal.CmsLoader;
-import com.axonivy.utils.smart.workflow.extraction.internal.FileExtractor;
+import com.axonivy.utils.smart.workflow.extraction.internal.ContentLoader;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
@@ -26,7 +25,6 @@ import ch.ivyteam.ivy.workflow.document.IDocument;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.ChatModel;
 
 public class QueryExpander {
 
@@ -62,7 +60,7 @@ public class QueryExpander {
     }
   }
 
-  public static Optional<UserMessage> expandMacroWithFileExtraction(String confKey, ProgramContext context, ChatModel model) {
+  public static Optional<UserMessage> expandMacroWithFileExtraction(String confKey, ProgramContext context) {
     try {
         var template = Optional.ofNullable(context.config().get(confKey));
         if (template.isEmpty()) {
@@ -71,9 +69,8 @@ public class QueryExpander {
 
         UserMessage userMessage = expandFileExpressions(
           template.get(),
-          model,
           expr -> context.script().executeExpression(expr, Object.class),
-          CmsLoader::load);
+          ContentLoader::loadFromCms);
 
         return Optional.of(userMessage);
     } catch (Exception ex) {
@@ -82,49 +79,39 @@ public class QueryExpander {
     }
   }
 
-  static UserMessage expandFileExpressions(String template, ChatModel model, Function<String, Optional<Object>> resolver, Function<String, Object> cmsLoader) {
+  static UserMessage expandFileExpressions(String template, Function<String, Optional<Object>> resolver, Function<String, Optional<Content>> cmsLoader) {
     List<Content> contents = new ArrayList<>();
     Matcher matcher = SCRIPT_VARIABLE_PATTERN.matcher(template);
-    int lastEnd = 0;
+    int processedUntil = 0;
     while (matcher.find()) {
-      String textBefore = template.substring(lastEnd, matcher.start());
-      if (!textBefore.isEmpty()) {
-        contents.add(TextContent.from(textBefore));
+      String textBeforeExpression = template.substring(processedUntil, matcher.start());
+      if (!textBeforeExpression.isEmpty()) {
+        contents.add(TextContent.from(textBeforeExpression));
       }
-
-      String expression = matcher.group(1).trim();
-      String cmsPath = extractCmsPath(expression);
-      Optional<Content> value = cmsPath != null
-          ? extractFromCms(cmsPath, model, cmsLoader)
-          : extractFromExpression(expression, resolver, model);
-
-      if (value.isPresent()) {
-        contents.add(value.get());
-      } else {
-        contents.add(TextContent.from(matcher.group(0)));
-      }
-
-      lastEnd = matcher.end();
+      resolveExpression(matcher.group(0), matcher.group(1).trim(), resolver, cmsLoader)
+          .ifPresent(contents::add);
+      processedUntil = matcher.end();
     }
 
-    String tail = template.substring(lastEnd);
-    if (!tail.isEmpty()) {
-      contents.add(TextContent.from(tail));
+    String remainingText = template.substring(processedUntil);
+    if (!remainingText.isEmpty()) {
+      contents.add(TextContent.from(remainingText));
     }
 
     return UserMessage.from(contents);
   }
 
-  private static Optional<Content> extractFromCms(String cmsPath, ChatModel model, Function<String, Object> cmsLoader) {
-    Object cmsValue = cmsLoader.apply(cmsPath);
-    return switch (cmsValue) {
-      case String str -> Optional.of(TextContent.from(str));
-      case InputStream stream -> new FileExtractor(model).extract(stream, null);
-      case null, default -> Optional.of(TextContent.from(""));
-    };
+  private static Optional<Content> resolveExpression(String token, String expression,
+      Function<String, Optional<Object>> resolver, Function<String, Optional<Content>> cmsLoader) {
+    String cmsPath = extractCmsPath(expression);
+    if (StringUtils.isNotBlank(cmsPath)) {
+      return cmsLoader.apply(cmsPath);
+    }
+    return extractFromExpression(expression, resolver)
+        .or(() -> Optional.of(TextContent.from(token)));
   }
 
-  private static Optional<Content> extractFromExpression(String expression, Function<String, Optional<Object>> resolver, ChatModel model) {
+  private static Optional<Content> extractFromExpression(String expression, Function<String, Optional<Object>> resolver) {
     if (StringUtils.isBlank(expression)) {
       return Optional.empty();
     }
@@ -132,7 +119,7 @@ public class QueryExpander {
     InputStreamWithName source = toInputStreamWithName(target);
     if (source != null) {
       try (source) {
-        return new FileExtractor(model).extract(source.stream(), source.name());
+        return ContentLoader.fromStream(source.stream(), source.name());
       } catch (IOException e) {
         throw new RuntimeException("Failed to close stream for expression '" + expression + "'", e);
       }

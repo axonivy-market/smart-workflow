@@ -1,7 +1,10 @@
 package com.axonivy.utils.smart.workflow.output;
 
-import dev.langchain4j.data.message.UserMessage;
+import java.util.List;
+
+import dev.langchain4j.data.message.Content;
+import dev.langchain4j.service.UserMessage;
 
 public interface DynamicAgent<T> {
-  T chat(UserMessage query);
+  T chat(@UserMessage List<Content> query);
 }

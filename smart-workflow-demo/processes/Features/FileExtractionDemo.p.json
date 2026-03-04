@@ -122,6 +122,7 @@
         "userConfig" : {
           "system" : "Extract Invoice from binary files",
           "resultType" : "com.axonivy.utils.ai.InvoiceList.class",
+          "tools" : "[]",
           "resultMapping" : "in.invoiceList",
           "query" : "The image of an invoice:\r\n<%=in.firstStream%>\r\n\r\nAnd this is pdf file of the second invoice:\r\n<%=in.secondBinary%>"
         }
