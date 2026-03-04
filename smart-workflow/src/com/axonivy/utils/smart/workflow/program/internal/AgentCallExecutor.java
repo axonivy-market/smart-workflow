@@ -19,6 +19,7 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.model.chat.ChatModel;
@@ -35,7 +36,7 @@ public class AgentCallExecutor {
 
   interface ChatAgent extends DynamicAgent<String> {
     @Override
-    String chat(UserMessage query);
+    String chat(List<Content> query);
   }
 
   interface Variable {
@@ -71,10 +72,10 @@ public class AgentCallExecutor {
 
     var agent = agentBuilder.build();
     try {
-      Object result = agent.chat(finalQuery.get());
+      Object result = agent.chat(finalQuery.get().contents());
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
-      String mapIt = mapTo + "=result";
+        String mapIt = mapTo + "=result";
         try {
           context.script().variable(Variable.RESULT, result).executeScript(mapIt);
         } catch (Exception ex) {
@@ -103,10 +104,10 @@ public class AgentCallExecutor {
 
   private Optional<List<String>> executeListOfStrings(String configKey) {
     return execute(configKey, List.class)
-      .map(rawList -> ((List<?>) rawList).stream()
-        .filter(String.class::isInstance)
-        .map(String.class::cast)
-        .toList());
+        .map(rawList -> ((List<?>) rawList).stream()
+            .filter(String.class::isInstance)
+            .map(String.class::cast)
+            .toList());
   }
 
   private void configureSystemMessage(AiServices<? extends DynamicAgent<?>> agentBuilder) {
@@ -122,7 +123,7 @@ public class AgentCallExecutor {
     var modelOptions = options()
         .modelName(modelName)
         .structuredOutput(isStructured);
-        return ChatModelFactory.createModel(modelOptions, providerName);
+    return ChatModelFactory.createModel(modelOptions, providerName);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
@@ -133,7 +134,7 @@ public class AgentCallExecutor {
   private void configureInputGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
     List<String> guardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
     List<InputGuardrailAdapter> inputGuardrails = GuardrailCollector.inputGuardrailAdapters(guardrailFilters);
-    
+
     if (CollectionUtils.isNotEmpty(inputGuardrails)) {
       agentBuilder.inputGuardrails(inputGuardrails);
     }
@@ -141,8 +142,8 @@ public class AgentCallExecutor {
 
   private void throwGuardrailError(InputGuardrailException ex) {
     BpmPublicErrorBuilder errorBuilder = BpmError.create(GUARDRAIL_ERROR_CODE);
-      Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
-      Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
-      errorBuilder.throwError();
+    Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
+    Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
+    errorBuilder.throwError();
   }
 }
