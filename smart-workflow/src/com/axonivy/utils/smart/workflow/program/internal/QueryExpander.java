@@ -82,38 +82,33 @@ public class QueryExpander {
   static UserMessage expandFileExpressions(String template, Function<String, Optional<Object>> resolver, Function<String, Optional<Content>> cmsLoader) {
     List<Content> contents = new ArrayList<>();
     Matcher matcher = SCRIPT_VARIABLE_PATTERN.matcher(template);
-    int lastEnd = 0;
+    int processedUntil = 0;
     while (matcher.find()) {
-      String textBefore = template.substring(lastEnd, matcher.start());
-      if (!textBefore.isEmpty()) {
-        contents.add(TextContent.from(textBefore));
+      String textBeforeExpression = template.substring(processedUntil, matcher.start());
+      if (!textBeforeExpression.isEmpty()) {
+        contents.add(TextContent.from(textBeforeExpression));
       }
-
-      String expression = matcher.group(1).trim();
-      String cmsPath = extractCmsPath(expression);
-      Optional<Content> value = cmsPath != null
-          ? extractFromCms(cmsPath, cmsLoader)
-          : extractFromExpression(expression, resolver);
-
-      if (value.isPresent()) {
-        contents.add(value.get());
-      } else {
-        contents.add(TextContent.from(matcher.group(0)));
-      }
-
-      lastEnd = matcher.end();
+      resolveExpression(matcher.group(0), matcher.group(1).trim(), resolver, cmsLoader)
+          .ifPresent(contents::add);
+      processedUntil = matcher.end();
     }
 
-    String tail = template.substring(lastEnd);
-    if (!tail.isEmpty()) {
-      contents.add(TextContent.from(tail));
+    String remainingText = template.substring(processedUntil);
+    if (!remainingText.isEmpty()) {
+      contents.add(TextContent.from(remainingText));
     }
 
     return UserMessage.from(contents);
   }
 
-  private static Optional<Content> extractFromCms(String cmsPath, Function<String, Optional<Content>> cmsLoader) {
-    return cmsLoader.apply(cmsPath).or(() -> Optional.of(TextContent.from("")));
+  private static Optional<Content> resolveExpression(String token, String expression,
+      Function<String, Optional<Object>> resolver, Function<String, Optional<Content>> cmsLoader) {
+    String cmsPath = extractCmsPath(expression);
+    if (StringUtils.isNotBlank(cmsPath)) {
+      return cmsLoader.apply(cmsPath);
+    }
+    return extractFromExpression(expression, resolver)
+        .or(() -> Optional.of(TextContent.from(token)));
   }
 
   private static Optional<Content> extractFromExpression(String expression, Function<String, Optional<Object>> resolver) {
