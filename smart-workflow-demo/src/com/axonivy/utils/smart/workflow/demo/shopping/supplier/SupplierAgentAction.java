@@ -6,7 +6,7 @@ public enum SupplierAgentAction {
       1. Find exact supplier using the given supplier information
         1.1. If exact supplier exist, skip step 2
         1.2. If exact supplier doesn't exist, do step 2
-      2. Find similiar suppliers
+      2. Find similar suppliers
       3. Finally, summarize all the feedbacks
       """),
   CREATE(

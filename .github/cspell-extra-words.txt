@@ -1,0 +1,2 @@
+smartworkflow, Agentic, multimodal, langchain, azureopenai, 
+onupload

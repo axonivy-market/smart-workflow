@@ -40,7 +40,7 @@ This demo showcases how to use the Axon Ivy Support Agent, an AI-powered agent i
 
 To configure the agent, define a program element with the following settings:
 
-![Support Ticket exanmple](img/support-ticket-example.png)
+![Support Ticket example](img/support-ticket-example.png)
 
 This configuration ensures the agent uses only the specified tool and returns its output as a structured Java object.
 
@@ -124,7 +124,7 @@ The new AI-powered process resulted in fewer errors, far less manual work, and a
 
 Before AI, shoppers typed keyword queries like “red dress,” then manually applied filters (price, brand, category) and scanned the results. This process was not only slow and rigid but also often failed to capture synonyms, styles, or intent (e.g., party vs. work).
 
-With semantic search the user speaks or types a natural request. AI understands intent and constraints (color, price, occasion, urgency), converts that into a structured criteria object. The backend then converts that object into SQL predicates and returns matched results. Offers explainability, familiar tooling, and easier deployment.
+With semantic search the user speaks or types a natural request. AI understands intent and constraints (color, price, occasion, urgency), converts that into a structured criteria object. The backend then converts that object into SQL predicates and returns matched results. Offers clear explanations, familiar tooling, and easier deployment.
 
 Developers need to add an additional `Find product by criteria` tool to the `Product agent` with input is the search criteria.
 
