@@ -1,3 +1,2 @@
 smartworkflow, Agentic, multimodal, langchain, azureopenai, 
-onupload, favourite, commont,  exanmple, similiar, Informations, 
-explainability
+onupload
