@@ -61,7 +61,7 @@ public class ContentLoader {
       return Optional.empty();
     }
     String resolvedFilename = Optional.ofNullable(fileName).orElse("unknown file name");
-    try {
+    try (stream) {
       byte[] bytes = stream.readAllBytes();
       return createContent(bytes, fileName);
     } catch (IOException e) {

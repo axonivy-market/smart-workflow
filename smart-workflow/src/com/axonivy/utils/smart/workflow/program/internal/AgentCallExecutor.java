@@ -45,6 +45,12 @@ public class AgentCallExecutor {
 
   @SuppressWarnings("unchecked")
   public void execute() {
+    Optional<UserMessage> query = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context);
+    if (query.isEmpty()) {
+      Ivy.log().info("Agent call was skipped, since there was no user query");
+      return; // early abort; user is still testing with empty values
+    }
+
     Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
     var structured = execute(Conf.OUTPUT, Class.class);
     if (structured.isPresent()) {
@@ -54,25 +60,13 @@ public class AgentCallExecutor {
     var agentBuilder = AiServices.builder(agentType);
     ChatModel model = initModel(structured.isPresent());
     agentBuilder.chatModel(model);
-
     configureToolProvider(agentBuilder);
     configureInputGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
-    var query = QueryExpander.expandMacro(Conf.QUERY, context);
-    if (query.isEmpty()) {
-      Ivy.log().info("Agent call was skipped, since there was no user query");
-      return; // early abort; user is still testing with empty values
-    }
-
-    Optional<UserMessage> finalQuery = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context);
-    if (finalQuery.isEmpty()) {
-      return;
-    }
-
     var agent = agentBuilder.build();
     try {
-      Object result = agent.chat(finalQuery.get().contents());
+      Object result = agent.chat(query.get().contents());
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
         String mapIt = mapTo + "=result";

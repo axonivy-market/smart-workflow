@@ -70,6 +70,10 @@ See the enumeration called `AI.DefaultProvider`.
 
 When contributing a new provider, document its multimodal support in this table.
 
+### Payload Size Limits
+
+File content is base64-encoded before being sent to the provider. The limits below apply to the encoded payload and vary by provider. There is no size cap enforced by Axon Ivy Smart Workflow itself — developers are responsible for ensuring files stay within the bounds of their chosen provider.
+
 ## Libraries
 
 Smart-workflow providers are built upon existing LangChain4j providers.
