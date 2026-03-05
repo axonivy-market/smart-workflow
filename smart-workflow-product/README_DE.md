@@ -78,7 +78,7 @@ Informationen zu prüfen und automatisch Supportaufgaben zu erstellen.
 Um den Agenten zu konfigurieren, definieren Sie ein Programmelement mit den
 folgenden Einstellungen:
 
-![Beispiel für ein Support-Ticket](img/support-ticket-example.png)
+![Support Ticket example](img/support-ticket-example.png)
 
 Diese Konfiguration stellt sicher, dass der Agent nur das angegebene Tool
 verwendet und dessen Ausgabe als strukturiertes Java-Objekt zurückgibt.
@@ -202,12 +202,11 @@ wendeten dann manuell Filter (Preis, Marke, Kategorie) an und durchsuchten die
 Ergebnisse. Dieser Prozess war nicht nur langsam und unflexibel, sondern
 erfasste oft auch keine Synonyme, Stile oder Absichten (z. B. Party vs. Arbeit).
 
-Bei der semantischen Suche spricht oder tippt der Benutzer eine natürliche
-Anfrage ein. Die KI versteht die Absicht und die Einschränkungen (Farbe, Preis,
-Anlass, Dringlichkeit) und wandelt diese in ein strukturiertes Kriterienobjekt
-um. Das Backend wandelt dieses Objekt dann in SQL-Prädikate um und gibt
-übereinstimmende Ergebnisse zurück. Bietet Erklärbarkeit, vertraute Tools und
-eine einfachere Bereitstellung.
+With semantic search the user speaks or types a natural request. AI understands
+intent and constraints (color, price, occasion, urgency), converts that into a
+structured criteria object. The backend then converts that object into SQL
+predicates and returns matched results. Offers clear explanations, familiar
+tooling, and easier deployment.
 
 Entwickler müssen ein zusätzliches `Tool „Produkt nach Kriterien finden”` zum
 `Produkt-Agenten` hinzufügen, wobei die Eingabe die Suchkriterien sind.
