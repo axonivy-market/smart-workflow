@@ -7,3 +7,5 @@ Variables:
     Guardrails:
       # Default input guardrails. Separated by comma. Example: "GuardrailOne, GuardrailTwo"
       DefaultInput: ""
+    # [file: json]
+    AgentProfiles: ""

@@ -7,6 +7,8 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.governance.memory.SmartWorkflowChatMemoryStore;
+import com.axonivy.utils.smart.workflow.governance.memory.SmartWorkflowChatModelListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
@@ -14,15 +16,17 @@ import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.Model
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
+import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import ch.ivyteam.ivy.workflow.ICase;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
-import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
@@ -58,11 +62,12 @@ public class AgentCallExecutor {
     }
 
     var agentBuilder = AiServices.builder(agentType);
-    ChatModel model = initModel(structured.isPresent());
-    agentBuilder.chatModel(model);
+    var  listener = configureModel(agentBuilder, structured.isPresent());
+
     configureToolProvider(agentBuilder);
     configureInputGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
+    configureMemory(agentBuilder, listener);
 
     var agent = agentBuilder.build();
     try {
@@ -111,13 +116,16 @@ public class AgentCallExecutor {
     }
   }
 
-  private ChatModel initModel(boolean isStructured) {
+  private SmartWorkflowChatModelListener configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean isStructured) {
     String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var modelOptions = options()
         .modelName(modelName)
         .structuredOutput(isStructured);
-    return ChatModelFactory.createModel(modelOptions, providerName);
+    var rawModel = ChatModelFactory.createModel(modelOptions, providerName);
+    var listener = new SmartWorkflowChatModelListener();
+    agentBuilder.chatModel(new ListeningChatModel(rawModel, listener));
+    return listener;
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
@@ -131,6 +139,20 @@ public class AgentCallExecutor {
 
     if (CollectionUtils.isNotEmpty(inputGuardrails)) {
       agentBuilder.inputGuardrails(inputGuardrails);
+    }
+  }
+
+  private void configureMemory(AiServices<? extends DynamicAgent<?>> agentBuilder, SmartWorkflowChatModelListener listener) {
+    var agentProfileId = execute(Conf.AGENT_PROFILE, String.class);
+
+    if (agentProfileId.isPresent()) {
+      String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(null);
+      agentBuilder.chatMemory(
+          MessageWindowChatMemory.builder()
+              .id(IdGenerationUtils.generateRandomId())
+              .maxMessages(100)
+              .chatMemoryStore(new SmartWorkflowChatMemoryStore(agentProfileId.get(), listener, caseUuid))
+              .build());
     }
   }
 

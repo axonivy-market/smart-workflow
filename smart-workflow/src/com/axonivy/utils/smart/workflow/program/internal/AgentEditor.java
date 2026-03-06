@@ -38,6 +38,12 @@ public class AgentEditor {
           .add(ui.label("Select the guardrails to apply, or keep empty to use default guardrails").create()).create();
     }
 
+    ui.group("Agent Profile")
+        .add(ui.label("Agent profile name:").create())
+        .add(ui.scriptField(Conf.AGENT_PROFILE).requireType(String.class).create())
+        .add(ui.label("Keep empty to use default agent profile").create())
+        .create();
+
     ui.group("Model")
         .add(ui.label("Provider").create())
         .add(ui.label(providersHelp()).multiline().create())
