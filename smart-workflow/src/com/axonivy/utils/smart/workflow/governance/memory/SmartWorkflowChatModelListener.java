@@ -1,20 +1,15 @@
 package com.axonivy.utils.smart.workflow.governance.memory;
 
+import java.util.Optional;
+
 import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.chat.listener.ChatModelRequestContext;
 import dev.langchain4j.model.chat.listener.ChatModelResponseContext;
+import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.model.output.TokenUsage;
 
-/**
- * Captures token usage, finish reason and model name from each LLM response.
- * One instance is created per agent execution and shared between
- * {@link IvyChatMemoryStore} and the {@code ListeningChatModel} wrapper.
- *
- * <p>The listener fires synchronously on the same thread as the ensuing
- * {@code updateMessages()} call, so no additional synchronisation is needed.
- */
 public class SmartWorkflowChatModelListener implements ChatModelListener {
 
-  /** Metadata captured from one LLM response. */
   public static class ResponseMetadata {
     public Integer inputTokens;
     public Integer outputTokens;
@@ -49,25 +44,21 @@ public class SmartWorkflowChatModelListener implements ChatModelListener {
   public void onResponse(ChatModelResponseContext ctx) {
     long durationMs = System.currentTimeMillis() - requestStartMs;
     var response = ctx.chatResponse();
-    var usage = response.tokenUsage();
-    var fn = response.finishReason();
+    Optional<TokenUsage> usage = Optional.ofNullable(response.tokenUsage());
+    Optional<ChatResponse> responseOpt = Optional.ofNullable(response);
+
     pending = new ResponseMetadata(
-        usage != null ? usage.inputTokenCount() : null,
-        usage != null ? usage.outputTokenCount() : null,
-        usage != null ? usage.totalTokenCount() : null,
-        fn != null ? fn.name() : null,
-        response.modelName(),
+        usage.map(TokenUsage::inputTokenCount).orElse(null),
+        usage.map(TokenUsage::outputTokenCount).orElse(null),
+        usage.map(TokenUsage::totalTokenCount).orElse(null),
+        responseOpt.map(ChatResponse::finishReason).map(Enum::name).orElse(null),
+        responseOpt.map(ChatResponse::modelName).orElse(null),
         durationMs);
   }
 
-  /**
-   * Returns and clears the metadata buffered from the most recent LLM response.
-   * Called by {@link IvyChatMemoryStore#updateMessages} immediately after an
-   * AI message has been appended to memory.
-   */
   public ResponseMetadata drainPending() {
-    var m = pending;
+    var metadata = pending;
     pending = null;
-    return m;
+    return metadata;
   }
 }

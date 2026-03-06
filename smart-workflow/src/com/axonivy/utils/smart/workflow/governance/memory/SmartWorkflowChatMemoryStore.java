@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,26 +47,10 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
 
   @Override
   public void updateMessages(Object memoryId, List<ChatMessage> messages) {
-    String id = String.valueOf(memoryId);
-    var entry = findByMemoryId(id);
-    if (entry == null) {
-      entry = new ChatMemoryEntry();
-      entry.setMemoryId(id);
-      entry.setAgentId(agentId);
-      entry.setCaseUuid(caseUuid);
-    }
+    var entry = findOrCreateEntry(String.valueOf(memoryId));
     entry.setMessagesJson(ChatMessageSerializer.messagesToJson(messages));
     entry.setLastUpdated(LocalDateTime.now());
-
-    // Capture token usage when the most recent message is an AI response
-    if (listener != null && !messages.isEmpty()
-        && messages.get(messages.size() - 1) instanceof AiMessage) {
-      var meta = listener.drainPending();
-      if (meta != null) {
-        appendTokenMetadata(entry, meta);
-      }
-    }
-
+    captureTokenUsageIfNeeded(entry, messages);
     Ivy.repo().save(entry);
     cachedEntry = entry;
   }
@@ -80,24 +66,31 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
     cachedEntry = null;
   }
 
+  private ChatMemoryEntry findOrCreateEntry(String id) {
+    var entry = findByMemoryId(id);
+    if (entry != null) {
+      return entry;
+    }
+    var newEntry = new ChatMemoryEntry();
+    newEntry.setMemoryId(id);
+    newEntry.setAgentId(agentId);
+    newEntry.setCaseUuid(caseUuid);
+    return newEntry;
+  }
+
   private ChatMemoryEntry findByMemoryId(String memoryId) {
     if (cachedEntry != null) {
       return cachedEntry;
     }
-    var all = Ivy.repo().search(ChatMemoryEntry.class)
+    var results = Ivy.repo().search(ChatMemoryEntry.class)
         .textField(FIELD_MEMORY_ID)
         .isEqualToIgnoringCase(memoryId)
         .execute()
         .getAll();
-    if (all.isEmpty()) {
+    if (results.isEmpty()) {
       return null;
     }
-    if (all.size() == 1) {
-      cachedEntry = all.get(0);
-      return cachedEntry;
-    }
-    // Duplicates present: keep the most recently updated, delete the rest
-    var sorted = all.stream()
+    var sorted = results.stream()
         .sorted(Comparator.comparing(ChatMemoryEntry::getLastUpdated,
             Comparator.nullsFirst(Comparator.reverseOrder())))
         .toList();
@@ -106,17 +99,32 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
     return cachedEntry;
   }
 
+  private void captureTokenUsageIfNeeded(ChatMemoryEntry entry, List<ChatMessage> messages) {
+    boolean lastMessageIsAi = Optional.ofNullable(messages)
+        .filter(messageList -> !messageList.isEmpty())
+        .map(messageList -> messageList.get(messageList.size() - 1))
+        .filter(AiMessage.class::isInstance)
+        .isPresent();
+
+    if (listener == null || !lastMessageIsAi) {
+      return;
+    }
+    var meta = listener.drainPending();
+    if (meta != null) {
+      appendTokenMetadata(entry, meta);
+    }
+  }
+
   private void appendTokenMetadata(ChatMemoryEntry entry,
       SmartWorkflowChatModelListener.ResponseMetadata meta) {
     try {
-      List<SmartWorkflowChatModelListener.ResponseMetadata> list = new ArrayList<>();
-      if (StringUtils.isNotBlank(entry.getTokenUsageJson())) {
-        list = MAPPER.readValue(entry.getTokenUsageJson(),
-            new TypeReference<List<SmartWorkflowChatModelListener.ResponseMetadata>>() {});
-      }
+      var list = StringUtils.isBlank(entry.getTokenUsageJson())
+          ? new ArrayList<SmartWorkflowChatModelListener.ResponseMetadata>()
+          : MAPPER.readValue(entry.getTokenUsageJson(),
+              new TypeReference<List<SmartWorkflowChatModelListener.ResponseMetadata>>() {});
       list.add(meta);
       entry.setTokenUsageJson(MAPPER.writeValueAsString(list));
-    } catch (Exception ex) {
+    } catch (JsonProcessingException ex) {
       Ivy.log().warn("Failed to persist token usage metadata", ex);
     }
   }
