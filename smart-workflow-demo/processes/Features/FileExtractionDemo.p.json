@@ -1,0 +1,163 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19C4072A47E6F420",
+  "config" : {
+    "data" : "Features.FileExtractionDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "extractFromCMS",
+      "config" : {
+        "signature" : "extractFromCMS"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 704, "y" : 64 }
+      }
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Extract Invoices from CMS",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "<%=ivy.cms.co(\"/Features/FileExtractionDemo/ExtractFromImagePrompt\")%>",
+          "resultType" : "com.axonivy.utils.ai.InvoiceList.class",
+          "resultMapping" : "in.invoiceList",
+          "query" : "The image of an invoice:\r\n<%=ivy.cms.co(\"/Features/FileExtractionDemo/InvoiceImage\")%>\r\n\r\nAnd this is pdf file of the second invoice:\r\n<%=ivy.cms.co(\"/Features/FileExtractionDemo/InvoicePdf\")%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 65 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Log extracted invoices",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import dev.langchain4j.internal.Json;",
+            "",
+            "ivy.log.warn(\"Generated Invoices: {0}\", Json.toJson(in.invoiceList));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 528, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f13",
+      "type" : "RequestStart",
+      "name" : "extractFromBinary",
+      "config" : {
+        "signature" : "extractFromBinary"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 200 }
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f14" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "Script",
+      "name" : "Load image as InputStream",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.utils.FileProcessingUtils;",
+            "",
+            "in.firstStream = FileProcessingUtils.loadInputStreamFromCms(\"/Features/FileExtractionDemo/InvoiceImage\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 200 }
+      },
+      "connect" : [
+        { "id" : "f20", "to" : "f15" }
+      ]
+    }, {
+      "id" : "f15",
+      "type" : "Script",
+      "name" : "Load PDF as Binary",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.utils.FileProcessingUtils;",
+            "",
+            "in.secondBinary = FileProcessingUtils.loadBinaryFromCms(\"/Features/FileExtractionDemo/InvoicePdf\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 408, "y" : 200 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f16" }
+      ]
+    }, {
+      "id" : "f16",
+      "type" : "ProgramInterface",
+      "name" : "Extract Invoices from Binary and InputStream",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Extract Invoice from binary files",
+          "resultType" : "com.axonivy.utils.ai.InvoiceList.class",
+          "tools" : "[]",
+          "resultMapping" : "in.invoiceList",
+          "query" : "The image of an invoice:\r\n<%=in.firstStream%>\r\n\r\nAnd this is pdf file of the second invoice:\r\n<%=in.secondBinary%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 620, "y" : 201 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f22", "to" : "f17", "color" : "default" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "Script",
+      "name" : "Log extracted invoices",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import dev.langchain4j.internal.Json;",
+            "",
+            "ivy.log.warn(\"Generated Invoices: {0}\", Json.toJson(in.invoiceList));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 800, "y" : 200 }
+      },
+      "connect" : [
+        { "id" : "f23", "to" : "f18", "color" : "default" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 928, "y" : 200 }
+      }
+    } ]
+}

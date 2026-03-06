@@ -6,4 +6,4 @@ Variables:
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
       # Default input guardrails. Separated by comma. Example: "GuardrailOne, GuardrailTwo"
-      DefaultInput: PromptInjectionGuardrail
+      DefaultInput: ""
