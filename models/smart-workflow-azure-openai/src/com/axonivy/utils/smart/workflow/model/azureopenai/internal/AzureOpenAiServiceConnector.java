@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.model.azureopenai.internal;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -7,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
+import com.axonivy.utils.smart.workflow.model.observer.ChatSpan;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.azure.AzureOpenAiChatModel;
@@ -33,7 +35,8 @@ public class AzureOpenAiServiceConnector {
   private static AzureOpenAiChatModel.Builder initBuilder(String deploymentName) {
     String endpoint = Ivy.var().get(AzureOpenAiConf.ENDPOINT);
     AzureOpenAiChatModel.Builder builder = AzureOpenAiChatModel.builder().endpoint(endpoint)
-        .logRequestsAndResponses(true);
+        .logRequestsAndResponses(true)
+        .listeners(List.of(new ChatSpan()));  
 
     // TODO as pure test variable
     if (StringUtils.isBlank(deploymentName)) {

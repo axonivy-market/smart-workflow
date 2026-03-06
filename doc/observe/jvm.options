@@ -1,0 +1,13 @@
+#
+# OpenTelemetry tracing Java agent configuration
+# The Java agent will install/instrumentation itself into Axon Ivy Engine and report tracings to Jaeger 
+#
+-javaagent:/home/rew/dev/market/smart-workflow/doc/observe/opentelemetry-javaagent.jar
+-Dotel.javaagent.configuration-file=/home/rew/dev/market/smart-workflow/doc/observe/opentelemetry.properties
+
+# Axon Ivy tracing extension 
+# Enables Slow Requests and Traffic Graph in Engine Cockpit with opentelemetry java agent
+
+-Dotel.javaagent.extensions=/home/rew/dev/market/smart-workflow/doc/observe/ch.ivyteam.ivy.trace.jar
+
+-Ddev.mode=true
