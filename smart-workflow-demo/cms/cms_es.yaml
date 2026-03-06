@@ -106,6 +106,9 @@ Dialogs:
                     Total: Total
                     ViewDetails: Ver detalles
                     YourCartIsEmpty: Tu carrito está vacío
+Features:
+  FileExtractionDemo:
+    ExtractFromImagePrompt: Extract Invoice from image
 Labels:
   Actions: Acciones
   Active: Activo

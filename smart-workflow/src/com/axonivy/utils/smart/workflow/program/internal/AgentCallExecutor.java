@@ -19,7 +19,10 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import dev.langchain4j.data.message.Content;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
@@ -33,7 +36,7 @@ public class AgentCallExecutor {
 
   interface ChatAgent extends DynamicAgent<String> {
     @Override
-    String chat(String query);
+    String chat(List<Content> query);
   }
 
   interface Variable {
@@ -42,7 +45,7 @@ public class AgentCallExecutor {
 
   @SuppressWarnings("unchecked")
   public void execute() {
-    var query = expand(Conf.QUERY);
+    Optional<UserMessage> query = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context);
     if (query.isEmpty()) {
       Ivy.log().info("Agent call was skipped, since there was no user query");
       return; // early abort; user is still testing with empty values
@@ -55,17 +58,18 @@ public class AgentCallExecutor {
     }
 
     var agentBuilder = AiServices.builder(agentType);
-    configureModel(agentBuilder, structured.isPresent());
+    ChatModel model = initModel(structured.isPresent());
+    agentBuilder.chatModel(model);
     configureToolProvider(agentBuilder);
     configureInputGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
     var agent = agentBuilder.build();
     try {
-      Object result = agent.chat(query.get());
+      Object result = agent.chat(query.get().contents());
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
-      String mapIt = mapTo + "=result";
+        String mapIt = mapTo + "=result";
         try {
           context.script().variable(Variable.RESULT, result).executeScript(mapIt);
         } catch (Exception ex) {
@@ -94,39 +98,26 @@ public class AgentCallExecutor {
 
   private Optional<List<String>> executeListOfStrings(String configKey) {
     return execute(configKey, List.class)
-      .map(rawList -> ((List<?>) rawList).stream()
-        .filter(String.class::isInstance)
-        .map(String.class::cast)
-        .toList());
-  }
-
-  private Optional<String> expand(String confKey) {
-    try {
-      var template = context.config().get(confKey);
-      if (template == null || template.isBlank()) {
-        return Optional.empty();
-      }
-      var expanded = context.script().expandMacro(template);
-      return Optional.ofNullable(expanded).filter(Predicate.not(String::isBlank));
-    } catch (Exception ex) {
-      return Optional.empty();
-    }
+        .map(rawList -> ((List<?>) rawList).stream()
+            .filter(String.class::isInstance)
+            .map(String.class::cast)
+            .toList());
   }
 
   private void configureSystemMessage(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    var systemMessage = expand(Conf.SYSTEM);
+    var systemMessage = QueryExpander.expandMacro(Conf.SYSTEM, context);
     if (systemMessage.isPresent()) {
       agentBuilder.systemMessageProvider(memId -> systemMessage.get());
     }
   }
 
-  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean isStructured) {
+  private ChatModel initModel(boolean isStructured) {
     String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var modelOptions = options()
         .modelName(modelName)
         .structuredOutput(isStructured);
-    agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
+    return ChatModelFactory.createModel(modelOptions, providerName);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
@@ -137,7 +128,7 @@ public class AgentCallExecutor {
   private void configureInputGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
     List<String> guardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
     List<InputGuardrailAdapter> inputGuardrails = GuardrailCollector.inputGuardrailAdapters(guardrailFilters);
-    
+
     if (CollectionUtils.isNotEmpty(inputGuardrails)) {
       agentBuilder.inputGuardrails(inputGuardrails);
     }
@@ -145,8 +136,8 @@ public class AgentCallExecutor {
 
   private void throwGuardrailError(InputGuardrailException ex) {
     BpmPublicErrorBuilder errorBuilder = BpmError.create(GUARDRAIL_ERROR_CODE);
-      Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
-      Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
-      errorBuilder.throwError();
+    Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
+    Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
+    errorBuilder.throwError();
   }
 }

@@ -230,6 +230,14 @@ Example Configuration:
 
 </details>
 
+### File Extraction
+
+Axon Ivy Smart Workflow supports extracting content from PDF and image files (PNG, JPG, and JPEG) using multimodal LLMs.
+This allows AI agents to read and reason over uploaded documents and images directly within your workflows.
+
+Not all providers and models support multimodal input.
+Refer to the [Models Contribution Guideline](../doc/MODELS.md#file-extraction-support) for the full list of supported providers and file types.
+
 ### Guardrails
 
 Guardrails protect AI agents by validating user input before it reaches the model. Smart Workflow includes a built-in `PromptInjectionGuardrail` that blocks common prompt injection attacks.

@@ -1,0 +1,10 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "InvoiceList",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "invoices",
+    "type" : "List<com.axonivy.utils.ai.Invoice>",
+    "comment" : "List of invoices"
+  } ]
+}
