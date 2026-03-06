@@ -169,8 +169,8 @@
   <!-- Additional Information Tab -->
   <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/components/ProductDetails/AdditionalInfo')}">
     <div class="p-3">
-      <h:panelGroup rendered="#{not empty product.otherInformations}">
-        <p:dataTable value="#{product.otherInformations}"
+      <h:panelGroup rendered="#{not empty product.otherInformation}">
+        <p:dataTable value="#{product.otherInformation}"
                     var="info" styleClass="p-datatable-sm" editable="true">
           <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/components/ProductDetails/Property')}">
             <p:cellEditor>
@@ -198,7 +198,7 @@
         </p:dataTable>
       </h:panelGroup>
       
-      <h:panelGroup rendered="#{empty product.otherInformations}">
+      <h:panelGroup rendered="#{empty product.otherInformation}">
         <div class="text-center p-4">
           <i class="pi pi-info-circle text-400 text-2xl mb-2"></i>
           <p class="text-500 m-0">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/components/ProductDetails/NoAdditionalInformation')}</p>

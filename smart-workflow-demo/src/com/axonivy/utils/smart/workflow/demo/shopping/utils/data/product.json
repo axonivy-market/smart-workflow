@@ -10,7 +10,7 @@
         "unitPrice": 68.0,
         "active": true,
         "imageId": "e02b0371ee6f4a31b75587f6b0172e3a",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Executive Line — 2025"
@@ -83,7 +83,7 @@
         "unitPrice": 54.0,
         "active": true,
         "imageId": "7e9742e6c82644e9ac8b3218c5e85672",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Business Line — 2025"
@@ -164,7 +164,7 @@
         "unitPrice": 32.0,
         "active": true,
         "imageId": "a6d912ff2d0f4518a7222f397ba93860",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Business Line — 2025"
@@ -233,7 +233,7 @@
         "unitPrice": 7.0,
         "active": true,
         "imageId": "1f4619f61718419aad9e78cf9ca674bf",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Fit",
                 "value": "Regular fit (unisex, true to size)"
@@ -298,7 +298,7 @@
         "unitPrice": 28.0,
         "active": true,
         "imageId": "d8254f4bcf004a149d613a05e69f1782",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Executive Line — 2025"
@@ -355,7 +355,7 @@
         "unitPrice": 0.0,
         "active": false,
         "imageId": "e7d9e37d090144f6aca17c76c7b70b9f",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Formalwear Series — 2025"
@@ -420,7 +420,7 @@
         "unitPrice": 18.0,
         "active": true,
         "imageId": "9ef71975771c4d3d9701f9a7c74f95e1",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Everyday Basics --- Spring/Summer 2025"
@@ -481,7 +481,7 @@
         "unitPrice": 27.0,
         "active": true,
         "imageId": "e13033d6cb07408088cb4e0738a20ac5",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Business Line — 2025"
@@ -530,7 +530,7 @@
         "unitPrice": 12.0,
         "active": true,
         "imageId": "3a9301acc2924367ad3fc22ede4f5707",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Urban Streetwear --- 2025"
@@ -575,7 +575,7 @@
         "unitPrice": 7.4,
         "active": true,
         "imageId": "1c019df46ea442e4b8a617075427554a",
-        "otherInformations": [
+        "otherInformation": [
             {
                 "name": "Collection",
                 "value": "Activewear Series --- 2025"

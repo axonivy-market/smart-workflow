@@ -55,7 +55,7 @@ public class Product implements Serializable {
   private String imageId;
 
   @Description("Other information of the product. Each field is a pair of label/value")
-  private List<OtherInformation> otherInformations;
+  private List<OtherInformation> otherInformation;
 
   private String supplierId;
 
@@ -127,12 +127,12 @@ public class Product implements Serializable {
     this.sku = sku;
   }
 
-  public List<OtherInformation> getOtherInformations() {
-    return otherInformations;
+  public List<OtherInformation> getOtherInformation() {
+    return otherInformation;
   }
 
-  public void setOtherInformations(List<OtherInformation> otherInformations) {
-    this.otherInformations = otherInformations;
+  public void setOtherInformation(List<OtherInformation> otherInformation) {
+    this.otherInformation = otherInformation;
   }
 
   public Supplier getSupplier() {

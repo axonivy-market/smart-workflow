@@ -5,7 +5,7 @@ In the `models` directory we maintain projects that supply a ChatModelProvider.
 ## Contributing
 
 We are open to support more ChatModels from any provider.
-If you miss your favourite one, simply contribute it to this space.
+If you miss your preferred one, simply contribute it to this space.
 
 Create a directory `models/smart-workflow-PROVIDER`, replacing PROVIDER with your concrete vendor.
 For the project coordinates, please align to our existing workspace:
@@ -85,7 +85,7 @@ Classically this will be the `langchain4j-core` and `langchain4j-http-client`
 Tests for your model provider should be written in the common `smart-workflow-test` project. Provider specific functionality
 should be enclosed in `src_test/com/axonivy/utils/smart/workflow/model/PROVIDER`.
 
-Therefore it's ok to add a dependency from the commont test project
+Therefore it's ok to add a dependency from the common test project
 to your new model provider.
 
 ## Demo

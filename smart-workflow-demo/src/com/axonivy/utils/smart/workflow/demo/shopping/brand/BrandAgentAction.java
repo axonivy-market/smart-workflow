@@ -6,7 +6,7 @@ public enum BrandAgentAction {
       1. Find exact brand using the given brand information
         1.1. If exact brand exist, skip step 2
         1.2. If exact brand doesn't exist, do step 2
-      2. Find similiar brands
+      2. Find similar brands
       3. Finally, summarize all the feedbacks
       """),
   CREATE(

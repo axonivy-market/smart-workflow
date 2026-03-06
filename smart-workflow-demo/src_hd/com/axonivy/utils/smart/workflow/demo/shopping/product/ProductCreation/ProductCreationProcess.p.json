@@ -417,13 +417,13 @@
     }, {
       "id" : "f66",
       "type" : "Script",
-      "name" : "Find similiar suppliers",
+      "name" : "Find similar suppliers",
       "config" : {
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierRepository;",
             "",
-            "in.similiarSuppliers = SupplierRepository.getInstance().findAll();"
+            "in.similarSuppliers = SupplierRepository.getInstance().findAll();"
           ]
         }
       },
@@ -436,13 +436,13 @@
     }, {
       "id" : "f68",
       "type" : "Script",
-      "name" : "Find similiar product categories",
+      "name" : "Find similar product categories",
       "config" : {
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
             "",
-            "in.similiarProductCategories = ProductCategoryRepository.getInstance().findAll();"
+            "in.similarProductCategories = ProductCategoryRepository.getInstance().findAll();"
           ]
         }
       },

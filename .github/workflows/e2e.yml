@@ -15,6 +15,7 @@ jobs:
     with:
       mvnArgs: -P e2e.test
       javaVersion: 25
+      cspellExtraWords: .github/cspell-extra-words.txt
     secrets:
       mvnArgs: |
         -DOPEN_AI_API_KEY=${{ secrets.OPEN_AI_API_KEY }} \
