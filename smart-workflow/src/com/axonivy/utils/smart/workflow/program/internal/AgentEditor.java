@@ -41,7 +41,7 @@ public class AgentEditor {
     ui.group("Agent Profile")
         .add(ui.label("Agent profile name:").create())
         .add(ui.scriptField(Conf.AGENT_PROFILE).requireType(String.class).create())
-        .add(ui.label("Keep empty to use default agent profile").create())
+        .add(ui.label("Keep empty to disable memory").create())
         .create();
 
     ui.group("Model")

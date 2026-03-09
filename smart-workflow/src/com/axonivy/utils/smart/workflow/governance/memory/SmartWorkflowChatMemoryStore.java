@@ -79,9 +79,14 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
   }
 
   private ChatMemoryEntry findByMemoryId(String memoryId) {
-    if (cachedEntry != null) {
+    if (memoryId == null) {
+      return null;
+    }
+
+    if (memoryId.equals(Optional.ofNullable(cachedEntry).map(ChatMemoryEntry::getMemoryId).orElse(null))) {
       return cachedEntry;
     }
+
     var results = Ivy.repo().search(ChatMemoryEntry.class)
         .textField(FIELD_MEMORY_ID)
         .isEqualToIgnoringCase(memoryId)

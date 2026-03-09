@@ -16,7 +16,6 @@ import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.Model
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
-import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
@@ -31,6 +30,7 @@ import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
   private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
+  private static final String MEMORY_ID_FORMAT = "%s_%s";
 
   private final ProgramContext context;
 
@@ -149,7 +149,7 @@ public class AgentCallExecutor {
       String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(null);
       agentBuilder.chatMemory(
           MessageWindowChatMemory.builder()
-              .id(IdGenerationUtils.generateRandomId())
+              .id(String.format(MEMORY_ID_FORMAT, agentProfileId.get(), caseUuid))
               .maxMessages(100)
               .chatMemoryStore(new SmartWorkflowChatMemoryStore(agentProfileId.get(), listener, caseUuid))
               .build());
