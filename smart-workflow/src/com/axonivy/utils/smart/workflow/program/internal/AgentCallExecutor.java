@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.memory.SmartWorkflowChatMemoryStore;
 import com.axonivy.utils.smart.workflow.governance.memory.SmartWorkflowChatModelListener;
+import com.axonivy.utils.smart.workflow.governance.profile.AgentProfileLoader;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
@@ -30,7 +31,9 @@ import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
   private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
+  private static final String DEFAULT_AGENT_PROFILE = "default";
   private static final String MEMORY_ID_FORMAT = "%s_%s";
+  private static final String DEFAULT_NO_CASE_UUID = "0";
 
   private final ProgramContext context;
 
@@ -143,17 +146,27 @@ public class AgentCallExecutor {
   }
 
   private void configureMemory(AiServices<? extends DynamicAgent<?>> agentBuilder, SmartWorkflowChatModelListener listener) {
-    var agentProfileId = execute(Conf.AGENT_PROFILE, String.class);
+    String profileName = resolveAgentProfile(execute(Conf.AGENT_PROFILE, String.class).orElse(null));
+    String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(DEFAULT_NO_CASE_UUID);
+    agentBuilder.chatMemory(
+        MessageWindowChatMemory.builder()
+            .id(String.format(MEMORY_ID_FORMAT, profileName, caseUuid))
+            .maxMessages(100)
+            .chatMemoryStore(new SmartWorkflowChatMemoryStore(profileName, listener, caseUuid))
+            .build());
+  }
 
-    if (agentProfileId.isPresent()) {
-      String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(null);
-      agentBuilder.chatMemory(
-          MessageWindowChatMemory.builder()
-              .id(String.format(MEMORY_ID_FORMAT, agentProfileId.get(), caseUuid))
-              .maxMessages(100)
-              .chatMemoryStore(new SmartWorkflowChatMemoryStore(agentProfileId.get(), listener, caseUuid))
-              .build());
+  private String resolveAgentProfile(String configured) {
+    if (StringUtils.isBlank(configured)) {
+      return DEFAULT_AGENT_PROFILE;
     }
+    boolean exists = AgentProfileLoader.profileNames().stream()
+        .anyMatch(configured::equalsIgnoreCase);
+    if (!exists) {
+      Ivy.log().warn("Agent profile ''{0}'' not found, falling back to 'default' agent profile", configured);
+      return DEFAULT_AGENT_PROFILE;
+    }
+    return configured;
   }
 
   private void throwGuardrailError(InputGuardrailException ex) {
