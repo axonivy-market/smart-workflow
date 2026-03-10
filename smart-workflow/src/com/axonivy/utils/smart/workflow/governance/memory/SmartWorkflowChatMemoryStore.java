@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,13 +27,29 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
   private final String agentId;
   private final SmartWorkflowChatModelListener listener;
   private final String caseUuid;
+  private final Function<String, List<ChatMemoryEntry>> finder;
+  private final Consumer<ChatMemoryEntry> saver;
+  private final Consumer<ChatMemoryEntry> deleter;
 
   private ChatMemoryEntry cachedEntry;
 
   public SmartWorkflowChatMemoryStore(String agentId, SmartWorkflowChatModelListener listener, String caseUuid) {
+    this(agentId, listener, caseUuid,
+        memoryId -> Ivy.repo().search(ChatMemoryEntry.class)
+            .textField(FIELD_MEMORY_ID).isEqualToIgnoringCase(memoryId).execute().getAll(),
+        entry -> Ivy.repo().save(entry),
+        entry -> Ivy.repo().delete(entry));
+  }
+
+  SmartWorkflowChatMemoryStore(String agentId, SmartWorkflowChatModelListener listener, String caseUuid,
+      Function<String, List<ChatMemoryEntry>> finder, Consumer<ChatMemoryEntry> saver,
+      Consumer<ChatMemoryEntry> deleter) {
     this.agentId = agentId;
     this.listener = listener;
     this.caseUuid = caseUuid;
+    this.finder = finder;
+    this.saver = saver;
+    this.deleter = deleter;
   }
 
   @Override
@@ -49,18 +67,13 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
     entry.setMessagesJson(ChatMessageSerializer.messagesToJson(messages));
     entry.setLastUpdated(LocalDateTime.now());
     captureTokenUsageIfNeeded(entry, messages);
-    Ivy.repo().save(entry);
+    saver.accept(entry);
     cachedEntry = entry;
   }
 
   @Override
   public void deleteMessages(Object memoryId) {
-    Ivy.repo().search(ChatMemoryEntry.class)
-        .textField(FIELD_MEMORY_ID)
-        .isEqualToIgnoringCase(String.valueOf(memoryId))
-        .execute()
-        .getAll()
-        .forEach(e -> Ivy.repo().delete(e));
+    finder.apply(String.valueOf(memoryId)).forEach(deleter);
     cachedEntry = null;
   }
 
@@ -85,11 +98,7 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
       return cachedEntry;
     }
 
-    var results = Ivy.repo().search(ChatMemoryEntry.class)
-        .textField(FIELD_MEMORY_ID)
-        .isEqualToIgnoringCase(memoryId)
-        .execute()
-        .getAll();
+    var results = finder.apply(memoryId);
     if (results.isEmpty()) {
       return null;
     }
@@ -103,7 +112,7 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
   }
 
   private void removeDuplicates(List<ChatMemoryEntry> sorted) {
-    sorted.subList(1, sorted.size()).forEach(e -> Ivy.repo().delete(e));
+    sorted.subList(1, sorted.size()).forEach(deleter);
   }
 
   private void captureTokenUsageIfNeeded(ChatMemoryEntry entry, List<ChatMessage> messages) {

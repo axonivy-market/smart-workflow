@@ -2,12 +2,13 @@ package com.axonivy.utils.smart.workflow.governance.memory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
@@ -22,9 +23,29 @@ import dev.langchain4j.model.output.TokenUsage;
   private static final String AGENT_ID = "test-agent";
   private static final String CASE_UUID = "test-case-uuid";
 
+  private final Map<String, ChatMemoryEntry> fakeRepo = new LinkedHashMap<>();
+
+  @BeforeEach
+  void setUp() {
+    fakeRepo.clear();
+  }
+
+  private SmartWorkflowChatMemoryStore newStore(SmartWorkflowChatModelListener listener) {
+    return new SmartWorkflowChatMemoryStore(AGENT_ID, listener, CASE_UUID,
+        memoryId -> fakeRepo.values().stream()
+            .filter(e -> memoryId.equalsIgnoreCase(e.getMemoryId())).toList(),
+        entry -> fakeRepo.put(entry.getId(), entry),
+        entry -> fakeRepo.remove(entry.getId()));
+  }
+
+  private List<ChatMemoryEntry> findByMemoryId(String memoryId) {
+    return fakeRepo.values().stream()
+        .filter(e -> memoryId.equalsIgnoreCase(e.getMemoryId())).toList();
+  }
+
   @Test
   void updateAndGetMessagesRoundTrip() {
-    var store = new SmartWorkflowChatMemoryStore(AGENT_ID, null, CASE_UUID);
+    var store = newStore(null);
     assertThat(store.getMessages("mem-roundtrip")).isEmpty();
 
     List<ChatMessage> messages = List.of(
@@ -41,13 +62,11 @@ import dev.langchain4j.model.output.TokenUsage;
 
   @Test
   void updateMessagesPersistsEntryWithCorrectMetadata() {
-    var store = new SmartWorkflowChatMemoryStore(AGENT_ID, null, CASE_UUID);
+    var store = newStore(null);
 
     store.updateMessages("mem-metadata", List.of(UserMessage.from("Hello")));
 
-    var entries = Ivy.repo().search(ChatMemoryEntry.class)
-        .textField("memoryId").isEqualToIgnoringCase("mem-metadata")
-        .execute().getAll();
+    var entries = findByMemoryId("mem-metadata");
     assertThat(entries).hasSize(1);
     assertThat(entries.get(0).getAgentId()).isEqualTo(AGENT_ID);
     assertThat(entries.get(0).getCaseUuid()).isEqualTo(CASE_UUID);
@@ -56,7 +75,7 @@ import dev.langchain4j.model.output.TokenUsage;
 
   @Test
   void deleteMessagesRemovesEntry() {
-    var store = new SmartWorkflowChatMemoryStore(AGENT_ID, null, CASE_UUID);
+    var store = newStore(null);
     store.updateMessages("mem-delete", List.of(UserMessage.from("Hello")));
 
     store.deleteMessages("mem-delete");
@@ -67,7 +86,7 @@ import dev.langchain4j.model.output.TokenUsage;
   @Test
   void tokenUsageCapturedOnlyWhenLastMessageIsAi() {
     var listener = new SmartWorkflowChatModelListener();
-    var store = new SmartWorkflowChatMemoryStore(AGENT_ID, listener, CASE_UUID);
+    var store = newStore(listener);
 
     listener.onRequest(null);
     listener.onResponse(buildResponseContext(10, 20));
@@ -80,24 +99,20 @@ import dev.langchain4j.model.output.TokenUsage;
     listener.onResponse(buildResponseContext(5, 10));
     store.updateMessages("mem-token-user", List.of(UserMessage.from("Hello")));
 
-    var aiEntry = Ivy.repo().search(ChatMemoryEntry.class)
-        .textField("memoryId").isEqualToIgnoringCase("mem-token-ai")
-        .execute().getAll().get(0);
+    var aiEntry = findByMemoryId("mem-token-ai").get(0);
     assertThat(aiEntry.getTokenUsageJson())
         .isNotBlank()
         .contains("\"inputTokens\":10")
         .contains("\"outputTokens\":20");
 
-    var userEntry = Ivy.repo().search(ChatMemoryEntry.class)
-        .textField("memoryId").isEqualToIgnoringCase("mem-token-user")
-        .execute().getAll().get(0);
+    var userEntry = findByMemoryId("mem-token-user").get(0);
     assertThat(userEntry.getTokenUsageJson()).isNullOrEmpty();
   }
 
   @Test
   void updateMessagesAppendsMultipleTokenUsageEntries() {
     var listener = new SmartWorkflowChatModelListener();
-    var store = new SmartWorkflowChatMemoryStore(AGENT_ID, listener, CASE_UUID);
+    var store = newStore(listener);
 
     listener.onRequest(null);
     listener.onResponse(buildResponseContext(10, 20));
@@ -115,9 +130,7 @@ import dev.langchain4j.model.output.TokenUsage;
         AiMessage.aiMessage("Second reply")
     ));
 
-    var entries = Ivy.repo().search(ChatMemoryEntry.class)
-        .textField("memoryId").isEqualToIgnoringCase("mem-token-multi")
-        .execute().getAll();
+    var entries = findByMemoryId("mem-token-multi");
     assertThat(entries).hasSize(1);
     assertThat(entries.get(0).getTokenUsageJson())
         .contains("\"inputTokens\":10")
