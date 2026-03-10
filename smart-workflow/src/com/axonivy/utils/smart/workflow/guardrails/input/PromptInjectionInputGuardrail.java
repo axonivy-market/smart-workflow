@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 
-public class PromptInjectionGuardrail implements SmartWorkflowInputGuardrail {
+public class PromptInjectionInputGuardrail implements SmartWorkflowInputGuardrail {
 
   private static final String FAILURE_MESSAGE = "The input message is rejected because it's empty or contains malicious content";
 

@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
+import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.provider.DefaultGuardrailProvider;
 import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
@@ -55,6 +57,44 @@ public class GuardrailCollector {
 
     return inputGuardrails.stream()
         .map(InputGuardrailAdapter::new)
+        .distinct()
+        .collect(Collectors.toList());
+  }
+
+  public static List<String> allOutputGuardrailNames() {
+    List<SmartWorkflowOutputGuardrail> outputGuardrails = new ArrayList<>(new DefaultGuardrailProvider().getOutputGuardrails());
+
+    outputGuardrails.addAll(
+        allProviders().stream()
+          .flatMap(provider -> provider.getOutputGuardrails().stream())
+          .collect(Collectors.toList())
+      );
+
+    return outputGuardrails.stream()
+        .map(OutputGuardrailAdapter::new)
+        .distinct()
+        .map(mapper -> mapper.getDelegate().name())
+        .collect(Collectors.toList());
+  }
+
+  public static List<OutputGuardrailAdapter> outputGuardrailAdapters(List<String> filters) {
+    List<SmartWorkflowOutputGuardrail> outputGuardrails = new DefaultGuardrailProvider().getFilteredDefaultOutputGuardrails();
+
+    if (CollectionUtils.isEmpty(filters)) {
+      return outputGuardrails.stream()
+          .map(OutputGuardrailAdapter::new)
+          .distinct()
+          .collect(Collectors.toList());
+    }
+
+    outputGuardrails.addAll(
+        allProviders().stream()
+          .flatMap(provider -> provider.getOutputGuardrails().stream())
+          .collect(Collectors.toList())
+      );
+
+    return outputGuardrails.stream()
+        .map(OutputGuardrailAdapter::new)
         .distinct()
         .collect(Collectors.toList());
   }

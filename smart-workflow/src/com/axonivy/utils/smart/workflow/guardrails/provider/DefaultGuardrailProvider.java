@@ -6,12 +6,15 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
-import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.output.SensitiveDataOutputGuardrail;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
 public class DefaultGuardrailProvider implements GuardrailProvider {
     public static final String DEFAULT_INPUT_GUARDRAILS = "AI.Guardrails.DefaultInput";
+    public static final String DEFAULT_OUTPUT_GUARDRAILS = "AI.Guardrails.DefaultOutput";
 
     public List<SmartWorkflowInputGuardrail> getFilteredDefaultInputGuardrails() {
         String defaultGuardrails = "";
@@ -26,8 +29,26 @@ public class DefaultGuardrailProvider implements GuardrailProvider {
         return getInputGuardrails().stream().filter(g -> guardrailNames.contains(g.name())).collect(Collectors.toList());
     }
 
+    public List<SmartWorkflowOutputGuardrail> getFilteredDefaultOutputGuardrails() {
+        String defaultGuardrails = "";
+        try {
+            defaultGuardrails = Ivy.var().get(DEFAULT_OUTPUT_GUARDRAILS);
+        } catch (Exception e) {
+            Ivy.log().error(e.getMessage());
+        }
+
+        List<String> guardrailNames = List.of(StringUtils.split(defaultGuardrails, ",")).stream()
+        .distinct().filter(StringUtils::isNotBlank).map(String::strip).toList();
+        return getOutputGuardrails().stream().filter(g -> guardrailNames.contains(g.name())).collect(Collectors.toList());
+    }
+
     @Override
     public List<SmartWorkflowInputGuardrail> getInputGuardrails() {
-        return List.of(new PromptInjectionGuardrail()) ;
+        return List.of(new PromptInjectionInputGuardrail());
+    }
+
+    @Override
+    public List<SmartWorkflowOutputGuardrail> getOutputGuardrails() {
+        return List.of(new SensitiveDataOutputGuardrail());
     }
 }

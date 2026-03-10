@@ -30,12 +30,25 @@ public class AgentEditor {
         .add(ui.scriptField(Conf.TOOLS).requireType(List.class).create())
         .create();
 
-    String guardrailList = guardrailsList();
-    if (StringUtils.isNotBlank(guardrailList)) {
-      ui.group("Guardrails").add(ui.label("Available guardrails:\n").create())
-          .add(ui.label(guardrailList).multiline().create())
-          .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create())
-          .add(ui.label("Select the guardrails to apply, or keep empty to use default guardrails").create()).create();
+    String inputGuardrailList = inputGuardrailsList();
+    String outputGuardrailList = outputGuardrailsList();
+    if (StringUtils.isNotBlank(inputGuardrailList) || StringUtils.isNotBlank(outputGuardrailList)) {
+      var guardrailsGroup = ui.group("Guardrails");
+      if (StringUtils.isNotBlank(inputGuardrailList)) {
+        guardrailsGroup
+            .add(ui.label("Available input guardrails:\n").create())
+            .add(ui.label(inputGuardrailList).multiline().create())
+            .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create())
+            .add(ui.label("Select the input guardrails to apply, or keep empty to use default guardrails").create());
+      }
+      if (StringUtils.isNotBlank(outputGuardrailList)) {
+        guardrailsGroup
+            .add(ui.label("Available output guardrails:\n").create())
+            .add(ui.label(outputGuardrailList).multiline().create())
+            .add(ui.scriptField(Conf.OUTPUT_GUARD_RAILS).requireType(List.class).create())
+            .add(ui.label("Select the output guardrails to apply, or keep empty to use default guardrails").create());
+      }
+      guardrailsGroup.create();
     }
 
     ui.group("Model")
@@ -85,8 +98,18 @@ public class AgentEditor {
     return providers.get().stream().map(ChatModelProvider::name).distinct().collect(Collectors.joining(", "));
   }
 
-  private String guardrailsList() {
+  private String inputGuardrailsList() {
     var guardrails = Optional.ofNullable(GuardrailCollector.allInputGuardrailNames());
+    if (guardrails.isEmpty()) {
+      return StringUtils.EMPTY;
+    }
+    return guardrails.get().stream()
+      .map(guardrail -> String.format("- %s", guardrail))
+      .collect(Collectors.joining("\n"));
+  }
+
+  private String outputGuardrailsList() {
+    var guardrails = Optional.ofNullable(GuardrailCollector.allOutputGuardrailNames());
     if (guardrails.isEmpty()) {
       return StringUtils.EMPTY;
     }

@@ -21,14 +21,25 @@ public class TestGuardrailProcess {
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
   @Test
-  void testCatchPromptInjection(BpmClient client) {
+  void testCatchPromptInjectionInput(BpmClient client) {
     Ivy.session().loginSessionUser("James", "secret");
     var res = client.start()
-        .process(GUARDRAIL_DEMO.elementName("Prompt Injection Guardrail Demo"))
+        .process(GUARDRAIL_DEMO.elementName("Prompt Injection Input Guardrail Demo"))
         .as().session(Ivy.session())
         .execute();
     GuardrailDemoData data = res.data().last();
     assertThat(data.getResult().contains(
         "The input message is rejected because it's empty or contains malicious content"));
+  }
+
+  @Test
+  void testCatchSensitiveDataOutput(BpmClient client) {
+    Ivy.session().loginSessionUser("James", "secret");
+    var res = client.start()
+        .process(GUARDRAIL_DEMO.elementName("Sensitive Data Output Guardrail Demo"))
+        .as().session(Ivy.session())
+        .execute();
+    GuardrailDemoData data = res.data().last();
+    assertThat(data.getResult()).contains("sensitive data");
   }
 }

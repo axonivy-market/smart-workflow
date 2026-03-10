@@ -336,7 +336,7 @@ list of supported providers and file types.
 ### Guardrails
 
 Guardrails protect AI agents by validating user input before it reaches the
-model. Smart Workflow includes a built-in `PromptInjectionGuardrail` that blocks
+model. Smart Workflow includes a built-in `PromptInjectionInputGuardrail` that blocks
 common prompt injection attacks.
 
 #### Configuring Default Guardrails
@@ -348,7 +348,7 @@ Variables:
   AI:
     Guardrails:
       # Comma-separated list of guardrail names
-      DefaultInput: PromptInjectionGuardrail
+      DefaultInput: PromptInjectionInputGuardrail
 ```
 
 #### Using Guardrails in Agents
@@ -356,7 +356,7 @@ Variables:
 In the agent configuration, specify guardrails as a String array:
 
 ```java
-["PromptInjectionGuardrail", "MyCustomGuardrail"]
+["PromptInjectionInputGuardrail", "MyCustomInputGuardrail"]
 ```
 
 If no guardrails are specified, the agent uses the default guardrails from

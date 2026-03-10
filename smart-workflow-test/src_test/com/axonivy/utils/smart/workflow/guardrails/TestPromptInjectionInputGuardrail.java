@@ -5,18 +5,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionInputGuardrail;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 
 @IvyProcessTest
-public class TestPromptInjectionGuardrail {
+public class TestPromptInjectionInputGuardrail {
 
-  private PromptInjectionGuardrail guardrail;
+  private PromptInjectionInputGuardrail guardrail;
 
   @BeforeEach
   void setup() {
-    guardrail = new PromptInjectionGuardrail();
+    guardrail = new PromptInjectionInputGuardrail();
   }
 
   @Test
