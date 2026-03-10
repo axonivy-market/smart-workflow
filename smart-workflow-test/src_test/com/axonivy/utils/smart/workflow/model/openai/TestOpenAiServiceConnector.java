@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
+import com.axonivy.utils.smart.workflow.governance.profile.AgentProfileLoader;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -27,6 +28,7 @@ class TestOpenAiServiceConnector {
 
   @BeforeEach
   void setup(AppFixture fixture, ResourceResponder responder) {
+    fixture.var(AgentProfileLoader.VARIABLE_KEY, "[{\"name\":\"test_ignore\"}]");
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("chat"));
     MockOpenAI.defineChat(request -> {
       if (request.toPrettyString().contains("ready?")) {

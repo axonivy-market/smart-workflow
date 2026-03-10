@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
+import com.axonivy.utils.smart.workflow.governance.profile.AgentProfileLoader;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -37,6 +38,7 @@ public class TestSupportAgentToolsWithPlanning {
 
   @BeforeEach
   void setup(AppFixture fixture, ResourceResponder responder) {
+    fixture.var(AgentProfileLoader.VARIABLE_KEY, "[{\"name\":\"test_ignore\"}]");
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
     MockOpenAI.defineChat(r -> toolTest(r, responder));

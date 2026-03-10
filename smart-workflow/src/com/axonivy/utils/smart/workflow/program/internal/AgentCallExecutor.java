@@ -32,6 +32,7 @@ import dev.langchain4j.service.AiServices;
 public class AgentCallExecutor {
   private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
   private static final String DEFAULT_AGENT_PROFILE = "default";
+  private static final String TEST_IGNORE_PROFILE = "test_ignore";
   private static final String MEMORY_ID_FORMAT = "%s_%s";
   private static final String NO_CASE_ID = "0";
 
@@ -146,6 +147,10 @@ public class AgentCallExecutor {
   }
 
   private void configureMemory(AiServices<? extends DynamicAgent<?>> agentBuilder, SmartWorkflowChatModelListener listener) {
+    var profileNames = AgentProfileLoader.profileNames();
+    if (isTestIgnoreProfile(profileNames)) {
+      return;
+    }
     String profileName = resolveAgentProfile(execute(Conf.AGENT_PROFILE, String.class).orElse(null));
     String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(NO_CASE_ID);
     agentBuilder.chatMemory(
@@ -167,6 +172,11 @@ public class AgentCallExecutor {
       return DEFAULT_AGENT_PROFILE;
     }
     return configured;
+  }
+
+  // Ignore memory for tests by using "test_ignore" profile, since memory is not relevant for most tests and would just create overhead
+  private boolean isTestIgnoreProfile(List<String> profileNames) {
+    return profileNames.size() == 1 && TEST_IGNORE_PROFILE.equalsIgnoreCase(profileNames.get(0));
   }
 
   private void throwGuardrailError(InputGuardrailException ex) {

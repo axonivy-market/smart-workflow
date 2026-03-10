@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
+import com.axonivy.utils.smart.workflow.governance.profile.AgentProfileLoader;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,6 +33,7 @@ class TestAgenticProcessCallElementQuery {
 
   @BeforeEach
   void setup(AppFixture fixture, ResourceResponder responder) {
+    fixture.var(AgentProfileLoader.VARIABLE_KEY, "[{\"name\":\"test_ignore\"}]");
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("query"));
     fixture.var(OpenAiConf.API_KEY, "");
     MockOpenAI.defineChat(request -> query(request, responder));
