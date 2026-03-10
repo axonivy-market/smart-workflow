@@ -13,13 +13,6 @@ public class AgentProfileLoader {
     return JsonUtils.jsonValueToEntities(Ivy.var().get(VARIABLE_KEY), AgentProfile.class);
   }
 
-  public static AgentProfile loadByName(String name) {
-    return loadAll().stream()
-        .filter(p -> name.equals(p.getName()))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("No agent profile found: " + name));
-  }
-
   public static List<String> profileNames() {
     return loadAll().stream()
         .map(AgentProfile::getName)

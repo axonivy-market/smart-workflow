@@ -33,7 +33,7 @@ public class AgentCallExecutor {
   private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
   private static final String DEFAULT_AGENT_PROFILE = "default";
   private static final String MEMORY_ID_FORMAT = "%s_%s";
-  private static final String DEFAULT_NO_CASE_UUID = "0";
+  private static final String NO_CASE_ID = "0";
 
   private final ProgramContext context;
 
@@ -65,7 +65,7 @@ public class AgentCallExecutor {
     }
 
     var agentBuilder = AiServices.builder(agentType);
-    var  listener = configureModel(agentBuilder, structured.isPresent());
+    var listener = configureModel(agentBuilder, structured.isPresent());
 
     configureToolProvider(agentBuilder);
     configureInputGuardrails(agentBuilder);
@@ -147,7 +147,7 @@ public class AgentCallExecutor {
 
   private void configureMemory(AiServices<? extends DynamicAgent<?>> agentBuilder, SmartWorkflowChatModelListener listener) {
     String profileName = resolveAgentProfile(execute(Conf.AGENT_PROFILE, String.class).orElse(null));
-    String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(DEFAULT_NO_CASE_UUID);
+    String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(NO_CASE_ID);
     agentBuilder.chatMemory(
         MessageWindowChatMemory.builder()
             .id(String.format(MEMORY_ID_FORMAT, profileName, caseUuid))
