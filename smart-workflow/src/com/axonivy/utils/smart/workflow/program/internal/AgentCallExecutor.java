@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.memory.SmartWorkflowChatMemoryStore;
 import com.axonivy.utils.smart.workflow.governance.memory.SmartWorkflowChatModelListener;
-import com.axonivy.utils.smart.workflow.governance.profile.AgentProfileLoader;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
@@ -23,6 +22,7 @@ import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import ch.ivyteam.ivy.workflow.ICase;
+import ch.ivyteam.ivy.workflow.ITask;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
@@ -31,10 +31,6 @@ import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
   private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
-  private static final String DEFAULT_AGENT_PROFILE = "default";
-  private static final String TEST_IGNORE_PROFILE = "test_ignore";
-  private static final String MEMORY_ID_FORMAT = "%s_%s";
-  private static final String NO_CASE_ID = "0";
 
   private final ProgramContext context;
 
@@ -147,36 +143,18 @@ public class AgentCallExecutor {
   }
 
   private void configureMemory(AiServices<? extends DynamicAgent<?>> agentBuilder, SmartWorkflowChatModelListener listener) {
-    var profileNames = AgentProfileLoader.profileNames();
-    if (isTestIgnoreProfile(profileNames)) {
+    String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(null);
+    if (caseUuid == null) {
       return;
     }
-    String profileName = resolveAgentProfile(execute(Conf.AGENT_PROFILE, String.class).orElse(null));
-    String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(NO_CASE_ID);
+    String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse("0");
+    String memoryId = caseUuid + "_" + taskUuid;
     agentBuilder.chatMemory(
         MessageWindowChatMemory.builder()
-            .id(String.format(MEMORY_ID_FORMAT, profileName, caseUuid))
+            .id(memoryId)
             .maxMessages(100)
-            .chatMemoryStore(new SmartWorkflowChatMemoryStore(profileName, listener, caseUuid))
+            .chatMemoryStore(new SmartWorkflowChatMemoryStore(listener, caseUuid, taskUuid))
             .build());
-  }
-
-  private String resolveAgentProfile(String configured) {
-    if (StringUtils.isBlank(configured)) {
-      return DEFAULT_AGENT_PROFILE;
-    }
-    boolean exists = AgentProfileLoader.profileNames().stream()
-        .anyMatch(configured::equalsIgnoreCase);
-    if (!exists) {
-      Ivy.log().warn("Agent profile ''{0}'' not found, falling back to 'default' agent profile", configured);
-      return DEFAULT_AGENT_PROFILE;
-    }
-    return configured;
-  }
-
-  // Ignore memory for tests by using "test_ignore" profile, since memory is not relevant for most tests and would just create overhead
-  private boolean isTestIgnoreProfile(List<String> profileNames) {
-    return profileNames.size() == 1 && TEST_IGNORE_PROFILE.equalsIgnoreCase(profileNames.get(0));
   }
 
   private void throwGuardrailError(InputGuardrailException ex) {

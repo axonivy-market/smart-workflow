@@ -2,9 +2,10 @@ package com.axonivy.utils.smart.workflow.governance.memory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,10 +21,10 @@ import dev.langchain4j.model.output.TokenUsage;
 
 @IvyTest class TestSmartWorkflowChatMemoryStore {
 
-  private static final String AGENT_ID = "test-agent";
   private static final String CASE_UUID = "test-case-uuid";
+  private static final String TASK_UUID = "test-task-uuid";
 
-  private final Map<String, ChatMemoryEntry> fakeRepo = new LinkedHashMap<>();
+  private final List<ChatMemoryEntry> fakeRepo = new ArrayList<>();
 
   @BeforeEach
   void setUp() {
@@ -31,29 +32,37 @@ import dev.langchain4j.model.output.TokenUsage;
   }
 
   private SmartWorkflowChatMemoryStore newStore(SmartWorkflowChatModelListener listener) {
-    return new SmartWorkflowChatMemoryStore(AGENT_ID, listener, CASE_UUID,
-        memoryId -> fakeRepo.values().stream()
-            .filter(e -> memoryId.equalsIgnoreCase(e.getMemoryId())).toList(),
-        entry -> fakeRepo.put(entry.getId(), entry),
-        entry -> fakeRepo.remove(entry.getId()));
+    return newStore(listener, CASE_UUID, TASK_UUID);
   }
 
-  private List<ChatMemoryEntry> findByMemoryId(String memoryId) {
-    return fakeRepo.values().stream()
-        .filter(e -> memoryId.equalsIgnoreCase(e.getMemoryId())).toList();
+  private SmartWorkflowChatMemoryStore newStore(SmartWorkflowChatModelListener listener, String caseUuid, String taskUuid) {
+    return new SmartWorkflowChatMemoryStore(listener, caseUuid, taskUuid,
+        () -> fakeRepo.stream()
+            .filter(e -> caseUuid.equals(e.getCaseUuid()) && taskUuid.equals(e.getTaskUuid())).toList(),
+        entry -> {
+          fakeRepo.removeIf(e -> e.getCaseUuid().equals(entry.getCaseUuid()) && e.getTaskUuid().equals(entry.getTaskUuid()));
+          fakeRepo.add(entry);
+        },
+        fakeRepo::remove);
+  }
+
+  private Optional<ChatMemoryEntry> findEntry(String caseUuid, String taskUuid) {
+    return fakeRepo.stream()
+        .filter(e -> caseUuid.equals(e.getCaseUuid()) && taskUuid.equals(e.getTaskUuid()))
+        .findFirst();
   }
 
   @Test
   void updateAndGetMessagesRoundTrip() {
     var store = newStore(null);
-    assertThat(store.getMessages("mem-roundtrip")).isEmpty();
+    assertThat(store.getMessages(null)).isEmpty();
 
     List<ChatMessage> messages = List.of(
         UserMessage.from("Hello"),
         AiMessage.aiMessage("Hi there!")
     );
-    store.updateMessages("mem-roundtrip", messages);
-    var retrieved = store.getMessages("mem-roundtrip");
+    store.updateMessages(null, messages);
+    var retrieved = store.getMessages(null);
 
     assertThat(retrieved).hasSize(2);
     assertThat(retrieved.get(0)).isInstanceOf(UserMessage.class);
@@ -64,49 +73,52 @@ import dev.langchain4j.model.output.TokenUsage;
   void updateMessagesPersistsEntryWithCorrectMetadata() {
     var store = newStore(null);
 
-    store.updateMessages("mem-metadata", List.of(UserMessage.from("Hello")));
+    store.updateMessages(null, List.of(UserMessage.from("Hello")));
 
-    var entries = findByMemoryId("mem-metadata");
-    assertThat(entries).hasSize(1);
-    assertThat(entries.get(0).getAgentId()).isEqualTo(AGENT_ID);
-    assertThat(entries.get(0).getCaseUuid()).isEqualTo(CASE_UUID);
-    assertThat(entries.get(0).getLastUpdated()).isNotNull();
+    var entry = findEntry(CASE_UUID, TASK_UUID);
+    assertThat(entry).isPresent();
+    assertThat(entry.get().getCaseUuid()).isEqualTo(CASE_UUID);
+    assertThat(entry.get().getTaskUuid()).isEqualTo(TASK_UUID);
+    assertThat(entry.get().getLastUpdated()).isNotNull();
   }
 
   @Test
   void deleteMessagesRemovesEntry() {
     var store = newStore(null);
-    store.updateMessages("mem-delete", List.of(UserMessage.from("Hello")));
+    store.updateMessages(null, List.of(UserMessage.from("Hello")));
 
-    store.deleteMessages("mem-delete");
+    store.deleteMessages(null);
 
-    assertThat(store.getMessages("mem-delete")).isEmpty();
+    assertThat(store.getMessages(null)).isEmpty();
   }
 
   @Test
   void tokenUsageCapturedOnlyWhenLastMessageIsAi() {
     var listener = new SmartWorkflowChatModelListener();
-    var store = newStore(listener);
+    var storeAi = newStore(listener, CASE_UUID, "task-ai");
+    var storeUser = newStore(listener, CASE_UUID, "task-user");
 
     listener.onRequest(null);
     listener.onResponse(buildResponseContext(10, 20));
-    store.updateMessages("mem-token-ai", List.of(
+    storeAi.updateMessages(null, List.of(
         UserMessage.from("Hello"),
         AiMessage.aiMessage("Response")
     ));
 
     listener.onRequest(null);
     listener.onResponse(buildResponseContext(5, 10));
-    store.updateMessages("mem-token-user", List.of(UserMessage.from("Hello")));
+    storeUser.updateMessages(null, List.of(UserMessage.from("Hello")));
 
-    var aiEntry = findByMemoryId("mem-token-ai").get(0);
-    assertThat(aiEntry.getTokenUsageJson())
+    var aiEntry = findEntry(CASE_UUID, "task-ai");
+    assertThat(aiEntry).isPresent();
+    assertThat(aiEntry.get().getTokenUsageJson())
         .isNotBlank()
         .contains("\"inputTokens\":10")
         .contains("\"outputTokens\":20");
 
-    var userEntry = findByMemoryId("mem-token-user").get(0);
-    assertThat(userEntry.getTokenUsageJson()).isNullOrEmpty();
+    var userEntry = findEntry(CASE_UUID, "task-user");
+    assertThat(userEntry).isPresent();
+    assertThat(userEntry.get().getTokenUsageJson()).isNullOrEmpty();
   }
 
   @Test
@@ -116,23 +128,23 @@ import dev.langchain4j.model.output.TokenUsage;
 
     listener.onRequest(null);
     listener.onResponse(buildResponseContext(10, 20));
-    store.updateMessages("mem-token-multi", List.of(
+    store.updateMessages(null, List.of(
         UserMessage.from("First"),
         AiMessage.aiMessage("First reply")
     ));
 
     listener.onRequest(null);
     listener.onResponse(buildResponseContext(5, 15));
-    store.updateMessages("mem-token-multi", List.of(
+    store.updateMessages(null, List.of(
         UserMessage.from("First"),
         AiMessage.aiMessage("First reply"),
         UserMessage.from("Second"),
         AiMessage.aiMessage("Second reply")
     ));
 
-    var entries = findByMemoryId("mem-token-multi");
-    assertThat(entries).hasSize(1);
-    assertThat(entries.get(0).getTokenUsageJson())
+    var entry = findEntry(CASE_UUID, TASK_UUID);
+    assertThat(entry).isPresent();
+    assertThat(entry.get().getTokenUsageJson())
         .contains("\"inputTokens\":10")
         .contains("\"inputTokens\":5");
   }

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
-import com.axonivy.utils.smart.workflow.governance.profile.AgentProfileLoader;
 import com.axonivy.utils.smart.workflow.guardrails.provider.DefaultGuardrailProvider;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 
@@ -24,7 +23,6 @@ class TestFileExtractionDemo {
 
   @BeforeEach
   void setup(AppFixture fixture, ResourceResponder responder) {
-    fixture.var(AgentProfileLoader.VARIABLE_KEY, "[{\"name\":\"test_ignore\"}]");
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("extraction"));
     fixture.var(OpenAiConf.API_KEY, "");
     fixture.var(DefaultGuardrailProvider.DEFAULT_INPUT_GUARDRAILS, "");

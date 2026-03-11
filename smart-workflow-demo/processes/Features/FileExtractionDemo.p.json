@@ -30,7 +30,6 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "agentProfile" : "",
           "system" : "<%=ivy.cms.co(\"/Features/FileExtractionDemo/ExtractFromImagePrompt\")%>",
           "resultType" : "com.axonivy.utils.ai.InvoiceList.class",
           "resultMapping" : "in.invoiceList",

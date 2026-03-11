@@ -54,7 +54,6 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "agentProfile" : "",
           "system" : "<%=in.systemMessage%>",
           "provider" : "",
           "resultMapping" : "in.resultObject",
