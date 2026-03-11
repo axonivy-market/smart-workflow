@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
+import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
@@ -22,11 +23,13 @@ import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
+import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
-  private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
+  private static final String INPUT_GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:input:violation";
+  private static final String OUTPUT_GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:output:violation";
 
   private final ProgramContext context;
 
@@ -62,6 +65,7 @@ public class AgentCallExecutor {
     agentBuilder.chatModel(model);
     configureToolProvider(agentBuilder);
     configureInputGuardrails(agentBuilder);
+    configureOutputGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
     var agent = agentBuilder.build();
@@ -78,6 +82,8 @@ public class AgentCallExecutor {
       }
       Ivy.log().info("Agent response: " + result);
     } catch (InputGuardrailException ex) {
+      throwGuardrailError(ex);
+    } catch (OutputGuardrailException ex) {
       throwGuardrailError(ex);
     }
   }
@@ -134,8 +140,24 @@ public class AgentCallExecutor {
     }
   }
 
+  private void configureOutputGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    List<String> guardrailFilters = executeListOfStrings(Conf.OUTPUT_GUARD_RAILS).orElse(null);
+    List<OutputGuardrailAdapter> outputGuardrails = GuardrailCollector.outputGuardrailAdapters(guardrailFilters);
+
+    if (CollectionUtils.isNotEmpty(outputGuardrails)) {
+      agentBuilder.outputGuardrails(outputGuardrails);
+    }
+  }
+
   private void throwGuardrailError(InputGuardrailException ex) {
-    BpmPublicErrorBuilder errorBuilder = BpmError.create(GUARDRAIL_ERROR_CODE);
+    BpmPublicErrorBuilder errorBuilder = BpmError.create(INPUT_GUARDRAIL_ERROR_CODE);
+    Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
+    Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
+    errorBuilder.throwError();
+  }
+
+  private void throwGuardrailError(OutputGuardrailException ex) {
+    BpmPublicErrorBuilder errorBuilder = BpmError.create(OUTPUT_GUARDRAIL_ERROR_CODE);
     Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
     Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
     errorBuilder.throwError();
