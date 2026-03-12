@@ -36,6 +36,7 @@ class TestAgenticProcessCallElementOutput {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("output"));
     fixture.var(OpenAiConf.API_KEY, "");
+    fixture.var("AI.Test", "true");
   }
 
   @Test

@@ -31,6 +31,7 @@ import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
   private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
+  public static final String TEST_VARIABLE = "AI.Test";
 
   private final ProgramContext context;
 
@@ -143,6 +144,9 @@ public class AgentCallExecutor {
   }
 
   private void configureMemory(AiServices<? extends DynamicAgent<?>> agentBuilder, SmartWorkflowChatModelListener listener) {
+    if ("true".equals(Ivy.var().get(TEST_VARIABLE))) {
+      return;
+    }
     String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(null);
     if (caseUuid == null) {
       return;
