@@ -12,6 +12,7 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.chat.request.ResponseFormat;
 
 public class AzureOpenAiModelProvider implements ChatModelProvider {
@@ -23,7 +24,7 @@ public class AzureOpenAiModelProvider implements ChatModelProvider {
   }
 
   @Override
-  public ChatModel setup(ModelOptions options) {
+  public ChatModel setup(ModelOptions options, List<ChatModelListener> listeners) {
     var builder = AzureOpenAiServiceConnector.buildOpenAiModel(options.modelName());
     if (builder == null) {
       return null;
@@ -33,6 +34,7 @@ public class AzureOpenAiModelProvider implements ChatModelProvider {
       builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA).strictJsonSchema(true)
           .responseFormat(ResponseFormat.JSON);
     }
+    builder.listeners(listeners);
     return builder.build();
   }
 

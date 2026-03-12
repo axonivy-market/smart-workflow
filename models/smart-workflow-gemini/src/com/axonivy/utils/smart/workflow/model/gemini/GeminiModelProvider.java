@@ -9,6 +9,7 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 
 public class GeminiModelProvider implements ChatModelProvider {
 
@@ -20,7 +21,7 @@ public class GeminiModelProvider implements ChatModelProvider {
   }
 
   @Override
-  public ChatModel setup(ModelOptions options) {
+  public ChatModel setup(ModelOptions options, List<ChatModelListener> listeners) {
     var builder = GeminiServiceConnector.buildGeminiModel(options.modelName());
     if (options.structuredOutput()) {
       // Gemini currently does NOT support structured JSON responses.
@@ -28,6 +29,7 @@ public class GeminiModelProvider implements ChatModelProvider {
       // https://discuss.ai.google.dev/t/function-calling-with-a-response-mime-type-application-json-is-unsupported/105093
       Ivy.log().error("Structured output is unsupported.");
     }
+    builder.listeners(listeners);
     return builder.build();
   }
 

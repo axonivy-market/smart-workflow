@@ -9,6 +9,7 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 
@@ -27,8 +28,8 @@ public class DummyChatModelProvider implements ChatModelProvider {
   }
 
   @Override
-  public ChatModel setup(ModelOptions options) {
-    return new DummyChatModel(options);
+  public ChatModel setup(ModelOptions options, List<ChatModelListener> listeners) {
+    return new DummyChatModel(options, listeners);
   }
 
   public interface ModelNames {
@@ -53,9 +54,16 @@ public class DummyChatModelProvider implements ChatModelProvider {
         .aiMessage(AiMessage.aiMessage(DummyChatModel.NOT_IMPLEMENTED)).build();
 
     private final ModelOptions options;
+    private final List<ChatModelListener> listeners;
 
-    public DummyChatModel(ModelOptions options) {
+    public DummyChatModel(ModelOptions options, List<ChatModelListener> listeners) {
       this.options = options;
+      this.listeners = listeners;
+    }
+
+    @Override
+    public List<ChatModelListener> listeners() {
+      return listeners;
     }
 
     @Override

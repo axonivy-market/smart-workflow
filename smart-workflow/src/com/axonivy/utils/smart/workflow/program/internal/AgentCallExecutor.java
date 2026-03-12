@@ -122,9 +122,9 @@ public class AgentCallExecutor {
     var modelOptions = options()
         .modelName(modelName)
         .structuredOutput(isStructured);
-    var rawModel = ChatModelFactory.createModel(modelOptions, providerName);
     var listener = new SmartWorkflowChatModelListener();
-    agentBuilder.chatModel(new ListeningChatModel(rawModel, listener));
+    var model = ChatModelFactory.createModel(modelOptions, providerName, List.of(listener));
+    agentBuilder.chatModel(model);
     return listener;
   }
 

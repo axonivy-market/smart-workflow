@@ -3,11 +3,12 @@ package com.axonivy.utils.smart.workflow.model.spi;
 import java.util.List;
 
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 
 public interface ChatModelProvider {
 
   String name();
-  ChatModel setup(ModelOptions options);
+  ChatModel setup(ModelOptions options, List<ChatModelListener> listeners);
   List<String> models();
 
   public static record ModelOptions(

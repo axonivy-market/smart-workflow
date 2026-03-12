@@ -2,6 +2,8 @@ package com.axonivy.utils.smart.workflow.model.azureopenai;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,10 +63,10 @@ public class TestAzureOpenAiLoader {
 
   @Test
   void capabilities() {
-    ChatModel normal = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false));
+    ChatModel normal = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false), List.of());
     assertThat(normal.supportedCapabilities()).isEmpty();
 
-    ChatModel structured = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, true));
+    ChatModel structured = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, true), List.of());
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 
