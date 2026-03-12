@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.governance.memory;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.governance.listener.AbstractChatModelListener;
 import com.axonivy.utils.smart.workflow.governance.listener.SmartWorkflowChatModelListener;
 
 public class TestSmartWorkflowChatModelListener
@@ -29,7 +30,7 @@ public class TestSmartWorkflowChatModelListener
     listener.onRequest(null);
     listener.onResponse(buildResponseContext(100, 50));
 
-    var meta = listener.drainPending();
+    AbstractChatModelListener.ResponseMetadata meta = listener.drainPending();
 
     assertThat(meta).isNotNull();
     assertThat(meta.inputTokens()).isEqualTo(100);
@@ -44,7 +45,7 @@ public class TestSmartWorkflowChatModelListener
     listener.onRequest(null);
     listener.onResponse(buildResponseContextNoTokens());
 
-    var meta = listener.drainPending();
+    AbstractChatModelListener.ResponseMetadata meta = listener.drainPending();
 
     assertThat(meta).isNotNull();
     assertThat(meta.inputTokens()).isNull();
