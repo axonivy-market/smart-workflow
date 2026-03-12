@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.governance.listener.AbstractChatModelListener;
+import com.axonivy.utils.smart.workflow.governance.listener.SmartWorkflowChatModelListener;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -122,12 +124,12 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
   }
 
   private void appendTokenMetadata(ChatMemoryEntry entry,
-      SmartWorkflowChatModelListener.ResponseMetadata meta) {
+      AbstractChatModelListener.ResponseMetadata meta) {
     try {
-      List<SmartWorkflowChatModelListener.ResponseMetadata> list = StringUtils.isBlank(entry.getTokenUsageJson())
+      List<AbstractChatModelListener.ResponseMetadata> list = StringUtils.isBlank(entry.getTokenUsageJson())
           ? new ArrayList<>()
           : JsonUtils.getObjectMapper().readValue(entry.getTokenUsageJson(),
-              new TypeReference<List<SmartWorkflowChatModelListener.ResponseMetadata>>() {});
+              new TypeReference<List<AbstractChatModelListener.ResponseMetadata>>() {});
       list.add(meta);
       entry.setTokenUsageJson(JsonUtils.getObjectMapper().writeValueAsString(list));
     } catch (JsonProcessingException ex) {

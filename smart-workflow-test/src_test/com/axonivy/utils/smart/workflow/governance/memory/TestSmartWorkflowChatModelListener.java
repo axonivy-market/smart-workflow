@@ -1,25 +1,16 @@
 package com.axonivy.utils.smart.workflow.governance.memory;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.listener.ChatModelResponseContext;
-import dev.langchain4j.model.chat.request.ChatRequest;
-import dev.langchain4j.model.chat.response.ChatResponse;
-import dev.langchain4j.model.output.TokenUsage;
+import com.axonivy.utils.smart.workflow.governance.listener.SmartWorkflowChatModelListener;
 
-public class TestSmartWorkflowChatModelListener {
+public class TestSmartWorkflowChatModelListener
+    extends AbstractChatModelListenerTest<SmartWorkflowChatModelListener> {
 
-  private SmartWorkflowChatModelListener listener;
-
-  @BeforeEach
-  void setUp() {
-    listener = new SmartWorkflowChatModelListener();
+  @Override
+  protected SmartWorkflowChatModelListener createListener() {
+    return new SmartWorkflowChatModelListener();
   }
 
   @Test
@@ -59,24 +50,5 @@ public class TestSmartWorkflowChatModelListener {
     assertThat(meta.inputTokens()).isNull();
     assertThat(meta.outputTokens()).isNull();
     assertThat(meta.totalTokens()).isNull();
-  }
-
-  private ChatModelResponseContext buildResponseContext(int inputTokens, int outputTokens) {
-    var response = ChatResponse.builder()
-        .aiMessage(AiMessage.aiMessage("test response"))
-        .tokenUsage(new TokenUsage(inputTokens, outputTokens))
-        .modelName("test-model")
-        .build();
-    var request = ChatRequest.builder().messages(UserMessage.from("Hello")).build();
-    return new ChatModelResponseContext(response, request, null, Map.of());
-  }
-
-  private ChatModelResponseContext buildResponseContextNoTokens() {
-    var response = ChatResponse.builder()
-        .aiMessage(AiMessage.aiMessage("test response"))
-        .modelName("test-model")
-        .build();
-    var request = ChatRequest.builder().messages(UserMessage.from("Hello")).build();
-    return new ChatModelResponseContext(response, request, null, Map.of());
   }
 }
