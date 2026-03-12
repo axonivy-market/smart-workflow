@@ -7,7 +7,6 @@ import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConne
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 import dev.langchain4j.model.chat.ChatModel;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 
 public class OpenAiModelProvider implements ChatModelProvider {
@@ -20,12 +19,12 @@ public class OpenAiModelProvider implements ChatModelProvider {
   }
 
   @Override
-  public ChatModel setup(ModelOptions options, List<ChatModelListener> listeners) {
+  public ChatModel setup(ModelOptions options) {
     var builder = OpenAiServiceConnector.buildOpenAiModel(options.modelName());
     if (options.structuredOutput()) {
       builder.responseFormat("json_schema");
     }
-    builder.listeners(listeners);
+    builder.listeners(options.listeners());
     return builder.build();
   }
 

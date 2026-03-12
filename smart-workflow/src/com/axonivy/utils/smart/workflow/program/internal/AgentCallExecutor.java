@@ -120,11 +120,12 @@ public class AgentCallExecutor {
   private SmartWorkflowChatModelListener configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean isStructured) {
     String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+    var listener = new SmartWorkflowChatModelListener();
     var modelOptions = options()
         .modelName(modelName)
-        .structuredOutput(isStructured);
-    var listener = new SmartWorkflowChatModelListener();
-    var model = ChatModelFactory.createModel(modelOptions, providerName, List.of(listener));
+        .structuredOutput(isStructured)
+        .listeners(List.of(listener));
+    var model = ChatModelFactory.createModel(modelOptions, providerName);
     agentBuilder.chatModel(model);
     return listener;
   }

@@ -28,8 +28,8 @@ public class DummyChatModelProvider implements ChatModelProvider {
   }
 
   @Override
-  public ChatModel setup(ModelOptions options, List<ChatModelListener> listeners) {
-    return new DummyChatModel(options, listeners);
+  public ChatModel setup(ModelOptions options) {
+    return new DummyChatModel(options, options.listeners());
   }
 
   public interface ModelNames {

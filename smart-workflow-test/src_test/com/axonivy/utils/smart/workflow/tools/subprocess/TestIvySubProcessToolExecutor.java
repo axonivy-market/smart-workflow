@@ -1,9 +1,8 @@
 package com.axonivy.utils.smart.workflow.tools.subprocess;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Map.Entry;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +25,7 @@ class TestIvySubProcessToolExecutor {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
+    fixture.var("AI.Test", "true");
     MockOpenAI.defineChat(new SupportToolChat()::toolTest);
   }
 

@@ -1,9 +1,8 @@
 package com.axonivy.utils.smart.workflow.model.openai;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import javax.ws.rs.core.Response;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -35,6 +34,7 @@ class TestOpenAiServiceModelSelection {
   void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("modelName"));
     fixture.var(OpenAiConf.API_KEY, "");
+    fixture.var("AI.Test", "true");
     MockOpenAI.defineChat(request -> modelInfo(request, responder));
   }
 

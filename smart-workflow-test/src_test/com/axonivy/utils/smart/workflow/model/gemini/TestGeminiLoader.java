@@ -57,10 +57,10 @@ public class TestGeminiLoader {
 
   @Test
   void capabilities() {
-    ChatModel normal = provider.setup(new ModelOptions(MODEL, false), List.of());
+    ChatModel normal = provider.setup(new ModelOptions(MODEL, false, List.of()));
     assertThat(normal.supportedCapabilities()).isEmpty();
 
-    ChatModel structured = provider.setup(new ModelOptions(MODEL, true), List.of());
+    ChatModel structured = provider.setup(new ModelOptions(MODEL, true, List.of()));
     assertThat(structured.supportedCapabilities().isEmpty());
   }
 

@@ -63,10 +63,10 @@ public class TestAzureOpenAiLoader {
 
   @Test
   void capabilities() {
-    ChatModel normal = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false), List.of());
+    ChatModel normal = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
     assertThat(normal.supportedCapabilities()).isEmpty();
 
-    ChatModel structured = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, true), List.of());
+    ChatModel structured = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, true, List.of()));
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 

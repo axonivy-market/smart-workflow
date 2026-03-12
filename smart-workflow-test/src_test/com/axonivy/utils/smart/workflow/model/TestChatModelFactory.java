@@ -14,11 +14,13 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.chat.listener.ChatModelRequestContext;
 import dev.langchain4j.model.chat.listener.ChatModelResponseContext;
+import dev.langchain4j.model.chat.request.ChatRequest;
 
 @IvyTest
 class TestChatModelFactory {
@@ -43,7 +45,7 @@ class TestChatModelFactory {
 
   @Test
   void chat() {
-    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, true), List.of());
+    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, true, List.of()));
     assertThat(model.chat("are you smart?"))
         .isEqualTo("Hey I'm Genious. My Smartness is under development.");
   }
@@ -51,10 +53,10 @@ class TestChatModelFactory {
   @Test
   void capabilities() {
     var provider = loadDummy();
-    ChatModel normal = provider.setup(new ModelOptions(GENIOUS, false), List.of());
+    ChatModel normal = provider.setup(new ModelOptions(GENIOUS, false, List.of()));
     assertThat(normal.supportedCapabilities()).isEmpty();
 
-    ChatModel structured = provider.setup(new ModelOptions(GENIOUS, true), List.of());
+    ChatModel structured = provider.setup(new ModelOptions(GENIOUS, true, List.of()));
     assertThat(structured.supportedCapabilities())
         .contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
@@ -72,8 +74,8 @@ class TestChatModelFactory {
         calls.add("response");
       }
     };
-    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, false), List.of(listener));
-    model.chat("ping");
+    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, false, List.of(listener)));
+    model.chat(ChatRequest.builder().messages(UserMessage.from("ping")).build());
     assertThat(calls).containsExactly("request", "response");
   }
 

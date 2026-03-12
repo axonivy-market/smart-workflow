@@ -26,6 +26,7 @@ class TestFileExtractionDemo {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("extraction"));
     fixture.var(OpenAiConf.API_KEY, "");
     fixture.var(DefaultGuardrailProvider.DEFAULT_INPUT_GUARDRAILS, "");
+    fixture.var("AI.Test", "true");
     MockOpenAI.defineChat(request -> responder.send("response.json"));
   }
 

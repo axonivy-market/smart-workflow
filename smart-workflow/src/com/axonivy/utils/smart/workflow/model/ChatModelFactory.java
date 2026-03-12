@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.model;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -14,7 +13,6 @@ import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.ChatModel;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
 
 public class ChatModelFactory {
 
@@ -24,13 +22,13 @@ public class ChatModelFactory {
     String DEFAULT_PROVIDER = "AI.DefaultProvider";
   }
 
-  public static ChatModel createModel(ModelOptions modelOptions, String providerName, List<ChatModelListener> listeners) {
+  public static ChatModel createModel(ModelOptions modelOptions, String providerName) {
     String resolvedProviderName = StringUtils.defaultIfBlank(providerName,
         StringUtils.defaultIfBlank(Ivy.var().get(AiConf.DEFAULT_PROVIDER), FALLBACK_PROVIDER));
 
     var provider = ChatModelFactory.create(resolvedProviderName)
         .orElseThrow(() -> new IllegalArgumentException("Unknown model provider " + resolvedProviderName));
-    return provider.setup(modelOptions, listeners);
+    return provider.setup(modelOptions);
   }
 
   public static Optional<ChatModelProvider> create(String provider) {

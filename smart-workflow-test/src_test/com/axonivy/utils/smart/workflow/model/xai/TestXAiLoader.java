@@ -53,7 +53,7 @@ public class TestXAiLoader {
 
   @Test
   void capabilities() {
-    ChatModel structured = provider.setup(new ModelOptions(MODEL, true), List.of());
+    ChatModel structured = provider.setup(new ModelOptions(MODEL, true, List.of()));
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 
