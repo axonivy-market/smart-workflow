@@ -33,7 +33,6 @@ class TestSmartWorkflowAgent {
   void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("invoice"));
     fixture.var(OpenAiConf.API_KEY, "");
-    fixture.var("AI.Test", "true");
     MockOpenAI.defineChat(request -> invoiceResponse(request, responder));
   }
 

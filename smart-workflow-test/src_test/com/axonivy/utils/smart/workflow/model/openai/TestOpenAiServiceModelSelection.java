@@ -34,7 +34,6 @@ class TestOpenAiServiceModelSelection {
   void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("modelName"));
     fixture.var(OpenAiConf.API_KEY, "");
-    fixture.var("AI.Test", "true");
     MockOpenAI.defineChat(request -> modelInfo(request, responder));
   }
 

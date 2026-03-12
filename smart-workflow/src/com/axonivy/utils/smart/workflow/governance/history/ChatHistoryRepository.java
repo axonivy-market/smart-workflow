@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.memory;
+package com.axonivy.utils.smart.workflow.governance.history;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.listener.AbstractChatModelListener;
-import com.axonivy.utils.smart.workflow.governance.listener.SmartWorkflowChatModelListener;
+import com.axonivy.utils.smart.workflow.governance.listener.ChatHistoryRecordingListener;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,24 +18,22 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.data.message.ChatMessageSerializer;
-import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 
-public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
+public class ChatHistoryRepository {
 
-  private final SmartWorkflowChatModelListener listener;
+  private final ChatHistoryRecordingListener listener;
   private final String caseUuid;
   private final String taskUuid;
-  private final Supplier<List<ChatMemoryEntry>> finder;
-  private final Consumer<ChatMemoryEntry> saver;
-  private final Consumer<ChatMemoryEntry> deleter;
+  private final Supplier<List<ChatHistoryEntry>> finder;
+  private final Consumer<ChatHistoryEntry> saver;
+  private final Consumer<ChatHistoryEntry> deleter;
 
-  private ChatMemoryEntry cachedEntry;
+  private ChatHistoryEntry currentEntry;
 
-  public SmartWorkflowChatMemoryStore(SmartWorkflowChatModelListener listener, String caseUuid, String taskUuid) {
+  public ChatHistoryRepository(ChatHistoryRecordingListener listener, String caseUuid, String taskUuid) {
     this(listener, caseUuid, taskUuid,
-        () -> Ivy.repo().search(ChatMemoryEntry.class)
+        () -> Ivy.repo().search(ChatHistoryEntry.class)
             .textField("caseUuid").isEqualToIgnoringCase(caseUuid)
             .and().textField("taskUuid").isEqualToIgnoringCase(taskUuid)
             .execute().getAll(),
@@ -43,9 +41,9 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
         entry -> Ivy.repo().delete(entry));
   }
 
-  SmartWorkflowChatMemoryStore(SmartWorkflowChatModelListener listener, String caseUuid, String taskUuid,
-      Supplier<List<ChatMemoryEntry>> finder, Consumer<ChatMemoryEntry> saver,
-      Consumer<ChatMemoryEntry> deleter) {
+  ChatHistoryRepository(ChatHistoryRecordingListener listener, String caseUuid, String taskUuid,
+      Supplier<List<ChatHistoryEntry>> finder, Consumer<ChatHistoryEntry> saver,
+      Consumer<ChatHistoryEntry> deleter) {
     this.listener = listener;
     this.caseUuid = caseUuid;
     this.taskUuid = taskUuid;
@@ -54,64 +52,48 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
     this.deleter = deleter;
   }
 
-  @Override
-  public List<ChatMessage> getMessages(Object memoryId) {
-    var entry = resolveMemoryEntry();
-    if (entry == null || StringUtils.isBlank(entry.getMessagesJson())) {
-      return new ArrayList<>();
-    }
-    return ChatMessageDeserializer.messagesFromJson(entry.getMessagesJson());
-  }
-
-  @Override
-  public void updateMessages(Object memoryId, List<ChatMessage> messages) {
+  public void updateMessages(List<ChatMessage> messages) {
     var entry = findOrCreateEntry();
     entry.setMessagesJson(ChatMessageSerializer.messagesToJson(messages));
     entry.setLastUpdated(LocalDateTime.now());
     captureTokenUsageIfNeeded(entry, messages);
     saver.accept(entry);
-    cachedEntry = entry;
+    currentEntry = entry;
   }
 
-  @Override
-  public void deleteMessages(Object memoryId) {
-    finder.get().forEach(deleter);
-    cachedEntry = null;
-  }
-
-  private ChatMemoryEntry findOrCreateEntry() {
+  private ChatHistoryEntry findOrCreateEntry() {
     var entry = resolveMemoryEntry();
     if (entry != null) {
       return entry;
     }
-    var newEntry = new ChatMemoryEntry();
+    var newEntry = new ChatHistoryEntry();
     newEntry.setCaseUuid(caseUuid);
     newEntry.setTaskUuid(taskUuid);
     return newEntry;
   }
 
-  private ChatMemoryEntry resolveMemoryEntry() {
-    if (cachedEntry != null) {
-      return cachedEntry;
+  private ChatHistoryEntry resolveMemoryEntry() {
+    if (currentEntry != null) {
+      return currentEntry;
     }
     var results = finder.get();
     if (results.isEmpty()) {
       return null;
     }
     var sorted = results.stream()
-        .sorted(Comparator.comparing(ChatMemoryEntry::getLastUpdated,
+        .sorted(Comparator.comparing(ChatHistoryEntry::getLastUpdated,
             Comparator.nullsLast(Comparator.reverseOrder())))
         .toList();
     removeDuplicates(sorted);
-    cachedEntry = sorted.get(0);
-    return cachedEntry;
+    currentEntry = sorted.get(0);
+    return currentEntry;
   }
 
-  private void removeDuplicates(List<ChatMemoryEntry> sorted) {
+  private void removeDuplicates(List<ChatHistoryEntry> sorted) {
     sorted.subList(1, sorted.size()).forEach(deleter);
   }
 
-  private void captureTokenUsageIfNeeded(ChatMemoryEntry entry, List<ChatMessage> messages) {
+  private void captureTokenUsageIfNeeded(ChatHistoryEntry entry, List<ChatMessage> messages) {
     boolean lastMessageIsAi = !messages.isEmpty() && messages.getLast() instanceof AiMessage;
 
     if (listener == null || !lastMessageIsAi) {
@@ -123,7 +105,7 @@ public class SmartWorkflowChatMemoryStore implements ChatMemoryStore {
     }
   }
 
-  private void appendTokenMetadata(ChatMemoryEntry entry,
+  private void appendTokenMetadata(ChatHistoryEntry entry,
       AbstractChatModelListener.ResponseMetadata meta) {
     try {
       List<AbstractChatModelListener.ResponseMetadata> list = StringUtils.isBlank(entry.getTokenUsageJson())

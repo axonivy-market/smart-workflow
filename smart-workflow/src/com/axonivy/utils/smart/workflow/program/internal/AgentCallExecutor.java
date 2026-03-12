@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.listener.SmartWorkflowChatModelListener;
+import com.axonivy.utils.smart.workflow.governance.listener.ChatHistoryRecordingListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
@@ -20,7 +20,6 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
-import ch.ivyteam.ivy.workflow.ICase;
 import ch.ivyteam.ivy.workflow.ITask;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
@@ -29,7 +28,7 @@ import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
   private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
-  public static final String TEST_VARIABLE = "AI.Test";
+  private static final String HISTORY_ENABLED = "AI.History.Enabled";
 
   private final ProgramContext context;
 
@@ -124,16 +123,12 @@ public class AgentCallExecutor {
     agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
   }
 
-  private SmartWorkflowChatModelListener createListener() {
-    if ("true".equals(Ivy.var().get(TEST_VARIABLE))) {
-      return new SmartWorkflowChatModelListener();
-    }
-    String caseUuid = Optional.ofNullable(Ivy.wfCase()).map(ICase::uuid).orElse(null);
-    if (caseUuid == null) {
-      return new SmartWorkflowChatModelListener();
+  private ChatHistoryRecordingListener createListener() {
+    if (!"true".equals(Ivy.var().get(HISTORY_ENABLED))) {
+      return new ChatHistoryRecordingListener();
     }
     String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse("0");
-    return new SmartWorkflowChatModelListener(caseUuid, taskUuid);
+    return new ChatHistoryRecordingListener(Ivy.wfCase().uuid(), taskUuid);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {

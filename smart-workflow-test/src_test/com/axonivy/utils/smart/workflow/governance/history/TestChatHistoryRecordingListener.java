@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.memory;
+package com.axonivy.utils.smart.workflow.governance.history;
 
 import java.util.Map;
 
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.listener.AbstractChatModelListener;
-import com.axonivy.utils.smart.workflow.governance.listener.SmartWorkflowChatModelListener;
+import com.axonivy.utils.smart.workflow.governance.listener.ChatHistoryRecordingListener;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
@@ -16,13 +16,13 @@ import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.TokenUsage;
 
-public class TestSmartWorkflowChatModelListener {
+public class TestChatHistoryRecordingListener {
 
-  private SmartWorkflowChatModelListener listener;
+  private ChatHistoryRecordingListener listener;
 
   @BeforeEach
   void setUp() {
-    listener = new SmartWorkflowChatModelListener();
+    listener = new ChatHistoryRecordingListener();
   }
 
   @Test

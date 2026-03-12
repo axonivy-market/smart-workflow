@@ -1,8 +1,8 @@
-package com.axonivy.utils.smart.workflow.governance.memory;
+package com.axonivy.utils.smart.workflow.governance.history;
 
 import java.time.LocalDateTime;
 
-public class ChatMemoryEntry {
+public class ChatHistoryEntry {
 
   private String caseUuid;
   private String taskUuid;

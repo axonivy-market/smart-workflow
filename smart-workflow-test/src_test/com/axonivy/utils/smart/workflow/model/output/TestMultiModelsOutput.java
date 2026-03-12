@@ -38,7 +38,6 @@ public class TestMultiModelsOutput {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("output"));
     fixture.var(OpenAiConf.API_KEY, "");
-    fixture.var("AI.Test", "true");
     fixture.var(AiConf.DEFAULT_PROVIDER, "");
     fixture.var(OpenAiConf.DEFAULT_MODEL, "");
     fixture.var(DefaultGuardrailProvider.DEFAULT_INPUT_GUARDRAILS, "");

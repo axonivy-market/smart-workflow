@@ -37,7 +37,6 @@ class TestAgenticProcessCallElement {
   void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tools.filter"));
     fixture.var(OpenAiConf.API_KEY, "");
-    fixture.var("AI.Test", "true");
     MockOpenAI.defineChat(request -> toolsFilter(request, responder));
   }
 

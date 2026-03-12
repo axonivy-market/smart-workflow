@@ -25,7 +25,6 @@ class TestIvySubProcessToolExecutor {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    fixture.var("AI.Test", "true");
     MockOpenAI.defineChat(new SupportToolChat()::toolTest);
   }
 
