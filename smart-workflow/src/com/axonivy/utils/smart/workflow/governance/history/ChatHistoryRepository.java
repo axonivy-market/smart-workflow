@@ -18,17 +18,19 @@ import dev.langchain4j.data.message.ChatMessageSerializer;
 
 public class ChatHistoryRepository implements HistoryRecorder {
 
-  /** In-memory store used in tests where OpenSearch is unavailable. Null in production. */
-  static List<ChatHistoryEntry> cachedHistoryEntries = null;
+  /** Overrides the default Ivy.repo() storage in tests. Null in production. */
+  static HistoryStorage testStorage = null;
 
   private final String caseUuid;
   private final String taskUuid;
+  private final HistoryStorage storage;
 
   private ChatHistoryEntry currentEntry;
 
   public ChatHistoryRepository(String caseUuid, String taskUuid) {
     this.caseUuid = caseUuid;
     this.taskUuid = taskUuid;
+    this.storage = testStorage != null ? testStorage : new IvyRepoHistoryStorage();
   }
 
   @Override
@@ -39,7 +41,7 @@ public class ChatHistoryRepository implements HistoryRecorder {
     if (metadata != null && !messages.isEmpty() && messages.getLast() instanceof AiMessage) {
       appendTokenMetadata(entry, metadata);
     }
-    save(entry);
+    storage.save(entry);
     currentEntry = entry;
   }
 
@@ -58,8 +60,7 @@ public class ChatHistoryRepository implements HistoryRecorder {
     if (currentEntry != null) {
       return currentEntry;
     }
-    var source = cachedHistoryEntries != null ? cachedHistoryEntries : Ivy.repo().search(ChatHistoryEntry.class).execute().getAll();
-    var results = source.stream()
+    var results = storage.findAll().stream()
         .filter(e -> caseUuid.equalsIgnoreCase(e.getCaseUuid()) && taskUuid.equalsIgnoreCase(e.getTaskUuid()))
         .toList();
     if (results.isEmpty()) {
@@ -68,21 +69,8 @@ public class ChatHistoryRepository implements HistoryRecorder {
     currentEntry = results.stream()
         .max(Comparator.comparing(ChatHistoryEntry::getLastUpdated, Comparator.nullsLast(Comparator.naturalOrder())))
         .orElseThrow();
-    results.stream().filter(e -> e != currentEntry).forEach(this::delete);
+    results.stream().filter(e -> e != currentEntry).forEach(storage::delete);
     return currentEntry;
-  }
-
-  private void save(ChatHistoryEntry entry) {
-    if (cachedHistoryEntries != null) {
-      if (!cachedHistoryEntries.contains(entry)) cachedHistoryEntries.add(entry);
-    } else {
-      Ivy.repo().save(entry);
-    }
-  }
-
-  private void delete(ChatHistoryEntry entry) {
-    if (cachedHistoryEntries != null) cachedHistoryEntries.remove(entry);
-    else Ivy.repo().delete(entry);
   }
 
   private void appendTokenMetadata(ChatHistoryEntry entry, ResponseMetadata metadata) {

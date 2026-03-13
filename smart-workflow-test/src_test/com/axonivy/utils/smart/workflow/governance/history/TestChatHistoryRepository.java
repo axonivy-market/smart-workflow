@@ -2,8 +2,6 @@ package com.axonivy.utils.smart.workflow.governance.history;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +24,12 @@ class TestChatHistoryRepository {
 
   private static final BpmProcess TEST_TOOL_USER = BpmProcess.name("TestToolUser");
 
+  private InMemoryHistoryStorage storage;
+
   @BeforeEach
   void setup(AppFixture fixture) {
-    ChatHistoryRepository.cachedHistoryEntries = new ArrayList<>();
+    storage = new InMemoryHistoryStorage();
+    ChatHistoryRepository.testStorage = storage;
     fixture.var(AiConf.DEFAULT_PROVIDER, DummyChatModelProvider.NAME);
     fixture.var("AI.History.Enabled", "true");
     DummyChatModelProvider.defineChat(req -> ChatResponse.builder()
@@ -39,7 +40,7 @@ class TestChatHistoryRepository {
 
   @AfterEach
   void teardown() {
-    ChatHistoryRepository.cachedHistoryEntries = null;
+    ChatHistoryRepository.testStorage = null;
   }
 
   @Test
@@ -48,7 +49,7 @@ class TestChatHistoryRepository {
         .process(TEST_TOOL_USER.elementName("systemMessage"))
         .execute();
 
-    var entries = ChatHistoryRepository.cachedHistoryEntries;
+    var entries = storage.findAll();
     assertThat(entries).hasSize(1);
     var entry = entries.get(0);
 
