@@ -2,8 +2,9 @@ package com.axonivy.utils.smart.workflow.governance.history;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,6 @@ import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.data.message.UserMessage;
@@ -28,6 +28,7 @@ class TestChatHistoryRepository {
 
   @BeforeEach
   void setup(AppFixture fixture) {
+    ChatHistoryRepository.cachedHistoryEntries = new ArrayList<>();
     fixture.var(AiConf.DEFAULT_PROVIDER, DummyChatModelProvider.NAME);
     fixture.var("AI.History.Enabled", "true");
     DummyChatModelProvider.defineChat(req -> ChatResponse.builder()
@@ -36,25 +37,18 @@ class TestChatHistoryRepository {
         .build());
   }
 
-  private List<ChatHistoryEntry> waitForEntries() throws InterruptedException {
-    List<ChatHistoryEntry> entries = List.of();
-    long deadline = System.currentTimeMillis() + 3000;
-    while (entries.isEmpty() && System.currentTimeMillis() < deadline) {
-      entries = Ivy.repo().search(ChatHistoryEntry.class).execute().getAll();
-      if (entries.isEmpty()) {
-        Thread.sleep(200);
-      }
-    }
-    return entries;
+  @AfterEach
+  void teardown() {
+    ChatHistoryRepository.cachedHistoryEntries = null;
   }
 
   @Test
-  void historyIsRecordedAfterAgentCall(BpmClient client) throws InterruptedException {
+  void historyIsRecordedAfterAgentCall(BpmClient client) {
     client.start()
         .process(TEST_TOOL_USER.elementName("systemMessage"))
         .execute();
 
-    var entries = waitForEntries();
+    var entries = ChatHistoryRepository.cachedHistoryEntries;
     assertThat(entries).hasSize(1);
     var entry = entries.get(0);
 
