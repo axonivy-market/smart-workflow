@@ -22,6 +22,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import ch.ivyteam.ivy.workflow.ITask;
 import dev.langchain4j.data.message.Content;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.service.AiServices;
@@ -119,16 +120,16 @@ public class AgentCallExecutor {
     var modelOptions = options()
         .modelName(modelName)
         .structuredOutput(isStructured)
-        .listeners(List.of(createListener()));
+        .listeners(createListeners());
     agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
   }
 
-  private ChatHistoryRecordingListener createListener() {
+  private List<ChatModelListener> createListeners() {
     if (!"true".equals(Ivy.var().get(HISTORY_ENABLED))) {
-      return new ChatHistoryRecordingListener();
+      return List.of();
     }
     String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse("0");
-    return new ChatHistoryRecordingListener(Ivy.wfCase().uuid(), taskUuid);
+    return List.of(new ChatHistoryRecordingListener(Ivy.wfCase().uuid(), taskUuid));
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {

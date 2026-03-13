@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,31 +23,13 @@ public class ChatHistoryRepository {
   private final ChatHistoryRecordingListener listener;
   private final String caseUuid;
   private final String taskUuid;
-  private final Supplier<List<ChatHistoryEntry>> finder;
-  private final Consumer<ChatHistoryEntry> saver;
-  private final Consumer<ChatHistoryEntry> deleter;
 
   private ChatHistoryEntry currentEntry;
 
   public ChatHistoryRepository(ChatHistoryRecordingListener listener, String caseUuid, String taskUuid) {
-    this(listener, caseUuid, taskUuid,
-        () -> Ivy.repo().search(ChatHistoryEntry.class)
-            .textField("caseUuid").isEqualToIgnoringCase(caseUuid)
-            .and().textField("taskUuid").isEqualToIgnoringCase(taskUuid)
-            .execute().getAll(),
-        entry -> Ivy.repo().save(entry),
-        entry -> Ivy.repo().delete(entry));
-  }
-
-  ChatHistoryRepository(ChatHistoryRecordingListener listener, String caseUuid, String taskUuid,
-      Supplier<List<ChatHistoryEntry>> finder, Consumer<ChatHistoryEntry> saver,
-      Consumer<ChatHistoryEntry> deleter) {
     this.listener = listener;
     this.caseUuid = caseUuid;
     this.taskUuid = taskUuid;
-    this.finder = finder;
-    this.saver = saver;
-    this.deleter = deleter;
   }
 
   public void updateMessages(List<ChatMessage> messages) {
@@ -57,7 +37,7 @@ public class ChatHistoryRepository {
     entry.setMessagesJson(ChatMessageSerializer.messagesToJson(messages));
     entry.setLastUpdated(LocalDateTime.now());
     captureTokenUsageIfNeeded(entry, messages);
-    saver.accept(entry);
+    Ivy.repo().save(entry);
     currentEntry = entry;
   }
 
@@ -76,7 +56,10 @@ public class ChatHistoryRepository {
     if (currentEntry != null) {
       return currentEntry;
     }
-    var results = finder.get();
+    var results = Ivy.repo().search(ChatHistoryEntry.class)
+        .execute().getAll().stream()
+        .filter(e -> caseUuid.equalsIgnoreCase(e.getCaseUuid()) && taskUuid.equalsIgnoreCase(e.getTaskUuid()))
+        .toList();
     if (results.isEmpty()) {
       return null;
     }
@@ -90,7 +73,7 @@ public class ChatHistoryRepository {
   }
 
   private void removeDuplicates(List<ChatHistoryEntry> sorted) {
-    sorted.subList(1, sorted.size()).forEach(deleter);
+    sorted.subList(1, sorted.size()).forEach(Ivy.repo()::delete);
   }
 
   private void captureTokenUsageIfNeeded(ChatHistoryEntry entry, List<ChatMessage> messages) {
