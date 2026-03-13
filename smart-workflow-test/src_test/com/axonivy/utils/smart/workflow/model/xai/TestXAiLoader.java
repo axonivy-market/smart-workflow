@@ -2,6 +2,8 @@ package com.axonivy.utils.smart.workflow.model.xai;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +53,7 @@ public class TestXAiLoader {
 
   @Test
   void capabilities() {
-    ChatModel structured = provider.setup(new ModelOptions(MODEL, true));
+    ChatModel structured = provider.setup(new ModelOptions(MODEL, true, List.of()));
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 

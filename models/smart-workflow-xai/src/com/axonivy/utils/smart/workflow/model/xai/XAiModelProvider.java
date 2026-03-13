@@ -26,6 +26,7 @@ public class XAiModelProvider implements ChatModelProvider {
       builder.strictJsonSchema(true);
       builder.responseFormat("json_schema");
     }
+    builder.listeners(options.listeners());
     return builder.build();
   }
 

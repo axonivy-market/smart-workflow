@@ -7,3 +7,6 @@ Variables:
     Guardrails:
       # Default input guardrails. Separated by comma. Example: "GuardrailOne, GuardrailTwo"
       DefaultInput: ""
+    History:
+      # Enable chat history recording for governance audit.
+      Enabled: false
