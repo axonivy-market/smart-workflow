@@ -1,0 +1,45 @@
+
+.section-card {
+  border: 1px solid var(--surface-border);
+}
+
+.section-header {
+  padding: 12px 16px;
+}
+
+.filter-bar {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.badge {
+  padding: 2px 8px;
+  font-size: 0.82em;
+}
+
+.model-chip {
+  font-family: monospace;
+  padding: 2px 6px;
+}
+
+.history-table .ui-datatable-data tr:hover td {
+  background: var(--blue-50);
+  cursor: pointer;
+}
+
+.history-table .ui-datatable-data tr.ui-state-highlight td {
+  background: var(--blue-100);
+}
+
+.col-case { width: 280px; }
+.col-messages { width: 90px; }
+.col-tokens { width: 90px; }
+.col-model { width: 220px; }
+
+.filter-case-input { width: 300px; }
+.filter-model-select { width: 200px; }
+.filter-date-select { width: 160px; }
+
+.content-area {
+  max-width: 1400px;
+}

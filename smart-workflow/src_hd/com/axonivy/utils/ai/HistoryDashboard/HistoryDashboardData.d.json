@@ -1,0 +1,9 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "HistoryDashboardData",
+  "namespace" : "com.axonivy.utils.ai.HistoryDashboard",
+  "fields" : [ {
+      "name" : "selectedCaseUuid",
+      "type" : "String"
+    } ]
+}

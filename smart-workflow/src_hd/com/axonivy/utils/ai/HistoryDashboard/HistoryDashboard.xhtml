@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">History Command Center</ui:define>
+    <ui:define name="content">
+
+      <h:outputStylesheet library="css" name="history-dashboard.css" />
+      <h:outputScript library="js" name="history-dashboard.js" />
+
+      <div class="content-area mx-auto p-4">
+
+        <div class="mb-4">
+          <h2 class="text-2xl font-bold text-900 mt-0 mb-1">AI Governance Center</h2>
+          <p class="text-sm text-color-secondary m-0">Browse and filter AI agent conversation history.</p>
+        </div>
+
+        <h:form id="mainForm">
+
+          <!-- Section 1: History Table -->
+          <div class="section-card surface-card border-round overflow-hidden mb-4">
+
+            <h:panelGroup id="historyTableSection" layout="block">
+
+              <div class="section-header surface-ground flex align-items-center font-semibold">
+                <span>&#128203; History Table (#{historyDashboardBean.entryCount} records)</span>
+              </div>
+
+              <div class="filter-bar flex flex-wrap gap-2 align-items-center">
+                <p:inputText value="#{historyDashboardBean.filterCase}"
+                             placeholder="Case name, ID or description"
+                             styleClass="filter-case-input" />
+                <p:selectOneMenu value="#{historyDashboardBean.filterModel}"
+                                 styleClass="filter-model-select">
+                  <f:selectItem itemValue="" itemLabel="All Models" />
+                  <f:selectItem itemValue="gpt-4o-mini" itemLabel="gpt-4o-mini" />
+                  <f:selectItem itemValue="gpt-4o" itemLabel="gpt-4o" />
+                  <f:selectItem itemValue="gemini-2.0" itemLabel="gemini-2.0" />
+                </p:selectOneMenu>
+                <p:selectOneMenu value="#{historyDashboardBean.filterDateRange}"
+                                 styleClass="filter-date-select">
+                  <f:selectItem itemValue="ALL" itemLabel="All time" />
+                  <f:selectItem itemValue="TODAY" itemLabel="Today" />
+                  <f:selectItem itemValue="LAST_7_DAYS" itemLabel="Last 7 days" />
+                  <f:selectItem itemValue="LAST_30_DAYS" itemLabel="Last 30 days" />
+                </p:selectOneMenu>
+                <p:commandButton value="Search"
+                                 action="#{historyDashboardBean.applyFilter}"
+                                 update="historyTableSection"
+                                 icon="fa fa-search" />
+              </div>
+
+              <p:dataTable id="historyTable"
+                           value="#{historyDashboardBean.entries}" var="row"
+                           rowKey="#{row.caseUuid}-#{row.taskUuid}"
+                           styleClass="history-table"
+                           selectionMode="single"
+                           selection="#{historyDashboardBean.selectedEntry}"
+                           emptyMessage="No history records found.">
+                <p:ajax event="rowSelect" update="@none"
+                        oncomplete="document.getElementById('mainForm:navBtn').click()" />
+
+                <p:column headerText="Case" styleClass="col-case">
+                  <h:outputText value="#{row.caseDisplayName}" />
+                </p:column>
+                <p:column headerText="Last Updated" styleClass="col-model">
+                  <h:outputText value="#{row.lastUpdated}">
+                    <f:convertDateTime pattern="yyyy-MM-dd HH:mm" type="localDateTime" />
+                  </h:outputText>
+                </p:column>
+                <p:column headerText="Messages" styleClass="col-messages">
+                  <span class="badge bg-blue-100 text-blue-700 border-round-3xl inline-block font-semibold">#{row.messageCount} msgs</span>
+                </p:column>
+                <p:column headerText="Tokens" styleClass="col-tokens">
+                  <span class="badge bg-green-100 text-green-700 border-round-3xl inline-block font-semibold">#{row.totalTokens}</span>
+                </p:column>
+                <p:column headerText="Model" styleClass="col-model">
+                  <span class="model-chip text-sm surface-ground border-round-sm">#{row.modelName}</span>
+                </p:column>
+              </p:dataTable>
+
+              <p:commandButton id="navBtn" style="display:none"
+                               process="@this"
+                               actionListener="#{logic.showConversations}">
+                <f:setPropertyActionListener target="#{data.selectedCaseUuid}"
+                                             value="#{historyDashboardBean.selectedEntry.caseUuid}" />
+              </p:commandButton>
+
+            </h:panelGroup>
+          </div>
+
+          <!-- Section 2: Token Usage Analytics (placeholder) -->
+          <div class="section-card surface-card border-round overflow-hidden">
+            <div class="section-header surface-ground flex justify-content-between align-items-center font-semibold">
+              <span>&#128202; Token Usage Analytics</span>
+              <span class="text-sm font-normal text-color-secondary">Coming soon</span>
+            </div>
+          </div>
+
+        </h:form>
+      </div>
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+</html>
