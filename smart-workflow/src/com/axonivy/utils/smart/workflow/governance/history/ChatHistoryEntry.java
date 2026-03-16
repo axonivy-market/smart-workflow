@@ -11,6 +11,7 @@ public class ChatHistoryEntry {
 
   private String caseUuid;
   private String taskUuid;
+  private String processName;
   private String messagesJson;
   private String tokenUsageJson;
   private LocalDateTime lastUpdated;
@@ -25,6 +26,9 @@ public class ChatHistoryEntry {
 
   public String getTaskUuid() { return taskUuid; }
   public void setTaskUuid(String taskUuid) { this.taskUuid = taskUuid; }
+
+  public String getProcessName() { return processName; }
+  public void setProcessName(String processName) { this.processName = processName; }
 
   public String getMessagesJson() { return messagesJson; }
   public void setMessagesJson(String messagesJson) { this.messagesJson = messagesJson; }

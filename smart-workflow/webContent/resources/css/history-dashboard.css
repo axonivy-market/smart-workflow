@@ -43,3 +43,31 @@
 .content-area {
   max-width: 1400px;
 }
+
+/* --- Analytics Tabs --- */
+.analytics-tab {
+  background: transparent;
+  border: 1px solid var(--surface-border);
+  color: var(--text-color);
+  padding: 4px 12px;
+  font-size: 0.82em;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.analytics-tab--active {
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+  border-color: var(--primary-color);
+}
+
+/* --- KPI Cards --- */
+.kpi-card { min-height: 88px; }
+.kpi-value { line-height: 1.2; }
+.kpi-trend { font-size: 0.78em; margin-top: 4px; }
+.kpi-trend--up   { color: var(--green-600); }
+.kpi-trend--down { color: var(--red-600); }
+
+/* --- Chart Panels --- */
+.chart-panel { min-height: 60px; }
+.chart-h-240 { height: 240px; }
+.chart-h-220 { height: 220px; }

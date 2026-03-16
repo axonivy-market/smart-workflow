@@ -22,9 +22,9 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import ch.ivyteam.ivy.workflow.ITask;
 import dev.langchain4j.data.message.Content;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
@@ -129,7 +129,11 @@ public class AgentCallExecutor {
       return List.of();
     }
     String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse("0");
-    return List.of(new ChatHistoryRecordingListener(Ivy.wfCase().uuid(), taskUuid));
+    String processName = Optional.ofNullable(Ivy.wfCase())
+        .map(c -> c.getProcessStart())
+        .map(ps -> StringUtils.defaultIfBlank(ps.getName(), ps.getRequestPath()))
+        .orElse("");
+    return List.of(new ChatHistoryRecordingListener(Ivy.wfCase().uuid(), taskUuid, processName));
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {

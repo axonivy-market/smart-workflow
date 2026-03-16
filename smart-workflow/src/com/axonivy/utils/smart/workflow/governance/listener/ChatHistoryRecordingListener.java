@@ -22,6 +22,10 @@ public class ChatHistoryRecordingListener implements ChatModelListener {
     this.recorder = new ChatHistoryRepository(caseUuid, taskUuid);
   }
 
+  public ChatHistoryRecordingListener(String caseUuid, String taskUuid, String processName) {
+    this.recorder = new ChatHistoryRepository(caseUuid, taskUuid, processName);
+  }
+
   public ChatHistoryRecordingListener(HistoryRecorder recorder) {
     this.recorder = recorder;
   }

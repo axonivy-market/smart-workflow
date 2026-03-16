@@ -23,13 +23,19 @@ public class ChatHistoryRepository implements HistoryRecorder {
 
   private final String caseUuid;
   private final String taskUuid;
+  private final String processName;
   private final HistoryStorage storage;
 
   private ChatHistoryEntry currentEntry;
 
   public ChatHistoryRepository(String caseUuid, String taskUuid) {
+    this(caseUuid, taskUuid, "");
+  }
+
+  public ChatHistoryRepository(String caseUuid, String taskUuid, String processName) {
     this.caseUuid = caseUuid;
     this.taskUuid = taskUuid;
+    this.processName = processName;
     this.storage = testStorage != null ? testStorage : new IvyRepoHistoryStorage();
   }
 
@@ -53,6 +59,7 @@ public class ChatHistoryRepository implements HistoryRecorder {
     var newEntry = new ChatHistoryEntry();
     newEntry.setCaseUuid(caseUuid);
     newEntry.setTaskUuid(taskUuid);
+    newEntry.setProcessName(processName);
     return newEntry;
   }
 
