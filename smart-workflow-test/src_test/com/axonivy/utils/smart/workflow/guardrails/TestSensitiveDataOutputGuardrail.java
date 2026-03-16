@@ -39,9 +39,10 @@ public class TestSensitiveDataOutputGuardrail {
 
   // The following fake credentials are used for testing purposes only and do not provide
   // access to any production systems. Please do not submit them as part of a bug bounty program.
+
   @Test
   void blockOpenAIApiKey() {
-    var result = guardrail.evaluate("Use this key: " + "sk-" + "abcdefghijklmnopqrstuvwxyz12345678");
+    var result = guardrail.evaluate("Use this key: " + "sk-proj-" + "AoFeTE4Mf4dtepe5Hab-6DdoLEdGd-JoEJGEGdb46mydDS6aaaaaaaaaaaaaaaaaaaaaaa-mG4JbyeDFYaaaaaaaaaaaaaa_6Guaaaaaaaaaaaaaa_YDJV6aaaaaaaaaaaaaaa_ugEY43aaaaaaaaaaaaa");
     assertThat(result.isAllowed()).isFalse();
     assertThat(result.getReason()).contains("sensitive data");
   }
@@ -53,8 +54,38 @@ public class TestSensitiveDataOutputGuardrail {
   }
 
   @Test
+  void blockAWSTemporaryAccessKey() {
+    var result = guardrail.evaluate("AWS STS key: " + "ASIA" + "IOSFODNN7EXAMPLE");
+    assertThat(result.isAllowed()).isFalse();
+  }
+
+  @Test
   void blockGitHubToken() {
-    var result = guardrail.evaluate("Token: " + "ghp_" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+    var result = guardrail.evaluate("Token: " + "ghp_" + "ABCDEFGHIJKLMNOPabcdefghijklmnop0123");
+    assertThat(result.isAllowed()).isFalse();
+  }
+
+  @Test
+  void blockGitHubOAuthToken() {
+    var result = guardrail.evaluate("Token: " + "gho_" + "ABCDEFGHIJKLMNOPabcdefghijklmnop0123");
+    assertThat(result.isAllowed()).isFalse();
+  }
+
+  @Test
+  void blockGitHubActionsToken() {
+    var result = guardrail.evaluate("Token: " + "ghs_" + "ABCDEFGHIJKLMNOPabcdefghijklmnop0123");
+    assertThat(result.isAllowed()).isFalse();
+  }
+
+  @Test
+  void blockGitHubFineGrainedPAT() {
+    var result = guardrail.evaluate("Token: " + "github_pat_" + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRST");
+    assertThat(result.isAllowed()).isFalse();
+  }
+
+  @Test
+  void blockGoogleApiKey() {
+    var result = guardrail.evaluate("Gemini key: " + "AIza" + "SyAetceEKUlfmeytmeWtU_UD6dU0Ueg4UEM");
     assertThat(result.isAllowed()).isFalse();
   }
 

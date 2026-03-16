@@ -32,24 +32,18 @@ public class AgentEditor {
 
     String inputGuardrailList = inputGuardrailsList();
     String outputGuardrailList = outputGuardrailsList();
-    if (StringUtils.isNotBlank(inputGuardrailList) || StringUtils.isNotBlank(outputGuardrailList)) {
-      var guardrailsGroup = ui.group("Guardrails");
-      if (StringUtils.isNotBlank(inputGuardrailList)) {
-        guardrailsGroup
-            .add(ui.label("Available input guardrails:\n").create())
-            .add(ui.label(inputGuardrailList).multiline().create())
-            .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create())
-            .add(ui.label("Select the input guardrails to apply, or keep empty to use default guardrails").create());
-      }
-      if (StringUtils.isNotBlank(outputGuardrailList)) {
-        guardrailsGroup
-            .add(ui.label("Available output guardrails:\n").create())
-            .add(ui.label(outputGuardrailList).multiline().create())
-            .add(ui.scriptField(Conf.OUTPUT_GUARD_RAILS).requireType(List.class).create())
-            .add(ui.label("Select the output guardrails to apply, or keep empty to use default guardrails").create());
-      }
-      guardrailsGroup.create();
-    }
+    var guardrailsGroup = ui.group("Guardrails");
+    guardrailsGroup
+        .add(ui.label("Available input guardrails:\n").create())
+        .add(ui.label(inputGuardrailList).multiline().create())
+        .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create())
+        .add(ui.label("Select the input guardrails to apply, or keep empty to use default guardrails").create());
+    guardrailsGroup
+        .add(ui.label("Available output guardrails:\n").create())
+        .add(ui.label(outputGuardrailList).multiline().create())
+        .add(ui.scriptField(Conf.OUTPUT_GUARD_RAILS).requireType(List.class).create())
+        .add(ui.label("Select the output guardrails to apply, or keep empty to use default guardrails").create());
+    guardrailsGroup.create();
 
     ui.group("Model")
         .add(ui.label("Provider").create())

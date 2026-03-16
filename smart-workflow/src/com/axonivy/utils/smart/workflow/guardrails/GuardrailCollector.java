@@ -57,6 +57,7 @@ public class GuardrailCollector {
 
     return inputGuardrails.stream()
         .map(InputGuardrailAdapter::new)
+        .filter(adapter -> filters.contains(adapter.getDelegate().name()))
         .distinct()
         .collect(Collectors.toList());
   }
@@ -95,6 +96,7 @@ public class GuardrailCollector {
 
     return outputGuardrails.stream()
         .map(OutputGuardrailAdapter::new)
+        .filter(adapter -> filters.contains(adapter.getDelegate().name()))
         .distinct()
         .collect(Collectors.toList());
   }
