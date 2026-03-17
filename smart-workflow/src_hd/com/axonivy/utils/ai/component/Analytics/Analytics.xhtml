@@ -15,10 +15,10 @@
 
   <!-- Section header with collapse/expand button -->
   <div class="section-header surface-ground flex justify-content-between align-items-center font-semibold">
-    <span>&#128202; Token Usage Analytics</span>
+    <span><i class="tif tif-report-analytics mr-1"></i>Token Usage Analytics</span>
     <h:panelGroup id="analytics-toggle-area" layout="block">
       <p:commandButton id="btn-collapse"
-                       icon="#{usageAnalyticBean.analyticsCollapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up'}"
+                       icon="#{usageAnalyticBean.analyticsCollapsed ? 'tif tif-caret-down' : 'tif tif-caret-up'}"
                        styleClass="p-button-text p-button-plain analytics-toggle-btn"
                        process="@this"
                        update="analytics-toggle-area analytics-section"
