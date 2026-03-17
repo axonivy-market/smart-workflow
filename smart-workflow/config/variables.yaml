@@ -9,3 +9,6 @@ Variables:
       DefaultInput: ""
       # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
       DefaultOutput: ""
+    History:
+      # Enable chat history recording for governance audit.
+      Enabled: false

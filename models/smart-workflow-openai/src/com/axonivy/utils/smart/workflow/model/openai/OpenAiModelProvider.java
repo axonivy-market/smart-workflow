@@ -24,6 +24,7 @@ public class OpenAiModelProvider implements ChatModelProvider {
     if (options.structuredOutput()) {
       builder.responseFormat("json_schema");
     }
+    builder.listeners(options.listeners());
     return builder.build();
   }
 

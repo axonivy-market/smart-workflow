@@ -28,6 +28,7 @@ public class GeminiModelProvider implements ChatModelProvider {
       // https://discuss.ai.google.dev/t/function-calling-with-a-response-mime-type-application-json-is-unsupported/105093
       Ivy.log().error("Structured output is unsupported.");
     }
+    builder.listeners(options.listeners());
     return builder.build();
   }
 

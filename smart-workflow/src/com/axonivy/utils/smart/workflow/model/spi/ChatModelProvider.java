@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.model.spi;
 import java.util.List;
 
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 
 public interface ChatModelProvider {
 
@@ -12,10 +13,11 @@ public interface ChatModelProvider {
 
   public static record ModelOptions(
       String modelName,
-      boolean structuredOutput) {
+      boolean structuredOutput,
+      List<ChatModelListener> listeners) {
 
     public ModelOptions() {
-      this(null, false);
+      this(null, false, List.of());
     }
 
     public static ModelOptions options() {
@@ -23,11 +25,15 @@ public interface ChatModelProvider {
     }
 
     public ModelOptions structuredOutput(boolean structured) {
-      return new ModelOptions(modelName, structured);
+      return new ModelOptions(modelName, structured, listeners);
     }
 
     public ModelOptions modelName(String name) {
-      return new ModelOptions(name, structuredOutput);
+      return new ModelOptions(name, structuredOutput, listeners);
+    }
+
+    public ModelOptions listeners(List<ChatModelListener> chatListeners) {
+      return new ModelOptions(modelName, structuredOutput, chatListeners);
     }
   }
 

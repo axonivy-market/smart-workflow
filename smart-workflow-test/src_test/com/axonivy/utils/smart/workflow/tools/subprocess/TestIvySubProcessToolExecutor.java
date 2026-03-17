@@ -1,9 +1,8 @@
 package com.axonivy.utils.smart.workflow.tools.subprocess;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Map.Entry;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

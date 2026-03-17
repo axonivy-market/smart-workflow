@@ -33,6 +33,7 @@ public class AzureOpenAiModelProvider implements ChatModelProvider {
       builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA).strictJsonSchema(true)
           .responseFormat(ResponseFormat.JSON);
     }
+    builder.listeners(options.listeners());
     return builder.build();
   }
 

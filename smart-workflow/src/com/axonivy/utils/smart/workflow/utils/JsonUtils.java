@@ -13,12 +13,10 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 public final class JsonUtils {
 
-  static ObjectMapper objectMapper;
+  static final ObjectMapper objectMapper =
+      new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
   public static ObjectMapper getObjectMapper() {
-    if (objectMapper == null) {
-      objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
     return objectMapper;
   }
 
