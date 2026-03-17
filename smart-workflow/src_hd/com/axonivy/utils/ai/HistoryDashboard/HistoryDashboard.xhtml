@@ -25,7 +25,7 @@
             <h:panelGroup id="history-table-section" layout="block">
 
               <div class="section-header surface-ground flex align-items-center font-semibold">
-                <span><i class="tif tif-clipboard mr-1"></i>History Table (#{historyDashboardBean.entryCount} records)</span>
+                <span><i class="tif tif-clipboard mr-1"></i>History Table (#{historyDashboardBean.caseCount} cases, #{historyDashboardBean.entryCount} tasks)</span>
               </div>
 
               <div class="filter-bar flex flex-wrap gap-2 align-items-center">
@@ -52,33 +52,43 @@
                                  icon="tif tif-search" />
               </div>
 
-              <p:dataTable id="history-table"
-                           value="#{historyDashboardBean.entries}" var="row"
-                           rowKey="#{row.caseUuid}-#{row.taskUuid}"
+              <p:treeTable id="history-table"
+                           value="#{historyDashboardBean.historyTree}" var="row"
                            styleClass="history-table"
                            emptyMessage="No history records found.">
 
-                <p:column headerText="Case" styleClass="col-case">
-                  <h:outputText value="#{row.caseDisplayName}" />
+                <p:column headerText="Case / Task" styleClass="col-case">
+                  <h:outputText value="#{row.caseDisplayName}"
+                                rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}"
+                                styleClass="font-semibold" />
+                  <h:outputText value="#{row.taskDisplayName}"
+                                rendered="#{row['class'].simpleName eq 'ChatHistoryEntry'}"
+                                styleClass="text-color-secondary" />
                 </p:column>
-                <p:column headerText="Last Updated" styleClass="col-model">
-                  <h:outputText value="#{row.lastUpdatedText}">
-                  </h:outputText>
+
+                <p:column headerText="Last Updated" styleClass="col-date">
+                  <h:outputText value="#{row.lastUpdatedText}" />
                 </p:column>
+
                 <p:column headerText="Messages" styleClass="col-messages">
                   <span class="badge bg-blue-100 text-blue-700 border-round-3xl inline-block font-semibold">#{row.messageCount} msgs</span>
                 </p:column>
+
                 <p:column headerText="Tokens" styleClass="col-tokens">
                   <span class="badge bg-green-100 text-green-700 border-round-3xl inline-block font-semibold">#{row.totalTokens}</span>
                 </p:column>
+
                 <p:column headerText="Model" styleClass="col-model">
                   <span class="model-chip text-sm surface-ground border-round-sm">#{row.modelName}</span>
                 </p:column>
+
                 <p:column headerText="" styleClass="col-action">
                   <p:commandButton value="View" icon="tif tif-eye" process="@this"
+                                   rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}"
                                    actionListener="#{logic.showConversations(row.caseUuid)}" />
                 </p:column>
-              </p:dataTable>
+
+              </p:treeTable>
 
             </h:panelGroup>
           </div>

@@ -2,12 +2,18 @@ package com.axonivy.utils.smart.workflow.governance.ui.bean;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.axonivy.utils.smart.workflow.governance.history.CaseHistoryGroup;
 import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryEntry;
 import com.axonivy.utils.smart.workflow.governance.history.HistoryFilter;
 import com.axonivy.utils.smart.workflow.governance.history.HistoryStorage;
@@ -26,6 +32,7 @@ public class HistoryDashboardBean implements Serializable {
   private String filterDateRange = "LAST_30_DAYS";
 
   private List<ChatHistoryEntry> entries = List.of();
+  private TreeNode<Object> historyTree;
   private ChatHistoryEntry selectedEntry;
 
   @PostConstruct
@@ -41,10 +48,28 @@ public class HistoryDashboardBean implements Serializable {
         resolveDateFrom(filterDateRange),
         resolveDateTo(filterDateRange));
     entries = storage.query(filter);
+    buildTree();
+  }
+
+  private void buildTree() {
+    historyTree = new DefaultTreeNode<>("root", null, null);
+    entries.stream()
+        .collect(Collectors.groupingBy(ChatHistoryEntry::getCaseUuid,
+            LinkedHashMap::new, Collectors.toList()))
+        .forEach((caseUuid, taskList) -> {
+          CaseHistoryGroup group = new CaseHistoryGroup(caseUuid, taskList);
+          TreeNode<Object> caseNode = new DefaultTreeNode<>("case", group, historyTree);
+          caseNode.setExpanded(false);
+          taskList.forEach(task -> new DefaultTreeNode<>("task", task, caseNode));
+        });
   }
 
   public int getEntryCount() {
     return entries.size();
+  }
+
+  public int getCaseCount() {
+    return historyTree == null ? 0 : historyTree.getChildCount();
   }
 
   private String nullIfEmpty(String value) {
@@ -82,6 +107,8 @@ public class HistoryDashboardBean implements Serializable {
   public void setFilterDateRange(String v) { this.filterDateRange = v; }
 
   public List<ChatHistoryEntry> getEntries() { return entries; }
+
+  public TreeNode<Object> getHistoryTree() { return historyTree; }
 
   public ChatHistoryEntry getSelectedEntry() { return selectedEntry; }
   public void setSelectedEntry(ChatHistoryEntry v) { this.selectedEntry = v; }
