@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.governance.history;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.axonivy.utils.smart.workflow.governance.service.CaseService;
 import com.axonivy.utils.smart.workflow.governance.service.TaskService;
@@ -8,6 +9,9 @@ import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ChatHistoryEntry {
+
+  private static final String DATE_TIME_FORMAT_PATTERN = "dd MMM yyyy HH:mm"; // TODO get formal date format from engine
+  private static final String NO_DATE = "—";
 
   private String caseUuid;
   private String taskUuid;
@@ -68,5 +72,12 @@ public class ChatHistoryEntry {
   @JsonIgnore
   public String getModelName() {
     return ChatHistoryJsonParser.getModelName(this);
+  }
+
+  @JsonIgnore
+  public String getLastUpdatedText() {
+    return lastUpdated != null
+        ? lastUpdated.format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN))
+        : NO_DATE;
   }
 }
