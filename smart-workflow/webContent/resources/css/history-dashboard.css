@@ -22,16 +22,29 @@
   padding: 2px 6px;
 }
 
-.history-table .ui-datatable-data tr:hover td {
+.history-table .ui-treetable-data tr:hover td {
   background: var(--blue-50);
   cursor: pointer;
 }
 
-.history-table .ui-datatable-data tr.ui-state-highlight td {
+.history-table .ui-treetable-data tr.ui-state-highlight td {
   background: var(--blue-100);
 }
 
+/* case (parent) rows */
+.history-table .ui-treetable-data tr.ui-treetable-row:not(.ui-treetable-row-leaf) > td {
+  background: var(--surface-ground);
+  font-weight: 600;
+}
+
+/* task (child) rows */
+.history-table .ui-treetable-data tr.ui-treetable-row-leaf > td {
+  background: var(--surface-card);
+  border-left: 2px solid var(--primary-100);
+}
+
 .col-case { width: 280px; }
+.col-date { width: 160px; }
 .col-messages { width: 90px; }
 .col-tokens { width: 90px; }
 .col-model { width: 220px; }

@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import Features.SmartWorkflowAgentDemoData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
+import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
@@ -46,7 +47,9 @@ class TestSmartWorkflowAgent {
         .process(SMART_WORKFLOW_AGENT_DEMO.elementName("start"))
         .execute();
 
-    SmartWorkflowAgentDemoData data = result.data().last();
+    SmartWorkflowAgentDemoData data = (SmartWorkflowAgentDemoData) result.data()
+        .onElement(BpmElement.pid("19C21B84E5BC9247-f1"))
+        .getLast();
     assertThat(data.getInvoice()).isNotNull();
     assertThat(data.getInvoice().getInvoiceNumber()).isEqualTo("INV-001");
     assertThat(data.getInvoice().getCustomerName()).isEqualTo("John Doe");
