@@ -56,18 +56,13 @@
                            value="#{historyDashboardBean.entries}" var="row"
                            rowKey="#{row.caseUuid}-#{row.taskUuid}"
                            styleClass="history-table"
-                           selectionMode="single"
-                           selection="#{historyDashboardBean.selectedEntry}"
                            emptyMessage="No history records found.">
-                <p:ajax event="rowSelect" update="@none"
-                        oncomplete="document.getElementById('mainForm:navBtn').click()" />
 
                 <p:column headerText="Case" styleClass="col-case">
                   <h:outputText value="#{row.caseDisplayName}" />
                 </p:column>
                 <p:column headerText="Last Updated" styleClass="col-model">
-                  <h:outputText value="#{row.lastUpdated}">
-                    <f:convertDateTime pattern="yyyy-MM-dd HH:mm" type="localDateTime" />
+                  <h:outputText value="#{row.lastUpdatedText}">
                   </h:outputText>
                 </p:column>
                 <p:column headerText="Messages" styleClass="col-messages">
@@ -79,14 +74,11 @@
                 <p:column headerText="Model" styleClass="col-model">
                   <span class="model-chip text-sm surface-ground border-round-sm">#{row.modelName}</span>
                 </p:column>
+                <p:column headerText="" styleClass="col-action">
+                  <p:commandButton value="View" icon="fa fa-eye" process="@this"
+                                   actionListener="#{logic.showConversations(row.caseUuid)}" />
+                </p:column>
               </p:dataTable>
-
-              <p:commandButton id="navBtn" style="display:none"
-                               process="@this"
-                               actionListener="#{logic.showConversations}">
-                <f:setPropertyActionListener target="#{data.selectedCaseUuid}"
-                                             value="#{historyDashboardBean.selectedEntry.caseUuid}" />
-              </p:commandButton>
 
             </h:panelGroup>
           </div>

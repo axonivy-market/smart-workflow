@@ -15,13 +15,13 @@
         "at" : { "x" : 96, "y" : 64 }
       },
       "connect" : [
-        { "id" : "f2", "to" : "f3" }
+        { "id" : "f2", "to" : "f9" }
       ]
     }, {
       "id" : "f1",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 728, "y" : 64 }
+        "at" : { "x" : 824, "y" : 64 }
       }
     }, {
       "id" : "f3",
@@ -33,7 +33,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 64 }
+        "at" : { "x" : 320, "y" : 64 }
       },
       "connect" : [
         { "id" : "f4", "to" : "f5", "color" : "default" }
@@ -59,7 +59,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 400, "y" : 64 }
+        "at" : { "x" : 496, "y" : 64 }
       },
       "connect" : [
         { "id" : "f6", "to" : "f7", "color" : "default" }
@@ -79,10 +79,28 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 64 }
+        "at" : { "x" : 688, "y" : 64 }
       },
       "connect" : [
         { "id" : "f8", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "TaskSwitchEvent",
+      "config" : {
+        "task" : {
+          "name" : "My task",
+          "skipTasklist" : true
+        },
+        "case" : {
+          "name" : "My case"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 192, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f3", "color" : "default" }
       ]
     } ]
 }

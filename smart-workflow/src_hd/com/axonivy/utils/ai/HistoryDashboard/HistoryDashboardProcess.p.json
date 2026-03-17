@@ -12,11 +12,9 @@
       "config" : {
         "signature" : "start",
         "result" : {
-          "params" : [ {
-              "name" : "selectedCaseUuid",
-              "type" : "String",
-              "desc" : ""
-            } ],
+          "params" : [
+            { "name" : "selectedCaseUuid", "type" : "String", "desc" : "" }
+          ],
           "map" : {
             "result.selectedCaseUuid" : "in.selectedCaseUuid"
           }
@@ -55,23 +53,32 @@
         "at" : { "x" : 224, "y" : 160 }
       }
     }, {
-      "id" : "f6",
-      "type" : "HtmlDialogEventStart",
-      "name" : "showConversations",
-      "config" : {
-        "guid" : "19CF47658D1EF3A1"
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 256 }
-      },
-      "connect" : [
-        { "id" : "f7", "to" : "f8" }
-      ]
-    }, {
       "id" : "f8",
       "type" : "HtmlDialogExit",
       "visual" : {
         "at" : { "x" : 224, "y" : 256 }
       }
+    }, {
+      "id" : "f9",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "showConversations(String)",
+      "config" : {
+        "signature" : "showConversations",
+        "input" : {
+          "params" : [
+            { "name" : "caseUuid", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.selectedCaseUuid" : "param.caseUuid"
+          }
+        },
+        "guid" : "19CF9BA5ABB77A2D"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f8" }
+      ]
     } ]
 }
