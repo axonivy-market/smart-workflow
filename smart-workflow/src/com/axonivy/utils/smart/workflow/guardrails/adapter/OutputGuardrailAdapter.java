@@ -12,12 +12,10 @@ import dev.langchain4j.guardrail.OutputGuardrail;
 import dev.langchain4j.guardrail.OutputGuardrailRequest;
 import dev.langchain4j.guardrail.OutputGuardrailResult;
 
-public class OutputGuardrailAdapter implements OutputGuardrail {
-
-  private SmartWorkflowOutputGuardrail delegate;
+public class OutputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkflowOutputGuardrail> implements OutputGuardrail {
 
   public OutputGuardrailAdapter(SmartWorkflowOutputGuardrail delegate) {
-    this.delegate = delegate;
+    super(delegate);
   }
 
   @Override
@@ -37,36 +35,7 @@ public class OutputGuardrailAdapter implements OutputGuardrail {
   }
 
   private OutputGuardrailResult doValidate(String message) {
-    GuardrailResult result = delegate.evaluate(message);
-
-    if (!result.isAllowed()) {
-      return this.fatal(result.getReason());
-    }
-    return this.success();
-  }
-
-  public SmartWorkflowOutputGuardrail getDelegate() {
-    return delegate;
-  }
-
-  @Override
-  public int hashCode() {
-    return delegate != null ? delegate.getClass().getName().hashCode() : 0;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    OutputGuardrailAdapter other = (OutputGuardrailAdapter) obj;
-    if (delegate == null) {
-      return other.delegate == null;
-    }
-    return delegate.getClass().getName().equals(
-        other.delegate != null ? other.delegate.getClass().getName() : null);
+    GuardrailResult result = getDelegate().evaluate(message);
+    return result.isAllowed() ? success() : fatal(result.getReason());
   }
 }

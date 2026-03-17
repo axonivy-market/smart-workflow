@@ -21,6 +21,9 @@ public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrai
   private static final Pattern GOOGLE_API_KEY_PATTERN = Pattern.compile(
       "\\bAIza[0-9A-Za-z_-]{35}\\b");
 
+  private static final Pattern XAI_KEY_PATTERN = Pattern.compile(
+      "\\bxai-[a-zA-Z0-9]{50,}\\b");
+
   private static final Pattern PRIVATE_KEY_PATTERN = Pattern.compile(
       "-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----");
 
@@ -34,6 +37,7 @@ public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrai
         || AWS_KEY_PATTERN.matcher(message).find()
         || GITHUB_TOKEN_PATTERN.matcher(message).find()
         || GOOGLE_API_KEY_PATTERN.matcher(message).find()
+        || XAI_KEY_PATTERN.matcher(message).find()
         || PRIVATE_KEY_PATTERN.matcher(message).find();
 
     return containsSensitiveData ? GuardrailResult.block(FAILURE_MESSAGE) : GuardrailResult.allow();

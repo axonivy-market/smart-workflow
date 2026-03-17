@@ -7,7 +7,9 @@ import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuar
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
 
 public interface GuardrailProvider {
-  List<SmartWorkflowInputGuardrail> getInputGuardrails();
+  default List<SmartWorkflowInputGuardrail> getInputGuardrails() {
+    return Collections.emptyList();
+  }
 
   default List<SmartWorkflowOutputGuardrail> getOutputGuardrails() {
     return Collections.emptyList();

@@ -158,11 +158,7 @@
       "name" : "Set error details to the result",
       "config" : {
         "output" : {
-          "code" : [
-            "ivy.log.warn(\"111 {0}\", in.result);",
-            "in.result = in.error.getMessage();",
-            "ivy.log.warn(\"222 {0}\", in.result);"
-          ]
+          "code" : "in.result = in.error.getMessage();"
         }
       },
       "visual" : {
@@ -173,4 +169,3 @@
       ]
     } ]
 }
-

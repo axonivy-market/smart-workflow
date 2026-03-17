@@ -82,9 +82,9 @@ public class AgentCallExecutor {
       }
       Ivy.log().info("Agent response: " + result);
     } catch (InputGuardrailException ex) {
-      throwGuardrailError(ex);
+      throwGuardrailError(INPUT_GUARDRAIL_ERROR_CODE, ex);
     } catch (OutputGuardrailException ex) {
-      throwGuardrailError(ex);
+      throwGuardrailError(OUTPUT_GUARDRAIL_ERROR_CODE, ex);
     }
   }
 
@@ -149,17 +149,10 @@ public class AgentCallExecutor {
     }
   }
 
-  private void throwGuardrailError(InputGuardrailException ex) {
-    BpmPublicErrorBuilder errorBuilder = BpmError.create(INPUT_GUARDRAIL_ERROR_CODE);
+  private void throwGuardrailError(String errorCode, Exception ex) {
+    BpmPublicErrorBuilder errorBuilder = BpmError.create(errorCode);
     Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
-    Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
-    errorBuilder.throwError();
-  }
-
-  private void throwGuardrailError(OutputGuardrailException ex) {
-    BpmPublicErrorBuilder errorBuilder = BpmError.create(OUTPUT_GUARDRAIL_ERROR_CODE);
-    Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
-    Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
+    Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(cause));
     errorBuilder.throwError();
   }
 }

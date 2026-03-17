@@ -90,6 +90,12 @@ public class TestSensitiveDataOutputGuardrail {
   }
 
   @Test
+  void blockXAiApiKey() {
+    var result = guardrail.evaluate("xAI key: " + "xai-" + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890AB");
+    assertThat(result.isAllowed()).isFalse();
+  }
+
+  @Test
   void blockPrivateKey() {
     var result = guardrail.evaluate("-----BEGIN RSA " + "PRIVATE KEY-----\nMIIEpA...\n-----END RSA " + "PRIVATE KEY-----");
     assertThat(result.isAllowed()).isFalse();

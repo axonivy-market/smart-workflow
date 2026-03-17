@@ -5,7 +5,7 @@ Variables:
     DefaultProvider: ""
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
-      # Default input guardrails. Separated by comma. Example: "GuardrailOne, GuardrailTwo"
+      # Default input guardrails. Separated by comma. Example: "PromptInjectionInputGuardrail, GuardrailTwo"
       DefaultInput: ""
-      # Default output guardrails. Separated by comma. Example: "GuardrailOne, GuardrailTwo"
+      # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
       DefaultOutput: ""
