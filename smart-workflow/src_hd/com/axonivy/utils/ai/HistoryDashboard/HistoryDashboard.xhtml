@@ -17,15 +17,15 @@
           <p class="text-sm text-color-secondary m-0">Browse and filter AI agent conversation history.</p>
         </div>
 
-        <h:form id="mainForm">
+        <h:form id="main-form">
 
           <!-- Section 1: History Table -->
           <div class="section-card surface-card border-round overflow-hidden mb-4">
 
-            <h:panelGroup id="historyTableSection" layout="block">
+            <h:panelGroup id="history-table-section" layout="block">
 
               <div class="section-header surface-ground flex align-items-center font-semibold">
-                <span>&#128203; History Table (#{historyDashboardBean.entryCount} records)</span>
+                <span><i class="tif tif-clipboard mr-1"></i>History Table (#{historyDashboardBean.entryCount} records)</span>
               </div>
 
               <div class="filter-bar flex flex-wrap gap-2 align-items-center">
@@ -48,11 +48,11 @@
                 </p:selectOneMenu>
                 <p:commandButton value="Search"
                                  action="#{historyDashboardBean.applyFilter}"
-                                 update="historyTableSection"
-                                 icon="fa fa-search" />
+                                 update="history-table-section"
+                                 icon="tif tif-search" />
               </div>
 
-              <p:dataTable id="historyTable"
+              <p:dataTable id="history-table"
                            value="#{historyDashboardBean.entries}" var="row"
                            rowKey="#{row.caseUuid}-#{row.taskUuid}"
                            styleClass="history-table"
@@ -75,7 +75,7 @@
                   <span class="model-chip text-sm surface-ground border-round-sm">#{row.modelName}</span>
                 </p:column>
                 <p:column headerText="" styleClass="col-action">
-                  <p:commandButton value="View" icon="fa fa-eye" process="@this"
+                  <p:commandButton value="View" icon="tif tif-eye" process="@this"
                                    actionListener="#{logic.showConversations(row.caseUuid)}" />
                 </p:column>
               </p:dataTable>
@@ -86,7 +86,7 @@
           <!-- Section 2: Token Usage Analytics (placeholder) -->
           <div class="section-card surface-card border-round overflow-hidden">
             <div class="section-header surface-ground flex justify-content-between align-items-center font-semibold">
-              <span>&#128202; Token Usage Analytics</span>
+              <span><i class="tif tif-report-analytics mr-1"></i>Token Usage Analytics</span>
               <span class="text-sm font-normal text-color-secondary">Coming soon</span>
             </div>
           </div>
