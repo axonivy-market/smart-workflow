@@ -29,12 +29,13 @@ public class DefaultGuardrailProvider implements GuardrailProvider {
       List<T> guardrails) {
     String defaultGuardrails = "";
     try {
-      defaultGuardrails = Ivy.var().get(variableKey);
+      defaultGuardrails = StringUtils.defaultString(Ivy.var().get(variableKey));
     } catch (Exception e) {
-      Ivy.log().error(e.getMessage());
+      Ivy.log().error("Error reading default guardrails for variable key '" + variableKey + "'", e);
     }
-    List<String> guardrailNames = List.of(StringUtils.split(defaultGuardrails, ",")).stream()
-        .distinct().filter(StringUtils::isNotBlank).map(String::strip).toList();
+    String[] split = StringUtils.split(defaultGuardrails, ",");
+    List<String> guardrailNames = split == null ? List.of()
+        : List.of(split).stream().distinct().filter(StringUtils::isNotBlank).map(String::strip).toList();
     return guardrails.stream().filter(g -> guardrailNames.contains(g.name())).collect(Collectors.toList());
   }
 

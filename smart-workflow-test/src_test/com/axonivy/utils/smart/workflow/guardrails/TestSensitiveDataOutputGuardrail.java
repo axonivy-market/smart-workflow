@@ -97,14 +97,23 @@ public class TestSensitiveDataOutputGuardrail {
 
   @Test
   void blockPrivateKey() {
-    var result = guardrail.evaluate("-----BEGIN RSA " + "PRIVATE KEY-----\nMIIEpA...\n-----END RSA " + "PRIVATE KEY-----");
+    var result = guardrail.evaluate("""
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEpA...
+        -----END RSA PRIVATE KEY-----
+        """);
     assertThat(result.isAllowed()).isFalse();
     assertThat(result.getReason()).contains("sensitive data");
   }
 
   @Test
   void blockPrivateKeyGeneric() {
-    var result = guardrail.evaluate("Here is the cert:\n" + "-----BEGIN " + "PRIVATE KEY-----\ndata\n" + "-----END " + "PRIVATE KEY-----");
+    var result = guardrail.evaluate("""
+        Here is the cert:
+        -----BEGIN PRIVATE KEY-----
+        data
+        -----END PRIVATE KEY-----
+        """);
     assertThat(result.isAllowed()).isFalse();
   }
 

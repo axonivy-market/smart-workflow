@@ -32,13 +32,27 @@ public class TestOutputGuardrailProcess {
   }
 
   private static Response buildResponse() {
+    /*
+    * The following fake credentials are used for testing purposes only and do not provide
+    * access to any production systems. Please do not submit them as part of a bug bounty program.
+    * ResourceResponder#send() is not used here because the test requires string concatenation
+    * to prevent false positives from automated sensitive-data detection tools.
+    */
     String apiKeyExample = "sk-" + "1234567890abcdef1234567890abcdef";
-    String body = "{\"id\":\"chatcmpl-test\",\"object\":\"chat.completion\",\"created\":1773582770,"
-        + "\"model\":\"gpt-4.1-mini\","
-        + "\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Example API key: "
-        + apiKeyExample
-        + "\"},\"finish_reason\":\"stop\"}],"
-        + "\"usage\":{\"prompt_tokens\":10,\"completion_tokens\":10,\"total_tokens\":20}}";
+    String body = """
+        {
+          "id": "chatcmpl-test",
+          "object": "chat.completion",
+          "created": 1773582770,
+          "model": "gpt-4.1-mini",
+          "choices": [{
+            "index": 0,
+            "message": {"role": "assistant", "content": "Example API key: %s"},
+            "finish_reason": "stop"
+          }],
+          "usage": {"prompt_tokens": 10, "completion_tokens": 10, "total_tokens": 20}
+        }
+        """.formatted(apiKeyExample);
     return Response.ok().entity(body).build();
   }
 
