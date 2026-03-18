@@ -12,7 +12,7 @@
       <h:outputStylesheet library="css" name="conversation-viewer.css" />
       <h:outputScript library="js" name="conversation-viewer.js" target="head" />
 
-      <h:form id="convForm">
+      <h:form id="conv-form">
         <f:event listener="#{conversationsBean.preRender(data.caseUuid)}" type="preRenderComponent" />
         <ui:include src="Header.xhtml" />
 
@@ -42,7 +42,7 @@
             <div class="cv-sidebar">
 
               <!-- Sliding panel -->
-              <div class="cv-sidebar-panel" id="cvSidebarPanel">
+              <div class="cv-sidebar-panel" id="cv-sidebar-panel">
                 <div class="cv-sidebar-content" id="cv-panel-process">
                   <ui:include src="ProcessViewer.xhtml" />
                 </div>

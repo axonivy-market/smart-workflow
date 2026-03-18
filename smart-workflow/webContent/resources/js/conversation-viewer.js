@@ -69,7 +69,7 @@ var CvSidebar = (function () {
   var activePanel = null;
 
   function toggle(panelId) {
-    var panel = document.getElementById('cvSidebarPanel');
+    var panel = document.getElementById('cv-sidebar-panel');
     if (!panel) { return; }
 
     if (activePanel === panelId) {
