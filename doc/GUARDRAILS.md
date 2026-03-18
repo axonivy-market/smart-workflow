@@ -17,9 +17,8 @@ Set default guardrails in `variables.yaml`:
 Variables:
   AI:
     Guardrails:
-      # Comma-separated list of input guardrail names
+      # Comma-separated list of guardrail names
       DefaultInput: PromptInjectionInputGuardrail
-      # Comma-separated list of output guardrail names
       DefaultOutput: SensitiveDataOutputGuardrail
 ```
 

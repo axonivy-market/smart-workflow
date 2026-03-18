@@ -33,16 +33,15 @@ public class AgentEditor {
     String inputGuardrailList = inputGuardrailsList();
     String outputGuardrailList = outputGuardrailsList();
     var guardrailsGroup = ui.group("Guardrails");
+    guardrailsGroup.add(ui.label("Select guardrails to apply, or keep empty to use the default guardrails").create());
     guardrailsGroup
         .add(ui.label("Available input guardrails:\n").create())
         .add(ui.label(inputGuardrailList).multiline().create())
-        .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create())
-        .add(ui.label("Select the input guardrails to apply, or keep empty to use default guardrails").create());
+        .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create());
     guardrailsGroup
         .add(ui.label("Available output guardrails:\n").create())
         .add(ui.label(outputGuardrailList).multiline().create())
-        .add(ui.scriptField(Conf.OUTPUT_GUARD_RAILS).requireType(List.class).create())
-        .add(ui.label("Select the output guardrails to apply, or keep empty to use default guardrails").create());
+        .add(ui.scriptField(Conf.OUTPUT_GUARD_RAILS).requireType(List.class).create());
     guardrailsGroup.create();
 
     ui.group("Model")
