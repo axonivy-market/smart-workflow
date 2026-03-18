@@ -165,14 +165,14 @@
       <div class="grid mb-4">
         <div class="col-8">
           <div class="chart-panel surface-ground border-round p-3">
-            <div class="text-sm font-semibold mb-2">Token Usage Over Time</div>
+            <div class="font-semibold mb-2">Token Usage Over Time</div>
             <p:lineChart id="chart-token-timeline" model="#{usageAnalyticBean.tokenTimelineChart}"
                          styleClass="chart-h-240" />
           </div>
         </div>
         <div class="col-4">
           <div class="chart-panel surface-ground border-round p-3">
-            <div class="text-sm font-semibold mb-2">Model Distribution</div>
+            <div class="font-semibold mb-2">Model Distribution</div>
             <p:donutChart id="chart-model-dist" model="#{usageAnalyticBean.modelDistributionChart}"
                           styleClass="chart-h-240" />
           </div>
@@ -183,14 +183,14 @@
       <div class="grid mb-4">
         <div class="col-6">
           <div class="chart-panel surface-ground border-round p-3">
-            <div class="text-sm font-semibold mb-2">Input vs Output Tokens per Day</div>
+            <div class="font-semibold mb-2">Input vs Output Tokens per Day</div>
             <p:barChart id="chart-token-stacked" model="#{usageAnalyticBean.tokenStackedChart}"
                         styleClass="chart-h-220" />
           </div>
         </div>
         <div class="col-6">
           <div class="chart-panel surface-ground border-round p-3">
-            <div class="text-sm font-semibold mb-2">Top Processes by Token Usage</div>
+            <div class="font-semibold mb-2">Top Processes by Token Usage</div>
             <p:barChart id="chart-top-cases" model="#{usageAnalyticBean.topCasesChart}"
                         styleClass="chart-h-220" />
           </div>
@@ -199,7 +199,7 @@
 
       <!-- Charts row 3: Response Time full width -->
       <div class="chart-panel surface-ground border-round p-3">
-        <div class="text-sm font-semibold mb-2">Response Time Distribution</div>
+        <div class="font-semibold mb-2">Response Time Distribution</div>
         <p:barChart id="chart-response-time" model="#{usageAnalyticBean.responseTimeChart}"
                     styleClass="chart-h-220" />
       </div>

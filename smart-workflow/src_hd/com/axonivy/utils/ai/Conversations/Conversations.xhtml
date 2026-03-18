@@ -7,29 +7,68 @@
     <ui:define name="title">Conversations</ui:define>
     <ui:define name="content">
 
-      <div class="content-area mx-auto p-4">
+      <h:outputStylesheet library="css" name="json-viewer.css" />
+      <h:outputScript library="js" name="json-viewer.js" target="head" />
+      <h:outputStylesheet library="css" name="conversation-viewer.css" />
+      <h:outputScript library="js" name="conversation-viewer.js" target="head" />
 
-        <div class="mb-4 flex align-items-center gap-3">
-          <h:form id="backForm">
-            <p:commandButton id="back-btn" value="Back" icon="pi pi-arrow-left"
-                             styleClass="ui-button-secondary"
-                             process="@this"
-                             actionListener="#{logic.close}" />
-          </h:form>
-          <h2 class="text-2xl font-bold text-900 m-0">Conversations</h2>
-        </div>
+      <h:form id="convForm">
+        <f:event listener="#{conversationsBean.preRender(data.caseUuid)}" type="preRenderComponent" />
+        <ui:include src="Header.xhtml" />
 
-        <div class="section-card surface-card border-round overflow-hidden">
-          <div class="section-header surface-ground flex align-items-center font-semibold">
-            <span>&#128172; Conversation — Case: #{data.caseUuid}</span>
+        <!-- Empty placehoder -->
+        <h:panelGroup rendered="#{conversationsBean.caseNode == null}" layout="block"
+                      styleClass="cv-empty-state flex flex-column align-items-center justify-content-center text-color-secondary">
+          <i class="tif tif-messages text-5xl block mb-3" />
+          <div class="font-semibold mb-2 text-color-secondary">No History Found</div>
+          <div class="text-sm text-color-secondary">No conversation history found for this case.</div>
+        </h:panelGroup>
+
+        <h:panelGroup id="cv-content-panel" layout="block" rendered="#{conversationsBean.caseNode != null}">
+          <ui:include src="Summary.xhtml" />
+
+          <div class="cv-page-layout">
+
+            <!-- Main: conversation list, grows/shrinks as panel opens -->
+            <div class="cv-main-area">
+              <div class="cv-conversation-list py-4 px-5">
+                <ui:repeat var="task" value="#{conversationsBean.caseNode.tasks}" varStatus="taskStatus">
+                  <ui:include src="ConversationTemplate.xhtml" />
+                </ui:repeat>
+              </div>
+            </div>
+
+            <!-- Sidebar: sliding panel + icon strip -->
+            <div class="cv-sidebar">
+
+              <!-- Sliding panel -->
+              <div class="cv-sidebar-panel" id="cvSidebarPanel">
+                <div class="cv-sidebar-content" id="cv-panel-process">
+                  <ui:include src="ProcessViewer.xhtml" />
+                </div>
+                <div class="cv-sidebar-content" id="cv-panel-casedetails" style="display:none">
+                  <div class="cv-sidebar-panel-heading font-bold text-xl text-900 mb-3">Case Details</div>
+                  <ui:include src="CaseDetailsDialog.xhtml" />
+                </div>
+              </div>
+
+              <!-- Sidebar icon strip -->
+              <div class="cv-sidebar-icons">
+                <button type="button" class="cv-sidebar-btn cv-sidebar-item cv-sidebar-item--process"
+                        title="Process Viewer" onclick="CvSidebar.toggle('process')">
+                  <i class="tif tif-sitemap cv-sidebar-btn-icon text-2xl" />
+                </button>
+                <button type="button" class="cv-sidebar-btn cv-sidebar-item cv-sidebar-item--casedetails"
+                        title="Case Details" onclick="CvSidebar.toggle('casedetails')">
+                  <i class="tif tif-info-circle cv-sidebar-btn-icon text-2xl" />
+                </button>
+                <p:tooltip globalSelector=".cv-sidebar-btn" position="left" showDelay="200" />
+              </div>
+
+            </div>
           </div>
-          <div class="p-4 text-color-secondary">
-            Conversation viewer coming soon.
-          </div>
-        </div>
-
-      </div>
-
+        </h:panelGroup>
+      </h:form>
     </ui:define>
   </ui:composition>
 </h:body>

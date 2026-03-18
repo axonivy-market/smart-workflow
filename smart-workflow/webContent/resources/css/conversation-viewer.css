@@ -1,0 +1,400 @@
+/* ── Keyframe: message entrance ─────────────────────────────────────────── */
+@keyframes cv-fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Suppress page-level scrollbar (all scrolling is inside cv-conversation-list) */
+html, body { overflow: hidden; }
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.cv-empty-state {
+  min-height: 360px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.cv-conv-header {
+  background: #ffffff;
+}
+
+/* ── Page layout ─────────────────────────────────────────────────────────── */
+.cv-page-layout {
+  display: flex;
+  height: calc(100vh - 152px); /* 100vh minus cv-conv-header (~70px) + cv-case-summary (~82px) */
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.cv-main-area {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Sidebar container ────────────────────────────────────────────────────── */
+.cv-sidebar {
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* ── Sliding panel — large screens: in-flow push ─────────────────────────── */
+@media (min-width: 992px) {
+  .cv-sidebar-panel {
+    width: 0;
+    overflow: hidden;
+    transition: width 0.28s ease;
+    border-left: 1px solid transparent;
+  }
+
+  .cv-sidebar-panel.cv-sidebar-open {
+    width: 50vw;
+    overflow-y: auto;
+    border-left-color: var(--surface-border);
+  }
+
+  .cv-sidebar-content {
+    width: 50vw;
+  }
+}
+
+/* ── Sliding panel — small screens: overlay ──────────────────────────────── */
+@media (max-width: 991px) {
+  .cv-sidebar-panel {
+    position: fixed;
+    top: 0;
+    right: 48px;
+    height: 100vh;
+    width: 0;
+    overflow: hidden;
+    transition: width 0.28s ease;
+    background: var(--surface-0, #fff);
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.12);
+    z-index: 200;
+    border-left: 1px solid transparent;
+  }
+
+  .cv-sidebar-panel.cv-sidebar-open {
+    width: calc(100vw - 48px);
+    overflow-y: auto;
+    border-left-color: var(--surface-border);
+  }
+
+  .cv-sidebar-content {
+    width: calc(100vw - 48px);
+  }
+}
+
+/* ── Sidebar icon strip ───────────────────────────────────────────────────── */
+.cv-sidebar-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, #ffffff 0%, #f5f8ff 100%);
+  box-shadow: -4px 0 24px rgba(99, 102, 241, 0.08);
+  padding: 12px 6px;
+  gap: 4px;
+  width: 52px;
+}
+
+.cv-sidebar-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text-color);
+  transition: background 0.18s ease, color 0.18s ease,
+              box-shadow 0.18s ease, transform 0.12s ease;
+}
+
+.cv-sidebar-btn:hover {
+  background: var(--blue-50, #eff6ff);
+  color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.14);
+}
+
+.cv-sidebar-btn.cv-active {
+  background: var(--blue-100, #dbeafe);
+  color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.18);
+}
+
+.cv-sidebar-btn-icon {
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.cv-sidebar-btn:hover .cv-sidebar-btn-icon,
+.cv-sidebar-btn.cv-active .cv-sidebar-btn-icon {
+  transform: scale(1.12);
+}
+
+/* ── Shared panel content padding ─────────────────────────────────────────── */
+.cv-sidebar-content {
+  padding: 20px 20px 20px 16px;
+}
+
+
+.cv-sidebar-panel-heading {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--surface-border);
+  margin-bottom: 16px;
+}
+
+/* ── KPI summary bar ─────────────────────────────────────────────────────── */
+.cv-case-summary {
+  background: #ffffff;
+}
+.cv-cs-card {
+  border-right: 1px solid var(--surface-border);
+  border-top: 3px solid transparent;
+  transition: background 0.15s;
+}
+.cv-cs-card:last-child {
+  border-right: none;
+}
+.cv-cs-card--tasks    { border-top-color: var(--green-400); }
+.cv-cs-card--messages { border-top-color: var(--blue-400); }
+.cv-cs-card--tokens   { border-top-color: var(--purple-400); }
+.cv-cs-card--duration { border-top-color: var(--orange-400); }
+
+.cv-cs-val {
+  line-height: 1.2;
+}
+.cv-cs-model-tag {
+  background: var(--blue-50);
+  color: var(--blue-600);
+  padding: 1px 7px;
+}
+
+/* ── Conversation list (scrollable fixed height) ─────────────────────────── */
+.cv-conversation-list {
+  flex: 1 1 0;
+  overflow-y: auto;
+}
+
+/* ── Task block (odd/even pastel backgrounds) ────────────────────────────── */
+.cv-task-block {
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 12px 14px 16px;
+}
+.cv-task-block--even {
+  background: #eef6ff;   /* soft blue */
+}
+.cv-task-block--odd {
+  background: #f0fdf4;   /* soft mint-green */
+}
+
+/* ── Task separator ──────────────────────────────────────────────────────── */
+.cv-task-sep-dot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  background: var(--green-500);
+}
+.cv-chat-msgs + .cv-task-sep {
+  margin-top: 24px;
+}
+
+/* ── Task model badge ────────────────────────────────────────────────────── */
+.cv-task-model-badge {
+  background: var(--blue-50);
+  color: var(--blue-600);
+  border: 1px solid var(--indigo-200);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MESSAGE LAYOUT — role label + bubble column
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.cv-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: cv-fadeInUp 0.24s ease both;
+}
+
+/* User: align right */
+.cv-msg--user {
+  align-items: flex-end;
+}
+
+/* Agent / System / Tool: align left */
+.cv-msg--agent,
+.cv-msg--system,
+.cv-msg--tool {
+  align-items: flex-start;
+}
+
+/* Role label */
+.cv-msg-role {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 0 4px;
+  line-height: 1;
+  color: var(--text-color-secondary);
+}
+
+/* ── Shared bubble base ──────────────────────────────────────────────────── */
+.cv-bubble {
+  max-width: 74%;
+  line-height: 1.65;
+  word-wrap: break-word;
+  background: #ffffff;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+}
+
+/* ── User bubble ─────────────────────────────────────────────────────────── */
+.cv-bubble-user {
+  border-radius: 16px 16px 4px 16px;
+  border: 2px solid var(--blue-300);
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.12);
+}
+
+/* ── Agent bubble ────────────────────────────────────────────────────────── */
+.cv-bubble-ai {
+  border-radius: 16px 16px 16px 4px;
+  border: 2px solid var(--green-300);
+  box-shadow: 0 2px 12px rgba(74, 222, 128, 0.12);
+}
+
+/* ── System block ────────────────────────────────────────────────────────── */
+.cv-system-block {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+.cv-system-label {
+  color: var(--text-color-secondary);
+  letter-spacing: 0.5px;
+}
+
+/* ── Tool / code block ───────────────────────────────────────────────────── */
+.cv-bubble-tool {
+  max-width: 90%;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.76rem;
+  background: var(--surface-800, #1e2432);
+  color: var(--surface-200, #e2e8f0);
+  border: 1px solid var(--surface-700, #2d3748);
+  border-radius: 8px;
+  white-space: pre-wrap;
+  line-height: 1.65;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* dark-mode-safe fallback using CSS custom props */
+@media (prefers-color-scheme: light) {
+  .cv-bubble-tool {
+    background: #1a1f2e;
+    color: #cdd6f4;
+    border-color: #313244;
+  }
+}
+
+.cv-tool-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--blue-300, #93c5fd);
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+  font-family: inherit;
+  opacity: 0.8;
+}
+
+/* ── Details tab ─────────────────────────────────────────────────────────── */
+.cv-detail-section {
+  background: #ffffff;
+}
+.cv-detail-table {
+  border-collapse: collapse;
+}
+.cv-detail-table th {
+  width: 140px;
+  text-align: left;
+  padding: 6px 0;
+  vertical-align: top;
+}
+.cv-detail-table td {
+  padding: 6px 0;
+}
+
+.cv-status-badge {
+  padding: 2px 8px;
+}
+.cv-status-badge--running {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.cv-status-badge--done {
+  background: var(--blue-100);
+  color: var(--blue-600);
+}
+
+.cv-process-viewer-frame {
+  height: 480px;
+}
+.cv-process-unavailable {
+  min-height: 160px;
+}
+
+/* ── Collapsible bubbles ─────────────────────────────────────────────────── */
+.cv-bubble--collapsed {
+  position: relative;
+  overflow: hidden;
+}
+.cv-bubble--collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2em;
+  pointer-events: none;
+}
+.cv-bubble-user.cv-bubble--collapsed::after,
+.cv-bubble-ai.cv-bubble--collapsed::after {
+  background: linear-gradient(to bottom, transparent, #ffffff);
+}
+.cv-bubble-tool.cv-bubble--collapsed::after {
+  background: linear-gradient(to bottom, transparent, #1a1f2e);
+}
+.cv-expand-btn {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  margin-top: 2px;
+  letter-spacing: 0.2px;
+  opacity: 0.85;
+}
+.cv-expand-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
