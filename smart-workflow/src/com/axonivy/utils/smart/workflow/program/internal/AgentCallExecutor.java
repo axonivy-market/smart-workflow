@@ -81,10 +81,8 @@ public class AgentCallExecutor {
         }
       }
       Ivy.log().info("Agent response: " + result);
-    } catch (InputGuardrailException ex) {
-      GuardrailErrors.throwError(GuardrailErrors.INPUT_VIOLATION, ex);
-    } catch (OutputGuardrailException ex) {
-      GuardrailErrors.throwError(GuardrailErrors.OUTPUT_VIOLATION, ex);
+    } catch (InputGuardrailException | OutputGuardrailException ex) {
+      GuardrailErrors.throwError(ex);
     }
   }
 

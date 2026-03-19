@@ -8,9 +8,13 @@ import org.junit.jupiter.api.Test;
 import com.axonivy.utils.smart.workflow.guardrails.output.SensitiveDataOutputGuardrail;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
+import ch.ivyteam.ivy.environment.Ivy;
 
 @IvyProcessTest
 public class TestSensitiveDataOutputGuardrail {
+
+  private static final String OPENAI_API_KEY_VAR = "Ai.Providers.OpenAI.APIKey";
+  private static final String TEST_API_KEY = "my-custom-secret-key-that-matches-no-regex";
 
   private SensitiveDataOutputGuardrail guardrail;
 
@@ -115,6 +119,18 @@ public class TestSensitiveDataOutputGuardrail {
         -----END PRIVATE KEY-----
         """);
     assertThat(result.isAllowed()).isFalse();
+  }
+
+  @Test
+  void blockConfiguredApiKey() {
+    Ivy.var().set(OPENAI_API_KEY_VAR, TEST_API_KEY);
+    try {
+      var result = guardrail.evaluate("Here is the configured key: " + TEST_API_KEY);
+      assertThat(result.isAllowed()).isFalse();
+      assertThat(result.getReason()).contains("sensitive data");
+    } finally {
+      Ivy.var().set(OPENAI_API_KEY_VAR, "");
+    }
   }
 
   @Test
