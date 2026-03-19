@@ -1,6 +1,8 @@
 package com.axonivy.utils.smart.workflow.guardrails.provider;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +36,8 @@ public class DefaultGuardrailProvider implements GuardrailProvider {
       Ivy.log().error("Error reading default guardrails for variable key '" + variableKey + "'", e);
     }
     String[] split = StringUtils.split(defaultGuardrails, ",");
-    List<String> guardrailNames = split == null ? List.of()
-        : List.of(split).stream().distinct().filter(StringUtils::isNotBlank).map(String::strip).toList();
+    Set<String> guardrailNames = split == null ? Set.of()
+        : Arrays.stream(split).filter(StringUtils::isNotBlank).map(String::strip).collect(Collectors.toSet());
     return guardrails.stream().filter(g -> guardrailNames.contains(g.name())).collect(Collectors.toList());
   }
 

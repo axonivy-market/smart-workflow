@@ -57,7 +57,7 @@
           "visual" : {
             "at" : { "x" : 616, "y" : 273 },
             "labelOffset" : { "x" : -71, "y" : 25 },
-            "icon" : "http://localhost:8080/~Developer-smart-workflow-123/Developer-smart-workflow-123/faces/javax.faces.resource/icons/shield.png?ln=xpertivy-4-webContent"
+            "icon" : "res:/webContent/icons/shield.png"
           },
           "connect" : [
             { "id" : "f11", "to" : "f8" }
@@ -143,7 +143,7 @@
           "visual" : {
             "at" : { "x" : 616, "y" : 593 },
             "labelOffset" : { "x" : -71, "y" : 25 },
-            "icon" : "http://localhost:8080/~Developer-smart-workflow-123/Developer-smart-workflow-123/faces/javax.faces.resource/icons/shield.png?ln=xpertivy-4-webContent"
+            "icon" : "res:/webContent/icons/shield.png"
           },
           "connect" : [
             { "id" : "f31", "to" : "f28" }

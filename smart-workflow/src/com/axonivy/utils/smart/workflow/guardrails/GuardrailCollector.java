@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.guardrails;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -57,10 +58,9 @@ public class GuardrailCollector {
     allProviders().stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
         .forEach(guardrails::add);
-    return guardrails.stream()
+    return new ArrayList<>(guardrails.stream()
         .map(SmartWorkflowGuardrail::name)
-        .distinct()
-        .collect(Collectors.toList());
+        .collect(Collectors.toCollection(LinkedHashSet::new)));
   }
 
   private static <G extends SmartWorkflowGuardrail, A extends AbstractGuardrailAdapter<G>> List<A> guardrailAdapters(
@@ -71,20 +71,18 @@ public class GuardrailCollector {
     List<G> guardrails = new ArrayList<>(defaults);
 
     if (CollectionUtils.isEmpty(filters)) {
-      return guardrails.stream()
+      return new ArrayList<>(guardrails.stream()
           .map(adapterFactory)
-          .distinct()
-          .collect(Collectors.toList());
+          .collect(Collectors.toCollection(LinkedHashSet::new)));
     }
 
     allProviders().stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
         .forEach(guardrails::add);
 
-    return guardrails.stream()
+    return new ArrayList<>(guardrails.stream()
         .filter(g -> filters.contains(g.name()))
         .map(adapterFactory)
-        .distinct()
-        .collect(Collectors.toList());
+        .collect(Collectors.toCollection(LinkedHashSet::new)));
   }
 }

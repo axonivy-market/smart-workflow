@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.listener.ChatHistoryRecordingListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
@@ -17,8 +18,6 @@ import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
 
-import ch.ivyteam.ivy.bpm.error.BpmError;
-import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import ch.ivyteam.ivy.workflow.ITask;
@@ -30,8 +29,6 @@ import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
-  private static final String INPUT_GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:input:violation";
-  private static final String OUTPUT_GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:output:violation";
   private static final String HISTORY_ENABLED = "AI.History.Enabled";
 
   private final ProgramContext context;
@@ -85,9 +82,9 @@ public class AgentCallExecutor {
       }
       Ivy.log().info("Agent response: " + result);
     } catch (InputGuardrailException ex) {
-      throwGuardrailError(INPUT_GUARDRAIL_ERROR_CODE, ex);
+      GuardrailErrors.throwError(GuardrailErrors.INPUT_VIOLATION, ex);
     } catch (OutputGuardrailException ex) {
-      throwGuardrailError(OUTPUT_GUARDRAIL_ERROR_CODE, ex);
+      GuardrailErrors.throwError(GuardrailErrors.OUTPUT_VIOLATION, ex);
     }
   }
 
@@ -159,12 +156,5 @@ public class AgentCallExecutor {
     if (CollectionUtils.isNotEmpty(outputGuardrails)) {
       agentBuilder.outputGuardrails(outputGuardrails);
     }
-  }
-
-  private void throwGuardrailError(String errorCode, Exception ex) {
-    BpmPublicErrorBuilder errorBuilder = BpmError.create(errorCode);
-    Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
-    Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(cause));
-    errorBuilder.throwError();
   }
 }
