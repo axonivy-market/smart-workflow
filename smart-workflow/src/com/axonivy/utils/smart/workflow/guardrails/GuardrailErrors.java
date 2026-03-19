@@ -16,7 +16,7 @@ public final class GuardrailErrors {
     String errorCode = ex instanceof InputGuardrailException ? INPUT_VIOLATION : OUTPUT_VIOLATION;
     BpmPublicErrorBuilder errorBuilder = BpmError.create(errorCode);
     Optional.ofNullable(ex.getMessage()).ifPresent(errorBuilder::withMessage);
-    errorBuilder.withCause(ex.getCause() != null ? ex.getCause() : ex);
+    errorBuilder.withCause(ex);
     errorBuilder.throwError();
   }
 }
