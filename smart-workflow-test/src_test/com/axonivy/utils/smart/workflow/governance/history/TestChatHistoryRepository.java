@@ -72,6 +72,8 @@ class TestChatHistoryRepository {
 
     assertThat(entry.getTokenUsageJson())
         .contains("\"inputTokens\":5")
-        .contains("\"outputTokens\":10");
+        .contains("\"outputTokens\":10")
+        .contains("\"aiServiceMethod\":\"chat\"")
+        .contains("\"toolNames\":[]");
   }
 }

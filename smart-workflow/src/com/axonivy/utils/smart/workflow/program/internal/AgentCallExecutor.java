@@ -7,7 +7,8 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.listener.ChatHistoryRecordingListener;
+import com.axonivy.utils.smart.workflow.governance.listener.AiServiceHistoryListener;
+import com.axonivy.utils.smart.workflow.governance.listener.ToolExecutionHistoryListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
@@ -22,7 +23,6 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import ch.ivyteam.ivy.workflow.ITask;
 import dev.langchain4j.data.message.Content;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.service.AiServices;
@@ -119,17 +119,19 @@ public class AgentCallExecutor {
     String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var modelOptions = options()
         .modelName(modelName)
-        .structuredOutput(isStructured)
-        .listeners(createListeners());
+        .structuredOutput(isStructured);
     agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
+    configureHistoryListeners(agentBuilder);
   }
 
-  private List<ChatModelListener> createListeners() {
+  private void configureHistoryListeners(AiServices<? extends DynamicAgent<?>> agentBuilder) {
     if (!"true".equals(Ivy.var().get(HISTORY_ENABLED))) {
-      return List.of();
+      return;
     }
+    String caseUuid = Ivy.wfCase().uuid();
     String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse("0");
-    return List.of(new ChatHistoryRecordingListener(Ivy.wfCase().uuid(), taskUuid));
+    agentBuilder.registerListener(new AiServiceHistoryListener(caseUuid, taskUuid));
+    agentBuilder.registerListener(new ToolExecutionHistoryListener(caseUuid, taskUuid));
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {

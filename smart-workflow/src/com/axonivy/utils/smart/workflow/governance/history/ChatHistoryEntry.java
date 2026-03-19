@@ -6,6 +6,7 @@ public class ChatHistoryEntry {
 
   private String caseUuid;
   private String taskUuid;
+  private String agentId;
   private String messagesJson;
   private String tokenUsageJson;
   private LocalDateTime lastUpdated;
@@ -15,6 +16,9 @@ public class ChatHistoryEntry {
 
   public String getTaskUuid() { return taskUuid; }
   public void setTaskUuid(String taskUuid) { this.taskUuid = taskUuid; }
+
+  public String getAgentId() { return agentId; }
+  public void setAgentId(String agentId) { this.agentId = agentId; }
 
   public String getMessagesJson() { return messagesJson; }
   public void setMessagesJson(String messagesJson) { this.messagesJson = messagesJson; }

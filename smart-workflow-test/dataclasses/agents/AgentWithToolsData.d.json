@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "AgentWithToolsData",
+  "namespace" : "agents",
+  "fields" : [ {
+    "name" : "invoiceStream",
+    "type" : "java.io.InputStream",
+    "comment" : "Invoice PNG loaded from CMS"
+  }, {
+    "name" : "invoiceContent",
+    "comment" : "Text content extracted from the invoice image by the extraction agent"
+  }, {
+    "name" : "analysisResult",
+    "comment" : "Summary and analysis produced by the InvoiceAnalyzer agent"
+  } ]
+}

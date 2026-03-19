@@ -23,13 +23,15 @@ public class ChatHistoryRepository implements HistoryRecorder {
 
   private final String caseUuid;
   private final String taskUuid;
+  private final String agentId;
   private final HistoryStorage storage;
 
   private ChatHistoryEntry currentEntry;
 
-  public ChatHistoryRepository(String caseUuid, String taskUuid) {
+  public ChatHistoryRepository(String caseUuid, String taskUuid, String agentId) {
     this.caseUuid = caseUuid;
     this.taskUuid = taskUuid;
+    this.agentId = agentId;
     this.storage = testStorage != null ? testStorage : new IvyRepoHistoryStorage();
   }
 
@@ -53,6 +55,7 @@ public class ChatHistoryRepository implements HistoryRecorder {
     var newEntry = new ChatHistoryEntry();
     newEntry.setCaseUuid(caseUuid);
     newEntry.setTaskUuid(taskUuid);
+    newEntry.setAgentId(agentId);
     return newEntry;
   }
 
@@ -61,7 +64,9 @@ public class ChatHistoryRepository implements HistoryRecorder {
       return currentEntry;
     }
     var results = storage.findAll().stream()
-        .filter(e -> caseUuid.equalsIgnoreCase(e.getCaseUuid()) && taskUuid.equalsIgnoreCase(e.getTaskUuid()))
+        .filter(e -> caseUuid.equalsIgnoreCase(e.getCaseUuid())
+            && taskUuid.equalsIgnoreCase(e.getTaskUuid())
+            && agentId.equalsIgnoreCase(e.getAgentId()))
         .toList();
     if (results.isEmpty()) {
       return null;
