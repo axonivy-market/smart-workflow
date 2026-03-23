@@ -32,6 +32,20 @@
             "version": "${version}",
             "type": "iar",
             "importInWorkspace": false
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-xai",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": false
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-anthropic",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": false
           }
         ],
         "repositories": [

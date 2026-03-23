@@ -63,10 +63,13 @@ See the enumeration called `AI.DefaultProvider`.
 | **Azure OpenAI** | Any vision-capable deployment (e.g. `gpt-4o`, `gpt-4.1` family) | ✓ | ✓ |
 | **Gemini** | All models (`gemini-1.5-*`, `gemini-2.0-*`, `gemini-2.5-*`) | ✓ | ✓ |
 | **xAI** | All `grok-4-1-*` models | ✓ | — |
+| **Anthropic** | All models (`claude-opus-*`, `claude-sonnet-*`, `claude-haiku-*`) | ✓ | ✓ |
 
 **Note for Azure OpenAI**: file extraction capability depends on the underlying model of your deployment, not the deployment name itself. Make sure your deployment uses a vision-capable model.
 
 **Note for xAI**: PDF files are not natively supported by the xAI API. To process PDFs with Grok models, convert them to images first before passing them to Axon Ivy Smart Workflow.
+
+**Note for Anthropic**: Images and PDFs can be sent via URL or base64-encoded data, both supporting text extraction and visual understanding (charts, diagrams, layouts).
 
 When contributing a new provider, document its multimodal support in this table.
 

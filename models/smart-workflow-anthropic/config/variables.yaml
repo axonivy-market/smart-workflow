@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/config/variables.json
+Variables:
+  AI:
+    Providers:
+      Anthropic:
+        #[password]
+        APIKey: ${decrypt:}
+        BaseUrl: ""
+        # The default model, if not explicitly specified on the calling Agent.
+        # [enum: claude-opus-4-6, claude-sonnet-4-6, claude-opus-4-5, claude-sonnet-4-5, claude-haiku-4-5, claude-opus-4-1, claude-opus-4-0, claude-sonnet-4-0]
+        DefaultModel: ""
