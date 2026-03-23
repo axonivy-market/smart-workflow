@@ -2,13 +2,19 @@ package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.listener.AiServiceHistoryListener;
-import com.axonivy.utils.smart.workflow.governance.listener.ToolExecutionHistoryListener;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecorder;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ToolExecutionRepository;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoToolExecutionStorage;
+import com.axonivy.utils.smart.workflow.governance.listener.AgentResponseListener;
+import com.axonivy.utils.smart.workflow.governance.listener.ToolExecutionListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
@@ -129,9 +135,12 @@ public class AgentCallExecutor {
       return;
     }
     String caseUuid = Ivy.wfCase().uuid();
-    String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse("0");
-    agentBuilder.registerListener(new AiServiceHistoryListener(caseUuid, taskUuid));
-    agentBuilder.registerListener(new ToolExecutionHistoryListener(caseUuid, taskUuid));
+    String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse(HistoryRecorder.NO_TASK_UUID);
+    String agentId = UUID.randomUUID().toString();
+    var chatHistoryRepo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, new IvyRepoHistoryStorage());
+    var toolRepo = new ToolExecutionRepository(caseUuid, taskUuid, agentId, new IvyRepoToolExecutionStorage());
+    agentBuilder.registerListener(new AgentResponseListener(chatHistoryRepo));
+    agentBuilder.registerListener(new ToolExecutionListener(toolRepo));
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {

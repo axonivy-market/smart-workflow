@@ -1,6 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.history;
-
-import java.time.LocalDateTime;
+package com.axonivy.utils.smart.workflow.governance.history.entity;
 
 public class ToolExecutionEntry {
 
@@ -10,7 +8,7 @@ public class ToolExecutionEntry {
   private String toolName;
   private String arguments;
   private String resultText;
-  private LocalDateTime executedAt;
+  private String executedAt;
 
   public String getAgentId() { return agentId; }
   public void setAgentId(String agentId) { this.agentId = agentId; }
@@ -30,6 +28,6 @@ public class ToolExecutionEntry {
   public String getResultText() { return resultText; }
   public void setResultText(String resultText) { this.resultText = resultText; }
 
-  public LocalDateTime getExecutedAt() { return executedAt; }
-  public void setExecutedAt(LocalDateTime executedAt) { this.executedAt = executedAt; }
+  public String getExecutedAt() { return executedAt; }
+  public void setExecutedAt(String executedAt) { this.executedAt = executedAt; }
 }

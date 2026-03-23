@@ -1,15 +1,13 @@
-package com.axonivy.utils.smart.workflow.governance.history;
+package com.axonivy.utils.smart.workflow.governance.history.entity;
 
-import java.time.LocalDateTime;
-
-public class ChatHistoryEntry {
+public class AgentConversationEntry {
 
   private String caseUuid;
   private String taskUuid;
   private String agentId;
   private String messagesJson;
   private String tokenUsageJson;
-  private LocalDateTime lastUpdated;
+  private String lastUpdated;
 
   public String getCaseUuid() { return caseUuid; }
   public void setCaseUuid(String caseUuid) { this.caseUuid = caseUuid; }
@@ -26,6 +24,6 @@ public class ChatHistoryEntry {
   public String getTokenUsageJson() { return tokenUsageJson; }
   public void setTokenUsageJson(String tokenUsageJson) { this.tokenUsageJson = tokenUsageJson; }
 
-  public LocalDateTime getLastUpdated() { return lastUpdated; }
-  public void setLastUpdated(LocalDateTime lastUpdated) { this.lastUpdated = lastUpdated; }
+  public String getLastUpdated() { return lastUpdated; }
+  public void setLastUpdated(String lastUpdated) { this.lastUpdated = lastUpdated; }
 }

@@ -12,5 +12,9 @@
   }, {
     "name" : "analysisResult",
     "comment" : "Summary and analysis produced by the InvoiceAnalyzer agent"
+  }, {
+    "name" : "result",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.CaseNode>",
+    "comment" : "Correlated agent execution tree built by AgentHistoryTreeBuilder"
   } ]
 }

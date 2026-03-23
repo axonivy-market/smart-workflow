@@ -1,60 +1,44 @@
 package com.axonivy.utils.smart.workflow.governance.history;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.time.Instant;
+import java.util.UUID;
 
-import org.junit.jupiter.api.AfterEach;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.model.ChatModelFactory.AiConf;
-import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
+import com.axonivy.utils.smart.workflow.governance.listener.AgentResponseListener;
 
-import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
-import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
-import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
-import ch.ivyteam.ivy.environment.AppFixture;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.invocation.InvocationContext;
+import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.TokenUsage;
+import dev.langchain4j.observability.api.event.AiServiceResponseReceivedEvent;
 
-@IvyProcessTest
-class TestChatHistoryRepository {
-
-  private static final BpmProcess TEST_TOOL_USER = BpmProcess.name("TestToolUser");
+public class TestChatHistoryRepository {
 
   private InMemoryHistoryStorage storage;
+  private AgentResponseListener listener;
 
   @BeforeEach
-  void setup(AppFixture fixture) {
+  void setUp() {
     storage = new InMemoryHistoryStorage();
-    ChatHistoryRepository.testStorage = storage;
-    fixture.var(AiConf.DEFAULT_PROVIDER, DummyChatModelProvider.NAME);
-    fixture.var("AI.History.Enabled", "true");
-    DummyChatModelProvider.defineChat(req -> ChatResponse.builder()
-        .aiMessage(AiMessage.aiMessage("Head to Lake Lucerne, it's refreshing!"))
-        .tokenUsage(new TokenUsage(5, 10))
-        .build());
-  }
-
-  @AfterEach
-  void teardown() {
-    ChatHistoryRepository.testStorage = null;
+    listener = new AgentResponseListener(new ChatHistoryRepository("case-1", "task-1", "test-agent", storage));
   }
 
   @Test
-  void historyIsRecordedAfterAgentCall(BpmClient client) {
-    client.start()
-        .process(TEST_TOOL_USER.elementName("systemMessage"))
-        .execute();
+  void storesMessagesAndMetadata() {
+    listener.onEvent(buildEvent("It's so hot", "chat", 5, 10, "Head to Lake Lucerne, it's refreshing!"));
 
-    var entries = storage.findAll();
-    assertThat(entries).hasSize(1);
-    var entry = entries.get(0);
+    assertThat(storage.findAll()).hasSize(1);
+    var entry = storage.findAll().get(0);
 
-    assertThat(entry.getCaseUuid()).isNotBlank();
-    assertThat(entry.getTaskUuid()).isNotBlank();
+    assertThat(entry.getCaseUuid()).isEqualTo("case-1");
+    assertThat(entry.getTaskUuid()).isEqualTo("task-1");
     assertThat(entry.getLastUpdated()).isNotNull();
 
     var messages = ChatMessageDeserializer.messagesFromJson(entry.getMessagesJson());
@@ -75,5 +59,26 @@ class TestChatHistoryRepository {
         .contains("\"outputTokens\":10")
         .contains("\"aiServiceMethod\":\"chat\"")
         .contains("\"toolNames\":[]");
+  }
+
+  private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName,
+      int inputTokens, int outputTokens, String aiText) {
+    var invocationCtx = InvocationContext.builder()
+        .invocationId(UUID.randomUUID())
+        .timestamp(Instant.now())
+        .methodName(methodName)
+        .interfaceName("ChatAgent")
+        .build();
+    var request = ChatRequest.builder().messages(UserMessage.from(userText)).build();
+    var response = ChatResponse.builder()
+        .aiMessage(AiMessage.aiMessage(aiText))
+        .tokenUsage(new TokenUsage(inputTokens, outputTokens))
+        .modelName("test-model")
+        .build();
+    return AiServiceResponseReceivedEvent.builder()
+        .invocationContext(invocationCtx)
+        .request(request)
+        .response(response)
+        .build();
   }
 }

@@ -24,7 +24,7 @@
       "id" : "f1",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 1024, "y" : 64 }
+        "at" : { "x" : 1216, "y" : 64 }
       }
     }, {
       "id" : "f2",
@@ -105,7 +105,85 @@
         "at" : { "x" : 864, "y" : 64 }
       },
       "connect" : [
-        { "id" : "f10", "to" : "f1", "color" : "default" }
+        { "id" : "f10", "to" : "f11", "color" : "default" }
       ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Log Agent History as JSON",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;",
+            "import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;",
+            "import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoToolExecutionStorage;",
+            "import com.axonivy.utils.smart.workflow.utils.JsonUtils;",
+            "",
+            "String caseUuid = ivy.case.uuid();",
+            "in.result = AgentHistoryTreeBuilder.buildTree(",
+            "    new IvyRepoHistoryStorage().findByCaseUuid(caseUuid),",
+            "    new IvyRepoToolExecutionStorage().findByCaseUuid(caseUuid));",
+            "",
+            "ivy.log.warn(\"=== Agent History Tree (JSON) ===\");",
+            "ivy.log.warn(JsonUtils.getObjectMapper().writeValueAsString(in.result));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1024, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f13",
+      "type" : "RequestStart",
+      "name" : "showAgentHistoryJson",
+      "config" : {
+        "signature" : "showAgentHistoryJson",
+        "request" : {
+          "name" : "Show Agent History JSON"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 200 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f14" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "Script",
+      "name" : "Build and Log Agent History JSON",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;",
+            "import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;",
+            "import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoToolExecutionStorage;",
+            "import com.axonivy.utils.smart.workflow.utils.JsonUtils;",
+            "",
+            "String caseUuid = ivy.case.uuid();",
+            "in.result = AgentHistoryTreeBuilder.buildTree(",
+            "    new IvyRepoHistoryStorage().findByCaseUuid(caseUuid),",
+            "    new IvyRepoToolExecutionStorage().findByCaseUuid(caseUuid));",
+            "",
+            "ivy.log.warn(\"=== Agent History Tree (JSON) ===\");",
+            "ivy.log.warn(JsonUtils.getObjectMapper().writeValueAsString(in.result));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 304, "y" : 200 }
+      },
+      "connect" : [
+        { "id" : "f17", "to" : "f15" }
+      ]
+    }, {
+      "id" : "f15",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 512, "y" : 200 }
+      }
     } ]
 }
