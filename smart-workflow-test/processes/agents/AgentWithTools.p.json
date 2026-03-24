@@ -116,13 +116,11 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;",
             "import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;",
-            "import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoToolExecutionStorage;",
             "import com.axonivy.utils.smart.workflow.utils.JsonUtils;",
             "",
             "String caseUuid = ivy.case.uuid();",
             "in.result = AgentHistoryTreeBuilder.buildTree(",
-            "    new IvyRepoHistoryStorage().findByCaseUuid(caseUuid),",
-            "    new IvyRepoToolExecutionStorage().findByCaseUuid(caseUuid));",
+            "    new IvyRepoHistoryStorage().findByCaseUuid(caseUuid));",
             "",
             "ivy.log.warn(\"=== Agent History Tree (JSON) ===\");",
             "ivy.log.warn(JsonUtils.getObjectMapper().writeValueAsString(in.result));"
@@ -160,13 +158,11 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;",
             "import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;",
-            "import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoToolExecutionStorage;",
             "import com.axonivy.utils.smart.workflow.utils.JsonUtils;",
             "",
             "String caseUuid = ivy.case.uuid();",
             "in.result = AgentHistoryTreeBuilder.buildTree(",
-            "    new IvyRepoHistoryStorage().findByCaseUuid(caseUuid),",
-            "    new IvyRepoToolExecutionStorage().findByCaseUuid(caseUuid));",
+            "    new IvyRepoHistoryStorage().findByCaseUuid(caseUuid));",
             "",
             "ivy.log.warn(\"=== Agent History Tree (JSON) ===\");",
             "ivy.log.warn(JsonUtils.getObjectMapper().writeValueAsString(in.result));"

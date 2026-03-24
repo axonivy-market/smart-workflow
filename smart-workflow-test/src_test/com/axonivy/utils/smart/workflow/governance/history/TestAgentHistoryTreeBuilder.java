@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.history.entity.ToolExecutionEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.CaseNode;
@@ -21,55 +21,41 @@ public class TestAgentHistoryTreeBuilder {
   private static final LocalDateTime T0 = LocalDateTime.of(2025, 1, 1, 12, 0, 0);
 
   @Test
-  void createsCorrectHierarchy() {
-    var parent = chatEntry("parent", T0.plusSeconds(10));
+  void allAgentsFlatWithToolsAttached() {
+    var tool1 = toolExecution("extractHeaderInfo", T0.plusSeconds(3));
+    var tool2 = toolExecution("assessCompliance", T0.plusSeconds(6));
+    var orchestrator = chatEntry("orchestrator", T0.plusSeconds(10), List.of(tool1, tool2));
     var sub1 = chatEntry("sub1", T0.plusSeconds(2));
     var sub2 = chatEntry("sub2", T0.plusSeconds(5));
 
-    var tool2 = toolEntry("parent", "assessCompliance", T0.plusSeconds(6));
-    var tool1 = toolEntry("parent", "extractHeaderInfo", T0.plusSeconds(3));
-
-    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(
-        List.of(parent, sub1, sub2),
-        List.of(tool2, tool1));
+    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(List.of(orchestrator, sub1, sub2));
 
     assertThat(cases).hasSize(1);
     List<AgentNode> agents = cases.get(0).tasks().get(0).agents();
 
-    assertThat(agents).hasSize(1);
-    AgentNode root = agents.get(0);
-    assertThat(root.chat()).isEqualTo(parent);
-    assertThat(root.tools()).containsExactly(tool1, tool2);
-    assertThat(root.children()).hasSize(2);
-    assertThat(root.children().get(0).chat()).isEqualTo(sub1);
-    assertThat(root.children().get(1).chat()).isEqualTo(sub2);
+    assertThat(agents).hasSize(3);
+    var orchestratorNode = agents.stream()
+        .filter(n -> n.chat() == orchestrator).findFirst().orElseThrow();
+    assertThat(orchestratorNode.tools()).containsExactly(tool1, tool2);
+    assertThat(agents.stream().filter(n -> n.chat() == sub1).findFirst()).isPresent();
+    assertThat(agents.stream().filter(n -> n.chat() == sub2).findFirst()).isPresent();
   }
 
   @Test
-  void standaloneAgent() {
-    var standalone = chatEntry("standalone", T0);
-    var parent = chatEntry("parent", T0.plusSeconds(10));
-    var realSub = chatEntry("realSub", T0.plusSeconds(4));
+  void agentsSortedByLastUpdatedAsc() {
+    var tool = toolExecution("extractHeaderInfo", T0.plusSeconds(5));
+    var orchestrator = chatEntry("orchestrator", T0.plusSeconds(10), List.of(tool));
+    var first = chatEntry("first", T0);
+    var second = chatEntry("second", T0.plusSeconds(4));
 
-    var tool = toolEntry("parent", "extractHeaderInfo", T0.plusSeconds(5));
-
-    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(
-        List.of(standalone, parent, realSub),
-        List.of(tool));
+    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(List.of(orchestrator, first, second));
 
     assertThat(cases).hasSize(1);
     List<AgentNode> agents = cases.get(0).tasks().get(0).agents();
-    assertThat(agents).hasSize(2);
-
-    var standaloneNode = agents.stream()
-        .filter(n -> n.chat() == standalone).findFirst().orElseThrow();
-    assertThat(standaloneNode.tools()).isEmpty();
-    assertThat(standaloneNode.children()).isEmpty();
-
-    var parentNode = agents.stream()
-        .filter(n -> n.chat() == parent).findFirst().orElseThrow();
-    assertThat(parentNode.children()).hasSize(1);
-    assertThat(parentNode.children().get(0).chat()).isEqualTo(realSub);
+    assertThat(agents).hasSize(3);
+    assertThat(agents.get(0).chat()).isEqualTo(first);
+    assertThat(agents.get(1).chat()).isEqualTo(second);
+    assertThat(agents.get(2).chat()).isEqualTo(orchestrator);
   }
 
   @Test
@@ -80,7 +66,7 @@ public class TestAgentHistoryTreeBuilder {
     entry.setTaskUuid(null);
     entry.setLastUpdated(T0.toString());
 
-    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(List.of(entry), List.of());
+    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(List.of(entry));
 
     assertThat(cases).hasSize(1);
     List<TaskNode> tasks = cases.get(0).tasks();
@@ -95,8 +81,7 @@ public class TestAgentHistoryTreeBuilder {
     var agentB = chatEntry("agent-b", "case-1", "task-2", T0.plusSeconds(5));
     var agentC = chatEntry("agent-c", "case-2", "task-3", T0.plusSeconds(3));
 
-    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(
-        List.of(agentA, agentB, agentC), List.of());
+    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(List.of(agentA, agentB, agentC));
 
     assertThat(cases).hasSize(2);
 
@@ -110,32 +95,36 @@ public class TestAgentHistoryTreeBuilder {
   }
 
   @Test
-  void oneToOneMatchingPreventsDuplicates() {
+  void toolExecutionsAttachedToCorrectAgent() {
+    var tool1 = toolExecution("toolA", T0.plusSeconds(11));
+    var tool2 = toolExecution("toolB", T0.plusSeconds(12));
+    var orchestrator = chatEntry("orchestrator", T0.plusSeconds(15), List.of(tool1, tool2));
     var ocr = chatEntry("ocr", T0.plusSeconds(1));
-    var subA = chatEntry("subA", T0.plusSeconds(8));
-    var subB = chatEntry("subB", T0.plusSeconds(9));
-    var subC = chatEntry("subC", T0.plusSeconds(10));
+    var sub = chatEntry("sub", T0.plusSeconds(8));
 
-    var tool1 = toolEntry("orchestrator", "toolA", T0.plusSeconds(11));
-    var tool2 = toolEntry("orchestrator", "toolB", T0.plusSeconds(11).plusNanos(100_000));
-    var tool3 = toolEntry("orchestrator", "toolC", T0.plusSeconds(11).plusNanos(200_000));
-
-    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(
-        List.of(ocr, subA, subB, subC),
-        List.of(tool1, tool2, tool3));
+    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(List.of(ocr, orchestrator, sub));
 
     List<AgentNode> agents = cases.get(0).tasks().get(0).agents();
+    assertThat(agents).hasSize(3);
 
-    assertThat(agents).hasSize(1);
+    var orchestratorNode = agents.stream()
+        .filter(n -> "orchestrator".equals(n.chat().getAgentId())).findFirst().orElseThrow();
+    assertThat(orchestratorNode.tools()).containsExactly(tool1, tool2);
+
     var ocrNode = agents.stream()
-        .filter(n -> "ocr".equals(n.chat().getAgentId())).findFirst();
-    assertThat(ocrNode).isPresent();
-    assertThat(ocrNode.get().children()).isEmpty();
+        .filter(n -> "ocr".equals(n.chat().getAgentId())).findFirst().orElseThrow();
+    assertThat(ocrNode.tools()).isEmpty();
   }
-
 
   private static AgentConversationEntry chatEntry(String agentId, LocalDateTime lastUpdated) {
     return chatEntry(agentId, "case-1", "task-1", lastUpdated);
+  }
+
+  private static AgentConversationEntry chatEntry(String agentId, LocalDateTime lastUpdated,
+      List<ToolExecution> tools) {
+    var e = chatEntry(agentId, "case-1", "task-1", lastUpdated);
+    e.setToolExecutions(tools);
+    return e;
   }
 
   private static AgentConversationEntry chatEntry(String agentId, String caseUuid, String taskUuid,
@@ -148,14 +137,7 @@ public class TestAgentHistoryTreeBuilder {
     return e;
   }
 
-  private static ToolExecutionEntry toolEntry(String agentId, String toolName,
-      LocalDateTime executedAt) {
-    var e = new ToolExecutionEntry();
-    e.setAgentId(agentId);
-    e.setCaseUuid("case-1");
-    e.setTaskUuid("task-1");
-    e.setToolName(toolName);
-    e.setExecutedAt(executedAt.toString());
-    return e;
+  private static ToolExecution toolExecution(String toolName, LocalDateTime executedAt) {
+    return new ToolExecution(toolName, null, null, executedAt.toString());
   }
 }

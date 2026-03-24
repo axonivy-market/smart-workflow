@@ -8,18 +8,21 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecorder;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.ToolExecutionRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageSerializer;
 
-public class ChatHistoryRepository implements HistoryRecorder {
+public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionRecorder {
 
   private final String caseUuid;
   private final String taskUuid;
@@ -38,11 +41,21 @@ public class ChatHistoryRepository implements HistoryRecorder {
   @Override
   public void store(List<ChatMessage> messages, ResponseMetadata metadata) {
     var entry = findOrCreateEntry();
-    entry.setMessagesJson(ChatMessageSerializer.messagesToJson(messages));
+    entry.setMessagesJson(stripBase64(ChatMessageSerializer.messagesToJson(messages)));
     entry.setLastUpdated(DateParsingUtils.now());
     if (metadata != null && !messages.isEmpty() && messages.getLast() instanceof AiMessage) {
       appendTokenMetadata(entry, metadata);
     }
+    storage.save(entry);
+    currentEntry = entry;
+  }
+
+  @Override
+  public void record(String toolName, String arguments, String resultText) {
+    var entry = findOrCreateEntry();
+    var tools = new ArrayList<>(entry.getToolExecutions());
+    tools.add(new ToolExecution(toolName, arguments, resultText, DateParsingUtils.now()));
+    entry.setToolExecutions(tools);
     storage.save(entry);
     currentEntry = entry;
   }
@@ -64,9 +77,9 @@ public class ChatHistoryRepository implements HistoryRecorder {
       return Optional.of(currentEntry);
     }
     var results = storage.findAll().stream()
-        .filter(e -> caseUuid.equalsIgnoreCase(e.getCaseUuid())
-            && taskUuid.equalsIgnoreCase(e.getTaskUuid())
-            && agentId.equalsIgnoreCase(e.getAgentId()))
+        .filter(entry -> caseUuid.equalsIgnoreCase(entry.getCaseUuid())
+            && taskUuid.equalsIgnoreCase(entry.getTaskUuid())
+            && agentId.equalsIgnoreCase(entry.getAgentId()))
         .toList();
     if (results.isEmpty()) {
       return Optional.empty();
@@ -81,6 +94,21 @@ public class ChatHistoryRepository implements HistoryRecorder {
       duplicates.forEach(storage::delete);
     }
     return Optional.of(currentEntry);
+  }
+
+  private static String stripBase64(String messagesJson) {
+    try {
+      var root = JsonUtils.getObjectMapper().readTree(messagesJson);
+      root.findParents("base64Data").forEach(node -> {
+        if (node instanceof ObjectNode objectNode) {
+          objectNode.remove("base64Data");
+        }
+      });
+      return JsonUtils.getObjectMapper().writeValueAsString(root);
+    } catch (JsonProcessingException ex) {
+      Ivy.log().warn("Failed to strip base64 from messages JSON", ex);
+      return messagesJson;
+    }
   }
 
   private void appendTokenMetadata(AgentConversationEntry entry, ResponseMetadata metadata) {
