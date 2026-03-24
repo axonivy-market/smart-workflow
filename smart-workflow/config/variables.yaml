@@ -7,8 +7,7 @@ Variables:
     Guardrails:
       # Default input guardrails. Separated by comma. Example: "PromptInjectionInputGuardrail, GuardrailTwo"
       DefaultInput: ""
-      # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
-      DefaultOutput: ""
-    History:
-      # Enable chat history recording for governance audit.
-      Enabled: false
+    Observability:
+      Ivy:
+        # Enable chat history recording for governance audit.
+        Enabled: false

@@ -2,12 +2,16 @@ package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.listener.ChatHistoryRecordingListener;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.listener.AgentResponseListener;
+import com.axonivy.utils.smart.workflow.governance.listener.ToolExecutionListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
@@ -20,16 +24,14 @@ import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
-import ch.ivyteam.ivy.workflow.ITask;
 import dev.langchain4j.data.message.Content;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
-  private static final String HISTORY_ENABLED = "AI.History.Enabled";
+  private static final String HISTORY_ENABLED = "AI.Observability.Ivy.Enabled";
 
   private final ProgramContext context;
 
@@ -120,17 +122,21 @@ public class AgentCallExecutor {
     String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var modelOptions = options()
         .modelName(modelName)
-        .structuredOutput(isStructured)
-        .listeners(createListeners());
+        .structuredOutput(isStructured);
     agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
+    configureHistoryListeners(agentBuilder);
   }
 
-  private List<ChatModelListener> createListeners() {
+  private void configureHistoryListeners(AiServices<? extends DynamicAgent<?>> agentBuilder) {
     if (!"true".equals(Ivy.var().get(HISTORY_ENABLED))) {
-      return List.of();
+      return;
     }
-    String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse("0");
-    return List.of(new ChatHistoryRecordingListener(Ivy.wfCase().uuid(), taskUuid));
+    String caseUuid = Ivy.wfCase().uuid();
+    String taskUuid = Ivy.wfTask().uuid();
+    String agentId = UUID.randomUUID().toString();
+    var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, new IvyRepoHistoryStorage());
+    agentBuilder.registerListener(new AgentResponseListener(repo));
+    agentBuilder.registerListener(new ToolExecutionListener(repo));
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
