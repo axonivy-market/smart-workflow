@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.listener.AgentResponseListener;
@@ -25,7 +24,6 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
-import ch.ivyteam.ivy.workflow.ITask;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
@@ -33,7 +31,7 @@ import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
   private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
-  private static final String HISTORY_ENABLED = "AI.History.Enabled";
+  private static final String HISTORY_ENABLED = "AI.Observability.Ivy";
 
   private final ProgramContext context;
 
@@ -133,7 +131,7 @@ public class AgentCallExecutor {
       return;
     }
     String caseUuid = Ivy.wfCase().uuid();
-    String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse(HistoryRecorder.NO_TASK_UUID);
+    String taskUuid = Ivy.wfTask().uuid();
     String agentId = UUID.randomUUID().toString();
     var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, new IvyRepoHistoryStorage());
     agentBuilder.registerListener(new AgentResponseListener(repo));

@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.history.internal;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
-import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecorder;
-import com.axonivy.utils.smart.workflow.utils.DateParsingUtils;
 
 
 public class AgentHistoryTreeBuilder {
@@ -34,7 +33,7 @@ public class AgentHistoryTreeBuilder {
   }
 
   private static CaseNode buildCaseNode(String caseUuid, List<AgentConversationEntry> entries) {
-    var entriesByTask = groupBy(entries, entry -> resolveTaskUuid(entry.getTaskUuid()));
+    var entriesByTask = groupBy(entries, AgentConversationEntry::getTaskUuid);
     List<TaskNode> taskNodes = sortTaskNodesByAgentTimestampAsc(entriesByTask.entrySet().stream()
         .map(taskGroup -> new TaskNode(taskGroup.getKey(), buildAgentNodes(taskGroup.getValue())))
         .toList());
@@ -57,7 +56,7 @@ public class AgentHistoryTreeBuilder {
                 .filter(Objects::nonNull)
                 .map(AgentConversationEntry::getLastUpdated)
                 .filter(Objects::nonNull)
-                .map(DateParsingUtils::parse)
+                .map(timestamp -> StringUtils.isBlank(timestamp) ? null : LocalDateTime.parse(timestamp))
                 .filter(Objects::nonNull)
                 .min(Comparator.naturalOrder())
                 .orElse(null),
@@ -67,9 +66,5 @@ public class AgentHistoryTreeBuilder {
 
   private static <T> Map<String, List<T>> groupBy(List<T> entries, Function<T, String> key) {
     return entries.stream().collect(Collectors.groupingBy(key));
-  }
-
-  private static String resolveTaskUuid(String taskUuid) {
-    return StringUtils.defaultIfBlank(taskUuid, HistoryRecorder.NO_TASK_UUID);
   }
 }

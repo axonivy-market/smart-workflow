@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.history.recorder.internal;
 
-import com.axonivy.utils.smart.workflow.utils.DateParsingUtils;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
   public void store(List<ChatMessage> messages, ResponseMetadata metadata) {
     var entry = findOrCreateEntry();
     entry.setMessagesJson(stripBase64(ChatMessageSerializer.messagesToJson(messages)));
-    entry.setLastUpdated(DateParsingUtils.now());
+    entry.setLastUpdated(LocalDateTime.now().toString());
     if (metadata != null && !messages.isEmpty() && messages.getLast() instanceof AiMessage) {
       appendTokenMetadata(entry, metadata);
     }
@@ -54,7 +54,7 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
   public void record(String toolName, String arguments, String resultText) {
     var entry = findOrCreateEntry();
     var tools = new ArrayList<>(entry.getToolExecutions());
-    tools.add(new ToolExecution(toolName, arguments, resultText, DateParsingUtils.now()));
+    tools.add(new ToolExecution(toolName, arguments, resultText, LocalDateTime.now().toString()));
     entry.setToolExecutions(tools);
     storage.save(entry);
     currentEntry = entry;

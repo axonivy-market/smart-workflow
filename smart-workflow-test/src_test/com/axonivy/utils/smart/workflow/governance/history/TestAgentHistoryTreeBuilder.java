@@ -11,7 +11,6 @@ import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversat
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.CaseNode;
-import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.TaskNode;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 
@@ -56,23 +55,6 @@ public class TestAgentHistoryTreeBuilder {
     assertThat(agents.get(0).chat()).isEqualTo(first);
     assertThat(agents.get(1).chat()).isEqualTo(second);
     assertThat(agents.get(2).chat()).isEqualTo(orchestrator);
-  }
-
-  @Test
-  void nullTaskUuidDefaultsToMinusOne() {
-    var entry = new AgentConversationEntry();
-    entry.setAgentId("agent-1");
-    entry.setCaseUuid("case-1");
-    entry.setTaskUuid(null);
-    entry.setLastUpdated(T0.toString());
-
-    List<CaseNode> cases = AgentHistoryTreeBuilder.buildTree(List.of(entry));
-
-    assertThat(cases).hasSize(1);
-    List<TaskNode> tasks = cases.get(0).tasks();
-    assertThat(tasks).hasSize(1);
-    assertThat(tasks.get(0).taskUuid()).isEqualTo("-1");
-    assertThat(tasks.get(0).agents()).hasSize(1);
   }
 
   @Test
