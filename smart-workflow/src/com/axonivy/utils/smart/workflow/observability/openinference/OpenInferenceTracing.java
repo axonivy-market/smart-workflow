@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.OpenInferenceCollector;
 import com.axonivy.utils.smart.workflow.observability.openinference.span.LLMSpan;
+import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.trace.Attribute;
@@ -29,12 +30,8 @@ public class OpenInferenceTracing implements ChatModelListener {
 
   public OpenInferenceTracing(String provider) {
     this.collector = new OpenInferenceCollector(provider)
-        .hideInputMessages(eval(Var.HIDE_INPUT_MESSAGES))
-        .hideOutputMessages(eval(Var.HIDE_OUTPUT_MESSAGES)) ;
-  }
-
-  private static boolean eval(String hideOutputMessages) {
-    return "true".equals(Ivy.var().get(hideOutputMessages));  
+        .hideInputMessages(IvyVar.bool(Var.HIDE_INPUT_MESSAGES))
+        .hideOutputMessages(IvyVar.bool(Var.HIDE_OUTPUT_MESSAGES)) ;
   }
 
   private List<Attribute> attributes() {
