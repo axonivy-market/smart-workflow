@@ -2,16 +2,12 @@ package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
-import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
-import com.axonivy.utils.smart.workflow.governance.listener.AgentResponseListener;
-import com.axonivy.utils.smart.workflow.governance.listener.ToolExecutionListener;
+import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
@@ -31,8 +27,6 @@ import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
-  private static final String HISTORY_ENABLED = "AI.Observability.Ivy.Enabled";
-
   private final ProgramContext context;
 
   public AgentCallExecutor(ProgramContext context) {
@@ -124,19 +118,7 @@ public class AgentCallExecutor {
         .modelName(modelName)
         .structuredOutput(isStructured);
     agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
-    configureHistoryListeners(agentBuilder);
-  }
-
-  private void configureHistoryListeners(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    if (!"true".equals(Ivy.var().get(HISTORY_ENABLED))) {
-      return;
-    }
-    String caseUuid = Ivy.wfCase().uuid();
-    String taskUuid = Ivy.wfTask().uuid();
-    String agentId = UUID.randomUUID().toString();
-    var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, new IvyRepoHistoryStorage());
-    agentBuilder.registerListener(new AgentResponseListener(repo));
-    agentBuilder.registerListener(new ToolExecutionListener(repo));
+    new ChatHistoryListener().configure().forEach(agentBuilder::registerListener);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
