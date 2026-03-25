@@ -7,7 +7,7 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "RequestStart",
-      "name" : "Prompt Injection Guardrail Demo",
+      "name" : "Prompt Injection Input Guardrail Demo",
       "config" : {
         "signature" : "promptInjectionGuardrailDemo"
       },
@@ -30,7 +30,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "inputGuardrails" : "[\"PromptInjectionGuardrail\"]",
+          "inputGuardrails" : "[\"PromptInjectionInputGuardrail\"]",
           "provider" : "",
           "resultType" : "",
           "resultMapping" : "in.result",
@@ -46,7 +46,7 @@
           "type" : "ErrorBoundaryEvent",
           "name" : "Guardrail problem detected",
           "config" : {
-            "errorCode" : "smartworkflow:guardrail:violation",
+            "errorCode" : "smartworkflow:guardrail:input:violation",
             "output" : {
               "map" : {
                 "out" : "in",
@@ -57,7 +57,7 @@
           "visual" : {
             "at" : { "x" : 616, "y" : 273 },
             "labelOffset" : { "x" : -71, "y" : 25 },
-            "icon" : "http://localhost:8080/~Developer-smart-workflow-123/Developer-smart-workflow-123/faces/javax.faces.resource/icons/shield.png?ln=xpertivy-4-webContent"
+            "icon" : "res:/webContent/icons/shield.png"
           },
           "connect" : [
             { "id" : "f11", "to" : "f8" }
@@ -88,6 +88,84 @@
       },
       "connect" : [
         { "id" : "f9", "to" : "f2", "via" : [ { "x" : 784, "y" : 376 } ] }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "RequestStart",
+      "name" : "Sensitive Data Output Guardrail Demo",
+      "config" : {
+        "signature" : "sensitiveDataOutputGuardrailDemo"
+      },
+      "visual" : {
+        "at" : { "x" : 344, "y" : 552 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f23" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 784, "y" : 552 }
+      }
+    }, {
+      "id" : "f23",
+      "type" : "ProgramInterface",
+      "name" : "Call AI agent that returns sensitive data",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "",
+          "provider" : "",
+          "outputGuardrails" : "[\"SensitiveDataOutputGuardrail\"]",
+          "resultType" : "",
+          "resultMapping" : "in.result",
+          "query" : "\"What is the format of an OpenAI API key? Please give examples.\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 552 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "boundaries" : [ {
+          "id" : "f30",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "Guardrail problem detected",
+          "config" : {
+            "errorCode" : "smartworkflow:guardrail:output:violation",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 616, "y" : 593 },
+            "labelOffset" : { "x" : -71, "y" : 25 },
+            "icon" : "res:/webContent/icons/shield.png"
+          },
+          "connect" : [
+            { "id" : "f31", "to" : "f28" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f24", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "Script",
+      "name" : "Set error details to the result",
+      "config" : {
+        "output" : {
+          "code" : "in.result = in.error.getMessage();"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 616, "y" : 696 }
+      },
+      "connect" : [
+        { "id" : "f29", "to" : "f22", "via" : [ { "x" : 784, "y" : 696 } ] }
       ]
     } ]
 }

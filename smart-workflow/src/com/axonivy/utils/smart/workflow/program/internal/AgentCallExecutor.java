@@ -2,34 +2,36 @@ package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.listener.ChatHistoryRecordingListener;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.listener.AgentResponseListener;
+import com.axonivy.utils.smart.workflow.governance.listener.ToolExecutionListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
+import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
 
-import ch.ivyteam.ivy.bpm.error.BpmError;
-import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
-import ch.ivyteam.ivy.workflow.ITask;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
+import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
-  private static final String GUARDRAIL_ERROR_CODE = "smartworkflow:guardrail:violation";
-  private static final String HISTORY_ENABLED = "AI.History.Enabled";
+  private static final String HISTORY_ENABLED = "AI.Observability.Ivy.Enabled";
 
   private final ProgramContext context;
 
@@ -65,6 +67,7 @@ public class AgentCallExecutor {
 
     configureToolProvider(agentBuilder);
     configureInputGuardrails(agentBuilder);
+    configureOutputGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
     var agent = agentBuilder.build();
@@ -80,8 +83,8 @@ public class AgentCallExecutor {
         }
       }
       Ivy.log().info("Agent response: " + result);
-    } catch (InputGuardrailException ex) {
-      throwGuardrailError(ex);
+    } catch (InputGuardrailException | OutputGuardrailException ex) {
+      GuardrailErrors.throwError(ex);
     }
   }
 
@@ -119,21 +122,21 @@ public class AgentCallExecutor {
     String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var modelOptions = options()
         .modelName(modelName)
-        .structuredOutput(isStructured)
-        .listeners(createListeners());
+        .structuredOutput(isStructured);
     agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
+    configureHistoryListeners(agentBuilder);
   }
 
-  private List<ChatModelListener> createListeners() {
+  private void configureHistoryListeners(AiServices<? extends DynamicAgent<?>> agentBuilder) {
     if (!"true".equals(Ivy.var().get(HISTORY_ENABLED))) {
-      return List.of();
+      return;
     }
-    String taskUuid = Optional.ofNullable(Ivy.wfTask()).map(ITask::uuid).orElse("0");
-    String processName = Optional.ofNullable(Ivy.wfCase())
-        .map(c -> c.getProcessStart())
-        .map(ps -> StringUtils.defaultIfBlank(ps.getName(), ps.getRequestPath()))
-        .orElse("");
-    return List.of(new ChatHistoryRecordingListener(Ivy.wfCase().uuid(), taskUuid, processName));
+    String caseUuid = Ivy.wfCase().uuid();
+    String taskUuid = Ivy.wfTask().uuid();
+    String agentId = UUID.randomUUID().toString();
+    var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, new IvyRepoHistoryStorage());
+    agentBuilder.registerListener(new AgentResponseListener(repo));
+    agentBuilder.registerListener(new ToolExecutionListener(repo));
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
@@ -150,10 +153,12 @@ public class AgentCallExecutor {
     }
   }
 
-  private void throwGuardrailError(InputGuardrailException ex) {
-    BpmPublicErrorBuilder errorBuilder = BpmError.create(GUARDRAIL_ERROR_CODE);
-    Optional.ofNullable(ex.getMessage()).ifPresent(message -> errorBuilder.withMessage(message));
-    Optional.ofNullable(ex.getCause()).ifPresent(cause -> errorBuilder.withCause(ex));
-    errorBuilder.throwError();
+  private void configureOutputGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    List<String> guardrailFilters = executeListOfStrings(Conf.OUTPUT_GUARD_RAILS).orElse(null);
+    List<OutputGuardrailAdapter> outputGuardrails = GuardrailCollector.outputGuardrailAdapters(guardrailFilters);
+
+    if (CollectionUtils.isNotEmpty(outputGuardrails)) {
+      agentBuilder.outputGuardrails(outputGuardrails);
+    }
   }
 }
