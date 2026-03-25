@@ -2,6 +2,7 @@ package com.axonivy.utils.smart.workflow.governance.ui.bean;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -13,9 +14,9 @@ import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.donut.DonutChartModel;
 import org.primefaces.model.charts.line.LineChartModel;
 
-import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryEntry;
-import com.axonivy.utils.smart.workflow.governance.history.HistoryFilter;
-import com.axonivy.utils.smart.workflow.governance.history.HistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.service.HistoryAnalyticsService;
 import com.axonivy.utils.smart.workflow.governance.ui.model.DashboardKpi;
 
@@ -25,7 +26,7 @@ public class UsageAnalyticBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private final HistoryStorage storage = HistoryStorage.create();
+  private final HistoryStorage storage = new IvyRepoHistoryStorage();
   private final HistoryAnalyticsService analyticsService = new HistoryAnalyticsService();
 
   private String analyticsDateRange = "LAST_7_DAYS";
@@ -61,12 +62,11 @@ public class UsageAnalyticBean implements Serializable {
   private void refreshAnalytics() {
     LocalDate from = resolveDateFrom(analyticsDateRange);
     LocalDate to = resolveDateTo(analyticsDateRange);
-    List<ChatHistoryEntry> current = storage.query(new HistoryFilter(null, null, null, from, to));
+    List<AgentConversationEntry> current = filterByDate(storage.findAll(), from, to);
 
     long days = (from != null && to != null) ? ChronoUnit.DAYS.between(from, to) + 1 : 0;
-    List<ChatHistoryEntry> previous = days > 0
-        ? storage.query(new HistoryFilter(null, null, null,
-            from.minusDays(days), from.minusDays(1)))
+    List<AgentConversationEntry> previous = days > 0
+        ? filterByDate(storage.findAll(), from.minusDays(days), from.minusDays(1))
         : List.of();
 
     kpi = analyticsService.computeKpi(current, previous);
@@ -75,6 +75,18 @@ public class UsageAnalyticBean implements Serializable {
     tokenStackedChart = analyticsService.buildTokenStacked(current);
     topCasesChart = analyticsService.buildTopCases(current);
     responseTimeChart = analyticsService.buildResponseTimeHistogram(current);
+  }
+
+  private List<AgentConversationEntry> filterByDate(List<AgentConversationEntry> all,
+      LocalDate from, LocalDate to) {
+    if (from == null && to == null) return all;
+    return all.stream().filter(e -> {
+      if (e.getLastUpdated() == null) return false;
+      try {
+        LocalDate d = LocalDateTime.parse(e.getLastUpdated()).toLocalDate();
+        return (from == null || !d.isBefore(from)) && (to == null || !d.isAfter(to));
+      } catch (Exception ex) { return false; }
+    }).toList();
   }
 
   private LocalDate resolveDateFrom(String range) {
@@ -104,4 +116,7 @@ public class UsageAnalyticBean implements Serializable {
   public BarChartModel getTokenStackedChart() { return tokenStackedChart; }
   public BarChartModel getTopCasesChart() { return topCasesChart; }
   public BarChartModel getResponseTimeChart() { return responseTimeChart; }
+
+  public String getAnalyticsDateRange() { return analyticsDateRange; }
+  public void setAnalyticsDateRange(String v) { this.analyticsDateRange = v; }
 }

@@ -21,6 +21,7 @@ public class AgentConversationEntry {
   private String caseUuid;
   private String taskUuid;
   private String agentId;
+  private String processName;
   private String messagesJson;
   private String tokenUsageJson;
   private String lastUpdated;
@@ -34,6 +35,9 @@ public class AgentConversationEntry {
 
   public String getAgentId() { return agentId; }
   public void setAgentId(String agentId) { this.agentId = agentId; }
+
+  public String getProcessName() { return processName; }
+  public void setProcessName(String processName) { this.processName = processName; }
 
   public String getMessagesJson() { return messagesJson; }
   public void setMessagesJson(String messagesJson) { this.messagesJson = messagesJson; }

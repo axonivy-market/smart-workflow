@@ -79,12 +79,12 @@ public class ChatHistoryJsonParser {
         .orElse(UNKNOWN_MODEL);
   }
 
-  public static long getInputTokens(ChatHistoryEntry entry) {
+  public static long getInputTokens(AgentConversationEntry entry) {
     if (entry == null || entry.getTokenUsageJson() == null) {
       return 0L;
     }
     try {
-      JsonNode array = MAPPER.readTree(entry.getTokenUsageJson());
+      JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
       if (!array.isArray()) {
         return 0L;
       }
@@ -101,12 +101,12 @@ public class ChatHistoryJsonParser {
     }
   }
 
-  public static long getOutputTokens(ChatHistoryEntry entry) {
+  public static long getOutputTokens(AgentConversationEntry entry) {
     if (entry == null || entry.getTokenUsageJson() == null) {
       return 0L;
     }
     try {
-      JsonNode array = MAPPER.readTree(entry.getTokenUsageJson());
+      JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
       if (!array.isArray()) {
         return 0L;
       }
@@ -123,12 +123,12 @@ public class ChatHistoryJsonParser {
     }
   }
 
-  public static long getAvgDurationMs(ChatHistoryEntry entry) {
+  public static long getAvgDurationMs(AgentConversationEntry entry) {
     if (entry == null || entry.getTokenUsageJson() == null) {
       return 0L;
     }
     try {
-      JsonNode array = MAPPER.readTree(entry.getTokenUsageJson());
+      JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
       if (!array.isArray() || array.size() == 0) {
         return 0L;
       }

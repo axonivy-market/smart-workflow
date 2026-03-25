@@ -15,8 +15,8 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
-import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryEntry;
-import com.axonivy.utils.smart.workflow.governance.history.HistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.service.CaseService;
 import com.axonivy.utils.smart.workflow.governance.ui.model.CaseTreeNode;
 import com.axonivy.utils.smart.workflow.governance.ui.model.TaskTreeNode;
@@ -50,10 +50,8 @@ public class ConversationsBean implements Serializable {
   }
 
   private void loadForCase(String caseUuid) {
-    HistoryStorage storage = HistoryStorage.create();
-    List<ChatHistoryEntry> entries = storage.findAll().stream()
-        .filter(e -> caseUuid.equalsIgnoreCase(e.getCaseUuid()))
-        .toList();
+    IvyRepoHistoryStorage storage = new IvyRepoHistoryStorage();
+    List<AgentConversationEntry> entries = storage.findByCaseUuid(caseUuid);
     List<CaseTreeNode> tree = CaseTreeNode.buildTree(entries);
     caseNode = tree.isEmpty() ? null : tree.get(0);
     if (caseNode != null && !caseNode.getTasks().isEmpty()) {
@@ -76,7 +74,7 @@ public class ConversationsBean implements Serializable {
   }
 
   /** Parses messagesJson into a list of MessageViewModels for rendering chat bubbles. */
-  public List<MessageViewModel> parseMessages(ChatHistoryEntry entry) {
+  public List<MessageViewModel> parseMessages(AgentConversationEntry entry) {
     if (entry == null || entry.getMessagesJson() == null) return List.of();
     try {
       List<ChatMessage> messages = ChatMessageDeserializer.messagesFromJson(entry.getMessagesJson());
@@ -112,11 +110,11 @@ public class ConversationsBean implements Serializable {
         .orElse(0);
   }
 
-  public long getInputTokens(ChatHistoryEntry entry) {
+  public long getInputTokens(AgentConversationEntry entry) {
     return ChatHistoryJsonParser.getInputTokens(entry);
   }
 
-  public long getOutputTokens(ChatHistoryEntry entry) {
+  public long getOutputTokens(AgentConversationEntry entry) {
     return ChatHistoryJsonParser.getOutputTokens(entry);
   }
 
@@ -165,7 +163,7 @@ public class ConversationsBean implements Serializable {
   }
 
   private String buildTaskJsonObject(TaskTreeNode taskNode) {
-    ChatHistoryEntry entry = taskNode.getEntry();
+    AgentConversationEntry entry = taskNode.getEntry();
     List<MessageViewModel> messages = parseMessages(entry);
     StringBuilder sb = new StringBuilder("  {\n");
     sb.append("    \"taskUuid\": ").append(jsonStr(entry.getTaskUuid())).append(",\n");

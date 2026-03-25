@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.service.CaseService;
 
 public class CaseTreeNode {
@@ -30,26 +30,26 @@ public class CaseTreeNode {
 
   /**
    * Factory: groups entries by caseUuid, sorts cases and tasks by lastUpdated descending
-   * (newest first). processName is taken from the first entry that has one.
+   * (newest first).
    */
-  public static List<CaseTreeNode> buildTree(List<ChatHistoryEntry> entries) {
+  public static List<CaseTreeNode> buildTree(List<AgentConversationEntry> entries) {
     if (entries == null || entries.isEmpty()) {
       return List.of();
     }
-    Map<String, List<ChatHistoryEntry>> byCase = new LinkedHashMap<>();
-    for (ChatHistoryEntry entry : entries) {
+    Map<String, List<AgentConversationEntry>> byCase = new LinkedHashMap<>();
+    for (AgentConversationEntry entry : entries) {
       String key = entry.getCaseUuid() != null ? entry.getCaseUuid() : "";
       byCase.computeIfAbsent(key, k -> new ArrayList<>()).add(entry);
     }
     List<CaseTreeNode> nodes = new ArrayList<>();
-    for (Map.Entry<String, List<ChatHistoryEntry>> e : byCase.entrySet()) {
+    for (Map.Entry<String, List<AgentConversationEntry>> e : byCase.entrySet()) {
       List<TaskTreeNode> taskNodes = e.getValue().stream()
-          .sorted(Comparator.comparing(ChatHistoryEntry::getLastUpdated,
+          .sorted(Comparator.comparing(AgentConversationEntry::getLastUpdated,
               Comparator.nullsLast(Comparator.naturalOrder())))
           .map(TaskTreeNode::new)
           .toList();
       String processName = e.getValue().stream()
-          .map(ChatHistoryEntry::getProcessName)
+          .map(AgentConversationEntry::getProcessName)
           .filter(n -> n != null && !n.isEmpty())
           .findFirst()
           .orElse("");

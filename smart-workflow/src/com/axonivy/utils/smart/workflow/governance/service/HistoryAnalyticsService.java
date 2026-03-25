@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import org.primefaces.model.charts.line.LineChartOptions;
 import org.primefaces.model.charts.optionconfig.legend.Legend;
 import org.primefaces.model.charts.pie.PieChartDataSet;
 
-import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.ui.model.DashboardKpi;
 import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
 
@@ -36,7 +37,7 @@ public class HistoryAnalyticsService {
 
   // ── KPI ──────────────────────────────────────────────────────────────────
 
-  public DashboardKpi computeKpi(List<ChatHistoryEntry> current, List<ChatHistoryEntry> previous) {
+  public DashboardKpi computeKpi(List<AgentConversationEntry> current, List<AgentConversationEntry> previous) {
     if (current.isEmpty()) {
       return DashboardKpi.empty();
     }
@@ -73,14 +74,16 @@ public class HistoryAnalyticsService {
 
   // ── Chart A: Token Usage Over Time (line) ────────────────────────────────
 
-  public LineChartModel buildTokenTimeline(List<ChatHistoryEntry> entries) {
+  public LineChartModel buildTokenTimeline(List<AgentConversationEntry> entries) {
     Map<String, Long> tokensByDay = new LinkedHashMap<>();
     entries.stream()
         .filter(e -> e.getLastUpdated() != null)
         .sorted((a, b) -> a.getLastUpdated().compareTo(b.getLastUpdated()))
         .forEach(e -> {
-          String label = e.getLastUpdated().toLocalDate().format(DAY_FMT);
-          tokensByDay.merge(label, (long) ChatHistoryJsonParser.getTotalTokens(e), Long::sum);
+          try {
+            String label = LocalDateTime.parse(e.getLastUpdated()).toLocalDate().format(DAY_FMT);
+            tokensByDay.merge(label, (long) ChatHistoryJsonParser.getTotalTokens(e), Long::sum);
+          } catch (Exception ignored) {}
         });
 
     LineChartDataSet dataSet = new LineChartDataSet();
@@ -117,7 +120,7 @@ public class HistoryAnalyticsService {
 
   // ── Chart B: Model Distribution (donut) ──────────────────────────────────
 
-  public DonutChartModel buildModelDistribution(List<ChatHistoryEntry> entries) {
+  public DonutChartModel buildModelDistribution(List<AgentConversationEntry> entries) {
     Map<String, Long> counts = entries.stream()
         .collect(Collectors.groupingBy(ChatHistoryJsonParser::getModelName, Collectors.counting()));
 
@@ -146,18 +149,20 @@ public class HistoryAnalyticsService {
 
   // ── Chart C: Input vs Output per Day (stacked bar) ───────────────────────
 
-  public BarChartModel buildTokenStacked(List<ChatHistoryEntry> entries) {
+  public BarChartModel buildTokenStacked(List<AgentConversationEntry> entries) {
     Map<String, Long[]> byDay = new LinkedHashMap<>();
     entries.stream()
         .filter(e -> e.getLastUpdated() != null)
         .sorted((a, b) -> a.getLastUpdated().compareTo(b.getLastUpdated()))
         .forEach(e -> {
-          String label = e.getLastUpdated().toLocalDate().format(DAY_FMT);
-          byDay.merge(label,
-              new Long[]{ChatHistoryJsonParser.getInputTokens(e),
-                         ChatHistoryJsonParser.getOutputTokens(e)},
-              (existing, incoming) -> new Long[]{
-                  existing[0] + incoming[0], existing[1] + incoming[1]});
+          try {
+            String label = LocalDateTime.parse(e.getLastUpdated()).toLocalDate().format(DAY_FMT);
+            byDay.merge(label,
+                new Long[]{ChatHistoryJsonParser.getInputTokens(e),
+                           ChatHistoryJsonParser.getOutputTokens(e)},
+                (existing, incoming) -> new Long[]{
+                    existing[0] + incoming[0], existing[1] + incoming[1]});
+          } catch (Exception ignored) {}
         });
 
     List<String> labels = new ArrayList<>(byDay.keySet());
@@ -207,7 +212,7 @@ public class HistoryAnalyticsService {
 
   // ── Chart D: Top 5 Processes by Token Usage (horizontal bar) ────────────
 
-  public BarChartModel buildTopCases(List<ChatHistoryEntry> entries) {
+  public BarChartModel buildTopCases(List<AgentConversationEntry> entries) {
     Map<String, Long> byCase = entries.stream()
         .collect(Collectors.groupingBy(
             e -> e.getProcessName() != null && !e.getProcessName().isEmpty() ? e.getProcessName() : "unknown",
@@ -253,9 +258,9 @@ public class HistoryAnalyticsService {
 
   // ── Chart E: Response Time Distribution (horizontal histogram) ───────────
 
-  public BarChartModel buildResponseTimeHistogram(List<ChatHistoryEntry> entries) {
+  public BarChartModel buildResponseTimeHistogram(List<AgentConversationEntry> entries) {
     long[] buckets = new long[4];
-    for (ChatHistoryEntry entry : entries) {
+    for (AgentConversationEntry entry : entries) {
       long ms = ChatHistoryJsonParser.getAvgDurationMs(entry);
       if (ms < 5000) {
         buckets[0]++;
