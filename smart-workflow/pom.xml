@@ -54,6 +54,22 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>com.arize</groupId>
+      <artifactId>openinference-semantic-conventions</artifactId>
+      <version>0.1.9</version>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.axonivy.ivy.api.restricted</groupId>
+      <artifactId>ivy-trace-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm</artifactId>
       <version>9.9.1</version>
