@@ -5,8 +5,9 @@ Variables:
     DefaultProvider: ""
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
-      # Default input guardrails. Separated by comma. Example: "GuardrailOne, GuardrailTwo"
+      # Default input guardrails. Separated by comma. Example: "PromptInjectionInputGuardrail, GuardrailTwo"
       DefaultInput: ""
-    History:
-      # Enable chat history recording for governance audit.
-      Enabled: false
+    Observability:
+      Ivy:
+        # Enable chat history recording for governance audit.
+        Enabled: false
