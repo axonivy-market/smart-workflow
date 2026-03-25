@@ -10,8 +10,8 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import com.axonivy.utils.smart.workflow.governance.history.CaseHistoryGroup;
-import com.axonivy.utils.smart.workflow.governance.history.TaskHistoryGroup;
+import com.axonivy.utils.smart.workflow.governance.ui.entity.CaseHistoryGroup;
+import com.axonivy.utils.smart.workflow.governance.ui.entity.TaskHistoryGroup;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
