@@ -57,32 +57,35 @@
                            styleClass="history-table"
                            emptyMessage="No history records found.">
 
-                <p:column headerText="Case / Task" styleClass="col-case">
+                <p:column headerText="Case / Task / Agent" width="30%">
                   <h:outputText value="#{row.caseDisplayName}"
                                 rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}"
                                 styleClass="font-semibold" />
                   <h:outputText value="#{row.taskDisplayName}"
-                                rendered="#{row['class'].simpleName eq 'ChatHistoryEntry'}"
+                                rendered="#{row['class'].simpleName eq 'TaskHistoryGroup'}"
                                 styleClass="text-color-secondary" />
+                  <h:outputText value="Agent #{row.agentId}"
+                                rendered="#{row['class'].simpleName eq 'AgentConversationEntry'}"
+                                styleClass="text-color-secondary text-sm" />
                 </p:column>
 
-                <p:column headerText="Last Updated" styleClass="col-date">
+                <p:column headerText="Last Updated" width="10%">
                   <h:outputText value="#{row.lastUpdatedText}" />
                 </p:column>
 
-                <p:column headerText="Messages" styleClass="col-messages">
+                <p:column headerText="Messages" width="10%">
                   <span class="badge bg-blue-100 text-blue-700 border-round-3xl inline-block font-semibold">#{row.messageCount} msgs</span>
                 </p:column>
 
-                <p:column headerText="Tokens" styleClass="col-tokens">
+                <p:column headerText="Tokens" width="10%">
                   <span class="badge bg-green-100 text-green-700 border-round-3xl inline-block font-semibold">#{row.totalTokens}</span>
                 </p:column>
 
-                <p:column headerText="Model" styleClass="col-model">
+                <p:column headerText="Model" width="10%">
                   <span class="model-chip text-sm surface-ground border-round-sm">#{row.modelName}</span>
                 </p:column>
 
-                <p:column headerText="" styleClass="col-action">
+                <p:column headerText="" styleClass="col-action" width="5%">
                   <p:commandButton value="View" icon="tif tif-eye" process="@this"
                                    rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}"
                                    actionListener="#{logic.showConversations(row.caseUuid)}" />

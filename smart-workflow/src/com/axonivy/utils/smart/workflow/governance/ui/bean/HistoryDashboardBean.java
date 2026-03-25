@@ -1,10 +1,7 @@
 package com.axonivy.utils.smart.workflow.governance.ui.bean;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -14,9 +11,12 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.axonivy.utils.smart.workflow.governance.history.CaseHistoryGroup;
-import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryEntry;
-import com.axonivy.utils.smart.workflow.governance.history.HistoryFilter;
-import com.axonivy.utils.smart.workflow.governance.history.HistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.TaskHistoryGroup;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;
+import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
+import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 
 @ManagedBean
 @ViewScoped
@@ -24,16 +24,16 @@ public class HistoryDashboardBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private final HistoryStorage storage = HistoryStorage.create();
+  private final HistoryStorage storage = new IvyRepoHistoryStorage();
 
   private String filterCase = "";
   private String filterTaskUuid = "";
   private String filterModel = "";
   private String filterDateRange = "LAST_30_DAYS";
 
-  private List<ChatHistoryEntry> entries = List.of();
+  private List<AgentConversationEntry> entries = List.of();
   private TreeNode<Object> historyTree;
-  private ChatHistoryEntry selectedEntry;
+  private AgentConversationEntry selectedEntry;
 
   @PostConstruct
   public void init() {
@@ -41,27 +41,32 @@ public class HistoryDashboardBean implements Serializable {
   }
 
   public void applyFilter() {
-    HistoryFilter filter = new HistoryFilter(
-        nullIfEmpty(filterCase),
-        nullIfEmpty(filterTaskUuid),
-        nullIfEmpty(filterModel),
-        resolveDateFrom(filterDateRange),
-        resolveDateTo(filterDateRange));
-    entries = storage.query(filter);
+    entries = storage.findAll();
     buildTree();
   }
 
   private void buildTree() {
     historyTree = new DefaultTreeNode<>("root", null, null);
-    entries.stream()
-        .collect(Collectors.groupingBy(ChatHistoryEntry::getCaseUuid,
-            LinkedHashMap::new, Collectors.toList()))
-        .forEach((caseUuid, taskList) -> {
-          CaseHistoryGroup group = new CaseHistoryGroup(caseUuid, taskList);
-          TreeNode<Object> caseNode = new DefaultTreeNode<>("case", group, historyTree);
-          caseNode.setExpanded(false);
-          taskList.forEach(task -> new DefaultTreeNode<>("task", task, caseNode));
-        });
+    AgentHistoryTreeBuilder.buildTree(entries).forEach(caseNode -> {
+      List<AgentConversationEntry> caseEntries = caseNode.tasks().stream()
+          .flatMap(t -> t.agents().stream())
+          .map(AgentNode::chat)
+          .toList();
+      CaseHistoryGroup caseGroup = new CaseHistoryGroup(caseNode.caseUuid(), caseEntries);
+      TreeNode<Object> caseTreeNode = new DefaultTreeNode<>("case", caseGroup, historyTree);
+      caseTreeNode.setExpanded(false);
+
+      caseNode.tasks().forEach(taskNode -> {
+        List<AgentConversationEntry> taskEntries = taskNode.agents().stream()
+            .map(AgentNode::chat).toList();
+        TaskHistoryGroup taskGroup = new TaskHistoryGroup(taskNode.taskUuid(), taskEntries);
+        TreeNode<Object> taskTreeNode = new DefaultTreeNode<>("task", taskGroup, caseTreeNode);
+        taskTreeNode.setExpanded(false);
+
+        taskNode.agents().forEach(agentNode ->
+            new DefaultTreeNode<>("agent", agentNode.chat(), taskTreeNode));
+      });
+    });
   }
 
   public int getEntryCount() {
@@ -70,26 +75,6 @@ public class HistoryDashboardBean implements Serializable {
 
   public int getCaseCount() {
     return historyTree == null ? 0 : historyTree.getChildCount();
-  }
-
-  private String nullIfEmpty(String value) {
-    return (value == null || value.isBlank()) ? null : value;
-  }
-
-  private LocalDate resolveDateFrom(String range) {
-    return switch (range) {
-      case "TODAY" -> LocalDate.now();
-      case "LAST_7_DAYS" -> LocalDate.now().minusDays(6);
-      case "LAST_30_DAYS" -> LocalDate.now().minusDays(29);
-      default -> null;
-    };
-  }
-
-  private LocalDate resolveDateTo(String range) {
-    return switch (range) {
-      case "TODAY", "LAST_7_DAYS", "LAST_30_DAYS" -> LocalDate.now();
-      default -> null;
-    };
   }
 
   // Getters and setters
@@ -106,11 +91,11 @@ public class HistoryDashboardBean implements Serializable {
   public String getFilterDateRange() { return filterDateRange; }
   public void setFilterDateRange(String v) { this.filterDateRange = v; }
 
-  public List<ChatHistoryEntry> getEntries() { return entries; }
+  public List<AgentConversationEntry> getEntries() { return entries; }
 
   public TreeNode<Object> getHistoryTree() { return historyTree; }
 
-  public ChatHistoryEntry getSelectedEntry() { return selectedEntry; }
-  public void setSelectedEntry(ChatHistoryEntry v) { this.selectedEntry = v; }
+  public AgentConversationEntry getSelectedEntry() { return selectedEntry; }
+  public void setSelectedEntry(AgentConversationEntry v) { this.selectedEntry = v; }
 
 }

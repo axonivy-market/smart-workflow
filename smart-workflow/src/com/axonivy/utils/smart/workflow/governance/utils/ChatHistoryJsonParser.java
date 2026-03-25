@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.utils;
 
-import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -10,7 +10,7 @@ public class ChatHistoryJsonParser {
 
   private ChatHistoryJsonParser() {}
 
-  public static int getMessageCount(ChatHistoryEntry entry) {
+  public static int getMessageCount(AgentConversationEntry entry) {
     if (entry == null || entry.getMessagesJson() == null) {
       return 0;
     }
@@ -22,7 +22,7 @@ public class ChatHistoryJsonParser {
     }
   }
 
-  public static int getTotalTokens(ChatHistoryEntry entry) {
+  public static int getTotalTokens(AgentConversationEntry entry) {
     if (entry == null || entry.getTokenUsageJson() == null) {
       return 0;
     }
@@ -44,7 +44,7 @@ public class ChatHistoryJsonParser {
     }
   }
 
-  public static String getModelName(ChatHistoryEntry entry) {
+  public static String getModelName(AgentConversationEntry entry) {
     if (entry == null || entry.getTokenUsageJson() == null) {
       return "unknown";
     }

@@ -43,11 +43,7 @@
   border-left: 2px solid var(--primary-100);
 }
 
-.col-case { width: 280px; }
-.col-date { width: 160px; }
-.col-messages { width: 90px; }
-.col-tokens { width: 90px; }
-.col-model { width: 220px; }
+.col-action { white-space: nowrap; }
 
 .filter-case-input { width: 300px; }
 .filter-model-select { width: 200px; }
