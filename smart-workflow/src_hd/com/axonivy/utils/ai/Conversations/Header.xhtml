@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+<div class="cv-conv-header flex align-items-center justify-content-between py-2 px-5 border-bottom-1 surface-border">
+    <div>
+    <h:panelGroup rendered="#{conversationsBean.caseNode != null}" layout="block">
+        <span class="text-2xl font-bold">#{conversationsBean.caseNode.displayName}</span>
+        <div class="text-color-secondary">
+        Last updated #{conversationsBean.caseNode.lastUpdatedText}
+        </div>
+    </h:panelGroup>
+    <h:panelGroup rendered="#{conversationsBean.caseNode == null}" layout="block">
+        <div class="text-sm font-bold"><i class="tif tif-message-circle" /> Conversations</div>
+        <div class="text-color-secondary">Case: #{data.caseUuid}</div>
+    </h:panelGroup>
+    </div>
+
+    <div class="flex gap-2 align-items-center">
+    <p:commandButton id="back-btn" value="Back" icon="tif tif-arrow-left-circle"
+                        styleClass="p-button-secondary p-button-sm"
+                        process="@this"
+                        actionListener="#{logic.close}" />
+
+    <p:commandButton id="btn-export" value="Export" icon="tif tif-download"
+                        styleClass="p-button-outlined p-button-sm"
+                        ajax="false">
+        <p:fileDownload value="#{conversationsBean.exportCase()}" />
+    </p:commandButton>
+    </div>
+</div>
+</h:body>
+</html>
