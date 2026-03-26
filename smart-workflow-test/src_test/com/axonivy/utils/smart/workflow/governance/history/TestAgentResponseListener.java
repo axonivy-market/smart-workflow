@@ -9,8 +9,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.governance.history.listener.AgentResponseListener;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecorder;
-import com.axonivy.utils.smart.workflow.governance.listener.AgentResponseListener;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
