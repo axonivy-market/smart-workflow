@@ -25,6 +25,7 @@ import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
+
   private final ProgramContext context;
 
   public AgentCallExecutor(ProgramContext context) {
@@ -108,13 +109,15 @@ public class AgentCallExecutor {
     }
   }
 
-  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean isStructured) {
-    String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
-    String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured) {
+    var providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
+    var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+    var provider = ChatModelFactory.getProviderOrDefault(providerName);
     var modelOptions = options()
-        .modelName(modelName)
-        .structuredOutput(isStructured);
-    agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
+        .modelName(model)
+        .structuredOutput(structured)
+        .listeners(ListenerFactory.createListeners(provider.name()));
+    agentBuilder.chatModel(provider.setup(modelOptions));
     new ChatHistoryListener().configure().forEach(agentBuilder::registerListener);
   }
 

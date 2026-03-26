@@ -6,6 +6,7 @@ Thumbs.db
 
 # java
 *.class
+*.jar
 hs_err_pid*
 
 # maven

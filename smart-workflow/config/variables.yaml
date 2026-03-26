@@ -13,3 +13,8 @@ Variables:
       Ivy:
         # Enable chat history recording for governance audit.
         Enabled: ""
+      Openinference:
+        # Enable logging of AI interactions for observability and debugging purposes.
+        Enabled: ""
+        HideInputMessages: ""
+        HideOutputMessages: ""
