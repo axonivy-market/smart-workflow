@@ -60,6 +60,13 @@ class TestIvySubProcessToolSpecs {
         .containsOnly("firstName", "lastName");
   }
 
+  @Test
+  void zeroParams() {
+    assertThat(paramsOf(List.of()))
+        .as("no empty properties, description and the like is better accepted by the Arize Phoenix playground")
+        .isNull();
+  }
+
   private static JsonObjectSchema paramsOf(List<StartParameter> userVars) {
     return new JsonToolParamBuilder().toParams(userVars);
   }

@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.listener;
+package com.axonivy.utils.smart.workflow.governance.history.listener;
 
 import com.axonivy.utils.smart.workflow.governance.history.recorder.ToolExecutionRecorder;
 

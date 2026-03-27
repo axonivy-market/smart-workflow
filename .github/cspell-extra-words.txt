@@ -1,2 +1,1 @@
-smartworkflow, Agentic, multimodal, langchain, azureopenai, 
-onupload
+smartworkflow, Agentic, multimodal, langchain, azureopenai, openinference, arizephoenix, javaagent

@@ -1,23 +1,17 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
+import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Predicate;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
-import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
-import com.axonivy.utils.smart.workflow.governance.listener.AgentResponseListener;
-import com.axonivy.utils.smart.workflow.governance.listener.ToolExecutionListener;
+import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
-import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
-import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
-import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
@@ -31,7 +25,6 @@ import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.service.AiServices;
 
 public class AgentCallExecutor {
-  private static final String HISTORY_ENABLED = "AI.Observability.Ivy.Enabled";
 
   private final ProgramContext context;
 
@@ -66,8 +59,7 @@ public class AgentCallExecutor {
     configureModel(agentBuilder, structured.isPresent());
 
     configureToolProvider(agentBuilder);
-    configureInputGuardrails(agentBuilder);
-    configureOutputGuardrails(agentBuilder);
+    configureGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
     var agent = agentBuilder.build();
@@ -117,30 +109,16 @@ public class AgentCallExecutor {
     }
   }
 
-  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean isStructured) {
-    String providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
-    String modelName = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured) {
+    var providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
+    var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
+    var provider = ChatModelFactory.getProviderOrDefault(providerName);
     var modelOptions = options()
-        .modelName(modelName)
-        .structuredOutput(isStructured);
-    agentBuilder.chatModel(ChatModelFactory.createModel(modelOptions, providerName));
-    configureHistoryListeners(agentBuilder);
-  }
-
-  private void configureHistoryListeners(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    if (!"true".equals(Ivy.var().get(HISTORY_ENABLED))) {
-      return;
-    }
-    String caseUuid = Ivy.wfCase().uuid();
-    String taskUuid = Ivy.wfTask().uuid();
-    String agentId = UUID.randomUUID().toString();
-    String processName = Optional.ofNullable(Ivy.wfCase())
-        .map(c -> c.getProcessStart())
-        .map(ps -> StringUtils.defaultIfBlank(ps.getName(), ps.getRequestPath()))
-        .orElse("");
-    var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, processName, new IvyRepoHistoryStorage());
-    agentBuilder.registerListener(new AgentResponseListener(repo));
-    agentBuilder.registerListener(new ToolExecutionListener(repo));
+        .modelName(model)
+        .structuredOutput(structured)
+        .listeners(ListenerFactory.createListeners(provider.name()));
+    agentBuilder.chatModel(provider.setup(modelOptions));
+    new ChatHistoryListener().configure().forEach(agentBuilder::registerListener);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
@@ -148,21 +126,12 @@ public class AgentCallExecutor {
     agentBuilder.toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
   }
 
-  private void configureInputGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    List<String> guardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
-    List<InputGuardrailAdapter> inputGuardrails = GuardrailCollector.inputGuardrailAdapters(guardrailFilters);
-
-    if (CollectionUtils.isNotEmpty(inputGuardrails)) {
-      agentBuilder.inputGuardrails(inputGuardrails);
-    }
-  }
-
-  private void configureOutputGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    List<String> guardrailFilters = executeListOfStrings(Conf.OUTPUT_GUARD_RAILS).orElse(null);
-    List<OutputGuardrailAdapter> outputGuardrails = GuardrailCollector.outputGuardrailAdapters(guardrailFilters);
-
-    if (CollectionUtils.isNotEmpty(outputGuardrails)) {
-      agentBuilder.outputGuardrails(outputGuardrails);
-    }
+  private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    List<String> inputGuardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
+    GuardrailCollector.inputGuardrailAdapters(inputGuardrailFilters)
+      .forEach(agentBuilder::inputGuardrails);
+    List<String> outputGuardrailFilters = executeListOfStrings(Conf.OUTPUT_GUARD_RAILS).orElse(null);
+    GuardrailCollector.outputGuardrailAdapters(outputGuardrailFilters)
+      .forEach(agentBuilder::outputGuardrails);
   }
 }

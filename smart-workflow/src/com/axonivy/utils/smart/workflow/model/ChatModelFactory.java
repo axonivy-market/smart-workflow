@@ -23,12 +23,15 @@ public class ChatModelFactory {
   }
 
   public static ChatModel createModel(ModelOptions modelOptions, String providerName) {
+    return getProviderOrDefault(providerName).setup(modelOptions);
+  }
+
+  public static ChatModelProvider getProviderOrDefault(String providerName) {
     String resolvedProviderName = StringUtils.defaultIfBlank(providerName,
         StringUtils.defaultIfBlank(Ivy.var().get(AiConf.DEFAULT_PROVIDER), FALLBACK_PROVIDER));
 
-    var provider = ChatModelFactory.create(resolvedProviderName)
+    return ChatModelFactory.create(resolvedProviderName)
         .orElseThrow(() -> new IllegalArgumentException("Unknown model provider " + resolvedProviderName));
-    return provider.setup(modelOptions);
   }
 
   public static Optional<ChatModelProvider> create(String provider) {
