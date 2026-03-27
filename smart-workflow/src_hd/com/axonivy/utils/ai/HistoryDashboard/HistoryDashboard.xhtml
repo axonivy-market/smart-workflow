@@ -64,7 +64,7 @@
                   <h:outputText value="#{row.taskDisplayName}"
                                 rendered="#{row['class'].simpleName eq 'TaskHistoryGroup'}"
                                 styleClass="text-color-secondary" />
-                  <h:outputText value="Agent #{row.agentId}"
+                  <h:outputText value="Agent #{row.agentDisplayLabel}"
                                 rendered="#{row['class'].simpleName eq 'AgentConversationEntry'}"
                                 styleClass="text-color-secondary text-sm" />
                 </p:column>

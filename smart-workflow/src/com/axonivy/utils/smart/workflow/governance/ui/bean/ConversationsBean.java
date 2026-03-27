@@ -73,6 +73,24 @@ public class ConversationsBean implements Serializable {
         .orElse(null);
   }
 
+  public List<MessageViewModel> getSystemMessages(AgentConversationEntry entry) {
+    return parseMessages(entry).stream()
+        .filter(m -> "system".equals(m.getRole()))
+        .collect(Collectors.toList());
+  }
+
+  public List<MessageViewModel> getUserMessages(AgentConversationEntry entry) {
+    return parseMessages(entry).stream()
+        .filter(m -> "user".equals(m.getRole()))
+        .collect(Collectors.toList());
+  }
+
+  public List<MessageViewModel> getAssistantMessages(AgentConversationEntry entry) {
+    return parseMessages(entry).stream()
+        .filter(m -> "assistant".equals(m.getRole()))
+        .collect(Collectors.toList());
+  }
+
   /** Parses messagesJson into a list of MessageViewModels for rendering chat bubbles. */
   public List<MessageViewModel> parseMessages(AgentConversationEntry entry) {
     if (entry == null || entry.getMessagesJson() == null) return List.of();

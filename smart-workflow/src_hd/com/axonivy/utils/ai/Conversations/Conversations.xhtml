@@ -7,9 +7,13 @@
     <ui:define name="title">Conversations</ui:define>
     <ui:define name="content">
 
-      <h:outputStylesheet library="css" name="json-viewer.css" />
-      <h:outputScript library="js" name="json-viewer.js" target="head" />
       <h:outputStylesheet library="css" name="conversation-viewer.css" />
+      <h:outputStylesheet library="css" name="highlight-github.min.css"
+                          rendered="#{ivyFreyaTheme.mode eq 'light'}" />
+      <h:outputStylesheet library="css" name="highlight-github-dark.min.css"
+                          rendered="#{ivyFreyaTheme.mode eq 'dark'}" />
+      <h:outputScript library="js" name="marked.min.js" target="head" />
+      <h:outputScript library="js" name="highlight.min.js" target="head" />
       <h:outputScript library="js" name="conversation-viewer.js" target="head" />
 
       <h:form id="conv-form">
@@ -27,44 +31,23 @@
         <h:panelGroup id="cv-content-panel" layout="block" rendered="#{conversationsBean.caseNode != null}">
           <ui:include src="Summary.xhtml" />
 
-          <div class="cv-page-layout">
+          <!-- PrimeFaces sidebar: Case Details + Process Viewer -->
+          <p:sidebar id="cv-details-sidebar" widgetVar="cvSidebarPanel" position="right"
+                     style="width:70%" styleClass="cv-details-sidebar" modal="true" showCloseIcon="false">
+            <div class="cv-sidebar-panel-heading font-bold text-xl text-900 mb-3">Case Details</div>
+            <ui:include src="CaseDetailsDialog.xhtml" />
 
-            <!-- Main: conversation list, grows/shrinks as panel opens -->
+            <div class="cv-sidebar-panel-heading font-bold text-xl text-900 mt-5 mb-3">Process Viewer</div>
+            <ui:include src="ProcessViewer.xhtml" />
+          </p:sidebar>
+
+          <div class="cv-page-layout">
             <div class="cv-main-area">
               <div class="cv-conversation-list py-4 px-5">
                 <ui:repeat var="task" value="#{conversationsBean.caseNode.tasks}" varStatus="taskStatus">
                   <ui:include src="ConversationTemplate.xhtml" />
                 </ui:repeat>
               </div>
-            </div>
-
-            <!-- Sidebar: sliding panel + icon strip -->
-            <div class="cv-sidebar">
-
-              <!-- Sliding panel -->
-              <div class="cv-sidebar-panel" id="cv-sidebar-panel">
-                <div class="cv-sidebar-content" id="cv-panel-process">
-                  <ui:include src="ProcessViewer.xhtml" />
-                </div>
-                <div class="cv-sidebar-content" id="cv-panel-casedetails" style="display:none">
-                  <div class="cv-sidebar-panel-heading font-bold text-xl text-900 mb-3">Case Details</div>
-                  <ui:include src="CaseDetailsDialog.xhtml" />
-                </div>
-              </div>
-
-              <!-- Sidebar icon strip -->
-              <div class="cv-sidebar-icons">
-                <button type="button" class="cv-sidebar-btn cv-sidebar-item cv-sidebar-item--process"
-                        title="Process Viewer" onclick="CvSidebar.toggle('process')">
-                  <i class="tif tif-sitemap cv-sidebar-btn-icon text-2xl" />
-                </button>
-                <button type="button" class="cv-sidebar-btn cv-sidebar-item cv-sidebar-item--casedetails"
-                        title="Case Details" onclick="CvSidebar.toggle('casedetails')">
-                  <i class="tif tif-info-circle cv-sidebar-btn-icon text-2xl" />
-                </button>
-                <p:tooltip globalSelector=".cv-sidebar-btn" position="left" showDelay="200" />
-              </div>
-
             </div>
           </div>
         </h:panelGroup>

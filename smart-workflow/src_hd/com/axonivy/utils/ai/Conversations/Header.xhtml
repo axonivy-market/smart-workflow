@@ -31,6 +31,11 @@
                         ajax="false">
         <p:fileDownload value="#{conversationsBean.exportCase()}" />
     </p:commandButton>
+
+    <p:commandButton id="btn-sidebar" type="button" value="Details" icon="tif tif-info-circle"
+                     styleClass="p-button-outlined p-button-sm"
+                     rendered="#{conversationsBean.caseNode != null}"
+                     onclick="PF('cvSidebarPanel').show()" />
     </div>
 </div>
 </h:body>

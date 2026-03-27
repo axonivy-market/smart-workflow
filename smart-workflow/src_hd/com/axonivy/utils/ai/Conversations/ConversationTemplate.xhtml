@@ -6,54 +6,169 @@
   xmlns:p="http://primefaces.org/ui"
   xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
-<div class="cv-task-block #{taskStatus.even ? 'cv-task-block--even' : 'cv-task-block--odd'}">
+<h:panelGroup layout="block" styleClass="cv-task-block">
 
-    <div class="cv-task-sep flex align-items-start justify-content-between py-2 px-1 mb-2 gap-3">
+    <!-- Task header -->
+    <div class="cv-task-sep flex align-items-start justify-content-between py-2 px-1 mb-3 gap-3">
         <div class="flex align-items-center gap-2 min-w-0">
             <span class="cv-task-sep-dot flex-shrink-0 border-circle" />
-            <span class="font-semibold">#{task.displayName}</span>
+            <span class="font-semibold">Task #{task.displayName}</span>
         </div>
-
         <div class="flex flex-column align-items-end gap-1 flex-shrink-0 text-color-secondary text-sm">
-            <span>#{task.messageCount} msgs &#183; #{task.totalTokens} tokens &#183; #{task.modelName}</span>
+            <span>#{task.agentCount} agent#{task.agentCount != 1 ? 's' : ''} &#183; #{task.totalTokens} tokens</span>
             <span>#{task.lastUpdatedText}</span>
         </div>
     </div>
 
-    <div class="cv-chat-msgs flex flex-column gap-3">
-        <ui:repeat var="msg" value="#{conversationsBean.parseMessages(task.entry)}">
+    <!-- Agents (collapsible panels) -->
+    <div class="flex flex-column gap-2">
+    <ui:repeat var="agent" value="#{task.agents}" varStatus="agentStatus">
+      <h:panelGroup layout="block" styleClass="cv-agent-block cv-agent-open">
 
-            <h:panelGroup rendered="#{msg.role == 'system'}" layout="block"
-                        styleClass="cv-msg cv-msg--system">
-            <div class="cv-system-block py-2 px-4">
-                <div class="cv-system-label mb-1 font-bold uppercase">System Prompt</div>
-                <div>#{msg.text}</div>
-            </div>
+        <!-- Agent header (clickable toggle) -->
+        <div class="cv-agent-header flex align-items-center gap-3" onclick="CvAgent.toggle(this)">
+          <i class="cv-agent-chevron tif tif-chevron-right flex-shrink-0" />
+          <span class="cv-agent-name flex-1 min-w-0 text-overflow-ellipsis overflow-hidden white-space-nowrap">Agent #{agent.displayName} (#{agentStatus.index + 1})</span>
+          <div class="flex align-items-center gap-2 flex-shrink-0" onclick="event.stopPropagation()">
+            <h:panelGroup rendered="#{agent.toolCount gt 0}">
+              <span class="cv-agent-tool-badge">
+                <i class="tif tif-wrench" />&#160;#{agent.toolCount}
+              </span>
             </h:panelGroup>
+          </div>
+        </div>
 
-            <h:panelGroup rendered="#{msg.role == 'user'}" layout="block"
-                        styleClass="cv-msg cv-msg--user">
-            <div class="cv-msg-role cv-msg-role--user">User</div>
-            <div class="cv-bubble cv-bubble-user py-3 px-4">#{msg.text}</div>
-            </h:panelGroup>
+        <!-- Agent body: PrimeFaces tab view -->
+        <div class="cv-agent-body">
+          <p:tabView styleClass="cv-agent-tabview" activeIndex="2">
 
-            <h:panelGroup rendered="#{msg.role == 'assistant'}" layout="block"
-                        styleClass="cv-msg cv-msg--agent">
-            <div class="cv-msg-role cv-msg-role--agent">Agent</div>
-            <div class="cv-bubble cv-bubble-ai py-3 px-4">#{msg.text}</div>
-            </h:panelGroup>
+            <f:facet name="actions">
+              <div class="cv-raw-toggle mt-2" onclick="event.stopPropagation()">
+                <span class="cv-raw-label font-semibold">Pretty</span>
+                <p:toggleSwitch value="#{agent.isPretty}" onchange="CvRaw.toggle(this)" />
+              </div>
+            </f:facet>
 
-            <h:panelGroup rendered="#{msg.role == 'tool'}" layout="block"
-                        styleClass="cv-msg cv-msg--tool">
-            <div class="cv-msg-role cv-msg-role--tool">Tool</div>
-            <div class="cv-bubble cv-bubble-tool py-2 px-3">
-                <div class="cv-tool-label">OUTPUT</div>
-                #{msg.text}
-            </div>
-            </h:panelGroup>
+            <p:tab title="System Prompt" contentStyleClass="cv-tab-content--system">
+              <h:panelGroup rendered="#{empty conversationsBean.getSystemMessages(agent.entry)}"
+                            layout="block" styleClass="cv-tab-empty">
+                No system prompt configured
+              </h:panelGroup>
+              <ui:repeat var="msg" value="#{conversationsBean.getSystemMessages(agent.entry)}">
+                <div class="cv-tab-msg-text">#{msg.text}</div>
+                <pre class="cv-tab-raw-text">#{msg.text}</pre>
+              </ui:repeat>
+            </p:tab>
 
-        </ui:repeat>
+            <p:tab title="Input" contentStyleClass="cv-tab-content--input">
+              <h:panelGroup rendered="#{empty conversationsBean.getUserMessages(agent.entry)}"
+                            layout="block" styleClass="cv-tab-empty">
+                No input messages
+              </h:panelGroup>
+              <ui:repeat var="msg" value="#{conversationsBean.getUserMessages(agent.entry)}" varStatus="s">
+                <h:panelGroup layout="block"
+                              styleClass="cv-tab-msg-turn #{s.index gt 0 ? 'cv-tab-msg-turn--sep' : ''}">
+                  <div class="cv-tab-msg-text">#{msg.text}</div>
+                  <pre class="cv-tab-raw-text">#{msg.text}</pre>
+                </h:panelGroup>
+              </ui:repeat>
+            </p:tab>
+
+            <p:tab title="Response" contentStyleClass="cv-tab-content--response">
+              <h:panelGroup rendered="#{empty conversationsBean.getAssistantMessages(agent.entry)}"
+                            layout="block" styleClass="cv-tab-empty">
+                No response
+              </h:panelGroup>
+              <ui:repeat var="msg" value="#{conversationsBean.getAssistantMessages(agent.entry)}" varStatus="s">
+                <h:panelGroup layout="block"
+                              styleClass="cv-tab-msg-turn #{s.index gt 0 ? 'cv-tab-msg-turn--sep' : ''}">
+                  <div class="cv-tab-msg-text">#{msg.text}</div>
+                  <pre class="cv-tab-raw-text">#{msg.text}</pre>
+                </h:panelGroup>
+              </ui:repeat>
+            </p:tab>
+
+            <p:tab title="Tools (#{agent.toolCount})" rendered="#{agent.toolCount gt 0}"
+                   contentStyleClass="cv-tab-content--tools">
+              <div class="cv-tools-tabview">
+
+                <!-- Left nav: tool names -->
+                <div class="cv-tools-nav">
+                  <ui:repeat var="tool" value="#{agent.tools}" varStatus="ts">
+                    <div class="cv-tools-nav-item" onclick="CvTools.select(this)">
+                      <span class="cv-tools-nav-index">#{ts.index + 1}</span>
+                      <span class="cv-tools-nav-name">#{tool.toolName}</span>
+                    </div>
+                  </ui:repeat>
+                </div>
+
+                <!-- Right: content panels (one per tool, shown/hidden by JS) -->
+                <div class="cv-tools-panels">
+                  <ui:repeat var="tool" value="#{agent.tools}">
+                    <div class="cv-tool-panel">
+                      <p:accordionPanel styleClass="cv-tool-accordion" multiple="true" activeIndex="0,1">
+
+                        <p:tab title="Output">
+                          <h:panelGroup rendered="#{empty tool.resultText}" layout="block"
+                                        styleClass="cv-tab-empty">No output</h:panelGroup>
+                          <div class="cv-tab-msg-text">#{tool.resultText}</div>
+                          <pre class="cv-tab-raw-text">#{tool.resultText}</pre>
+                        </p:tab>
+
+                        <p:tab title="Arguments">
+                          <h:panelGroup rendered="#{empty tool.argumentEntries}" layout="block"
+                                        styleClass="cv-tab-empty">No arguments</h:panelGroup>
+                          <h:panelGroup rendered="#{not empty tool.argumentEntries}" layout="block"
+                                        styleClass="cv-args-tabview">
+                            <div class="cv-args-nav">
+                              <ui:repeat var="arg" value="#{tool.argumentEntries}">
+                                <span class="cv-args-tab" onclick="CvArgs.select(this)">#{arg.key}</span>
+                              </ui:repeat>
+                            </div>
+                            <div class="cv-args-panels">
+                              <ui:repeat var="arg" value="#{tool.argumentEntries}">
+                                <div class="cv-args-panel">
+                                  <div class="cv-tab-msg-text">#{arg.value}</div>
+                                  <pre class="cv-tab-raw-text">#{arg.value}</pre>
+                                </div>
+                              </ui:repeat>
+                            </div>
+                          </h:panelGroup>
+                        </p:tab>
+
+                      </p:accordionPanel>
+                    </div>
+                  </ui:repeat>
+                </div>
+
+              </div>
+            </p:tab>
+
+            <p:tab title="Metadata">
+              <div class="grid">
+                <div class="col-2 text-color-secondary">Start time</div>
+                <div class="col-10">#{agent.startTime}</div>
+                <div class="col-2 text-color-secondary">Model</div>
+                <div class="col-10">#{agent.modelName}</div>
+                <div class="col-2 text-color-secondary">Input tokens</div>
+                <div class="col-10">#{conversationsBean.getInputTokens(agent.entry)}</div>
+                <div class="col-2 text-color-secondary">Output tokens</div>
+                <div class="col-10">#{conversationsBean.getOutputTokens(agent.entry)}</div>
+                <div class="col-2 text-color-secondary">Total tokens</div>
+                <div class="col-10 font-semibold">#{agent.totalTokens}</div>
+                <h:panelGroup rendered="#{agent.avgDurationMs gt 0}" layout="block"
+                              styleClass="col-2 text-color-secondary">Duration</h:panelGroup>
+                <h:panelGroup rendered="#{agent.avgDurationMs gt 0}" layout="block"
+                              styleClass="col-10">#{agent.avgDurationMs} ms</h:panelGroup>
+              </div>
+            </p:tab>
+
+          </p:tabView>
+        </div>
+      </h:panelGroup>
+    </ui:repeat>
     </div>
-</div>
+
+</h:panelGroup>
 </h:body>
 </html>

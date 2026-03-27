@@ -21,6 +21,7 @@ public class AgentConversationEntry {
   private String caseUuid;
   private String taskUuid;
   private String agentId;
+  private String agentName;
   private String processName;
   private String messagesJson;
   private String tokenUsageJson;
@@ -35,6 +36,9 @@ public class AgentConversationEntry {
 
   public String getAgentId() { return agentId; }
   public void setAgentId(String agentId) { this.agentId = agentId; }
+
+  public String getAgentName() { return agentName; }
+  public void setAgentName(String agentName) { this.agentName = agentName; }
 
   public String getProcessName() { return processName; }
   public void setProcessName(String processName) { this.processName = processName; }
@@ -77,6 +81,19 @@ public class AgentConversationEntry {
   @JsonIgnore
   public String getModelName() {
     return ChatHistoryJsonParser.getModelName(this);
+  }
+
+  @JsonIgnore
+  private transient int sequenceInTask;
+
+  @JsonIgnore
+  public int getSequenceInTask() { return sequenceInTask; }
+  public void setSequenceInTask(int sequenceInTask) { this.sequenceInTask = sequenceInTask; }
+
+  @JsonIgnore
+  public String getAgentDisplayLabel() {
+    String name = (agentName != null && !agentName.isBlank()) ? agentName : agentId;
+    return sequenceInTask > 0 ? name + " (" + sequenceInTask + ")" : name;
   }
 
   public List<ToolExecution> getToolExecutions() {

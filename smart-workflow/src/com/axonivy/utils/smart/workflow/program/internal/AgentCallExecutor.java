@@ -134,13 +134,26 @@ public class AgentCallExecutor {
     String caseUuid = Ivy.wfCase().uuid();
     String taskUuid = Ivy.wfTask().uuid();
     String agentId = UUID.randomUUID().toString();
+    String agentName = resolveElementName();
     String processName = Optional.ofNullable(Ivy.wfCase())
         .map(c -> c.getProcessStart())
         .map(ps -> StringUtils.defaultIfBlank(ps.getName(), ps.getRequestPath()))
         .orElse("");
-    var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, processName, new IvyRepoHistoryStorage());
+    var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, agentName, processName, new IvyRepoHistoryStorage());
     agentBuilder.registerListener(new AgentResponseListener(repo));
     agentBuilder.registerListener(new ToolExecutionListener(repo));
+  }
+
+  private String resolveElementName() {
+    try {
+      return context.script()
+          .executeExpression(
+              "ch.ivyteam.ivy.bpm.engine.restricted.model.IProcessElement.current().getName()",
+              String.class)
+          .orElse("");
+    } catch (Exception e) {
+      return "";
+    }
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {

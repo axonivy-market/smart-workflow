@@ -63,8 +63,12 @@ public class HistoryDashboardBean implements Serializable {
         TreeNode<Object> taskTreeNode = new DefaultTreeNode<>("task", taskGroup, caseTreeNode);
         taskTreeNode.setExpanded(false);
 
-        taskNode.agents().forEach(agentNode ->
-            new DefaultTreeNode<>("agent", agentNode.chat(), taskTreeNode));
+        List<AgentNode> agentNodes = taskNode.agents();
+        for (int i = 0; i < agentNodes.size(); i++) {
+          AgentConversationEntry chat = agentNodes.get(i).chat();
+          chat.setSequenceInTask(i + 1);
+          new DefaultTreeNode<>("agent", chat, taskTreeNode);
+        }
       });
     });
   }

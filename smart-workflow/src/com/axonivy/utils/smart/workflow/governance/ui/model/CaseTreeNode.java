@@ -43,10 +43,16 @@ public class CaseTreeNode {
     }
     List<CaseTreeNode> nodes = new ArrayList<>();
     for (Map.Entry<String, List<AgentConversationEntry>> e : byCase.entrySet()) {
-      List<TaskTreeNode> taskNodes = e.getValue().stream()
-          .sorted(Comparator.comparing(AgentConversationEntry::getLastUpdated,
-              Comparator.nullsLast(Comparator.naturalOrder())))
+      // Group entries by taskUuid so multiple agent calls within one task are nested
+      Map<String, List<AgentConversationEntry>> byTask = new LinkedHashMap<>();
+      for (AgentConversationEntry entry : e.getValue()) {
+        String taskKey = entry.getTaskUuid() != null ? entry.getTaskUuid() : "";
+        byTask.computeIfAbsent(taskKey, k -> new ArrayList<>()).add(entry);
+      }
+      List<TaskTreeNode> taskNodes = byTask.values().stream()
           .map(TaskTreeNode::new)
+          .sorted(Comparator.comparing(TaskTreeNode::getLastUpdated,
+              Comparator.nullsLast(Comparator.naturalOrder())))
           .toList();
       String processName = e.getValue().stream()
           .map(AgentConversationEntry::getProcessName)

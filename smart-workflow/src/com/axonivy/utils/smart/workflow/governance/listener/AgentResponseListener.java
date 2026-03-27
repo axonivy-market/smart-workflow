@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.workflow.governance.listener;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +42,7 @@ public class AgentResponseListener implements AiServiceListener<AiServiceRespons
     var response = event.response();
     var usage = Optional.ofNullable(response.tokenUsage());
     long durationMs = System.currentTimeMillis() - context.timestamp().toEpochMilli();
+    String startTimestamp = LocalDateTime.ofInstant(context.timestamp(), ZoneId.systemDefault()).toString();
     return new HistoryRecorder.ResponseMetadata(
         usage.map(TokenUsage::inputTokenCount).orElse(null),
         usage.map(TokenUsage::outputTokenCount).orElse(null),
@@ -48,7 +51,8 @@ public class AgentResponseListener implements AiServiceListener<AiServiceRespons
         response.modelName(),
         durationMs,
         context.methodName(),
-        toolNames(event));
+        toolNames(event),
+        startTimestamp);
   }
 
   private static List<String> toolNames(AiServiceResponseReceivedEvent event) {

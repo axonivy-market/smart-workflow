@@ -1,6 +1,8 @@
 package com.axonivy.utils.smart.workflow.governance.utils;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
@@ -120,6 +122,50 @@ public class ChatHistoryJsonParser {
       return total;
     } catch (Exception e) {
       return 0L;
+    }
+  }
+
+  private static final String FIELD_START_TIMESTAMP = "startTimestamp";
+  private static final DateTimeFormatter DISPLAY_FMT = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss.SSS");
+
+  /** Returns the earliest startTimestamp across all token-usage records as raw ISO string (for sorting). */
+  public static String getStartTimestamp(AgentConversationEntry entry) {
+    if (entry == null || entry.getTokenUsageJson() == null) return null;
+    try {
+      JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
+      if (!array.isArray()) return null;
+      String earliest = null;
+      for (JsonNode node : array) {
+        JsonNode ts = node.get(FIELD_START_TIMESTAMP);
+        if (ts != null && !ts.isNull()) {
+          String val = ts.asText();
+          if (earliest == null || val.compareTo(earliest) < 0) earliest = val;
+        }
+      }
+      return earliest;
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  /** Returns the earliest startTimestamp across all token-usage records, formatted for display. */
+  public static String getStartTime(AgentConversationEntry entry) {
+    if (entry == null || entry.getTokenUsageJson() == null) return "—";
+    try {
+      JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
+      if (!array.isArray()) return "—";
+      String earliest = null;
+      for (JsonNode node : array) {
+        JsonNode ts = node.get(FIELD_START_TIMESTAMP);
+        if (ts != null && !ts.isNull()) {
+          String val = ts.asText();
+          if (earliest == null || val.compareTo(earliest) < 0) earliest = val;
+        }
+      }
+      if (earliest == null) return "—";
+      return LocalDateTime.parse(earliest).format(DISPLAY_FMT);
+    } catch (Exception e) {
+      return "—";
     }
   }
 
