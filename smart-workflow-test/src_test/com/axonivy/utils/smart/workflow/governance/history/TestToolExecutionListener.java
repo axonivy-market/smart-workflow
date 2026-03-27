@@ -8,8 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.governance.history.listener.ToolExecutionListener;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
-import com.axonivy.utils.smart.workflow.governance.listener.ToolExecutionListener;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;

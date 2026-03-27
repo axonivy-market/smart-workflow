@@ -24,6 +24,9 @@ public class JsonToolParamBuilder {
   public JsonToolParamBuilder() {}
 
   public JsonObjectSchema toParams(List<StartParameter> variables) {
+    if (variables.isEmpty()) {
+      return null; // less tokens + better compliance with Arize Phoenix playground
+    }
     variables.stream().forEach(this::toJsonParam);
     return builder.build();
   }
