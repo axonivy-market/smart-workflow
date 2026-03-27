@@ -19,13 +19,10 @@ Token costs and more. In addition, it allows you to re-play real requests with a
 ### Setup Engine
 
 1. Download and unpack a normal Axon Ivy Engine, which we will instrument for tracing
-2. Download the [opentelemetry-javaagent.jar](https://repo1.maven.org/maven2/io/opentelemetry/javaagent/opentelemetry-javaagent/2.25.0/opentelemetry-javaagent-2.25.0.jar) and store it in the engine root
-3. Copy the [opentelemetry.properties](./opentelemetry.properties) into the engine `configuration/opentelemetry.properties`
-3. Append the [jvm.options](./jvm.options) into the engine file `configuration/jvm.options`
-4. Adjust the paths in the jvm.options; replace __DIR__ with the engine directory
-5. Adjust the ch.ivyteam.ivy.tracing.jar; replace __VERSION__ with the current jar file shipped with the engine
-6. Set the variable `AI.Observability.Openinference.Enabled=true` in the `config/variables.yaml` of a project depending on smart-workflow.
-7. Start the Engine
+2. Append the [jvm.options](./jvm.options) into the engine file `configuration/jvm.options`
+3. Set the variable `AI.Observability.Openinference.Enabled=true` in the `config/variables.yaml` of a project depending on smart-workflow.
+4. Start the Engine
+5. Go to the Engine Cockpit and enable slow request [tracing](https://developer.axonivy.com/doc/14.0/en/engine-guide/reference/engine-cockpit/monitor.html#slow-requests) by pressing the play button under Monitor > Performance > Slow Requests.
 
 ### Setup Visual Studio Code
 
