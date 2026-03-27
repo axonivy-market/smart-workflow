@@ -1,17 +1,15 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
-import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
@@ -113,12 +111,25 @@ public class AgentCallExecutor {
     var providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var provider = ChatModelFactory.getProviderOrDefault(providerName);
+    var agentName = resolveElementName();
     var modelOptions = options()
         .modelName(model)
         .structuredOutput(structured)
         .listeners(ListenerFactory.createListeners(provider.name()));
     agentBuilder.chatModel(provider.setup(modelOptions));
-    new ChatHistoryListener().configure().forEach(agentBuilder::registerListener);
+    ListenerFactory.createHistoryListeners(agentName).forEach(agentBuilder::registerListener);
+  }
+
+  private String resolveElementName() {
+    try {
+      return context.script()
+          .executeExpression(
+              "ch.ivyteam.ivy.bpm.engine.restricted.model.IProcessElement.current().getName()",
+              String.class)
+          .orElse("");
+    } catch (Exception e) {
+      return "";
+    }
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
