@@ -1,11 +1,7 @@
-# OpenTelemetry tracing Java agent configuration
-# The Java agent will install/instrumentation itself into Axon Ivy Engine and report tracings to Arize Phoenix 
--javaagent:__DIR__/opentelemetry-javaagent-2.25.0.jar
--Dotel.javaagent.configuration-file=__DIR__/configuration/opentelemetry.properties
-
-# Axon Ivy tracing extension 
-# Enables Slow Requests and Traffic Graph in Engine Cockpit with opentelemetry java agent
-# -Dotel.javaagent.extensions=__DIR__/system/plugins/ch.ivyteam.ivy.trace__VERSION__.jar
+# OpenTelemetry -> Arize Phoenix
+-Dotel.traces.exporter=otlp
+-Dotel.exporter.otlp.endpoint=http://localhost:6006
+-Dotel.resource.attributes=openinference.project.name=smart-workflow
 
 # Run Engine in VSCode dev mode
 -Ddev.mode=true
