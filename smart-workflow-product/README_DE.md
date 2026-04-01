@@ -323,6 +323,29 @@ Example Configuration:
 
 </details>
 
+#### Anthropic Models
+
+<details>
+
+<summary>Anthropic setup instructions</summary>
+Claude models (including Claude Opus, Sonnet and Haiku) from Anthropic are supported. Import the `smart-workflow-anthropic` project, configure your API key to get started.
+
+> **Note:** Structured outputs are only supported on Claude Opus 4.6, Claude
+> Sonnet 4.6, Claude Sonnet 4.5, Claude Opus 4.5, and Claude Haiku 4.5. Older
+> models (e.g., Claude Sonnet 4, Claude Opus 4) do not support this feature.
+
+```yaml
+@variables.anthropic@
+```
+
+Example Configuration:
+
+```yaml
+@variables.anthropic.example@
+```
+
+</details>
+
 ### File Extraction
 
 Axon Ivy Smart Workflow supports extracting content from PDF and image files
