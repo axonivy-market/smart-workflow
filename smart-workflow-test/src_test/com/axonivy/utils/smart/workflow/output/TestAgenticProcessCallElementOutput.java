@@ -63,7 +63,7 @@ class TestAgenticProcessCallElementOutput {
 
   @Test
   void structuredOutputList(BpmClient client, ResourceResponder responder) {
-    MockOpenAI.defineChat(request -> responder.send("storyResponse.json"));
+    MockOpenAI.defineChat(_ -> responder.send("storyResponse.json"));
 
     var res = client.start().process(AGENT_TOOLS.elementName("structuredOutputList")).execute();
     TestToolUserData data = res.data().last();

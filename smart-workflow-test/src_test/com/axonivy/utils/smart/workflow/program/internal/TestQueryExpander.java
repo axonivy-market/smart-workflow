@@ -67,8 +67,8 @@ class TestQueryExpander {
   void nonFileExpressionIsExpandedAsString() {
     UserMessage result = QueryExpander.expandFileExpressions(
         "Hello <%=in.name%>",
-        expr -> Optional.of("John"),
-        cmsExpr -> Optional.empty());
+        _ -> Optional.of("John"),
+        _ -> Optional.empty());
 
     assertThat(textOf(result)).isEqualTo("Hello John");
   }
@@ -77,8 +77,8 @@ class TestQueryExpander {
   void templateWithNoExpressionsIsReturnedAsIs() {
     UserMessage result = QueryExpander.expandFileExpressions(
         "Plain text",
-        expr -> Optional.empty(),
-        cmsExpr -> Optional.empty());
+        _ -> Optional.empty(),
+        _ -> Optional.empty());
 
     assertThat(textOf(result)).isEqualTo("Plain text");
   }
@@ -87,8 +87,8 @@ class TestQueryExpander {
   void emptyResolverResultLeavesExpressionInPlace() {
     UserMessage result = QueryExpander.expandFileExpressions(
         "Value: <%=in.missing%>",
-        expr -> Optional.empty(),
-        cmsExpr -> Optional.empty());
+        _ -> Optional.empty(),
+        _ -> Optional.empty());
 
     assertThat(textOf(result)).isEqualTo("Value: <%=in.missing%>");
   }
@@ -97,8 +97,8 @@ class TestQueryExpander {
   void cmsTextIsReturnedAsString() {
     UserMessage result = QueryExpander.expandFileExpressions(
         "Prompt: <%=ivy.cms.co(\"/Texts/SystemPrompt\")%>",
-        expr -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
-        cmsExpr -> Optional.of(TextContent.from("You are Smart Workflow.")));
+        _ -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
+        _ -> Optional.of(TextContent.from("You are Smart Workflow.")));
     assertThat(textOf(result)).isEqualTo("Prompt: You are Smart Workflow.");
   }
 
@@ -106,8 +106,8 @@ class TestQueryExpander {
   void cmsSingleQuoteIsSupported() {
     UserMessage result = QueryExpander.expandFileExpressions(
         "<%=ivy.cms.co('/Texts/Note')%>",
-        expr -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
-        cmsExpr -> Optional.of(TextContent.from("Note text")));
+        _ -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
+        _ -> Optional.of(TextContent.from("Note text")));
     assertThat(textOf(result)).isEqualTo("Note text");
   }
 
@@ -116,8 +116,8 @@ class TestQueryExpander {
     byte[] pdfBytes = "%PDF-1.4 binary".getBytes(StandardCharsets.US_ASCII);
     UserMessage result = QueryExpander.expandFileExpressions(
         "Invoice: <%=ivy.cms.co(\"/Docs/Invoice\")%>",
-        expr -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
-        cmsExpr -> ContentLoader.fromStream(new ByteArrayInputStream(pdfBytes), null));
+        _ -> { throw new AssertionError("resolver must not be called for CMS expressions"); },
+        _ -> ContentLoader.fromStream(new ByteArrayInputStream(pdfBytes), null));
     assertThat(result.contents()).hasSize(2); // TextContent("Invoice: ") + PdfFileContent
   }
 
@@ -125,16 +125,16 @@ class TestQueryExpander {
   void cmsPathNotFoundReturnsEmptyString() {
     UserMessage result = QueryExpander.expandFileExpressions(
         "Value: <%=ivy.cms.co(\"/Missing/Path\")%>",
-        expr -> Optional.empty(),
-        cmsExpr -> Optional.empty());
+        _ -> Optional.empty(),
+        _ -> Optional.empty());
     assertThat(textOf(result)).isEqualTo("Value: ");
   }
 
   private void assertFileTypeResolved(Object fileArg) {
     UserMessage result = QueryExpander.expandFileExpressions(
         "Summary: <%=in.file%>",
-        expr -> Optional.of(fileArg),
-        cmsExpr -> Optional.empty());
+        _ -> Optional.of(fileArg),
+        _ -> Optional.empty());
     assertThat(result.contents()).hasSize(2); // TextContent("Summary: ") + ImageContent/PdfFileContent
   }
 
