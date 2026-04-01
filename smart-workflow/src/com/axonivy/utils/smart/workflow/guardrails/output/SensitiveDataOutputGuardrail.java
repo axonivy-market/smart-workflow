@@ -18,8 +18,10 @@ public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrai
 
   private static final List<String> API_KEY_VARIABLE_PATHS = List.of(
       "Ai.Providers.OpenAI.APIKey",
+      "AI.Providers.AzureOpenAI.APIKey",
       "AI.Providers.Gemini.APIKey",
-      "Ai.Providers.xAI.APIKey"
+      "AI.Providers.xAI.APIKey",
+      "AI.Providers.Anthropic.APIKey"
   );
   
   private static final Pattern SK_KEY_PATTERN = Pattern.compile(

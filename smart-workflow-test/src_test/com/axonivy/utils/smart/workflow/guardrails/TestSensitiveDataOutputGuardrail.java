@@ -100,6 +100,12 @@ public class TestSensitiveDataOutputGuardrail {
   }
 
   @Test
+  void blockAnthropicApiKey() {
+    var result = guardrail.evaluate("Anthropic key: " + "sk-ant-api" + "1234567890abcdef1234567890abcdef");
+    assertThat(result.isAllowed()).isFalse();
+  }
+
+  @Test
   void blockPrivateKey() {
     var result = guardrail.evaluate("""
         -----BEGIN RSA PRIVATE KEY-----

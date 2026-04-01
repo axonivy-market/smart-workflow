@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/config/variables.json
 Variables:
   AI:
-    # [enum: OpenAI, AzureOpenAI, Gemini]
+    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic]
     DefaultProvider: ""
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
