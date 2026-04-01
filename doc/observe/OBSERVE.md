@@ -22,7 +22,6 @@ Token costs and more. In addition, it allows you to re-play real requests with a
 2. Append the [jvm.options](./jvm.options) into the engine file `configuration/jvm.options`
 3. Set the variable `AI.Observability.Openinference.Enabled=true` in the `config/variables.yaml` of a project depending on smart-workflow.
 4. Start the Engine
-5. Go to the Engine Cockpit and enable slow request [tracing](https://developer.axonivy.com/doc/14.0/en/engine-guide/reference/engine-cockpit/monitor.html#slow-requests) by pressing the play button under Monitor > Performance > Slow Requests.
 
 ### Setup Visual Studio Code
 
