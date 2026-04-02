@@ -26,9 +26,12 @@ Token costs and more. In addition, it allows you to re-play real requests with a
 ### Setup Visual Studio Code
 
 1. Install the Axon Ivy Designer extension
-2. Go to settings and disable "Run Engine by Extension"
+2. Open the Settings and search for Axon Ivy, in it define:
+    - `AxonIvy > Engine: Run by Extension` : uncheck to false
 3. Restart Visual Studio Code (Command > Developer: Reload Window)
 4. Run an AI assisted process in smart-workflow-demo
+
+![](../img/arize_vsc-engine.png)
 
 ### Querying
 
