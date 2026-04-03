@@ -28,7 +28,7 @@ public class TestOutputGuardrailProcess {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("guardrails"));
     fixture.var(OpenAiConf.API_KEY, "");
     fixture.var(DefaultGuardrailProvider.DEFAULT_OUTPUT_GUARDRAILS, "");
-    MockOpenAI.defineChat(request -> buildResponse());
+    MockOpenAI.defineChat(_ -> buildResponse());
   }
 
   private static Response buildResponse() {

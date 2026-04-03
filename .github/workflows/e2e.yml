@@ -24,4 +24,5 @@ jobs:
         -DAZURE_OPEN_AI_DEPLOYMENT=${{ secrets.AZURE_OPEN_AI_DEPLOYMENT }} \
         -DAZURE_OPEN_AI_ENDPOINT=${{ secrets.AZURE_OPEN_AI_ENDPOINT }} \
         -DGEMINI_AI_API_KEY=${{ secrets.GEMINI_AI_API_KEY }} \
-        -DXAI_API_KEY=${{ secrets.XAI_API_KEY }}
+        -DXAI_API_KEY=${{ secrets.XAI_API_KEY }} \
+        -DANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}

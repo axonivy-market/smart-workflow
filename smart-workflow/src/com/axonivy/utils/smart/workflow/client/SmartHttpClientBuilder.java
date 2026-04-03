@@ -1,7 +1,6 @@
 package com.axonivy.utils.smart.workflow.client;
 
 import java.time.Duration;
-import java.util.UUID;
 
 import javax.ws.rs.client.WebTarget;
 
@@ -11,7 +10,7 @@ import dev.langchain4j.http.client.HttpClientBuilder;
 
 public class SmartHttpClientBuilder implements HttpClientBuilder {
 
-  private static final UUID LANG_CHAIN_CLIENT = UUID.fromString("4fc2b880-8b39-4219-baa5-ada7f40ddb92");
+  private static final String LANG_CHAIN_CLIENT = "langChain";
 
   private final WebTarget client;
 

@@ -19,20 +19,19 @@ Token costs and more. In addition, it allows you to re-play real requests with a
 ### Setup Engine
 
 1. Download and unpack a normal Axon Ivy Engine, which we will instrument for tracing
-2. Download the [opentelemetry-javaagent.jar](https://repo1.maven.org/maven2/io/opentelemetry/javaagent/opentelemetry-javaagent/2.25.0/opentelemetry-javaagent-2.25.0.jar) and store it in the engine root
-3. Copy the [opentelemetry.properties](./opentelemetry.properties) into the engine `configuration/opentelemetry.properties`
-3. Append the [jvm.options](./jvm.options) into the engine file `configuration/jvm.options`
-4. Adjust the paths in the jvm.options; replace __DIR__ with the engine directory
-5. Adjust the ch.ivyteam.ivy.tracing.jar; replace __VERSION__ with the current jar file shipped with the engine
-6. Set the variable `AI.Observability.Openinference.Enabled=true` in the `config/variables.yaml` of a project depending on smart-workflow.
-7. Start the Engine
+2. Append the [jvm.options](./jvm.options) into the engine file `configuration/jvm.options`
+3. Set the variable `AI.Observability.Openinference.Enabled=true` in the `config/variables.yaml` of a project depending on smart-workflow.
+4. Start the Engine
 
 ### Setup Visual Studio Code
 
 1. Install the Axon Ivy Designer extension
-2. Go to settings and disable "Run Engine by Extension"
+2. Open the Settings and search for Axon Ivy, in it define:
+    - `AxonIvy > Engine: Run by Extension` : uncheck to false
 3. Restart Visual Studio Code (Command > Developer: Reload Window)
 4. Run an AI assisted process in smart-workflow-demo
+
+![](../img/arize_vsc-engine.png)
 
 ### Querying
 
@@ -42,3 +41,17 @@ To query costs, models or prompts from past AI assistant runs open Arize Phoenix
 3. Switch to from `Root Spans` to `All` next to the filter bar
 
 ![arize-filtering](../img/arize_filterLLM.png)
+
+
+#### Filters
+
+If you like to dig deeper. Note that its possible to track AI interactions over a complete Case or Task.
+You can reveal them by adding a filter, expressing the UUID of the Case respectively the Task.
+
+- Case with UUID 6407c9bd-be10-4334-9ca9-c9b846fc1f57:
+
+  `span_kind == 'LLM' and ivy.case == '6407c9bd-be10-4334-9ca9-c9b846fc1f57'`
+
+- Task with UUID 2afa6db6-35d6-4f72-af05-711963888b0b:
+
+  `span_kind == 'LLM' and ivy.task == '2afa6db6-35d6-4f72-af05-711963888b0b'`

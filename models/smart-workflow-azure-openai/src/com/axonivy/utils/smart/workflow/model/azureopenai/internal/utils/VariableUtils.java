@@ -33,7 +33,7 @@ public final class VariableUtils {
       if (parts.length == 6) {
         String deploymentName = parts[4];
         String fieldName = parts[5]; // e.g., "Model" or "APIKey"
-        deploymentMap.computeIfAbsent(deploymentName, depployment -> new AzureAiDeployment(deploymentName));
+        deploymentMap.computeIfAbsent(deploymentName, AzureAiDeployment::new);
         AzureAiDeployment deployment = deploymentMap.get(deploymentName);
         if (MODEL_FIELD.equals(fieldName)) {
           deployment.setModel(variable.value());

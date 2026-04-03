@@ -29,7 +29,7 @@ import ch.ivyteam.util.threadcontext.IvyThreadContext;
  * .contains("log is using the deprecated my-feature.");</pre></code>
  */
 public class LoggerAccess implements BeforeEachCallback, AfterEachCallback {
-  private static final Predicate<LogEvent> ALL = logEvent -> true;
+  private static final Predicate<LogEvent> ALL = _ -> true;
   private final Logger logger;
   private final LogAppender appender;
 
