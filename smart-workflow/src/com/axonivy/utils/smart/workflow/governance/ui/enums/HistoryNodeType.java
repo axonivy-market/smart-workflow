@@ -1,4 +1,4 @@
-﻿package com.axonivy.utils.smart.workflow.governance.ui.enums;
+package com.axonivy.utils.smart.workflow.governance.ui.enums;
 
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
