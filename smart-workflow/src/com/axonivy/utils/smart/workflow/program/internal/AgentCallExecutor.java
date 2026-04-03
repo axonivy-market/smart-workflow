@@ -105,7 +105,7 @@ public class AgentCallExecutor {
   private void configureSystemMessage(AiServices<? extends DynamicAgent<?>> agentBuilder) {
     var systemMessage = QueryExpander.expandMacro(Conf.SYSTEM, context);
     if (systemMessage.isPresent()) {
-      agentBuilder.systemMessageProvider(memId -> systemMessage.get());
+      agentBuilder.systemMessageProvider(_ -> systemMessage.get());
     }
   }
 

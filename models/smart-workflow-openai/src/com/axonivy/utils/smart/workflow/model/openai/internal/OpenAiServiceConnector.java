@@ -24,7 +24,7 @@ public class OpenAiServiceConnector {
   private static final String DEFAULT_MODEL = OpenAiChatModelName.GPT_4_1_MINI.toString();
 
   public interface OpenAiConf {
-    String PREFIX = "Ai.Providers.OpenAI.";
+    String PREFIX = "AI.Providers.OpenAI.";
     String BASE_URL = PREFIX + "BaseUrl";
     String API_KEY = PREFIX + "APIKey";
     String DEFAULT_MODEL = PREFIX + "DefaultModel";

@@ -14,6 +14,8 @@
     <variables.gemini.example.file>../models/smart-workflow-gemini/config/variables.example.yaml</variables.gemini.example.file>
     <variables.xai.file>../models/smart-workflow-xai/config/variables.yaml</variables.xai.file>
     <variables.xai.example.file>../models/smart-workflow-xai/config/variables.example.yaml</variables.xai.example.file>
+    <variables.anthropic.file>../models/smart-workflow-anthropic/config/variables.yaml</variables.anthropic.file>
+    <variables.anthropic.example.file>../models/smart-workflow-anthropic/config/variables.example.yaml</variables.anthropic.example.file>
   </properties>
 
   <build>
@@ -76,6 +78,12 @@
                 <loadfile property="variables.xai.example" srcFile="${variables.xai.example.file}" encoding="UTF-8" failonerror="false" />
                 <replace file="${project.build.directory}/README.md" token="@variables.xai.example@" value="${variables.xai.example}" />
                 <replace file="${project.build.directory}/README_DE.md" token="@variables.xai.example@" value="${variables.xai.example}" />
+                <loadfile property="variables.anthropic" srcFile="${variables.anthropic.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.anthropic@" value="${variables.anthropic}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.anthropic@" value="${variables.anthropic}" />
+                <loadfile property="variables.anthropic.example" srcFile="${variables.anthropic.example.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.anthropic.example@" value="${variables.anthropic.example}" />
+                <replace file="${project.build.directory}/README_DE.md" token="@variables.anthropic.example@" value="${variables.anthropic.example}" />
               </target>
             </configuration>
             <goals>

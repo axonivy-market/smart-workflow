@@ -42,7 +42,7 @@ public class TestMultiModelsOutput {
     fixture.var(OpenAiConf.DEFAULT_MODEL, "");
     fixture.var(DefaultGuardrailProvider.DEFAULT_INPUT_GUARDRAILS, "");
 
-    DummyChatModelProvider.defineChatText(r -> "The Spark of Innovation");
+    DummyChatModelProvider.defineChatText(_ -> "The Spark of Innovation");
   }
 
   @Test
