@@ -7,25 +7,28 @@
   xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
 
-    <h:panelGroup rendered="#{conversationsBean.caseDetails != null}" layout="block">
+    <h:panelGroup rendered="#{conversationsBean.ivyCase != null}" layout="block">
 
     <div class="flex gap-4 mb-1">
         <div class="flex-1">
         <div class="text-color-secondary">Case Id</div>
-        <div class="text-sm font-semibold">#{conversationsBean.caseDetails.id}</div>
+        <div class="text-sm font-semibold">#{conversationsBean.ivyCase.id}</div>
         </div>
         <div class="flex-1">
         <div class="text-color-secondary">State</div>
         <div class="text-sm font-semibold">
             <h:panelGroup layout="inline"
-                        styleClass="cv-status-badge inline-block border-round-xl font-semibold #{conversationsBean.caseDetails.state == 'DONE' ? 'cv-status-badge--done' : 'cv-status-badge--running'}">
-            &#9679; #{conversationsBean.caseDetails.state}
+                        styleClass="cv-status-badge inline-block border-round-xl font-semibold #{conversationsBean.caseState == 'DONE' ? 'cv-status-badge--done' : 'cv-status-badge--running'}">
+            &#9679; #{conversationsBean.caseState}
             </h:panelGroup>
         </div>
         </div>
         <div class="flex-1">
         <div class="text-color-secondary">Case Category</div>
-        <div class="text-sm font-semibold">#{conversationsBean.caseDetails.category}</div>
+        <div class="text-sm font-semibold">
+            <h:outputText value="#{conversationsBean.ivyCase.category.name}" rendered="#{not empty conversationsBean.ivyCase.category}"/>
+            <h:outputText value="N/A" rendered="#{empty conversationsBean.ivyCase.category}"/>
+        </div>
         </div>
     </div>
 
@@ -33,7 +36,7 @@
     <table class="cv-detail-table w-full text-900">
         <tr>
         <th class="text-color-secondary font-medium">Creator</th>
-        <td>#{conversationsBean.caseDetails.creator}</td>
+        <td>#{conversationsBean.ivyCase.creatorUserName}</td>
         </tr>
     </table>
 
@@ -41,24 +44,37 @@
     <table class="cv-detail-table w-full text-900">
         <tr>
         <th class="text-color-secondary font-medium">Created</th>
-        <td>#{conversationsBean.caseDetails.created}</td>
+        <td>
+            <h:outputText value="#{conversationsBean.ivyCase.startTimestamp}" rendered="#{not empty conversationsBean.ivyCase.startTimestamp}">
+            <f:convertDateTime pattern="MMM dd, yyyy"/>
+            </h:outputText>
+            <h:outputText value="&#8212;" rendered="#{empty conversationsBean.ivyCase.startTimestamp}"/>
+        </td>
         </tr>
         <tr>
         <th class="text-color-secondary font-medium">Finished</th>
-        <td>#{conversationsBean.caseDetails.finished}</td>
+        <td>
+            <h:outputText value="#{conversationsBean.ivyCase.endTimestamp}" rendered="#{not empty conversationsBean.ivyCase.endTimestamp}">
+            <f:convertDateTime pattern="MMM dd, yyyy"/>
+            </h:outputText>
+            <h:outputText value="&#8212;" rendered="#{empty conversationsBean.ivyCase.endTimestamp}"/>
+        </td>
         </tr>
         <tr>
         <th class="text-color-secondary font-medium">Processing Time</th>
-        <td>#{conversationsBean.caseDetails.processingTime}</td>
+        <td>#{conversationsBean.processingTime}</td>
         </tr>
     </table>
 
     <div class="cv-detail-subheading mt-3 mb-2 pt-2 border-top-1 surface-border font-bold text-900">Description</div>
-    <div class="text-sm text-color-secondary font-italic py-1">#{conversationsBean.caseDetails.description}</div>
+    <div class="text-sm text-color-secondary font-italic py-1">
+        <h:outputText value="#{conversationsBean.ivyCase.description}" rendered="#{not empty conversationsBean.ivyCase.description}"/>
+        <h:outputText value="No description" rendered="#{empty conversationsBean.ivyCase.description}"/>
+    </div>
 
     </h:panelGroup>
 
-    <h:panelGroup rendered="#{conversationsBean.caseDetails == null}" layout="block"
+    <h:panelGroup rendered="#{conversationsBean.ivyCase == null}" layout="block"
                 styleClass="text-sm text-color-secondary p-2">
     Case details are not available.
     </h:panelGroup>

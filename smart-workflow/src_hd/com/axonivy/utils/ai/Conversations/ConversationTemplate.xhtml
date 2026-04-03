@@ -106,18 +106,10 @@
                 <div class="cv-tools-panels">
                   <ui:repeat var="tool" value="#{agent.tools}">
                     <div class="cv-tool-panel">
-                      <p:accordionPanel styleClass="cv-tool-accordion" multiple="true" activeIndex="0,1">
-
-                        <p:tab title="Output">
-                          <h:panelGroup rendered="#{empty tool.resultText}" layout="block"
-                                        styleClass="cv-tab-empty">No output</h:panelGroup>
-                          <div class="cv-tab-msg-text">#{tool.resultText}</div>
-                          <pre class="cv-tab-raw-text">#{tool.resultText}</pre>
-                        </p:tab>
-
-                        <p:tab title="Arguments">
+                      <p:accordionPanel styleClass="cv-tool-accordion" multiple="true" activeIndex="1">
+                        <p:tab title="Input parameters">
                           <h:panelGroup rendered="#{empty tool.argumentEntries}" layout="block"
-                                        styleClass="cv-tab-empty">No arguments</h:panelGroup>
+                                        styleClass="cv-tab-empty">No parameters</h:panelGroup>
                           <h:panelGroup rendered="#{not empty tool.argumentEntries}" layout="block"
                                         styleClass="cv-args-tabview">
                             <div class="cv-args-nav">
@@ -135,7 +127,12 @@
                             </div>
                           </h:panelGroup>
                         </p:tab>
-
+                        <p:tab title="Result">
+                          <h:panelGroup rendered="#{empty tool.resultText}" layout="block"
+                                        styleClass="cv-tab-empty">No output</h:panelGroup>
+                          <div class="cv-tab-msg-text">#{tool.resultText}</div>
+                          <pre class="cv-tab-raw-text">#{tool.resultText}</pre>
+                        </p:tab>
                       </p:accordionPanel>
                     </div>
                   </ui:repeat>

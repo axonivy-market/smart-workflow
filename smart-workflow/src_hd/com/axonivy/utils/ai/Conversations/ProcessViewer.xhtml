@@ -6,10 +6,6 @@
   xmlns:p="http://primefaces.org/ui"
   xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
-<div class="cv-detail-section-title border-bottom-1 surface-border text-xl font-bold text-900 py-3">
-    Process Viewer
-</div>
-
 <h:panelGroup rendered="#{conversationsBean.processViewerUrl != null}" layout="block">
     <iframe src="#{conversationsBean.processViewerUrl}"
             class="cv-process-viewer-frame w-full block"
