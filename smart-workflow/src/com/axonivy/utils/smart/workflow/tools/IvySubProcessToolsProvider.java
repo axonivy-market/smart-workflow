@@ -25,7 +25,7 @@ public class IvySubProcessToolsProvider implements ToolProvider {
 
   @Override
   public ToolProviderResult provideTools(ToolProviderRequest provide) {
-    ToolExecutor executor = (request, memoryId) -> IvySubProcessToolExecutor.execute(request).text(); // TODO; user centric memory interpretation!
+    ToolExecutor executor = (request, _) -> IvySubProcessToolExecutor.execute(request).text(); // TODO; user centric memory interpretation!
     Map<ToolSpecification, ToolExecutor> tools = new HashMap<>();
     IvyToolsProcesses.toolStarts().stream()
         .map(IvySubProcessToolSpecs::toTool)

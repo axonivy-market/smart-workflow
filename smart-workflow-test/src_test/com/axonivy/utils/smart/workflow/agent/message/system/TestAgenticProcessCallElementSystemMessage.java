@@ -31,7 +31,7 @@ class TestAgenticProcessCallElementSystemMessage {
   void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("systemMessage"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(request -> responder.send("response.json"));
+    MockOpenAI.defineChat(_ -> responder.send("response.json"));
   }
 
   @Test

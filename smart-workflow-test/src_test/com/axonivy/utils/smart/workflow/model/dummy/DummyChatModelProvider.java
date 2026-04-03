@@ -50,7 +50,7 @@ public class DummyChatModelProvider implements ChatModelProvider {
 
     private static final String DEFAULT_CHAT_RESPONSE_TEMPLATE = "Hey I'm %s. My Smartness is under development.";
     private static final String NOT_IMPLEMENTED = "Not implemented!";
-    private static Function<ChatRequest, ChatResponse> CHAT = request -> ChatResponse.builder()
+    private static Function<ChatRequest, ChatResponse> CHAT = _ -> ChatResponse.builder()
         .aiMessage(AiMessage.aiMessage(DummyChatModel.NOT_IMPLEMENTED)).build();
 
     private final ModelOptions options;

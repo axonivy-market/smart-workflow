@@ -29,7 +29,7 @@ public class XAiServiceConnector {
   );
 
   public interface XAiConf {
-    String PREFIX = "Ai.Providers.xAI.";
+    String PREFIX = "AI.Providers.xAI.";
     String BASE_URL = PREFIX + "BaseUrl";
     String API_KEY = PREFIX + "APIKey";
     String DEFAULT_MODEL = PREFIX + "DefaultModel";
