@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.governance.ui.bean;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversat
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.service.HistoryAnalyticsService;
+import com.axonivy.utils.smart.workflow.governance.ui.enums.DateRangeFilter;
 import com.axonivy.utils.smart.workflow.governance.ui.model.DashboardKpi;
 
 @ManagedBean
@@ -26,10 +28,10 @@ public class UsageAnalyticBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private final HistoryStorage storage = new IvyRepoHistoryStorage();
-  private final HistoryAnalyticsService analyticsService = new HistoryAnalyticsService();
+  private HistoryStorage storage;
+  private HistoryAnalyticsService analyticsService;
 
-  private String analyticsDateRange = "LAST_7_DAYS";
+  private DateRangeFilter analyticsDateRange = DateRangeFilter.LAST_7_DAYS;
   private boolean loaded = false;
   private boolean analyticsCollapsed = false;
 
@@ -42,14 +44,10 @@ public class UsageAnalyticBean implements Serializable {
 
   @PostConstruct
   public void init() {
-    // Intentionally empty — analytics loads async via p:remoteCommand autoRun.
-    // This keeps page initial render fast; skeleton is shown until loadAnalytics() completes.
+    storage = new IvyRepoHistoryStorage();
+    analyticsService = new HistoryAnalyticsService();
   }
 
-  /**
-   * Called once on first page render by p:remoteCommand autoRun="true".
-   * Sets loaded=true so the skeleton is replaced by real content.
-   */
   public void loadAnalytics() {
     refreshAnalytics();
     loaded = true;
@@ -60,13 +58,14 @@ public class UsageAnalyticBean implements Serializable {
   }
 
   private void refreshAnalytics() {
-    LocalDate from = resolveDateFrom(analyticsDateRange);
-    LocalDate to = resolveDateTo(analyticsDateRange);
-    List<AgentConversationEntry> current = filterByDate(storage.findAll(), from, to);
+    LocalDate from = analyticsDateRange.toDateFrom();
+    LocalDate to = analyticsDateRange.toDateTo();
+    List<AgentConversationEntry> all = storage.findAll();
+    List<AgentConversationEntry> current = filterByDate(all, from, to);
 
     long days = (from != null && to != null) ? ChronoUnit.DAYS.between(from, to) + 1 : 0;
     List<AgentConversationEntry> previous = days > 0
-        ? filterByDate(storage.findAll(), from.minusDays(days), from.minusDays(1))
+        ? filterByDate(all, from.minusDays(days), from.minusDays(1))
         : List.of();
 
     kpi = analyticsService.computeKpi(current, previous);
@@ -79,44 +78,61 @@ public class UsageAnalyticBean implements Serializable {
 
   private List<AgentConversationEntry> filterByDate(List<AgentConversationEntry> all,
       LocalDate from, LocalDate to) {
-    if (from == null && to == null) return all;
-    return all.stream().filter(e -> {
-      if (e.getLastUpdated() == null) return false;
-      try {
-        LocalDate d = LocalDateTime.parse(e.getLastUpdated()).toLocalDate();
-        return (from == null || !d.isBefore(from)) && (to == null || !d.isAfter(to));
-      } catch (Exception ex) { return false; }
-    }).toList();
+    if (from == null && to == null) {
+      return all;
+    }
+    return all.stream()
+        .filter(entry -> {
+          if (entry.getLastUpdated() == null) {
+            return false;
+          }
+          try {
+            LocalDate entryDate = LocalDateTime.parse(entry.getLastUpdated()).toLocalDate();
+            return (from == null || !entryDate.isBefore(from)) && (to == null || !entryDate.isAfter(to));
+          } catch (DateTimeParseException ignored) {
+            return false;
+          }
+        })
+        .toList();
   }
 
-  private LocalDate resolveDateFrom(String range) {
-    return switch (range) {
-      case "TODAY" -> LocalDate.now();
-      case "LAST_7_DAYS" -> LocalDate.now().minusDays(6);
-      case "LAST_30_DAYS" -> LocalDate.now().minusDays(29);
-      default -> null;
-    };
+  public boolean isLoaded() {
+    return loaded;
   }
 
-  private LocalDate resolveDateTo(String range) {
-    return switch (range) {
-      case "TODAY", "LAST_7_DAYS", "LAST_30_DAYS" -> LocalDate.now();
-      default -> null;
-    };
+  public boolean isAnalyticsCollapsed() {
+    return analyticsCollapsed;
   }
 
-  // ── Getters / setters ─────────────────────────────────────────────────────
+  public DashboardKpi getKpi() {
+    return kpi;
+  }
 
-  public boolean isLoaded() { return loaded; }
-  public boolean isAnalyticsCollapsed() { return analyticsCollapsed; }
+  public LineChartModel getTokenTimelineChart() {
+    return tokenTimelineChart;
+  }
 
-  public DashboardKpi getKpi() { return kpi; }
-  public LineChartModel getTokenTimelineChart() { return tokenTimelineChart; }
-  public DonutChartModel getModelDistributionChart() { return modelDistributionChart; }
-  public BarChartModel getTokenStackedChart() { return tokenStackedChart; }
-  public BarChartModel getTopCasesChart() { return topCasesChart; }
-  public BarChartModel getResponseTimeChart() { return responseTimeChart; }
+  public DonutChartModel getModelDistributionChart() {
+    return modelDistributionChart;
+  }
 
-  public String getAnalyticsDateRange() { return analyticsDateRange; }
-  public void setAnalyticsDateRange(String v) { this.analyticsDateRange = v; }
+  public BarChartModel getTokenStackedChart() {
+    return tokenStackedChart;
+  }
+
+  public BarChartModel getTopCasesChart() {
+    return topCasesChart;
+  }
+
+  public BarChartModel getResponseTimeChart() {
+    return responseTimeChart;
+  }
+
+  public DateRangeFilter getAnalyticsDateRange() {
+    return analyticsDateRange;
+  }
+
+  public void setAnalyticsDateRange(DateRangeFilter analyticsDateRange) {
+    this.analyticsDateRange = analyticsDateRange;
+  }
 }

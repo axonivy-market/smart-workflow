@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">Conversations</ui:define>
+    <ui:define name="content">
+
+      <h:outputStylesheet library="css" name="conversation-viewer.css" />
+      <h:outputStylesheet library="css" name="highlight-github.min.css"
+                          rendered="#{ivyFreyaTheme.mode eq 'light'}" />
+      <h:outputStylesheet library="css" name="highlight-github-dark.min.css"
+                          rendered="#{ivyFreyaTheme.mode eq 'dark'}" />
+      <h:outputScript library="js" name="marked.min.js" target="head" />
+      <h:outputScript library="js" name="highlight.min.js" target="head" />
+      <h:outputScript library="js" name="conversation-viewer.js" target="head" />
+
+      <h:form id="conv-form">
+        <f:event listener="#{conversationsBean.preRender(data.caseUuid)}" type="preRenderComponent" />
+        <ui:include src="Header.xhtml" />
+
+        <!-- Empty placehoder -->
+        <h:panelGroup rendered="#{conversationsBean.caseNode == null}" layout="block"
+                      styleClass="cv-empty-state flex flex-column align-items-center justify-content-center text-color-secondary">
+          <i class="tif tif-messages text-5xl block mb-3" />
+          <div class="font-semibold mb-2 text-color-secondary">No History Found</div>
+          <div class="text-sm text-color-secondary">No conversation history found for this case.</div>
+        </h:panelGroup>
+
+        <h:panelGroup id="cv-content-panel" layout="block" rendered="#{conversationsBean.caseNode != null}">
+          <ui:include src="Summary.xhtml" />
+
+          <!-- PrimeFaces sidebar: Case Details + Process Viewer -->
+          <p:sidebar id="cv-details-sidebar" widgetVar="cvSidebarPanel" position="right"
+                     style="width:70%" styleClass="cv-details-sidebar" modal="true" showCloseIcon="false">
+            <div class="cv-sidebar-panel-heading font-bold text-xl text-900 mb-3">Case Details</div>
+            <ui:include src="CaseDetailsDialog.xhtml" />
+
+            <div class="cv-sidebar-panel-heading font-bold text-xl text-900 mt-5 mb-3">Process Viewer</div>
+            <ui:include src="ProcessViewer.xhtml" />
+          </p:sidebar>
+
+          <div class="cv-page-layout">
+            <div class="cv-main-area">
+              <div class="cv-conversation-list py-4 px-5">
+                <ui:repeat var="task" value="#{conversationsBean.caseNode.tasks}" varStatus="taskStatus">
+                  <ui:include src="ConversationTemplate.xhtml" />
+                </ui:repeat>
+              </div>
+            </div>
+          </div>
+        </h:panelGroup>
+      </h:form>
+    </ui:define>
+  </ui:composition>
+</h:body>
+</html>

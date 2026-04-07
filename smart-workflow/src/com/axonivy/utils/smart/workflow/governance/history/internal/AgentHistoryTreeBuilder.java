@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
+import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
 
 
 public class AgentHistoryTreeBuilder {
@@ -42,7 +43,7 @@ public class AgentHistoryTreeBuilder {
 
   private static List<AgentNode> buildAgentNodes(List<AgentConversationEntry> entries) {
     return entries.stream()
-        .sorted(Comparator.comparing(AgentConversationEntry::getLastUpdated,
+        .sorted(Comparator.comparing(ChatHistoryJsonParser::getStartTimestamp,
             Comparator.nullsLast(Comparator.naturalOrder())))
         .map(entry -> new AgentNode(entry, entry.getToolExecutions()))
         .toList();

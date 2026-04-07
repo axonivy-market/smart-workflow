@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+<div class="cv-case-summary flex border-bottom-2 surface-border">
+    <div class="cv-cs-card cv-cs-card--tasks flex-1 py-3 px-5">
+        <div class="cv-cs-val text-2xl font-bold text-900">#{conversationsBean.caseNode.taskCount}</div>
+        <div class="text-color-secondary mt-1">Tasks</div>
+    </div>
+    <div class="cv-cs-card cv-cs-card--messages flex-1 py-3 px-5">
+        <div class="cv-cs-val text-2xl font-bold text-900">#{conversationsBean.caseNode.totalMessages}</div>
+        <div class="text-color-secondary mt-1">Total Messages</div>
+    </div>
+    <div class="cv-cs-card cv-cs-card--tokens flex-1 py-3 px-5">
+        <div class="cv-cs-val text-2xl font-bold text-900">#{conversationsBean.caseNode.totalTokens}</div>
+        <div class="text-color-secondary mt-1">Total Tokens</div>
+    </div>
+    <div class="cv-cs-card cv-cs-card--duration flex-1 py-3 px-5">
+        <div class="cv-cs-val text-2xl font-bold text-900">#{conversationsBean.caseAvgDurationMs} ms</div>
+        <div class="text-color-secondary mt-1">Avg Duration</div>
+    </div>
+</div>
+</h:body>
+</html>

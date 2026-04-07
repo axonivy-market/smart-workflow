@@ -1,0 +1,559 @@
+/* ── Keyframe: message entrance ─────────────────────────────────────────── */
+@keyframes cv-fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Suppress page-level scrollbar (all scrolling is inside cv-conversation-list) */
+html, body { overflow: hidden; }
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.cv-empty-state {
+  min-height: 360px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.cv-conv-header {
+  background: var(--surface-0);
+}
+
+/* ── Page layout ─────────────────────────────────────────────────────────── */
+.cv-page-layout {
+  display: flex;
+  height: calc(100vh - 152px); /* 100vh minus cv-conv-header (~70px) + cv-case-summary (~82px) */
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.cv-main-area {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Details sidebar (p:sidebar) ─────────────────────────────────────────── */
+.cv-details-sidebar .ui-sidebar-content {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.cv-sidebar-panel-heading {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--surface-border);
+  margin-bottom: 16px;
+}
+
+/* ── KPI summary bar ─────────────────────────────────────────────────────── */
+.cv-case-summary {
+  background: var(--surface-0);
+}
+.cv-cs-card {
+  border-right: 1px solid var(--surface-border);
+  border-top: 3px solid transparent;
+  transition: background 0.15s;
+}
+.cv-cs-card:last-child {
+  border-right: none;
+}
+.cv-cs-card--tasks    { border-top-color: var(--green-400); }
+.cv-cs-card--messages { border-top-color: var(--blue-400); }
+.cv-cs-card--tokens   { border-top-color: var(--purple-400); }
+.cv-cs-card--duration { border-top-color: var(--orange-400); }
+
+.cv-cs-val {
+  line-height: 1.2;
+}
+.cv-cs-model-tag {
+  background: var(--blue-50);
+  color: var(--blue-600);
+  padding: 1px 7px;
+}
+
+/* ── Conversation list (scrollable fixed height) ─────────────────────────── */
+.cv-conversation-list {
+  flex: 1 1 0;
+  overflow-y: auto;
+}
+
+/* ── Task block (separator-only, no background) ──────────────────────────── */
+.cv-task-block {
+  padding: 16px 14px 20px;
+  border-top: 1px solid var(--surface-border);
+}
+.cv-conversation-list > :first-child .cv-task-block,
+.cv-task-block:first-child {
+  border-top: none;
+}
+
+/* ── Task separator ──────────────────────────────────────────────────────── */
+.cv-task-sep-dot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  background: var(--green-500);
+}
+.cv-chat-msgs + .cv-task-sep {
+  margin-top: 24px;
+}
+
+/* ── Task model badge ────────────────────────────────────────────────────── */
+.cv-task-model-badge {
+  background: var(--blue-50);
+  color: var(--blue-600);
+  border: 1px solid var(--indigo-200);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+
+/* ── Details tab ─────────────────────────────────────────────────────────── */
+.cv-detail-section {
+  background: var(--surface-0);
+}
+.cv-detail-table {
+  border-collapse: collapse;
+}
+.cv-detail-table th {
+  width: 140px;
+  text-align: left;
+  padding: 6px 0;
+  vertical-align: top;
+}
+.cv-detail-table td {
+  padding: 6px 0;
+}
+
+.cv-status-badge {
+  padding: 2px 8px;
+}
+.cv-status-badge--running {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.cv-status-badge--done {
+  background: var(--blue-100);
+  color: var(--blue-600);
+}
+
+.cv-process-viewer-frame {
+  height: 480px;
+}
+.cv-process-unavailable {
+  min-height: 160px;
+}
+
+/* ── Agent block (collapsible panel) ─────────────────────────────────────── */
+.cv-agent-block {
+  border: 1px solid var(--surface-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface-0, #fff);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.2s ease;
+}
+
+.cv-agent-block:hover {
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.10), 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.cv-agent-header {
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(135deg, var(--surface-0, #fff) 0%, var(--blue-50, #eff6ff) 100%);
+  border-bottom: 1px solid transparent;
+  transition: filter 0.15s ease;
+  min-height: 52px;
+}
+
+.cv-agent-header:hover {
+  filter: brightness(0.97);
+}
+
+.cv-agent-open > .cv-agent-header {
+  border-bottom-color: var(--surface-border);
+  background: linear-gradient(135deg, var(--surface-50, #f8fafc) 0%, var(--blue-100, #dbeafe) 100%);
+}
+
+/* Chevron: points right when collapsed, down when expanded */
+.cv-agent-chevron {
+  color: var(--text-color-secondary);
+  transition: transform 0.22s ease;
+}
+
+.cv-agent-open > .cv-agent-header .cv-agent-chevron {
+  transform: rotate(90deg);
+}
+
+.cv-agent-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+
+.cv-agent-tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ffffff;
+  color: var(--orange-600, #ea580c);
+  border: 1px solid var(--orange-300, #fdba74);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-weight: 700;
+  letter-spacing: 0.15px;
+}
+
+/* Collapse/expand the agent body */
+.cv-agent-body {
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.cv-agent-open > .cv-agent-body {
+  max-height: 9999px;  /* large enough for any content */
+  padding: 0 0 12px;
+}
+
+/* ── PrimeFaces tabView overrides (agent panels only) ────────────────────── */
+.cv-agent-tabview.ui-tabview {
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+
+.cv-agent-tabview .ui-tabview-nav {
+  background: var(--surface-50, #f8fafc);
+  border: none;
+  border-bottom: 1px solid var(--surface-border);
+  border-radius: 0;
+  padding: 0 4px;
+}
+
+.cv-agent-tabview .ui-tabview-nav li {
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  margin: 0 0 -1px;
+  background: transparent;
+  top: 0;
+}
+
+.cv-agent-tabview .ui-tabview-nav li a,
+.cv-agent-tabview .ui-tabview-nav li a:hover {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--text-color-secondary);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 9px 14px;
+  transition: color 0.15s ease, background 0.15s ease;
+  margin: 0;
+}
+
+.cv-agent-tabview .ui-tabview-nav li:not(.ui-state-active) a:hover {
+  background: var(--surface-100, #f1f5f9);
+  color: var(--text-color);
+}
+
+/* Active tab underline colors (by position: System/Input/Response/Tools) */
+.cv-agent-tabview .ui-tabview-nav li:nth-child(1).ui-state-active {
+  border-bottom-color: var(--purple-400, #a78bfa);
+}
+.cv-agent-tabview .ui-tabview-nav li:nth-child(1).ui-state-active a {
+  color: var(--purple-600, #7c3aed);
+  background: transparent;
+}
+.cv-agent-tabview .ui-tabview-nav li:nth-child(2).ui-state-active {
+  border-bottom-color: var(--blue-400, #60a5fa);
+}
+.cv-agent-tabview .ui-tabview-nav li:nth-child(2).ui-state-active a {
+  color: var(--blue-600, #2563eb);
+  background: transparent;
+}
+.cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active {
+  border-bottom-color: var(--green-500, #22c55e);
+}
+.cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active a {
+  color: var(--green-700, #15803d);
+  background: transparent;
+}
+.cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active {
+  border-bottom-color: var(--orange-400, #fb923c);
+}
+.cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active a {
+  color: var(--orange-600, #ea580c);
+  background: transparent;
+}
+
+/* Tab panels wrapper */
+.cv-agent-tabview .ui-tabview-panels {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.cv-agent-tabview .ui-tabview-panel {
+  padding: 0;
+}
+
+/* ── Tab content panes ───────────────────────────────────────────────────── */
+.cv-tab-content--system {
+  padding: 16px;
+  background: var(--purple-50, #faf5ff);
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.cv-tab-content--input {
+  padding: 16px;
+  background: var(--surface-0, #ffffff);
+  line-height: 1.65;
+}
+
+.cv-tab-content--response {
+  padding: 16px;
+  background: var(--green-50, #f0fdf4);
+  line-height: 1.65;
+}
+
+.cv-tab-content--tools {
+  padding: 12px;
+  background: var(--surface-0, #ffffff);
+}
+
+
+/* Message text blocks */
+.cv-tab-msg-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-color);
+}
+
+/* Multi-turn separator */
+.cv-tab-msg-turn--sep {
+  border-top: 1px dashed var(--surface-border);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+/* Empty state */
+.cv-tab-empty {
+  text-align: center;
+  color: var(--text-color-secondary);
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 12px 0;
+}
+
+/* ── Rendered markdown inside message panes ──────────────────────────────── */
+.cv-tab-msg-text {
+  white-space: normal; /* override pre-wrap — marked produces block HTML */
+}
+.cv-tab-msg-text p            { margin: 0 0 0.6em; }
+.cv-tab-msg-text p:last-child { margin-bottom: 0; }
+.cv-tab-msg-text pre          { margin: 0.6em 0; overflow-x: auto; }
+.cv-tab-msg-text pre code     { background: none; padding: 0; }
+
+/* ── Tool executions section ─────────────────────────────────────────────── */
+
+.cv-tools-tabview {
+  display: flex;
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  overflow: hidden;
+  min-height: 160px;
+}
+
+/* Left nav */
+.cv-tools-nav {
+  width: 190px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--surface-border);
+  background: var(--surface-50, #f8fafc);
+  overflow-y: auto;
+}
+
+.cv-tools-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.cv-tools-nav-item:last-child {
+  border-bottom: none;
+}
+
+.cv-tools-nav-item:hover {
+  background: var(--surface-100, #f1f5f9);
+}
+
+.cv-tools-nav-item--active {
+  background: var(--surface-0, #ffffff);
+  border-left-color: var(--primary-color);
+}
+
+.cv-tools-nav-index {
+  color: var(--text-color-secondary);
+  flex-shrink: 0;
+}
+
+.cv-tools-nav-name {
+  color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Right content panels */
+.cv-tools-panels {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.cv-tool-panel {
+  display: none;
+}
+
+.cv-tool-panel--active {
+  display: block;
+}
+
+.cv-tool-label {
+  color: var(--text-color-secondary);
+  margin-bottom: 4px;
+}
+
+/* ── Argument tabview (horizontal tab strip per argument key) ────────────── */
+.cv-args-nav {
+  display: flex;
+  border-bottom: 1px solid var(--surface-border);
+  margin-bottom: 8px;
+}
+
+.cv-args-tab {
+  padding: 4px 12px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+}
+
+.cv-args-tab:hover { color: var(--text-color); }
+
+.cv-args-tab--active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.cv-args-panel         { display: none; }
+.cv-args-panel--active { display: block; }
+
+
+/* ── Pretty / Raw toggle ─────────────────────────────────────────────────── */
+.cv-raw-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-right: 10px;
+}
+
+.cv-raw-label {
+  color: var(--text-color-secondary);
+  user-select: none;
+}
+
+/* Raw content: hidden by default, visible in raw mode */
+.cv-tab-raw-text {
+  display: none;
+}
+
+.cv-raw-mode .cv-tab-raw-text {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  line-height: 1.6;
+  color: var(--text-color);
+  margin: 0;
+}
+
+/* Pretty content: hidden in raw mode */
+.cv-raw-mode .cv-tab-msg-text {
+  display: none;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════════
+   Dark mode overrides  (body.dark is set by frame-10-full-width.xhtml via
+   #{ivyFreyaTheme.mode})
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Agent block: stronger shadow (dark backgrounds need higher contrast) */
+body.dark .cv-agent-block {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+body.dark .cv-agent-block:hover {
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25), 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Agent header: drop the blue-tinted gradient (--blue-50 fallback is a light
+   color that clashes with dark surfaces) → flat elevated surface */
+body.dark .cv-agent-header {
+  background: var(--surface-100);
+}
+body.dark .cv-agent-open > .cv-agent-header {
+  background: var(--surface-200);
+}
+body.dark .cv-agent-header:hover {
+  filter: brightness(1.08);
+}
+
+
+/* Tab content tints: --purple-50 and --green-50 become near-black in dark
+   mode → replace with a subtle left-border accent so the tab identity is
+   still visible without an invisible background tint */
+body.dark .cv-tab-content--system {
+  background: var(--surface-50);
+  border-left: 3px solid var(--purple-400);
+}
+body.dark .cv-tab-content--response {
+  background: var(--surface-50);
+  border-left: 3px solid var(--green-500);
+}
+
+/* Active tab text: dark-mode Freya maps --purple-600/--blue-600/--green-700
+   to deep saturated colors that are hard to read on dark → shift to
+   lighter 300/400 variants */
+body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(1).ui-state-active a {
+  color: var(--purple-300);
+}
+body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(2).ui-state-active a {
+  color: var(--blue-300);
+}
+body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active a {
+  color: var(--green-400);
+}
+body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active a {
+  color: var(--orange-400);
+}

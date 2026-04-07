@@ -3,10 +3,12 @@ package com.axonivy.utils.smart.workflow.program.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryListener;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import dev.langchain4j.model.chat.listener.ChatModelListener;
+import dev.langchain4j.observability.api.listener.AiServiceListener;
 
 class ListenerFactory {
 
@@ -16,6 +18,10 @@ class ListenerFactory {
       listeners.add(new OpenInferenceTracing(provider));
     }
     return listeners;
+  }
+
+  public static List<AiServiceListener<?>> createHistoryListeners(String agentName) {
+    return new ChatHistoryListener().configure(agentName);
   }
 
 }

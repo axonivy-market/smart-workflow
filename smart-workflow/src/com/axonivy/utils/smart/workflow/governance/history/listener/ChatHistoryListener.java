@@ -19,7 +19,7 @@ public class ChatHistoryListener {
     String HISTORY_ENABLED = "AI.Observability.Ivy.Enabled";
   }
 
-  public List<AiServiceListener<?>> configure() {
+  public List<AiServiceListener<?>> configure(String agentName) {
     if (!IvyVar.bool(Var.HISTORY_ENABLED)) {
       return List.of();
     }
@@ -30,7 +30,7 @@ public class ChatHistoryListener {
         .map(c -> c.getProcessStart())
         .map(ps -> StringUtils.defaultIfBlank(ps.getName(), ps.getRequestPath()))
         .orElse("");
-    var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, processName, new IvyRepoHistoryStorage());
+    var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, agentName, processName, new IvyRepoHistoryStorage());
     return List.of(
         new AgentResponseListener(repo),
         new ToolExecutionListener(repo));

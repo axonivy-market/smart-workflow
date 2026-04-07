@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+<h:panelGroup rendered="#{conversationsBean.processViewerUrl != null}" layout="block">
+    <iframe src="#{conversationsBean.processViewerUrl}"
+            class="cv-process-viewer-frame w-full block"
+            title="Process Flow">
+    </iframe>
+    </h:panelGroup>
+    <h:panelGroup rendered="#{conversationsBean.processViewerUrl == null}" layout="block"
+                styleClass="cv-process-unavailable p-6 text-center text-color-secondary">
+    <i class="tif tif-mood-smile text-4xl block mb-2" />
+    <div class="font-semibold mb-1">Oops... sorry</div>
+    <div class="text-sm">Process viewer is not available for this case.</div>
+</h:panelGroup>
+</h:body>
+</html>
