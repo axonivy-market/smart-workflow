@@ -1,0 +1,27 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "OpenSearchRagToolData",
+  "namespace" : "tool",
+  "fields" : [ {
+    "name" : "collection",
+    "type" : "String"
+  }, {
+    "name" : "query",
+    "type" : "String"
+  }, {
+    "name" : "maxResults",
+    "type" : "Integer"
+  }, {
+    "name" : "minScore",
+    "type" : "Double"
+  }, {
+    "name" : "sources",
+    "type" : "java.util.List<String>"
+  }, {
+    "name" : "indexExists",
+    "type" : "boolean"
+  }, {
+    "name" : "result",
+    "type" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult"
+  } ]
+}

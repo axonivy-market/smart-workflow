@@ -1,0 +1,22 @@
+services:
+  opensearch:
+    image: opensearchproject/opensearch:3.5.0
+    container_name: smart-workflow-opensearch
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_PASSWORD}
+    ports:
+      - "${OPENSEARCH_PORT:-19600}:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+
+volumes:
+  opensearch-data:

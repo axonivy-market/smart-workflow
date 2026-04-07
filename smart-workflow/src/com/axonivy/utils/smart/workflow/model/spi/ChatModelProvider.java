@@ -1,9 +1,11 @@
 package com.axonivy.utils.smart.workflow.model.spi;
 
 import java.util.List;
+import java.util.Optional;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 
 public interface ChatModelProvider {
 
@@ -35,6 +37,33 @@ public interface ChatModelProvider {
     public ModelOptions listeners(List<ChatModelListener> chatListeners) {
       return new ModelOptions(modelName, structuredOutput, chatListeners);
     }
+  }
+
+  public static record EmbeddingModelOptions(String modelName, String apiKey) {
+
+    public EmbeddingModelOptions() {
+      this(null, null);
+    }
+
+    public static EmbeddingModelOptions options() {
+      return new EmbeddingModelOptions();
+    }
+
+    public EmbeddingModelOptions modelName(String name) {
+      return new EmbeddingModelOptions(name, apiKey);
+    }
+
+    public EmbeddingModelOptions apiKey(String key) {
+      return new EmbeddingModelOptions(modelName, key);
+    }
+  }
+
+  default boolean supportsEmbedding() {
+    return false;
+  }
+
+  default Optional<EmbeddingModel> setupEmbedding(EmbeddingModelOptions options) {
+    return Optional.empty();
   }
 
 }

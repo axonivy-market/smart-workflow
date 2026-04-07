@@ -1,0 +1,33 @@
+package com.axonivy.utils.smart.workflow.rag.pipeline;
+
+import java.util.List;
+
+import com.axonivy.utils.smart.workflow.rag.document.processor.RagDocumentSplitter;
+import com.axonivy.utils.smart.workflow.rag.entity.RagResult;
+
+import dev.langchain4j.data.embedding.Embedding;
+import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.embedding.EmbeddingModel;
+
+public interface RagIngestor {
+
+  RagConnector getConnector();
+
+  RagResult ingest(String collection, List<String> sources);
+
+  default RagResult performIngest(String collection, List<String> sources, int chunkSize, int chunkOverlap, EmbeddingModel embeddingModel) {
+    List<TextSegment> segments = new RagDocumentSplitter(chunkSize, chunkOverlap).split(sources);
+    if (segments.isEmpty()) {
+      return new RagResult("No content could be loaded from the provided sources.");
+    }
+    List<Embedding> embeddings = embeddingModel.embedAll(segments).content();
+    RagVectorStore store = getConnector().connectStore(collection);
+    try {
+      store.addAll(embeddings, segments);
+    } finally {
+      store.close();
+    }
+    return new RagResult("Indexed " + segments.size() + " segments.");
+  }
+
+}

@@ -9,6 +9,26 @@ Variables:
       DefaultInput: ""
       # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
       DefaultOutput: ""
+    RAG:
+      # Default number of document segments returned per query.
+      MaxResults: "5"
+      # Cosine similarity threshold (0.0–1.0). Segments below this score are excluded.
+      MinScore: "0.6"
+      # Number of tokens per document chunk when splitting.
+      ChunkSize: "300"
+      # Number of overlapping tokens between consecutive chunks.
+      ChunkOverlap: "20"
+      EmbeddingModel:
+        # Provider used to generate embeddings. Only providers that support embedding are valid.
+        # When blank, falls back to AI.DefaultProvider.
+        Provider: ""
+        # Embedding model name. When blank, defaults to the provider's DefaultEmbeddingModel variable.
+        # Example: "text-embedding-3-small" (OpenAI), "gemini-embedding-001" (Gemini)
+        Name: ""
+        # Optional separate API key for embedding calls (billed separately from chat).
+        # When blank, the provider's own API key variable is used.
+        #[password]
+        ApiKey: ${decrypt:}
     Observability:
       Ivy:
         # Enable chat history recording for governance audit.

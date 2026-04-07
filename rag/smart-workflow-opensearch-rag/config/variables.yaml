@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/config/variables.json
+# Common RAG settings (MaxResults, MinScore, ChunkSize, ChunkOverlap, EmbeddingModel.*)
+# are defined in the smart-workflow module under AI.RAG.*.
+Variables:
+  AI:
+    RAG:
+      OpenSearch:
+        # Base URL of the OpenSearch server.
+        # Demo/dev (Docker, security disabled): "http://localhost:19600"
+        # Production (AWS OpenSearch): "https://my-opensearch.us-east-1.es.amazonaws.com"
+        Url: ""
+        # API key for the OpenSearch server.
+        # Leave blank when using username/password auth or when security is disabled.
+        #[password]
+        ApiKey: ${decrypt:}
+        # Username for basic authentication. Leave blank when security is disabled.
+        UserName: ""
+        # Password for basic authentication. Leave blank when security is disabled.
+        #[password]
+        Password: ${decrypt:}
+        # Index name to query when 'collection' is not provided by the agent.
+        DefaultCollection: ""

@@ -1,0 +1,170 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "A1B2C3D4E5F60012",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "OpenSearchVectorStoreManagementData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "createVectorStore(String,List)",
+      "config" : {
+        "signature" : "createVectorStore",
+        "input" : {
+          "params" : [
+            { "name" : "collection", "type" : "String", "desc" : "OpenSearch index name to ingest documents into. Uses the configured default when blank." },
+            { "name" : "sources", "type" : "java.util.List<String>", "desc" : "Document sources to index: plain text strings." }
+          ],
+          "map" : {
+            "out.collection" : "param.collection",
+            "out.sources" : "param.sources"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult", "desc" : "Ingestion result: answer contains the number of indexed segments, error contains failure details." }
+          ],
+          "map" : {
+            "result.result" : "in.result"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 384, "y" : 72 },
+        "description" : "Index documents into an OpenSearch collection using semantic embeddings. Accepts plain text strings as sources."
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "Script",
+      "name" : "Log Input",
+      "config" : {
+        "output" : {
+          "code" : "ivy.log.info(\"createVectorStore collection='\" + in.collection + \"', sources=\" + in.sources.size());"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 576, "y" : 72 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Check Index",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector;",
+            "",
+            "in.indexExists = OpenSearchConnector.indexExists(in.collection);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 768, "y" : 72 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "Alternative",
+      "name" : "Index exists?",
+      "config" : {
+        "conditions" : {
+          "f10" : "!in.indexExists"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 960, "y" : 72 },
+        "labelOffset" : { "x" : 24, "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f11", "label" : {
+            "name" : "create",
+            "offset" : { "x" : 33, "y" : -19 }
+          } },
+        { "id" : "f12", "to" : "f2", "label" : {
+            "name" : "update",
+            "offset" : { "x" : -3, "y" : -10 }
+          } }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Create Index",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector;",
+            "import com.axonivy.utils.smart.workflow.rag.entity.RagResult;",
+            "import com.axonivy.utils.smart.workflow.rag.pipeline.RagConnector;",
+            "",
+            "RagConnector.Connection connection = OpenSearchConnector.connect(in.collection);",
+            "if (connection.hasError()) {",
+            "  in.result = new RagResult(connection.error());",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 960, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "fa" }
+      ]
+    }, {
+      "id" : "fa",
+      "type" : "Alternative",
+      "name" : "Has error?",
+      "config" : {
+        "conditions" : {
+          "fab" : "in.result != null && in.result.hasError()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1264, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "fab", "to" : "f3", "via" : [ { "x" : 1456, "y" : 216 } ], "label" : {
+            "name" : "error",
+            "segment" : 0.91,
+            "offset" : { "x" : -71, "y" : 14 }
+          } },
+        { "id" : "fac", "to" : "f2", "label" : {
+            "name" : "ok",
+            "offset" : { "x" : -15, "y" : -1 }
+          } }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "Script",
+      "name" : "Ingest",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchIngestor;",
+            "",
+            "in.result = new OpenSearchIngestor().ingest(in.collection, in.sources);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1264, "y" : 72 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1456, "y" : 72 }
+      }
+    } ]
+}
