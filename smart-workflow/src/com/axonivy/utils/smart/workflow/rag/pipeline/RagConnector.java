@@ -1,7 +1,5 @@
 package com.axonivy.utils.smart.workflow.rag.pipeline;
 
-import com.axonivy.utils.smart.workflow.rag.entity.RagResult;
-
 import org.apache.commons.lang3.StringUtils;
 
 public interface RagConnector {

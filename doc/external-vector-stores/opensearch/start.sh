@@ -34,8 +34,18 @@ OPENSEARCH_PASSWORD=${OPENSEARCH_PASSWORD}
 OPENSEARCH_PORT=${OPENSEARCH_PORT}
 EOF
   chmod 600 "$ENV_FILE"
+
+  local gitignore="$SCRIPT_DIR/.gitignore"
+  if [[ ! -f "$gitignore" ]]; then
+    echo ".env" > "$gitignore"
+  elif ! grep -qx '\.env' "$gitignore"; then
+    echo "" >> "$gitignore"
+    echo ".env" >> "$gitignore"
+  fi
 }
 
+unset OPENSEARCH_PASSWORD
+unset OPENSEARCH_PORT
 load_env
 
 # ── Disclaimer ────────────────────────────────────────────────────────────────
@@ -55,9 +65,26 @@ echo ""
 
 CHANGED=false
 
+validate_password() {
+  local pw="$1"
+  [[ ${#pw} -ge 12 ]]         || { echo "Password must be at least 12 characters long."; return 1; }
+  [[ "$pw" =~ [A-Z] ]]        || { echo "Password must contain at least one uppercase letter."; return 1; }
+  [[ "$pw" =~ [a-z] ]]        || { echo "Password must contain at least one lowercase letter."; return 1; }
+  [[ "$pw" =~ [0-9] ]]        || { echo "Password must contain at least one digit."; return 1; }
+  [[ "$pw" =~ [^A-Za-z0-9] ]] || { echo "Password must contain at least one special character."; return 1; }
+  return 0
+}
+
 if [[ -z "${OPENSEARCH_PASSWORD:-}" ]]; then
-  read -rsp "OpenSearch admin password (startup only, not used for connections): " OPENSEARCH_PASSWORD
-  echo
+  echo "  OpenSearch requires a strong password (scored by zxcvbn)."
+  echo "  Min 12 chars, upper+lower+digit+special. Avoid common words/patterns."
+  echo "  Test strength: https://lowe.github.io/tryzxcvbn"
+  while true; do
+    read -rsp "Admin password (startup only, not used for connections): " OPENSEARCH_PASSWORD
+    echo
+    err=$(validate_password "$OPENSEARCH_PASSWORD") && break
+    echo "  Invalid: $err"
+  done
   CHANGED=true
 fi
 

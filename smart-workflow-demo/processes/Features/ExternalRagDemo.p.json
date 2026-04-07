@@ -40,49 +40,7 @@
         "at" : { "x" : 272, "y" : 64 }
       },
       "connect" : [
-        { "id" : "e1", "to" : "f2" }
-      ]
-    }, {
-      "id" : "f2",
-      "type" : "Script",
-      "name" : "Check Index",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector;",
-            "",
-            "in.skipIngest = OpenSearchConnector.indexExists(\"hr-knowledge\");"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 496, "y" : 64 }
-      },
-      "connect" : [
-        { "id" : "e2", "to" : "f3" }
-      ]
-    }, {
-      "id" : "f3",
-      "type" : "Alternative",
-      "name" : "Skip ingest?",
-      "config" : {
-        "conditions" : {
-          "e3" : "!in.skipIngest"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 720, "y" : 64 },
-        "labelOffset" : { "x" : 24, "y" : -24 }
-      },
-      "connect" : [
-        { "id" : "e3", "to" : "f4", "label" : {
-            "name" : "ingest",
-            "offset" : { "x" : 33, "y" : -19 }
-          } },
-        { "id" : "e4", "to" : "f5", "label" : {
-            "name" : "skip",
-            "offset" : { "x" : -3, "y" : -10 }
-          } }
+        { "id" : "e1", "to" : "f4" }
       ]
     }, {
       "id" : "f4",
@@ -104,7 +62,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 720, "y" : 208 },
+        "at" : { "x" : 512, "y" : 64 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "connect" : [
@@ -120,17 +78,18 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 944, "y" : 208 },
+        "at" : { "x" : 696, "y" : 64 },
         "labelOffset" : { "x" : -24, "y" : -16 }
       },
       "connect" : [
-        { "id" : "eb", "to" : "fc", "label" : {
+        { "id" : "eb", "to" : "fc", "via" : [ { "x" : 696, "y" : 184 } ], "label" : {
             "name" : "error",
-            "offset" : { "x" : 1, "y" : -10 }
+            "segment" : 1.15,
+            "offset" : { "x" : 2, "y" : -74 }
           } },
         { "id" : "ec", "to" : "f5", "label" : {
             "name" : "ok",
-            "offset" : { "x" : 17, "y" : -9 }
+            "offset" : { "x" : -11, "y" : -10 }
           } }
       ]
     }, {
@@ -143,7 +102,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1104, "y" : 208 }
+        "at" : { "x" : 888, "y" : 184 }
       },
       "connect" : [
         { "id" : "ed", "to" : "f9" }
@@ -168,7 +127,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 944, "y" : 64 }
+        "at" : { "x" : 880, "y" : 64 }
       },
       "connect" : [
         { "id" : "e6", "to" : "f6" }
@@ -183,7 +142,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1240, "y" : 64 },
+        "at" : { "x" : 1080, "y" : 64 },
         "labelOffset" : { "x" : -40, "y" : -16 }
       },
       "connect" : [
@@ -212,7 +171,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1416, "y" : 64 },
+        "at" : { "x" : 1256, "y" : 64 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "connect" : [
@@ -235,10 +194,18 @@
             "ivy.log.info(\"Q: {0}\", in.questions.get(in.currentIndex));",
             "ivy.log.info(\"A: {0}\", ragResult.getAnswer());",
             "",
-            "if (ragResult.getMatches() != null) {",
-            "  for (RagMatch match : ragResult.getMatches()) {",
-            "    ivy.log.info(\"  {0} - {1}\", match.getScore(), match.getContent());",
+            "if (ragResult.getMatches() != null && !ragResult.getMatches().isEmpty()) {",
+            "  StringBuilder sb = new StringBuilder(\"Matches\\n\");",
+            "  sb.append(\"****************************\\n\");",
+            "  for (int i = 0; i < ragResult.getMatches().size(); i++) {",
+            "    RagMatch match = ragResult.getMatches().get(i);",
+            "    sb.append(match.getScore()).append(\"\\n\");",
+            "    sb.append(match.getContent()).append(\"\\n\");",
+            "    if (i < ragResult.getMatches().size() - 1) {",
+            "      sb.append(\"-----------------------------\\n\");",
+            "    }",
             "  }",
+            "  ivy.log.info(sb.toString());",
             "}",
             "",
             "in.currentIndex = in.currentIndex + 1;"
@@ -246,16 +213,16 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1640, "y" : 64 }
+        "at" : { "x" : 1480, "y" : 64 }
       },
       "connect" : [
-        { "id" : "ea", "to" : "f6", "via" : [ { "x" : 1640, "y" : -16 }, { "x" : 1240, "y" : -16 } ] }
+        { "id" : "ea", "to" : "f6", "via" : [ { "x" : 1480, "y" : -16 }, { "x" : 1080, "y" : -16 } ] }
       ]
     }, {
       "id" : "f9",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 1240, "y" : 208 }
+        "at" : { "x" : 1080, "y" : 184 }
       }
     }, {
       "id" : "ann",
@@ -263,8 +230,7 @@
       "name" : [
         "External RAG Demo: HR Knowledge Base (OpenSearch)",
         "",
-        "Single entry point. Ingest is skipped automatically if the hr-knowledge",
-        "index already exists in OpenSearch.",
+        "Single entry point. Documents are ingested on every run.",
         "",
         "Prerequisites:",
         "- Configure AI.RAG.OpenSearch.Url",
@@ -274,8 +240,8 @@
         "Flow: Init Sources -> Check Index -> [Ingest if new] -> Answer 3 HR questions"
       ],
       "visual" : {
-        "at" : { "x" : 328, "y" : 224 },
-        "size" : { "width" : 480, "height" : 160 }
+        "at" : { "x" : 298, "y" : 252 },
+        "size" : { "width" : 508, "height" : 216 }
       }
     } ]
 }

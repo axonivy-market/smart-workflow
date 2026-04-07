@@ -115,7 +115,7 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector;",
             "",
-            "in.indexExists = OpenSearchConnector.indexExists(in.collection);"
+            "in.indexExists = new OpenSearchConnector().indexExists(in.collection);"
           ]
         }
       },
@@ -159,7 +159,7 @@
             "import com.axonivy.utils.smart.workflow.rag.entity.RagResult;",
             "import com.axonivy.utils.smart.workflow.rag.pipeline.RagConnector;",
             "",
-            "RagConnector.Connection connection = OpenSearchConnector.connect(in.collection);",
+            "RagConnector.Connection connection = new OpenSearchConnector().connect(in.collection);",
             "if (connection.hasError()) {",
             "  in.result = new RagResult(connection.error());",
             "}"

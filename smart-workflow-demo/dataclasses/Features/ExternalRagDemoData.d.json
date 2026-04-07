@@ -4,7 +4,7 @@
   "namespace" : "Features",
   "fields" : [ {
     "name" : "ragResult",
-    "type" : "com.axonivy.utils.smart.workflow.rag.RagResult"
+    "type" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult"
   }, {
     "name" : "sources",
     "type" : "java.util.List<String>"
@@ -13,12 +13,9 @@
     "type" : "java.util.List<String>"
   }, {
     "name" : "results",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.rag.RagResult>"
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.rag.entity.RagResult>"
   }, {
     "name" : "currentIndex",
     "type" : "Integer"
-  }, {
-    "name" : "skipIngest",
-    "type" : "boolean"
   } ]
 }

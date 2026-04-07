@@ -27,7 +27,9 @@ public interface RagIngestor {
     } finally {
       store.close();
     }
-    return new RagResult("Indexed " + segments.size() + " segments.");
+    RagResult result = new RagResult();
+    result.setAnswer("Indexed " + segments.size() + " segments.");
+    return result;
   }
 
 }

@@ -39,6 +39,13 @@ OPENSEARCH_PASSWORD=$env:OPENSEARCH_PASSWORD
 OPENSEARCH_PORT=$env:OPENSEARCH_PORT
 "@ | Set-Content -Path $EnvFile -Encoding UTF8
     Write-Host "Settings saved to $EnvFile"
+
+    $gitignoreFile = Join-Path $ScriptDir ".gitignore"
+    if (-not (Test-Path $gitignoreFile)) {
+        ".env" | Set-Content -Path $gitignoreFile -Encoding UTF8
+    } elseif (-not (Select-String -Path $gitignoreFile -Pattern "^\.env$" -Quiet)) {
+        "`n.env" | Add-Content -Path $gitignoreFile -Encoding UTF8
+    }
 }
 
 
@@ -62,6 +69,8 @@ function Find-FreePort($startPort) {
     return $port
 }
 
+$env:OPENSEARCH_PASSWORD = $null
+$env:OPENSEARCH_PORT     = $null
 Read-Env
 
 # ── Disclaimer ────────────────────────────────────────────────────────────────
@@ -81,8 +90,27 @@ Write-Host ""
 
 $changed = $false
 
+function Test-PasswordStrength($pw) {
+    if ($pw.Length -lt 12)                 { return "Password must be at least 12 characters long." }
+    if ($pw -notmatch '[A-Z]')             { return "Password must contain at least one uppercase letter." }
+    if ($pw -notmatch '[a-z]')             { return "Password must contain at least one lowercase letter." }
+    if ($pw -notmatch '[0-9]')             { return "Password must contain at least one digit." }
+    if ($pw -notmatch '[^A-Za-z0-9]')      { return "Password must contain at least one special character." }
+    return $null
+}
+
 if (-not $env:OPENSEARCH_PASSWORD) {
-    $env:OPENSEARCH_PASSWORD = Read-Host "OpenSearch admin password (startup only, not used for connections)"
+    Write-Host "  OpenSearch requires a strong password (scored by zxcvbn)."
+    Write-Host "  Min 12 chars, upper+lower+digit+special. Avoid common words/patterns."
+    Write-Host "  Test strength: https://lowe.github.io/tryzxcvbn"
+    while ($true) {
+        $secure = Read-Host "Admin password (startup only, not used for connections)" -AsSecureString
+        $env:OPENSEARCH_PASSWORD = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto(
+            [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure))
+        $err = Test-PasswordStrength $env:OPENSEARCH_PASSWORD
+        if (-not $err) { break }
+        Write-Host "  Invalid: $err" -ForegroundColor Yellow
+    }
     $changed = $true
 }
 
