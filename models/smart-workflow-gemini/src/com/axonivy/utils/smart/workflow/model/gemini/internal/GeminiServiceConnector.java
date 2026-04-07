@@ -8,6 +8,7 @@ import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel.GoogleAiGeminiChatModelBuilder;
 
@@ -31,6 +32,10 @@ public class GeminiServiceConnector {
     GoogleAiGeminiChatModelBuilder builder = initBuilder();
     builder.modelName(modelName);
     builder.temperature(Double.valueOf(DEFAULT_TEMPERATURE));
+    var request = ChatRequestParameters.builder()
+      .modelName(modelName)// pre-serve for observability
+      .build();
+    builder.defaultRequestParameters(request); 
     return builder;
   }
 
