@@ -7,17 +7,18 @@ import ch.ivyteam.ivy.trace.Attribute;
 import ch.ivyteam.ivy.trace.SpanInstance;
 import ch.ivyteam.ivy.trace.SpanResult;
 
-public class LLMSpan implements SpanInstance<Void> {
-
+public class AiSpan implements SpanInstance<Void> {
+  private final String name;
   private final Supplier<List<Attribute>> attributes;
 
-  public LLMSpan(Supplier<List<Attribute>> attributes) {
+  public AiSpan(String name, Supplier<List<Attribute>> attributes) {
+    this.name = name;
     this.attributes = attributes;
   }
 
   @Override
   public String name() {
-    return "AI Assistant";
+    return name;
   }
 
   @Override

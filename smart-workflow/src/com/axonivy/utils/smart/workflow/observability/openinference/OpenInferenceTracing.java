@@ -2,23 +2,33 @@ package com.axonivy.utils.smart.workflow.observability.openinference;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.arize.semconv.trace.SemanticConventions;
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.OpenInferenceCollector;
-import com.axonivy.utils.smart.workflow.observability.openinference.span.LLMSpan;
+import com.axonivy.utils.smart.workflow.observability.openinference.internal.ToolCollector;
+import com.axonivy.utils.smart.workflow.observability.openinference.span.AiSpan;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.trace.Attribute;
 import ch.ivyteam.ivy.trace.Span;
+import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
+import dev.langchain4j.observability.api.event.AiServiceCompletedEvent;
 import dev.langchain4j.observability.api.event.AiServiceErrorEvent;
 import dev.langchain4j.observability.api.event.AiServiceRequestIssuedEvent;
 import dev.langchain4j.observability.api.event.AiServiceResponseReceivedEvent;
+import dev.langchain4j.observability.api.event.AiServiceStartedEvent;
+import dev.langchain4j.observability.api.event.ToolExecutedEvent;
+import dev.langchain4j.observability.api.listener.AiServiceCompletedListener;
 import dev.langchain4j.observability.api.listener.AiServiceErrorListener;
 import dev.langchain4j.observability.api.listener.AiServiceListener;
 import dev.langchain4j.observability.api.listener.AiServiceRequestIssuedListener;
 import dev.langchain4j.observability.api.listener.AiServiceResponseReceivedListener;
+import dev.langchain4j.observability.api.listener.AiServiceStartedListener;
+import dev.langchain4j.observability.api.listener.ToolExecutedEventListener;
 
 public class OpenInferenceTracing implements ChatModelListener {
 
@@ -30,12 +40,26 @@ public class OpenInferenceTracing implements ChatModelListener {
   }
 
   private final OpenInferenceCollector collector;
-  private Span<Void> span;
+  private ToolCollector toolCollector;
+  private Span<Void> llmSpan;
+  private Span<Void> agentSpan;
+  private Span<Void> toolSpan;
+
+  MessageOptions options;
 
   public OpenInferenceTracing(String provider, String model) {
+    this.options = MessageOptions.fromIvyVar();
     this.collector = new OpenInferenceCollector(provider, model)
-        .hideInputMessages(IvyVar.bool(Var.HIDE_INPUT_MESSAGES))
-        .hideOutputMessages(IvyVar.bool(Var.HIDE_OUTPUT_MESSAGES)) ;
+        .hideInputMessages(options.hideInput())
+        .hideOutputMessages(options.hideOutput()) ;
+  }
+
+  public record MessageOptions(boolean hideInput, boolean hideOutput) {
+    public static MessageOptions fromIvyVar() {
+      return new MessageOptions(
+          IvyVar.bool(Var.HIDE_INPUT_MESSAGES),
+          IvyVar.bool(Var.HIDE_OUTPUT_MESSAGES));
+    }
   }
 
   private List<Attribute> attributes() {
@@ -49,9 +73,32 @@ public class OpenInferenceTracing implements ChatModelListener {
       return List.of();
     }
     return List.of(
+      new InitListener(),
+      new CompletedListener(),
       new RequestListener(), 
       new ResponseListener(), 
-      new ErrorListener());
+      new ErrorListener(),
+      new ToolListener());
+  }
+
+  private class InitListener implements AiServiceStartedListener {
+
+    @Override
+    public void onEvent(AiServiceStartedEvent event) {
+      agentSpan = Span.open(() -> new AiSpan("AI Agent", () -> List.of(
+          Attribute.attribute(SemanticConventions.OPENINFERENCE_SPAN_KIND,
+              SemanticConventions.OpenInferenceSpanKind.AGENT.getValue()))));
+    }
+    
+  }
+
+  private class CompletedListener implements AiServiceCompletedListener {
+    
+    @Override
+    public void onEvent(AiServiceCompletedEvent event) {
+      agentSpan.result(null);
+      agentSpan.close();
+    }
   }
 
   private class RequestListener implements AiServiceRequestIssuedListener {
@@ -59,7 +106,7 @@ public class OpenInferenceTracing implements ChatModelListener {
     @Override
     public void onEvent(AiServiceRequestIssuedEvent event) {
       collector.onRequest(event.request());
-      span = Span.open(() -> new LLMSpan(() -> attributes()));
+      llmSpan = Span.open(() -> new AiSpan("AI Assistant", () -> attributes()));
     }
   }
 
@@ -68,8 +115,14 @@ public class OpenInferenceTracing implements ChatModelListener {
     @Override
     public void onEvent(AiServiceResponseReceivedEvent event) {
       collector.onResponse(event.response());
-      span.result(null);
-      span.close();
+      llmSpan.result(null);
+      llmSpan.close();
+
+      Optional.ofNullable(event.response().aiMessage()).map(AiMessage::toolExecutionRequests).ifPresent(requests -> {
+        toolCollector = new ToolCollector(options);
+        toolCollector.onRequestExecution(requests.get(0)); // TODO: multi-tool execution
+        toolSpan = Span.open(() -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
+      });
     }
   }
 
@@ -77,12 +130,21 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(AiServiceErrorEvent event) {
-      if (span == null) {
+      if (llmSpan == null) {
         Ivy.log().error("Error occurred before span was created", event.error());
         return;
       }
-      span.error(event.error());
-      span.close();
+      llmSpan.error(event.error());
+      llmSpan.close();
+    }
+  }
+
+  private class ToolListener implements ToolExecutedEventListener {
+    @Override
+    public void onEvent(ToolExecutedEvent event) {
+      toolCollector.onExecuted(event);
+      toolSpan.result(null);
+      toolSpan.close();
     }
   }
 

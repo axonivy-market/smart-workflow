@@ -52,7 +52,10 @@ class TestOpenInferenceSpans {
 
     var spans = tracer.slowTraces().all();
     var rootSpan = spans.get(0).rootSpan();
-    var assistants = findChild(rootSpan, "AI Assistant").toList();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+
+    var assistants = findChild(agent, "AI Assistant").toList();
     assertThat(assistants).hasSize(2);
 
     var assistCalc = assistants.get(0);
@@ -65,6 +68,26 @@ class TestOpenInferenceSpans {
     assertIvyAttrs(doneAttrs, res.workflow().executedTask());
     assertToolDoneAttrs(doneAttrs);
     assertToolResult(doneAttrs);
+
+    var toolRun = findChild(agent, "Tool").findFirst().orElseThrow();
+    assertTool(toolRun);
+  }
+
+  private void assertAgent(TraceSpan agent) {
+    assertThat(mapOf(agent.attributes()))
+      .containsEntry("openinference.span.kind", "AGENT");
+  }
+
+  private void assertTool(TraceSpan toolRun) {
+    assertThat(mapOf(toolRun.attributes()))
+        .containsEntry("openinference.span.kind", "TOOL")
+        .containsEntry("tool.name", "add")
+        .containsEntry("tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+        .containsEntry("tool.parameters", "{\"a\":1984,\"b\":41}")
+        .containsEntry("input.value", "{\"a\":1984,\"b\":41}")
+        .containsEntry("input.mime_type", "application/json")
+        .containsEntry("output.value", "{\n  \"c\" : 2025\n}")
+        .containsEntry("output.mime_type", "text/plain");
   }
 
   private void assertToolCallAttrs(Map<String, String> attrs) {
