@@ -1,27 +1,17 @@
 {
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
-  "id" : "19CF4E8B0E56696A",
+  "id" : "19CF57D86AE28280",
   "kind" : "HTML_DIALOG",
   "config" : {
-    "data" : "com.axonivy.utils.ai.Conversations.ConversationsData"
+    "data" : "com.axonivy.utils.ai.component.Analytics.AnalyticsData"
   },
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",
-      "name" : "start(String)",
+      "name" : "start()",
       "config" : {
         "signature" : "start",
-        "input" : {
-          "params" : [ {
-              "name" : "caseUuid",
-              "type" : "String",
-              "desc" : ""
-            } ],
-          "map" : {
-            "out.caseUuid" : "param.caseUuid"
-          }
-        },
-        "guid" : "19CF4E8B0E72C3B6"
+        "guid" : "19CF57D86B2D015A"
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 64 }
@@ -40,7 +30,7 @@
       "type" : "HtmlDialogEventStart",
       "name" : "close",
       "config" : {
-        "guid" : "19CF4E8B0E8A8B73"
+        "guid" : "19CF57D86D341439"
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 160 }

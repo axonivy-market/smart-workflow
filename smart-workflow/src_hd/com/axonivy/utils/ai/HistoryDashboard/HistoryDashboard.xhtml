@@ -20,15 +20,15 @@
         <h:form id="main-form">
 
           <!-- Section 1: History Table -->
-          <div class="section-card surface-card border-round overflow-hidden mb-4">
+          <div class="surface-card border-round overflow-hidden mb-4 border-1 surface-border">
 
             <h:panelGroup id="history-table-section" layout="block">
 
-              <div class="section-header surface-ground flex align-items-center font-semibold">
+              <div class="p-3 surface-ground flex align-items-center font-semibold">
                 <span><i class="tif tif-clipboard mr-1"></i>History Table (#{historyDashboardBean.caseCount} cases, #{historyDashboardBean.entryCount} tasks)</span>
               </div>
 
-              <div class="filter-bar flex flex-wrap gap-2 align-items-center">
+              <div class="p-3 flex flex-wrap gap-2 align-items-center border-bottom-1 surface-border">
                 <p:inputText value="#{historyDashboardBean.filterCase}"
                              placeholder="Case name, ID or description"
                              styleClass="filter-case-input" />
@@ -74,15 +74,15 @@
                 </p:column>
 
                 <p:column headerText="Messages" width="10%">
-                  <span class="badge bg-blue-100 text-blue-700 border-round-3xl inline-block font-semibold">#{row.messageCount} msgs</span>
+                  <span class="bg-blue-100 text-blue-700 border-round-3xl inline-block font-semibold px-2 text-sm">#{row.messageCount} msgs</span>
                 </p:column>
 
                 <p:column headerText="Tokens" width="10%">
-                  <span class="badge bg-green-100 text-green-700 border-round-3xl inline-block font-semibold">#{row.totalTokens}</span>
+                  <span class="bg-green-100 text-green-700 border-round-3xl inline-block font-semibold px-2 text-sm">#{row.totalTokens}</span>
                 </p:column>
 
                 <p:column headerText="Model" width="10%">
-                  <span class="model-chip text-sm surface-ground border-round-sm">#{row.modelName}</span>
+                  <span class="text-sm surface-ground border-round-sm px-2">#{row.modelName}</span>
                 </p:column>
 
                 <p:column headerText="" styleClass="col-action" width="5%">
@@ -96,12 +96,9 @@
             </h:panelGroup>
           </div>
 
-          <!-- Section 2: Token Usage Analytics (placeholder) -->
+          <!-- Section 2: Token Usage Analytics -->
           <div class="section-card surface-card border-round overflow-hidden">
-            <div class="section-header surface-ground flex justify-content-between align-items-center font-semibold">
-              <span><i class="tif tif-report-analytics mr-1"></i>Token Usage Analytics</span>
-              <span class="text-sm font-normal text-color-secondary">Coming soon</span>
-            </div>
+            <ic:com.axonivy.utils.ai.component.Analytics id="analytics" />
           </div>
 
         </h:form>

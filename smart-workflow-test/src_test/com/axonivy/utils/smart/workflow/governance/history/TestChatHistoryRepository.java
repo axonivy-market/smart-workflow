@@ -27,7 +27,7 @@ public class TestChatHistoryRepository {
   @BeforeEach
   void setUp() {
     storage = new InMemoryHistoryStorage();
-    listener = new AgentResponseListener(new ChatHistoryRepository("case-1", "task-1", "test-agent", storage));
+    listener = new AgentResponseListener(new ChatHistoryRepository("case-1", "task-1", "test-agent", "test-process", storage));
   }
 
   @Test

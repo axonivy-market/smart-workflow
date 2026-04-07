@@ -78,4 +78,72 @@ public class ChatHistoryJsonParser {
         })
         .orElse(UNKNOWN_MODEL);
   }
+
+  public static long getInputTokens(AgentConversationEntry entry) {
+    if (entry == null || entry.getTokenUsageJson() == null) {
+      return 0L;
+    }
+    try {
+      JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
+      if (!array.isArray()) {
+        return 0L;
+      }
+      long total = 0L;
+      for (JsonNode node : array) {
+        JsonNode tokens = node.get("inputTokens");
+        if (tokens != null && tokens.isNumber()) {
+          total += tokens.longValue();
+        }
+      }
+      return total;
+    } catch (Exception e) {
+      return 0L;
+    }
+  }
+
+  public static long getOutputTokens(AgentConversationEntry entry) {
+    if (entry == null || entry.getTokenUsageJson() == null) {
+      return 0L;
+    }
+    try {
+      JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
+      if (!array.isArray()) {
+        return 0L;
+      }
+      long total = 0L;
+      for (JsonNode node : array) {
+        JsonNode tokens = node.get("outputTokens");
+        if (tokens != null && tokens.isNumber()) {
+          total += tokens.longValue();
+        }
+      }
+      return total;
+    } catch (Exception e) {
+      return 0L;
+    }
+  }
+
+  public static long getAvgDurationMs(AgentConversationEntry entry) {
+    if (entry == null || entry.getTokenUsageJson() == null) {
+      return 0L;
+    }
+    try {
+      JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
+      if (!array.isArray() || array.size() == 0) {
+        return 0L;
+      }
+      long total = 0L;
+      int count = 0;
+      for (JsonNode node : array) {
+        JsonNode duration = node.get("durationMs");
+        if (duration != null && duration.isNumber()) {
+          total += duration.longValue();
+          count++;
+        }
+      }
+      return count == 0 ? 0L : total / count;
+    } catch (Exception e) {
+      return 0L;
+    }
+  }
 }

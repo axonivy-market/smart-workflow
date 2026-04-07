@@ -1,0 +1,215 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<cc:interface componentType="IvyComponent">
+</cc:interface>
+
+<cc:implementation>
+
+  <!-- Async analytics loader — fires once after page renders -->
+  <p:remoteCommand name="loadAnalyticsData"
+                   action="#{usageAnalyticBean.loadAnalytics}"
+                   update="analytics-section"
+                   autoRun="true" />
+
+  <!-- Section header with collapse/expand button -->
+  <div class="section-header surface-ground flex justify-content-between align-items-center font-semibold">
+    <span><i class="tif tif-report-analytics mr-1"></i>Token Usage Analytics</span>
+    <h:panelGroup id="analytics-toggle-area" layout="block">
+      <p:commandButton id="btn-collapse"
+                       icon="#{usageAnalyticBean.analyticsCollapsed ? 'tif tif-caret-down' : 'tif tif-caret-up'}"
+                       styleClass="p-button-text p-button-plain analytics-toggle-btn"
+                       process="@this"
+                       update="analytics-toggle-area analytics-section"
+                       action="#{usageAnalyticBean.toggleAnalyticsCollapsed}" />
+    </h:panelGroup>
+  </div>
+
+  <!-- Content panel — AJAX update target -->
+  <h:panelGroup id="analytics-section" layout="block">
+  <h:panelGroup rendered="#{not usageAnalyticBean.analyticsCollapsed}" layout="block" styleClass="p-4">
+
+    <!-- Skeleton (shown while loadAnalyticsData remote command is in-flight) -->
+    <h:panelGroup rendered="#{not usageAnalyticBean.loaded}" layout="block">
+
+      <!-- KPI card skeletons: 4 columns -->
+      <div class="grid mb-4">
+        <div class="col-3">
+          <div class="kpi-card surface-ground border-round p-3">
+            <p:skeleton width="55%" height="0.75rem" styleClass="mb-2" />
+            <p:skeleton width="40%" height="2rem"    styleClass="mb-2" />
+            <p:skeleton width="60%" height="0.65rem" />
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="kpi-card surface-ground border-round p-3">
+            <p:skeleton width="55%" height="0.75rem" styleClass="mb-2" />
+            <p:skeleton width="40%" height="2rem"    styleClass="mb-2" />
+            <p:skeleton width="60%" height="0.65rem" />
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="kpi-card surface-ground border-round p-3">
+            <p:skeleton width="55%" height="0.75rem" styleClass="mb-2" />
+            <p:skeleton width="40%" height="2rem"    styleClass="mb-2" />
+            <p:skeleton width="60%" height="0.65rem" />
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="kpi-card surface-ground border-round p-3">
+            <p:skeleton width="55%" height="0.75rem" styleClass="mb-2" />
+            <p:skeleton width="50%" height="1.5rem"  styleClass="mb-2" />
+            <p:skeleton width="65%" height="0.65rem" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart skeletons row 1: line chart (wide) + donut circle (narrow) -->
+      <div class="grid mb-4">
+        <div class="col-8">
+          <div class="chart-panel surface-ground border-round p-3">
+            <p:skeleton width="40%" height="0.75rem" styleClass="mb-3" />
+            <p:skeleton width="100%" height="200px" />
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="chart-panel surface-ground border-round p-3">
+            <p:skeleton width="50%" height="0.75rem" styleClass="mb-3" />
+            <div class="flex justify-content-center">
+              <p:skeleton shape="circle" size="160px" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart skeletons row 2: stacked bar + horizontal bars (50/50) -->
+      <div class="grid mb-4">
+        <div class="col-6">
+          <div class="chart-panel surface-ground border-round p-3">
+            <p:skeleton width="55%" height="0.75rem" styleClass="mb-3" />
+            <p:skeleton width="100%" height="180px" />
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="chart-panel surface-ground border-round p-3">
+            <p:skeleton width="50%" height="0.75rem" styleClass="mb-3" />
+            <p:skeleton width="100%" height="1.5rem" styleClass="mb-2" />
+            <p:skeleton width="82%"  height="1.5rem" styleClass="mb-2" />
+            <p:skeleton width="60%"  height="1.5rem" styleClass="mb-2" />
+            <p:skeleton width="44%"  height="1.5rem" styleClass="mb-2" />
+            <p:skeleton width="28%"  height="1.5rem" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart skeleton row 3: full-width response time histogram -->
+      <div class="chart-panel surface-ground border-round p-3">
+        <p:skeleton width="40%" height="0.75rem" styleClass="mb-3" />
+        <p:skeleton width="58%"  height="1.5rem" styleClass="mb-2" />
+        <p:skeleton width="100%" height="1.5rem" styleClass="mb-2" />
+        <p:skeleton width="42%"  height="1.5rem" styleClass="mb-2" />
+        <p:skeleton width="48%"  height="1.5rem" />
+      </div>
+
+    </h:panelGroup>
+
+    <!-- Real content (shown after loadAnalyticsData completes) -->
+    <h:panelGroup rendered="#{usageAnalyticBean.loaded}" layout="block">
+
+      <!-- KPI Cards (4-column grid) -->
+      <div class="grid mb-4">
+        <div class="col-3">
+          <div class="kpi-card surface-ground border-round p-3">
+            <div class="kpi-label text-sm text-color-secondary mb-1">Total Sessions</div>
+            <div class="kpi-value text-2xl font-bold">#{usageAnalyticBean.kpi.totalSessions}</div>
+            <h:panelGroup layout="block" styleClass="kpi-trend #{usageAnalyticBean.kpi.sessionsTrend ge 0 ? 'kpi-trend--up' : 'kpi-trend--down'}">
+              <h:outputText value="&#9650;" rendered="#{usageAnalyticBean.kpi.sessionsTrend ge 0}" />
+              <h:outputText value="&#9660;" rendered="#{usageAnalyticBean.kpi.sessionsTrend lt 0}" />
+              #{usageAnalyticBean.kpi.sessionsTrend}% vs prev
+            </h:panelGroup>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="kpi-card surface-ground border-round p-3">
+            <div class="kpi-label text-sm text-color-secondary mb-1">Total Tokens</div>
+            <div class="kpi-value text-2xl font-bold">#{usageAnalyticBean.kpi.formattedTotalTokens}</div>
+            <h:panelGroup layout="block" styleClass="kpi-trend #{usageAnalyticBean.kpi.tokensTrend ge 0 ? 'kpi-trend--up' : 'kpi-trend--down'}">
+              <h:outputText value="&#9650;" rendered="#{usageAnalyticBean.kpi.tokensTrend ge 0}" />
+              <h:outputText value="&#9660;" rendered="#{usageAnalyticBean.kpi.tokensTrend lt 0}" />
+              #{usageAnalyticBean.kpi.tokensTrend}% vs prev
+            </h:panelGroup>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="kpi-card surface-ground border-round p-3">
+            <div class="kpi-label text-sm text-color-secondary mb-1">Avg Response Time</div>
+            <div class="kpi-value text-2xl font-bold">#{usageAnalyticBean.kpi.avgResponseMs} ms</div>
+            <h:panelGroup layout="block" styleClass="kpi-trend #{usageAnalyticBean.kpi.responseMsTrend le 0 ? 'kpi-trend--up' : 'kpi-trend--down'}">
+              <h:outputText value="&#9650; faster" rendered="#{usageAnalyticBean.kpi.responseMsTrend le 0}" />
+              <h:outputText value="&#9660; slower" rendered="#{usageAnalyticBean.kpi.responseMsTrend gt 0}" />
+              vs prev
+            </h:panelGroup>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="kpi-card surface-ground border-round p-3">
+            <div class="kpi-label text-sm text-color-secondary mb-1">Top Model</div>
+            <div class="kpi-value text-lg font-bold font-mono">#{usageAnalyticBean.kpi.topModel}</div>
+            <div class="kpi-trend text-color-secondary">#{usageAnalyticBean.kpi.topModelPct}% of all calls</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts row 1: Token Timeline (wide) + Model Distribution (narrow) -->
+      <div class="grid mb-4">
+        <div class="col-8">
+          <div class="chart-panel surface-ground border-round p-3">
+            <div class="font-semibold mb-2">Token Usage Over Time</div>
+            <p:lineChart id="chart-token-timeline" model="#{usageAnalyticBean.tokenTimelineChart}"
+                         styleClass="chart-h-240" />
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="chart-panel surface-ground border-round p-3">
+            <div class="font-semibold mb-2">Model Distribution</div>
+            <p:donutChart id="chart-model-dist" model="#{usageAnalyticBean.modelDistributionChart}"
+                          styleClass="chart-h-240" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts row 2: Input/Output Stacked + Top Processes (50/50) -->
+      <div class="grid mb-4">
+        <div class="col-6">
+          <div class="chart-panel surface-ground border-round p-3">
+            <div class="font-semibold mb-2">Input vs Output Tokens per Day</div>
+            <p:barChart id="chart-token-stacked" model="#{usageAnalyticBean.tokenStackedChart}"
+                        styleClass="chart-h-220" />
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="chart-panel surface-ground border-round p-3">
+            <div class="font-semibold mb-2">Top Processes by Token Usage</div>
+            <p:barChart id="chart-top-cases" model="#{usageAnalyticBean.topCasesChart}"
+                        styleClass="chart-h-220" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts row 3: Response Time full width -->
+      <div class="chart-panel surface-ground border-round p-3">
+        <div class="font-semibold mb-2">Response Time Distribution</div>
+        <p:barChart id="chart-response-time" model="#{usageAnalyticBean.responseTimeChart}"
+                    styleClass="chart-h-220" />
+      </div>
+
+    </h:panelGroup>
+
+  </h:panelGroup>
+
+  </h:panelGroup>
+
+</cc:implementation>
+
+</html>
