@@ -10,6 +10,7 @@ import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.Variabl
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.azure.AzureOpenAiChatModel;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 
 public class AzureOpenAiServiceConnector {
   private static final int DEFAULT_TEMPERATURE = 0;
@@ -53,6 +54,10 @@ public class AzureOpenAiServiceConnector {
           .valueOf(GPT_5.equalsIgnoreCase(deployment.getModel()) ? DEFAULT_TEMPERATURE_GPT_5 : DEFAULT_TEMPERATURE);
       builder.temperature(temperature);
     }
+    var request = ChatRequestParameters.builder()
+      .modelName(deployment.getModel())// pre-serve for observability
+      .build();
+    builder.defaultRequestParameters(request); 
 
     return builder;
   }

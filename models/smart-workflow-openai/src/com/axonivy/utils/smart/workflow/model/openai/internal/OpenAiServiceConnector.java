@@ -9,6 +9,7 @@ import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
@@ -57,6 +58,11 @@ public class OpenAiServiceConnector {
       builder.temperature(temperature);
     }
 
+    var request = ChatRequestParameters.builder()
+      .modelName(modelName)// pre-serve for observability
+      .build();
+    builder.defaultRequestParameters(request); 
+    
     return builder;
   }
 

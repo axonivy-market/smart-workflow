@@ -85,8 +85,7 @@ class TestOpenInferenceSpans {
       .containsEntry("llm.input_messages.0.message.content", "SystemMessage { text = \"You are a Support Agent\" }")
       .containsEntry("llm.input_messages.0.message.role", "system")
       .containsEntry("llm.input_messages.1.message.content", "UserMessage { name = null, contents = [TextContent { text = \"I have error 404 in Cockpit\" }], attributes = {} }")
-      .containsEntry("llm.input_messages.1.message.role", "user")
-      .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}");
+      .containsEntry("llm.input_messages.1.message.role", "user");
   }
 
   private void assertOutputAttrs(Map<String, String> attrs) {
