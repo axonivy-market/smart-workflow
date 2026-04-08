@@ -50,20 +50,18 @@ public class OpenAiServiceConnector {
   }
 
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
-    OpenAiChatModelBuilder builder = initBuilder();
-    builder.modelName(modelName);
-    // Only set temperature if not using the "o" series
-    if (!modelName.startsWith("o")) {
-      Double temperature = Double.valueOf(GPT_5.equalsIgnoreCase(modelName) ? DEFAULT_TEMPERATURE_GPT_5 : DEFAULT_TEMPERATURE);
-      builder.temperature(temperature);
-    }
-
-    var request = ChatRequestParameters.builder()
-      .modelName(modelName)// pre-serve for observability
-      .build();
-    builder.defaultRequestParameters(request); 
+    OpenAiChatModelBuilder model = initBuilder();
     
-    return builder;
+    var request = ChatRequestParameters.builder()
+      .modelName(modelName);
+    if (!modelName.startsWith("o")) {
+      // Only set temperature if not using the "o" series
+      Double temperature = Double.valueOf(GPT_5.equalsIgnoreCase(modelName) ? DEFAULT_TEMPERATURE_GPT_5 : DEFAULT_TEMPERATURE);
+      request.temperature(temperature);
+    }
+    model.defaultRequestParameters(request.build()); 
+    
+    return model;
   }
 
   private static OpenAiChatModelBuilder initBuilder() {
