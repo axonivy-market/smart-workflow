@@ -133,7 +133,7 @@ public class AgentCallExecutor {
     ToolProvider ivyTools = new IvySubProcessToolsProvider().filtering(toolFilter);
     agentBuilder.toolProvider(request -> {
       Map<ToolSpecification, ToolExecutor> all = new HashMap<>(ivyTools.provideTools(request).tools());
-      all.putAll(SmartWorkflowToolsProvider.provideTools().tools());
+      all.putAll(SmartWorkflowToolsProvider.provideTools(toolFilter).tools());
       return new ToolProviderResult(all);
     });
   }

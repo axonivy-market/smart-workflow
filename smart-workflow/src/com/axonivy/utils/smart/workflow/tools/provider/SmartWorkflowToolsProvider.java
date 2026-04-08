@@ -19,12 +19,13 @@ public interface SmartWorkflowToolsProvider {
 
   List<SmartWorkflowTool> getTools();
 
-  static ToolProviderResult provideTools() {
+  static ToolProviderResult provideTools(List<String> toolFilter) {
     Map<ToolSpecification, ToolExecutor> tools = new HashMap<>();
     var project = SpiProject.getSmartWorkflowPmv().project();
     new SpiLoader(project).load(SmartWorkflowToolsProvider.class)
         .stream()
         .flatMap(provider -> provider.getTools().stream())
+        .filter(tool -> toolFilter == null || toolFilter.contains(tool.name()))
         .map(JavaToolAdapter::new)
         .forEach(adapter -> tools.put(adapter.toToolSpecification(), adapter.toToolExecutor()));
     return new ToolProviderResult(tools);
