@@ -11,7 +11,7 @@ Guardrails protect AI agents by validating both user input and AI output. Smart 
 
 ## Configuring Default Guardrails
 
-Set default guardrails in `variables.yaml`:
+Set default guardrails in `variables.yaml`. These apply to every agent that does **not** explicitly configure its own guardrail list:
 
 ```yaml
 Variables:

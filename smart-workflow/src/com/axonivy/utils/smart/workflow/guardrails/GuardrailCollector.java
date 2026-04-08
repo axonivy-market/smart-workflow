@@ -1,24 +1,28 @@
 package com.axonivy.utils.smart.workflow.guardrails;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.adapter.AbstractGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowGuardrail;
-import com.axonivy.utils.smart.workflow.guardrails.provider.DefaultGuardrailProvider;
 import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
 
+import ch.ivyteam.ivy.environment.Ivy;
+
 public class GuardrailCollector {
+  public static final String DEFAULT_INPUT_GUARDRAILS = "AI.Guardrails.DefaultInput";
+  public static final String DEFAULT_OUTPUT_GUARDRAILS = "AI.Guardrails.DefaultOutput";
 
   public static Set<GuardrailProvider> allProviders() {
     var project = SpiProject.getSmartWorkflowPmv().project();
@@ -26,63 +30,65 @@ public class GuardrailCollector {
   }
 
   public static List<String> allInputGuardrailNames() {
-    return allGuardrailNames(
-        new DefaultGuardrailProvider().getInputGuardrails(),
-        GuardrailProvider::getInputGuardrails);
+    return allGuardrailNames(GuardrailProvider::getInputGuardrails);
   }
 
   public static List<InputGuardrailAdapter> inputGuardrailAdapters(List<String> filters) {
     return guardrailAdapters(filters,
-        new DefaultGuardrailProvider().getFilteredDefaultInputGuardrails(),
+        DEFAULT_INPUT_GUARDRAILS,
         GuardrailProvider::getInputGuardrails,
         InputGuardrailAdapter::new);
   }
 
   public static List<String> allOutputGuardrailNames() {
-    return allGuardrailNames(
-        new DefaultGuardrailProvider().getOutputGuardrails(),
-        GuardrailProvider::getOutputGuardrails);
+    return allGuardrailNames(GuardrailProvider::getOutputGuardrails);
   }
 
   public static List<OutputGuardrailAdapter> outputGuardrailAdapters(List<String> filters) {
     return guardrailAdapters(filters,
-        new DefaultGuardrailProvider().getFilteredDefaultOutputGuardrails(),
+        DEFAULT_OUTPUT_GUARDRAILS,
         GuardrailProvider::getOutputGuardrails,
         OutputGuardrailAdapter::new);
   }
 
   private static <G extends SmartWorkflowGuardrail> List<String> allGuardrailNames(
-      List<G> defaults,
       Function<GuardrailProvider, List<G>> providerExtractor) {
-    List<G> guardrails = new ArrayList<>(defaults);
-    allProviders().stream()
+    Set<String> uniqueNames = allProviders().stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
-        .forEach(guardrails::add);
-    return new ArrayList<>(guardrails.stream()
         .map(SmartWorkflowGuardrail::name)
-        .collect(Collectors.toCollection(LinkedHashSet::new)));
+        .collect(Collectors.toCollection(LinkedHashSet::new));
+    return List.copyOf(uniqueNames);
   }
 
   private static <G extends SmartWorkflowGuardrail, A extends AbstractGuardrailAdapter<G>> List<A> guardrailAdapters(
       List<String> filters,
-      List<G> defaults,
+      String defaultVariableKey,
       Function<GuardrailProvider, List<G>> providerExtractor,
       Function<G, A> adapterFactory) {
-    List<G> guardrails = new ArrayList<>(defaults);
 
-    if (CollectionUtils.isEmpty(filters)) {
-      return new ArrayList<>(guardrails.stream()
-          .map(adapterFactory)
-          .collect(Collectors.toCollection(LinkedHashSet::new)));
+    Set<String> requestedNames = new LinkedHashSet<>(
+        (filters != null && !filters.isEmpty()) ? filters : readVariableNames(defaultVariableKey));
+
+    if (requestedNames.isEmpty()) {
+      return List.of();
     }
 
-    allProviders().stream()
+    Map<String, G> guardrailsByName = allProviders().stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
-        .forEach(guardrails::add);
+        .collect(Collectors.toMap(SmartWorkflowGuardrail::name, g -> g, (existing, dup) -> existing));
 
-    return new ArrayList<>(guardrails.stream()
-        .filter(g -> filters.contains(g.name()))
+    return requestedNames.stream()
+        .filter(guardrailsByName::containsKey)
+        .map(guardrailsByName::get)
         .map(adapterFactory)
-        .collect(Collectors.toCollection(LinkedHashSet::new)));
+        .collect(Collectors.toList());
+  }
+
+  private static List<String> readVariableNames(String variableKey) {
+    var configuredValue = StringUtils.defaultString(Ivy.var().get(variableKey));
+    return Arrays.stream(StringUtils.split(configuredValue, ','))
+        .map(String::strip)
+        .filter(StringUtils::isNotBlank)
+        .collect(Collectors.toList());
   }
 }
