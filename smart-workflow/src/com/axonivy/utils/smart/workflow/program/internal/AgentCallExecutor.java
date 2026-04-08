@@ -128,10 +128,8 @@ public class AgentCallExecutor {
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
     List<String> inputGuardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
-    GuardrailCollector.inputGuardrailAdapters(inputGuardrailFilters)
-      .forEach(agentBuilder::inputGuardrails);
+    agentBuilder.inputGuardrails(GuardrailCollector.inputGuardrailAdapters(inputGuardrailFilters));
     List<String> outputGuardrailFilters = executeListOfStrings(Conf.OUTPUT_GUARD_RAILS).orElse(null);
-    GuardrailCollector.outputGuardrailAdapters(outputGuardrailFilters)
-      .forEach(agentBuilder::outputGuardrails);
+    agentBuilder.outputGuardrails(GuardrailCollector.outputGuardrailAdapters(outputGuardrailFilters));
   }
 }

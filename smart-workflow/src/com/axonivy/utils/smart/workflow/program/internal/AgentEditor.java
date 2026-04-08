@@ -92,22 +92,14 @@ public class AgentEditor {
   }
 
   private String inputGuardrailsList() {
-    var guardrails = Optional.ofNullable(GuardrailCollector.allInputGuardrailNames());
-    if (guardrails.isEmpty()) {
-      return StringUtils.EMPTY;
-    }
-    return guardrails.get().stream()
-      .map(guardrail -> String.format("- %s", guardrail))
-      .collect(Collectors.joining("\n"));
+    return GuardrailCollector.allInputGuardrailNames().stream()
+        .map(name -> "- " + name)
+        .collect(Collectors.joining("\n"));
   }
 
   private String outputGuardrailsList() {
-    var guardrails = Optional.ofNullable(GuardrailCollector.allOutputGuardrailNames());
-    if (guardrails.isEmpty()) {
-      return StringUtils.EMPTY;
-    }
-    return guardrails.get().stream()
-      .map(guardrail -> String.format("- %s", guardrail))
-      .collect(Collectors.joining("\n"));
+    return GuardrailCollector.allOutputGuardrailNames().stream()
+        .map(name -> "- " + name)
+        .collect(Collectors.joining("\n"));
   }
 }
