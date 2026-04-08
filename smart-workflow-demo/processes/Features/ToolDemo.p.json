@@ -1,0 +1,89 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "3A7F92C1D84BE056",
+  "config" : {
+    "data" : "Features.ToolDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "start",
+      "config" : {
+        "signature" : "start"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 704, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Prepare demo data",
+      "config" : {
+        "output" : {
+          "code" : "in.rawInvoice = \"Invoice #INV-2024-042 | Customer: John Doe | Date: 2024-11-15 | Due: 2024-12-15. Items: MacBook Pro 16-inch (Qty: 1, Unit Price: $2499.00, Total: $2499.00), Office Coffee Subscription 3-month (Qty: 1, Unit Price: $45.00, Total: $45.00), Samsung QLED TV 65-inch (Qty: 1, Unit Price: $1799.00, Total: $1799.00), Rolex Submariner Watch (Qty: 1, Unit Price: $8500.00, Total: $8500.00), Legal Consultation Service (Qty: 2 hours, Unit Price: $250.00, Total: $500.00). Subtotal: $13343.00\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Calculate invoice tax",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an invoice processing assistant. Parse the raw invoice text to extract all items. Use the calculateTax tool with the item descriptions and their total amounts to determine applicable taxes. For each item, populate the taxRate and taxAmount fields based on the tool result. Return a complete TaxedInvoice with all invoice details including per-item tax rates and amounts, the effective tax rate, total tax amount, and total amount with tax applied.",
+          "resultType" : "com.axonivy.utils.ai.TaxedInvoice.class",
+          "tools" : "[\"calculateTax\"]",
+          "resultMapping" : "in.taxedInvoice",
+          "query" : "<%=in.rawInvoice%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 440, "y" : 65 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Log result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.warn(\"Tax calculation complete - Effective rate: {0}%, Tax amount: ${1}, Total with tax: ${2}\",",
+            "  Math.round(in.taxedInvoice.effectiveTaxRate * 10000) / 100.0,",
+            "  in.taxedInvoice.taxAmount,",
+            "  in.taxedInvoice.totalWithTax);",
+            "for (com.axonivy.utils.ai.InvoiceItem item : in.taxedInvoice.items) {",
+            "  ivy.log.warn(\"  Item: {0} | Tax Rate: {1}% | Tax Amount: ${2}\",",
+            "    item.description,",
+            "    Math.round(item.taxRate * 10000) / 100.0,",
+            "    item.taxAmount);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 608, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}

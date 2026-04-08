@@ -1,0 +1,38 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "TaxedInvoice",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "invoiceNumber",
+    "comment" : "The unique identifier for the invoice"
+  }, {
+    "name" : "customerName",
+    "comment" : "The name of the customer being invoiced"
+  }, {
+    "name" : "invoiceDate",
+    "comment" : "The date the invoice was issued"
+  }, {
+    "name" : "dueDate",
+    "comment" : "The date the invoice is due"
+  }, {
+    "name" : "items",
+    "type" : "List<com.axonivy.utils.ai.InvoiceItem>",
+    "comment" : "A list of items included in the invoice"
+  }, {
+    "name" : "subtotal",
+    "type" : "java.lang.Double",
+    "comment" : "The invoice total before tax"
+  }, {
+    "name" : "effectiveTaxRate",
+    "type" : "java.lang.Double",
+    "comment" : "The effective tax rate applied across all items (e.g. 0.12 for 12%)"
+  }, {
+    "name" : "taxAmount",
+    "type" : "java.lang.Double",
+    "comment" : "The total tax amount"
+  }, {
+    "name" : "totalWithTax",
+    "type" : "java.lang.Double",
+    "comment" : "The final invoice total including tax"
+  } ]
+}

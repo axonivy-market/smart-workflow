@@ -1,0 +1,13 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ToolDemoData",
+  "namespace" : "Features",
+  "fields" : [ {
+    "name" : "rawInvoice",
+    "comment" : "Raw invoice text to be processed by the agent"
+  }, {
+    "name" : "taxedInvoice",
+    "type" : "com.axonivy.utils.ai.TaxedInvoice",
+    "comment" : "Parsed invoice with calculated tax details"
+  } ]
+}

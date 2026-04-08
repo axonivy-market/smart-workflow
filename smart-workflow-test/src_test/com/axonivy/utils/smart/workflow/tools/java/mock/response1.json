@@ -1,0 +1,31 @@
+{
+  "id": "chatcmpl-tool-demo-1",
+  "object": "chat.completion",
+  "created": 1712345678,
+  "model": "gpt-4o-mini",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_tax001",
+            "type": "function",
+            "function": {
+              "name": "calculateTax",
+              "arguments": "{\"itemDescriptions\":[\"MacBook Pro 16-inch\",\"Office Coffee Subscription 3-month\",\"Samsung QLED TV 65-inch\",\"Rolex Submariner Watch\",\"Legal Consultation Service\"],\"itemAmounts\":[2499.0,45.0,1799.0,8500.0,500.0]}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 500,
+    "completion_tokens": 100,
+    "total_tokens": 600
+  }
+}
