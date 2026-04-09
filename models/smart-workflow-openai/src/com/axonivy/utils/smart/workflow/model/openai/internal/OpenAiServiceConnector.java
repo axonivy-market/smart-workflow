@@ -9,6 +9,7 @@ import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
@@ -49,15 +50,18 @@ public class OpenAiServiceConnector {
   }
 
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
-    OpenAiChatModelBuilder builder = initBuilder();
-    builder.modelName(modelName);
-    // Only set temperature if not using the "o" series
+    OpenAiChatModelBuilder model = initBuilder();
+    
+    var request = ChatRequestParameters.builder()
+      .modelName(modelName);
     if (!modelName.startsWith("o")) {
+      // Only set temperature if not using the "o" series
       Double temperature = Double.valueOf(GPT_5.equalsIgnoreCase(modelName) ? DEFAULT_TEMPERATURE_GPT_5 : DEFAULT_TEMPERATURE);
-      builder.temperature(temperature);
+      request.temperature(temperature);
     }
-
-    return builder;
+    model.defaultRequestParameters(request.build()); 
+    
+    return model;
   }
 
   private static OpenAiChatModelBuilder initBuilder() {

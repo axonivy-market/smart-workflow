@@ -36,5 +36,45 @@
       "visual" : {
         "at" : { "x" : 352, "y" : 64 }
       }
+    }, {
+      "id" : "f3",
+      "type" : "CallSubStart",
+      "name" : "add(Integer,Integer)",
+      "config" : {
+        "signature" : "add",
+        "input" : {
+          "params" : [
+            { "name" : "a", "type" : "Integer", "desc" : "first number" },
+            { "name" : "b", "type" : "Integer", "desc" : "number to be added" }
+          ],
+          "map" : {
+            "out.result" : "param.a.intValue() + param.b.intValue()"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "c", "type" : "Integer", "desc" : "the calculated result" }
+          ],
+          "map" : {
+            "result.c" : "in.result"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 200 },
+        "description" : "This is a simple calculator: supporting additions of numbers"
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 200 }
+      }
     } ]
 }

@@ -14,6 +14,7 @@ import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryL
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
@@ -122,10 +123,12 @@ public class AgentCallExecutor {
     var provider = ChatModelFactory.getProviderOrDefault(providerName);
     var modelOptions = options()
         .modelName(model)
-        .structuredOutput(structured)
-        .listeners(ListenerFactory.createListeners(provider.name()));
-    agentBuilder.chatModel(provider.setup(modelOptions));
+        .structuredOutput(structured);
+    var chatModel = provider.setup(modelOptions);
+    agentBuilder.chatModel(chatModel);
+    var modelName = chatModel.defaultRequestParameters().modelName();
     new ChatHistoryListener().configure().forEach(agentBuilder::registerListener);
+    new OpenInferenceTracing(provider.name(), modelName).configure().forEach(agentBuilder::registerListener);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {

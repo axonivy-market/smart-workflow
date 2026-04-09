@@ -8,20 +8,18 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.vars.Variable;
 
 public final class VariableUtils {
-  private static final String AZURE_DEPLOYMENTS_PREFIX = "AI.Providers.AzureOpenAI.Deployments";
-  private static final String MODEL_FIELD = "Model";
-  private static final String API_KEY_FIELD = "APIKey";
 
   public static List<AzureAiDeployment> getDeployments() {
     List<Variable> deploymentVariables = Ivy.var().all().stream()
-        .filter(variable -> variable.name().startsWith(AZURE_DEPLOYMENTS_PREFIX))
-        .filter(variable -> !variable.name().equals(AZURE_DEPLOYMENTS_PREFIX)).collect(Collectors.toList());
+        .filter(variable -> variable.name().startsWith(AzureOpenAiConf.DEPLOYMENTS))
+        .filter(variable -> !variable.name().equals(AzureOpenAiConf.DEPLOYMENTS)).collect(Collectors.toList());
 
     if (deploymentVariables.size() == 0) {
       return null;
@@ -35,9 +33,9 @@ public final class VariableUtils {
         String fieldName = parts[5]; // e.g., "Model" or "APIKey"
         deploymentMap.computeIfAbsent(deploymentName, AzureAiDeployment::new);
         AzureAiDeployment deployment = deploymentMap.get(deploymentName);
-        if (MODEL_FIELD.equals(fieldName)) {
+        if (AzureOpenAiConf.MODEL_FIELD.equals(fieldName)) {
           deployment.setModel(variable.value());
-        } else if (API_KEY_FIELD.equals(fieldName)) {
+        } else if (AzureOpenAiConf.API_KEY_FIELD.equals(fieldName)) {
           deployment.setApiKey(variable.value());
         }
       }
