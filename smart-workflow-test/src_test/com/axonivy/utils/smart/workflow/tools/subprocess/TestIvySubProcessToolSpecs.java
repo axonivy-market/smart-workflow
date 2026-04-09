@@ -8,10 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.test.Person;
 import com.axonivy.utils.smart.workflow.tools.internal.JsonToolParamBuilder;
+import com.axonivy.utils.smart.workflow.tools.provider.ToolParameter;
 
 import ch.ivyteam.ivy.environment.IvyTest;
-import ch.ivyteam.ivy.process.call.StartParameter;
-import ch.ivyteam.ivy.process.call.impl.DefaultStartParameter;
 import dev.langchain4j.model.chat.request.json.JsonArraySchema;
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
@@ -22,10 +21,9 @@ class TestIvySubProcessToolSpecs {
 
   @Test
   void complexParams() {
-    List<StartParameter> userVars = List.of(
-        new DefaultStartParameter("id", Integer.class.getName(), "the user id"),
-        new DefaultStartParameter("person", Person.class.getName(), null));
-    var params = paramsOf(userVars);
+    var params = paramsOf(List.of(
+        ToolParameter.of("id", "the user id", Integer.class.getName()),
+        ToolParameter.of("person", null, Person.class.getName())));
 
     assertThat(params.properties().keySet())
         .containsExactly("id", "person");
@@ -45,19 +43,14 @@ class TestIvySubProcessToolSpecs {
 
   @Test
   void collectionParams() {
-    List<StartParameter> userVars = List.of(
-        new DefaultStartParameter("users", "java.util.List<" + Person.class.getName() + ">", null));
-    var params = paramsOf(userVars);
+    var params = paramsOf(List.of(
+        ToolParameter.of("users", null, "java.util.List<" + Person.class.getName() + ">")));
 
     assertThat(params.properties().keySet()).containsOnly("users");
     var users = (JsonArraySchema) params.properties().get("users");
-
-    var item = users.items();
-    assertThat(item)
-        .isInstanceOf(JsonObjectSchema.class);
-    var person = (JsonObjectSchema) item;
-    assertThat(person.properties().keySet())
-        .containsOnly("firstName", "lastName");
+    assertThat(users.items()).isInstanceOf(JsonObjectSchema.class);
+    var person = (JsonObjectSchema) users.items();
+    assertThat(person.properties().keySet()).containsOnly("firstName", "lastName");
   }
 
   @Test
@@ -67,8 +60,7 @@ class TestIvySubProcessToolSpecs {
         .isNull();
   }
 
-  private static JsonObjectSchema paramsOf(List<StartParameter> userVars) {
-    return new JsonToolParamBuilder().toParams(userVars);
+  private static JsonObjectSchema paramsOf(List<ToolParameter> params) {
+    return new JsonToolParamBuilder().toParams(params);
   }
-
 }
