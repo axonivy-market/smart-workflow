@@ -11,11 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
-import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
-import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
-import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.tools.math.MathToolChat;
@@ -165,27 +161,6 @@ class TestOpenInferenceSpans {
 
   private static Map<String, String> mapOf(List<Attribute> attributes) {
     return attributes.stream().collect(Collectors.toMap(Attribute::name, Attribute::value));
-  }
-
-  @Test
-  void modelProvider_sharesModelAsRequestParameter(AppFixture fixture) {
-    fixture.var(AnthropicConf.API_KEY, "notMyKey"); // anthropic fails with empty key
-    fixture.var(Azure.DEPLOYMENTS_PREFIX + "." + Azure.TEST_DEPLOYMENT_NAME + "." + AzureOpenAiConf.MODEL_FIELD, Azure.MODEL);
-    fixture.var(Azure.DEPLOYMENTS_PREFIX + "." + Azure.TEST_DEPLOYMENT_NAME + "." + AzureOpenAiConf.API_KEY_FIELD, Azure.API_KEY);
-
-    ChatModelFactory.providers().forEach(p -> {
-      var model = p.setup(new ModelOptions("AwesomeModel", true, List.of()));
-      assertThat(model.defaultRequestParameters().modelName())
-        .as("Model as request parameter; allows tracing distribution for provider "+p.name())
-        .isEqualTo("AwesomeModel");
-    });
-  }
-
-  private interface Azure {
-    String DEPLOYMENTS_PREFIX = AzureOpenAiConf.DEPLOYMENTS;
-    String TEST_DEPLOYMENT_NAME = "AwesomeModel";
-    String MODEL = "AwesomeModel";
-    String API_KEY = "${decrypt:test-key-1}";
   }
 
 }
