@@ -15,6 +15,16 @@ import com.google.inject.util.Types;
  */
 public class QualifiedTypeLoader {
 
+  private final ClassLoader classLoader;
+
+  public QualifiedTypeLoader() {
+    this(null);
+  }
+
+  public QualifiedTypeLoader(ClassLoader classLoader) {
+    this.classLoader = classLoader;
+  }
+
   public record QType(String fqName) {
 
     public boolean isGeneric() {
@@ -69,8 +79,10 @@ public class QualifiedTypeLoader {
     return Types.newParameterizedType(rawType, typeArgs);
   }
 
-  private Class<?> loadRaw(QType type) throws IllegalStateException, ClassNotFoundException {
-    return Class.forName(type.rawType());
+  private Class<?> loadRaw(QType type) throws ClassNotFoundException {
+    return classLoader != null ? 
+      Class.forName(type.rawType(), true, classLoader) :
+      Class.forName(type.rawType());
   }
 
   private Type[] loadParameters(QType qType) throws ClassNotFoundException {

@@ -1,20 +1,26 @@
 package com.axonivy.utils.smart.workflow.tools.adapter;
 
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.axonivy.utils.smart.workflow.tools.entity.SmartWorkflowTool;
-import com.axonivy.utils.smart.workflow.tools.entity.ToolParameter;
-import com.axonivy.utils.smart.workflow.tools.entity.ToolParameter.ParameterType;
+import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader;
+import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
+import com.axonivy.utils.smart.workflow.tools.provider.ToolParameter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.internal.Json;
 import dev.langchain4j.internal.JsonSchemaElementUtils;
 import dev.langchain4j.internal.JsonSchemaElementUtils.VisitedClassMetadata;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
+import dev.langchain4j.model.chat.request.json.JsonStringSchema;
 import dev.langchain4j.service.tool.ToolExecutor;
 
 public class JavaToolAdapter {
@@ -54,21 +60,15 @@ public class JavaToolAdapter {
     };
   }
 
-  private static JsonSchemaElement toJsonSchema(ToolParameter p) {
-    Class<?> javaClass = toJavaClass(p.type());
-    Map<Class<?>, VisitedClassMetadata> visited = new HashMap<>();
-    return JsonSchemaElementUtils.jsonSchemaElementFrom(javaClass, javaClass, p.description(), false, visited);
-  }
-
-  private static Class<?> toJavaClass(ParameterType type) {
-    return switch (type) {
-      case STRING -> String.class;
-      case NUMBER -> Double.class;
-      case INTEGER -> Long.class;
-      case BOOLEAN -> Boolean.class;
-      case STRING_ARRAY -> String[].class;
-      case NUMBER_ARRAY -> Double[].class;
-    };
+  private JsonSchemaElement toJsonSchema(ToolParameter p) {
+    try {
+      Type type = new QualifiedTypeLoader(tool.getClass().getClassLoader()).load(new QType(p.type()));
+      Map<Class<?>, VisitedClassMetadata> visited = new HashMap<>();
+      return JsonSchemaElementUtils.jsonSchemaElementFrom(toRawType(type), type, p.description(), false, visited);
+    } catch (Exception ex) {
+      Ivy.log().warn("Failed to define schema for parameter '" + p.name() + "': " + ex.getMessage());
+      return JsonStringSchema.builder().description(p.description()).build();
+    }
   }
 
   private Map<String, Object> parseArgs(String rawJson) {
@@ -84,18 +84,19 @@ public class JavaToolAdapter {
           result.put(p.name(), null);
           continue;
         }
-        result.put(p.name(), switch (p.type()) {
-          case STRING -> node.asText();
-          case NUMBER -> node.asDouble();
-          case INTEGER -> node.asLong();
-          case BOOLEAN -> node.asBoolean();
-          case STRING_ARRAY -> MAPPER.readerForListOf(String.class).readValue(node);
-          case NUMBER_ARRAY -> MAPPER.readerForListOf(Double.class).readValue(node);
-        });
+        Type type = new QualifiedTypeLoader(tool.getClass().getClassLoader()).load(new QType(p.type()));
+        result.put(p.name(), MAPPER.reader().forType(type).readValue(node));
       }
-    } catch (Exception ex) {
-      // return partial map; tool handles nulls
+    } catch (IOException | ClassNotFoundException ex) {
+      Ivy.log().warn("Failed to parse tool arguments for '" + tool.name() + "': " + ex.getMessage());
     }
     return result;
+  }
+
+  private static Class<?> toRawType(Type type) {
+    if (type instanceof ParameterizedType pt) {
+      return (Class<?>) pt.getRawType();
+    }
+    return (Class<?>) type;
   }
 }

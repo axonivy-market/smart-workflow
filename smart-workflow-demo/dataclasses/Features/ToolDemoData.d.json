@@ -3,8 +3,9 @@
   "simpleName" : "ToolDemoData",
   "namespace" : "Features",
   "fields" : [ {
-    "name" : "rawInvoice",
-    "comment" : "Raw invoice text to be processed by the agent"
+    "name" : "invoice",
+    "type" : "com.axonivy.utils.ai.Invoice",
+    "comment" : "Structured invoice to be processed by the agent"
   }, {
     "name" : "taxedInvoice",
     "type" : "com.axonivy.utils.ai.TaxedInvoice",

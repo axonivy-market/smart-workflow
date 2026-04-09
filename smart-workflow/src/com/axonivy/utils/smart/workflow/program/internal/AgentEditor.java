@@ -12,7 +12,7 @@ import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
-import com.axonivy.utils.smart.workflow.tools.entity.SmartWorkflowTool;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
 
