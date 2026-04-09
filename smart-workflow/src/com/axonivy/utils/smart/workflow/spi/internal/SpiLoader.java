@@ -44,6 +44,10 @@ public class SpiLoader {
 
   private static <T> List<T> findImpl(Project project, Class<T> type) {
     ClassLoader loader = loaderOf(project);
+    return findImpl(type, loader);
+  }
+
+  public static <T> List<T> findImpl(Class<T> type, ClassLoader loader) {
     var refs = loadRefs(type, loader);
     var implNames = refs.stream()
         .flatMap(ref -> ref.lines().findFirst().stream())
