@@ -17,6 +17,9 @@ import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
+import dev.langchain4j.model.chat.listener.ChatModelRequestContext;
+import dev.langchain4j.model.chat.listener.ChatModelResponseContext;
 
 @IvyTest
 class TestChatModelProviders {
@@ -30,12 +33,33 @@ class TestChatModelProviders {
 
   @ParameterizedTest
   @MethodSource("providerNames")
-  void observable_sharesModelAsRequestParameter(String providerName, AppFixture fixture) throws ClassNotFoundException {
+  void observable_sharesModelAsRequestParameter(String providerName) {
     var provider = ChatModelFactory.create(providerName).orElseThrow();
     var model = provider.setup(new ModelOptions("AwesomeModel", true, List.of()));
     assertThat(model.defaultRequestParameters().modelName())
       .as("Model as request parameter; allows tracing distribution for provider " + providerName)
       .isEqualTo("AwesomeModel");
+  }
+
+  @ParameterizedTest
+  @MethodSource("providerNames")
+  void listeners_areInstalled(String providerName) {
+    var provider = ChatModelFactory.create(providerName).orElseThrow();
+    var myListener = new ChatModelListener() {
+      @Override
+      public void onRequest(ChatModelRequestContext context) {
+        System.out.println("request");
+      }
+
+      @Override
+      public void onResponse(ChatModelResponseContext context) {
+        System.out.println("response");
+      }
+    };
+    var model = provider.setup(new ModelOptions("", true, List.of(myListener)));
+    assertThat(model.listeners())
+      .as("providers install listeners passed from Agent")
+      .contains(myListener);
   }
 
   static Stream<String> providerNames() {
