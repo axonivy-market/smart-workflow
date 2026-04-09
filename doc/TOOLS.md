@@ -6,7 +6,9 @@ AI agents in Smart Workflow use tools to take action. A tool is a named, callabl
 
 ## Callable Process Tools
 
-Turn any callable sub-process into a tool by adding the `tool` tag to it. The agent discovers all tagged processes automatically — no registration needed.
+We strongly encourage using callable subprocesses as tools. This approach aligns naturally with how Ivy developers already work and provides full access to the power of the process designer—such as error handling, dialogs, subprocess calls, and other Axon Ivy capabilities.
+
+You can turn any callable subprocess into a tool by simply adding the `tool` tag.
 
 **Steps:**
 
@@ -16,17 +18,11 @@ Turn any callable sub-process into a tool by adding the `tool` tag to it. The ag
 
 ![Tool configurations](../smart-workflow-product/img/tool-configurations.png)
 
-The agent matches the tool name and description to the task at hand, then calls the subprocess with the required input parameters.
-
 ---
 
 ## Java Tools
 
-Java Tools let you implement tool logic directly in Java without a callable sub-process. This is the right choice when:
-
-- The logic is self-contained and has no workflow steps.
-- You need type-safe structured parameters (e.g. passing a full object instead of primitives).
-- The tool is reusable across multiple projects via a library.
+For advanced use cases, tool logic can also be implemented directly in Java. This is rarely needed — prefer callable processes whenever possible. Consider Java Tools only when the logic has no workflow steps and is better expressed as a plain Java class.
 
 ### Step 1 — Implement `SmartWorkflowTool`
 
@@ -46,7 +42,7 @@ public class MyTool implements SmartWorkflowTool {
   @Override
   public List<ToolParameter> parameters() {
     return List.of(
-        ToolParameter.of("paramName", "description of this param", "java.lang.String")
+        new ToolParameter("paramName", "description of this param", "java.lang.String")
     );
   }
 
