@@ -241,8 +241,8 @@
         "a wrapping 'composite' object around these values must be provided."
       ],
       "visual" : {
-        "at" : { "x" : 232, "y" : 352 },
-        "size" : { "width" : 254, "height" : 62 }
+        "at" : { "x" : 271, "y" : 319 },
+        "size" : { "width" : 343, "height" : 47 }
       },
       "connect" : [
         { "id" : "f31", "to" : "f25" }
@@ -258,7 +258,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 512, "y" : 392 }
+        "at" : { "x" : 512, "y" : 384 }
       },
       "connect" : [
         { "id" : "f33", "to" : "f34" }
@@ -278,7 +278,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 648, "y" : 392 }
+        "at" : { "x" : 648, "y" : 384 }
       },
       "connect" : [
         { "id" : "f35", "to" : "f36" }
@@ -287,7 +287,7 @@
       "id" : "f36",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 768, "y" : 392 }
+        "at" : { "x" : 768, "y" : 384 }
       }
     }, {
       "id" : "f37",
@@ -430,7 +430,7 @@
         "signature" : "math"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 424 }
+        "at" : { "x" : 96, "y" : 384 }
       },
       "connect" : [
         { "id" : "f55", "to" : "f56" }
@@ -450,7 +450,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 232, "y" : 424 }
+        "at" : { "x" : 232, "y" : 384 }
       },
       "connect" : [
         { "id" : "f57", "to" : "f58" }
@@ -459,7 +459,46 @@
       "id" : "f58",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 424 }
+        "at" : { "x" : 352, "y" : 384 }
+      }
+    }, {
+      "id" : "f59",
+      "type" : "RequestStart",
+      "name" : "error",
+      "config" : {
+        "signature" : "error"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f61" }
+      ]
+    }, {
+      "id" : "f61",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Use the 'disconnected' tool to verify that a user is available",
+          "tools" : "[\"disconnected\"]",
+          "resultType" : "",
+          "resultMapping" : "",
+          "query" : "Verify whether Martha is available by using the 'disconnected' tool"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f62", "to" : "f63" }
+      ]
+    }, {
+      "id" : "f63",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 456 }
       }
     } ]
 }
