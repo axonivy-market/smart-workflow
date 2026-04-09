@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiServiceConnector;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
@@ -41,5 +44,14 @@ public class AzureOpenAiModelProvider implements ChatModelProvider {
   public List<String> models() {
     return Optional.ofNullable(VariableUtils.getDeployments()).orElse(new ArrayList<>()).stream()
         .map(AzureAiDeployment::getName).collect(Collectors.toList());
+  }
+
+  @Override
+  public List<String> secretsVars() {
+    return VariableUtils.deploymentsVars().stream()
+      .map(var -> StringUtils.substringBeforeLast(var.name(), "."))
+      .distinct()
+      .map(var -> var + "." + AzureOpenAiConf.API_KEY_FIELD)
+      .toList();
   }
 }

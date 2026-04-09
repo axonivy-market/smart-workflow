@@ -74,4 +74,10 @@ public class TestAzureOpenAiLoader {
   private static ChatModelProvider loadModel() {
     return ChatModelFactory.create(AzureOpenAiModelProvider.NAME).get();
   }
+
+  @Test
+  void secrets_deploymentAware(){
+    assertThat(provider.secretsVars())
+      .contains(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".APIKey");
+  }
 }

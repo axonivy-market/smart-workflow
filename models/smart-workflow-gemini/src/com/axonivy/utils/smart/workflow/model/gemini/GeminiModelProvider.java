@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector.GeminiConf;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
@@ -37,6 +38,11 @@ public class GeminiModelProvider implements ChatModelProvider {
     return Stream.of(GoogleAiGeminiChatModelName.values())
         .map(GoogleAiGeminiChatModelName::toString)
         .toList();
+  }
+
+  @Override
+  public List<String> secretsVars() {
+    return List.of(GeminiConf.API_KEY);
   }
 
 }
