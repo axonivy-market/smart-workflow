@@ -13,7 +13,7 @@ import dev.langchain4j.observability.api.event.ToolExecutedEvent;
 public class ToolCollector {
 
   private final MessageOptions options;
-  private List<Attribute> attrs = new LinkedList<>();
+  private final List<Attribute> attrs = new LinkedList<>();
 
   public ToolCollector(MessageOptions options) {
     this.options = options;
@@ -24,17 +24,17 @@ public class ToolCollector {
   }
 
   public void onRequestExecution(ToolExecutionRequest request) {
-    attrs.add(Attribute.attribute(SemanticConventions.OPENINFERENCE_SPAN_KIND,
-        SemanticConventions.OpenInferenceSpanKind.TOOL.getValue())
-    );
+    attrs.addAll(List.of(
+        Attribute.attribute(SemanticConventions.OPENINFERENCE_SPAN_KIND,
+            SemanticConventions.OpenInferenceSpanKind.TOOL.getValue()),
+        Attribute.attribute(
+            SemanticConventions.TOOL_NAME, request.name()),
+        Attribute.attribute(
+            SemanticConventions.TOOL_CALL_ID, request.id())
+    ));
   }
 
   public void onExecuted(ToolExecutedEvent event) {
-    attrs.addAll(List.of(
-        Attribute.attribute(
-            SemanticConventions.TOOL_NAME, event.request().name()),
-        Attribute.attribute(
-            SemanticConventions.TOOL_CALL_ID, event.request().id())));
     if (!options.hideInput()) {
       attrs.addAll(List.of(
           Attribute.attribute(SemanticConventions.INPUT_VALUE,

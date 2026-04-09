@@ -16,6 +16,7 @@ import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConne
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.tools.math.MathToolChat;
+import com.axonivy.utils.smart.workflow.tools.ntools.MultiToolChat;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
@@ -43,7 +44,8 @@ class TestOpenInferenceSpans {
   }
 
   @AfterEach
-  void clean(){
+  void clean() throws InterruptedException{
+    Thread.sleep(1_000); // wait for async spans to be flushed (fail on CI without this)
     this.tracer.slowTraces().clear();
   }
 
@@ -65,6 +67,29 @@ class TestOpenInferenceSpans {
     var llmAttrs = mapOf(assistants.get(0).attributes());
     assertThat(llmAttrs.get("error.message"))
       .contains("invalid_api_key");
+  }
+
+  @Test
+  void multiToolCall(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+    MockOpenAI.defineChat(new MultiToolChat()::nTools);
+
+    var tools = BpmProcess.name("TestToolUser").elementName("nTools");
+    var res = client.start().process(tools).execute();
+    assertThat(res.bpmError()).isNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+    var toolCalls = findChild(agent, "Tool").toList();
+    assertThat(toolCalls)
+      .as("multi-tool spans are recorded")
+      .hasSize(1);
+    var another = findChild(toolCalls.get(0), "Tool").toList();
+    assertThat(another)
+      .as("records nested tool call spans! actually not expected; but we document the current behavior")
+      .hasSize(1); // should be a parallel span instead. Now we lack APIs to define a parent span
   }
 
   @Test

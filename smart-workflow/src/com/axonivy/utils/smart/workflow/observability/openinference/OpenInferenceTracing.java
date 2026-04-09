@@ -2,7 +2,9 @@ package com.axonivy.utils.smart.workflow.observability.openinference;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.arize.semconv.trace.SemanticConventions;
@@ -45,6 +47,8 @@ public class OpenInferenceTracing implements ChatModelListener {
   private Span<Void> agentSpan;
   private Span<Void> toolSpan;
 
+  private final Map<String, ToolExecution> toolExecutions = new ConcurrentHashMap<>();
+  private record ToolExecution(Span<Void> span, ToolCollector collector) {}
 
   public OpenInferenceTracing(String provider, String model) {
     this.options = MessageOptions.fromIvyVar();
@@ -88,7 +92,6 @@ public class OpenInferenceTracing implements ChatModelListener {
           Attribute.attribute(SemanticConventions.OPENINFERENCE_SPAN_KIND,
               SemanticConventions.OpenInferenceSpanKind.AGENT.getValue()))));
     }
-    
   }
 
   private class CompletedListener implements AiServiceCompletedListener {
@@ -117,10 +120,13 @@ public class OpenInferenceTracing implements ChatModelListener {
       llmSpan.result(null);
       llmSpan.close();
 
-      Optional.ofNullable(event.response().aiMessage()).map(AiMessage::toolExecutionRequests).ifPresent(requests -> {
-        toolCollector = new ToolCollector(options);
-        toolCollector.onRequestExecution(requests.get(0)); // TODO: multi-tool execution
-        toolSpan = Span.open(() -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
+      Optional.ofNullable(event.response().aiMessage()).stream()
+        .filter(AiMessage::hasToolExecutionRequests)
+        .flatMap(msg -> msg.toolExecutionRequests().stream()).forEachOrdered(request -> {
+          toolCollector = new ToolCollector(options);
+          toolCollector.onRequestExecution(request);
+          toolSpan = Span.open(() -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
+          toolExecutions.put(request.id(), new ToolExecution(toolSpan, toolCollector));
       });
     }
   }
@@ -129,9 +135,9 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(AiServiceErrorEvent event) {
-      if (toolSpan != null) {
-        toolSpan.error(event.error());
-        toolSpan.close();
+      for(var execution : toolExecutions.values()) {
+        execution.span().error(event.error());
+        execution.span().close();
       }
       if (llmSpan != null) {
         llmSpan.error(event.error());
@@ -147,9 +153,13 @@ public class OpenInferenceTracing implements ChatModelListener {
   private class ToolListener implements ToolExecutedEventListener {
     @Override
     public void onEvent(ToolExecutedEvent event) {
-      toolCollector.onExecuted(event);
-      toolSpan.result(null);
-      toolSpan.close();
+      var execution = toolExecutions.remove(event.request().id());
+      if (execution == null) {
+        return;
+      }
+      execution.collector().onExecuted(event);
+      execution.span().result(null);
+      execution.span().close();
     }
   }
 

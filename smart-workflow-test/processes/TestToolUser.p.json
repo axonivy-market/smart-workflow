@@ -500,5 +500,44 @@
       "visual" : {
         "at" : { "x" : 352, "y" : 456 }
       }
+    }, {
+      "id" : "f64",
+      "type" : "RequestStart",
+      "name" : "nTools",
+      "config" : {
+        "signature" : "nTools"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f65", "to" : "f66" }
+      ]
+    }, {
+      "id" : "f66",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Use the 'add' tool to calculate my age and 'whaomi' to fetch my name",
+          "tools" : "[\"add\", \"whoami\"]",
+          "resultType" : "",
+          "resultMapping" : "",
+          "query" : "Whats my age and name?"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 648, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f67", "to" : "f68" }
+      ]
+    }, {
+      "id" : "f68",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 768, "y" : 456 }
+      }
     } ]
 }
