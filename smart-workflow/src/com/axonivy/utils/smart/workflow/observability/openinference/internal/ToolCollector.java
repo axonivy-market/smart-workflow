@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.observability.openinference;
+package com.axonivy.utils.smart.workflow.observability.openinference.internal;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class ToolCollector {
               event.resultText()),
           Attribute.attribute(SemanticConventions.OUTPUT_MIME_TYPE,
               SemanticConventions.MimeType.TEXT.getValue())));
-    }      
+    }
   }
 
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -41,6 +42,31 @@ class TestOpenInferenceSpans {
     }
   }
 
+  @AfterEach
+  void clean(){
+    this.tracer.slowTraces().clear();
+  }
+
+  @Test
+  void errorCall(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+    MockOpenAI.defineChat(new MathToolChat()::authError);
+
+    var tools = BpmProcess.name("TestToolUser").elementName("math");
+    var res = client.start().process(tools).executeAndIgnoreBpmError();
+    assertThat(res.bpmError()).isNotNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+    var assistants = findChild(agent, "AI Assistant").toList();
+    assertThat(assistants).hasSize(1);
+    var llmAttrs = mapOf(assistants.get(0).attributes());
+    assertThat(llmAttrs.get("error.message"))
+      .contains("invalid_api_key");
+  }
+
   @Test
   void observesModelInteractions(BpmClient client, AppFixture fixture) {
     setupTracing(fixture);
@@ -51,7 +77,7 @@ class TestOpenInferenceSpans {
     assertThat(data.getSum()).isEqualTo(2025);
 
     var spans = tracer.slowTraces().all();
-    var rootSpan = spans.get(0).rootSpan();
+    var rootSpan = spans.getFirst().rootSpan();
     var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
     assertAgent(agent);
 

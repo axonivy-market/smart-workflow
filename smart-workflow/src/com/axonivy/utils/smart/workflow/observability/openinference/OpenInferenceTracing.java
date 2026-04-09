@@ -11,7 +11,6 @@ import com.axonivy.utils.smart.workflow.observability.openinference.internal.Too
 import com.axonivy.utils.smart.workflow.observability.openinference.span.AiSpan;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
-import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.trace.Attribute;
 import ch.ivyteam.ivy.trace.Span;
 import dev.langchain4j.data.message.AiMessage;
@@ -39,13 +38,13 @@ public class OpenInferenceTracing implements ChatModelListener {
     String HIDE_OUTPUT_MESSAGES = PREFIX + "HideOutputMessages";
   }
 
+  private final MessageOptions options;
   private final OpenInferenceCollector collector;
   private ToolCollector toolCollector;
   private Span<Void> llmSpan;
   private Span<Void> agentSpan;
   private Span<Void> toolSpan;
 
-  MessageOptions options;
 
   public OpenInferenceTracing(String provider, String model) {
     this.options = MessageOptions.fromIvyVar();
@@ -130,12 +129,18 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(AiServiceErrorEvent event) {
-      if (llmSpan == null) {
-        Ivy.log().error("Error occurred before span was created", event.error());
-        return;
+      if (toolSpan != null) {
+        toolSpan.error(event.error());
+        toolSpan.close();
       }
-      llmSpan.error(event.error());
-      llmSpan.close();
+      if (llmSpan != null) {
+        llmSpan.error(event.error());
+        llmSpan.close();
+      }
+      if (agentSpan != null) {
+        agentSpan.error(event.error());
+        agentSpan.close();
+      }
     }
   }
 
