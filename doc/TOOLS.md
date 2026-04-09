@@ -82,7 +82,7 @@ public class MyToolProvider implements SmartWorkflowToolsProvider {
 
 ### Step 3 — Register via SPI
 
-Create the file `src/META-INF/services/com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider` and add one line per provider:
+Create the file `src/META-INF/services/com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider` and the tool provider:
 
 ```text
 com.example.MyToolProvider

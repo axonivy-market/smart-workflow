@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.tools.adapter.JavaToolAdapter;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
-import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;

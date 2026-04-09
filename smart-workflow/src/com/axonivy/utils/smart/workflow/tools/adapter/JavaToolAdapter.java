@@ -1,7 +1,6 @@
 package com.axonivy.utils.smart.workflow.tools.adapter;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
