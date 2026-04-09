@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -31,12 +30,10 @@ class TestOpenInferenceSpans {
   
   private Tracer tracer;
 
-  @BeforeEach
-  void setup(AppFixture fixture) {
+  private void setupTracing(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
     MockOpenAI.defineChat(new MathToolChat()::toolTest);
-
     fixture.var(OpenInferenceTracing.Var.ENABLED, "true");
     this.tracer = Tracer.instance();
     if (!this.tracer.isRunning()) {
@@ -45,7 +42,9 @@ class TestOpenInferenceSpans {
   }
 
   @Test
-  void observesModelInteractions(BpmClient client) {
+  void observesModelInteractions(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+
     var tools = BpmProcess.name("TestToolUser").elementName("math");
     var res = client.start().process(tools).execute();
     TestToolUserData data = res.data().last();

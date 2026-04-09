@@ -39,11 +39,9 @@ public class AnthropicServiceConnector {
 
   private static AnthropicChatModelBuilder initBuilder(String modelName) {
     AnthropicChatModelBuilder builder = initBuilder();
-    builder.modelName(modelName);
     var request = ChatRequestParameters.builder()
-      .modelName(modelName)// pre-serve for observability
-      .build();
-    builder.defaultRequestParameters(request); 
+      .modelName(modelName);
+    builder.defaultRequestParameters(request.build()); 
     return builder;
   }
 

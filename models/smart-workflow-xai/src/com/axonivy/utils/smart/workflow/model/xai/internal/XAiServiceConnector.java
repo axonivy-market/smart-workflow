@@ -56,12 +56,10 @@ public class XAiServiceConnector {
 
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
     OpenAiChatModelBuilder builder = initBuilder();
-    builder.modelName(modelName);
-    builder.temperature(Double.valueOf(DEFAULT_TEMPERATURE));
     var request = ChatRequestParameters.builder()
-      .modelName(modelName)// pre-serve for observability
-      .build();
-    builder.defaultRequestParameters(request); 
+      .modelName(modelName)
+      .temperature(Double.valueOf(DEFAULT_TEMPERATURE));
+    builder.defaultRequestParameters(request.build()); 
     return builder;
   }
 

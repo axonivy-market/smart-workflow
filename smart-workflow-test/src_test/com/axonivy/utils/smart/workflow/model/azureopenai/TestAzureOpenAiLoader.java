@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
@@ -22,7 +23,7 @@ import dev.langchain4j.model.chat.ChatModel;
 @IvyTest
 public class TestAzureOpenAiLoader {
 
-  private static final String DEPLOYMENTS_PREFIX = "AI.Providers.AzureOpenAI.Deployments";
+  private static final String DEPLOYMENTS_PREFIX = AzureOpenAiConf.DEPLOYMENTS;
   private static final String TEST_DEPLOYMENT_NAME = "test-gpt-4-1-mini";
   private static final String MODEL = "gpt-4.1-mini";
   private static final String API_KEY = "${decrypt:test-key-1}";
