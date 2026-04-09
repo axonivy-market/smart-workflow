@@ -4,52 +4,58 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ch.ivyteam.ivy.process.call.StartParameter;
 
 public class JsonProcessParameters {
 
   private static final Logger LOGGER = Logger.getLogger(JsonProcessParameters.class);
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  public JsonProcessParameters() {}
+  private final ClassLoader classLoader;
 
-  public Map<String, Object> readParams(List<StartParameter> ins, String rawJsonArgs) {
+  public JsonProcessParameters() {
+    this(null);
+  }
+
+  public JsonProcessParameters(ClassLoader classLoader) {
+    this.classLoader = classLoader;
+  }
+
+  public Map<String, Object> readParams(List<ToolParameter> parameters, String rawJsonArgs) {
     try {
-      if (ins.isEmpty()) {
+      if (CollectionUtils.isEmpty(parameters)) {
         return Map.of();
       }
-      return toParams(ins, MAPPER.readTree(rawJsonArgs));
+      return toParams(parameters, MAPPER.readTree(rawJsonArgs));
     } catch (JsonProcessingException ex) {
-      LOGGER.error("Failed to create parameters from " + rawJsonArgs);
+      LOGGER.error("Failed to create parameters from " + rawJsonArgs, ex);
       return Map.of();
     }
   }
 
-  public Map<String, Object> toParams(List<StartParameter> ins, JsonNode rawArgs) {
+  public Map<String, Object> toParams(List<ToolParameter> parameters, JsonNode rawArgs) {
     var map = new LinkedHashMap<String, Object>();
-    ins.stream().forEachOrdered(in -> {
-      map.put(in.name(), toValue(in, rawArgs));
-    });
+    parameters.forEach(p -> map.put(p.name(), toValue(p, rawArgs)));
     return map;
   }
 
-  private Object toValue(StartParameter in, JsonNode rawArgs) {
+  private Object toValue(ToolParameter parameter, JsonNode rawArgs) {
     try {
-      var typed = new QualifiedTypeLoader().load(new QType(in.typeName()));
-      var jArg = rawArgs.get(in.name());
+      var typed = new QualifiedTypeLoader(classLoader).load(new QType(parameter.type()));
+      var jArg = rawArgs.get(parameter.name());
       if (jArg == null) {
         return null;
       }
       return MAPPER.reader().forType(typed).readValue(jArg);
     } catch (Exception ex) {
-      LOGGER.error("Failed to load value of variable " + in, ex);
+      LOGGER.error("Failed to load value of variable " + parameter, ex);
       return null;
     }
   }

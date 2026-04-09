@@ -87,7 +87,7 @@ class TestOpenInferenceSpans {
     assertThat(attrs)
       .as("records tool schema")
       .containsEntry("llm.tools.0.tool.json_schema", """
-          {"type":"function","function":{"name":"add","description":"This is a simple calculator: supporting additions of numbers","parameters":{"description":null,"properties":{"a":{"description":"first number"},"b":{"description":"number to be added"}},"required":[],"additionalProperties":null,"definitions":{}}}}
+          {"type":"function","function":{"name":"add","description":"This is a simple calculator: supporting additions of numbers","parameters":{"description":null,"properties":{"a":{"description":"first number"},"b":{"description":"number to be added"}},"required":["a","b"],"additionalProperties":null,"definitions":{}}}}
           """.trim());
 
     assertThat(attrs)

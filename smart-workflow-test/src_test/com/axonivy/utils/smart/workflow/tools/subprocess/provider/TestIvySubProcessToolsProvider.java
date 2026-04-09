@@ -14,9 +14,9 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
-import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.internal.IvySubProcessToolExecutor;
 import com.axonivy.utils.smart.workflow.tools.internal.IvySubProcessToolSpecs;
+import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;

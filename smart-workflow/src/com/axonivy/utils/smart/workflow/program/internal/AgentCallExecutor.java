@@ -2,7 +2,9 @@ package com.axonivy.utils.smart.workflow.program.internal;
 
 import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -15,7 +17,8 @@ import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
-import com.axonivy.utils.smart.workflow.tools.IvySubProcessToolsProvider;
+import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
@@ -23,7 +26,11 @@ import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
+import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.tool.ToolExecutor;
+import dev.langchain4j.service.tool.ToolProvider;
+import dev.langchain4j.service.tool.ToolProviderResult;
 
 public class AgentCallExecutor {
 
@@ -126,7 +133,12 @@ public class AgentCallExecutor {
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
     List<String> toolFilter = executeListOfStrings(Conf.TOOLS).orElse(null);
-    agentBuilder.toolProvider(new IvySubProcessToolsProvider().filtering(toolFilter));
+    ToolProvider ivyTools = new IvySubProcessToolsProvider().filtering(toolFilter);
+    agentBuilder.toolProvider(request -> {
+      Map<ToolSpecification, ToolExecutor> all = new HashMap<>(ivyTools.provideTools(request).tools());
+      all.putAll(SmartWorkflowToolsProvider.provideTools(toolFilter).tools());
+      return new ToolProviderResult(all);
+    });
   }
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {

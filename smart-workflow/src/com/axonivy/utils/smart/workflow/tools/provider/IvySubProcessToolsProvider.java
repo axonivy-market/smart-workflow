@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.tools;
+package com.axonivy.utils.smart.workflow.tools.provider;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,0 +1,31 @@
+{
+  "id": "chatcmpl-tool-demo-1",
+  "object": "chat.completion",
+  "created": 1712345678,
+  "model": "gpt-4o-mini",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_tax001",
+            "type": "function",
+            "function": {
+              "name": "calculateTax",
+              "arguments": "{\"invoice\":{\"invoiceNumber\":\"INV-2024-042\",\"customerName\":\"John Doe\",\"invoiceDate\":\"2024-11-15\",\"dueDate\":\"2024-12-15\",\"items\":[{\"description\":\"MacBook Pro 16-inch\",\"quantity\":1,\"unitPrice\":2499.0,\"total\":2499.0,\"currency\":\"USD\"},{\"description\":\"Office Coffee Subscription 3-month\",\"quantity\":1,\"unitPrice\":45.0,\"total\":45.0,\"currency\":\"USD\"},{\"description\":\"Samsung QLED TV 65-inch\",\"quantity\":1,\"unitPrice\":1799.0,\"total\":1799.0,\"currency\":\"USD\"},{\"description\":\"Rolex Submariner Watch\",\"quantity\":1,\"unitPrice\":8500.0,\"total\":8500.0,\"currency\":\"USD\"},{\"description\":\"Legal Consultation Service\",\"quantity\":2,\"unitPrice\":250.0,\"total\":500.0,\"currency\":\"USD\"}],\"totalAmount\":13343.0}}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 500,
+    "completion_tokens": 100,
+    "total_tokens": 600
+  }
+}
