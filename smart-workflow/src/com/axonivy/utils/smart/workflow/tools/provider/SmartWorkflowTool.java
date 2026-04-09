@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface SmartWorkflowTool {
 
+  record ToolParameter(String name, String description, String type) {}
+
   String description();
 
   List<ToolParameter> parameters();

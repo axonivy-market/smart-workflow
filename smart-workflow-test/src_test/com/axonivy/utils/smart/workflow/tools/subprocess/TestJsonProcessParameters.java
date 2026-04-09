@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.test.Person;
 import com.axonivy.utils.smart.workflow.tools.internal.JsonProcessParameters;
-import com.axonivy.utils.smart.workflow.tools.provider.ToolParameter;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
@@ -21,8 +21,8 @@ class TestJsonProcessParameters {
   @Test
   void complexParams() {
     var params = List.of(
-        ToolParameter.of("id", "the user id", Integer.class.getName()),
-        ToolParameter.of("person", null, Person.class.getName()));
+        new ToolParameter("id", "the user id", Integer.class.getName()),
+        new ToolParameter("person", null, Person.class.getName()));
 
     var jPayload = JsonNodeFactory.instance.objectNode();
     jPayload.put("id", 123);
@@ -37,7 +37,7 @@ class TestJsonProcessParameters {
 
   @Test
   void missingParamReturnsNull() {
-    var params = List.of(ToolParameter.of("name", null, String.class.getName()));
+    var params = List.of(new ToolParameter("name", null, String.class.getName()));
     var jPayload = JsonNodeFactory.instance.objectNode();
 
     var result = paramsOf(params, jPayload);

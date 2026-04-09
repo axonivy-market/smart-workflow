@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
-import com.axonivy.utils.smart.workflow.tools.provider.ToolParameter;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 import ch.ivyteam.log.Logger;
 import dev.langchain4j.internal.JsonSchemaElementUtils;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.tools.provider.ToolParameter;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import dev.langchain4j.agent.tool.ToolSpecification;
@@ -27,7 +27,7 @@ public class IvySubProcessToolSpecs {
     }
 
     List<ToolParameter> toolParams = method.in().stream()
-        .map(p -> ToolParameter.of(p.name(), p.description(), p.typeName()))
+        .map(p -> new ToolParameter(p.name(), p.description(), p.typeName()))
         .toList();
     var params = new JsonToolParamBuilder().toParams(toolParams);
     builder.parameters(params);

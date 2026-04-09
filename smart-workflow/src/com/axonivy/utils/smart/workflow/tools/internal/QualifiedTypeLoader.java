@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.tools.internal;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,6 +15,16 @@ import com.google.inject.util.Types;
  * and we consider introduce a PublicAPI for it.
  */
 public class QualifiedTypeLoader {
+
+  private static final Map<String, Class<?>> PRIMITIVES = Map.of(
+      "int", int.class,
+      "long", long.class,
+      "double", double.class,
+      "float", float.class,
+      "boolean", boolean.class,
+      "byte", byte.class,
+      "short", short.class,
+      "char", char.class);
 
   private final ClassLoader classLoader;
 
@@ -80,9 +91,13 @@ public class QualifiedTypeLoader {
   }
 
   private Class<?> loadRaw(QType type) throws ClassNotFoundException {
-    return classLoader != null ? 
-      Class.forName(type.rawType(), true, classLoader) :
-      Class.forName(type.rawType());
+    var primitive = PRIMITIVES.get(type.rawType());
+    if (primitive != null) {
+      return primitive;
+    }
+    return classLoader != null ?
+        Class.forName(type.rawType(), true, classLoader) :
+        Class.forName(type.rawType());
   }
 
   private Type[] loadParameters(QType qType) throws ClassNotFoundException {

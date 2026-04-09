@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.test.Person;
 import com.axonivy.utils.smart.workflow.tools.internal.JsonToolParamBuilder;
-import com.axonivy.utils.smart.workflow.tools.provider.ToolParameter;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.model.chat.request.json.JsonArraySchema;
@@ -22,8 +22,8 @@ class TestIvySubProcessToolSpecs {
   @Test
   void complexParams() {
     var params = paramsOf(List.of(
-        ToolParameter.of("id", "the user id", Integer.class.getName()),
-        ToolParameter.of("person", null, Person.class.getName())));
+        new ToolParameter("id", "the user id", Integer.class.getName()),
+        new ToolParameter("person", null, Person.class.getName())));
 
     assertThat(params.properties().keySet())
         .containsExactly("id", "person");
@@ -44,7 +44,7 @@ class TestIvySubProcessToolSpecs {
   @Test
   void collectionParams() {
     var params = paramsOf(List.of(
-        ToolParameter.of("users", null, "java.util.List<" + Person.class.getName() + ">")));
+        new ToolParameter("users", null, "java.util.List<" + Person.class.getName() + ">")));
 
     assertThat(params.properties().keySet()).containsOnly("users");
     var users = (JsonArraySchema) params.properties().get("users");

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
-import com.axonivy.utils.smart.workflow.tools.provider.ToolParameter;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 public class TaxCalculatorTool implements SmartWorkflowTool {
 
@@ -33,7 +33,7 @@ public class TaxCalculatorTool implements SmartWorkflowTool {
   @Override
   public List<ToolParameter> parameters() {
     return List.of(
-        ToolParameter.of("invoice",
+        new ToolParameter("invoice",
             "The structured invoice containing line items to calculate tax for",
             "com.axonivy.utils.ai.Invoice"));
   }
