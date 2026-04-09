@@ -43,7 +43,7 @@ public class JavaToolAdapter {
         return (result instanceof String s) ? s : Json.toJson(result);
       } catch (Exception e) {
         throw new RuntimeException(
-            "Error executing tool '%s' with args: %s".formatted(tool.name(), request.arguments()), e);
+            "Error executing tool '%s'".formatted(tool.name()), e);
       }
     };
   }

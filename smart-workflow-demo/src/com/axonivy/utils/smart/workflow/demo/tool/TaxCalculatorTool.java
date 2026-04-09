@@ -10,7 +10,7 @@ import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
 public class TaxCalculatorTool implements SmartWorkflowTool {
 
   private static final String TAX_LINE_FORMAT = "%s: $%.2f @ %d%% tax = $%.2f%n";
-  private static final String[]  ELECTRONICS_KEYWORDS = {"laptop","macbook","computer","phone","television","tv","monitor","tablet","electronics","samsung","apple","dell","lenovo"};
+  private static final String[] ELECTRONICS_KEYWORDS = {"laptop","macbook","computer","phone","television","tv","monitor","tablet","electronics","samsung","apple","dell","lenovo"};
   private static final String[] FOOD_KEYWORDS = {"coffee","food","drink","beverage","meal","snack","grocery"};
   private static final String[] LUXURY_KEYWORDS = {"rolex","luxury","diamond","gold","jewel","watch","premium"};
   private static final String[] SERVICE_KEYWORDS = {"service","consulting","consultation","legal","accounting","support"};
