@@ -16,5 +16,8 @@
   }, {
     "name" : "storyTmp",
     "type" : "com.axonivy.utils.smart.workflow.test.Story"
+  }, {
+    "name" : "sum",
+    "type" : "Integer"
   } ]
 }

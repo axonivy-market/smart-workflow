@@ -422,5 +422,44 @@
       "connect" : [
         { "id" : "f53", "to" : "f43", "color" : "default" }
       ]
+    }, {
+      "id" : "f54",
+      "type" : "RequestStart",
+      "name" : "math",
+      "config" : {
+        "signature" : "math"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 424 }
+      },
+      "connect" : [
+        { "id" : "f55", "to" : "f56" }
+      ]
+    }, {
+      "id" : "f56",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Use the 'add' tool to calculate",
+          "tools" : "[\"add\"]",
+          "resultType" : "Integer.class",
+          "resultMapping" : "in.sum",
+          "query" : "Whats the sum of 1984 plus 41 ?"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 424 }
+      },
+      "connect" : [
+        { "id" : "f57", "to" : "f58" }
+      ]
+    }, {
+      "id" : "f58",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 424 }
+      }
     } ]
 }
