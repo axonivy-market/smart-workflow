@@ -3,8 +3,9 @@ package com.axonivy.utils.smart.workflow.demo.tool;
 import java.util.List;
 import java.util.Map;
 
+import com.axonivy.utils.ai.Invoice;
+import com.axonivy.utils.ai.InvoiceItem;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
-import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 public class TaxCalculatorTool implements SmartWorkflowTool {
 
@@ -40,13 +41,13 @@ public class TaxCalculatorTool implements SmartWorkflowTool {
 
   @Override
   public Object execute(Map<String, Object> args) {
-    com.axonivy.utils.ai.Invoice invoice = (com.axonivy.utils.ai.Invoice) args.get("invoice");
+    Invoice invoice = (Invoice) args.get("invoice");
 
     double subtotal = 0;
     double totalTax = 0;
     StringBuilder lineItemTaxBuilder = new StringBuilder();
 
-    for (com.axonivy.utils.ai.InvoiceItem item : invoice.getItems()) {
+    for (InvoiceItem item : invoice.getItems()) {
       String description = item.getDescription();
       double amount = item.getTotal();
       double taxRate = getTaxRate(description);

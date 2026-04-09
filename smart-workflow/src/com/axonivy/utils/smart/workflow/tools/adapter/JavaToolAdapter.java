@@ -30,7 +30,7 @@ public class JavaToolAdapter {
 
   public ToolSpecification toToolSpecification() {
     return ToolSpecification.builder()
-        .name(StringUtils.defaultIfBlank(tool.name(), "unknown"))
+        .name(tool.name())
         .description(StringUtils.defaultIfBlank(tool.description(), ""))
         .parameters(paramBuilder.toParams(tool.parameters()))
         .build();

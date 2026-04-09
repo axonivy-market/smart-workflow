@@ -53,7 +53,7 @@ public class JsonToolParamBuilder {
       builder.addProperty(parameter.name(), schema);
       return true;
     } catch (Exception ex) {
-      LOGGER.error("Failed to define json parameter for tool parameter " + parameter);
+      LOGGER.error("Failed to define json parameter for tool parameter " + parameter, ex);
       builder.additionalProperties(true); // hint: more parameters which we can't describe
       return false;
     }

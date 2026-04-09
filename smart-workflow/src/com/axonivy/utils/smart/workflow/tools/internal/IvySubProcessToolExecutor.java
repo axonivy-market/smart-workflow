@@ -26,7 +26,7 @@ public class IvySubProcessToolExecutor {
 
     if (startable.isEmpty()) {
       // TODO: how does Agentic error handling look like?
-      return ToolExecutionResultMessage.from(execTool, "failed to execut tool; unknown ivy-process function");
+      return ToolExecutionResultMessage.from(execTool, "failed to execute tool; unknown ivy-process function");
     }
 
     List<ToolParameter> toolParams = startable.get().description().in().stream()
