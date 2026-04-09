@@ -18,7 +18,7 @@ public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrai
 
   private static final List<String> API_KEY_VARIABLE_PATHS = List.of(
       "Ai.Providers.OpenAI.APIKey",
-      "AI.Providers.AzureOpenAI.Deployment.APIKey",
+      "AI.Providers.AzureOpenAI.Deployments.Deployment.APIKey",
       "AI.Providers.Gemini.APIKey",
       "AI.Providers.xAI.APIKey",
       "AI.Providers.Anthropic.APIKey"
