@@ -3,6 +3,8 @@ package com.axonivy.utils.smart.workflow.tools.adapter;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.axonivy.utils.smart.workflow.tools.internal.JsonProcessParameters;
 import com.axonivy.utils.smart.workflow.tools.internal.JsonToolParamBuilder;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
@@ -28,9 +30,9 @@ public class JavaToolAdapter {
 
   public ToolSpecification toToolSpecification() {
     return ToolSpecification.builder()
-        .name(Optional.ofNullable(tool).map(SmartWorkflowTool::name).orElse("unknown"))
-        .description(Optional.ofNullable(tool).map(SmartWorkflowTool::description).orElse(""))
-        .parameters(paramBuilder.toParams(Optional.ofNullable(tool).map(SmartWorkflowTool::parameters).orElse(null)))
+        .name(StringUtils.defaultIfBlank(tool.name(), "unknown"))
+        .description(StringUtils.defaultIfBlank(tool.description(), ""))
+        .parameters(paramBuilder.toParams(tool.parameters()))
         .build();
   }
 

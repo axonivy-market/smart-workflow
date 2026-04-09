@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
@@ -32,25 +34,28 @@ public class JsonToolParamBuilder {
   }
 
   public JsonObjectSchema toParams(List<ToolParameter> parameters) {
-    if (parameters.isEmpty()) {
+    if (CollectionUtils.isEmpty(parameters)) {
       return null; // less tokens + better compliance with Arize Phoenix playground
     }
     var required = new ArrayList<String>();
     parameters.forEach(p -> {
-      toJsonParam(p);
-      required.add(p.name());
+      if (toJsonParam(p)) {
+        required.add(p.name());
+      }
     });
     return builder.required(required).build();
   }
 
-  public void toJsonParam(ToolParameter parameter) {
+  public boolean toJsonParam(ToolParameter parameter) {
     try {
       var type = new QualifiedTypeLoader(classLoader).load(new QType(parameter.type()));
       var schema = JsonSchemaElementUtils.jsonSchemaElementFrom(toRawType(type), type, parameter.description(), false, visited);
       builder.addProperty(parameter.name(), schema);
+      return true;
     } catch (Exception ex) {
       LOGGER.error("Failed to define json parameter for tool parameter " + parameter);
       builder.additionalProperties(true); // hint: more parameters which we can't describe
+      return false;
     }
   }
 

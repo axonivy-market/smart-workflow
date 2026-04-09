@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
@@ -29,12 +30,12 @@ public class JsonProcessParameters {
 
   public Map<String, Object> readParams(List<ToolParameter> parameters, String rawJsonArgs) {
     try {
-      if (parameters.isEmpty()) {
+      if (CollectionUtils.isEmpty(parameters)) {
         return Map.of();
       }
       return toParams(parameters, MAPPER.readTree(rawJsonArgs));
     } catch (JsonProcessingException ex) {
-      LOGGER.error("Failed to create parameters from " + rawJsonArgs);
+      LOGGER.error("Failed to create parameters from " + rawJsonArgs, ex);
       return Map.of();
     }
   }
