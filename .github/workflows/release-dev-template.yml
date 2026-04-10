@@ -119,6 +119,7 @@ jobs:
             const dryRun = ((process.env.DRY_RUN || 'true').toLowerCase() === 'true');
             let deletedCount = 0;
             let candidateCount = 0;
+            let packagesWithSnapshots = 0;
 
             core.info(`Dry run: ${dryRun}`);
 
@@ -146,9 +147,16 @@ jobs:
                 .filter(v => (v.name || '').includes('SNAPSHOT'))
                 .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
+              if (snapshots.length > 0) {
+                packagesWithSnapshots += 1;
+              }
+
+              const deleteCandidates = Math.max(0, snapshots.length - 5);
+              core.info(`Package ${pkg.name}: snapshots=${snapshots.length}, deleteCandidates=${deleteCandidates}`);
+              candidateCount += deleteCandidates;
+
               // Keep the newest 5 snapshot versions and delete older ones.
               for (const version of snapshots.slice(5)) {
-                candidateCount += 1;
                 const label = `${pkg.name}@${version.name} (${version.created_at})`;
                 core.notice(`${dryRun ? '[DRY RUN] Would delete' : 'Deleting'} ${label}`);
                 if (dryRun) {
@@ -169,7 +177,10 @@ jobs:
             }
 
             if (dryRun) {
+              core.notice(`[DRY RUN] Packages with snapshots: ${packagesWithSnapshots}`);
               core.notice(`[DRY RUN] Snapshot deletion candidates: ${candidateCount}`);
             } else {
+              core.notice(`Packages with snapshots: ${packagesWithSnapshots}`);
+              core.notice(`Snapshot deletion candidates: ${candidateCount}`);
               core.notice(`Snapshot versions deleted: ${deletedCount}`);
             }
