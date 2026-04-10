@@ -33,6 +33,8 @@ jobs:
           java-version: ${{ inputs.javaVersion }}
           distribution: temurin
           server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
 
       - name: Setup Maven
         uses: stCarolas/setup-maven@v5
