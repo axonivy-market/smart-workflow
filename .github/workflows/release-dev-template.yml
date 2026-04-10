@@ -52,7 +52,7 @@ jobs:
 
           mvn --batch-mode \
             -Dmaven.test.skip=true \
-            -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} \
+            -DaltDeploymentRepository=github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} \
             ${goals} ${{ inputs.mvnArgs }}
 
   cleanup-snapshots:
