@@ -50,11 +50,11 @@ jobs:
             });
 
             const previousSuccess = runs.find(
-              run => run.id !== context.runId && run.conclusion === 'success'
+              run => run.id !== context.runId && run.conclusion === 'success' && run.event === 'schedule'
             );
 
             if (!previousSuccess) {
-              core.info('No previous successful release run found. Release will run.');
+              core.info('No previous successful scheduled release run found. Release will run.');
               core.setOutput('shouldRelease', 'true');
               return;
             }
