@@ -1,119 +1,19 @@
 name: Release-Build-Dev
 
-permissions:
-  contents: read
-  packages: write
-
-on: 
+on:
   schedule:
-    - cron:  '21 21 * * *'
+    - cron: '21 21 * * *'
   workflow_dispatch:
-  workflow_call:
     inputs:
-      javaVersion:
-        type: number
-        default: 25
-      mvnVersion:
-        type: string
-        default: 3.9.13
-      mvnArgs:
-        type: string
-        required: false
       dryRun:
+        description: Dry run mode for release and cleanup
         type: boolean
+        required: false
         default: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup Java JDK
-      uses: actions/setup-java@v4
-      with:
-        java-version: ${{ inputs.javaVersion }}
-        distribution: temurin
-        server-id: github
-
-    - name: Setup Maven
-      uses: stCarolas/setup-maven@v5
-      with:
-        maven-version: ${{ inputs.mvnVersion }}
-
-    - name: Build with Maven
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        dry_run="${{ github.event_name == 'schedule' && 'false' || inputs.dryRun }}"
-        if [ -z "${dry_run}" ]; then
-          dry_run="true"
-        fi
-
-        goals="release:prepare release:perform"
-        if [ "${dry_run}" = "true" ]; then
-          goals="release:prepare"
-        fi
-
-        mvn --batch-mode -Darguments="-Dmaven.test.skip=true\
-         -DaltDeploymentRepository=github::https://maven.pkg.github.com/axonivy-market/${{ github.event.repository.name }}"\
-         ${goals} ${{ inputs.mvnArgs }}
-
-  cleanup-snapshots:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Keep last 5 Maven snapshots
-      uses: actions/github-script@v7
-      env:
-        DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || inputs.dryRun || 'true' }}
-      with:
-        script: |
-          const owner = context.repo.owner;
-          const repo = context.repo.repo;
-          const dryRun = ((process.env.DRY_RUN || 'true').toLowerCase() === 'true');
-
-          core.info(`Dry run: ${dryRun}`);
-
-          const packages = await github.paginate('GET /orgs/{org}/packages', {
-            org: owner,
-            package_type: 'maven',
-            per_page: 100
-          });
-
-          const repoPackages = packages.filter(pkg => pkg.repository && pkg.repository.name === repo);
-          core.info(`Found ${repoPackages.length} Maven packages linked to ${owner}/${repo}`);
-
-          for (const pkg of repoPackages) {
-            const versions = await github.paginate(
-              'GET /orgs/{org}/packages/{package_type}/{package_name}/versions',
-              {
-                org: owner,
-                package_type: 'maven',
-                package_name: pkg.name,
-                per_page: 100
-              }
-            );
-
-            const snapshots = versions
-              .filter(v => (v.name || '').includes('SNAPSHOT'))
-              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-            // Keep the newest 5 snapshot versions and delete older ones.
-            for (const version of snapshots.slice(5)) {
-              core.info(`${dryRun ? '[DRY RUN] Would delete' : 'Deleting'} ${pkg.name}@${version.name} (${version.created_at})`);
-              if (dryRun) {
-                continue;
-              }
-              await github.request(
-                'DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}',
-                {
-                  org: owner,
-                  package_type: 'maven',
-                  package_name: pkg.name,
-                  package_version_id: version.id
-                }
-              );
-            }
-          }
+  release:
+    uses: ./.github/workflows/release-dev-template.yml
+    with:
+      dryRun: ${{ fromJSON(github.event_name == 'schedule' && 'false' || github.event_name == 'workflow_dispatch' && github.event.inputs.dryRun || 'true') }}
+    secrets: inherit
