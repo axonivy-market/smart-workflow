@@ -520,7 +520,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "Use the 'add' tool to calculate my age and 'whaomi' to fetch my name",
+          "system" : "Use the 'add' tool to calculate my age and 'whoami' to fetch my name",
           "tools" : "[\"add\", \"whoami\"]",
           "resultType" : "",
           "resultMapping" : "",

@@ -123,9 +123,9 @@ public class OpenInferenceTracing implements ChatModelListener {
       Optional.ofNullable(event.response().aiMessage()).stream()
         .filter(AiMessage::hasToolExecutionRequests)
         .flatMap(msg -> msg.toolExecutionRequests().stream()).forEachOrdered(request -> {
-          toolCollector = new ToolCollector(options);
+          ToolCollector toolCollector = new ToolCollector(options);
           toolCollector.onRequestExecution(request);
-          toolSpan = Span.open(() -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
+          Span toolSpan = Span.open(() -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
           toolExecutions.put(request.id(), new ToolExecution(toolSpan, toolCollector));
       });
     }
@@ -135,10 +135,12 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(AiServiceErrorEvent event) {
-      for(var execution : toolExecutions.values()) {
-        execution.span().error(event.error());
-        execution.span().close();
-      }
+      toolExecutions.forEach((id, execution) -> {
+        if (toolExecutions.remove(id, execution)) {
+          execution.span().error(event.error());
+          execution.span().close();
+        }
+      });
       if (llmSpan != null) {
         llmSpan.error(event.error());
         llmSpan.close();
