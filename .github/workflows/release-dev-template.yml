@@ -117,6 +117,8 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const dryRun = ((process.env.DRY_RUN || 'true').toLowerCase() === 'true');
+            let deletedCount = 0;
+            let candidateCount = 0;
 
             core.info(`Dry run: ${dryRun}`);
 
@@ -146,7 +148,9 @@ jobs:
 
               // Keep the newest 5 snapshot versions and delete older ones.
               for (const version of snapshots.slice(5)) {
-                core.info(`${dryRun ? '[DRY RUN] Would delete' : 'Deleting'} ${pkg.name}@${version.name} (${version.created_at})`);
+                candidateCount += 1;
+                const label = `${pkg.name}@${version.name} (${version.created_at})`;
+                core.notice(`${dryRun ? '[DRY RUN] Would delete' : 'Deleting'} ${label}`);
                 if (dryRun) {
                   continue;
                 }
@@ -159,5 +163,13 @@ jobs:
                     package_version_id: version.id
                   }
                 );
+                deletedCount += 1;
+                core.notice(`Deleted ${label}`);
               }
+            }
+
+            if (dryRun) {
+              core.notice(`[DRY RUN] Snapshot deletion candidates: ${candidateCount}`);
+            } else {
+              core.notice(`Snapshot versions deleted: ${deletedCount}`);
             }
