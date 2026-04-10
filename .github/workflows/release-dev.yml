@@ -1,0 +1,43 @@
+name: Reusable Dev-Release-Build
+
+on: 
+  schedule:
+    - cron:  '21 21 * * *'
+  workflow_call:
+    inputs:
+      javaVersion:
+        type: number
+        default: 25
+      mvnVersion:
+        type: string
+        default: 3.9.13
+      mvnArgs:
+        type: string
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ inputs.javaVersion }}
+        distribution: temurin
+        server-id: github
+
+    - name: Setup Maven
+      uses: stCarolas/setup-maven@v5
+      with:
+        maven-version: ${{ inputs.mvnVersion }}
+
+    - name: Build with Maven
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        mvn --batch-mode -Darguments="-Dmaven.test.skip=true\
+         -DaltDeploymentRepository=github::https://maven.pkg.github.com/axonivy-market/${{ github.event.repository.name }}"\
+         release:prepare release:perform ${{ inputs.mvnArgs }}
