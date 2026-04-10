@@ -43,14 +43,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          goals="release:prepare release:perform"
+          goals="clean deploy"
           if [ "${{ inputs.dryRun }}" = "true" ]; then
-            goals="release:prepare"
+            goals="clean verify"
           fi
 
-          mvn --batch-mode -Darguments="-Dmaven.test.skip=true\
-           -DaltDeploymentRepository=github::https://maven.pkg.github.com/axonivy-market/${{ github.event.repository.name }}"\
-           ${goals} ${{ inputs.mvnArgs }}
+          mvn --batch-mode \
+            -Dmaven.test.skip=true \
+            -DaltDeploymentRepository=github::https://maven.pkg.github.com/axonivy-market/${{ github.event.repository.name }} \
+            ${goals} ${{ inputs.mvnArgs }}
 
   cleanup-snapshots:
     runs-on: ubuntu-latest
