@@ -22,6 +22,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>smart-workflow-demo</artifactId>
       <version>${project.version}</version>

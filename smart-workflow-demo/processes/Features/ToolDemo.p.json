@@ -1,0 +1,117 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "3A7F92C1D84BE056",
+  "config" : {
+    "data" : "Features.ToolDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "start",
+      "config" : {
+        "signature" : "start"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 704, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Prepare demo data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.invoice = new com.axonivy.utils.ai.Invoice();",
+            "in.invoice.invoiceNumber = \"INV-2024-042\";",
+            "in.invoice.customerName = \"John Doe\";",
+            "in.invoice.invoiceDate = \"2024-11-15\";",
+            "in.invoice.dueDate = \"2024-12-15\";",
+            "in.invoice.totalAmount = 13343.00;",
+            "in.invoice.items = new java.util.ArrayList();",
+            "",
+            "com.axonivy.utils.ai.InvoiceItem item1 = new com.axonivy.utils.ai.InvoiceItem();",
+            "item1.description = \"MacBook Pro 16-inch\"; item1.quantity = 1; item1.unitPrice = 2499.00; item1.total = 2499.00; item1.currency = \"USD\";",
+            "in.invoice.items.add(item1);",
+            "",
+            "com.axonivy.utils.ai.InvoiceItem item2 = new com.axonivy.utils.ai.InvoiceItem();",
+            "item2.description = \"Office Coffee Subscription 3-month\"; item2.quantity = 1; item2.unitPrice = 45.00; item2.total = 45.00; item2.currency = \"USD\";",
+            "in.invoice.items.add(item2);",
+            "",
+            "com.axonivy.utils.ai.InvoiceItem item3 = new com.axonivy.utils.ai.InvoiceItem();",
+            "item3.description = \"Samsung QLED TV 65-inch\"; item3.quantity = 1; item3.unitPrice = 1799.00; item3.total = 1799.00; item3.currency = \"USD\";",
+            "in.invoice.items.add(item3);",
+            "",
+            "com.axonivy.utils.ai.InvoiceItem item4 = new com.axonivy.utils.ai.InvoiceItem();",
+            "item4.description = \"Rolex Submariner Watch\"; item4.quantity = 1; item4.unitPrice = 8500.00; item4.total = 8500.00; item4.currency = \"USD\";",
+            "in.invoice.items.add(item4);",
+            "",
+            "com.axonivy.utils.ai.InvoiceItem item5 = new com.axonivy.utils.ai.InvoiceItem();",
+            "item5.description = \"Legal Consultation Service\"; item5.quantity = 2; item5.unitPrice = 250.00; item5.total = 500.00; item5.currency = \"USD\";",
+            "in.invoice.items.add(item5);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Calculate invoice tax",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an invoice processing assistant. You receive a structured Invoice object with line items. Use the calculateTax tool with the complete invoice to determine applicable taxes for each item. Based on the tool result, populate per-item taxRate and taxAmount fields, then return a complete TaxedInvoice with the effective tax rate, total tax amount, and total amount with tax applied.",
+          "resultType" : "com.axonivy.utils.ai.TaxedInvoice.class",
+          "tools" : "[\"calculateTax\"]",
+          "resultMapping" : "in.taxedInvoice",
+          "query" : "<%=in.invoice%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 440, "y" : 65 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Log result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.warn(\"Tax calculation complete - Effective rate: {0}%, Tax amount: ${1}, Total with tax: ${2}\",",
+            "  Math.round(in.taxedInvoice.effectiveTaxRate * 10000) / 100.0,",
+            "  in.taxedInvoice.taxAmount,",
+            "  in.taxedInvoice.totalWithTax);",
+            "for (com.axonivy.utils.ai.InvoiceItem item : in.taxedInvoice.items) {",
+            "  ivy.log.warn(\"  Item: {0} | Tax Rate: {1}% | Tax Amount: ${2}\",",
+            "    item.description,",
+            "    Math.round(item.taxRate * 10000) / 100.0,",
+            "    item.taxAmount);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 608, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}

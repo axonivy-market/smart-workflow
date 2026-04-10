@@ -3,13 +3,18 @@ package com.axonivy.utils.smart.workflow.program.internal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
+import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
 
 import ch.ivyteam.ivy.process.call.StartParameter;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
@@ -73,13 +78,31 @@ public class AgentEditor {
 
   private String toolList() {
     try {
-      return IvyToolsProcesses
+      var ivyTools = IvyToolsProcesses
           .toolStarts().stream()
           .map(SubProcessCallStartEvent::description)
-          .map(tool -> "- " + tool.name() + tool.in().stream().map(StartParameter::name).toList())
-          .collect(Collectors.joining("\n"));
+          .map(tool -> "- " + tool.name() + tool.in().stream().map(StartParameter::name).toList());
+      var javaTools = javaToolNames().stream()
+          .map(name -> "- " + name);
+      return Stream.concat(ivyTools, javaTools).collect(Collectors.joining("\n"));
     } catch (Exception ex) {
       return "";
+    }
+  }
+
+  private List<String> javaToolNames() {
+    try {
+      var project = SpiProject.getSmartWorkflowPmv().project();
+      return new SpiLoader(project).load(SmartWorkflowToolsProvider.class).stream()
+          .flatMap(provider -> {
+            var tools = provider.getTools();
+            return tools == null ? Stream.empty() : tools.stream();
+          })
+          .map(SmartWorkflowTool::name)
+          .distinct()
+          .toList();
+    } catch (Exception ex) {
+      return List.of();
     }
   }
 
