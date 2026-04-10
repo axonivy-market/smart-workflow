@@ -11,6 +11,10 @@ on:
         required: false
         default: true
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   release:
     uses: ./.github/workflows/release-dev-template.yml
