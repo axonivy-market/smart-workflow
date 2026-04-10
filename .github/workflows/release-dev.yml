@@ -1,0 +1,23 @@
+name: Release-Build-Dev
+
+on:
+  schedule:
+    - cron: '21 21 * * *'
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: Dry run mode for release and cleanup
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/release-dev-template.yml
+    with:
+      dryRun: ${{ fromJSON(github.event_name == 'schedule' && 'false' || github.event_name == 'workflow_dispatch' && github.event.inputs.dryRun || 'true') }}
+    secrets: inherit
