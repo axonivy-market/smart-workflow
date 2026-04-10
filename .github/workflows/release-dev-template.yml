@@ -74,7 +74,7 @@ jobs:
     if: ${{ needs.check-changes.outputs.shouldRelease == 'true' }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Java JDK
         uses: actions/setup-java@v5
