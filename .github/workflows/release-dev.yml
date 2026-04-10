@@ -1,5 +1,9 @@
 name: Reusable Dev-Release-Build
 
+permissions:
+  contents: read
+  packages: write
+
 on: 
   schedule:
     - cron:  '21 21 * * *'
@@ -41,3 +45,53 @@ jobs:
         mvn --batch-mode -Darguments="-Dmaven.test.skip=true\
          -DaltDeploymentRepository=github::https://maven.pkg.github.com/axonivy-market/${{ github.event.repository.name }}"\
          release:prepare release:perform ${{ inputs.mvnArgs }}
+
+  cleanup-snapshots:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Keep last 5 Maven snapshots
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+
+          const packages = await github.paginate('GET /orgs/{org}/packages', {
+            org: owner,
+            package_type: 'maven',
+            per_page: 100
+          });
+
+          const repoPackages = packages.filter(pkg => pkg.repository && pkg.repository.name === repo);
+          core.info(`Found ${repoPackages.length} Maven packages linked to ${owner}/${repo}`);
+
+          for (const pkg of repoPackages) {
+            const versions = await github.paginate(
+              'GET /orgs/{org}/packages/{package_type}/{package_name}/versions',
+              {
+                org: owner,
+                package_type: 'maven',
+                package_name: pkg.name,
+                per_page: 100
+              }
+            );
+
+            const snapshots = versions
+              .filter(v => (v.name || '').includes('SNAPSHOT'))
+              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+            // Keep the newest 5 snapshot versions and delete older ones.
+            for (const version of snapshots.slice(5)) {
+              core.info(`Deleting ${pkg.name}@${version.name} (${version.created_at})`);
+              await github.request(
+                'DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}',
+                {
+                  org: owner,
+                  package_type: 'maven',
+                  package_name: pkg.name,
+                  package_version_id: version.id
+                }
+              );
+            }
+          }
