@@ -30,7 +30,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "<%=ivy.cms.co(\"/Features/FileExtractionDemo/ExtractFromImagePrompt\")%>",
+          "system" : "Extract Invoice from image",
           "resultType" : "com.axonivy.utils.ai.InvoiceList.class",
           "resultMapping" : "in.invoiceList",
           "query" : "The image of an invoice:\r\n<%=ivy.cms.co(\"/Features/FileExtractionDemo/InvoiceImage\")%>\r\n\r\nAnd this is pdf file of the second invoice:\r\n<%=ivy.cms.co(\"/Features/FileExtractionDemo/InvoicePdf\")%>"

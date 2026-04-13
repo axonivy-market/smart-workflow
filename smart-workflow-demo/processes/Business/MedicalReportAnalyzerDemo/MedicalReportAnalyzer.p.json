@@ -1,0 +1,264 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19F0B2C3D4E5F601",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Business.MedicalReportAnalyzerDemo.MedicalReportAnalyzerData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "analyze(String)",
+      "config" : {
+        "signature" : "analyze",
+        "input" : {
+          "params" : [
+            { "name" : "reportContent", "type" : "String", "desc" : "The medical report text to analyze" }
+          ],
+          "map" : {
+            "out.reportContent" : "param.reportContent"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "analysisResult", "type" : "String", "desc" : "Compiled analysis from all three specialist tools" }
+          ],
+          "map" : {
+            "result.analysisResult" : "in.analysisResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 128 },
+        "description" : "Orchestrator: delegates to extractVitals, identifyAbnormalities, generateSummary"
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "ProgramInterface",
+      "name" : "Medical Report Analyzer",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a medical report analyzer agent. Use all available tools to comprehensively analyze the provided medical report:\n1) Use extractVitals to extract all vital signs (blood pressure, heart rate, BMI, oxygen saturation).\n2) Use identifyAbnormalities to detect out-of-range values and urgent clinical flags.\n3) Use generateSummary to produce a concise clinical summary for physician review.\nAlways call all three tools and compile their results into a cohesive analysis report.",
+          "tools" : "[\"extractVitals\",\"identifyAbnormalities\",\"generateSummary\"]",
+          "resultMapping" : "in.analysisResult",
+          "query" : "<%=in.reportContent%>"
+        },
+        "exceptionHandler" : "f5"
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 128 }
+      },
+      "connect" : [
+        { "id" : "f3", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 480, "y" : 128 }
+      }
+    }, {
+      "id" : "f5",
+      "type" : "ErrorStartEvent",
+      "name" : "ivy:error:program:exception",
+      "config" : {
+        "errorCode" : "ivy:error:program:exception",
+        "output" : {
+          "code" : [
+            "ivy.log.error(exception);",
+            "error.printStackTrace();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 480, "y" : 224 }
+      }
+    }, {
+      "id" : "f8",
+      "type" : "CallSubStart",
+      "name" : "extractVitals(String)",
+      "config" : {
+        "signature" : "extractVitals",
+        "input" : {
+          "params" : [
+            { "name" : "reportContent", "type" : "String", "desc" : "The medical report text" }
+          ],
+          "map" : {
+            "out.reportContent" : "param.reportContent"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "String", "desc" : "Extracted vital signs as structured text" }
+          ],
+          "map" : {
+            "result.result" : "in.analysisResult"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 320 },
+        "description" : "Extract vital signs from the medical report: blood pressure, heart rate, BMI, oxygen saturation, temperature"
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f10" }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "ProgramInterface",
+      "name" : "Extract Vitals",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Extract all vital signs from this medical report. Include: blood pressure (systolic/diastolic mmHg), heart rate (bpm), respiratory rate (breaths/min), body temperature (°C/°F), BMI, and oxygen saturation (SpO2 %). Present each finding as a labelled value on its own line.",
+          "tools" : "[]",
+          "resultMapping" : "in.analysisResult",
+          "query" : "<%=in.reportContent%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 480, "y" : 320 }
+      }
+    }, {
+      "id" : "f13",
+      "type" : "CallSubStart",
+      "name" : "identifyAbnormalities(String)",
+      "config" : {
+        "signature" : "identifyAbnormalities",
+        "input" : {
+          "params" : [
+            { "name" : "reportContent", "type" : "String", "desc" : "The medical report text" }
+          ],
+          "map" : {
+            "out.reportContent" : "param.reportContent"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "String", "desc" : "Identified abnormalities and urgent clinical flags" }
+          ],
+          "map" : {
+            "result.result" : "in.analysisResult"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 448 },
+        "description" : "Identify out-of-range values and urgent clinical flags in the medical report"
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f15" }
+      ]
+    }, {
+      "id" : "f15",
+      "type" : "ProgramInterface",
+      "name" : "Identify Abnormalities",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Analyze this medical report and identify all abnormal findings. For each out-of-range value: state the finding, the measured value, the normal reference range, and the severity (mild/moderate/severe). Flag any urgent clinical concerns requiring immediate medical attention.",
+          "tools" : "[]",
+          "resultMapping" : "in.analysisResult",
+          "query" : "<%=in.reportContent%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 448 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f17" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 480, "y" : 448 }
+      }
+    }, {
+      "id" : "f18",
+      "type" : "CallSubStart",
+      "name" : "generateSummary(String)",
+      "config" : {
+        "signature" : "generateSummary",
+        "input" : {
+          "params" : [
+            { "name" : "reportContent", "type" : "String", "desc" : "The medical report text" }
+          ],
+          "map" : {
+            "out.reportContent" : "param.reportContent"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "result", "type" : "String", "desc" : "Concise clinical summary for physician review" }
+          ],
+          "map" : {
+            "result.result" : "in.analysisResult"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 576 },
+        "description" : "Generate a concise clinical summary of the medical report for physician review"
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f20" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "ProgramInterface",
+      "name" : "Generate Summary",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Generate a concise clinical summary of this medical report for physician review. Structure the summary as: (1) Chief Complaint, (2) Key Findings, (3) Assessment, (4) Recommended Follow-up Actions. Keep the summary focused, clinically relevant, and suitable for inclusion in a physician's case notes.",
+          "tools" : "[]",
+          "resultMapping" : "in.analysisResult",
+          "query" : "<%=in.reportContent%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 576 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 480, "y" : 576 }
+      }
+    } ]
+}

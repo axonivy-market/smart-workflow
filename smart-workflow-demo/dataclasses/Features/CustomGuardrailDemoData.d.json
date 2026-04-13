@@ -1,0 +1,19 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "CustomGuardrailDemoData",
+  "namespace" : "Features",
+  "fields" : [ {
+    "name" : "query",
+    "type" : "String"
+  }, {
+    "name" : "result",
+    "type" : "String"
+  }, {
+    "name" : "violationMessage",
+    "type" : "String"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError",
+    "modifiers" : [ ]
+  } ]
+}

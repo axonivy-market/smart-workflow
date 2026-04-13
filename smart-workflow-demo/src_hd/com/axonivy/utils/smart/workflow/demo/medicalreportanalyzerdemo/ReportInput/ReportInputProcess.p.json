@@ -1,0 +1,73 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19F0A1B2C3D4E020",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.demo.medicalreportanalyzerdemo.ReportInput.ReportInputData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "result" : {
+          "params" : [
+            { "name" : "reportText", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.reportText" : "in.reportText"
+          }
+        },
+        "guid" : "19F0A1B2C3D4F020"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "Script",
+      "name" : "Set Dummy Data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.reportText = \"PATIENT MEDICAL REPORT\\n\\nPatient: Sarah Johnson, DOB: 1985-03-22\\nDate: 2026-04-10\\nPhysician: Dr. Michael Chen\\n\\nVITAL SIGNS:\\nBlood Pressure: 145/95 mmHg (elevated)\\nHeart Rate: 88 bpm\\nTemperature: 37.2°C\\nOxygen Saturation: 98%\\nWeight: 78 kg, Height: 165 cm, BMI: 28.7\\n\\nCHIEF COMPLAINT:\\nPatient presents with persistent headaches and dizziness for the past 2 weeks.\\n\\nLABORATORY RESULTS:\\nHbA1c: 7.2% (above normal, diabetes range)\\nFasting Glucose: 138 mg/dL (elevated)\\nTotal Cholesterol: 215 mg/dL (borderline high)\\nLDL: 142 mg/dL (high)\\nHDL: 48 mg/dL (low-normal)\\nCreatinine: 0.9 mg/dL (normal)\\nHemoglobin: 11.8 g/dL (mildly low)\\n\\nDIAGNOSIS:\\nType 2 Diabetes Mellitus (uncontrolled), Stage 1 Hypertension, Mild Anemia\\n\\nPLAN:\\nAdjust metformin dosage. Prescribe antihypertensive. Dietary counseling referral. Follow-up in 4 weeks.\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "19F0A1B2C3D4F021"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    } ]
+}

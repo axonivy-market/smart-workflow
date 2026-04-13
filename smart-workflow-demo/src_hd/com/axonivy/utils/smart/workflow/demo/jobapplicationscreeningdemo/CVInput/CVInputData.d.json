@@ -1,0 +1,12 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "CVInputData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.jobapplicationscreeningdemo.CVInput",
+  "fields" : [ {
+    "name" : "cvText",
+    "type" : "String"
+  }, {
+    "name" : "jobDescription",
+    "type" : "String"
+  } ]
+}

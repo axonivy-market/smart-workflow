@@ -106,9 +106,48 @@ Dialogs:
                     Total: Total
                     ViewDetails: Ver detalles
                     YourCartIsEmpty: Tu carrito está vacío
-Features:
-  FileExtractionDemo:
-    ExtractFromImagePrompt: Extract Invoice from image
+              meetingminutesdemo:
+                TranscriptInput:
+                  Title: Analizador de actas de reuniones
+                  TranscriptLabel: Pegue la transcripción de la reunión de sprint
+                  UploadLabel: "O suba un archivo de transcripción (.txt o .vtt)"
+                  UploadButton: Subir
+                  LanguageLabel: Idioma de destino para la salida
+                  AnalyzeButton: Analizar
+                FeedbackReview:
+                  Title: Revisar comentarios extraídos
+                  TitleCol: Título
+                  DescriptionCol: Descripción
+                  TypeCol: Tipo
+                  AssigneeCol: Asignado a
+                  ConfirmButton: "Confirmar y crear tareas"
+              jobapplicationscreeningdemo:
+                CVInput:
+                  Title: Cribado de solicitudes de empleo
+                  CvLabel: Texto del CV / currículum
+                  JobDescriptionLabel: Descripción del puesto
+                  ScreenButton: Evaluar candidato
+                ReviewCommunication:
+                  Title: Revisar resultado del cribado
+                  ProfileTitle: Perfil del candidato
+                  NameLabel: Nombre
+                  EmailLabel: Correo electrónico
+                  ExperienceLabel: Experiencia (años)
+                  SkillsLabel: Habilidades
+                  FitScoreTitle: Evaluación de idoneidad
+                  ScoreLabel: Puntuación
+                  QualifiedLabel: Calificado
+                  RecommendationLabel: Recomendación
+                  DraftTitle: Borrador de comunicación
+                  SendButton: Enviar comunicación
+              medicalreportanalyzerdemo:
+                ReportInput:
+                  Title: Analizador de informes médicos
+                  ReportLabel: Pegue el texto del informe médico
+                  AnalyzeButton: Analizar informe
+                AnalysisResult:
+                  Title: Análisis del informe médico
+                  ResultLabel: Resultado del análisis
 Labels:
   Actions: Acciones
   Active: Activo

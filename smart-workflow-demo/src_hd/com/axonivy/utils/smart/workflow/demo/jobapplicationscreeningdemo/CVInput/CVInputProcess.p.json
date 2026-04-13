@@ -1,0 +1,83 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19F0A1B2C3D4E010",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.demo.jobapplicationscreeningdemo.CVInput.CVInputData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "result" : {
+          "params" : [
+            { "name" : "cvText", "type" : "String", "desc" : "" },
+            { "name" : "jobDescription", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.cvText" : "in.cvText",
+            "result.jobDescription" : "in.jobDescription"
+          }
+        },
+        "guid" : "19F0A1B2C3D4F010"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "Script",
+      "name" : "Set Dummy Data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.cvText = \"John Doe\\nEmail: john.doe@example.com\\n\\nSummary:\\nExperienced Java developer with 7 years of experience in enterprise software development.\\n\\nSkills:\\nJava, Spring Boot, Microservices, REST APIs, SQL, Docker, Kubernetes, CI/CD\\n\\nExperience:\\n- Senior Java Developer at TechCorp (2020-present)\\n  Built microservices for a high-traffic e-commerce platform.\\n- Java Developer at SoftSolutions (2018-2020)\\n  Developed backend APIs for insurance management systems.\\n\\nEducation:\\nBachelor of Computer Science, State University, 2017\";",
+            "in.jobDescription = \"We are looking for a Senior Java Developer to join our growing engineering team.\\n\\nRequirements:\\n- 5+ years of Java development experience\\n- Strong knowledge of Spring Boot and REST API design\\n- Experience with microservices architecture\\n- Familiarity with Docker and Kubernetes\\n- Good understanding of SQL databases\\n\\nResponsibilities:\\n- Design and implement backend services\\n- Collaborate with frontend teams on API contracts\\n- Participate in code reviews and mentoring junior developers\\n\\nNice to have:\\n- Experience with cloud platforms (AWS, Azure)\\n- Knowledge of event-driven architecture (Kafka)\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 384, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "19F0A1B2C3D4F011",
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.cvText" : "in.cvText",
+            "out.jobDescription" : "in.jobDescription"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    } ]
+}

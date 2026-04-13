@@ -106,9 +106,48 @@ Dialogs:
                     Total: Gesamt
                     ViewDetails: Details anzeigen
                     YourCartIsEmpty: Dein Warenkorb ist leer
-Features:
-  FileExtractionDemo:
-    ExtractFromImagePrompt: Extract Invoice from image
+              meetingminutesdemo:
+                TranscriptInput:
+                  Title: Besprechungsprotokoll-Analyse
+                  TranscriptLabel: Besprechungsprotokoll einfügen
+                  UploadLabel: "Oder Transkript-Datei hochladen (.txt oder .vtt)"
+                  UploadButton: Hochladen
+                  LanguageLabel: Zielsprache für Ausgabe
+                  AnalyzeButton: Analysieren
+                FeedbackReview:
+                  Title: Extrahiertes Feedback prüfen
+                  TitleCol: Titel
+                  DescriptionCol: Beschreibung
+                  TypeCol: Typ
+                  AssigneeCol: Zugewiesen an
+                  ConfirmButton: "Bestätigen & Aufgaben erstellen"
+              jobapplicationscreeningdemo:
+                CVInput:
+                  Title: Bewerbungsscreening
+                  CvLabel: Lebenslauf / CV Text
+                  JobDescriptionLabel: Stellenbeschreibung
+                  ScreenButton: Bewerber prüfen
+                ReviewCommunication:
+                  Title: Screening-Ergebnis prüfen
+                  ProfileTitle: Kandidatenprofil
+                  NameLabel: Name
+                  EmailLabel: E-Mail
+                  ExperienceLabel: Erfahrung (Jahre)
+                  SkillsLabel: Fähigkeiten
+                  FitScoreTitle: Eignungsbewertung
+                  ScoreLabel: Punktzahl
+                  QualifiedLabel: Qualifiziert
+                  RecommendationLabel: Empfehlung
+                  DraftTitle: Kommunikationsentwurf
+                  SendButton: Kommunikation senden
+              medicalreportanalyzerdemo:
+                ReportInput:
+                  Title: Medizinischer Berichtsanalysator
+                  ReportLabel: Medizinischen Bericht einfügen
+                  AnalyzeButton: Bericht analysieren
+                AnalysisResult:
+                  Title: Medizinische Berichtsanalyse
+                  ResultLabel: Analyseergebnis
 Labels:
   Actions: Aktionen
   Active: Aktiv

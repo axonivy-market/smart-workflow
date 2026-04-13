@@ -1,0 +1,126 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19F0A1B2C3D4E005",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.demo.meetingminutesdemo.TranscriptInput.TranscriptInputData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "result" : {
+          "params" : [
+            { "name" : "transcriptText", "type" : "String", "desc" : "" },
+            { "name" : "targetLanguage", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.transcriptText" : "in.transcriptText",
+            "result.targetLanguage" : "in.targetLanguage"
+          }
+        },
+        "guid" : "19F0A1B2C3D4F001"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "Script",
+      "name" : "Set Dummy Data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.transcriptText = \"SPRINT REVIEW MEETING - April 10, 2026\\nAttendees: Alice (Product Owner), Bob (Tech Lead), Carol (Developer), Dave (Designer), Eve (QA)\\nDuration: 60 minutes\\n\\n[Alice] Sprint 12 goals were mostly achieved. The new checkout flow is live.\\n[Bob] We had some delays on the payment service refactor. Carol, can you finish the unit tests by Friday?\\n[Carol] Yes, I will complete the payment service unit tests by Friday EOD.\\n[Bob] Also the API rate limiter is not yet deployed. Dave and I will pair on it next Monday.\\n[Dave] The mobile design review feedback still needs to be addressed. I will update the Figma designs by Wednesday.\\n[Alice] We agreed to add error state screens to the backlog. Bob to create the tickets today.\\n[Eve] Found 3 regression bugs in the cart module. Carol and Dave to investigate and fix before next sprint.\\n[Alice] Retrospective action: improve PR review turnaround. Team agreed on a 24-hour review SLA starting next sprint.\\n[Bob] Sprint velocity was 42 points, slightly below target of 48. Capacity issue due to 2 team members on leave.\";",
+            "",
+            "in.targetLanguage = \"EN\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 376, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "19F0A1B2C3D4F003"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "handleUpload(FileUploadEvent)",
+      "config" : {
+        "signature" : "handleUpload",
+        "input" : {
+          "params" : [
+            { "name" : "event", "type" : "org.primefaces.event.FileUploadEvent", "desc" : "" }
+          ],
+          "map" : {
+            "out.uploadEvent" : "param.event"
+          }
+        },
+        "guid" : "19F0A1B2C3D4F002"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Extract transcript text",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import java.io.InputStream;",
+            "import java.nio.charset.StandardCharsets;",
+            "",
+            "InputStream stream = in.uploadEvent.getFile().getInputStream();",
+            "in.transcriptText = new String(stream.readAllBytes(), StandardCharsets.UTF_8);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f10", "color" : "default" }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 256 }
+      }
+    } ]
+}

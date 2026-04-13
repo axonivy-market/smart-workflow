@@ -1,0 +1,22 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "MeetingMinutesDemoData",
+  "namespace" : "Business.MeetingMinutesDemo",
+  "fields" : [ {
+    "name" : "transcriptText",
+    "type" : "String"
+  }, {
+    "name" : "targetLanguage",
+    "type" : "String"
+  }, {
+    "name" : "description",
+    "type" : "String"
+  }, {
+    "name" : "feedbackList",
+    "type" : "com.axonivy.utils.smart.workflow.demo.model.FeedbackList"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError",
+    "modifiers" : [ ]
+  } ]
+}

@@ -137,6 +137,228 @@ Demo flow
 
 To quickly set up the demo data, run the process `Create data for shopping demo` from the process list.
 
+### File Extraction Demo
+
+This demo shows how AI agents can extract structured data directly from uploaded files — images and PDFs — using multimodal language models. It eliminates manual data entry by reading documents and producing typed Java objects ready for use in subsequent workflow steps.
+
+**Purpose:** Demonstrate multimodal AI extraction from binary content (images, PDFs) without any manual data parsing.
+
+**Workflow Overview:**
+
+1. **Input:** The demo prepares file content — either from the Axon Ivy CMS or from a binary stream loaded at runtime.
+2. **Extraction:** The file content is embedded in the agent's query; the AI model reads and extracts the relevant fields.
+3. **Output:** The result is mapped to a typed Java object (e.g., an invoice or receipt data class) for immediate use downstream.
+
+**Technical Details:**
+
+- Implemented in `processes/Features/FileExtractionDemo.p.json` using a `ProgramInterface` element backed by `com.axonivy.utils.smart.workflow.AgenticProcessCall`.
+- Two variants are provided: `extractFromCMS` — loads files via `ivy.cm.ref(...)`, and `extractFromBinary` — loads files as `InputStream` / `Binary` from the filesystem at runtime.
+- The file content is passed inline inside the agent `query`; no file system tooling is required.
+- The `resultType` is set to the target Java class so the agent returns a fully populated structured object.
+- Not all providers support multimodal input — see the [Models Contribution Guideline](../doc/MODELS.md#file-extraction-support) for the list of supported providers.
+
+---
+
+### Guardrail Demo
+
+This demo shows how built-in Smart Workflow guardrails protect AI agents from prompt injection attacks and prevent sensitive data from leaking in AI responses. It demonstrates both input and output guardrails in action with real attack scenarios.
+
+**Purpose:** Show how to harden AI agents against common security threats using Smart Workflow's built-in guardrail infrastructure without writing custom code.
+
+**Workflow Overview:**
+
+1. **Prompt Injection variant:** A crafted malicious message is submitted to the agent. The `PromptInjectionInputGuardrail` intercepts it _before_ the AI model is called and raises an error that the process handles via an `ErrorBoundaryEvent`.
+2. **Sensitive Data variant:** The agent is prompted to include sensitive content in its response. The `SensitiveDataOutputGuardrail` intercepts the response _after_ the AI model returns it and blocks the output before it reaches the process.
+3. **Error Handling:** Both variants demonstrate catching the guardrail violation with a boundary event and routing to a safe error path.
+
+**Technical Details:**
+
+- Implemented in `processes/Features/GuardrailDemo.p.json`.
+- Uses built-in guardrails `PromptInjectionInputGuardrail` and `SensitiveDataOutputGuardrail` configured in the agent's `inputGuardrails` / `outputGuardrails` fields.
+- Error paths are wired via `ErrorBoundaryEvent` attached to the `ProgramInterface` element.
+- Default guardrails can be set globally in `variables.yaml` under `AI.Guardrails.DefaultInput` and `AI.Guardrails.DefaultOutput` — any agent that does not specify guardrails explicitly will inherit these defaults.
+
+---
+
+### Custom Guardrail Demo
+
+This demo shows how to implement and register a domain-specific business rule as a reusable custom guardrail using the Smart Workflow SPI. Once registered, the guardrail applies automatically to all agents without touching individual prompts.
+
+**Purpose:** Demonstrate the `GuardrailProvider` SPI pattern for encoding company-wide policies (e.g., never mention a competitor) as a reusable, centrally managed guardrail.
+
+**Workflow Overview:**
+
+1. **Blocked variant:** The agent receives a query that mentions a competitor (Camunda). The custom `BlockCompetitorMentionGuardrail` detects this at input time and blocks the request before the AI model is called.
+2. **Allowed variant:** The agent receives a neutral business query. The guardrail passes the input through, and the agent responds normally.
+3. Both variants illustrate that the guardrail logic lives in one place and is applied transparently.
+
+**Technical Details:**
+
+- Implemented in `processes/Features/CustomGuardrailDemo.p.json` with two `ProgramInterface` elements, each specifying `inputGuardrails: ["BlockCompetitorMentionGuardrail"]`.
+- The guardrail class `BlockCompetitorMentionGuardrail` implements the `SmartWorkflowInputGuardrail` SPI.
+- Registration is done via `META-INF/services/com.axonivy.utils.smart.workflow.guardrails.spi.SmartWorkflowInputGuardrail`.
+- Once registered, the guardrail name appears in the designer's Available Input Guardrails list automatically.
+
+---
+
+### Smart Workflow Agent Demo
+
+This demo shows how to invoke a Smart Workflow AI agent through a reusable callable subprocess, separating the AI logic from the calling process and making it independently deployable.
+
+**Purpose:** Demonstrate the callable subprocess pattern for encapsulating AI agent logic — enabling reuse, independent testing, and clean separation from business process orchestration.
+
+**Workflow Overview:**
+
+1. **Preparation:** The calling process prepares sample input (e.g., invoice text) and passes it via parameters to a `SubProcessCall`.
+2. **Callable execution:** The callable subprocess (`CALLABLE_SUB`) runs the `ProgramInterface` agent, processes the input, and returns a typed result.
+3. **Result usage:** The calling process receives the structured result object and continues its workflow.
+
+**Technical Details:**
+
+- Implemented in `processes/Features/SmartWorkflowAgentDemo.p.json` as the entry point and a separate `CALLABLE_SUB` containing the `ProgramInterface`.
+- The calling process uses a standard `SubProcessCall` element — no agent-specific API is needed in the caller.
+- The callable `CALLABLE_SUB` encapsulates the `ProgramInterface`, system message, model selection, and output mapping.
+- This pattern allows multiple different calling processes to share the same AI callable without duplicating agent configuration.
+
+---
+
+### Meeting Minutes Demo
+
+This demo shows an AI-assisted multi-step pipeline where AI extracts structured action items from a meeting transcript, a human reviews and edits the list, and Axon Ivy tasks are automatically created per action item.
+
+**Purpose:** Demonstrate a complete human-in-the-loop AI workflow — AI produces initial output, a human validates it, and the confirmed items drive downstream process automation.
+
+**Workflow Overview:**
+
+1. **Input:** The user pastes a meeting transcript and optionally selects a target language for translation.
+2. **AI Extraction:** A `TaskSwitchEvent` triggers the AI to extract a structured `FeedbackList` from the transcript — each item has a title, description, assignee, and priority.
+3. **Optional Translation:** A second agent step can translate all item text to the selected language.
+4. **Human Review:** The extracted list is presented in a task form where the reviewer can add, edit, or remove items.
+5. **Task Fan-out:** For each confirmed feedback item, a `TriggerCall` fires a separate Ivy task assigned to the named team member.
+
+**Technical Details:**
+
+- Implemented in `processes/Business/MeetingMinutesDemo/MeetingMinutesDemo.p.json`.
+- Uses `TaskSwitchEvent` for the AI extraction step so the agent output is observable as an Ivy task before the human review starts.
+- The human review dialog is invoked via `DialogCall` using the `FeedbackReview` HTML dialog.
+- `TriggerCall` fans out one task per feedback item using the `createFeedbackTask(String, String, String)` callable signature.
+- Model classes (`FeedbackList`, `FeedbackItem`) are annotated with `@Description` for reliable AI extraction.
+
+---
+
+### Job Application Screening Demo
+
+This demo automates the initial CV screening step of HR recruitment using a two-stage AI pipeline followed by a human review step — before any communication is sent to the candidate.
+
+**Purpose:** Demonstrate a multi-stage AI pipeline with structured extraction and scoring, where each stage produces a typed object, and a human finalises the output before it leaves the system.
+
+**Workflow Overview:**
+
+1. **Input:** HR enters the CV text and job description (pre-filled with a sample Java developer CV and job spec).
+2. **Profile Extraction:** A `TaskSwitchEvent` triggers the first AI agent to extract a `CandidateProfile` — name, email, skills, years of experience, and education level.
+3. **Fit Scoring:** A second `TaskSwitchEvent` runs the scoring agent against both the profile and the job description, producing a `FitScore` — a 0–100 score, a qualified flag, strengths, gaps, and a hiring recommendation.
+4. **Communication Draft:** A script builds a personalised accept or reject communication from the structured scoring output.
+5. **Human Review:** The recruiter reviews and optionally edits the draft in a task form before it is finalised.
+
+**Technical Details:**
+
+- Implemented in `processes/Business/JobApplicationScreeningDemo/JobApplicationScreening.p.json`.
+- Two independent `TaskSwitchEvent` steps keep extraction and scoring separately observable and re-runnable.
+- `CandidateProfile` and `FitScore` model classes use `@Description` annotations on each field to guide reliable AI extraction.
+- Null-safe expressions (`<%=in.field != null ? in.field : ""` patterns) are required in query templates — AI may return `null` for optional fields.
+- The human review dialog is `ReviewCommunication`, invoked via `DialogCall`.
+
+---
+
+### Medical Report Analyzer Demo
+
+This demo shows how to build a reusable AI callable that delegates work to three specialist tool subprocesses — an orchestrator agent that decides which tool to call and in what order, rather than hardwiring the sequence in the process diagram.
+
+**Purpose:** Demonstrate the agent-with-tools-in-callable pattern, where a single `CALLABLE_SUB` hides all AI orchestration behind a clean interface, making it independently deployable and testable.
+
+**Workflow Overview:**
+
+1. **Input:** The user enters a medical report text (pre-filled with a sample patient report).
+2. **Orchestrator invocation:** A `SubProcessCall` invokes the `MedicalReportAnalyzer:analyze` callable, passing the report text.
+3. **Tool dispatch (inside the callable):** The orchestrator `ProgramInterface` agent autonomously calls three specialist tools:
+   - `extractVitals` — extracts blood pressure, heart rate, BMI, and oxygen saturation.
+   - `identifyAbnormalities` — flags out-of-range values and urgent clinical findings.
+   - `generateSummary` — produces a concise clinical summary for physician review.
+4. **Result display:** The compiled analysis result is shown in a read-only result dialog.
+
+**Technical Details:**
+
+- Two process files: `MedicalReportAnalyzer.p.json` (`CALLABLE_SUB`) contains the orchestrator and three tool `CallSubStart` elements; `MedicalReportCaller.p.json` (`NORMAL`) is the user-facing entry point.
+- Each tool `CallSubStart` is tagged with `"tags": ["tool"]` — without this the framework does not register it as an AI-invocable tool.
+- The orchestrator `ProgramInterface` specifies `tools: ["extractVitals", "identifyAbnormalities", "generateSummary"]` explicitly; the three tool agents specify `tools: "[]"` (no nested tools).
+- The callable can be deployed independently and invoked by any process that needs medical report analysis, without exposing internal AI wiring.
+
+---
+
+### Support Agent Demo (Callable Multi-Agent)
+
+This demo shows how to orchestrate multiple AI agents within a formal Axon Ivy approval workflow — each agent handling one focused responsibility inside its own callable subprocess.
+
+**Purpose:** Demonstrate multi-agent composition in a real business process: AI creates a ticket, selects an approver, and prepares task data — each step independently callable and testable.
+
+**Workflow Overview:**
+
+1. **Ticket creation:** The first AI callable receives user input and produces a structured `SupportTicket` object.
+2. **Approver selection:** A second AI callable reads the ticket type and selects the appropriate approver from a policy list.
+3. **Task preparation:** A third AI callable prepares HR-specific task info for the approval lane.
+4. **Approval workflow:** A `TriggerCall` starts the `SupportBusiness` approval process, which runs a two-stage approval flow with `DialogCall` forms for the approvers.
+
+**Technical Details:**
+
+- Implemented across `processes/AgentDemo/SupportAgent.p.json` (orchestrating process) and `processes/AgentDemo/SupportBusiness.p.json` (approval back-end).
+- Each AI step is a separate `CALLABLE_SUB` with its own `ProgramInterface`, typed input, and typed output — one responsibility per callable.
+- Callables: `Create SupportTicket object`, `Create task`, `chooseTicketApprover(SupportTicket)`, `handleHrTicket(SupportTicket)`.
+- `SupportBusiness.p.json` provides two entry points: `createSupportTicket` (routes to first approval task) and `handleHrTicket` (two-stage approval with `DialogCall` forms).
+
+---
+
+### Support Agent with Tools Demo
+
+This demo shows how an AI agent autonomously decides when and how to invoke a subprocess tool — without the process designer explicitly scripting the call sequence.
+
+**Purpose:** Demonstrate autonomous tool invocation: the agent receives a goal, decides which tool satisfies it, invokes the tool, and returns the combined result — all without branching logic in the process diagram.
+
+**Workflow Overview:**
+
+1. **Input:** A support problem description is submitted to the agent.
+2. **Autonomous decision:** The `ProgramInterface` agent (system: "You are a Support Agent") reviews the problem and decides to call the `sumarizeProblem` tool.
+3. **Tool execution:** The tool callable runs and returns a summary.
+4. **Response:** The agent incorporates the tool result and returns a final response.
+
+**Technical Details:**
+
+- Implemented in `processes/AgentDemo/SupportAgentTools.p.json`.
+- The `ProgramInterface` specifies `tools: ["sumarizeProblem"]` — only the listed tool is available to the agent.
+- The tool `CallSubStart` is tagged with `"tags": ["tool"]`; its description tells the agent when to use it.
+- Best practice: keep tool interfaces simple — one focused input, one typed output; let the agent handle invocation ordering.
+
+---
+
+### Support Agent with Planning Demo
+
+This demo shows how an AI agent can execute a multi-step business goal expressed entirely as a natural language instruction, planning the tool call sequence autonomously without any explicit branching in the process diagram.
+
+**Purpose:** Demonstrate goal-oriented autonomous planning — the designer states _what_ to achieve; the agent plans _how_, calling multiple tools in the correct order to reach the goal.
+
+**Workflow Overview:**
+
+1. **Input:** A support request is submitted.
+2. **Planning:** The `ProgramInterface` agent reads the system prompt goal ("Create a support ticket then create a task to handle it") and plans the required tool invocations.
+3. **Execution:** The agent calls the tools in the order it determines is correct — no explicit sequencing in the process diagram.
+4. **Result:** All tool outputs are combined and the final result is returned to the caller.
+
+**Technical Details:**
+
+- Implemented in `processes/AgentDemo/SupportAgentToolsWithPlanning.p.json`.
+- The system prompt contains the complete goal description; tool availability is declared in the `tools` field.
+- Requires a planning-capable model (GPT-4.1, Claude Sonnet 4+) — weaker models may miss steps or invoke tools out of order.
+- Pair with guardrails when using broad tool access; autonomous agents with goal-oriented prompts have a wider action surface than single-step agents.
+
 ## Setup
 
 To start your AI initiative, we need to define the Models and Tools in advance.

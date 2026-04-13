@@ -1,0 +1,378 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19F0A1B2C3D4E007",
+  "config" : {
+    "data" : "Business.MeetingMinutesDemo.MeetingMinutesDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "meetingMinutesDemo",
+      "config" : {
+        "signature" : "meetingMinutesDemo",
+        "request" : {
+          "name" : "Meeting Minutes Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "DialogCall",
+      "name" : "Enter Meeting Transcript",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.meetingminutesdemo.TranscriptInput:start()",
+        "output" : {
+          "map" : {
+            "out.transcriptText" : "result.transcriptText",
+            "out.targetLanguage" : "result.targetLanguage"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 304, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f42", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "TaskSwitchEvent",
+      "name" : "Analyze Meeting Transcript",
+      "config" : {
+        "task" : {
+          "name" : "Analyze Meeting Transcript",
+          "skipTasklist" : true
+        },
+        "case" : {
+          "name" : "Meeting Minutes Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 536, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f6", "color" : "default" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "ProgramInterface",
+      "name" : "Extract Feedback Items",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an expert Scrum Master and agile coach. Extract all actionable feedback items from this sprint review transcript. For each item identify: title (short action name), description (details), type (bug/improvement/task/question), and assignee (person mentioned or 'unassigned').",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.model.FeedbackList.class",
+          "tools" : "[]",
+          "resultMapping" : "in.feedbackList",
+          "query" : "Extract all actionable feedback items from this sprint review transcript:\n\n<TRANSCRIPT>\n<%=in.transcriptText%>\n</TRANSCRIPT>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 696, "y" : 64 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "boundaries" : [ {
+          "id" : "f21",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "Extraction failed",
+          "config" : {
+            "errorCode" : "ivy:error:program:exception",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 752, "y" : 105 },
+            "labelOffset" : { "x" : -50, "y" : 25 }
+          },
+          "connect" : [
+            { "id" : "f22", "to" : "f20" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f7", "to" : "f8", "color" : "default" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Alternative",
+      "name" : "Translation needed?",
+      "config" : {
+        "conditions" : {
+          "f9" : "in.targetLanguage != null && !in.targetLanguage.equals(\"EN\")"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 888, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f10", "label" : {
+            "name" : "yes"
+          } },
+        { "id" : "f13", "to" : "f14", "label" : {
+            "name" : "no"
+          } }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "TaskSwitchEvent",
+      "name" : "Translate Feedback Items",
+      "config" : {
+        "task" : {
+          "name" : "Translate Feedback Items",
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 888, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f12", "color" : "default" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "ProgramInterface",
+      "name" : "Translate Feedback Items",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a professional translator. Translate the titles and descriptions of all feedback items to the requested language. Keep all technical terms and names unchanged. Return the complete list with translated content.",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.model.FeedbackList.class",
+          "tools" : "[]",
+          "resultMapping" : "in.feedbackList",
+          "query" : "Translate all feedback item titles and descriptions to <%=in.targetLanguage%>. Return the full updated list:\n\n<%=in.feedbackList.toString()%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1048, "y" : 192 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f14", "color" : "default" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "DialogCall",
+      "name" : "Review Feedback",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.meetingminutesdemo.FeedbackReview:start(com.axonivy.utils.smart.workflow.demo.model.FeedbackList)",
+        "call" : {
+          "map" : {
+            "param.feedbackList" : "in.feedbackList"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.feedbackList" : "result.feedbackList"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1240, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f17", "to" : "f26" }
+      ]
+    }, {
+      "id" : "f16",
+      "type" : "Script",
+      "name" : "Remove Processed Item",
+      "config" : {
+        "output" : {
+          "code" : "in.feedbackList.setItems(new java.util.ArrayList(in.feedbackList.items.subList(1, in.feedbackList.items.size())));"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1688, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f26", "via" : [ { "x" : 1688, "y" : 256 }, { "x" : 1368, "y" : 256 } ], "color" : "default" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1368, "y" : 352 }
+      }
+    }, {
+      "id" : "f20",
+      "type" : "Script",
+      "name" : "Log extraction error",
+      "config" : {
+        "output" : {
+          "code" : "ivy.log.error(\"[MeetingMinutesDemo] AI extraction failed: {0}\", in.error.getMessage());"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 888, "y" : 352 }
+      },
+      "connect" : [
+        { "id" : "f25", "to" : "f18", "color" : "default" }
+      ]
+    }, {
+      "id" : "f23",
+      "type" : "ProcessAnnotation",
+      "name" : "Demonstrates AI-powered meeting minutes analysis: users paste or upload a sprint review transcript, the AI extracts actionable feedback items with optional translation, users review the list, and tasks are created for each item.",
+      "visual" : {
+        "at" : { "x" : 192, "y" : 320 },
+        "size" : { "width" : 720, "height" : 80 }
+      }
+    }, {
+      "id" : "f26",
+      "type" : "Alternative",
+      "name" : "More feedback tasks?",
+      "config" : {
+        "conditions" : {
+          "f27" : "in.feedbackList.items != null && !in.feedbackList.items.isEmpty()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1368, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f27", "to" : "f28", "label" : {
+            "name" : "yes"
+          } },
+        { "id" : "f29", "to" : "f18", "label" : {
+            "name" : "no"
+          } }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "TriggerCall",
+      "name" : "Create Feedback Task",
+      "config" : {
+        "processCall" : "Business/MeetingMinutesDemo/MeetingMinutesDemo:createFeedbackTask(String,String,String)",
+        "call" : {
+          "map" : {
+            "param.title" : "in.feedbackList.items.get(0).title",
+            "param.description" : "in.feedbackList.items.get(0).description",
+            "param.assigneeName" : "in.feedbackList.items.get(0).assignee"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1528, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f30", "to" : "f16", "color" : "default" }
+      ]
+    }, {
+      "id" : "f31",
+      "type" : "RequestStart",
+      "name" : "createFeedbackTask",
+      "config" : {
+        "signature" : "createFeedbackTask",
+        "input" : {
+          "params" : [
+            { "name" : "title", "type" : "String", "desc" : "" },
+            { "name" : "description", "type" : "String", "desc" : "" },
+            { "name" : "assigneeName", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.transcriptText" : "param.title",
+            "out.description" : "param.description",
+            "out.targetLanguage" : "param.assigneeName"
+          }
+        },
+        "request" : {
+          "isHttpRequestable" : false,
+          "isVisibleOnStartList" : false
+        },
+        "triggerable" : true,
+        "task" : {
+          "responsible" : {
+            "roles" : [
+              "SYSTEM"
+            ]
+          }
+        },
+        "case" : {
+          "attachToBusinessCase" : false
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 480 }
+      },
+      "connect" : [
+        { "id" : "f32", "to" : "f35" }
+      ]
+    }, {
+      "id" : "f35",
+      "type" : "TaskSwitchEvent",
+      "name" : "Review Feedback Item",
+      "config" : {
+        "task" : {
+          "name" : "<%=in1.transcriptText%>",
+          "description" : "<%=in1.description%>"
+        },
+        "case" : {
+          "name" : "Feedback Item Review"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 480 }
+      },
+      "connect" : [
+        { "id" : "f36", "to" : "f38", "color" : "default" }
+      ]
+    }, {
+      "id" : "f38",
+      "type" : "Script",
+      "name" : "Build Feedback List",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.model.FeedbackItem;",
+            "import com.axonivy.utils.smart.workflow.demo.model.FeedbackList;",
+            "",
+            "FeedbackItem item = new FeedbackItem();",
+            "item.setTitle(in.transcriptText);",
+            "item.setDescription(in.description);",
+            "item.setAssignee(in.targetLanguage);",
+            "FeedbackList list = new FeedbackList();",
+            "list.setItems(new java.util.ArrayList<FeedbackItem>());",
+            "list.getItems().add(item);",
+            "in.feedbackList = list;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 416, "y" : 480 }
+      },
+      "connect" : [
+        { "id" : "f39", "to" : "f40" }
+      ]
+    }, {
+      "id" : "f40",
+      "type" : "DialogCall",
+      "name" : "Review Feedback Item",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.meetingminutesdemo.FeedbackReview:start(com.axonivy.utils.smart.workflow.demo.model.FeedbackList)",
+        "call" : {
+          "map" : {
+            "param.feedbackList" : "in.feedbackList"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 576, "y" : 480 }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f37" }
+      ]
+    }, {
+      "id" : "f37",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 736, "y" : 480 }
+      }
+    } ]
+}
