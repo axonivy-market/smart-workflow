@@ -124,6 +124,43 @@ class TestOpenInferenceSpans {
     assertTool(toolRun);
   }
 
+  @Test
+  void observesGuardrailSpans(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+
+    var process = BpmProcess.name("TestToolUser").elementName("mathWithGuardrails");
+    var res = client.start().process(process).execute();
+    assertThat(res.bpmError()).isNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+
+    var inputGuardrail = findChild(agent, "InputGuardrailAdapter").findFirst().orElseThrow();
+    var inputAttrs = mapOf(inputGuardrail.attributes());
+    assertThat(inputAttrs)
+        .containsEntry("openinference.span.kind", "GUARDRAIL")
+        .containsEntry("validator_name", "InputGuardrailAdapter")
+        .containsEntry("validator_on_fail", "exception")
+        .containsEntry("guardrail.type", "INPUT")
+        .containsEntry("guardrail.result", "SUCCESS")
+        .containsEntry("input.value", "Whats the sum of 1984 plus 41 ?")
+        .containsEntry("input.mime_type", "text/plain")
+        .containsEntry("output.value", "pass")
+        .containsEntry("output.mime_type", "text/plain");
+
+    var outputGuardrail = findChild(agent, "OutputGuardrailAdapter").findFirst().orElseThrow();
+    var outputAttrs = mapOf(outputGuardrail.attributes());
+    assertThat(outputAttrs)
+        .containsEntry("openinference.span.kind", "GUARDRAIL")
+        .containsEntry("validator_name", "OutputGuardrailAdapter")
+        .containsEntry("validator_on_fail", "exception")
+        .containsEntry("guardrail.type", "OUTPUT")
+        .containsEntry("guardrail.result", "SUCCESS")
+        .containsEntry("output.value", "pass")
+        .containsEntry("output.mime_type", "text/plain");
+  }
+
   private void assertAgent(TraceSpan agent) {
     assertThat(mapOf(agent.attributes()))
       .containsEntry("openinference.span.kind", "AGENT");
