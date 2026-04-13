@@ -29,6 +29,7 @@ public class OutputGuardrailListener implements OutputGuardrailExecutedListener 
         .orElse(null);
     String failureMessage = event.result().failures().stream()
         .map(Failure::message)
+        .filter(m -> m != null && !m.isBlank())
         .collect(Collectors.joining("; "));
     long durationMs = event.duration().toMillis();
     recorder.recordGuardrail(guardrailName, "OUTPUT", result, message,

@@ -28,6 +28,7 @@ public class InputGuardrailListener implements InputGuardrailExecutedListener {
         .orElse(null);
     String failureMessage = event.result().failures().stream()
         .map(Failure::message)
+        .filter(m -> m != null && !m.isBlank())
         .collect(Collectors.joining("; "));
     long durationMs = event.duration().toMillis();
     recorder.recordGuardrail(guardrailName, "INPUT", result, message,

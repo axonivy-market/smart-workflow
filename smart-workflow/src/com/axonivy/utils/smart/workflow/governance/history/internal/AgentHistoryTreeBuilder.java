@@ -24,7 +24,8 @@ public class AgentHistoryTreeBuilder {
   public record CaseNode(String caseUuid, List<TaskNode> tasks) {}
 
   /**
-   * Builds a Case > Task > Agent > Tool tree from the given history entries.
+   * Builds a Case > Task > Agent tree from the given history entries. Each AgentNode
+   * carries both the tool executions and the guardrail executions recorded for that agent.
    */
   public static List<CaseNode> buildTree(List<AgentConversationEntry> entries) {
     var entriesByCase = groupBy(entries, AgentConversationEntry::getCaseUuid);

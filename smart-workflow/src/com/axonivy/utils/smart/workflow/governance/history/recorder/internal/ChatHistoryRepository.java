@@ -55,9 +55,11 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
   @Override
   public void record(String toolName, String arguments, String resultText) {
     var entry = findOrCreateEntry();
+    String now = LocalDateTime.now().toString();
     var tools = new ArrayList<>(entry.getToolExecutions());
-    tools.add(new ToolExecution(toolName, arguments, resultText, LocalDateTime.now().toString()));
+    tools.add(new ToolExecution(toolName, arguments, resultText, now));
     entry.setToolExecutions(tools);
+    entry.setLastUpdated(now);
     storage.save(entry);
     currentEntry = entry;
   }
@@ -130,9 +132,11 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
   @Override
   public void recordGuardrail(String guardrailName, String type, String result, String message, String failureMessage, Long durationMs) {
     var entry = findOrCreateEntry();
+    String now = LocalDateTime.now().toString();
     var guardrails = new ArrayList<>(entry.getGuardrailExecutions());
-    guardrails.add(new GuardrailExecution(guardrailName, type, result, message, failureMessage, durationMs, LocalDateTime.now().toString()));
+    guardrails.add(new GuardrailExecution(guardrailName, type, result, message, failureMessage, durationMs, now));
     entry.setGuardrailExecutions(guardrails);
+    entry.setLastUpdated(now);
     storage.save(entry);
     currentEntry = entry;
   }

@@ -44,12 +44,16 @@ public class OpenInferenceTracing implements ChatModelListener {
   }
 
   private final OpenInferenceCollector collector;
+  private final boolean hideInputMessages;
+  private final boolean hideOutputMessages;
   private Span<Void> span;
 
   public OpenInferenceTracing(String provider, String model) {
+    this.hideInputMessages = IvyVar.bool(Var.HIDE_INPUT_MESSAGES);
+    this.hideOutputMessages = IvyVar.bool(Var.HIDE_OUTPUT_MESSAGES);
     this.collector = new OpenInferenceCollector(provider, model)
-        .hideInputMessages(IvyVar.bool(Var.HIDE_INPUT_MESSAGES))
-        .hideOutputMessages(IvyVar.bool(Var.HIDE_OUTPUT_MESSAGES)) ;
+        .hideInputMessages(hideInputMessages)
+        .hideOutputMessages(hideOutputMessages);
   }
 
   private List<Attribute> attributes() {
@@ -106,7 +110,7 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(InputGuardrailExecutedEvent event) {
-      String inputMessage = Optional.ofNullable(event.request())
+      String inputMessage = hideInputMessages ? null : Optional.ofNullable(event.request())
           .map(r -> r.userMessage())
           .map(UserMessage::singleText)
           .orElse(null);
@@ -119,7 +123,7 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(OutputGuardrailExecutedEvent event) {
-      String outputMessage = Optional.ofNullable(event.request())
+      String outputMessage = hideOutputMessages ? null : Optional.ofNullable(event.request())
           .map(r -> r.responseFromLLM())
           .map(r -> r.aiMessage())
           .map(AiMessage::text)
