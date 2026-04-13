@@ -11,12 +11,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.GuardrailExecution;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 
 
 public class AgentHistoryTreeBuilder {
 
-  public record AgentNode(AgentConversationEntry chat, List<ToolExecution> tools) {}
+  public record AgentNode(AgentConversationEntry chat, List<ToolExecution> tools, List<GuardrailExecution> guardrails) {}
 
   public record TaskNode(String taskUuid, List<AgentNode> agents) {}
 
@@ -44,7 +45,7 @@ public class AgentHistoryTreeBuilder {
     return entries.stream()
         .sorted(Comparator.comparing(AgentConversationEntry::getLastUpdated,
             Comparator.nullsLast(Comparator.naturalOrder())))
-        .map(entry -> new AgentNode(entry, entry.getToolExecutions()))
+        .map(entry -> new AgentNode(entry, entry.getToolExecutions(), entry.getGuardrailExecutions()))
         .toList();
   }
 

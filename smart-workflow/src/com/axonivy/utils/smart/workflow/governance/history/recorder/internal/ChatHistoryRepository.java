@@ -8,7 +8,9 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.GuardrailExecution;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.GuardrailExecutionRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.ToolExecutionRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
@@ -22,7 +24,7 @@ import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageSerializer;
 
-public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionRecorder {
+public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionRecorder, GuardrailExecutionRecorder {
 
   private final String caseUuid;
   private final String taskUuid;
@@ -122,5 +124,16 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
     } catch (JsonProcessingException ex) {
       Ivy.log().warn("Failed to persist token usage metadata", ex);
     }
+  }
+
+  
+  @Override
+  public void recordGuardrail(String guardrailName, String type, String result, String message, String failureMessage, Long durationMs) {
+    var entry = findOrCreateEntry();
+    var guardrails = new ArrayList<>(entry.getGuardrailExecutions());
+    guardrails.add(new GuardrailExecution(guardrailName, type, result, message, failureMessage, durationMs, LocalDateTime.now().toString()));
+    entry.setGuardrailExecutions(guardrails);
+    storage.save(entry);
+    currentEntry = entry;
   }
 }
