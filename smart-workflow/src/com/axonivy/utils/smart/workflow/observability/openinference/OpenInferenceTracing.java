@@ -42,10 +42,8 @@ public class OpenInferenceTracing implements ChatModelListener {
 
   private final MessageOptions options;
   private final OpenInferenceCollector collector;
-  private ToolCollector toolCollector;
   private Span<Void> llmSpan;
   private Span<Void> agentSpan;
-  private Span<Void> toolSpan;
 
   private final Map<String, ToolExecution> toolExecutions = new ConcurrentHashMap<>();
   private record ToolExecution(Span<Void> span, ToolCollector collector) {}
@@ -88,7 +86,7 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(AiServiceStartedEvent event) {
-      agentSpan = Span.open(() -> new AiSpan("AI Agent", () -> List.of(
+      agentSpan = Span.open().instance(() -> new AiSpan("AI Agent", () -> List.of(
           Attribute.attribute(SemanticConventions.OPENINFERENCE_SPAN_KIND,
               SemanticConventions.OpenInferenceSpanKind.AGENT.getValue()))));
     }
@@ -108,7 +106,7 @@ public class OpenInferenceTracing implements ChatModelListener {
     @Override
     public void onEvent(AiServiceRequestIssuedEvent event) {
       collector.onRequest(event.request());
-      llmSpan = Span.open(() -> new AiSpan("AI Assistant", () -> attributes()));
+      llmSpan = Span.open().instance(() -> new AiSpan("AI Assistant", () -> attributes()));
     }
   }
 
@@ -125,7 +123,8 @@ public class OpenInferenceTracing implements ChatModelListener {
         .flatMap(msg -> msg.toolExecutionRequests().stream()).forEachOrdered(request -> {
           ToolCollector toolCollector = new ToolCollector(options);
           toolCollector.onRequestExecution(request);
-          Span toolSpan = Span.open(() -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
+          Span<Void> toolSpan = Span.open().instance(
+            () -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
           toolExecutions.put(request.id(), new ToolExecution(toolSpan, toolCollector));
       });
     }
