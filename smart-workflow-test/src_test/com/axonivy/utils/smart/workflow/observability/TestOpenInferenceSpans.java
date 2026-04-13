@@ -137,7 +137,7 @@ class TestOpenInferenceSpans {
         .containsEntry("tool.parameters", "{\"a\":1984,\"b\":41}")
         .containsEntry("input.value", "{\"a\":1984,\"b\":41}")
         .containsEntry("input.mime_type", "application/json")
-        .containsEntry("output.value", "{\n  \"c\" : 2025\n}")
+        .containsEntry("output.value", "{\"c\":2025}")
         .containsEntry("output.mime_type", "text/plain");
   }
 
