@@ -175,7 +175,7 @@ public class OpenInferenceTracing implements ChatModelListener {
         .map(e -> Attribute.attribute(e.getKey(), e.getValue()))
         .collect(Collectors.toList());
 
-    var guardrailSpan = Span.open(() -> new GuardrailSpan(guardrailName, () -> attrList));
+    var guardrailSpan = Span.open().instance(() -> new GuardrailSpan(guardrailName, () -> attrList));
     guardrailSpan.result(null);
     guardrailSpan.close();
   }
