@@ -36,7 +36,7 @@ public class JavaToolAdapter {
   }
 
   public ToolExecutor toToolExecutor() {
-    return (request, memoryId) -> {
+    return (request, _) -> {
       try {
         Map<String, Object> args = paramProcessor.readParams(tool.parameters(), request.arguments());
         Object result = tool.execute(args);
