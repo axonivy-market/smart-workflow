@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -15,6 +16,7 @@ import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConne
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.tools.math.MathToolChat;
+import com.axonivy.utils.smart.workflow.tools.ntools.MultiToolChat;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
@@ -41,6 +43,55 @@ class TestOpenInferenceSpans {
     }
   }
 
+  @AfterEach
+  void clean() throws InterruptedException{
+    Thread.sleep(1_000); // wait for async spans to be flushed (fail on CI without this)
+    this.tracer.slowTraces().clear();
+  }
+
+  @Test
+  void errorCall(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+    MockOpenAI.defineChat(new MathToolChat()::authError);
+
+    var tools = BpmProcess.name("TestToolUser").elementName("math");
+    var res = client.start().process(tools).executeAndIgnoreBpmError();
+    assertThat(res.bpmError()).isNotNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+    var assistants = findChild(agent, "AI Assistant").toList();
+    assertThat(assistants).hasSize(1);
+    var llmAttrs = mapOf(assistants.get(0).attributes());
+    assertThat(llmAttrs.get("error.message"))
+      .contains("invalid_api_key");
+  }
+
+  @Test
+  void multiToolCall(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+    MockOpenAI.defineChat(new MultiToolChat()::nTools);
+
+    var tools = BpmProcess.name("TestToolUser").elementName("nTools");
+    var res = client.start().process(tools).execute();
+    assertThat(res.bpmError()).isNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+    var toolCalls = findChild(agent, "Tool").toList();
+    assertThat(toolCalls)
+      .as("multi-tool spans are recorded")
+      .hasSize(1);
+    var another = findChild(toolCalls.get(0), "Tool").toList();
+    assertThat(another)
+      .as("records nested tool call spans! actually not expected; but we document the current behavior")
+      .hasSize(1); // should be a parallel span instead. Now we lack APIs to define a parent span
+  }
+
   @Test
   void observesModelInteractions(BpmClient client, AppFixture fixture) {
     setupTracing(fixture);
@@ -51,8 +102,11 @@ class TestOpenInferenceSpans {
     assertThat(data.getSum()).isEqualTo(2025);
 
     var spans = tracer.slowTraces().all();
-    var rootSpan = spans.get(0).rootSpan();
-    var assistants = findChild(rootSpan, "AI Assistant").toList();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+
+    var assistants = findChild(agent, "AI Assistant").toList();
     assertThat(assistants).hasSize(2);
 
     var assistCalc = assistants.get(0);
@@ -65,6 +119,26 @@ class TestOpenInferenceSpans {
     assertIvyAttrs(doneAttrs, res.workflow().executedTask());
     assertToolDoneAttrs(doneAttrs);
     assertToolResult(doneAttrs);
+
+    var toolRun = findChild(agent, "Tool").findFirst().orElseThrow();
+    assertTool(toolRun);
+  }
+
+  private void assertAgent(TraceSpan agent) {
+    assertThat(mapOf(agent.attributes()))
+      .containsEntry("openinference.span.kind", "AGENT");
+  }
+
+  private void assertTool(TraceSpan toolRun) {
+    assertThat(mapOf(toolRun.attributes()))
+        .containsEntry("openinference.span.kind", "TOOL")
+        .containsEntry("tool.name", "add")
+        .containsEntry("tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+        .containsEntry("tool.parameters", "{\"a\":1984,\"b\":41}")
+        .containsEntry("input.value", "{\"a\":1984,\"b\":41}")
+        .containsEntry("input.mime_type", "application/json")
+        .containsEntry("output.value", "{\"c\":2025}")
+        .containsEntry("output.mime_type", "text/plain");
   }
 
   private void assertToolCallAttrs(Map<String, String> attrs) {

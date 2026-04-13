@@ -22,4 +22,10 @@ public class MathToolChat {
     return Response.status(404).build();
   }
 
+  public Response authError(JsonNode request) {
+    return Response.status(401)
+      .entity(responder.load("reAuthError.json"))
+      .build();
+  }
+
 }

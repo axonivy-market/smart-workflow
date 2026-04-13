@@ -75,7 +75,7 @@ public class GuardrailCollector {
 
     Map<String, G> guardrailsByName = allProviders().stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
-        .collect(Collectors.toMap(SmartWorkflowGuardrail::name, g -> g, (existing, dup) -> existing));
+        .collect(Collectors.toMap(SmartWorkflowGuardrail::name, g -> g, (existing, _) -> existing));
 
     return requestedNames.stream()
         .filter(guardrailsByName::containsKey)
