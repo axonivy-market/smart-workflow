@@ -1,0 +1,480 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19D000DF09396D17",
+  "config" : {
+    "data" : "Patterns.MultiTaskProcessesData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "multiTaskDemo",
+      "config" : {
+        "signature" : "multiTaskDemo",
+        "request" : {
+          "name" : "AI Order Processing Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 2032, "y" : 64 }
+      }
+    }, {
+      "id" : "f2",
+      "type" : "Script",
+      "name" : "Initialize rawData",
+      "config" : {
+        "output" : {
+          "code" : "in.rawData = \"Order from Acme Corporation: 3x Office Chair Deluxe (OC-2024) at $299.00 each, 5x Ergonomic Keyboard (EK-500) at $79.00 each, 2x Standing Desk Pro (SD-Pro) at $599.00 each. Customer contact: orders@acme.com\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f3", "color" : "default" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 1: Order Analysis",
+      "config" : {
+        "task" : {
+          "name" : "Task 1: Order Analysis",
+          "skipTasklist" : true
+        },
+        "case" : {
+          "name" : "AI Order Processing Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f4", "color" : "default" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "ProgramInterface",
+      "name" : "Product Extraction Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a product extraction specialist. Analyze the customer order text and extract each product as a structured list. For each product include: product name, model number, quantity, and unit price. Format as a clear itemized text list.",
+          "tools" : "[]",
+          "resultMapping" : "in.productSummary",
+          "query" : "Extract products from this order: <%=in.rawData%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 480, "y" : 64 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f5", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Pricing Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a pricing specialist. Given a product list with quantities and unit prices, calculate the subtotal for each line item (quantity x unit price) and the overall order total. Provide a clear pricing breakdown.",
+          "tools" : "[]",
+          "resultMapping" : "in.pricingDetails",
+          "query" : "Calculate pricing for: <%=in.productSummary%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 688, "y" : 64 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f17", "to" : "f6", "color" : "default" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 2: Invoice Generation",
+      "config" : {
+        "task" : {
+          "name" : "Task 2: Invoice Generation",
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 896, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f18", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "ProgramInterface",
+      "name" : "Invoice Generator Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an invoice generation specialist. Create a complete structured invoice. Use 2026-03-17 as invoiceDate, set dueDate 30 days later (2026-04-16), and generate invoice number INV-2026-0317-001.",
+          "resultType" : "com.axonivy.utils.ai.Invoice.class",
+          "tools" : "[]",
+          "resultMapping" : "in.invoice",
+          "query" : "Create an invoice from this order:\\nRaw order: <%=in.rawData%>\\nPricing breakdown: <%=in.pricingDetails%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1024, "y" : 64 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f8", "color" : "default" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Serialize invoice to JSON",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import dev.langchain4j.internal.Json;",
+            "",
+            "in.invoiceJson = Json.toJson(in.invoice);",
+            "ivy.log.warn(\"Generated Invoice: {0}\", in.invoiceJson);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1232, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f20", "to" : "f9", "color" : "default" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 3: Review and Finalization",
+      "config" : {
+        "task" : {
+          "name" : "Task 3: Review and Finalization",
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1360, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f10", "color" : "default" }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "ProgramInterface",
+      "name" : "Quality Review Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a quality control specialist for invoices. Review the invoice for completeness and accuracy. Check: all required fields present, line item totals match quantity x unit price, totalAmount matches sum of items, invoice and due dates are valid.",
+          "tools" : "[]",
+          "resultMapping" : "in.qualityReport",
+          "query" : "Review this invoice: <%=in.invoiceJson%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1488, "y" : 64 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f22", "to" : "f11", "color" : "default" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "ProgramInterface",
+      "name" : "Confirmation Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a customer communication specialist. Draft a professional, concise order confirmation email for the customer summarizing what was ordered, the total amount, invoice number, and payment due date.",
+          "tools" : "[]",
+          "resultMapping" : "in.confirmationMessage",
+          "query" : "Draft an order confirmation based on this invoice: <%=in.invoiceJson%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1696, "y" : 64 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f23", "to" : "f12", "color" : "default" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "Script",
+      "name" : "Log results",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.warn(\"=== Order Processing Complete ===\");",
+            "ivy.log.warn(\"Invoice Number: {0}\", in.invoice != null ? in.invoice.getInvoiceNumber() : \"N/A\");",
+            "ivy.log.warn(\"Quality Report: {0}\", in.qualityReport);",
+            "ivy.log.warn(\"Confirmation: {0}\", in.confirmationMessage);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1904, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f24", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f38",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 2240, "y" : 232 }
+      }
+    }, {
+      "id" : "f25",
+      "type" : "RequestStart",
+      "name" : "productImportDemo",
+      "config" : {
+        "signature" : "productImportDemo",
+        "request" : {
+          "name" : "AI Product Import Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f50", "to" : "f26" }
+      ]
+    }, {
+      "id" : "f26",
+      "type" : "Script",
+      "name" : "Initialize rawCsvData",
+      "config" : {
+        "output" : {
+          "code" : "in.rawCsvData = \"Product Import Batch - TechStore 2026-03-17\\nName,SKU,Category,Brand,Supplier,UnitPrice,Description,Active\\n\\\"Wireless Gaming Mouse\\\",\\\"WGM-2024\\\",\\\"Electronics\\\",\\\"LogiTech\\\",\\\"TechSupplies Inc\\\",\\\"49.99\\\",\\\"High-performance wireless gaming mouse with RGB lighting\\\",\\\"true\\\"\\n\\\"Mechanical Keyboard Pro\\\",\\\"MKB-500\\\",\\\"Electronics\\\",\\\"Corsair\\\",\\\"TechSupplies Inc\\\",\\\"129.99\\\",\\\"Full mechanical keyboard with Cherry MX switches\\\",\\\"true\\\"\\n\\\"4K Monitor Ultra\\\",\\\"MON-4K32\\\",\\\"Electronics\\\",\\\"Samsung\\\",\\\"GlobalElectronics Ltd\\\",\\\"599.99\\\",\\\"32-inch 4K IPS monitor with HDR support\\\",\\\"true\\\"\\n\\\"USB-C Hub 7-in-1\\\",\\\"USB-HUB7\\\",\\\"Accessories\\\",\\\"Anker\\\",\\\"TechSupplies Inc\\\",\\\"39.99\\\",\\\"7-port USB-C hub with HDMI and card reader\\\",\\\"true\\\"\\n\\\"Laptop Stand Adjustable\\\",\\\"LSTD-ALU\\\",\\\"Accessories\\\",\\\"TechRise\\\",\\\"OfficeEssentials Co\\\",\\\"29.99\\\",\\\"Aluminum adjustable laptop stand\\\",\\\"true\\\"\";"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f51", "to" : "f27", "color" : "default" }
+      ]
+    }, {
+      "id" : "f27",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 1: Data Parsing & Validation",
+      "config" : {
+        "task" : {
+          "name" : "Task 1: Data Parsing & Validation",
+          "skipTasklist" : true
+        },
+        "case" : {
+          "name" : "AI Product Import Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 352, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f52", "to" : "f28", "color" : "default" }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "ProgramInterface",
+      "name" : "CSV Parser Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a CSV data parsing specialist. Parse CSV product import data into a JSON array. Each product must include: name, sku, category, brand, supplier, unitPrice (number), description, active (boolean). Return a valid JSON array only, no explanation.",
+          "tools" : "[]",
+          "resultMapping" : "in.parsedProductsJson",
+          "query" : "Parse this product import CSV: <%=in.rawCsvData%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 480, "y" : 232 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f53", "to" : "f29", "color" : "default" }
+      ]
+    }, {
+      "id" : "f29",
+      "type" : "ProgramInterface",
+      "name" : "Data Validator Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a data quality specialist. Validate a JSON array of products for import. Check: required fields present (name, sku, unitPrice), unitPrice is a positive number, SKUs are unique, active is boolean. Report: total count, valid count, invalid count, and list any issues per product.",
+          "tools" : "[]",
+          "resultMapping" : "in.validationReport",
+          "query" : "Validate these products for import: <%=in.parsedProductsJson%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 688, "y" : 232 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f54", "to" : "f30", "color" : "default" }
+      ]
+    }, {
+      "id" : "f30",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 2: Category & Brand Resolution",
+      "config" : {
+        "task" : {
+          "name" : "Task 2: Category & Brand Resolution",
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 896, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f55", "to" : "f31", "color" : "default" }
+      ]
+    }, {
+      "id" : "f31",
+      "type" : "ProgramInterface",
+      "name" : "Category Mapper Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a product taxonomy specialist. Map each product's raw category string to a standardized ProductCategory with categoryId, name, and description. Use consistent category IDs like cat-electronics, cat-accessories, etc. Return a JSON object mapping SKU to resolved ProductCategory.",
+          "tools" : "[]",
+          "resultMapping" : "in.categoryMappingJson",
+          "query" : "Map product categories from: <%=in.parsedProductsJson%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1024, "y" : 232 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f56", "to" : "f32", "color" : "default" }
+      ]
+    }, {
+      "id" : "f32",
+      "type" : "ProgramInterface",
+      "name" : "Brand Resolver Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a brand data specialist. For each unique brand in the product list, create a Brand record with: brandId (kebab-case of name), name, description (2 sentences about the brand), and website (plausible URL). Return a JSON object mapping brand name to Brand record.",
+          "tools" : "[]",
+          "resultMapping" : "in.brandMappingJson",
+          "query" : "Resolve brand information for products: <%=in.parsedProductsJson%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1232, "y" : 232 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f57", "to" : "f33", "color" : "default" }
+      ]
+    }, {
+      "id" : "f33",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 3: Product Enrichment",
+      "config" : {
+        "task" : {
+          "name" : "Task 3: Product Enrichment",
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1440, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f58", "to" : "f34", "color" : "default" }
+      ]
+    }, {
+      "id" : "f34",
+      "type" : "ProgramInterface",
+      "name" : "Product Enrichment Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a product content specialist. Using the parsed products, category mappings, and brand data, create fully enriched Product records with: productId (UUID), sku, name, description (detailed 2-3 sentences), categoryId, brandId, supplierId (kebab-case of supplier name), unitPrice (number), active (boolean), otherInformation (list of label/value spec pairs). Return as a JSON array.",
+          "tools" : "[]",
+          "resultMapping" : "in.enrichedProductsJson",
+          "query" : "Enrich products using:\\nParsed: <%=in.parsedProductsJson%>\\nCategories: <%=in.categoryMappingJson%>\\nBrands: <%=in.brandMappingJson%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1568, "y" : 232 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f59", "to" : "f35", "color" : "default" }
+      ]
+    }, {
+      "id" : "f35",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 4: Import Finalization",
+      "config" : {
+        "task" : {
+          "name" : "Task 4: Import Finalization",
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1776, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f36", "color" : "default" }
+      ]
+    }, {
+      "id" : "f36",
+      "type" : "ProgramInterface",
+      "name" : "Import Report Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an import operations specialist. Generate a structured import summary report including: batch ID (use today's date), total products attempted, successfully enriched, data quality issues found, category distribution, brand distribution, and a recommendation on whether the batch is ready for final import.",
+          "tools" : "[]",
+          "resultMapping" : "in.importReport",
+          "query" : "Generate an import report for:\\nValidation: <%=in.validationReport%>\\nEnriched products: <%=in.enrichedProductsJson%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1904, "y" : 232 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f61", "to" : "f37", "color" : "default" }
+      ]
+    }, {
+      "id" : "f37",
+      "type" : "Script",
+      "name" : "Log import results",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.warn(\"=== Product Import Complete ===\");",
+            "ivy.log.warn(\"Validation: {0}\", in.validationReport);",
+            "ivy.log.warn(\"Import Report: {0}\", in.importReport);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2112, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f62", "to" : "f38", "color" : "default" }
+      ]
+    } ]
+}

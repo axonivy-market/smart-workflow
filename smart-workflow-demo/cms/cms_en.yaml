@@ -106,48 +106,6 @@ Dialogs:
                     Total: Total
                     ViewDetails: View Details
                     YourCartIsEmpty: Your cart is empty
-              meetingminutesdemo:
-                TranscriptInput:
-                  Title: Meeting Minutes Analyzer
-                  TranscriptLabel: Paste your sprint review transcript
-                  UploadLabel: "Or upload a transcript file (.txt or .vtt)"
-                  UploadButton: Upload
-                  LanguageLabel: Target Language for Output
-                  AnalyzeButton: Analyze
-                FeedbackReview:
-                  Title: Review Extracted Feedback
-                  TitleCol: Title
-                  DescriptionCol: Description
-                  TypeCol: Type
-                  AssigneeCol: Assignee
-                  ConfirmButton: "Confirm & Create Tasks"
-              jobapplicationscreeningdemo:
-                CVInput:
-                  Title: Job Application Screening
-                  CvLabel: "CV / Resume Text"
-                  JobDescriptionLabel: Job Description
-                  ScreenButton: Screen Candidate
-                ReviewCommunication:
-                  Title: Review Screening Result
-                  ProfileTitle: Candidate Profile
-                  NameLabel: Name
-                  EmailLabel: Email
-                  ExperienceLabel: "Experience (years)"
-                  SkillsLabel: Skills
-                  FitScoreTitle: Fit Assessment
-                  ScoreLabel: Score
-                  QualifiedLabel: Qualified
-                  RecommendationLabel: Recommendation
-                  DraftTitle: Communication Draft
-                  SendButton: Send Communication
-              medicalreportanalyzerdemo:
-                ReportInput:
-                  Title: Medical Report Analyzer
-                  ReportLabel: Paste the medical report text
-                  AnalyzeButton: Analyze Report
-                AnalysisResult:
-                  Title: Medical Report Analysis
-                  ResultLabel: Analysis Result
 Labels:
   Actions: Actions
   Active: Active

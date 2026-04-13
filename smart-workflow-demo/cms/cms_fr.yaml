@@ -106,48 +106,6 @@ Dialogs:
                     Total: Total
                     ViewDetails: Voir les détails
                     YourCartIsEmpty: Votre panier est vide
-              meetingminutesdemo:
-                TranscriptInput:
-                  Title: Analyseur de compte-rendu
-                  TranscriptLabel: Coller le compte-rendu de la réunion
-                  UploadLabel: "Ou télécharger un fichier de transcription (.txt ou .vtt)"
-                  UploadButton: Télécharger
-                  LanguageLabel: Langue cible pour la sortie
-                  AnalyzeButton: Analyser
-                FeedbackReview:
-                  Title: Examiner les retours extraits
-                  TitleCol: Titre
-                  DescriptionCol: Description
-                  TypeCol: Type
-                  AssigneeCol: Assigné à
-                  ConfirmButton: "Confirmer et créer les tâches"
-              jobapplicationscreeningdemo:
-                CVInput:
-                  Title: Présélection de candidatures
-                  CvLabel: Texte du CV
-                  JobDescriptionLabel: Description du poste
-                  ScreenButton: Évaluer le candidat
-                ReviewCommunication:
-                  Title: Examiner le résultat de présélection
-                  ProfileTitle: Profil du candidat
-                  NameLabel: Nom
-                  EmailLabel: E-mail
-                  ExperienceLabel: Expérience (années)
-                  SkillsLabel: Compétences
-                  FitScoreTitle: Évaluation de l'adéquation
-                  ScoreLabel: Score
-                  QualifiedLabel: Qualifié
-                  RecommendationLabel: Recommandation
-                  DraftTitle: Brouillon de communication
-                  SendButton: Envoyer la communication
-              medicalreportanalyzerdemo:
-                ReportInput:
-                  Title: Analyseur de rapport médical
-                  ReportLabel: Coller le texte du rapport médical
-                  AnalyzeButton: Analyser le rapport
-                AnalysisResult:
-                  Title: Analyse du rapport médical
-                  ResultLabel: Résultat de l'analyse
 Labels:
   Actions: Actions
   Active: Actif
