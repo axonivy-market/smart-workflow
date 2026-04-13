@@ -17,5 +17,8 @@
   }, {
     "name" : "currentIndex",
     "type" : "Integer"
+  }, {
+    "name" : "indexExists",
+    "type" : "Boolean"
   } ]
 }

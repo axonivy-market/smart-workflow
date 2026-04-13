@@ -60,7 +60,7 @@ Use this callable subprocess to create an OpenSearch index and ingest documents 
 
 | Parameter | Type | Description |
 |---|---|---|
-| `collection` | String | Index name to ingest into. When blank, the configured `AI.RAG.OpenSearch.DefaultCollection` is used. |
+| `collection` | String | Index name to ingest into. |
 | `sources` | List\<String\> | Plain text documents to index. |
 
 **Result**
@@ -77,7 +77,7 @@ Semantic search tool available to Smart Workflow agents. The agent calls this to
 
 | Parameter | Type | Description |
 |---|---|---|
-| `collection` | String | Index name to query. When blank, `AI.RAG.OpenSearch.DefaultCollection` is used. |
+| `collection` | String | Index name to query. |
 | `query` | String | The search query to find relevant content. |
 | `maxResults` | Integer | Maximum segments to return. When null, `AI.RAG.MaxResults` is used. |
 | `minScore` | Double | Minimum similarity score (0.0–1.0). When null, `AI.RAG.MinScore` is used. |
@@ -96,7 +96,7 @@ Ingest tool available to Smart Workflow agents. Allows an agent to index new doc
 
 | Parameter | Type | Description |
 |---|---|---|
-| `collection` | String | Index name to ingest into. When blank, `AI.RAG.OpenSearch.DefaultCollection` is used. Created automatically if it does not exist. |
+| `collection` | String | Index name to ingest into. Created automatically if it does not exist. |
 | `sources` | List\<String\> | Plain text documents to index. |
 
 **Result**
@@ -113,7 +113,6 @@ Ingest tool available to Smart Workflow agents. Allows an agent to index new doc
 | `AI.RAG.OpenSearch.ApiKey` | *(encrypted)* | API key for authenticated access. Leave blank when using username/password or when security is disabled. |
 | `AI.RAG.OpenSearch.UserName` | *(empty)* | Username for basic authentication. Leave blank when security is disabled. |
 | `AI.RAG.OpenSearch.Password` | *(encrypted)* | Password for basic authentication. Leave blank when security is disabled. |
-| `AI.RAG.OpenSearch.DefaultCollection` | *(empty)* | Index name used when `collection` is not specified by the caller. Falls back to `default-axon-ivy-vector-store` if blank. |
 
 **Example:**
 

@@ -13,7 +13,7 @@
         "signature" : "createVectorStore",
         "input" : {
           "params" : [
-            { "name" : "collection", "type" : "String", "desc" : "OpenSearch index name to ingest documents into. Uses the configured default when blank." },
+            { "name" : "collection", "type" : "String", "desc" : "OpenSearch index name to ingest documents into." },
             { "name" : "sources", "type" : "java.util.List<String>", "desc" : "Document sources to index: plain text strings." }
           ],
           "map" : {

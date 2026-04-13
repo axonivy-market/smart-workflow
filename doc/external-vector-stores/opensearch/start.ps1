@@ -194,7 +194,7 @@ Write-Host "    AI.RAG.OpenSearch.Url               = $url"
 Write-Host "    AI.RAG.OpenSearch.ApiKey             = (leave blank)"
 Write-Host "    AI.RAG.OpenSearch.UserName           = (leave blank)"
 Write-Host "    AI.RAG.OpenSearch.Password           = (leave blank)"
-Write-Host "    AI.RAG.OpenSearch.DefaultCollection  = (optional, defaults to 'default-axon-ivy-vector-store')"
+
 Write-Host "==========================================================="
 Write-Host ""
 Write-Host "Stop:   docker compose stop"

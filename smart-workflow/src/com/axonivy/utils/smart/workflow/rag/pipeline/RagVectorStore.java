@@ -12,6 +12,4 @@ public interface RagVectorStore {
   void addAll(List<Embedding> embeddings, List<TextSegment> segments);
 
   EmbeddingSearchResult<TextSegment> search(EmbeddingSearchRequest request);
-
-  void close();
 }

@@ -11,22 +11,16 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 
 public interface RagIngestor {
 
-  RagConnector getConnector();
-
   RagResult ingest(String collection, List<String> sources);
 
-  default RagResult performIngest(String collection, List<String> sources, int chunkSize, int chunkOverlap, EmbeddingModel embeddingModel) {
+  default RagResult performIngest(RagConnector connector, String collection, List<String> sources, int chunkSize, int chunkOverlap, EmbeddingModel embeddingModel) {
     List<TextSegment> segments = new RagDocumentSplitter(chunkSize, chunkOverlap).split(sources);
     if (segments.isEmpty()) {
       return new RagResult("No content could be loaded from the provided sources.");
     }
     List<Embedding> embeddings = embeddingModel.embedAll(segments).content();
-    RagVectorStore store = getConnector().connectStore(collection);
-    try {
-      store.addAll(embeddings, segments);
-    } finally {
-      store.close();
-    }
+    RagVectorStore store = connector.connect(collection);
+    store.addAll(embeddings, segments);
     RagResult result = new RagResult();
     result.setAnswer("Indexed " + segments.size() + " segments.");
     return result;

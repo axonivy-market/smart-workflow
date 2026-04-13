@@ -11,29 +11,23 @@ import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 
 public interface RagRetriever {
 
-  RagConnector getConnector();
-
   RagResult search(String collection, String query, Integer maxResults, Double minScore);
 
-  default RagResult performSearch(String collection, String query, int maxResults, double minScore, EmbeddingModel embeddingModel) {
+  default RagResult performSearch(RagConnector connector, String collection, String query, int maxResults, double minScore, EmbeddingModel embeddingModel) {
     var queryEmbedding = embeddingModel.embed(query).content();
     var searchRequest = EmbeddingSearchRequest.builder()
         .queryEmbedding(queryEmbedding)
         .maxResults(maxResults)
         .minScore(minScore)
         .build();
-    RagVectorStore store = getConnector().connectStore(collection);
-    try {
-      var matches = store.search(searchRequest).matches().stream()
-          .map(match -> new RagMatch(
-              match.embedded().text(),
-              match.score(),
-              toStringMap(match.embedded().metadata().toMap())))
-          .toList();
-      return new RagResult(matches);
-    } finally {
-      store.close();
-    }
+    RagVectorStore store = connector.connect(collection);
+    var matches = store.search(searchRequest).matches().stream()
+        .map(match -> new RagMatch(
+            match.embedded().text(),
+            match.score(),
+            toStringMap(match.embedded().metadata().toMap())))
+        .toList();
+    return new RagResult(matches);
   }
 
   private static Map<String, String> toStringMap(Map<String, Object> source) {

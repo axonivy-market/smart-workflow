@@ -27,17 +27,12 @@ public class OpenSearchIngestor implements RagIngestor {
   }
 
   @Override
-  public RagConnector getConnector() {
-    return connector;
-  }
-
-  @Override
   public RagResult ingest(String collection, List<String> sources) {
     try {
       int chunkSize = IvyVar.integer(RagConf.CHUNK_SIZE, RagConf.FALLBACK_CHUNK_SIZE);
       int chunkOverlap = IvyVar.integer(RagConf.CHUNK_OVERLAP, RagConf.FALLBACK_CHUNK_OVERLAP);
       EmbeddingModel embeddingModel = EmbeddingModelFactory.createFromIvyVars();
-      return performIngest(collection, sources, chunkSize, chunkOverlap, embeddingModel);
+      return performIngest(connector, collection, sources, chunkSize, chunkOverlap, embeddingModel);
     } catch (Exception ex) {
       Ivy.log().error(ERR_INGEST_FAILED, ex);
       return new RagResult(ex.getMessage());

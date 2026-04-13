@@ -179,7 +179,7 @@ printf "│    AI.RAG.OpenSearch.Url              http://localhost:%-4s│\n" "$
 echo "│    AI.RAG.OpenSearch.ApiKey             (leave blank)   │"
 echo "│    AI.RAG.OpenSearch.UserName           (leave blank)   │"
 echo "│    AI.RAG.OpenSearch.Password           (leave blank)   │"
-echo "│    AI.RAG.OpenSearch.DefaultCollection  (optional)      │"
+
 echo "└─────────────────────────────────────────────────────────┘"
 echo
 echo "Stop:   docker compose stop"

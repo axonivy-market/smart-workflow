@@ -15,10 +15,49 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 64 }
+        "at" : { "x" : 272, "y" : 56 }
       },
       "connect" : [
-        { "id" : "e0", "to" : "f1" }
+        { "id" : "e0", "to" : "fd" }
+      ]
+    }, {
+      "id" : "fd",
+      "type" : "Script",
+      "name" : "Check Index",
+      "config" : {
+        "output" : {
+          "code" : "in.indexExists = new com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector().indexExists(\"hr-knowledge\");"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 448, "y" : 56 }
+      },
+      "connect" : [
+        { "id" : "efd", "to" : "fe" }
+      ]
+    }, {
+      "id" : "fe",
+      "type" : "Alternative",
+      "name" : "Index exists?",
+      "config" : {
+        "conditions" : {
+          "efe_yes" : "in.indexExists"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 616, "y" : 56 },
+        "labelOffset" : { "x" : -24, "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "efe_yes", "to" : "f5", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : -15, "y" : -10 }
+          } },
+        { "id" : "efe_no", "to" : "f1", "via" : [ { "x" : 616, "y" : 192 } ], "label" : {
+            "name" : "no",
+            "segment" : 0.49,
+            "offset" : { "x" : 17, "y" : 4 }
+          } }
       ]
     }, {
       "id" : "f1",
@@ -37,7 +76,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 272, "y" : 64 }
+        "at" : { "x" : 616, "y" : 240 }
       },
       "connect" : [
         { "id" : "e1", "to" : "f4" }
@@ -62,7 +101,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 512, "y" : 64 },
+        "at" : { "x" : 832, "y" : 240 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "connect" : [
@@ -78,18 +117,19 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 696, "y" : 64 },
-        "labelOffset" : { "x" : -24, "y" : -16 }
+        "at" : { "x" : 1016, "y" : 240 },
+        "labelOffset" : { "x" : 64, "y" : -16 }
       },
       "connect" : [
-        { "id" : "eb", "to" : "fc", "via" : [ { "x" : 696, "y" : 184 } ], "label" : {
+        { "id" : "eb", "to" : "fc", "label" : {
             "name" : "error",
-            "segment" : 1.15,
-            "offset" : { "x" : 2, "y" : -74 }
+            "segment" : 0.35,
+            "offset" : { "x" : 56, "y" : -10 }
           } },
         { "id" : "ec", "to" : "f5", "label" : {
             "name" : "ok",
-            "offset" : { "x" : -11, "y" : -10 }
+            "segment" : 0.04,
+            "offset" : { "x" : 17, "y" : -69 }
           } }
       ]
     }, {
@@ -102,7 +142,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 888, "y" : 184 }
+        "at" : { "x" : 1240, "y" : 240 }
       },
       "connect" : [
         { "id" : "ed", "to" : "f9" }
@@ -127,7 +167,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 880, "y" : 64 }
+        "at" : { "x" : 1016, "y" : 56 }
       },
       "connect" : [
         { "id" : "e6", "to" : "f6" }
@@ -142,7 +182,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1080, "y" : 64 },
+        "at" : { "x" : 1240, "y" : 56 },
         "labelOffset" : { "x" : -40, "y" : -16 }
       },
       "connect" : [
@@ -171,7 +211,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1256, "y" : 64 },
+        "at" : { "x" : 1432, "y" : 56 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "connect" : [
@@ -213,16 +253,16 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1480, "y" : 64 }
+        "at" : { "x" : 1648, "y" : 56 }
       },
       "connect" : [
-        { "id" : "ea", "to" : "f6", "via" : [ { "x" : 1480, "y" : -16 }, { "x" : 1080, "y" : -16 } ] }
+        { "id" : "ea", "to" : "f6", "via" : [ { "x" : 1648, "y" : -24 }, { "x" : 1240, "y" : -24 } ] }
       ]
     }, {
       "id" : "f9",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 1080, "y" : 184 }
+        "at" : { "x" : 1240, "y" : 136 }
       }
     }, {
       "id" : "ann",
@@ -230,18 +270,18 @@
       "name" : [
         "External RAG Demo: HR Knowledge Base (OpenSearch)",
         "",
-        "Single entry point. Documents are ingested on every run.",
+        "Single entry point. Documents are ingested only if the index does not exist.",
         "",
         "Prerequisites:",
         "- Configure AI.RAG.OpenSearch.Url",
         "- Configure AI.RAG.EmbeddingModel.Provider and ApiKey",
         "- Ensure an LLM provider API key is set",
         "",
-        "Flow: Init Sources -> Check Index -> [Ingest if new] -> Answer 3 HR questions"
+        "Flow: Check Index -> [Ingest if new] -> Answer 3 HR questions"
       ],
       "visual" : {
-        "at" : { "x" : 298, "y" : 252 },
-        "size" : { "width" : 508, "height" : 216 }
+        "at" : { "x" : 256, "y" : 224 },
+        "size" : { "width" : 508, "height" : 200 }
       }
     } ]
 }
