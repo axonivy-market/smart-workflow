@@ -1,8 +1,6 @@
 package com.axonivy.utils.smart.workflow.observability.openinference;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.arize.semconv.trace.SemanticConventions;
+import com.axonivy.utils.smart.workflow.observability.openinference.internal.GuardrailRecorder;
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.OpenInferenceCollector;
-import com.axonivy.utils.smart.workflow.observability.openinference.span.GuardrailSpan;
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.ToolCollector;
 import com.axonivy.utils.smart.workflow.observability.openinference.span.AiSpan;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
@@ -20,7 +18,6 @@ import ch.ivyteam.ivy.trace.Attribute;
 import ch.ivyteam.ivy.trace.Span;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.guardrail.GuardrailResult.Failure;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.observability.api.event.AiServiceCompletedEvent;
 import dev.langchain4j.observability.api.event.AiServiceErrorEvent;
@@ -52,8 +49,6 @@ public class OpenInferenceTracing implements ChatModelListener {
 
   private final MessageOptions options;
   private final OpenInferenceCollector collector;
-  private Span<Void> span;
-
   private Span<Void> llmSpan;
   private Span<Void> agentSpan;
 
@@ -86,15 +81,14 @@ public class OpenInferenceTracing implements ChatModelListener {
       return List.of();
     }
     return List.of(
+      new InitListener(),
+      new CompletedListener(),
       new RequestListener(),
       new ResponseListener(),
       new ErrorListener(),
-      new InitListener(),
-      new CompletedListener(),
-      new RequestListener(), 
-      new ResponseListener(), 
-      new ErrorListener(),
-      new ToolListener());
+      new ToolListener(),
+      new InputGuardrailTracingListener(),
+      new OutputGuardrailTracingListener());
   }
 
   private class InitListener implements AiServiceStartedListener {
@@ -183,7 +177,7 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(InputGuardrailExecutedEvent event) {
-      String inputMessage = hideInputMessages ? null : Optional.ofNullable(event.request())
+      String inputMessage = options.hideInput ? null : Optional.ofNullable(event.request())
           .map(r -> r.userMessage())
           .map(UserMessage::singleText)
           .orElse(null);
@@ -196,7 +190,7 @@ public class OpenInferenceTracing implements ChatModelListener {
 
     @Override
     public void onEvent(OutputGuardrailExecutedEvent event) {
-      String outputMessage = hideOutputMessages ? null : Optional.ofNullable(event.request())
+      String outputMessage = options.hideOutput ? null : Optional.ofNullable(event.request())
           .map(r -> r.responseFromLLM())
           .map(r -> r.aiMessage())
           .map(AiMessage::text)
@@ -206,51 +200,15 @@ public class OpenInferenceTracing implements ChatModelListener {
     }
   }
 
-  private void traceGuardrail(GuardrailExecutedEvent<?, ?, ?> event, String type, String validatedMessage, String guardrailName) {
-    Map<String, Object> attrs = new LinkedHashMap<>();
-    attrs.put(SemanticConventions.OPENINFERENCE_SPAN_KIND,
-        SemanticConventions.OpenInferenceSpanKind.GUARDRAIL.getValue());
-
-    var result = event.result();
-    boolean passed = result.failures().isEmpty();
-
-    attrs.put("validator_name", guardrailName);
-    // Smart Workflow adapters always throw on block (InputGuardrailAdapter uses failure(),
-    // OutputGuardrailAdapter uses fatal()), so on_fail is always "exception".
-    // If we support retry/reprompt in the future, derive from OutputGuardrailResult.isRetry()/isReprompt().
-    attrs.put("validator_on_fail", "exception");
-
-    attrs.put("guardrail.type", type);
-    attrs.put("guardrail.result", result.result().name());
-
-    if (validatedMessage != null) {
-      attrs.put(SemanticConventions.INPUT_VALUE, validatedMessage);
-      attrs.put(SemanticConventions.INPUT_MIME_TYPE, "text/plain");
-    }
-
-    if (passed) {
-      attrs.put(SemanticConventions.OUTPUT_VALUE, "pass");
-    } else {
-      attrs.put(SemanticConventions.OUTPUT_VALUE, "fail");
-      List<String> messages = new ArrayList<>();
-      for (var failure : result.failures()) {
-        if (failure instanceof Failure f && f.message() != null) {
-          messages.add(f.message());
-        }
-      }
-      if (!messages.isEmpty()) {
-        attrs.put("guardrail.failure_message", String.join("; ", messages));
-      }
-    }
-    attrs.put(SemanticConventions.OUTPUT_MIME_TYPE, "text/plain");
-
+  private void traceGuardrail(GuardrailExecutedEvent<?, ?, ?> event, String type,
+      String validatedMessage, String guardrailName) {
+    Map<String, Object> attrs = new GuardrailRecorder()
+        .handleGuardrail(event, type, validatedMessage, guardrailName);
     List<Attribute> attrList = attrs.entrySet().stream()
         .map(e -> Attribute.attribute(e.getKey(), e.getValue()))
-        .collect(Collectors.toList());
-
-    var guardrailSpan = Span.open().instance(() -> new GuardrailSpan(guardrailName, () -> attrList));
+        .toList();
+    var guardrailSpan = Span.open().instance(() -> new AiSpan(guardrailName, () -> attrList));
     guardrailSpan.result(null);
     guardrailSpan.close();
   }
-
 }
