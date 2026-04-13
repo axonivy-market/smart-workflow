@@ -16,20 +16,14 @@ Token costs and more. In addition, it allows you to re-play real requests with a
 1. Run Arize Phoenix using Docker: `docker run --rm -p 6006:6006 -p 4317:4317 arizephoenix/phoenix:nightly`
 2. Visit the tracing platform in your browser [http://localhost:6006](http://localhost:6006)
 
-### Setup Engine
-
-1. Download and unpack a normal Axon Ivy Engine, which we will instrument for tracing
-2. Append the [jvm.options](./jvm.options) into the engine file `configuration/jvm.options`
-3. Set the variable `AI.Observability.Openinference.Enabled=true` in the `config/variables.yaml` of a project depending on smart-workflow.
-4. Start the Engine
-
 ### Setup Visual Studio Code
 
 1. Install the Axon Ivy Designer extension
 2. Open the Settings and search for Axon Ivy, in it define:
-    - `AxonIvy > Engine: Run by Extension` : uncheck to false
+    - `AxonIvy > Engine: VM args` : `-Dotel.traces.exporter=otlp -Dotel.exporter.otlp.endpoint=http://localhost:6006 -Dotel.resource.attributes=openinference.project.name=smart-workflow`
 3. Restart Visual Studio Code (Command > Developer: Reload Window)
-4. Run an AI assisted process in smart-workflow-demo
+4. Set the variable `AI.Observability.Openinference.Enabled=true` in the `config/variables.yaml` of a project depending on smart-workflow.
+5. Run an AI assisted process in smart-workflow-demo
 
 ![](../img/arize_vsc-engine.png)
 
