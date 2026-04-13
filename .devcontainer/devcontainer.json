@@ -2,10 +2,14 @@
   "name": "Axon Ivy",
   "image": "mcr.microsoft.com/devcontainers/base:trixie",
   "forwardPorts": [
-    8080
+    8080,
+    6006,
+    4317
   ],
   "onCreateCommand": "mvn clean package --batch-mode -Dmaven.test.skip=true -Divy.script.validation.skip=true -Divy.engine.directory=/usr/lib/axonivy-engine",
+  "postCreateCommand": "docker ps --format '{{.Names}}' | grep -qx 'phoenix' || (docker ps -a --format '{{.Names}}' | grep -qx 'phoenix' && docker start phoenix || docker run -d --name phoenix -p 6006:6006 -p 4317:4317 arizephoenix/phoenix:nightly)",
   "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
     "ghcr.io/devcontainers/features/java:1": {
       "version": "25",
       "installMaven": "true",
