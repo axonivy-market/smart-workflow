@@ -214,12 +214,6 @@ This demo shows how to invoke a Smart Workflow AI agent through a reusable calla
 
 ---
 
----
-
----
-
----
-
 ### Support Agent Demo (Callable Multi-Agent)
 
 This demo shows how to orchestrate multiple AI agents within a formal Axon Ivy approval workflow — each agent handling one focused responsibility inside its own callable subprocess.
