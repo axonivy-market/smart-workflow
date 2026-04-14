@@ -1,0 +1,24 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ExternalRagDemoData",
+  "namespace" : "Features",
+  "fields" : [ {
+    "name" : "ragResult",
+    "type" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult"
+  }, {
+    "name" : "sources",
+    "type" : "java.util.List<String>"
+  }, {
+    "name" : "questions",
+    "type" : "java.util.List<String>"
+  }, {
+    "name" : "results",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.rag.entity.RagResult>"
+  }, {
+    "name" : "currentIndex",
+    "type" : "Integer"
+  }, {
+    "name" : "indexExists",
+    "type" : "Boolean"
+  } ]
+}

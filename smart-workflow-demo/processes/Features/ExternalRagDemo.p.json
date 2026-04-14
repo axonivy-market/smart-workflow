@@ -1,0 +1,287 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "A1B2C3D4E5F60011",
+  "config" : {
+    "data" : "Features.ExternalRagDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "hrKnowledgeBaseDemo",
+      "config" : {
+        "signature" : "hrKnowledgeBaseDemo",
+        "request" : {
+          "name" : "RAG Demo: HR Knowledge Base (OpenSearch)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 272, "y" : 56 }
+      },
+      "connect" : [
+        { "id" : "e0", "to" : "fd" }
+      ]
+    }, {
+      "id" : "fd",
+      "type" : "Script",
+      "name" : "Check Index",
+      "config" : {
+        "output" : {
+          "code" : "in.indexExists = new com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector().indexExists(\"hr-knowledge\");"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 448, "y" : 56 }
+      },
+      "connect" : [
+        { "id" : "efd", "to" : "fe" }
+      ]
+    }, {
+      "id" : "fe",
+      "type" : "Alternative",
+      "name" : "Index exists?",
+      "config" : {
+        "conditions" : {
+          "efe_yes" : "in.indexExists"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 616, "y" : 56 },
+        "labelOffset" : { "x" : -24, "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "efe_yes", "to" : "f5", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : -15, "y" : -10 }
+          } },
+        { "id" : "efe_no", "to" : "f1", "via" : [ { "x" : 616, "y" : 192 } ], "label" : {
+            "name" : "no",
+            "segment" : 0.49,
+            "offset" : { "x" : 17, "y" : 4 }
+          } }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "Script",
+      "name" : "Init Sources",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import java.util.ArrayList;",
+            "",
+            "in.sources = new ArrayList();",
+            "in.sources.add(ivy.cms.co(\"/Features/ExternalRagDemo/InsurancePlans\"));",
+            "in.sources.add(ivy.cms.co(\"/Features/ExternalRagDemo/CompanyRules\"));",
+            "in.sources.add(ivy.cms.co(\"/Features/ExternalRagDemo/Benefits\"));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 616, "y" : 240 }
+      },
+      "connect" : [
+        { "id" : "e1", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "SubProcessCall",
+      "name" : "Ingest to OpenSearch",
+      "config" : {
+        "processCall" : "OpenSearchVectorStoreManagement:createVectorStore(String,java.util.List<String>)",
+        "call" : {
+          "map" : {
+            "param.collection" : "\"hr-knowledge\"",
+            "param.sources" : "in.sources"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "in.ragResult" : "result.result"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 832, "y" : 240 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "e5", "to" : "fb" }
+      ]
+    }, {
+      "id" : "fb",
+      "type" : "Alternative",
+      "name" : "Ingest error?",
+      "config" : {
+        "conditions" : {
+          "eb" : "in.ragResult != null && in.ragResult.hasError()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1016, "y" : 240 },
+        "labelOffset" : { "x" : 64, "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "eb", "to" : "fc", "label" : {
+            "name" : "error",
+            "segment" : 0.35,
+            "offset" : { "x" : 56, "y" : -10 }
+          } },
+        { "id" : "ec", "to" : "f5", "label" : {
+            "name" : "ok",
+            "segment" : 0.04,
+            "offset" : { "x" : 17, "y" : -69 }
+          } }
+      ]
+    }, {
+      "id" : "fc",
+      "type" : "Script",
+      "name" : "Log Error",
+      "config" : {
+        "output" : {
+          "code" : "ivy.log.error(\"Ingest failed: \" + in.ragResult.getError());"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1240, "y" : 240 }
+      },
+      "connect" : [
+        { "id" : "ed", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "Script",
+      "name" : "Init Questions",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import java.util.ArrayList;",
+            "",
+            "in.currentIndex = 0;",
+            "in.results = new ArrayList();",
+            "in.questions = new ArrayList();",
+            "",
+            "in.questions.add(\"What health insurance plans are available and what are the monthly premiums?\");",
+            "in.questions.add(\"How many days of PTO do I get after 3 years of employment?\");",
+            "in.questions.add(\"What is the company 401k matching policy and vesting schedule?\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1016, "y" : 56 }
+      },
+      "connect" : [
+        { "id" : "e6", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "Alternative",
+      "name" : "More questions?",
+      "config" : {
+        "conditions" : {
+          "e7" : "in.currentIndex < in.questions.size()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1240, "y" : 56 },
+        "labelOffset" : { "x" : -40, "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "e7", "to" : "f7", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : -15, "y" : -10 }
+          } },
+        { "id" : "e8", "to" : "f9", "label" : {
+            "name" : "no",
+            "segment" : 0.54,
+            "offset" : { "x" : 9, "y" : -7 }
+          } }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "ProgramInterface",
+      "name" : "HR Knowledge Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an HR Knowledge Base assistant.\r\nEmployees ask you questions about company benefits, insurance plans, and policies.\r\nThe knowledge base collection name is: hr-knowledge.\r\n\r\nFor every question:\r\n1. Use the openSearchSearch tool with collection 'hr-knowledge' to retrieve the relevant sections from the HR knowledge base.\r\n2. Provide a clear, accurate answer based only on the retrieved content.\r\n3. Return a structured result with:\r\n  - answer: a complete and helpful response citing the applicable policy or plan details;\r\n  - matches: the knowledge base sections you retrieved, each with content, score (0.0-1.0), and metadata. Be concise, friendly, and factual.\r\n4. If the information is not in the knowledge base, say so explicitly.",
+          "tools" : "[\"openSearchSearch\"]",
+          "resultType" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult.class",
+          "resultMapping" : "in.ragResult",
+          "query" : "<%=in.questions.get(in.currentIndex)%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1432, "y" : 56 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "e9", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Collect result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.rag.entity.RagMatch;",
+            "import com.axonivy.utils.smart.workflow.rag.entity.RagResult;",
+            "",
+            "RagResult ragResult = in.ragResult;",
+            "in.results.add(ragResult);",
+            "",
+            "ivy.log.info(\"--- Question {0} ---\", in.currentIndex + 1);",
+            "ivy.log.info(\"Q: {0}\", in.questions.get(in.currentIndex));",
+            "ivy.log.info(\"A: {0}\", ragResult.getAnswer());",
+            "",
+            "if (ragResult.getMatches() != null && !ragResult.getMatches().isEmpty()) {",
+            "  StringBuilder sb = new StringBuilder(\"Matches\\n\");",
+            "  sb.append(\"****************************\\n\");",
+            "  for (int i = 0; i < ragResult.getMatches().size(); i++) {",
+            "    RagMatch match = ragResult.getMatches().get(i);",
+            "    sb.append(match.getScore()).append(\"\\n\");",
+            "    sb.append(match.getContent()).append(\"\\n\");",
+            "    if (i < ragResult.getMatches().size() - 1) {",
+            "      sb.append(\"-----------------------------\\n\");",
+            "    }",
+            "  }",
+            "  ivy.log.info(sb.toString());",
+            "}",
+            "",
+            "in.currentIndex = in.currentIndex + 1;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1648, "y" : 56 }
+      },
+      "connect" : [
+        { "id" : "ea", "to" : "f6", "via" : [ { "x" : 1648, "y" : -24 }, { "x" : 1240, "y" : -24 } ] }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1240, "y" : 136 }
+      }
+    }, {
+      "id" : "ann",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "External RAG Demo: HR Knowledge Base (OpenSearch)",
+        "",
+        "Single entry point. Documents are ingested only if the index does not exist.",
+        "",
+        "Prerequisites:",
+        "- Configure AI.RAG.OpenSearch.Url",
+        "- Configure AI.RAG.EmbeddingModel.Provider and ApiKey",
+        "- Ensure an LLM provider API key is set",
+        "",
+        "Flow: Check Index -> [Ingest if new] -> Answer 3 HR questions"
+      ],
+      "visual" : {
+        "at" : { "x" : 256, "y" : 224 },
+        "size" : { "width" : 508, "height" : 200 }
+      }
+    } ]
+}
