@@ -2,7 +2,7 @@
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
   "id" : "19D000D24BEB2CAF",
   "config" : {
-    "data" : "agents.AgentWithToolsData"
+    "data" : "Patterns.AgentWithToolsData"
   },
   "elements" : [ {
       "id" : "f0",
@@ -40,7 +40,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 64 }
+        "at" : { "x" : 252, "y" : 65 },
+        "size" : { "width" : 168, "height" : 62 }
       },
       "connect" : [
         { "id" : "f7", "to" : "f3", "color" : "default" }
@@ -59,7 +60,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 408, "y" : 64 },
+        "at" : { "x" : 448, "y" : 64 },
         "size" : { "width" : 152, "height" : 62 }
       },
       "connect" : [
@@ -70,7 +71,7 @@
       "type" : "SubProcessCall",
       "name" : "Analyze Invoice",
       "config" : {
-        "processCall" : "agents/callable/InvoiceAnalyzer:call(String)",
+        "processCall" : "Patterns/InvoiceAnalyzer:call(String)",
         "call" : {
           "map" : {
             "param.invoiceContent" : "in.invoiceContent"
@@ -102,7 +103,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 864, "y" : 64 }
+        "at" : { "x" : 880, "y" : 65 },
+        "size" : { "width" : 144, "height" : 62 }
       },
       "connect" : [
         { "id" : "f10", "to" : "f11", "color" : "default" }
@@ -128,7 +130,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1024, "y" : 64 }
+        "at" : { "x" : 1080, "y" : 65 },
+        "size" : { "width" : 144, "height" : 62 }
       },
       "connect" : [
         { "id" : "f12", "to" : "f1", "color" : "default" }
@@ -170,7 +173,8 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 304, "y" : 200 }
+        "at" : { "x" : 312, "y" : 200 },
+        "size" : { "width" : 168, "height" : 70 }
       },
       "connect" : [
         { "id" : "f17", "to" : "f15" }

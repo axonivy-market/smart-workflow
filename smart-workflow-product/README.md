@@ -23,20 +23,27 @@ We provide only the **technical capability** to enable such configurations and e
 
 This demo showcases how to use the Axon Ivy Support Agent, an AI-powered agent integrated into a business workflow. The agent is designed to classify support problems, check for missing information, and create support tasks automatically.
 
-**Workflow Overview:**
+<details>
+<summary><strong>Workflow Overview</strong></summary>
 
 1. **Input:** The agent receives a support question and the username of the reporter.
 2. **Classification:** It analyzes the problem, determines if information is missing (such as version), and classifies the issue (Portal, Core, or Market product).
 3. **Task Creation:** If necessary, the agent creates a support task using the `createAxonIvySupportTask` tool and provides a link to the created task.
 4. **Summary & Response:** The agent summarizes the problem and replies to the user with a detailed response.
 
-**Technical Details:**
+</details>
+
+<details>
+<summary><strong>Technical Details</strong></summary>
 
 - The agent is implemented as a callable sub-process (`AxonIvySupportAgent.p.json`) and uses the `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java bean.
 - The agent is configured to use a specific tool (`createAxonIvySupportTask`), which allows it to create support tasks automatically within the workflow. This is achieved by specifying the tool name in the agent's configuration (see example below).
 - The agent's output is mapped to a structured Java object (`AxonIvySupportResponse`), making it easy to use the AI-generated result directly in Axon Ivy processes. This object typically contains details such as the classification, created task link, and a summary of the support issue.
 
-**Agent Configuration Example:**
+</details>
+
+<details>
+<summary><strong>Agent Configuration Example</strong></summary>
 
 To configure the agent, define a program element with the following settings:
 
@@ -44,7 +51,10 @@ To configure the agent, define a program element with the following settings:
 
 This configuration ensures the agent uses only the specified tool and returns its output as a structured Java object.
 
-**Demo Run Example:**
+</details>
+
+<details>
+<summary><strong>Demo Run Example</strong></summary>
 
 Suppose a user submits a support question: "I have NPE when open Case Details in Portal 12.0.9"
 
@@ -60,17 +70,25 @@ Summary: The problem is a NullPointerException (NPE) occurring when opening Case
 
 This response is mapped to the `AxonIvySupportResponse` object and can be used directly in subsequent workflow steps.
 
-How to Run the Demo:
+</details>
+
+<details>
+<summary><strong>How to Run the Demo</strong></summary>
 
 1. Ensure you have completed the [Configurations](#configurations) section.
 2. Trigger the Axon Ivy Support Agent process with a support question and username.
 3. Review the agent's response, which includes classification, task creation (if needed), and a summary.
 
+</details>
+
+---
+
 ### Shopping Demo
 
 This demo showcases how AI can transform the operations of a small e-commerce fashion store. It’s more advanced and combines two mini-demos: one on product creation and another on semantic search. Because of its complexity, we won’t dive into the detailed code or step-by-step instructions here. If you’d like to explore the implementation, please check out the demo project `smart-workflow-demo`.
 
-**Product creation**
+<details>
+<summary><strong>Product creation</strong></summary>
 
 Traditionally, adding a product requires the store operator to manually fill many fields and to validate or create dependent records (supplier, brand, category). For a small store this process can take hours or a full day: manual data entry, hunting for missing info, and re-checking for mistakes.
 
@@ -120,7 +138,10 @@ Demo flow
 
 The new AI-powered process resulted in fewer errors, far less manual work, and a much faster time-to-publish.
 
-**Semantic search**
+</details>
+
+<details>
+<summary><strong>Semantic search</strong></summary>
 
 Before AI, shoppers typed keyword queries like “red dress,” then manually applied filters (price, brand, category) and scanned the results. This process was not only slow and rigid but also often failed to capture synonyms, styles, or intent (e.g., party vs. work).
 
@@ -137,140 +158,77 @@ Demo flow
 
 To quickly set up the demo data, run the process `Create data for shopping demo` from the process list.
 
+</details>
+
+---
+
 ### File Extraction Demo
 
-This demo shows how AI agents can extract structured data directly from uploaded files — images and PDFs — using multimodal language models. It eliminates manual data entry by reading documents and producing typed Java objects ready for use in subsequent workflow steps.
+This demo shows how to build a process that reads invoice data directly from uploaded images and PDF files — with no manual data entry. Using multimodal language models, the AI reads the document content and returns structured Java objects that subsequent process steps can use immediately.
 
-**Workflow Overview:**
+To extract from a file, include the file content in the agent's user message. The AI reads it and maps the result to the specified Java class — no special tooling or file-system access required.
 
-1. **Input:** The demo prepares file content — either from the Axon Ivy CMS or from a binary stream loaded at runtime.
-2. **Extraction:** The file content is embedded in the agent's query; the AI model reads and extracts the relevant fields.
-3. **Output:** The result is mapped to a typed Java object (e.g., an invoice or receipt data class) for immediate use downstream.
+<details>
+<summary><strong>Demo flow</strong></summary>
 
-**Technical Details:**
+1. The process loads an invoice image and a PDF.
+2. The file contents are included in the agent's user message.
+3. The AI reads and extracts the invoice fields.
+4. The result is returned as a typed Java object ready for the next process step.
 
-- Implemented in `processes/Features/FileExtractionDemo.p.json` using a `ProgramInterface` element backed by `com.axonivy.utils.smart.workflow.AgenticProcessCall`.
-- Two variants are provided: `extractFromCMS` — embeds file content directly in the agent query using `ivy.cms.co(...)` expressions, and `extractFromBinary` — loads files from the CMS as `InputStream` (`FileProcessingUtils.loadInputStreamFromCms(...)`) or `Binary` (`FileProcessingUtils.loadBinaryFromCms(...)`) and passes them inline in the query.
-- The file content is passed inline inside the agent `query`; no file system tooling is required.
-- The `resultType` is set to the target Java class so the agent returns a fully populated structured object.
-- Not all providers support multimodal input — see the [Models Contribution Guideline](../doc/MODELS.md#file-extraction-support) for the list of supported providers.
+</details>
+
+Not all providers support multimodal input — see the [Models Contribution Guideline](../doc/MODELS.md#file-extraction-support) for supported providers and file types.
 
 ---
 
 ### Guardrail Demo
 
-This demo shows how built-in Smart Workflow guardrails protect AI agents from prompt injection attacks and prevent sensitive data from leaking in AI responses. It demonstrates both input and output guardrails in action with real attack scenarios.
+This demo shows how built-in Smart Workflow guardrails protect AI agents from prompt injection attacks and prevent sensitive data from leaking in AI responses. Without protection, a malicious user can craft a message that overrides the system prompt or tricks the agent into revealing internal data.
 
-**Workflow Overview:**
+Two defence layers are configured in the agent's `inputGuardrails` / `outputGuardrails` fields:
 
-1. **Prompt Injection variant:** A crafted malicious message is submitted to the agent. The `PromptInjectionInputGuardrail` intercepts it _before_ the AI model is called and raises an error that the process handles via an `ErrorBoundaryEvent`.
-2. **Sensitive Data variant:** The agent is prompted to include sensitive content in its response. The `SensitiveDataOutputGuardrail` intercepts the response _after_ the AI model returns it and blocks the output before it reaches the process.
-3. **Error Handling:** Both variants demonstrate catching the guardrail violation with a boundary event and routing to a safe error path.
+- `PromptInjectionInputGuardrail` — inspects user input before it reaches the AI model and blocks known injection patterns
+- `SensitiveDataOutputGuardrail` — scans the AI response before it is returned and blocks output containing API keys or private keys
 
-**Technical Details:**
+Default guardrails can be set globally in `variables.yaml` under `AI.Guardrails.DefaultInput` and `AI.Guardrails.DefaultOutput` — any agent without explicit guardrails inherits these defaults.
 
-- Implemented in `processes/Features/GuardrailDemo.p.json`.
-- Uses built-in guardrails `PromptInjectionInputGuardrail` and `SensitiveDataOutputGuardrail` configured in the agent's `inputGuardrails` / `outputGuardrails` fields.
-- Error paths are wired via `ErrorBoundaryEvent` attached to the `ProgramInterface` element.
-- Default guardrails can be set globally in `variables.yaml` under `AI.Guardrails.DefaultInput` and `AI.Guardrails.DefaultOutput` — any agent that does not specify guardrails explicitly will inherit these defaults.
+<details>
+<summary><strong>Demo flow</strong></summary>
+
+1. A crafted malicious message is submitted. The `PromptInjectionInputGuardrail` intercepts it before the AI is called and raises an error.
+2. The process catches the error via an `ErrorBoundaryEvent` and routes to a safe fallback path.
+3. A second message instructs the agent to include sensitive data in its response. The `SensitiveDataOutputGuardrail` intercepts the response after the model returns and blocks it.
+4. The error boundary catches this violation and routes to the safe fallback path again.
+
+</details>
 
 ---
 
 ### Custom Guardrail Demo
 
-This demo shows how to implement and register a domain-specific business rule as a reusable custom guardrail using the Smart Workflow SPI. Once registered, the guardrail can be referenced by name in any agent's `inputGuardrails` configuration, or added to the `AI.Guardrails.DefaultInput` variable to apply it globally to all agents.
+This demo shows how to implement and register a domain-specific business rule as a reusable custom guardrail. A company policy requires that agents never mention competitor products. The `BlockCompetitorMentionGuardrail` enforces this rule in one place — once registered, it can be added to any agent by name without touching individual system prompts.
 
-**Workflow Overview:**
+Developers implement `SmartWorkflowInputGuardrail`, expose it through a `GuardrailProvider`, and register the provider in `META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`. The guardrail name then appears automatically in the Available Input Guardrails list. Each agent opts in via `inputGuardrails: ["BlockCompetitorMentionGuardrail"]`; to apply it to every agent, add it to `AI.Guardrails.DefaultInput` in `variables.yaml`.
 
-1. **Blocked variant:** The agent receives a query that mentions a competitor (ProcessX). The custom `BlockCompetitorMentionGuardrail` detects this at input time and blocks the request before the AI model is called.
-2. **Allowed variant:** The agent receives a neutral business query. The guardrail passes the input through, and the agent responds normally.
-3. Both variants illustrate that the guardrail logic lives in one place and is referenced by name wherever it is needed.
+<details>
+<summary><strong>Demo flow</strong></summary>
 
-**Technical Details:**
+**Blocked query**
 
-- Implemented in `processes/Features/GuardrailDemo.p.json` with two `ProgramInterface` elements, each specifying `inputGuardrails: ["BlockCompetitorMentionGuardrail"]`.
-- The guardrail class `BlockCompetitorMentionGuardrail` implements the `SmartWorkflowInputGuardrail` SPI and is exposed through a `GuardrailProvider` implementation.
-- Registration is done via `META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`.
-- Once registered, the guardrail name appears in the designer's Available Input Guardrails list and can be used by name in any agent's `inputGuardrails` field, or set globally via `AI.Guardrails.DefaultInput` in `variables.yaml`.
+1. A user submits a query that mentions a competitor product (Woxbriv).
+2. `BlockCompetitorMentionGuardrail` detects the mention and blocks the request before the AI model is called.
+3. The process catches the error and routes to a safe fallback path.
 
----
+**Allowed query**
 
-### Smart Workflow Agent Demo
+1. A user submits a query with no competitor mentions.
+2. `BlockCompetitorMentionGuardrail` finds nothing to block and allows the request through.
+3. The agent processes the query and responds normally.
 
-This demo shows how to invoke a Smart Workflow AI agent through a reusable callable subprocess, separating the AI logic from the calling process and making it independently deployable.
-
-**Workflow Overview:**
-
-1. **Preparation:** The calling process prepares sample input (e.g., invoice text) and passes it via parameters to a `SubProcessCall`.
-2. **Callable execution:** The callable subprocess (`CALLABLE_SUB`) runs the `ProgramInterface` agent, processes the input, and returns a typed result.
-3. **Result usage:** The calling process receives the structured result object and continues its workflow.
-
-**Technical Details:**
-
-- Implemented in `processes/Features/SmartWorkflowAgentDemo.p.json` as the entry point and a separate `CALLABLE_SUB` containing the `ProgramInterface`.
-- The calling process uses a standard `SubProcessCall` element — no agent-specific API is needed in the caller.
-- The callable `CALLABLE_SUB` encapsulates the `ProgramInterface`, system message, model selection, and output mapping.
-- This pattern allows multiple different calling processes to share the same AI callable without duplicating agent configuration.
+</details>
 
 ---
-
-### Support Agent Demo (Callable Multi-Agent)
-
-This demo shows how to orchestrate multiple AI agents within a formal Axon Ivy approval workflow — each agent handling one focused responsibility inside its own callable subprocess.
-
-**Workflow Overview:**
-
-1. **Ticket creation:** The first AI callable receives user input and produces a structured `SupportTicket` object.
-2. **Approver selection:** A second AI callable reads the ticket type and selects the appropriate approver from a policy list.
-3. **Task preparation:** A third AI callable prepares HR-specific task info for the approval lane.
-4. **Approval workflow:** A `TriggerCall` starts the `SupportBusiness` approval process, which runs a two-stage approval flow with `DialogCall` forms for the approvers.
-
-**Technical Details:**
-
-- Implemented across `processes/AgentDemo/SupportAgent.p.json` (orchestrating process) and `processes/AgentDemo/SupportBusiness.p.json` (approval back-end).
-- Each AI step is a separate `CALLABLE_SUB` with its own `ProgramInterface`, typed input, and typed output — one responsibility per callable.
-- Callables: `Create SupportTicket object`, `Create task`, `chooseTicketApprover(SupportTicket)`, `handleHrTicket(SupportTicket)`.
-- `SupportBusiness.p.json` provides two entry points: `createSupportTicket` (routes to first approval task) and `handleHrTicket` (two-stage approval with `DialogCall` forms).
-
----
-
-### Support Agent with Tools Demo
-
-This demo shows how an AI agent autonomously decides when and how to invoke a subprocess tool — without the process designer explicitly scripting the call sequence.
-
-**Workflow Overview:**
-
-1. **Input:** A support problem description is submitted to the agent.
-2. **Autonomous decision:** The `ProgramInterface` agent (system: "You are a Support Agent") reviews the problem and decides to call the `sumarizeProblem` tool.
-3. **Tool execution:** The tool callable runs and returns a summary.
-4. **Response:** The agent incorporates the tool result and returns a final response.
-
-**Technical Details:**
-
-- Implemented in `processes/AgentDemo/SupportAgentTools.p.json`.
-- The `ProgramInterface` specifies `tools: ["sumarizeProblem"]` — only the listed tool is available to the agent.
-- The tool `CallSubStart` is tagged with `"tags": ["tool"]`; its description tells the agent when to use it.
-- Best practice: keep tool interfaces simple — one focused input, one typed output; let the agent handle invocation ordering.
-
----
-
-### Support Agent with Planning Demo
-
-This demo shows how an AI agent can execute a multi-step business goal expressed entirely as a natural language instruction, planning the tool call sequence autonomously without any explicit branching in the process diagram.
-
-**Workflow Overview:**
-
-1. **Input:** A support request is submitted.
-2. **Planning:** The `ProgramInterface` agent reads the system prompt goal ("Create a support ticket then create a task to handle it") and plans the required tool invocations.
-3. **Execution:** The agent calls the tools in the order it determines is correct — no explicit sequencing in the process diagram.
-4. **Result:** All tool outputs are combined and the final result is returned to the caller.
-
-**Technical Details:**
-
-- Implemented in `processes/AgentDemo/SupportAgentToolsWithPlanning.p.json`.
-- The system prompt contains the complete goal description; tool availability is declared in the `tools` field.
-- Requires a planning-capable model (GPT-4.1, Claude Sonnet 4+) — weaker models may miss steps or invoke tools out of order.
-- Pair with guardrails when using broad tool access; autonomous agents with goal-oriented prompts have a wider action surface than single-step agents.
 
 ## Patterns
 
@@ -278,21 +236,19 @@ The demos below illustrate **best practices** for structuring Axon Ivy agents an
 
 ### Invoice Analyzer — Agent + Tools in One Callable
 
-This pattern shows how to bundle an agent together with all of its tools inside a single `CALLABLE_SUB`. Everything the agent is permitted to call is defined in one file, creating a clear boundary around the feature that is easy to audit, test, and replace.
+This pattern shows how to bundle an agent together with all of its tools inside a single callable subprocess. Everything the agent is permitted to call is defined in one file, creating a clear boundary around the feature that is easy to audit, test, and replace.
 
-**Workflow Overview:**
+The orchestrating agent and all its tools are co-located in the same process file. The agent's tool access is explicitly restricted to only the tools defined within that file — no other tools are reachable. This makes the agent's full capability visible at a glance and prevents unintended tool access.
 
-1. **Entry point:** The `call(String)` callable start receives the raw invoice text and passes it to the orchestrating agent.
-2. **Orchestration:** The `Invoice Analyzer Agent` is instructed to invoke its tools in sequence: `extractHeaderInfo` → `extractLineItems` → `validateAmounts` → `assessCompliance`.
-3. **Tool callables:** Each tool is a `CallSubStart` tagged with `"tags": ["tool"]` and backed by its own `ProgramInterface` agent — all defined inside the same process file.
-4. **Result:** The agent compiles all findings into a structured analysis report and returns it to the caller.
+<details>
+<summary><strong>Demo flow</strong></summary>
 
-**Technical Details:**
+1. Raw invoice text is passed to the callable entry point.
+2. The Invoice Analyzer Agent invokes its tools in sequence: extract header info → extract line items → validate amounts → assess compliance.
+3. Each tool runs its own focused AI agent and returns a typed result.
+4. The orchestrating agent compiles all findings into a structured analysis report and returns it to the caller.
 
-- Implemented in `processes/Patterns/InvoiceAnalyzer.p.json` as a `CALLABLE_SUB`.
-- The `Invoice Analyzer Agent` explicitly restricts its tool access via `tools: ["extractHeaderInfo","extractLineItems","validateAmounts","assessCompliance"]` — no other tools are reachable.
-- All tool `CallSubStart` entries are co-located with the orchestrating agent in the same process file.
-- This makes the agent's full capability visible at a glance and prevents unintended tool access.
+</details>
 
 ---
 
@@ -300,46 +256,51 @@ This pattern shows how to bundle an agent together with all of its tools inside 
 
 This pattern shows how to organize agents and tools by business domain when tools need to be shared across multiple agents. Rather than bundling everything inside a single callable, each agent and each tool group lives in its own process file under a common feature folder — making the domain boundary explicit and allowing tool reuse.
 
-**Workflow Overview:**
-
-1. **Entry:** A business process calls a domain agent (e.g. `ProductAgent`) via a `SubProcessCall`.
-2. **Agent scope:** Each agent declares only the tools relevant to its responsibility — `ProductAgent` lists `["findProduct","createProduct","checkProductDependencies","createProductSearchCriteria"]`; `BrandAgent` lists `["findProductBrand","createProductBrand"]`.
-3. **Shared tools:** Tool callables are defined once per file — any agent in the same domain can reference them without duplication.
-4. **Result:** The agent returns a typed result to the calling process, which continues the business flow.
-
-**Technical Details:**
-
-- Implemented across `processes/Business/ShoppingDemo/` and `processes/Business/AxonIvySupportDemo/`.
-- Tool files are `CALLABLE_SUB` processes; each `CallSubStart` is tagged with `"tags": ["tool"]`.
-- Agent files are also `CALLABLE_SUB` processes containing a single `ProgramInterface` element with an explicit `tools` list.
-- Separating agents from tools keeps each file focused: agent files declare intent and scope; tool files declare capability.
+```
+processes/
+  Shopping/
+    agents/
+      ProductAgent.p.json
+      BrandAgent.p.json
+      SupplierAgent.p.json
+      CategoryAgent.p.json
+    tools/
+      ProductTools.p.json
+      BrandTools.p.json
+      SupplierTools.p.json
+      CategoryTools.p.json
+```
 
 ---
 
-### Multi-Task Processes — Task-Per-Stage for Observability
+### Multi-Task Processes — Task-Per-Stage
 
 This pattern shows how wrapping each AI agent invocation in a dedicated Axon Ivy **task** gives every AI step its own lifecycle — enabling filtering, audit logging, and retry at the task level without changing the agent logic.
 
-**Workflow Overview:**
-
-The demo contains two independent flows:
+Two independent flows are included to illustrate the pattern at different scales.
 
 **AI Order Processing (`multiTaskDemo`)**
-1. **Task 1 – Order Analysis:** `Product Extraction Agent` and `Pricing Agent` run sequentially to process the raw purchase order.
-2. **Task 2 – Invoice Generation:** The `Invoice Generator Agent` combines extracted products and pricing into a structured invoice object.
-3. **Task 3 – Review & Finalization:** `Quality Review Agent` and `Confirmation Agent` run sequentially to produce a quality report and a customer confirmation draft.
+
+<details>
+<summary><strong>Demo flow</strong></summary>
+
+1. Task 1 – `Product Extraction Agent` and `Pricing Agent` run sequentially to process the raw purchase order.
+2. Task 2 – `Invoice Generator Agent` combines the extracted products and pricing into a structured invoice object.
+3. Task 3 – `Quality Review Agent` and `Confirmation Agent` run sequentially to produce a quality report and a customer confirmation draft.
+
+</details>
 
 **AI Product Import (`productImportDemo`)**
-1. **Task 1 – Data Parsing & Validation:** `CSV Parser Agent` and `Data Validator Agent` run sequentially.
-2. **Task 2 – Category & Brand Resolution:** `Category Mapper Agent` and `Brand Resolver Agent` resolve product metadata sequentially.
-3. **Task 3 – Product Enrichment:** `Product Enrichment Agent` combines all metadata into enriched product data.
-4. **Task 4 – Import Finalization:** `Import Report Agent` generates the final import summary.
 
-**Technical Details:**
+<details>
+<summary><strong>Demo flow</strong></summary>
 
-- Implemented in `processes/Patterns/MultiTaskProcesses.p.json` as a `NORMAL` process.
-- Each AI stage is a `TaskSwitchEvent` — creating a real Axon Ivy task that the engine schedules, tracks, and persists independently.
-- Multiple `ProgramInterface` agents within the same task run sequentially inside that task's scope.
+1. Task 1 – `CSV Parser Agent` and `Data Validator Agent` parse and validate the import file sequentially.
+2. Task 2 – `Category Mapper Agent` and `Brand Resolver Agent` resolve product metadata sequentially.
+3. Task 3 – `Product Enrichment Agent` combines all metadata into enriched product data.
+4. Task 4 – `Import Report Agent` generates the final import summary.
+
+</details>
 
 ---
 
