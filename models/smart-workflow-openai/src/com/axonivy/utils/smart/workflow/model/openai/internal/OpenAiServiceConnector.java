@@ -2,8 +2,10 @@ package com.axonivy.utils.smart.workflow.model.openai.internal;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 
@@ -54,14 +56,22 @@ public class OpenAiServiceConnector {
     
     var request = ChatRequestParameters.builder()
       .modelName(modelName);
-    if (!modelName.startsWith("o")) {
-      // Only set temperature if not using the "o" series
-      Double temperature = Double.valueOf(GPT_5.equalsIgnoreCase(modelName) ? DEFAULT_TEMPERATURE_GPT_5 : DEFAULT_TEMPERATURE);
-      request.temperature(temperature);
-    }
+    temperature(modelName)
+      .ifPresent(request::temperature);
     model.defaultRequestParameters(request.build()); 
     
     return model;
+  }
+
+  private static Optional<Double> temperature(String modelName) {
+    if (modelName.startsWith("o")) {
+      // Only set temperature if not using the "o" series
+      return Optional.empty();
+    }
+    if (Strings.CI.startsWith(modelName, GPT_5)) {
+      return Optional.of(Double.valueOf(DEFAULT_TEMPERATURE_GPT_5));
+    }
+    return Optional.of(Double.valueOf(DEFAULT_TEMPERATURE));
   }
 
   private static OpenAiChatModelBuilder initBuilder() {
