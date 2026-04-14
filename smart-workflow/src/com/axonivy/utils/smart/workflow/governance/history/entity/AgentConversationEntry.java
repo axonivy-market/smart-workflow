@@ -14,6 +14,15 @@ public class AgentConversationEntry {
       @JsonProperty("resultText") String resultText,
       @JsonProperty("executedAt") String executedAt) {}
 
+  public record GuardrailExecution(
+      @JsonProperty("guardrailName")  String guardrailName,
+      @JsonProperty("type")           String type,
+      @JsonProperty("result")         String result,
+      @JsonProperty("message")        String message,
+      @JsonProperty("failureMessage") String failureMessage,
+      @JsonProperty("durationMs")     Long durationMs,
+      @JsonProperty("executedAt")     String executedAt) {}
+
   private String caseUuid;
   private String taskUuid;
   private String agentId;
@@ -21,6 +30,7 @@ public class AgentConversationEntry {
   private String tokenUsageJson;
   private String lastUpdated;
   private String toolExecutionsJson;
+  private String guardrailExecutionsJson;
 
   public String getCaseUuid() { return caseUuid; }
   public void setCaseUuid(String caseUuid) { this.caseUuid = caseUuid; }
@@ -52,6 +62,21 @@ public class AgentConversationEntry {
       toolExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(toolExecutions);
     } catch (JsonProcessingException e) {
       toolExecutionsJson = null;
+    }
+  }
+
+  public String getGuardrailExecutionsJson() { return guardrailExecutionsJson; }
+  public void setGuardrailExecutionsJson(String guardrailExecutionsJson) { this.guardrailExecutionsJson = guardrailExecutionsJson; }
+
+  public List<GuardrailExecution> getGuardrailExecutions() {
+    return JsonUtils.jsonValueToEntities(guardrailExecutionsJson, GuardrailExecution.class);
+  }
+
+  public void setGuardrailExecutions(List<GuardrailExecution> guardrailExecutions) {
+    try {
+      guardrailExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(guardrailExecutions);
+    } catch (JsonProcessingException e) {
+      guardrailExecutionsJson = null;
     }
   }
 }

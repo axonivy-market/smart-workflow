@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.arize.semconv.trace.SemanticConventions;
+import com.axonivy.utils.smart.workflow.observability.openinference.internal.GuardrailRecorder;
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.OpenInferenceCollector;
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.ToolCollector;
 import com.axonivy.utils.smart.workflow.observability.openinference.span.AiSpan;
@@ -16,11 +17,15 @@ import com.axonivy.utils.smart.workflow.utils.IvyVar;
 import ch.ivyteam.ivy.trace.Attribute;
 import ch.ivyteam.ivy.trace.Span;
 import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.observability.api.event.AiServiceCompletedEvent;
 import dev.langchain4j.observability.api.event.AiServiceErrorEvent;
 import dev.langchain4j.observability.api.event.AiServiceRequestIssuedEvent;
 import dev.langchain4j.observability.api.event.AiServiceResponseReceivedEvent;
+import dev.langchain4j.observability.api.event.GuardrailExecutedEvent;
+import dev.langchain4j.observability.api.event.InputGuardrailExecutedEvent;
+import dev.langchain4j.observability.api.event.OutputGuardrailExecutedEvent;
 import dev.langchain4j.observability.api.event.AiServiceStartedEvent;
 import dev.langchain4j.observability.api.event.ToolExecutedEvent;
 import dev.langchain4j.observability.api.listener.AiServiceCompletedListener;
@@ -28,6 +33,8 @@ import dev.langchain4j.observability.api.listener.AiServiceErrorListener;
 import dev.langchain4j.observability.api.listener.AiServiceListener;
 import dev.langchain4j.observability.api.listener.AiServiceRequestIssuedListener;
 import dev.langchain4j.observability.api.listener.AiServiceResponseReceivedListener;
+import dev.langchain4j.observability.api.listener.InputGuardrailExecutedListener;
+import dev.langchain4j.observability.api.listener.OutputGuardrailExecutedListener;
 import dev.langchain4j.observability.api.listener.AiServiceStartedListener;
 import dev.langchain4j.observability.api.listener.ToolExecutedEventListener;
 
@@ -76,10 +83,12 @@ public class OpenInferenceTracing implements ChatModelListener {
     return List.of(
       new InitListener(),
       new CompletedListener(),
-      new RequestListener(), 
-      new ResponseListener(), 
+      new RequestListener(),
+      new ResponseListener(),
       new ErrorListener(),
-      new ToolListener());
+      new ToolListener(),
+      new InputGuardrailTracingListener(),
+      new OutputGuardrailTracingListener());
   }
 
   private class InitListener implements AiServiceStartedListener {
@@ -164,4 +173,42 @@ public class OpenInferenceTracing implements ChatModelListener {
     }
   }
 
+  private class InputGuardrailTracingListener implements InputGuardrailExecutedListener {
+
+    @Override
+    public void onEvent(InputGuardrailExecutedEvent event) {
+      String inputMessage = options.hideInput ? null : Optional.ofNullable(event.request())
+          .map(r -> r.userMessage())
+          .map(UserMessage::singleText)
+          .orElse(null);
+      String guardrailName = event.guardrailClass().getSimpleName();
+      traceGuardrail(event, "INPUT", inputMessage, guardrailName);
+    }
+  }
+
+  private class OutputGuardrailTracingListener implements OutputGuardrailExecutedListener {
+
+    @Override
+    public void onEvent(OutputGuardrailExecutedEvent event) {
+      String outputMessage = options.hideOutput ? null : Optional.ofNullable(event.request())
+          .map(r -> r.responseFromLLM())
+          .map(r -> r.aiMessage())
+          .map(AiMessage::text)
+          .orElse(null);
+      String guardrailName = event.guardrailClass().getSimpleName();
+      traceGuardrail(event, "OUTPUT", outputMessage, guardrailName);
+    }
+  }
+
+  private void traceGuardrail(GuardrailExecutedEvent<?, ?, ?> event, String type,
+      String validatedMessage, String guardrailName) {
+    Map<String, Object> attrs = new GuardrailRecorder()
+        .handleGuardrail(event, type, validatedMessage, guardrailName);
+    List<Attribute> attrList = attrs.entrySet().stream()
+        .map(e -> Attribute.attribute(e.getKey(), e.getValue()))
+        .toList();
+    var guardrailSpan = Span.open().instance(() -> new AiSpan(guardrailName, () -> attrList));
+    guardrailSpan.result(null);
+    guardrailSpan.close();
+  }
 }
