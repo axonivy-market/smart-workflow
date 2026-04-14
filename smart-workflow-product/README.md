@@ -274,7 +274,7 @@ This demo shows how an AI agent can execute a multi-step business goal expressed
 
 ## Patterns
 
-The demos below are not business scenarios — they illustrate **best practices** for structuring Axon Ivy agents and tools with Smart Workflow. Two complementary patterns are shown: one for tightly scoping an agent's tool access, and one for gaining full task-level observability over multi-step AI pipelines.
+The demos below illustrate **best practices** for structuring Axon Ivy agents and tools with Smart Workflow. Two complementary patterns are shown: one for tightly scoping an agent's tool access, and one for gaining full task-level observability over multi-step AI pipelines.
 
 ### Invoice Analyzer — Agent + Tools in One Callable
 
@@ -294,13 +294,25 @@ This pattern shows how to bundle an agent together with all of its tools inside 
 - All tool `CallSubStart` entries are co-located with the orchestrating agent in the same process file.
 - This makes the agent's full capability visible at a glance and prevents unintended tool access.
 
-**Pattern advantages:**
+---
 
-- **Auditable scope:** Every tool the agent can call is visible in one file.
-- **Testable unit:** The callable can be tested in isolation with a mock input.
-- **Replaceable:** The whole feature can be versioned or swapped without touching other processes.
+### Feature-Grouped Agents and Tools
 
-**Contrast with the feature-grouped approach:** In demos like `AxonIvySupportDemo` and `ShoppingDemo`, agents and tools are organized by feature folder and tools can be shared across multiple agents. Prefer the callable-scoped pattern when tool access must be strictly agent-specific; prefer the feature-grouped pattern when tools serve multiple agents within the same domain.
+This pattern shows how to organize agents and tools by business domain when tools need to be shared across multiple agents. Rather than bundling everything inside a single callable, each agent and each tool group lives in its own process file under a common feature folder — making the domain boundary explicit and allowing tool reuse.
+
+**Workflow Overview:**
+
+1. **Entry:** A business process calls a domain agent (e.g. `ProductAgent`) via a `SubProcessCall`.
+2. **Agent scope:** Each agent declares only the tools relevant to its responsibility — `ProductAgent` lists `["findProduct","createProduct","checkProductDependencies","createProductSearchCriteria"]`; `BrandAgent` lists `["findProductBrand","createProductBrand"]`.
+3. **Shared tools:** Tool callables are defined once per file — any agent in the same domain can reference them without duplication.
+4. **Result:** The agent returns a typed result to the calling process, which continues the business flow.
+
+**Technical Details:**
+
+- Implemented across `processes/Business/ShoppingDemo/` and `processes/Business/AxonIvySupportDemo/`.
+- Tool files are `CALLABLE_SUB` processes; each `CallSubStart` is tagged with `"tags": ["tool"]`.
+- Agent files are also `CALLABLE_SUB` processes containing a single `ProgramInterface` element with an explicit `tools` list.
+- Separating agents from tools keeps each file focused: agent files declare intent and scope; tool files declare capability.
 
 ---
 
@@ -328,15 +340,6 @@ The demo contains two independent flows:
 - Implemented in `processes/Patterns/MultiTaskProcesses.p.json` as a `NORMAL` process.
 - Each AI stage is a `TaskSwitchEvent` — creating a real Axon Ivy task that the engine schedules, tracks, and persists independently.
 - Multiple `ProgramInterface` agents within the same task run sequentially inside that task's scope.
-
-**Pattern advantages:**
-
-- **Observability:** Each task stage appears in the Axon Ivy task list with its own lifecycle; tasks can be filtered by AI-related categories to show only AI-executed steps.
-- **Audit log:** The engine records start time, end time, and executor for every task, providing a full audit trail of AI activity across the process.
-- **Retry mechanism:** If an agent fails, only that task needs to be retried — no need to restart the entire process.
-- **Human handover:** Any task boundary is a natural checkpoint for routing to a human reviewer if the AI result needs verification.
-
-**Contrast with inline agents:** Agents embedded directly in a process without task boundaries are simpler and faster to invoke but provide no intermediate audit trail or retry capability. Use task-scoped agents when traceability and operational resilience matter.
 
 ---
 
