@@ -150,7 +150,7 @@ This demo shows how AI agents can extract structured data directly from uploaded
 **Technical Details:**
 
 - Implemented in `processes/Features/FileExtractionDemo.p.json` using a `ProgramInterface` element backed by `com.axonivy.utils.smart.workflow.AgenticProcessCall`.
-- Two variants are provided: `extractFromCMS` — loads files via `ivy.cm.ref(...)`, and `extractFromBinary` — loads files as `InputStream` / `Binary` from the filesystem at runtime.
+- Two variants are provided: `extractFromCMS` — embeds file content directly in the agent query using `ivy.cms.co(...)` expressions, and `extractFromBinary` — loads files from the CMS as `InputStream` (`FileProcessingUtils.loadInputStreamFromCms(...)`) or `Binary` (`FileProcessingUtils.loadBinaryFromCms(...)`) and passes them inline in the query.
 - The file content is passed inline inside the agent `query`; no file system tooling is required.
 - The `resultType` is set to the target Java class so the agent returns a fully populated structured object.
 - Not all providers support multimodal input — see the [Models Contribution Guideline](../doc/MODELS.md#file-extraction-support) for the list of supported providers.
