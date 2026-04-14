@@ -116,16 +116,16 @@ Ingest tool available to Smart Workflow agents. Allows an agent to index new doc
 
 **Example:**
 
-```
-# Local Docker (security disabled, no auth)
-AI.RAG.OpenSearch.Url = http://localhost:19600
+```properties
+# Local OpenSearch (security disabled, no auth)
+AI.RAG.OpenSearch.Url = https://my-opensearch.us-east-1.es.amazonaws.com
 
 # AWS OpenSearch Service (API key auth)
 AI.RAG.OpenSearch.Url    = https://my-domain.us-east-1.es.amazonaws.com
 AI.RAG.OpenSearch.ApiKey = <your-api-key>
 
 # Self-hosted OpenSearch (basic auth)
-AI.RAG.OpenSearch.Url      = https://opensearch.internal:9200
+AI.RAG.OpenSearch.Url      = https://my-opensearch.us-east-1.es.amazonaws.com
 AI.RAG.OpenSearch.UserName = admin
 AI.RAG.OpenSearch.Password = <your-password>
 ```
@@ -143,15 +143,6 @@ The `ExternalRagDemo` process in `smart-workflow-demo` demonstrates a complete R
 
 ```properties
 AI.DefaultProvider           = OpenAI          # or AzureOpenAI / Gemini
-AI.RAG.OpenSearch.Url        = http://localhost:19600
+AI.RAG.OpenSearch.Url        = https://my-opensearch.us-east-1.es.amazonaws.com
 # AI.RAG.EmbeddingModel.Provider can be left blank if AI.DefaultProvider supports embedding
 ```
-
-### Others
-
-The `doc/external-vector-stores/opensearch/` folder contains helper scripts to quickly initialize Docker images and start a local OpenSearch vector store:
-
-- `start.ps1` — PowerShell (Windows)
-- `start.sh` — Bash (Linux / macOS)
-
-> **Warning:** These scripts are for **demo and development use only** and must not be used in production.

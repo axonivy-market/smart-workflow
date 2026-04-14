@@ -11,7 +11,7 @@ import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 
 public interface RagRetriever {
 
-  RagResult search(String collection, String query, Integer maxResults, Double minScore);
+  RagResult search(String collection, String query, int maxResults, double minScore);
 
   default RagResult performSearch(RagConnector connector, String collection, String query, int maxResults, double minScore, EmbeddingModel embeddingModel) {
     var queryEmbedding = embeddingModel.embed(query).content();
