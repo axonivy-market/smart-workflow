@@ -32,7 +32,7 @@ Token costs and more. In addition, it allows you to re-play real requests with a
 #### Devcontainer
 
 Our [Devcontainer](../dev/DEVCONTAINER.md) is pre-configured to run Arize Phoenix within your codespace. 
-In this alternative dev environment you only need to define the AI Provider APIkey. 
+In this alternative dev environment you only need to define the AI Provider API key. 
 Processes that you run will automatically report to Arize Phoenix 
 and you can inspect the traces on the exposed container port 6006.
 
