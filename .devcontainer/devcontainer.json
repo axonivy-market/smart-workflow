@@ -13,7 +13,7 @@
     8080,
     6006
   ],
-  "onCreateCommand": "mvn clean package --batch-mode -Dmaven.test.skip=true -Divy.script.validation.skip=true -Divy.engine.directory=/usr/lib/axonivy-engine",
+  "onCreateCommand": "bash .devcontainer/on-create.sh",
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
       "version": "25",
