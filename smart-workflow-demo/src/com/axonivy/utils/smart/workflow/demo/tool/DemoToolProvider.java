@@ -9,6 +9,6 @@ public class DemoToolProvider implements SmartWorkflowToolsProvider {
 
   @Override
   public List<SmartWorkflowTool> getTools() {
-    return List.of(new TaxCalculatorTool());
+    return List.of(new TaxCalculatorTool(), new WebSearchTool());
   }
 }
