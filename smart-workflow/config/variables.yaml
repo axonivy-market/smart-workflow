@@ -10,6 +10,9 @@ Variables:
       # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
       DefaultOutput: ""
     Observability:
+      CustomFields:
+        # Enable marking of workflow custom fields to track AI usage provenance.
+        Enabled: "true"
       Ivy:
         # Enable chat history recording for governance audit.
         Enabled: ""

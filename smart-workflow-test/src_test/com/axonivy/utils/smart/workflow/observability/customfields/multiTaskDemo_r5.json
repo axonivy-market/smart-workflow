@@ -1,0 +1,24 @@
+{
+  "id": "chatcmpl-multitask-5",
+  "object": "chat.completion",
+  "created": 1776000005,
+  "model": "gpt-4.1-mini-2025-04-14",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Dear Acme Corporation, your order has been confirmed. Invoice INV-2026-0317-001 totals 2490.00 and is due on 2026-04-16.",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 118,
+    "completion_tokens": 36,
+    "total_tokens": 154
+  }
+}
