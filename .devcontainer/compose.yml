@@ -9,4 +9,3 @@ services:
     image: arizephoenix/phoenix:nightly
     ports:
       - "6006:6006"
-      - "4317:4317"

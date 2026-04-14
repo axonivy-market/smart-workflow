@@ -11,8 +11,7 @@
   ],
   "forwardPorts": [
     8080,
-    6006,
-    4317
+    6006
   ],
   "onCreateCommand": "mvn clean package --batch-mode -Dmaven.test.skip=true -Divy.script.validation.skip=true -Divy.engine.directory=/usr/lib/axonivy-engine",
   "features": {
