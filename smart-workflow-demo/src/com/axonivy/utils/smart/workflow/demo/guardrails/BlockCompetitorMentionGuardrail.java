@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.workflow.demo.guardrails;
 
+import java.util.Locale;
+
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 
@@ -10,7 +12,7 @@ import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuar
 public class BlockCompetitorMentionGuardrail implements SmartWorkflowInputGuardrail {
 
   private static final String[] COMPETITORS = {
-      "ServiceNow", "Pega", "Camunda", "Appian", "Nintex", "Mendix", "OutSystems"
+      "servicenow", "pega", "camunda", "appian", "nintex", "mendix", "outsystems"
   };
 
   @Override
@@ -18,9 +20,9 @@ public class BlockCompetitorMentionGuardrail implements SmartWorkflowInputGuardr
     if (message == null) {
       return GuardrailResult.allow();
     }
-    String lower = message.toLowerCase();
+    String lower = message.toLowerCase(Locale.ROOT);
     for (String competitor : COMPETITORS) {
-      if (lower.contains(competitor.toLowerCase())) {
+      if (lower.contains(competitor)) {
         return GuardrailResult.block(
             "Message blocked: competitor product '" + competitor + "' mentioned. "
             + "Do not reference competitor products in AI queries.");

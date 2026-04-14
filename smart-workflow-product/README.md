@@ -178,20 +178,20 @@ This demo shows how built-in Smart Workflow guardrails protect AI agents from pr
 
 ### Custom Guardrail Demo
 
-This demo shows how to implement and register a domain-specific business rule as a reusable custom guardrail using the Smart Workflow SPI. Once registered, the guardrail applies automatically to all agents without touching individual prompts.
+This demo shows how to implement and register a domain-specific business rule as a reusable custom guardrail using the Smart Workflow SPI. Once registered, the guardrail can be referenced by name in any agent's `inputGuardrails` configuration, or added to the `AI.Guardrails.DefaultInput` variable to apply it globally to all agents.
 
 **Workflow Overview:**
 
 1. **Blocked variant:** The agent receives a query that mentions a competitor (Camunda). The custom `BlockCompetitorMentionGuardrail` detects this at input time and blocks the request before the AI model is called.
 2. **Allowed variant:** The agent receives a neutral business query. The guardrail passes the input through, and the agent responds normally.
-3. Both variants illustrate that the guardrail logic lives in one place and is applied transparently.
+3. Both variants illustrate that the guardrail logic lives in one place and is referenced by name wherever it is needed.
 
 **Technical Details:**
 
 - Implemented in `processes/Features/GuardrailDemo.p.json` with two `ProgramInterface` elements, each specifying `inputGuardrails: ["BlockCompetitorMentionGuardrail"]`.
-- The guardrail class `BlockCompetitorMentionGuardrail` implements the `SmartWorkflowInputGuardrail` SPI.
-- Registration is done via `META-INF/services/com.axonivy.utils.smart.workflow.guardrails.spi.SmartWorkflowInputGuardrail`.
-- Once registered, the guardrail name appears in the designer's Available Input Guardrails list automatically.
+- The guardrail class `BlockCompetitorMentionGuardrail` implements the `SmartWorkflowInputGuardrail` SPI and is exposed through a `GuardrailProvider` implementation.
+- Registration is done via `META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`.
+- Once registered, the guardrail name appears in the designer's Available Input Guardrails list and can be used by name in any agent's `inputGuardrails` field, or set globally via `AI.Guardrails.DefaultInput` in `variables.yaml`.
 
 ---
 
@@ -325,13 +325,13 @@ This pattern shows how wrapping each AI agent invocation in a dedicated Axon Ivy
 The demo contains two independent flows:
 
 **AI Order Processing (`multiTaskDemo`)**
-1. **Task 1 – Order Analysis:** Two parallel agents — `Product Extraction Agent` and `Pricing Agent` — process the raw purchase order simultaneously.
+1. **Task 1 – Order Analysis:** `Product Extraction Agent` and `Pricing Agent` run sequentially to process the raw purchase order.
 2. **Task 2 – Invoice Generation:** The `Invoice Generator Agent` combines extracted products and pricing into a structured invoice object.
-3. **Task 3 – Review & Finalization:** Two parallel agents — `Quality Review Agent` and `Confirmation Agent` — produce a quality report and a customer confirmation draft.
+3. **Task 3 – Review & Finalization:** `Quality Review Agent` and `Confirmation Agent` run sequentially to produce a quality report and a customer confirmation draft.
 
 **AI Product Import (`productImportDemo`)**
-1. **Task 1 – Data Parsing & Validation:** `CSV Parser Agent` and `Data Validator Agent` run in parallel.
-2. **Task 2 – Category & Brand Resolution:** `Category Mapper Agent` and `Brand Resolver Agent` resolve product metadata in parallel.
+1. **Task 1 – Data Parsing & Validation:** `CSV Parser Agent` and `Data Validator Agent` run sequentially.
+2. **Task 2 – Category & Brand Resolution:** `Category Mapper Agent` and `Brand Resolver Agent` resolve product metadata sequentially.
 3. **Task 3 – Product Enrichment:** `Product Enrichment Agent` combines all metadata into enriched product data.
 4. **Task 4 – Import Finalization:** `Import Report Agent` generates the final import summary.
 
