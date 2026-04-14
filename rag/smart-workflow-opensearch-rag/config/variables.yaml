@@ -18,6 +18,6 @@ Variables:
         # Password for basic authentication. Leave blank when security is disabled.
         #[password]
         Password: ${decrypt:}
-        # Set to 'true' to disable SSL certificate validation (e.g. for self-signed certs in dev/test).
+        # Set to 'true' to trust self-signed SSL certificates (e.g. for dev/test environments).
         # Never use 'true' in production with sensitive data.
-        DisableSslVerification: "false"
+        TrustSelfSignedCertificates: "false"

@@ -8,4 +8,4 @@ RestClients:
     Properties:
       SensitiveData: 'true'
       Deserialization.FAIL_ON_UNKNOWN_PROPERTIES: 'false'
-      TrustSelfSignedCertificates: ${ivy.var.AI.RAG.OpenSearch.DisableSslVerification}
+      TrustSelfSignedCertificates: ${ivy.var.AI.RAG.OpenSearch.TrustSelfSignedCertificates}
