@@ -182,7 +182,7 @@ This demo shows how to implement and register a domain-specific business rule as
 
 **Workflow Overview:**
 
-1. **Blocked variant:** The agent receives a query that mentions a competitor (Camunda). The custom `BlockCompetitorMentionGuardrail` detects this at input time and blocks the request before the AI model is called.
+1. **Blocked variant:** The agent receives a query that mentions a competitor (ProcessX). The custom `BlockCompetitorMentionGuardrail` detects this at input time and blocks the request before the AI model is called.
 2. **Allowed variant:** The agent receives a neutral business query. The guardrail passes the input through, and the agent responds normally.
 3. Both variants illustrate that the guardrail logic lives in one place and is referenced by name wherever it is needed.
 

@@ -200,7 +200,7 @@
           "inputGuardrails" : "[\"BlockCompetitorMentionGuardrail\"]",
           "tools" : "[]",
           "resultMapping" : "in.result",
-          "query" : "\"How does Camunda compare to other BPM platforms?\""
+          "query" : "\"How does ProcessX compare to other BPM platforms?\""
         }
       },
       "visual" : {
@@ -372,7 +372,7 @@
     }, {
       "id" : "f72",
       "type" : "ProcessAnnotation",
-      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries mentioning competitor products. Two variants: blocked query (mentions Camunda) and allowed query (neutral).",
+      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries mentioning competitor products. Two variants: blocked query (mentions ProcessX) and allowed query (neutral).",
       "visual" : {
         "at" : { "x" : 536, "y" : 816 },
         "size" : { "width" : 480, "height" : 78 }
