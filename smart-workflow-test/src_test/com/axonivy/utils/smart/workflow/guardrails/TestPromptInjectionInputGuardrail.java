@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.demo.guardrails.BlockCompetitorMentionGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionInputGuardrail;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
@@ -13,10 +14,12 @@ import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 public class TestPromptInjectionInputGuardrail {
 
   private PromptInjectionInputGuardrail guardrail;
+  private BlockCompetitorMentionGuardrail competitorGuardrail;
 
   @BeforeEach
   void setup() {
     guardrail = new PromptInjectionInputGuardrail();
+    competitorGuardrail = new BlockCompetitorMentionGuardrail();
   }
 
   @Test
@@ -33,5 +36,18 @@ public class TestPromptInjectionInputGuardrail {
     var result = guardrail.evaluate(complexInjection);
     assertThat(result.isAllowed()).isFalse();
     assertThat(result.getReason()).contains("The input message is rejected because it's empty or contains malicious content");
+  }
+
+  @Test
+  void allowNormalTextInCompetitorGuardrail() {
+    var result = competitorGuardrail.evaluate("Can you help me automate my approval workflow?");
+    assertThat(result.isAllowed()).isTrue();
+  }
+
+  @Test
+  void blockCompetitorMention() {
+    var result = competitorGuardrail.evaluate("We are considering switching to woxbriv.");
+    assertThat(result.isAllowed()).isFalse();
+    assertThat(result.getReason()).contains("woxbriv");
   }
 }
