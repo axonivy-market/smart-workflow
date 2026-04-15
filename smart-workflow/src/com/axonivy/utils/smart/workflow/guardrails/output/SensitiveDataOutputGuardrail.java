@@ -36,6 +36,8 @@ public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrai
         "-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----");
   }
 
+  private Set<String> variables = null;
+
   @Override
   public GuardrailResult evaluate(String message) {
     if (message == null || message.isBlank()) {
@@ -49,7 +51,10 @@ public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrai
   }
 
   private boolean containsConfiguredApiKey(String message) {
-    return loadConfiguredApiKeys().stream().anyMatch(message::contains);
+    if (variables == null) {
+      variables = loadConfiguredApiKeys();
+    }
+    return variables.stream().anyMatch(message::contains);
   }
 
   private static Set<String> loadConfiguredApiKeys() {
