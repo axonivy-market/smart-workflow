@@ -1,460 +1,307 @@
 {
-  "$schema": "https://json-schema.axonivy.com/14.0-dev/project/process.json",
-  "id": "19F1A2B3C4D5E006",
-  "kind": "CALLABLE_SUB",
-  "config": {
-    "data": "Patterns.InvoiceAnalyzerData"
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19F1A2B3C4D5E006",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Patterns.InvoiceAnalyzerData"
   },
-  "elements": [
-    {
-      "id": "f0",
-      "type": "CallSubStart",
-      "name": "call(String)",
-      "config": {
-        "signature": "call",
-        "input": {
-          "params": [
-            {
-              "name": "invoiceContent",
-              "type": "String",
-              "desc": "Text content of the invoice extracted from the image"
-            }
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "call(String)",
+      "config" : {
+        "signature" : "call",
+        "input" : {
+          "params" : [
+            { "name" : "invoiceContent", "type" : "String", "desc" : "Text content of the invoice extracted from the image" }
           ],
-          "map": {
-            "out.invoiceContent": "param.invoiceContent"
+          "map" : {
+            "out.invoiceContent" : "param.invoiceContent"
           }
         },
-        "result": {
-          "params": [
-            {
-              "name": "analysisResult",
-              "type": "String",
-              "desc": "Comprehensive invoice analysis report"
-            }
+        "result" : {
+          "params" : [
+            { "name" : "analysisResult", "type" : "String", "desc" : "Comprehensive invoice analysis report" }
           ],
-          "map": {
-            "result.analysisResult": "in.analysisResult"
+          "map" : {
+            "result.analysisResult" : "in.analysisResult"
           }
         }
       },
-      "visual": {
-        "at": {
-          "x": 88,
-          "y": 312
-        }
+      "visual" : {
+        "at" : { "x" : 88, "y" : 312 }
       },
-      "connect": [
-        {
-          "id": "f15",
-          "to": "f2"
-        }
+      "connect" : [
+        { "id" : "f15", "to" : "f2" }
       ]
-    },
-    {
-      "id": "f1",
-      "type": "CallSubEnd",
-      "visual": {
-        "at": {
-          "x": 568,
-          "y": 312
-        }
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 568, "y" : 312 }
       }
-    },
-    {
-      "id": "f2",
-      "type": "ProgramInterface",
-      "name": "Invoice Analyzer Agent",
-      "config": {
-        "javaClass": "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig": {
-          "system": "You are a comprehensive invoice analysis specialist. Analyze the provided invoice document using the available tools in this order: 1) extractHeaderInfo to extract invoice number, dates, and party information, 2) extractLineItems to extract all individual line items, 3) validateAmounts to verify all calculations are correct, 4) assessCompliance to check required fields and flag any issues. Compile a complete, structured analysis report combining all findings.",
-          "tools": "[\"extractHeaderInfo\",\"extractLineItems\",\"validateAmounts\",\"assessCompliance\"]",
-          "resultMapping": "in.analysisResult",
-          "query": "Analyze this invoice document: <%=in.invoiceContent%>"
+    }, {
+      "id" : "f2",
+      "type" : "ProgramInterface",
+      "name" : "Invoice Analyzer Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a comprehensive invoice analysis specialist. Analyze the provided invoice document using the available tools in this order: 1) extractHeaderInfo to extract invoice number, dates, and party information, 2) extractLineItems to extract all individual line items, 3) validateAmounts to verify all calculations are correct, 4) assessCompliance to check required fields and flag any issues. Compile a complete, structured analysis report combining all findings.",
+          "tools" : "[\"extractHeaderInfo\",\"extractLineItems\",\"validateAmounts\",\"assessCompliance\"]",
+          "resultMapping" : "in.analysisResult",
+          "query" : "Analyze this invoice document: <%=in.invoiceContent%>"
         }
       },
-      "visual": {
-        "at": {
-          "x": 272,
-          "y": 312
-        },
-        "size": {
-          "width": 152,
-          "height": 62
-        }
+      "visual" : {
+        "at" : { "x" : 272, "y" : 312 },
+        "size" : { "width" : 152, "height" : 62 }
       },
-      "connect": [
-        {
-          "id": "f16",
-          "to": "f1",
-          "color": "default"
-        }
+      "connect" : [
+        { "id" : "f16", "to" : "f1", "color" : "default" }
       ]
-    },
-    {
-      "id": "f3",
-      "type": "CallSubStart",
-      "name": "extractHeaderInfo(String)",
-      "config": {
-        "signature": "extractHeaderInfo",
-        "input": {
-          "params": [
-            {
-              "name": "invoiceContent",
-              "type": "String",
-              "desc": "Raw invoice text or content to extract header information from"
-            }
+    }, {
+      "id" : "f3",
+      "type" : "CallSubStart",
+      "name" : "extractHeaderInfo(String)",
+      "config" : {
+        "signature" : "extractHeaderInfo",
+        "input" : {
+          "params" : [
+            { "name" : "invoiceContent", "type" : "String", "desc" : "Raw invoice text or content to extract header information from" }
           ],
-          "map": {
-            "out.invoiceContent": "param.invoiceContent"
+          "map" : {
+            "out.invoiceContent" : "param.invoiceContent"
           }
         },
-        "result": {
-          "params": [
-            {
-              "name": "headerInfo",
-              "type": "String",
-              "desc": "Extracted header information as JSON"
-            }
+        "result" : {
+          "params" : [
+            { "name" : "headerInfo", "type" : "String", "desc" : "Extracted header information as JSON" }
           ],
-          "map": {
-            "result.headerInfo": "in.headerInfo"
+          "map" : {
+            "result.headerInfo" : "in.headerInfo"
           }
         }
       },
-      "tags": [
+      "tags" : [
         "tool"
       ],
-      "visual": {
-        "at": {
-          "x": 96,
-          "y": 488
-        },
-        "description": "Extracts invoice header: invoice number, dates, vendor and customer details, payment terms"
+      "visual" : {
+        "at" : { "x" : 96, "y" : 488 },
+        "description" : "Extracts invoice header: invoice number, dates, vendor and customer details, payment terms"
       },
-      "connect": [
-        {
-          "id": "f17",
-          "to": "f5"
-        }
+      "connect" : [
+        { "id" : "f17", "to" : "f5" }
       ]
-    },
-    {
-      "id": "f4",
-      "type": "CallSubEnd",
-      "visual": {
-        "at": {
-          "x": 432,
-          "y": 488
-        }
+    }, {
+      "id" : "f4",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 432, "y" : 488 }
       }
-    },
-    {
-      "id": "f5",
-      "type": "ProgramInterface",
-      "name": "Extract Header Info Agent",
-      "config": {
-        "javaClass": "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig": {
-          "system": "You are an invoice header extraction specialist. Given invoice content, extract the following fields: invoiceNumber, invoiceDate, dueDate, vendorName, vendorAddress, customerName, customerAddress, paymentTerms. Return the result as a structured JSON object.",
-          "tools": "[]",
-          "resultMapping": "in.headerInfo",
-          "query": "Extract header information from this invoice content: <%=in.invoiceContent%>"
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Extract Header Info Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an invoice header extraction specialist. Given invoice content, extract the following fields: invoiceNumber, invoiceDate, dueDate, vendorName, vendorAddress, customerName, customerAddress, paymentTerms. Return the result as a structured JSON object.",
+          "tools" : "[]",
+          "resultMapping" : "in.headerInfo",
+          "query" : "Extract header information from this invoice content: <%=in.invoiceContent%>"
         }
       },
-      "visual": {
-        "at": {
-          "x": 280,
-          "y": 488
-        },
-        "size": {
-          "width": 152,
-          "height": 62
-        }
+      "visual" : {
+        "at" : { "x" : 280, "y" : 488 },
+        "size" : { "width" : 152, "height" : 62 }
       },
-      "connect": [
-        {
-          "id": "f18",
-          "to": "f4",
-          "color": "default"
-        }
+      "connect" : [
+        { "id" : "f18", "to" : "f4", "color" : "default" }
       ]
-    },
-    {
-      "id": "f6",
-      "type": "CallSubStart",
-      "name": "extractLineItems(String)",
-      "config": {
-        "signature": "extractLineItems",
-        "input": {
-          "params": [
-            {
-              "name": "invoiceContent",
-              "type": "String",
-              "desc": "Raw invoice text or content to extract line items from"
-            }
+    }, {
+      "id" : "f6",
+      "type" : "CallSubStart",
+      "name" : "extractLineItems(String)",
+      "config" : {
+        "signature" : "extractLineItems",
+        "input" : {
+          "params" : [
+            { "name" : "invoiceContent", "type" : "String", "desc" : "Raw invoice text or content to extract line items from" }
           ],
-          "map": {
-            "out.invoiceContent": "param.invoiceContent"
+          "map" : {
+            "out.invoiceContent" : "param.invoiceContent"
           }
         },
-        "result": {
-          "params": [
-            {
-              "name": "lineItemsJson",
-              "type": "String",
-              "desc": "Extracted line items as a JSON array"
-            }
+        "result" : {
+          "params" : [
+            { "name" : "lineItemsJson", "type" : "String", "desc" : "Extracted line items as a JSON array" }
           ],
-          "map": {
-            "result.lineItemsJson": "in.lineItemsJson"
+          "map" : {
+            "result.lineItemsJson" : "in.lineItemsJson"
           }
         }
       },
-      "tags": [
+      "tags" : [
         "tool"
       ],
-      "visual": {
-        "at": {
-          "x": 96,
-          "y": 608
-        },
-        "description": "Extracts all line items from the invoice: description, quantity, unit price, line total, currency"
+      "visual" : {
+        "at" : { "x" : 96, "y" : 608 },
+        "description" : "Extracts all line items from the invoice: description, quantity, unit price, line total, currency"
       },
-      "connect": [
-        {
-          "id": "f19",
-          "to": "f8"
-        }
+      "connect" : [
+        { "id" : "f19", "to" : "f8" }
       ]
-    },
-    {
-      "id": "f7",
-      "type": "CallSubEnd",
-      "visual": {
-        "at": {
-          "x": 432,
-          "y": 608
-        }
+    }, {
+      "id" : "f7",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 432, "y" : 608 }
       }
-    },
-    {
-      "id": "f8",
-      "type": "ProgramInterface",
-      "name": "Extract Line Items Agent",
-      "config": {
-        "javaClass": "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig": {
-          "system": "You are an invoice line item extraction specialist. Given invoice content, extract all individual line items. For each item include: description, quantity, unitPrice, lineTotal, currency (default USD). Return the result as a valid JSON array only, with no additional explanation.",
-          "tools": "[]",
-          "resultMapping": "in.lineItemsJson",
-          "query": "Extract all line items from this invoice content: <%=in.invoiceContent%>"
+    }, {
+      "id" : "f8",
+      "type" : "ProgramInterface",
+      "name" : "Extract Line Items Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an invoice line item extraction specialist. Given invoice content, extract all individual line items. For each item include: description, quantity, unitPrice, lineTotal, currency (default USD). Return the result as a valid JSON array only, with no additional explanation.",
+          "tools" : "[]",
+          "resultMapping" : "in.lineItemsJson",
+          "query" : "Extract all line items from this invoice content: <%=in.invoiceContent%>"
         }
       },
-      "visual": {
-        "at": {
-          "x": 280,
-          "y": 608
-        },
-        "size": {
-          "width": 152,
-          "height": 62
-        }
+      "visual" : {
+        "at" : { "x" : 280, "y" : 608 },
+        "size" : { "width" : 152, "height" : 62 }
       },
-      "connect": [
-        {
-          "id": "f20",
-          "to": "f7",
-          "color": "default"
-        }
+      "connect" : [
+        { "id" : "f20", "to" : "f7", "color" : "default" }
       ]
-    },
-    {
-      "id": "f9",
-      "type": "CallSubStart",
-      "name": "validateAmounts(String)",
-      "config": {
-        "signature": "validateAmounts",
-        "input": {
-          "params": [
-            {
-              "name": "lineItemsJson",
-              "type": "String",
-              "desc": "JSON array of invoice line items to validate mathematically"
-            }
+    }, {
+      "id" : "f9",
+      "type" : "CallSubStart",
+      "name" : "validateAmounts(String)",
+      "config" : {
+        "signature" : "validateAmounts",
+        "input" : {
+          "params" : [
+            { "name" : "lineItemsJson", "type" : "String", "desc" : "JSON array of invoice line items to validate mathematically" }
           ],
-          "map": {
-            "out.lineItemsJson": "param.lineItemsJson"
+          "map" : {
+            "out.lineItemsJson" : "param.lineItemsJson"
           }
         },
-        "result": {
-          "params": [
-            {
-              "name": "validationResult",
-              "type": "String",
-              "desc": "Validation report confirming correct math or listing discrepancies"
-            }
+        "result" : {
+          "params" : [
+            { "name" : "validationResult", "type" : "String", "desc" : "Validation report confirming correct math or listing discrepancies" }
           ],
-          "map": {
-            "result.validationResult": "in.validationResult"
+          "map" : {
+            "result.validationResult" : "in.validationResult"
           }
         }
       },
-      "tags": [
+      "tags" : [
         "tool"
       ],
-      "visual": {
-        "at": {
-          "x": 528,
-          "y": 488
-        },
-        "description": "Validates invoice calculations: quantity x unit price = line total per item; sum of all line totals = invoice total"
+      "visual" : {
+        "at" : { "x" : 528, "y" : 488 },
+        "description" : "Validates invoice calculations: quantity x unit price = line total per item; sum of all line totals = invoice total"
       },
-      "connect": [
-        {
-          "id": "f21",
-          "to": "f11"
-        }
+      "connect" : [
+        { "id" : "f21", "to" : "f11" }
       ]
-    },
-    {
-      "id": "f10",
-      "type": "CallSubEnd",
-      "visual": {
-        "at": {
-          "x": 864,
-          "y": 488
-        }
+    }, {
+      "id" : "f10",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 864, "y" : 488 }
       }
-    },
-    {
-      "id": "f11",
-      "type": "ProgramInterface",
-      "name": "Validate Amounts Agent",
-      "config": {
-        "javaClass": "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig": {
-          "system": "You are an invoice amount validation specialist. Given a JSON array of invoice line items, verify: 1) quantity x unitPrice = lineTotal for each item, 2) the sum of all lineTotals matches the invoice total if present. Report any arithmetic discrepancies with exact expected vs. actual values, or confirm that all calculations are correct.",
-          "tools": "[]",
-          "resultMapping": "in.validationResult",
-          "query": "Validate the amounts in these invoice line items: <%=in.lineItemsJson%>"
+    }, {
+      "id" : "f11",
+      "type" : "ProgramInterface",
+      "name" : "Validate Amounts Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an invoice amount validation specialist. Given a JSON array of invoice line items, verify: 1) quantity x unitPrice = lineTotal for each item, 2) the sum of all lineTotals matches the invoice total if present. Report any arithmetic discrepancies with exact expected vs. actual values, or confirm that all calculations are correct.",
+          "tools" : "[]",
+          "resultMapping" : "in.validationResult",
+          "query" : "Validate the amounts in these invoice line items: <%=in.lineItemsJson%>"
         }
       },
-      "visual": {
-        "at": {
-          "x": 704,
-          "y": 488
-        },
-        "size": {
-          "width": 152,
-          "height": 62
-        }
+      "visual" : {
+        "at" : { "x" : 704, "y" : 488 },
+        "size" : { "width" : 152, "height" : 62 }
       },
-      "connect": [
-        {
-          "id": "f22",
-          "to": "f10",
-          "color": "default"
-        }
+      "connect" : [
+        { "id" : "f22", "to" : "f10", "color" : "default" }
       ]
-    },
-    {
-      "id": "f12",
-      "type": "CallSubStart",
-      "name": "assessCompliance(String)",
-      "config": {
-        "signature": "assessCompliance",
-        "input": {
-          "params": [
-            {
-              "name": "invoiceContent",
-              "type": "String",
-              "desc": "Raw invoice text or content to assess for compliance"
-            }
+    }, {
+      "id" : "f12",
+      "type" : "CallSubStart",
+      "name" : "assessCompliance(String)",
+      "config" : {
+        "signature" : "assessCompliance",
+        "input" : {
+          "params" : [
+            { "name" : "invoiceContent", "type" : "String", "desc" : "Raw invoice text or content to assess for compliance" }
           ],
-          "map": {
-            "out.invoiceContent": "param.invoiceContent"
+          "map" : {
+            "out.invoiceContent" : "param.invoiceContent"
           }
         },
-        "result": {
-          "params": [
-            {
-              "name": "complianceReport",
-              "type": "String",
-              "desc": "Compliance assessment with issues flagged and a compliance score 1-10"
-            }
+        "result" : {
+          "params" : [
+            { "name" : "complianceReport", "type" : "String", "desc" : "Compliance assessment with issues flagged and a compliance score 1-10" }
           ],
-          "map": {
-            "result.complianceReport": "in.complianceReport"
+          "map" : {
+            "result.complianceReport" : "in.complianceReport"
           }
         }
       },
-      "tags": [
+      "tags" : [
         "tool"
       ],
-      "visual": {
-        "at": {
-          "x": 528,
-          "y": 608
-        },
-        "description": "Assesses invoice compliance: checks required fields, flags issues, rates compliance 1-10"
+      "visual" : {
+        "at" : { "x" : 528, "y" : 608 },
+        "description" : "Assesses invoice compliance: checks required fields, flags issues, rates compliance 1-10"
       },
-      "connect": [
-        {
-          "id": "f23",
-          "to": "f14"
-        }
+      "connect" : [
+        { "id" : "f23", "to" : "f14" }
       ]
-    },
-    {
-      "id": "f13",
-      "type": "CallSubEnd",
-      "visual": {
-        "at": {
-          "x": 864,
-          "y": 608
-        }
+    }, {
+      "id" : "f13",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 864, "y" : 608 }
       }
-    },
-    {
-      "id": "f14",
-      "type": "ProgramInterface",
-      "name": "Assess Compliance Agent",
-      "config": {
-        "javaClass": "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig": {
-          "system": "You are an invoice compliance specialist. Given invoice content, assess: 1) presence of required fields (invoice number, invoice date, due date, vendor name and address, customer name and address, payment terms, tax information), 2) any missing or suspicious fields, 3) standard formatting and readability. Rate overall compliance on a scale of 1 (non-compliant) to 10 (fully compliant) and list specific issues found.",
-          "tools": "[]",
-          "resultMapping": "in.complianceReport",
-          "query": "Assess the compliance of this invoice: <%=in.invoiceContent%>"
+    }, {
+      "id" : "f14",
+      "type" : "ProgramInterface",
+      "name" : "Assess Compliance Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an invoice compliance specialist. Given invoice content, assess: 1) presence of required fields (invoice number, invoice date, due date, vendor name and address, customer name and address, payment terms, tax information), 2) any missing or suspicious fields, 3) standard formatting and readability. Rate overall compliance on a scale of 1 (non-compliant) to 10 (fully compliant) and list specific issues found.",
+          "tools" : "[]",
+          "resultMapping" : "in.complianceReport",
+          "query" : "Assess the compliance of this invoice: <%=in.invoiceContent%>"
         }
       },
-      "visual": {
-        "at": {
-          "x": 704,
-          "y": 608
-        },
-        "size": {
-          "width": 152,
-          "height": 62
-        }
+      "visual" : {
+        "at" : { "x" : 704, "y" : 608 },
+        "size" : { "width" : 152, "height" : 62 }
       },
-      "connect": [
-        {
-          "id": "f24",
-          "to": "f13",
-          "color": "default"
-        }
+      "connect" : [
+        { "id" : "f24", "to" : "f13", "color" : "default" }
       ]
-    }
-  ],
-  "layout": {
-    "lanes": [
-      {
-        "name": "Tools",
-        "offset": 400,
-        "size": 304
-      }
-    ]
+    } ],
+  "layout" : {
+    "lanes" : [ {
+        "name" : "Tools",
+        "offset" : 400,
+        "size" : 304
+      } ]
   }
 }
