@@ -12,7 +12,7 @@ import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuar
 public class BlockCompetitorMentionGuardrail implements SmartWorkflowInputGuardrail {
 
   private static final String[] COMPETITORS = {
-      "woxbriv", "flentrix", "quelborz", "zovantim", "pribflox", "nexdruv", "clorfwork"
+      "alpha systems", "beta technologies", "gamma solutions", "delta labs", "omega group"
   };
 
   @Override

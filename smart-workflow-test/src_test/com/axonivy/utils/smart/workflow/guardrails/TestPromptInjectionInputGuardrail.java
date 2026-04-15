@@ -46,8 +46,8 @@ public class TestPromptInjectionInputGuardrail {
 
   @Test
   void blockCompetitorMention() {
-    var result = competitorGuardrail.evaluate("We are considering switching to woxbriv.");
+    var result = competitorGuardrail.evaluate("We are considering switching to Alpha Systems.");
     assertThat(result.isAllowed()).isFalse();
-    assertThat(result.getReason()).contains("woxbriv");
+    assertThat(result.getReason()).contains("alpha systems");
   }
 }

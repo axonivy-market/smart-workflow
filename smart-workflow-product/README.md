@@ -216,7 +216,7 @@ Developers implement `SmartWorkflowInputGuardrail`, expose it through a `Guardra
 
 **Blocked query**
 
-1. A user submits a query that mentions a competitor product (flentrix).
+1. A user submits a query that mentions a competitor product.
 2. `BlockCompetitorMentionGuardrail` detects the mention and blocks the request before the AI model is called.
 3. The process catches the error and routes to a safe fallback path.
 

@@ -200,7 +200,7 @@
           "inputGuardrails" : "[\"BlockCompetitorMentionGuardrail\"]",
           "tools" : "[]",
           "resultMapping" : "in.result",
-          "query" : "\"How does ProcessX compare to flentrix for BPM workflows?\""
+          "query" : "\"How does AxonIvy compare to Beta Technologies for BPM workflows?\""
         }
       },
       "visual" : {
@@ -372,7 +372,7 @@
     }, {
       "id" : "f72",
       "type" : "ProcessAnnotation",
-      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries containing specific competitor tokens. Two variants: blocked query (mentions competitor \"flentrix\") and allowed query (neutral).",
+      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries containing specific competitor tokens. Two variants: blocked query (mentions competitor \"Beta Technologies\") and allowed query (neutral).",
       "visual" : {
         "at" : { "x" : 536, "y" : 816 },
         "size" : { "width" : 480, "height" : 78 }
