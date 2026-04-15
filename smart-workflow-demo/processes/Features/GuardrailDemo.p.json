@@ -178,7 +178,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 344, "y" : 1128 }
+        "at" : { "x" : 312, "y" : 936 }
       },
       "connect" : [
         { "id" : "f51", "to" : "f53" }
@@ -187,7 +187,7 @@
       "id" : "f52",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 848, "y" : 1128 }
+        "at" : { "x" : 816, "y" : 936 }
       }
     }, {
       "id" : "f53",
@@ -204,7 +204,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 560, "y" : 1128 },
+        "at" : { "x" : 528, "y" : 936 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "boundaries" : [ {
@@ -221,7 +221,7 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 616, "y" : 1169 },
+            "at" : { "x" : 584, "y" : 977 },
             "labelOffset" : { "x" : -80, "y" : 25 },
             "icon" : "res:/webContent/icons/shield.png"
           },
@@ -245,7 +245,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 728, "y" : 1248 }
+        "at" : { "x" : 696, "y" : 1056 }
       },
       "connect" : [
         { "id" : "f56", "to" : "f52" }
@@ -263,7 +263,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 728, "y" : 1128 }
+        "at" : { "x" : 696, "y" : 936 }
       },
       "connect" : [
         { "id" : "f60", "to" : "f52" }
@@ -279,7 +279,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 344, "y" : 1392 }
+        "at" : { "x" : 312, "y" : 1200 }
       },
       "connect" : [
         { "id" : "f62", "to" : "f63" }
@@ -288,7 +288,7 @@
       "id" : "f64",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 848, "y" : 1392 }
+        "at" : { "x" : 816, "y" : 1200 }
       }
     }, {
       "id" : "f63",
@@ -305,7 +305,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 560, "y" : 1392 },
+        "at" : { "x" : 528, "y" : 1200 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "boundaries" : [ {
@@ -322,7 +322,7 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 616, "y" : 1433 },
+            "at" : { "x" : 584, "y" : 1241 },
             "labelOffset" : { "x" : -60, "y" : 25 },
             "icon" : "res:/webContent/icons/shield.png"
           },
@@ -346,7 +346,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 736, "y" : 1520 }
+        "at" : { "x" : 704, "y" : 1328 }
       },
       "connect" : [
         { "id" : "f70", "to" : "f64" }
@@ -364,7 +364,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 728, "y" : 1392 }
+        "at" : { "x" : 696, "y" : 1200 }
       },
       "connect" : [
         { "id" : "f71", "to" : "f64" }
@@ -372,7 +372,7 @@
     }, {
       "id" : "f72",
       "type" : "ProcessAnnotation",
-      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries containing specific competitor tokens. Two variants: blocked query (mentions \"woxbriv\") and allowed query (neutral).",
+      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries containing specific competitor tokens. Two variants: blocked query (mentions competitor \"flentrix\") and allowed query (neutral).",
       "visual" : {
         "at" : { "x" : 536, "y" : 816 },
         "size" : { "width" : 480, "height" : 78 }

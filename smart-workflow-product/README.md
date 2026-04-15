@@ -186,7 +186,7 @@ Not all providers support multimodal input — see the [Models Contribution Guid
 
 This demo shows how built-in Smart Workflow guardrails protect AI agents from prompt injection attacks and prevent sensitive data from leaking in AI responses. Without protection, a malicious user can craft a message that overrides the system prompt or tricks the agent into revealing internal data.
 
-Two defence layers are configured in the agent's `inputGuardrails` / `outputGuardrails` fields:
+Two defense layers are configured in the agent's `inputGuardrails` / `outputGuardrails` fields:
 
 - `PromptInjectionInputGuardrail` — inspects user input before it reaches the AI model and blocks known injection patterns
 - `SensitiveDataOutputGuardrail` — scans the AI response before it is returned and blocks output containing API keys or private keys
@@ -216,7 +216,7 @@ Developers implement `SmartWorkflowInputGuardrail`, expose it through a `Guardra
 
 **Blocked query**
 
-1. A user submits a query that mentions a competitor product (Woxbriv).
+1. A user submits a query that mentions a competitor product (flentrix).
 2. `BlockCompetitorMentionGuardrail` detects the mention and blocks the request before the AI model is called.
 3. The process catches the error and routes to a safe fallback path.
 
