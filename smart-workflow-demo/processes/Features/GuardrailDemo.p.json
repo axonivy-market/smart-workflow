@@ -200,7 +200,7 @@
           "inputGuardrails" : "[\"BlockCompetitorMentionGuardrail\"]",
           "tools" : "[]",
           "resultMapping" : "in.result",
-          "query" : "\"How does ProcessX compare to other BPM platforms?\""
+          "query" : "\"How does ProcessX compare to flentrix for BPM workflows?\""
         }
       },
       "visual" : {

@@ -8,9 +8,9 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "sumarizeProblem(String)",
+      "name" : "summarizeProblem(String)",
       "config" : {
-        "signature" : "sumarizeProblem",
+        "signature" : "summarizeProblem",
         "input" : {
           "params" : [
             { "name" : "problem", "type" : "String", "desc" : "The support problem description to summarize" }
