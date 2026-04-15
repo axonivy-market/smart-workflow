@@ -372,7 +372,7 @@
     }, {
       "id" : "f72",
       "type" : "ProcessAnnotation",
-      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries mentioning competitor products. Two variants: blocked query (mentions ProcessX) and allowed query (neutral).",
+      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries containing specific competitor tokens. Two variants: blocked query (mentions \"woxbriv\") and allowed query (neutral).",
       "visual" : {
         "at" : { "x" : 536, "y" : 816 },
         "size" : { "width" : 480, "height" : 78 }
