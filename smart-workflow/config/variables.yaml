@@ -2,13 +2,17 @@
 Variables:
   AI:
     # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic]
-    DefaultProvider: ""
+    DefaultProvider: OpenAI
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
       # Default input guardrails. Separated by comma. Example: "PromptInjectionInputGuardrail, GuardrailTwo"
       DefaultInput: ""
       # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
       DefaultOutput: ""
+    WebSearch:
+      # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"
+      # If empty, all domains are allowed.
+      WhitelistDomains: ""
     Observability:
       Ivy:
         # Enable chat history recording for governance audit.
