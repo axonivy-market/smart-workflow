@@ -9,7 +9,10 @@
       "type" : "RequestStart",
       "name" : "Prompt Injection Input Guardrail Demo",
       "config" : {
-        "signature" : "promptInjectionGuardrailDemo"
+        "signature" : "promptInjectionGuardrailDemo",
+        "request" : {
+          "name" : "Prompt Injection Guardrail Demo"
+        }
       },
       "visual" : {
         "at" : { "x" : 344, "y" : 232 }
@@ -94,7 +97,10 @@
       "type" : "RequestStart",
       "name" : "Sensitive Data Output Guardrail Demo",
       "config" : {
-        "signature" : "sensitiveDataOutputGuardrailDemo"
+        "signature" : "sensitiveDataOutputGuardrailDemo",
+        "request" : {
+          "name" : "Sensitive Data Output Guardrail Demo"
+        }
       },
       "visual" : {
         "at" : { "x" : 344, "y" : 552 }

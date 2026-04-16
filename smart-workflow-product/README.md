@@ -76,7 +76,7 @@ This response is mapped to the `AxonIvySupportResponse` object and can be used d
 <summary><strong>How to Run the Demo</strong></summary>
 
 1. Ensure you have completed the [Configurations](#configurations) section.
-2. Trigger the Axon Ivy Support Agent process with a support question and username.
+2. Start **Axon Ivy Support** process with a support question and username.
 3. Review the agent's response, which includes classification, task creation (if needed), and a summary.
 
 </details>
@@ -125,7 +125,7 @@ Developers need to create four agents
   - Find brand: Find brand in the system
   - Create brand: Create a new brand using the provided information
 
-Demo flow
+Demo flow (start **Create new product** process)
 
 1. Operator uploads product specification and image files.
 2. Smart Workflow parses the files, extracts product attributes (title, SKU, description, price, supplier info, brand, category, images).
@@ -149,14 +149,14 @@ With semantic search the user speaks or types a natural request. AI understands 
 
 Developers need to add an additional `Find product by criteria` tool to the `Product agent` with input is the search criteria.
 
-Demo flow
+Demo flow (start **Shopping Store** process)
 
 1. Shopper: types or says “I need a $100 red dress for a party tonight.”
 2. `Product agent` extracts attributes and expands the query (synonyms, acceptable price range: $80–$120).
 3. Axon Ivy Business Data turns criteria into an optimized filters and search for the products.
 4. Return the top products matched criteria.
 
-To quickly set up the demo data, run the process `Create data for shopping demo` from the process list.
+To quickly set up the demo data, start **Create data for shopping demo** from the process list.
 
 </details>
 
@@ -171,10 +171,12 @@ To extract from a file, include the file content in the agent's user message. Th
 <details>
 <summary><strong>Demo flow</strong></summary>
 
-1. The process loads an invoice image and a PDF.
-2. The file contents are included in the agent's user message.
-3. The AI reads and extracts the invoice fields.
-4. The result is returned as a typed Java object ready for the next process step.
+- Start **File Extraction Demo (CMS)** or **File Extraction Demo (Binary)** from the process list.
+
+  1. The process loads an invoice image and a PDF.
+  2. The file contents are included in the agent's user message.
+  3. The AI reads and extracts the invoice fields.
+  4. The result is returned as a typed Java object ready for the next process step.
 
 </details>
 
@@ -196,10 +198,15 @@ Default guardrails can be set globally in `variables.yaml` under `AI.Guardrails.
 <details>
 <summary><strong>Demo flow</strong></summary>
 
-1. A crafted malicious message is submitted. The `PromptInjectionInputGuardrail` intercepts it before the AI is called and raises an error.
-2. The process catches the error via an `ErrorBoundaryEvent` and routes to a safe fallback path.
-3. A second message instructs the agent to include sensitive data in its response. The `SensitiveDataOutputGuardrail` intercepts the response after the model returns and blocks it.
-4. The error boundary catches this violation and routes to the safe fallback path again.
+- **Prompt injection** (start **Prompt Injection Guardrail Demo** process)
+
+  1. A crafted malicious message is submitted. The `PromptInjectionInputGuardrail` intercepts it before the AI is called and raises an error.
+  2. The process catches the error via an `ErrorBoundaryEvent` and routes to a safe fallback path.
+
+- **Sensitive data output** (start **Sensitive Data Output Guardrail Demo** process)
+
+  1. A message instructs the agent to include sensitive data in its response. The `SensitiveDataOutputGuardrail` intercepts the response after the model returns and blocks it.
+  2. The error boundary catches this violation and routes to the safe fallback path again.
 
 </details>
 
@@ -214,17 +221,17 @@ Developers implement `SmartWorkflowInputGuardrail`, expose it through a `Guardra
 <details>
 <summary><strong>Demo flow</strong></summary>
 
-**Blocked query**
+- **Blocked query** (start **Custom Guardrail Demo - Blocked** process)
 
-1. A user submits a query that mentions a competitor product.
-2. `BlockCompetitorMentionGuardrail` detects the mention and blocks the request before the AI model is called.
-3. The process catches the error and routes to a safe fallback path.
+  1. A user submits a query that mentions a competitor product.
+  2. `BlockCompetitorMentionGuardrail` detects the mention and blocks the request before the AI model is called.
+  3. The process catches the error and routes to a safe fallback path.
 
-**Allowed query**
+- **Allowed query** (start **Custom Guardrail Demo - Allowed** process)
 
-1. A user submits a query with no competitor mentions.
-2. `BlockCompetitorMentionGuardrail` finds nothing to block and allows the request through.
-3. The agent processes the query and responds normally.
+  1. A user submits a query with no competitor mentions.
+  2. `BlockCompetitorMentionGuardrail` finds nothing to block and allows the request through.
+  3. The agent processes the query and responds normally.
 
 </details>
 
@@ -241,7 +248,7 @@ This pattern shows how to bundle an agent together with all of its tools inside 
 The orchestrating agent and all its tools are co-located in the same process file. The agent's tool access is explicitly restricted to only the tools defined within that file — no other tools are reachable. This makes the agent's full capability visible at a glance and prevents unintended tool access.
 
 <details>
-<summary><strong>Demo flow</strong></summary>
+<summary><strong>Demo flow (start Agent With Tools Demo process)</strong></summary>
 
 1. Raw invoice text is passed to the callable entry point.
 2. The Invoice Analyzer Agent invokes its tools in sequence: extract header info → extract line items → validate amounts → assess compliance.
@@ -255,6 +262,9 @@ The orchestrating agent and all its tools are co-located in the same process fil
 ### Feature-Grouped Agents and Tools
 
 This pattern shows how to organize agents and tools by business domain when tools need to be shared across multiple agents. Rather than bundling everything inside a single callable, each agent and each tool group lives in its own process file under a common feature folder — making the domain boundary explicit and allowing tool reuse.
+
+<details>
+<summary><strong>Example (Shopping Demo process)</strong></summary>
 
 ```
 processes/
@@ -271,6 +281,8 @@ processes/
       CategoryTools.p.json
 ```
 
+</details>
+
 ---
 
 ### Multi-Task Processes — Task-Per-Stage
@@ -279,10 +291,8 @@ This pattern shows how wrapping each AI agent invocation in a dedicated Axon Ivy
 
 Two independent flows are included to illustrate the pattern at different scales.
 
-**AI Order Processing (`multiTaskDemo`)**
-
 <details>
-<summary><strong>Demo flow</strong></summary>
+<summary><strong>Demo flow (start AI Order Processing Demo process)</strong></summary>
 
 1. Task 1 – `Product Extraction Agent` and `Pricing Agent` run sequentially to process the raw purchase order.
 2. Task 2 – `Invoice Generator Agent` combines the extracted products and pricing into a structured invoice object.
@@ -290,10 +300,8 @@ Two independent flows are included to illustrate the pattern at different scales
 
 </details>
 
-**AI Product Import (`productImportDemo`)**
-
 <details>
-<summary><strong>Demo flow</strong></summary>
+<summary><strong>Demo flow (start AI Product Import Demo process)</strong></summary>
 
 1. Task 1 – `CSV Parser Agent` and `Data Validator Agent` parse and validate the import file sequentially.
 2. Task 2 – `Category Mapper Agent` and `Brand Resolver Agent` resolve product metadata sequentially.
