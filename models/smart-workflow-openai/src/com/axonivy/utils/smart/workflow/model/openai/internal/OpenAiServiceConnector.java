@@ -2,13 +2,16 @@ package com.axonivy.utils.smart.workflow.model.openai.internal;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
@@ -49,15 +52,26 @@ public class OpenAiServiceConnector {
   }
 
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
-    OpenAiChatModelBuilder builder = initBuilder();
-    builder.modelName(modelName);
-    // Only set temperature if not using the "o" series
-    if (!modelName.startsWith("o")) {
-      Double temperature = Double.valueOf(GPT_5.equalsIgnoreCase(modelName) ? DEFAULT_TEMPERATURE_GPT_5 : DEFAULT_TEMPERATURE);
-      builder.temperature(temperature);
-    }
+    OpenAiChatModelBuilder model = initBuilder();
+    
+    var request = ChatRequestParameters.builder()
+      .modelName(modelName);
+    temperature(modelName)
+      .ifPresent(request::temperature);
+    model.defaultRequestParameters(request.build()); 
+    
+    return model;
+  }
 
-    return builder;
+  private static Optional<Double> temperature(String modelName) {
+    if (modelName.startsWith("o")) {
+      // Only set temperature if not using the "o" series
+      return Optional.empty();
+    }
+    if (Strings.CI.startsWith(modelName, GPT_5)) {
+      return Optional.of(Double.valueOf(DEFAULT_TEMPERATURE_GPT_5));
+    }
+    return Optional.of(Double.valueOf(DEFAULT_TEMPERATURE));
   }
 
   private static OpenAiChatModelBuilder initBuilder() {

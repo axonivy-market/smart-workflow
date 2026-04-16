@@ -11,6 +11,7 @@ import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.chat.response.ChatResponse;
 
 public class DummyChatModelProvider implements ChatModelProvider {
@@ -25,6 +26,11 @@ public class DummyChatModelProvider implements ChatModelProvider {
   @Override
   public List<String> models() {
     return List.of(ModelNames.GENIOUS, ModelNames.SUPERMAN, ModelNames.CLASSIC);
+  }
+
+  @Override
+  public List<String> secretsVars() {
+    return List.of();
   }
 
   @Override
@@ -82,6 +88,13 @@ public class DummyChatModelProvider implements ChatModelProvider {
     @Override
     public ChatResponse doChat(ChatRequest chatRequest) {
       return CHAT.apply(chatRequest);
+    }
+
+    @Override
+    public ChatRequestParameters defaultRequestParameters() {
+      return ChatRequestParameters.builder()
+          .modelName(options.modelName())
+          .build();
     }
   }
 

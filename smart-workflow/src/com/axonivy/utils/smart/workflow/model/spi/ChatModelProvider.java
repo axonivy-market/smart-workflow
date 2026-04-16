@@ -10,6 +10,7 @@ public interface ChatModelProvider {
   String name();
   ChatModel setup(ModelOptions options);
   List<String> models();
+  List<String> secretsVars();
 
   public static record ModelOptions(
       String modelName,

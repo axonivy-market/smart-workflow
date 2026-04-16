@@ -1,8 +1,12 @@
 package com.axonivy.utils.smart.workflow.tools.internal;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
+
+import ch.ivyteam.ivy.process.call.StartParameter;
 import ch.ivyteam.ivy.process.call.SubProcessCallResult;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartParamCaller;
@@ -22,11 +26,14 @@ public class IvySubProcessToolExecutor {
 
     if (startable.isEmpty()) {
       // TODO: how does Agentic error handling look like?
-      return ToolExecutionResultMessage.from(execTool, "failed to execut tool; unknown ivy-process function");
+      return ToolExecutionResultMessage.from(execTool, "failed to execute tool; unknown ivy-process function");
     }
 
+    List<ToolParameter> toolParams = startable.get().description().in().stream()
+        .map((StartParameter p) -> new ToolParameter(p.name(), p.description(), p.typeName()))
+        .toList();
     var parameters = new JsonProcessParameters()
-        .readParams(startable.get().description().in(), execTool.arguments());
+        .readParams(toolParams, execTool.arguments());
 
     SubProcessCallResult res = call(startable.get(), parameters);
 

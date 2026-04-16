@@ -471,13 +471,11 @@ If no guardrails are specified, the agent uses the default guardrails from `vari
 
 Smart Workflow also lets you implement custom guardrails and handle guardrail errors. For more details, see the [Guardrails Guideline](../doc/GUARDRAILS.md).
 
-### Defining Tools with Callable Processes
+### Defining Tools
 
-To function effectively, AI agents require tools to perform tasks. With Smart Workflow, creating a tool is straightforward: simply define a callable process and add the `tool` tag to it.
+To function effectively, AI agents require tools to perform tasks. Smart Workflow supports two kinds of tools: **Callable Process Tools** (any tagged callable sub-process) and **Java Tools** (implement `SmartWorkflowTool` and register via SPI).
 
-To select the appropriate tool, AI agents rely on the descriptions of callable processes. To ensure efficient tool selection, clearly describe the tool's purpose in the `description` field.
-
-![Tool configurations](img/tool-configurations.png)
+For step-by-step instructions on creating both tool types, see the [Tools Guide](../doc/TOOLS.md).
 
 ### Defining AI agent
 

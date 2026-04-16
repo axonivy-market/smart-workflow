@@ -241,8 +241,8 @@
         "a wrapping 'composite' object around these values must be provided."
       ],
       "visual" : {
-        "at" : { "x" : 232, "y" : 352 },
-        "size" : { "width" : 254, "height" : 62 }
+        "at" : { "x" : 271, "y" : 319 },
+        "size" : { "width" : 343, "height" : 47 }
       },
       "connect" : [
         { "id" : "f31", "to" : "f25" }
@@ -258,7 +258,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 512, "y" : 392 }
+        "at" : { "x" : 512, "y" : 384 }
       },
       "connect" : [
         { "id" : "f33", "to" : "f34" }
@@ -278,7 +278,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 648, "y" : 392 }
+        "at" : { "x" : 648, "y" : 384 }
       },
       "connect" : [
         { "id" : "f35", "to" : "f36" }
@@ -287,7 +287,7 @@
       "id" : "f36",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 768, "y" : 392 }
+        "at" : { "x" : 768, "y" : 384 }
       }
     }, {
       "id" : "f37",
@@ -422,5 +422,163 @@
       "connect" : [
         { "id" : "f53", "to" : "f43", "color" : "default" }
       ]
+    }, {
+      "id" : "f54",
+      "type" : "RequestStart",
+      "name" : "math",
+      "config" : {
+        "signature" : "math"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 384 }
+      },
+      "connect" : [
+        { "id" : "f55", "to" : "f56" }
+      ]
+    }, {
+      "id" : "f56",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Use the 'add' tool to calculate",
+          "tools" : "[\"add\"]",
+          "resultType" : "Integer.class",
+          "resultMapping" : "in.sum",
+          "query" : "Whats the sum of 1984 plus 41 ?"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 384 }
+      },
+      "connect" : [
+        { "id" : "f57", "to" : "f58" }
+      ]
+    }, {
+      "id" : "f58",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 384 }
+      }
+    }, {
+      "id" : "f59",
+      "type" : "RequestStart",
+      "name" : "error",
+      "config" : {
+        "signature" : "error"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f61" }
+      ]
+    }, {
+      "id" : "f61",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Use the 'disconnected' tool to verify that a user is available",
+          "tools" : "[\"disconnected\"]",
+          "resultType" : "",
+          "resultMapping" : "",
+          "query" : "Verify whether Martha is available by using the 'disconnected' tool"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f62", "to" : "f63" }
+      ]
+    }, {
+      "id" : "f63",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 456 }
+      }
+    }, {
+      "id" : "f64",
+      "type" : "RequestStart",
+      "name" : "nTools",
+      "config" : {
+        "signature" : "nTools"
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f65", "to" : "f66" }
+      ]
+    }, {
+      "id" : "f66",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Use the 'add' tool to calculate my age and 'whoami' to fetch my name",
+          "tools" : "[\"add\", \"whoami\"]",
+          "resultType" : "",
+          "resultMapping" : "",
+          "query" : "Whats my age and name?"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 648, "y" : 456 }
+      },
+      "connect" : [
+        { "id" : "f67", "to" : "f68" }
+      ]
+    }, {
+      "id" : "f68",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 768, "y" : 456 }
+      }
+    }, {
+      "id" : "f69",
+      "type" : "RequestStart",
+      "name" : "mathWithGuardrails",
+      "config" : {
+        "signature" : "mathWithGuardrails"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 624 }
+      },
+      "connect" : [
+        { "id" : "f70", "to" : "f71" }
+      ]
+    }, {
+      "id" : "f71",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Use the 'add' tool to calculate",
+          "inputGuardrails" : "[\"PromptInjectionInputGuardrail\"]",
+          "resultMapping" : "in.sum",
+          "query" : "Whats the sum of 1984 plus 41 ?",
+          "tools" : "[\"add\"]",
+          "resultType" : "Integer.class",
+          "outputGuardrails" : "[\"SensitiveDataOutputGuardrail\"]"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 624 }
+      },
+      "connect" : [
+        { "id" : "f72", "to" : "f73" }
+      ]
+    }, {
+      "id" : "f73",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 400, "y" : 624 }
+      }
     } ]
 }

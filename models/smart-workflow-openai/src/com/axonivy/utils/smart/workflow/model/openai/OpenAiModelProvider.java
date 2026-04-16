@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 import dev.langchain4j.model.chat.ChatModel;
@@ -33,6 +34,11 @@ public class OpenAiModelProvider implements ChatModelProvider {
     return Stream.of(OpenAiChatModelName.values())
         .map(OpenAiChatModelName::name)
         .toList();
+  }
+
+  @Override
+  public List<String> secretsVars() {
+    return List.of(OpenAiConf.API_KEY);
   }
 
 }

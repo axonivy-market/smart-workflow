@@ -11,7 +11,7 @@ Guardrails protect AI agents by validating both user input and AI output. Smart 
 
 ## Configuring Default Guardrails
 
-Set default guardrails in `variables.yaml`:
+Set default guardrails in `variables.yaml`. These apply to every agent that does **not** explicitly configure its own guardrail list:
 
 ```yaml
 Variables:
@@ -128,6 +128,41 @@ public class MyGuardrailProvider implements GuardrailProvider {
    ```
 
    This SPI registration is **required** for Smart Workflow to discover and load your guardrails. The provider will be automatically loaded when agents request guardrails by name.
+
+## Guardrail Observability
+
+Smart Workflow records guardrail executions for both governance audit and external telemetry.
+
+### Ivy History Recording
+
+When `AI.Observability.Ivy.Enabled` is set to `true`, every guardrail execution is recorded in the agent conversation history. Each record includes:
+
+- **guardrailName** - The guardrail class name
+- **type** - `INPUT` or `OUTPUT`
+- **result** - `SUCCESS`, `FAILURE`, or `FATAL`
+- **message** - The validated content (user query for input guardrails, AI response for output guardrails)
+- **failureMessage** - The reason when a guardrail blocks (null on success)
+- **durationMs** - Execution time in milliseconds
+- **executedAt** - Timestamp of execution
+
+Guardrail records are stored alongside tool executions in the `AgentConversationEntry` and are visible in the agent history tree.
+
+### OpenInference Tracing (Arize Phoenix)
+
+When `AI.Observability.Openinference.Enabled` is set to `true`, each guardrail execution produces a dedicated span with `openinference.span.kind = "GUARDRAIL"`. These spans appear in Arize Phoenix alongside the LLM spans, providing a complete trace of the AI interaction including safety checks.
+
+Guardrail span attributes:
+
+| Attribute | Description |
+|-----------|-------------|
+| `openinference.span.kind` | `GUARDRAIL` |
+| `validator_name` | The guardrail class name (Phoenix convention) |
+| `validator_on_fail` | Behavior on failure — always `"exception"` |
+| `guardrail.type` | `INPUT` or `OUTPUT` |
+| `guardrail.result` | `SUCCESS`, `FAILURE`, or `FATAL` |
+| `guardrail.failure_message` | Failure reason (present only when blocked) |
+| `input.value` | The validated content (user query or AI response) |
+| `output.value` | `"pass"` or `"fail"` (Phoenix convention) |
 
 ## Handling Guardrail Errors
 

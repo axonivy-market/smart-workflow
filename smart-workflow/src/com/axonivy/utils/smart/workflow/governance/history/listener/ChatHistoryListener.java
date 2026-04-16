@@ -26,7 +26,9 @@ public class ChatHistoryListener {
     var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, new IvyRepoHistoryStorage());
     return List.of(
         new AgentResponseListener(repo),
-        new ToolExecutionListener(repo));
+        new ToolExecutionListener(repo),
+        new InputGuardrailListener(repo),
+        new OutputGuardrailListener(repo));
   }
 
 }

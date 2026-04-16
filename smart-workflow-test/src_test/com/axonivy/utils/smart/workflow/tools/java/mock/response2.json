@@ -1,0 +1,22 @@
+{
+  "id": "chatcmpl-tool-demo-2",
+  "object": "chat.completion",
+  "created": 1712345679,
+  "model": "gpt-4o-mini",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"invoiceNumber\":\"INV-2024-042\",\"customerName\":\"John Doe\",\"invoiceDate\":\"2024-11-15\",\"dueDate\":\"2024-12-15\",\"items\":[{\"description\":\"MacBook Pro 16-inch\",\"quantity\":1,\"unitPrice\":2499.0,\"total\":2499.0,\"currency\":\"USD\",\"taxRate\":0.1,\"taxAmount\":249.9},{\"description\":\"Office Coffee Subscription 3-month\",\"quantity\":1,\"unitPrice\":45.0,\"total\":45.0,\"currency\":\"USD\",\"taxRate\":0.05,\"taxAmount\":2.25},{\"description\":\"Samsung QLED TV 65-inch\",\"quantity\":1,\"unitPrice\":1799.0,\"total\":1799.0,\"currency\":\"USD\",\"taxRate\":0.1,\"taxAmount\":179.9},{\"description\":\"Rolex Submariner Watch\",\"quantity\":1,\"unitPrice\":8500.0,\"total\":8500.0,\"currency\":\"USD\",\"taxRate\":0.2,\"taxAmount\":1700.0},{\"description\":\"Legal Consultation Service\",\"quantity\":2,\"unitPrice\":250.0,\"total\":500.0,\"currency\":\"USD\",\"taxRate\":0.08,\"taxAmount\":40.0}],\"subtotal\":13343.0,\"effectiveTaxRate\":0.16278573034549954,\"taxAmount\":2172.05,\"totalWithTax\":15515.05}",
+        "refusal": null
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 700,
+    "completion_tokens": 300,
+    "total_tokens": 1000
+  }
+}
