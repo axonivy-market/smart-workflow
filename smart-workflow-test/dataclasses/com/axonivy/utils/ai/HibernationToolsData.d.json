@@ -1,0 +1,12 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "HibernationToolsData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "decision",
+    "type" : "hibernate.HumanDecision"
+  }, {
+    "name" : "selected",
+    "type" : "List<hibernate.Choice>"
+  } ]
+}

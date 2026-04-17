@@ -1,0 +1,11 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "HibernationData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "iceCream"
+  }, {
+    "name" : "decision",
+    "type" : "hibernate.HumanDecision"
+  } ]
+}

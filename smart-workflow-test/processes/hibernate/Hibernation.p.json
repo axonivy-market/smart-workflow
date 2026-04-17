@@ -1,0 +1,317 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19D9B40B0E198091",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.HibernationData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "askSignal",
+      "config" : {
+        "signature" : "askSignal"
+      },
+      "visual" : {
+        "at" : { "x" : 120, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 376, "y" : 224 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "ProgramInterface",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "strictly ask the user instead of making bold decisions. present your users quests as HumanDecision (title+options)",
+          "tools" : "[\"askUserSignal\"]",
+          "resultType" : "String.class",
+          "resultMapping" : "in.iceCream",
+          "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "RequestStart",
+      "name" : "askYesOrNo",
+      "config" : {
+        "signature" : "ask2"
+      },
+      "visual" : {
+        "at" : { "x" : 120, "y" : 312 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "ProgramInterface",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "strictly ask the user instead of making bold decisions. present your users quests as HumanDecision (title+options)",
+          "tools" : "[\"askUserYesOrNo\"]",
+          "resultType" : "String.class",
+          "resultMapping" : "in.iceCream",
+          "query" : "Which ice cream flavour do you prefer today: Vanilla or Raspberry?"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 312 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f9", "color" : "default" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 376, "y" : 312 }
+      }
+    }, {
+      "id" : "f10",
+      "type" : "SignalStartEvent",
+      "name" : "human:task",
+      "config" : {
+        "signalCode" : "human:task",
+        "output" : {
+          "map" : { },
+          "code" : [
+            "import hibernate.HumanDecision;",
+            "ivy.log.info(\"event received data: \"+signal.getSignalData());",
+            "out.decision = signal.getSignalData() as HumanDecision;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 16 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f11" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "UserTask",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.HumanDecision:start(hibernate.HumanDecision)",
+        "call" : {
+          "map" : {
+            "param.decision" : "in.decision"
+          },
+          "code" : "ivy.log.info(\"setup decision >>> : \"+in.decision.question);"
+        },
+        "task" : {
+          "name" : "Assisted: <%=in.decision.question%>"
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.iceCream" : "result.first.title"
+          },
+          "code" : "ivy.log.info(\"user selected \"+result.first.title);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 112 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "RequestStart",
+      "name" : "humanTrigger",
+      "config" : {
+        "signature" : "humanTrigger",
+        "input" : {
+          "params" : [
+            { "name" : "decision", "type" : "hibernate.HumanDecision", "desc" : "" },
+            { "name" : "q", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.decision" : "param.decision",
+            "out.decision.question" : "\"what: \"+param.decision.question+\"/\"+param.q"
+          }
+        },
+        "request" : {
+          "isHttpRequestable" : false
+        },
+        "triggerable" : true,
+        "task" : {
+          "responsible" : {
+            "roles" : [
+              "SYSTEM"
+            ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 600, "y" : 16 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f15" }
+      ]
+    }, {
+      "id" : "f15",
+      "type" : "UserTask",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.HumanDecision:start(hibernate.HumanDecision)",
+        "call" : {
+          "map" : {
+            "param.decision" : "in.decision"
+          },
+          "code" : "ivy.log.info(\"setup decision >>> : \"+in.decision.question);"
+        },
+        "task" : {
+          "name" : "Assisted: <%=in.decision.question%>"
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.iceCream" : "result.first.title"
+          },
+          "code" : "ivy.log.info(\"user selected: \"+result.first.title);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 600, "y" : 112 }
+      },
+      "connect" : [
+        { "id" : "f17", "to" : "f20" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "RequestStart",
+      "name" : "askTrigger",
+      "config" : {
+        "signature" : "askTrigger"
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f20" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "ProgramInterface",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "strictly ask the user instead of making bold decisions. present your users quests as HumanDecision (title+options)",
+          "tools" : "[\"askUserTrigger\"]",
+          "resultType" : "String.class",
+          "resultMapping" : "in.iceCream",
+          "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 600, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f22", "color" : "default" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 728, "y" : 224 }
+      }
+    }, {
+      "id" : "f23",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1128, "y" : 224 }
+      }
+    }, {
+      "id" : "f24",
+      "type" : "ProgramInterface",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "strictly ask the user instead of making bold decisions. present your users quests as HumanDecision (title+options)",
+          "tools" : "[\"askUserError\"]",
+          "resultType" : "String.class",
+          "resultMapping" : "in.iceCream",
+          "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1000, "y" : 224 }
+      },
+      "boundaries" : [ {
+          "id" : "f32",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "human:decision",
+          "config" : {
+            "errorCode" : "human:decision",
+            "output" : {
+              "code" : "ivy.log.info(\"error data: \"+error.getProcessData());"
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 1032, "y" : 202 },
+            "labelOffset" : { "x" : 57, "y" : -15 }
+          },
+          "connect" : [
+            { "id" : "f33", "to" : "f26" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f25", "to" : "f23", "color" : "default" }
+      ]
+    }, {
+      "id" : "f26",
+      "type" : "UserTask",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.HumanDecision:start(hibernate.HumanDecision)",
+        "call" : {
+          "map" : {
+            "param.decision" : "in.decision"
+          },
+          "code" : "ivy.log.info(\"setup decision >>> : \"+in.decision.question);"
+        },
+        "task" : {
+          "name" : "Assisted: <%=in.decision.question%>"
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.iceCream" : "result.first.title"
+          },
+          "code" : "ivy.log.info(\"user selected: \"+result.first.title);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1000, "y" : 112 }
+      },
+      "connect" : [
+        { "id" : "f27", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "RequestStart",
+      "name" : "askError",
+      "config" : {
+        "signature" : "askError"
+      },
+      "visual" : {
+        "at" : { "x" : 872, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f29", "to" : "f24" }
+      ]
+    } ]
+}

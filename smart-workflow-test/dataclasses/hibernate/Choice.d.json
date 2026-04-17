@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "Choice",
+  "namespace" : "hibernate",
+  "fields" : [ {
+    "name" : "title",
+    "comment" : "Short title for the option at hand",
+    "annotations" : [ "@com.fasterxml.jackson.annotation.JsonProperty(required = true)" ]
+  }, {
+    "name" : "description",
+    "comment" : "Detailed explanation of the option"
+  }, {
+    "name" : "example",
+    "comment" : "Exampels how this choice would be manifested"
+  } ]
+}

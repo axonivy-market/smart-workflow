@@ -1,0 +1,73 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19D9B5F1A037C4DB",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.HumanDecision.HumanDecisionData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start(HumanDecision)",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "params" : [
+            { "name" : "decision", "type" : "hibernate.HumanDecision", "desc" : "" }
+          ],
+          "map" : {
+            "out.decision" : "param.decision"
+          },
+          "code" : "ivy.log.info(\"decision to be made \"+param.decision.question);"
+        },
+        "result" : {
+          "params" : [
+            { "name" : "selected", "type" : "List<hibernate.Choice>", "desc" : "" },
+            { "name" : "first", "type" : "hibernate.Choice", "desc" : "" }
+          ],
+          "map" : {
+            "result.selected" : "in.chosen",
+            "result.first" : "in.chosen.get(0)"
+          }
+        },
+        "guid" : "19D9B5F1A05CD791"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "19D9B5F1A08FDFE8",
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.chosen" : "[in.choice]"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    } ]
+}

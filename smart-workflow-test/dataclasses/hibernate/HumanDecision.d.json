@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "HumanDecision",
+  "namespace" : "hibernate",
+  "fields" : [ {
+    "name" : "question",
+    "comment" : "required: A descriptive text to let a human decide on",
+    "annotations" : [ "@com.fasterxml.jackson.annotation.JsonProperty(required = true)" ]
+  }, {
+    "name" : "options",
+    "type" : "List<hibernate.Choice>",
+    "comment" : "required: List of options the human decision maker can select from",
+    "annotations" : [ "@com.fasterxml.jackson.annotation.JsonProperty(required = true)" ]
+  } ]
+}
