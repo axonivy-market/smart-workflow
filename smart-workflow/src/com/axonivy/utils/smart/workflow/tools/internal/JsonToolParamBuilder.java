@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.axonivy.utils.smart.workflow.spi.internal.ProjectClassLoader;
 import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
+import ch.ivyteam.api.API;
 import ch.ivyteam.log.Logger;
 import dev.langchain4j.internal.JsonSchemaElementUtils;
 import dev.langchain4j.internal.JsonSchemaElementUtils.VisitedClassMetadata;
@@ -24,10 +26,11 @@ public class JsonToolParamBuilder {
   private final JsonObjectSchema.Builder builder = JsonObjectSchema.builder();
 
   public JsonToolParamBuilder() {
-    this(null);
+    this(ProjectClassLoader.current());
   }
 
   public JsonToolParamBuilder(ClassLoader classLoader) {
+    API.checkParameterNotNull(classLoader, "classLoader");
     this.classLoader = classLoader;
   }
 
