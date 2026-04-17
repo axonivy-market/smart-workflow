@@ -168,7 +168,9 @@ private static ObjectNode buildDocNode(Embedding embedding, TextSegment segment)
 
   public static OpenSearchIndexMeta parseIndexMeta(String json) throws JsonProcessingException {
     JsonNode root = JsonUtils.getObjectMapper().readTree(json);
-    // Response shape: { "<indexName>": { "mappings": { "_meta": { ... } } } }
+    if (!root.properties().iterator().hasNext()) {
+      throw new IllegalStateException("Unexpected empty response when parsing index meta: " + json);
+    }
     JsonNode meta = root.elements().next().path("mappings").path(Meta.META);
     return new OpenSearchIndexMeta(
         meta.path(Meta.EMBEDDING_PROVIDER).asText(null),

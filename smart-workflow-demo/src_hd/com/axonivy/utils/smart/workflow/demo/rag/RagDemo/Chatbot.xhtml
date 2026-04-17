@@ -2,11 +2,9 @@
   xmlns:f="http://xmlns.jcp.org/jsf/core"
   xmlns:h="http://xmlns.jcp.org/jsf/html"
   xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-  xmlns:p="http://primefaces.org/ui"
-  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+  xmlns:p="http://primefaces.org/ui">
 
   <h:outputStylesheet library="css" name="chat-ui.css" />
-  <h:outputScript library="js" name="marked.min.js" />
   <h:outputScript library="js" name="chat.js" />
 
   <h:panelGroup id="chat-panel" layout="block">
@@ -50,8 +48,8 @@
             <h:panelGroup rendered="#{message.role ne 'user'}" layout="block" styleClass="assistant-message-row mb-4">
               <div class="assistant-content">
                 <div class="assistant-name text-sm font-semibold text-gray-700 mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Chatbot/AssistantName')}</div>
-                <div class="markdown-content" pt:data-markdown="true">
-                  <h:outputText value="#{message.content}" escape="false" />
+                <div class="message-content">
+                  <h:outputText value="#{message.content}" />
                 </div>
                 <h:panelGroup layout="block" styleClass="message-time text-xs text-gray-400 mt-2">
                   <h:outputText value="#{message.timestamp}" />

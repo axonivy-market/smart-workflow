@@ -6,7 +6,6 @@ const thinkingPhases = [
 
 let thinkingPhaseIndex = 0;
 let thinkingInterval = null;
-let streamingInProgress = false;
 
 function scrollToBottom() {
   const messagesArea = document.querySelector('.messages-area');
@@ -133,139 +132,9 @@ function onChatComplete() {
 
   document.querySelectorAll('.temp-user-message').forEach(el => el.remove());
 
-  // Hide unrendered response immediately to prevent flash before streaming begins
-  document.querySelectorAll('.markdown-content:not(.markdown-rendered)').forEach(function(el) {
-    el.style.visibility = 'hidden';
-  });
-
-  setTimeout(function() {
-    renderMarkdownWithStreaming();
-    scrollToBottom();
-  }, 150);
-}
-
-function renderMarkdownWithStreaming() {
-  const markdownElements = document.querySelectorAll('.markdown-content');
-
-  markdownElements.forEach(function(element, index) {
-    if (element.classList.contains('markdown-rendered')) {
-      return;
-    }
-
-    const rawContent = element.textContent || element.innerText;
-
-    if (!rawContent || rawContent.trim() === '') {
-      return;
-    }
-
-    try {
-      if (typeof marked !== 'undefined' && marked.parse) {
-        marked.setOptions({
-          breaks: true,
-          gfm: true
-        });
-
-        const htmlContent = marked.parse(rawContent);
-        const isLastMessage = index === markdownElements.length - 1;
-
-        if (isLastMessage && !streamingInProgress) {
-          streamText(element, htmlContent);
-        } else {
-          element.innerHTML = htmlContent;
-          element.classList.add('markdown-rendered');
-          element.style.visibility = '';
-        }
-      }
-    } catch (error) {
-      console.warn('Markdown rendering error:', error);
-      element.innerHTML = rawContent;
-      element.classList.add('markdown-rendered');
-      element.style.visibility = '';
-      enableChatInput();
-      focusChatInput();
-    }
-  });
-
-  if (markdownElements.length === 0) {
-    enableChatInput();
-    focusChatInput();
-  }
-}
-
-function streamText(element, htmlContent) {
-  streamingInProgress = true;
-  element.classList.add('markdown-rendered', 'streaming');
-  element.innerHTML = '';
-  element.style.visibility = '';
-
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = htmlContent;
-
-  const textContent = tempDiv.textContent || tempDiv.innerText;
-  const words = textContent.split(/(\s+)/);
-  const streamLimit = 100;
-  let currentIndex = 0;
-  const streamSpeed = 20;
-
-  const streamContainer = document.createElement('div');
-  streamContainer.className = 'stream-content';
-  element.appendChild(streamContainer);
-
-  function streamNextWord() {
-    if (currentIndex < words.length && currentIndex < streamLimit) {
-      streamContainer.textContent += words[currentIndex];
-      currentIndex++;
-
-      if (currentIndex % 5 === 0) {
-        scrollToBottom();
-      }
-
-      setTimeout(streamNextWord, streamSpeed);
-    } else {
-      setTimeout(function() {
-        element.innerHTML = htmlContent;
-        element.classList.remove('streaming');
-        element.classList.add('stream-complete');
-        streamingInProgress = false;
-
-        enableChatInput();
-        focusChatInput();
-        scrollToBottom();
-      }, 100);
-    }
-  }
-
-  streamNextWord();
-}
-
-function renderAllMarkdown() {
-  const markdownElements = document.querySelectorAll('.markdown-content');
-
-  markdownElements.forEach(function(element) {
-    if (element.classList.contains('markdown-rendered')) {
-      return;
-    }
-
-    const rawContent = element.textContent || element.innerText;
-
-    if (!rawContent || rawContent.trim() === '') {
-      return;
-    }
-
-    try {
-      if (typeof marked !== 'undefined' && marked.parse) {
-        marked.setOptions({
-          breaks: true,
-          gfm: true
-        });
-
-        element.innerHTML = marked.parse(rawContent);
-        element.classList.add('markdown-rendered');
-      }
-    } catch (error) {
-      console.warn('Markdown rendering error:', error);
-    }
-  });
+  enableChatInput();
+  focusChatInput();
+  scrollToBottom();
 }
 
 function handleChatInputKeydown(event) {
@@ -275,7 +144,7 @@ function handleChatInputKeydown(event) {
     const sendBtn = document.querySelector('[id$="send-btn"]');
     const chatInput = document.querySelector('.message-input');
 
-    if (streamingInProgress || (chatInput && chatInput.disabled)) {
+    if (chatInput && chatInput.disabled) {
       return;
     }
 
@@ -300,34 +169,12 @@ function onClearChat() {
     thinkingInterval = null;
   }
   thinkingPhaseIndex = 0;
-  streamingInProgress = false;
 
   enableChatInput();
   focusChatInput();
 }
 
-function loadMarkedLibrary(callback) {
-  if (typeof marked !== 'undefined') {
-    if (callback) callback();
-    return;
-  }
-
-  const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
-  script.onload = function() {
-    console.log('Marked library loaded');
-    if (callback) callback();
-  };
-  script.onerror = function() {
-    console.error('Failed to load marked library');
-  };
-  document.head.appendChild(script);
-}
-
 $(document).ready(function() {
-  loadMarkedLibrary(function() {
-    renderAllMarkdown();
-    scrollToBottom();
-    focusChatInput();
-  });
+  scrollToBottom();
+  focusChatInput();
 });
