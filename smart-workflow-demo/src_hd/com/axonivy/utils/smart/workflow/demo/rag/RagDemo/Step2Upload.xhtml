@@ -42,8 +42,11 @@
       <!-- File upload -->
       <div class="col-12 md:col-7">
         <div class="rag-upload-zone border-round-xl p-4 h-full">
-          <p class="font-semibold m-0 mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/DropzoneTitle')}</p>
-          <p class="m-0 mb-3 text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/DropzoneHint')}</p>
+          <p class="font-semibold m-0 mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/FileUploadContainerTitle')}</p>
+          <p class="m-0 mb-3 text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/FileUploadContainerHint')}</p>
+          <p class="m-0 mb-3 text-color-secondary text-sm">
+            <i class="si si-information-circle mr-1" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/PdfNote')}
+          </p>
           <p:fileUpload auto="true" multiple="false" accept=".txt,.md,.pdf"
             listener="#{logic.handleFileUpload}"
             update="step2-panel"

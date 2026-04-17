@@ -166,8 +166,9 @@ Dialogs:
                     IndexExistsWarning: Index bereits vorhanden
                     IndexExistsWarningDesc: "Ein Index mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Indexnamen."
                     BackButton: Zurück
-                    DropzoneTitle: Dateien hier ablegen
-                    DropzoneHint: "Unterstützt .pdf, .md und .txt — eine Datei gleichzeitig"
+                    FileUploadContainerTitle: Dateien hier ablegen
+                    FileUploadContainerHint: "Unterstützt .pdf, .md und .txt — eine Datei gleichzeitig"
+                    PdfNote: "PDF-Dateien können länger dauern — KI wird verwendet, um ihren Inhalt zu extrahieren."
                     StagedFilesTitle: Bereit zum Einbetten
                     FileNameColumn: Dateiname
                     FileSizeColumn: Größe

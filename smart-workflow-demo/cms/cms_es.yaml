@@ -166,8 +166,9 @@ Dialogs:
                     IndexExistsWarning: "El índice ya existe"
                     IndexExistsWarningDesc: "Ya existe un índice con este nombre. Por favor, elija un nombre de índice diferente."
                     BackButton: Volver
-                    DropzoneTitle: Arrastra y suelta archivos aquí
-                    DropzoneHint: "Soporta .pdf, .md y .txt — un archivo a la vez"
+                    FileUploadContainerTitle: Arrastra y suelta archivos aquí
+                    FileUploadContainerHint: "Soporta .pdf, .md y .txt — un archivo a la vez"
+                    PdfNote: "Los archivos PDF pueden tardar más en procesarse — se usa IA para extraer su contenido."
                     StagedFilesTitle: Listos para integrar
                     FileNameColumn: Nombre de archivo
                     FileSizeColumn: Tamaño
