@@ -20,7 +20,7 @@ import ch.ivyteam.ivy.project.model.Project;
 public class SpiLoader {
   private final Project project;
 
-  private static final String IJAVA_CONFIGURATION = "ch.ivyteam.ivy.java.IJavaConfiguration";
+  private static final String JAVA_RUNTIME = "ch.ivyteam.ivy.java.JavaRuntime";
   private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
   private static final String EXCEPTION_PATTERN = "Failed to read service descriptor %s";
 
@@ -61,7 +61,7 @@ public class SpiLoader {
 
   private static ClassLoader loaderOf(Project project) {
     try {
-      var javaConf = Class.forName(IJAVA_CONFIGURATION);
+      var javaConf = Class.forName(JAVA_RUNTIME);
       var of = MethodUtils.getMethodObject(javaConf, "of", Project.class);
       var local = of.invoke(null, project);
       var loader = MethodUtils.getMethodObject(javaConf, "getClassLoader");
