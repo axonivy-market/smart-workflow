@@ -29,6 +29,11 @@ public class DummyChatModelProvider implements ChatModelProvider {
   }
 
   @Override
+  public List<String> secretsVars() {
+    return List.of();
+  }
+
+  @Override
   public ChatModel setup(ModelOptions options) {
     return new DummyChatModel(options, options.listeners());
   }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
-import com.axonivy.utils.smart.workflow.guardrails.provider.DefaultGuardrailProvider;
+import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 
 import Features.FileExtractionDemoData;
@@ -25,7 +25,7 @@ class TestFileExtractionDemo {
   void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("extraction"));
     fixture.var(OpenAiConf.API_KEY, "");
-    fixture.var(DefaultGuardrailProvider.DEFAULT_INPUT_GUARDRAILS, "");
+    fixture.var(GuardrailCollector.DEFAULT_INPUT_GUARDRAILS, "");
     MockOpenAI.defineChat(_ -> responder.send("response.json"));
   }
 

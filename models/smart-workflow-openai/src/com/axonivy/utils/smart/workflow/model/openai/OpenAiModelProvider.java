@@ -44,6 +44,11 @@ public class OpenAiModelProvider implements ChatModelProvider {
   }
 
   @Override
+  public List<String> secretsVars() {
+    return List.of(OpenAiConf.API_KEY);
+  }
+
+  @Override
   public boolean supportsEmbedding() {
     return true;
   }

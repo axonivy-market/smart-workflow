@@ -74,4 +74,34 @@ public class TestAzureOpenAiLoader {
   private static ChatModelProvider loadModel() {
     return ChatModelFactory.create(AzureOpenAiModelProvider.NAME).get();
   }
+
+  @Test
+  void secrets_deploymentAware(){
+    assertThat(provider.secretsVars())
+      .contains(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".APIKey");
+  }
+
+  @Test
+  void temperature_gpt4(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-4.1-mini");
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    assertThat(model.defaultRequestParameters().temperature())
+        .isEqualTo(0.0);
+  }
+
+  @Test
+  void temperature_gpt5(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-5");
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    assertThat(model.defaultRequestParameters().temperature())
+        .isEqualTo(1.0);
+  }
+
+  @Test
+  void temperature_gpt5_nano(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-5-nano");
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    assertThat(model.defaultRequestParameters().temperature())
+        .isEqualTo(1.0);
+  }
 }

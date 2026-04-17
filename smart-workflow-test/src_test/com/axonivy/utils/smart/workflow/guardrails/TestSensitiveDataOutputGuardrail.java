@@ -13,7 +13,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 @IvyProcessTest
 public class TestSensitiveDataOutputGuardrail {
 
-  private static final String OPENAI_API_KEY_VAR = "Ai.Providers.OpenAI.APIKey";
+  private static final String OPENAI_API_KEY_VAR = "AI.Providers.OpenAI.APIKey";
   private static final String TEST_API_KEY = "my-custom-secret-key-that-matches-no-regex";
 
   private SensitiveDataOutputGuardrail guardrail;
@@ -130,7 +130,7 @@ public class TestSensitiveDataOutputGuardrail {
   @Test
   void blockConfiguredApiKey(AppFixture fixture) {
     fixture.var(OPENAI_API_KEY_VAR, TEST_API_KEY);
-    var result = guardrail.evaluate("Here is the configured key: " + TEST_API_KEY);
+    var result = new SensitiveDataOutputGuardrail().evaluate("Here is the configured key: " + TEST_API_KEY);
     assertThat(result.isAllowed()).isFalse();
     assertThat(result.getReason()).contains("sensitive data");
   }
