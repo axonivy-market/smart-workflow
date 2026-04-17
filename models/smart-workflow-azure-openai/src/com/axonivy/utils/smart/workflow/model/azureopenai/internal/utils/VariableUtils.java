@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
@@ -53,13 +52,9 @@ public final class VariableUtils {
       return null;
     }
 
-    List<AzureAiDeployment> deployments = getDeployments();
-
-    if (CollectionUtils.isEmpty(deployments)) {
-      return null;
-    }
-
-    return deployments.stream().filter(deployment -> deploymentName.equals(deployment.getName())).findFirst()
-        .orElse(null);
+    return getDeployments().stream()
+      .filter(deployment -> deploymentName.equals(deployment.getName()))
+      .findFirst()
+      .orElse(null);
   }
 }

@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
@@ -34,7 +32,7 @@ public class JsonToolParamBuilder {
   }
 
   public JsonObjectSchema toParams(List<ToolParameter> parameters) {
-    if (CollectionUtils.isEmpty(parameters)) {
+    if (parameters.isEmpty()) {
       return null; // less tokens + better compliance with Arize Phoenix playground
     }
     var required = new ArrayList<String>();
