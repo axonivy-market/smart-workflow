@@ -49,9 +49,14 @@ public class OpenAiModelProvider implements ChatModelProvider {
   }
 
   @Override
-  public Optional<EmbeddingModel> setupEmbedding(EmbeddingModelOptions options) {
-    String modelName = StringUtils.defaultIfBlank(options.modelName(),
+  public String resolveEmbeddingModelName(EmbeddingModelOptions options) {
+    return StringUtils.defaultIfBlank(options.modelName(),
         StringUtils.defaultIfBlank(Ivy.var().get(OpenAiConf.DEFAULT_EMBEDDING_MODEL), FALLBACK_EMBEDDING_MODEL));
+  }
+
+  @Override
+  public Optional<EmbeddingModel> setupEmbedding(EmbeddingModelOptions options) {
+    String modelName = resolveEmbeddingModelName(options);
     String apiKey = resolveApiKey(options.apiKey());
 
     var builder = OpenAiEmbeddingModel.builder()

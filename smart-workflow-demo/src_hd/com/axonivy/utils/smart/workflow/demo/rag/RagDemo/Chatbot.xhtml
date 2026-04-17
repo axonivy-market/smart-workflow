@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+  <h:outputStylesheet library="css" name="chat-ui.css" />
+  <h:outputScript library="js" name="marked.min.js" />
+  <h:outputScript library="js" name="chat.js" />
+
+  <h:panelGroup id="chat-panel" layout="block">
+    <p:ajaxStatus onstart="return false;" styleClass="rag-hidden">
+      <f:facet name="start"><span></span></f:facet>
+      <f:facet name="complete"><span></span></f:facet>
+    </p:ajaxStatus>
+
+    <div class="messenger-container flex flex-column rag-chat-container">
+
+      <!-- Messages Area -->
+        <div class="messages-area flex-1 overflow-auto md:p-4 lg:px-6" id="chat-messages-container">
+        <div class="chat-content rag-chat-inner mx-auto">
+
+          <ui:fragment rendered="#{empty data.messages}">
+            <div class="flex flex-column align-items-center justify-content-center rag-welcome-state">
+              <div class="rag-welcome-avatar flex align-items-center justify-content-center border-circle mb-3">
+                <i class="si si-robot text-white"></i>
+              </div>
+              <div class="text-2xl font-semibold text-gray-800 mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Chatbot/WelcomeTitle')}</div>
+              <p class="text-center text-gray-500 m-0 line-height-3">
+                #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Chatbot/WelcomeDesc')}
+              </p>
+            </div>
+          </ui:fragment>
+
+          <ui:repeat value="#{data.messages}" var="message">
+            <!-- User Message -->
+            <h:panelGroup rendered="#{message.role eq 'user'}" layout="block" styleClass="user-message-row flex justify-content-end mb-4">
+              <div class="user-message">
+                <h:panelGroup layout="block" styleClass="message-bubble sent">
+                  <h:outputText value="#{message.content}" />
+                </h:panelGroup>
+                <h:panelGroup layout="block" styleClass="message-time text-xs text-gray-400 mt-1 text-right">
+                  <h:outputText value="#{message.timestamp}" />
+                </h:panelGroup>
+              </div>
+            </h:panelGroup>
+
+            <!-- Assistant Message -->
+            <h:panelGroup rendered="#{message.role ne 'user'}" layout="block" styleClass="assistant-message-row mb-4">
+              <div class="assistant-content">
+                <div class="assistant-name text-sm font-semibold text-gray-700 mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Chatbot/AssistantName')}</div>
+                <div class="markdown-content" pt:data-markdown="true">
+                  <h:outputText value="#{message.content}" escape="false" />
+                </div>
+                <h:panelGroup layout="block" styleClass="message-time text-xs text-gray-400 mt-2">
+                  <h:outputText value="#{message.timestamp}" />
+                </h:panelGroup>
+              </div>
+            </h:panelGroup>
+          </ui:repeat>
+
+          <!-- Thinking Indicator -->
+          <div class="assistant-message-row mb-4 thinking-status rag-hidden" id="thinking-indicator">
+            <div class="assistant-content">
+              <div class="assistant-name text-sm font-semibold text-gray-700 mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Chatbot/AssistantName')}</div>
+              <div class="flex align-items-center gap-2">
+                <div class="thinking-spinner">
+                  <span class="thinking-dot"></span>
+                  <span class="thinking-dot"></span>
+                  <span class="thinking-dot"></span>
+                </div>
+                <span class="thinking-text text-gray-600" id="thinking-text">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Chatbot/ThinkingText')}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Message Input Area -->
+      <div class="message-input-area surface-0 border-top-1 border-gray-200 p-3">
+        <div class="rag-chat-inner mx-auto">
+          <div class="flex align-items-end gap-2">
+            <div class="flex-1 relative">
+              <p:inputTextarea id="chat-input"
+                              value="#{data.userInput}"
+                              rows="1"
+                              autoResize="true"
+                              maxlength="2000"
+                              styleClass="w-full message-input"
+                              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Chatbot/InputPlaceholder')}"
+                              onkeydown="handleChatInputKeydown(event)">
+              </p:inputTextarea>
+            </div>
+
+            <p:commandButton id="send-btn"
+                            icon="si si-arrow-up-1"
+                            styleClass="p-button-rounded send-btn"
+                            actionListener="#{logic.chat()}"
+                            update="chat-panel"
+                            global="false"
+                            onstart="showThinking()"
+                            oncomplete="onChatComplete();">
+            </p:commandButton>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </h:panelGroup>
+
+</ui:composition>

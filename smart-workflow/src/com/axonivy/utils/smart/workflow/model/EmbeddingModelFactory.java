@@ -16,6 +16,17 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 
 public class EmbeddingModelFactory {
 
+  public record EmbeddingConfig(String providerName, String modelName) {}
+
+  public static EmbeddingConfig resolvedEmbeddingConfig() {
+    String providerVar = Ivy.var().get(RagConf.EMBEDDING_PROVIDER);
+    String modelVar = Ivy.var().get(RagConf.EMBEDDING_MODEL_NAME);
+    String apiKey = Ivy.var().get(RagConf.EMBEDDING_API_KEY);
+    ChatModelProvider provider = getProviderOrDefault(providerVar);
+    EmbeddingModelOptions opts = EmbeddingModelOptions.options().modelName(modelVar).apiKey(apiKey);
+    return new EmbeddingConfig(provider.name(), provider.resolveEmbeddingModelName(opts));
+  }
+
   public static EmbeddingModel createModel(EmbeddingModelOptions options, String providerName) {
     return getProviderOrDefault(providerName).setupEmbedding(options).orElseThrow();
   }

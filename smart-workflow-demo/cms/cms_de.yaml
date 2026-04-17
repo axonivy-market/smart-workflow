@@ -106,6 +106,81 @@ Dialogs:
                     Total: Gesamt
                     ViewDetails: Details anzeigen
                     YourCartIsEmpty: Dein Warenkorb ist leer
+              rag:
+                RagDemo:
+                  PageTitle: RAG Demo
+                  Title: Smart Workflow RAG
+                  Subtitle: Eine geführte Einführung in Retrieval-Augmented Generation mit Smart Workflow
+                  IndexNameLabel: Name des Vektorspeichers
+                  IndexNamePlaceholder: z.B. hr-wissen
+                  IndexNameDesc: "Ein eindeutiger Name zur Identifizierung dieser Wissensdatenbank im Vektorspeicher."
+                  ChooseFileLabel: 'Datei auswählen (.pdf / .md / .txt)'
+                  UploadLabel: Hochladen
+                  EmbedButton: Einbetten
+                  EmbeddedChunksCount: 'Eingebettete Abschnitte ({0})'
+                  ProviderLabel: Anbieter
+                  ModelLabel: Modell
+                  CreatedLabel: Erstellt
+                  ChunkSizeLabel: Abschnittsgröße
+                  OverlapLabel: Überlappung
+                  TokensUnit: Token
+                  NoDocumentsTitle: Noch keine Dokumente
+                  NoDocumentsDesc: 'Laden Sie <strong>.txt</strong>- oder <strong>.md</strong>-Dateien hoch und klicken Sie auf <strong>Einbetten</strong>, um sie zu indexieren.'
+                  PreviewColumn: Vorschau
+                  SourceColumn: Quelle
+                  ChunkIdColumn: Abschnitts-ID
+                  Wizard:
+                    Step1Label: Konfiguration
+                    Step2Label: "Hochladen & Einbetten"
+                    Step3Label: Ergebnisse
+                    Step4Label: Chat
+                    BackToUploadButton: "Zurück zu den Ergebnissen"
+                  Step1:
+                    VectorStoreTitle: Vektorspeicher
+                    UrlLabel: Server-URL
+                    UrlDesc: Basis-URL des OpenSearch-Servers.
+                    AuthTypeLabel: Authentifizierung
+                    AuthTypeDesc: "Für diese OpenSearch-Instanz konfigurierte Authentifizierungsmethode."
+                    TestConnectionButton: Verbindung testen
+                    Title: RAG-Konfiguration
+                    Subtitle: "Schreibgeschützte Einstellungen aus Ivy-Variablen. Um sie zu ändern, aktualisieren Sie die Variablen in der Ivy-Konfiguration."
+                    ContinueButton: Weiter
+                    ProviderLabel: Einbettungsanbieter
+                    ProviderDesc: "KI-Anbieter zur Generierung von Vektor-Einbettungen. Fällt auf AI.DefaultProvider zurück, wenn leer."
+                    ModelLabel: Einbettungsmodell
+                    ModelDesc: "Modell für die Einbettung. Wenn leer, wird der Anbieterstandard verwendet."
+                    ChunkSizeLabel: Abschnittsgröße
+                    ChunkSizeDesc: "Maximale Tokens pro Dokumentenabschnitt beim Aufteilen von Quelltext."
+                    ChunkSizeUnit: Tokens
+                    ChunkOverlapLabel: Abschnittsüberlappung
+                    ChunkOverlapDesc: "Überlappende Tokens zwischen aufeinanderfolgenden Abschnitten zur Kontexterhaltung an Grenzen."
+                    ChunkOverlapUnit: Tokens
+                    MaxResultsLabel: "Max. Ergebnisse"
+                    MaxResultsDesc: "Maximale Anzahl übereinstimmender Abschnitte pro Suchanfrage."
+                    MinScoreLabel: "Min. Bewertung"
+                    MinScoreDesc: "Kosinus-Ähnlichkeitsschwelle. Abschnitte unterhalb dieses Wertes werden ausgeschlossen."
+                  Step2:
+                    Title: "Dokumente hochladen & einbetten"
+                    Subtitle: "Geben Sie einen Vektorspeichernamen ein, laden Sie eine Datei (.pdf, .md oder .txt) hoch und betten Sie sie in den Vektorspeicher ein."
+                    EmbedButton: Einbetten
+                    IndexExistsWarning: Index bereits vorhanden
+                    IndexExistsWarningDesc: "Ein Index mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Indexnamen."
+                    BackButton: Zurück
+                    DropzoneTitle: Dateien hier ablegen
+                    DropzoneHint: "Unterstützt .pdf, .md und .txt — eine Datei gleichzeitig"
+                    StagedFilesTitle: Bereit zum Einbetten
+                    FileNameColumn: Dateiname
+                    FileSizeColumn: Größe
+                  Step3:
+                    Title: Einbettungsergebnisse
+                    BackButton: "Zurück zum Hochladen"
+                    ChatButton: Chat starten
+                  Chatbot:
+                    WelcomeTitle: "Hallo, ich bin Ihr KI-Assistent"
+                    WelcomeDesc: Ich helfe Ihnen, Informationen aus Ihren indizierten Dokumenten zu finden.
+                    InputPlaceholder: Fragen Sie zu Ihren Dokumenten...
+                    AssistantName: KI-Assistent
+                    ThinkingText: Dokumente werden durchsucht...
 Features:
   FileExtractionDemo:
     ExtractFromImagePrompt: Extract Invoice from image

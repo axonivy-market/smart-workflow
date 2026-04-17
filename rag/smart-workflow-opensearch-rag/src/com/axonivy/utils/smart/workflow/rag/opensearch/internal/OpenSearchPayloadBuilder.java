@@ -81,9 +81,15 @@ final class OpenSearchPayloadBuilder {
     .put(Meta.EMBEDDING_MODEL, StringUtils.defaultIfBlank(meta.embeddingModel(), null));
   }
 
-  public static String buildUpdateLastIngestedBody() {
+  public static String buildUpdateLastIngestedBody(OpenSearchIndexMeta currentMeta) {
     ObjectNode root = JsonUtils.getObjectMapper().createObjectNode();
-    root.putObject(Meta.META).put(Meta.LAST_INGESTED_AT, Instant.now().toString());
+    root.putObject(Meta.META)
+        .put(Meta.EMBEDDING_PROVIDER, StringUtils.defaultIfBlank(currentMeta.embeddingProvider(), null))
+        .put(Meta.EMBEDDING_MODEL, StringUtils.defaultIfBlank(currentMeta.embeddingModel(), null))
+        .put(Meta.CHUNK_SIZE, currentMeta.chunkSize())
+        .put(Meta.CHUNK_OVERLAP, currentMeta.chunkOverlap())
+        .put(Meta.CREATED_AT, currentMeta.createdAt())
+        .put(Meta.LAST_INGESTED_AT, Instant.now().toString());
     return root.toString();
   }
 
@@ -158,6 +164,29 @@ private static ObjectNode buildDocNode(Embedding embedding, TextSegment segment)
       matches.add(new EmbeddingMatch<>(score, id, null, segment));
     }
     return new EmbeddingSearchResult<>(matches);
+  }
+
+  public static OpenSearchIndexMeta parseIndexMeta(String json) throws JsonProcessingException {
+    JsonNode root = JsonUtils.getObjectMapper().readTree(json);
+    // Response shape: { "<indexName>": { "mappings": { "_meta": { ... } } } }
+    JsonNode meta = root.elements().next().path("mappings").path(Meta.META);
+    return new OpenSearchIndexMeta(
+        meta.path(Meta.EMBEDDING_PROVIDER).asText(null),
+        meta.path(Meta.EMBEDDING_MODEL).asText(null),
+        meta.path(Meta.CHUNK_SIZE).asInt(0),
+        meta.path(Meta.CHUNK_OVERLAP).asInt(0),
+        meta.path(Meta.CREATED_AT).asText(null),
+        meta.path(Meta.LAST_INGESTED_AT).asText(null));
+  }
+
+  public static String buildListDocumentsBody(int size) {
+    ObjectNode root = JsonUtils.getObjectMapper().createObjectNode();
+    root.put(Fields.SIZE, size);
+    root.putObject(Fields.QUERY).putObject("match_all");
+    ArrayNode source = root.putArray(Fields.SOURCE);
+    source.add(Fields.TEXT);
+    source.add(Fields.METADATA);
+    return root.toString();
   }
 
   public static Optional<String> parseBulkError(String responseBody) throws JsonProcessingException {

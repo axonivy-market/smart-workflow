@@ -103,11 +103,11 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector;",
             "import com.axonivy.utils.smart.workflow.rag.entity.RagResult;",
-            "import com.axonivy.utils.smart.workflow.rag.pipeline.RagConnector;",
             "",
-            "RagConnector.Connection connection = new OpenSearchConnector().connect(in.collection);",
-            "if (connection.hasError()) {",
-            "  in.result = new RagResult(connection.error());",
+            "try {",
+            "  new OpenSearchConnector().connect(in.collection);",
+            "} catch (Exception e) {",
+            "  in.result = new RagResult(e.getMessage());",
             "}"
           ]
         }

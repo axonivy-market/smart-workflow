@@ -2,6 +2,8 @@ package com.axonivy.utils.smart.workflow.rag.pipeline.internal;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.model.EmbeddingModelFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.rag.RagConf;
 import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchIndexMeta;
 import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;
@@ -10,6 +12,7 @@ import com.axonivy.utils.smart.workflow.rag.pipeline.RagVectorStore;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 
 public class OpenSearchConnector implements RagConnector {
 
@@ -42,9 +45,11 @@ public class OpenSearchConnector implements RagConnector {
     }
     OpenSearchRestClient client = OpenSearchRestClient.fromIvyVars();
     client.ping();
+    ChatModelProvider embeddingProvider = EmbeddingModelFactory.getProviderOrDefault(Ivy.var().get(RagConf.EMBEDDING_PROVIDER));
+    EmbeddingModel embeddingModel = EmbeddingModelFactory.createFromIvyVars();
     OpenSearchIndexMeta meta = new OpenSearchIndexMeta(
-        Ivy.var().get(RagConf.EMBEDDING_PROVIDER),
-        Ivy.var().get(RagConf.EMBEDDING_MODEL_NAME),
+        embeddingProvider.name(),
+        embeddingModel.modelName(),
         IvyVar.integer(RagConf.CHUNK_SIZE, RagConf.FALLBACK_CHUNK_SIZE),
         IvyVar.integer(RagConf.CHUNK_OVERLAP, RagConf.FALLBACK_CHUNK_OVERLAP));
     return new OpenSearchVectorStore(client, collection, meta);

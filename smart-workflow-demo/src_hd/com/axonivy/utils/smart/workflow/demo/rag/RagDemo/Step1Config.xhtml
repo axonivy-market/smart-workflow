@@ -1,0 +1,167 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://primefaces.org/ui">
+
+  <div class="rag-step-content">
+    <!-- Vector Store Information -->
+    <div class="rag-step-intro mb-3">
+      <h3 class="m-0 mb-1 text-2xl">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/VectorStoreTitle')}</h3>
+    </div>
+    <div class="mb-2">
+      <div class="grid">
+        <!-- Server URL -->
+        <div class="col-12 flex align-items-center gap-3">
+          <span class="rag-meta-label w-7rem font-bold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/UrlLabel')}</span>
+          <span class="rag-meta-value">
+            <h:outputText value="#{data.cfgOpenSearchUrl}" rendered="#{not empty data.cfgOpenSearchUrl}" />
+            <h:outputText value="-" rendered="#{empty data.cfgOpenSearchUrl}" />
+          </span>
+        </div>
+
+        <!-- Authentication Type -->
+        <div class="col-12 flex align-items-center gap-3">
+          <span class="rag-meta-label w-7rem font-bold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/AuthTypeLabel')}</span>
+          <span class="rag-meta-value">#{data.cfgOpenSearchAuthType}</span>
+        </div>
+
+        <div class="col-12 flex flex-row-reverse">
+          <p:commandButton
+            value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/TestConnectionButton')}"
+            styleClass="p-button-outlined p-button-sm"
+            actionListener="#{logic.testConnection}"
+            update="messages wizard-body"
+            process="@this">
+          </p:commandButton>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAG Configuration -->
+    <div class="rag-step-intro mb-3">
+      <h3 class="m-0 mb-1 text-2xl">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/Title')}</h3>
+      <p class="m-0 text-gray-500">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/Subtitle')}</p>
+    </div>
+    <div class="grid">
+      <!-- Embedding Provider -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="rag-config-card border-round-xl p-4">
+          <div class="flex align-items-center gap-2 mb-3">
+            <i class="si si-cloud-1 rag-config-icon" />
+            <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ProviderLabel')}</span>
+          </div>
+          <div class="mb-3">
+            <span class="rag-config-badge surface-100 text-primary">
+              <h:outputText value="#{data.cfgEmbeddingProvider}" rendered="#{not empty data.cfgEmbeddingProvider}" />
+              <h:outputText value="-" rendered="#{empty data.cfgEmbeddingProvider}" />
+            </span>
+          </div>
+          <p class="m-0 line-height-3 text-gray-500">
+            #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ProviderDesc')}
+          </p>
+        </div>
+      </div>
+
+      <!-- Embedding Model -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="rag-config-card border-round-xl p-4">
+          <div class="flex align-items-center gap-2 mb-3">
+            <i class="si si-brain-1 rag-config-icon" />
+            <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ModelLabel')}</span>
+          </div>
+          <div class="mb-3">
+            <span class="rag-config-badge surface-100 text-primary">
+              <h:outputText value="#{data.cfgEmbeddingModel}" rendered="#{not empty data.cfgEmbeddingModel}" />
+              <h:outputText value="-" rendered="#{empty data.cfgEmbeddingModel}" />
+            </span>
+          </div>
+          <p class="m-0 line-height-3 text-gray-500">
+            #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ModelDesc')}
+          </p>
+        </div>
+      </div>
+
+      <!-- Chunk Size -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="rag-config-card border-round-xl p-4">
+          <div class="flex align-items-center gap-2 mb-3">
+            <i class="si si-scissors rag-config-icon" />
+            <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ChunkSizeLabel')}</span>
+          </div>
+          <div class="mb-3">
+            <span class="rag-config-badge surface-100 text-primary">
+              #{data.cfgChunkSize}
+              #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ChunkSizeUnit')}
+            </span>
+          </div>
+          <p class="m-0 line-height-3 text-gray-500">
+            #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ChunkSizeDesc')}
+          </p>
+        </div>
+      </div>
+
+      <!-- Chunk Overlap -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="rag-config-card border-round-xl p-4">
+          <div class="flex align-items-center gap-2 mb-3">
+            <i class="si si-layers-back rag-config-icon" />
+            <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ChunkOverlapLabel')}</span>
+          </div>
+          <div class="mb-3">
+            <span class="rag-config-badge surface-100 text-primary">
+              #{data.cfgChunkOverlap}
+              #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ChunkOverlapUnit')}
+            </span>
+          </div>
+          <p class="m-0 line-height-3 text-gray-500">
+            #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ChunkOverlapDesc')}
+          </p>
+        </div>
+      </div>
+
+      <!-- Max Results -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="rag-config-card border-round-xl p-4">
+          <div class="flex align-items-center gap-2 mb-3">
+            <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/MaxResultsLabel')}</span>
+          </div>
+          <div class="mb-3">
+            <span class="rag-config-badge surface-100 text-primary">#{data.cfgMaxResults}</span>
+          </div>
+          <p class="m-0 line-height-3 text-gray-500">
+            #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/MaxResultsDesc')}
+          </p>
+        </div>
+      </div>
+
+      <!-- Min Score -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="rag-config-card border-round-xl p-4">
+          <div class="flex align-items-center gap-2 mb-3">
+            <i class="si si-gauge rag-config-icon" />
+            <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/MinScoreLabel')}</span>
+          </div>
+          <div class="mb-3">
+            <span class="rag-config-badge surface-100 text-primary">#{data.cfgMinScore}</span>
+          </div>
+          <p class="m-0 line-height-3 text-gray-500">
+            #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/MinScoreDesc')}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-content-end mt-5">
+      <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ContinueButton')}"
+        icon="si si-arrow-right-1" iconPos="right"
+        actionListener="#{logic.goToStep(2)}"
+        update="wizard-body wizard-steps"
+        process="@this"
+        disabled="#{not data.connectionOk}">
+      </p:commandButton>
+    </div>
+
+  </div>
+
+</ui:composition>

@@ -54,12 +54,12 @@ Semantic search tool available to Smart Workflow agents. The agent calls this to
 
 ### Demo
 
-The `ExternalRagDemo` process in `smart-workflow-demo` demonstrates a complete RAG pipeline:
+The `RagChatBotDemo` process in `smart-workflow-demo` is an interactive four-step wizard that demonstrates a complete RAG pipeline:
 
-1. Loads three HR documents (insurance plans, company rules, benefits) from the project CMS.
-2. Ingests them into an OpenSearch index named `hr-knowledge` (skipped if the index already exists).
-3. Asks three HR-related questions through an AI agent that uses the `openSearchSearch` tool.
-4. Logs each answer along with the matched knowledge base segments and their similarity scores.
+1. **Configuration** — Review the OpenSearch server URL, authentication type, and embedding model settings loaded from Ivy variables. Test the connection before proceeding.
+2. **Upload & Embed** — Enter an index name, upload `.txt` or `.md` files, and embed the documents into OpenSearch as searchable vector chunks.
+3. **Results** — Inspect all indexed chunks with their source file and a content preview.
+4. **Chat** — Ask questions answered by an AI agent that retrieves grounded context from the indexed documents using the `openSearchSearch` tool.
 
 **Prerequisites:**
 

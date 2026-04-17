@@ -106,6 +106,81 @@ Dialogs:
                     Total: Total
                     ViewDetails: Ver detalles
                     YourCartIsEmpty: Tu carrito está vacío
+              rag:
+                RagDemo:
+                  PageTitle: RAG Demo
+                  Title: Smart Workflow RAG
+                  Subtitle: Una guía paso a paso de la Generación Aumentada por Recuperación con Smart Workflow
+                  IndexNameLabel: Nombre del almacén vectorial
+                  IndexNamePlaceholder: ej. hr-conocimiento
+                  IndexNameDesc: "Un nombre único para identificar esta base de conocimiento en el almacén vectorial."
+                  ChooseFileLabel: 'Elegir archivo (.pdf / .md / .txt)'
+                  UploadLabel: Subir
+                  EmbedButton: Integrar
+                  EmbeddedChunksCount: 'Fragmentos integrados ({0})'
+                  ProviderLabel: Proveedor
+                  ModelLabel: Modelo
+                  CreatedLabel: Creado
+                  ChunkSizeLabel: Tamaño de fragmento
+                  OverlapLabel: Superposición
+                  TokensUnit: tokens
+                  NoDocumentsTitle: Aún no hay documentos
+                  NoDocumentsDesc: 'Sube archivos <strong>.txt</strong> o <strong>.md</strong> y haz clic en <strong>Integrar</strong> para indexarlos.'
+                  PreviewColumn: Vista previa
+                  SourceColumn: Fuente
+                  ChunkIdColumn: ID de fragmento
+                  Wizard:
+                    Step1Label: "Configuración"
+                    Step2Label: Subir e integrar
+                    Step3Label: Resultados
+                    Step4Label: Chat
+                    BackToUploadButton: Volver a los resultados
+                  Step1:
+                    VectorStoreTitle: "Almacén de vectores"
+                    UrlLabel: URL del servidor
+                    UrlDesc: URL base del servidor OpenSearch.
+                    AuthTypeLabel: Autenticación
+                    AuthTypeDesc: "Método de autenticación configurado para esta instancia de OpenSearch."
+                    TestConnectionButton: Probar conexión
+                    Title: "Configuración RAG"
+                    Subtitle: "Configuración de solo lectura cargada desde variables de Ivy. Para cambiarlos, actualice las variables en la configuración de Ivy."
+                    ContinueButton: Continuar
+                    ProviderLabel: Proveedor de integración
+                    ProviderDesc: "Proveedor de IA utilizado para generar embeddings vectoriales. Utiliza AI.DefaultProvider si está vacío."
+                    ModelLabel: Modelo de integración
+                    ModelDesc: "Modelo utilizado para la integración. Si está vacío, se usa el predeterminado del proveedor."
+                    ChunkSizeLabel: Tamaño de fragmento
+                    ChunkSizeDesc: "Número máximo de tokens por fragmento de documento al dividir el texto fuente."
+                    ChunkSizeUnit: tokens
+                    ChunkOverlapLabel: Solapamiento de fragmentos
+                    ChunkOverlapDesc: "Tokens solapados entre fragmentos consecutivos para preservar el contexto en los límites."
+                    ChunkOverlapUnit: tokens
+                    MaxResultsLabel: "Máx. resultados"
+                    MaxResultsDesc: "Número máximo de fragmentos coincidentes devueltos por consulta de búsqueda."
+                    MinScoreLabel: "Puntuación mínima"
+                    MinScoreDesc: "Umbral de similitud del coseno. Los fragmentos por debajo de esta puntuación se excluyen."
+                  Step2:
+                    Title: Subir e integrar documentos
+                    Subtitle: "Introduce un nombre de almacén vectorial, sube un archivo (.pdf, .md o .txt) y luego intégralo en el almacén vectorial."
+                    EmbedButton: Integrar
+                    IndexExistsWarning: "El índice ya existe"
+                    IndexExistsWarningDesc: "Ya existe un índice con este nombre. Por favor, elija un nombre de índice diferente."
+                    BackButton: Volver
+                    DropzoneTitle: Arrastra y suelta archivos aquí
+                    DropzoneHint: "Soporta .pdf, .md y .txt — un archivo a la vez"
+                    StagedFilesTitle: Listos para integrar
+                    FileNameColumn: Nombre de archivo
+                    FileSizeColumn: Tamaño
+                  Step3:
+                    Title: "Resultados de integración"
+                    BackButton: Volver a subir
+                    ChatButton: Iniciar chat
+                  Chatbot:
+                    WelcomeTitle: "Hola, soy tu asistente de IA"
+                    WelcomeDesc: Puedo ayudarte a encontrar información en tus documentos indexados.
+                    InputPlaceholder: Pregunta sobre tus documentos...
+                    AssistantName: Asistente IA
+                    ThinkingText: Buscando en los documentos...
 Features:
   FileExtractionDemo:
     ExtractFromImagePrompt: Extract Invoice from image

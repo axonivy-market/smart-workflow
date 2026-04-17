@@ -7,9 +7,10 @@ public record OpenSearchIndexMeta(
     String embeddingModel,
     int chunkSize,
     int chunkOverlap,
-    String createdAt) {
+    String createdAt,
+    String lastIngestedAt) {
 
   public OpenSearchIndexMeta(String embeddingProvider, String embeddingModel, int chunkSize, int chunkOverlap) {
-    this(embeddingProvider, embeddingModel, chunkSize, chunkOverlap, Instant.now().toString());
+    this(embeddingProvider, embeddingModel, chunkSize, chunkOverlap, Instant.now().toString(), null);
   }
 }
