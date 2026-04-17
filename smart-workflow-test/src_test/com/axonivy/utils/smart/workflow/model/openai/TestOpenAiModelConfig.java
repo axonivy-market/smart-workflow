@@ -30,6 +30,30 @@ public class TestOpenAiModelConfig {
     assertModel(builder, "gpt-4.1-mini");
   }
 
+  @Test
+  void temperature_gpt4(AppFixture fixture) {
+    var builder = OpenAiServiceConnector.buildOpenAiModel("gpt-4.1-mini");
+    assertThat(builder).extracting("defaultRequestParameters")
+        .extracting(r -> ((DefaultChatRequestParameters) r).temperature())
+        .isEqualTo(0.0);
+  }
+
+  @Test
+  void temperature_gpt5(AppFixture fixture) {
+    var builder = OpenAiServiceConnector.buildOpenAiModel("gpt-5");
+    assertThat(builder).extracting("defaultRequestParameters")
+        .extracting(r -> ((DefaultChatRequestParameters) r).temperature())
+        .isEqualTo(1.0);
+  }
+
+  @Test
+  void temperature_gpt5_nano(AppFixture fixture) {
+    var builder = OpenAiServiceConnector.buildOpenAiModel("gpt-5-nano");
+    assertThat(builder).extracting("defaultRequestParameters")
+        .extracting(r -> ((DefaultChatRequestParameters) r).temperature())
+        .isEqualTo(1.0);
+  }
+
   private static void assertModel(OpenAiChatModelBuilder builder, String expect) {
     assertThat(builder).extracting("defaultRequestParameters")
       .extracting(r -> ((DefaultChatRequestParameters)r).modelName())

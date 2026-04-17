@@ -76,5 +76,48 @@
       "visual" : {
         "at" : { "x" : 352, "y" : 200 }
       }
+    }, {
+      "id" : "f6",
+      "type" : "CallSubStart",
+      "name" : "disconnected(String)",
+      "config" : {
+        "signature" : "disconnected",
+        "input" : {
+          "params" : [
+            { "name" : "user", "type" : "String", "desc" : "user to test availability" }
+          ],
+          "map" : { }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "available", "type" : "Boolean", "desc" : "" }
+          ],
+          "map" : {
+            "result.available" : "false"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 320 },
+        "description" : "Call me to verify the availability of a chat user"
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "ErrorEnd",
+      "name" : "connection:problem",
+      "config" : {
+        "throws" : {
+          "error" : "connection:problem"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 352, "y" : 320 }
+      }
     } ]
 }

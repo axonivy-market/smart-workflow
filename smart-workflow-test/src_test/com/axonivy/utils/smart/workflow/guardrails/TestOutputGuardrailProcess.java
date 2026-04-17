@@ -2,14 +2,13 @@ package com.axonivy.utils.smart.workflow.guardrails;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import javax.ws.rs.core.Response;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
-
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
-import com.axonivy.utils.smart.workflow.guardrails.provider.DefaultGuardrailProvider;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 
 import Features.GuardrailDemoData;
@@ -27,7 +26,7 @@ public class TestOutputGuardrailProcess {
   void setup(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("guardrails"));
     fixture.var(OpenAiConf.API_KEY, "");
-    fixture.var(DefaultGuardrailProvider.DEFAULT_OUTPUT_GUARDRAILS, "");
+    fixture.var(GuardrailCollector.DEFAULT_OUTPUT_GUARDRAILS, "");
     MockOpenAI.defineChat(_ -> buildResponse());
   }
 

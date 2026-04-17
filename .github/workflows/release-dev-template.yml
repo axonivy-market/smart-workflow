@@ -1,0 +1,105 @@
+name: Release-Build-Dev-Template
+
+permissions:
+  actions: read
+  contents: read
+  packages: write
+
+on:
+  workflow_call:
+    inputs:
+      javaVersion:
+        type: number
+        default: 25
+      mvnVersion:
+        type: string
+        default: 3.9.13
+      mvnArgs:
+        type: string
+        required: false
+      dryRun:
+        type: boolean
+        default: true
+      releaseWorkflowId:
+        type: string
+        default: release-dev.yml
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      shouldRelease: ${{ steps.detect.outputs.shouldRelease }}
+    steps:
+      - name: Detect changes since last successful release run
+        id: detect
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const workflow_id = '${{ inputs.releaseWorkflowId }}';
+            const branch = context.ref.replace('refs/heads/', '');
+            const currentSha = context.sha;
+
+            const runs = await github.paginate(github.rest.actions.listWorkflowRuns, {
+              owner,
+              repo,
+              workflow_id,
+              branch,
+              status: 'completed',
+              per_page: 100
+            });
+
+            const previousSuccess = runs.find(
+              run => run.id !== context.runId && run.conclusion === 'success' && run.event === 'schedule'
+            );
+
+            if (!previousSuccess) {
+              core.info('No previous successful scheduled release run found. Release will run.');
+              core.setOutput('shouldRelease', 'true');
+              return;
+            }
+
+            const shouldRelease = previousSuccess.head_sha !== currentSha;
+            core.info(`Previous successful run SHA: ${previousSuccess.head_sha}`);
+            core.info(`Current run SHA: ${currentSha}`);
+            core.setOutput('shouldRelease', shouldRelease ? 'true' : 'false');
+
+            if (!shouldRelease) {
+              core.notice('No changes since last successful release run. Skipping release jobs.');
+            }
+
+  build:
+    runs-on: ubuntu-latest
+    needs: check-changes
+    if: ${{ needs.check-changes.outputs.shouldRelease == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ inputs.javaVersion }}
+          distribution: temurin
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: ${{ inputs.mvnVersion }}
+
+      - name: Build with Maven
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          goals="clean deploy"
+          if [ "${{ inputs.dryRun }}" = "true" ]; then
+            goals="clean verify"
+          fi
+
+          mvn --batch-mode \
+            -Dmaven.test.skip=true \
+            -DaltDeploymentRepository=github::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} \
+            ${goals} ${{ inputs.mvnArgs }}

@@ -1,8 +1,9 @@
 package com.axonivy.utils.smart.workflow.tools.subprocess;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Map.Entry;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,8 @@ import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.demo.support.mock.SupportToolChat;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.tools.internal.IvySubProcessToolExecutor;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.axonivy.utils.smart.workflow.utils.JsonUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -37,11 +39,11 @@ class TestIvySubProcessToolExecutor {
         .build();
 
     var result = IvySubProcessToolExecutor.execute(queryOnly);
-    assertThat(result.text())
+    JsonNode jsonResult = (ObjectNode) JsonUtils.getObjectMapper().readTree(result.text());
+    assertThat(jsonResult.toPrettyString())
         .contains("\"type\" : \"TECHNICAL\"");
 
-    var jResult = (ObjectNode) new ObjectMapper().reader().readTree(result.text());
-    assertThat(jResult.properties()).extracting(Entry::getKey)
+    assertThat(jsonResult.properties()).extracting(Entry::getKey)
         .as("serves complex results as JSON")
         .containsOnly("supportTicket", "aiResult");
   }
