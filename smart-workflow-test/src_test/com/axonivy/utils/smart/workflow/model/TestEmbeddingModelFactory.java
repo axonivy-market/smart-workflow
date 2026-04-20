@@ -2,11 +2,12 @@ package com.axonivy.utils.smart.workflow.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
+import com.axonivy.utils.smart.workflow.rag.RagConf;
 
+import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
@@ -51,8 +52,10 @@ class TestEmbeddingModelFactory {
   }
 
   @Test
-  void createFromIvyVarsThrowsWhenNotConfigured() {
+  void createFromIvyVarsThrowsWhenNotConfigured(AppFixture fixture) {
+    fixture.var(RagConf.EMBEDDING_PROVIDER, "no-such-provider");
     assertThatThrownBy(EmbeddingModelFactory::createFromIvyVars)
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("no-such-provider");
   }
 }
