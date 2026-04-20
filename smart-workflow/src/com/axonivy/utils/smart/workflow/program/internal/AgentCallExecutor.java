@@ -139,6 +139,7 @@ public class AgentCallExecutor {
       all.putAll(SmartWorkflowToolsProvider.provideTools(toolFilter).tools());
       return new ToolProviderResult(all);
     });
+    agentBuilder.toolExecutionErrorHandler(new IvyHandler());
   }
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
