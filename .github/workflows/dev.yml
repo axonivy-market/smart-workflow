@@ -13,4 +13,4 @@ permissions:
 
 jobs:
   build:
-    uses: vhhoang-axonivy/github-workflows/.github/workflows/dev.yml@v6
+    uses: vhhoang-axonivy/github-workflows/.github/workflows/dev.yml@master

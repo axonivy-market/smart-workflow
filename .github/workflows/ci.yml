@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    uses: vhhoang-axonivy/github-workflows/.github/workflows/ci.yml@v6
+    uses: vhhoang-axonivy/github-workflows/.github/workflows/ci.yml@master
     with:
       javaVersion: 25
       cspellExtraWords: .github/cspell-extra-words.txt
