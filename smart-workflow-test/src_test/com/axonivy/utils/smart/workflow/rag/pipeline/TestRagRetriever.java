@@ -1,9 +1,8 @@
 package com.axonivy.utils.smart.workflow.rag.pipeline;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import dev.langchain4j.data.document.Metadata;
@@ -24,7 +23,7 @@ import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 public class TestRagRetriever {
 
   // abstract method is not under test
-  private final RagRetriever retriever = (collection, query, maxResults, minScore) -> {
+  private final RagRetriever retriever = (_collection, _query, _maxResults, _minScore) -> {
     throw new UnsupportedOperationException("search() not under test");
   };
 
@@ -32,7 +31,7 @@ public class TestRagRetriever {
 
   private final EmbeddingModel embeddingModel = textSegments ->
       Response.from(textSegments.stream()
-          .map(ts -> stubEmbedding)
+          .map(_ts -> stubEmbedding)
           .toList());
 
   @Test
