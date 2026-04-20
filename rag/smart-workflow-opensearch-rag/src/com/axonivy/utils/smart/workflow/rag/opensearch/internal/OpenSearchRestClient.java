@@ -27,6 +27,7 @@ public class OpenSearchRestClient {
 
   private static final String OPENSEARCH_CLIENT = "openSearch";
   private static final String NDJSON = "application/x-ndjson";
+  private static final double NO_MIN_SCORE = 0.0;
 
   private interface Paths {
     String BULK = "_bulk";
@@ -107,9 +108,13 @@ public class OpenSearchRestClient {
         Ivy.log().warn("Could not parse OpenSearch bulk response", ex);
       }
     }
-    OpenSearchIndexMeta currentMeta = getIndexMeta(indexName);
-    target.path(indexName).path(Paths.MAPPING)
-        .request(MediaType.APPLICATION_JSON).put(Entity.json(OpenSearchPayloadBuilder.buildUpdateLastIngestedBody(currentMeta))).close();
+    try {
+      OpenSearchIndexMeta currentMeta = getIndexMeta(indexName);
+      target.path(indexName).path(Paths.MAPPING)
+          .request(MediaType.APPLICATION_JSON).put(Entity.json(OpenSearchPayloadBuilder.buildUpdateLastIngestedBody(currentMeta))).close();
+    } catch (RuntimeException ex) {
+      Ivy.log().warn("Could not refresh OpenSearch index meta after bulk ingest", ex);
+    }
   }
 
   public EmbeddingSearchResult<TextSegment> search(String indexName, EmbeddingSearchRequest request) {
@@ -153,7 +158,7 @@ public class OpenSearchRestClient {
       }
       String responseBody = response.readEntity(String.class);
       try {
-        return OpenSearchPayloadBuilder.parseSearchResponse(responseBody, 0.0);
+        return OpenSearchPayloadBuilder.parseSearchResponse(responseBody, NO_MIN_SCORE);
       } catch (JsonProcessingException ex) {
         throw new IllegalStateException("Failed to parse OpenSearch list documents response", ex);
       }
