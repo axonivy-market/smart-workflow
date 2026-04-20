@@ -2,7 +2,7 @@
 Variables:
   AI:
     # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic]
-    DefaultProvider: OpenAI
+    DefaultProvider: ""
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
       # Default input guardrails. Separated by comma. Example: "PromptInjectionInputGuardrail, GuardrailTwo"
