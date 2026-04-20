@@ -1,0 +1,4 @@
+# Normalize line endings
+* text=auto
+# keep .sh script exectuable in WSL
+*.sh text eol=lf

@@ -11,12 +11,14 @@ Token costs and more. In addition, it allows you to re-play real requests with a
 
 ![arize-tool-call](../img/arize_toolCall.png)
 
-### Setup Arize Phoenix
+### Setup
+
+#### Arize Phoenix
 
 1. Run Arize Phoenix using Docker: `docker run --rm -p 6006:6006 -p 4317:4317 arizephoenix/phoenix:nightly`
 2. Visit the tracing platform in your browser [http://localhost:6006](http://localhost:6006)
 
-### Setup Visual Studio Code
+#### Visual Studio Code
 
 1. Install the Axon Ivy Designer extension
 2. Open the Settings and search for Axon Ivy, in it define:
@@ -26,6 +28,13 @@ Token costs and more. In addition, it allows you to re-play real requests with a
 5. Run an AI assisted process in smart-workflow-demo
 
 ![](../img/arize_vsc-engine.png)
+
+#### Devcontainer
+
+Our [Devcontainer](../dev/DEVCONTAINER.md) is pre-configured to run Arize Phoenix within your codespace. 
+In this alternative dev environment you only need to define the AI Provider API key. 
+Processes that you run will automatically report to Arize Phoenix 
+and you can inspect the traces on the exposed container port 6006.
 
 ### Querying
 
