@@ -23,15 +23,17 @@ import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 public class TestRagRetriever {
 
   // abstract method is not under test
-  private final RagRetriever retriever = (_collection, _query, _maxResults, _minScore) -> {
+  @SuppressWarnings("unused")
+  private final RagRetriever retriever = (collection, query, maxResults, minScore) -> {
     throw new UnsupportedOperationException("search() not under test");
   };
 
   private final Embedding stubEmbedding = Embedding.from(new float[]{0.1f, 0.2f, 0.3f});
 
+  @SuppressWarnings("unused")
   private final EmbeddingModel embeddingModel = textSegments ->
       Response.from(textSegments.stream()
-          .map(_ts -> stubEmbedding)
+          .map(ts -> stubEmbedding)
           .toList());
 
   @Test
