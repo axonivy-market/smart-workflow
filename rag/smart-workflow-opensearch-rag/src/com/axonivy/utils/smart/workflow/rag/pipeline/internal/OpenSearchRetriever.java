@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.rag.pipeline.internal;
 
-import com.axonivy.utils.smart.workflow.model.EmbeddingModelFactory;
 import com.axonivy.utils.smart.workflow.rag.RagConf;
 import com.axonivy.utils.smart.workflow.rag.entity.RagResult;
 import com.axonivy.utils.smart.workflow.rag.pipeline.RagConnector;
@@ -29,7 +28,7 @@ public class OpenSearchRetriever implements RagRetriever {
     try {
       int effectiveMaxResults = maxResults > 0 ? maxResults : IvyVar.integer(RagConf.MAX_RESULTS, RagConf.FALLBACK_MAX_RESULTS);
       double effectiveMinScore = minScore > 0 ? minScore : IvyVar.decimal(RagConf.MIN_SCORE, RagConf.FALLBACK_MIN_SCORE);
-      EmbeddingModel embeddingModel = EmbeddingModelFactory.createFromIvyVars();
+      EmbeddingModel embeddingModel = connector.embeddingModel();
       return performSearch(connector, collection, query, effectiveMaxResults, effectiveMinScore, embeddingModel);
     } catch (Exception ex) {
       Ivy.log().error(ERR_SEARCH_FAILED, ex);

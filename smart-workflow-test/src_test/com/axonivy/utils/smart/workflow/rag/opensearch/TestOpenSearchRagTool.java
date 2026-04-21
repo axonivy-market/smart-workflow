@@ -11,12 +11,12 @@ public class TestOpenSearchRagTool {
   private final OpenSearchRagTool tool = new OpenSearchRagTool();
 
   @Test
-  void nameIsOpenSearchSearch() {
+  void name() {
     assertThat(tool.name()).isEqualTo("openSearchSearch");
   }
 
   @Test
-  void descriptionIsNotBlank() {
+  void description() {
     assertThat(tool.description()).isNotBlank();
   }
 

@@ -26,10 +26,14 @@ public class TestOpenSearchPayloadBuilder {
     JsonNode root = JsonUtils.getObjectMapper().readTree(json);
 
     assertThat(root.at("/settings/index.knn").asBoolean()).isTrue();
-    assertThat(root.at("/mappings/properties/vector/type").asText()).isEqualTo("knn_vector");
-    assertThat(root.at("/mappings/properties/vector/dimension").asInt()).isEqualTo(DIMENSION);
-    assertThat(root.at("/mappings/properties/text/type").asText()).isEqualTo("text");
-    assertThat(root.at("/mappings/properties/metadata/type").asText()).isEqualTo("object");
+    assertThat(root.at("/mappings/properties/vector/type").asText())
+        .isEqualTo("knn_vector");
+    assertThat(root.at("/mappings/properties/vector/dimension").asInt())
+        .isEqualTo(DIMENSION);
+    assertThat(root.at("/mappings/properties/text/type").asText())
+        .isEqualTo("text");
+    assertThat(root.at("/mappings/properties/metadata/type").asText())
+        .isEqualTo("object");
 
     JsonNode meta = root.at("/mappings/_meta");
     assertThat(meta.get("chunkSize").asInt()).isEqualTo(300);
