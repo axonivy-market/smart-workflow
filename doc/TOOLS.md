@@ -101,3 +101,31 @@ Key points from the demo:
 - Uses a custom type (`com.axonivy.utils.ai.Invoice`) as a parameter — the framework deserializes it automatically from the agent's JSON call.
 - Returns a typed result record (`TaxCalculationResult`) which the framework serializes back to the agent as JSON.
 - Registered in [`DemoToolProvider`](../smart-workflow-demo/src/com/axonivy/utils/smart/workflow/demo/tool/DemoToolProvider.java) via SPI.
+
+---
+
+## Standard Tools
+
+Smart Workflow ships with built-in tools that agents can use out of the box.
+
+### webSearch
+
+Searches the web for current information and returns a list of results with titles, URLs, and content snippets.
+Agents select this tool automatically when they need up-to-date or factual information from the internet.
+
+**Configuration** (set in `variables.yaml`):
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `AI.Tool.WebSearch.MaxResults` | Maximum number of search results returned per query | `5` |
+| `AI.Tool.WebSearch.WhitelistDomains` | Comma-separated list of allowed domains (e.g. `stackoverflow.com, github.com`). If empty, all domains are allowed. | _(empty — all domains)_ |
+
+**Search engine**: By default the tool uses DuckDuckGo. Custom engines can be plugged in by implementing [`SmartWebSearchEngine`](../smart-workflow/src/com/axonivy/utils/smart/workflow/tools/web/SmartWebSearchEngine.java) and registering a [`SmartWebSearchEngineProvider`](../smart-workflow/src/com/axonivy/utils/smart/workflow/tools/web/SmartWebSearchEngineProvider.java) via SPI.
+
+**Using the tool in a process**: Assign `webSearch` to the `tools` field of an Agentic Process Call element:
+
+```
+tools = ["webSearch"]
+```
+
+See the [`WebSearchDemo`](../smart-workflow-demo/processes/Features/WebSearchDemo.p.json) process for a complete example.
