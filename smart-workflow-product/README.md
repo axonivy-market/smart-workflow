@@ -237,53 +237,27 @@ Developers implement `SmartWorkflowInputGuardrail`, expose it through a `Guardra
 
 ---
 
-## Patterns
+## Best Practices
 
-The demos below illustrate **best practices** for structuring Axon Ivy agents and tools with Smart Workflow. Two complementary patterns are shown: one for tightly scoping an agent's tool access, and one for feature-grouped tool reuse.
+The demos below illustrate **best practices** for structuring Axon Ivy agents and tools with Smart Workflow. Three complementary patterns are shown: one for tightly scoping an agent's tool access, one for linear task-based orchestration, and one for feature-grouped tool reuse.
 
-### Self-Contained Agent — Agent + Tools in One Callable
+### Pattern: Agent Pipeline
 
-This pattern shows how to bundle an agent together with all of its tools inside a single callable subprocess. Everything the agent is permitted to call is defined in one file, creating a clear boundary around the feature that is easy to audit, test, and replace.
+A linear chain of agents where each one processes an input and passes the result to the next stage. Best practice: assign a dedicated task to each agent so that execution is tracked, resumable, and visible in the task history.
 
-The orchestrating agent and all its tools are co-located in the same process file. The agent's tool access is explicitly restricted to only the tools defined within that file — no other tools are reachable. This makes the agent's full capability visible at a glance and prevents unintended tool access.
+See the **Agent Pipeline Demo** process in `smart-workflow-demo`.
 
-<details>
-<summary><strong>Demo flow (start Agent Pipeline Demo)</strong></summary>
+### Pattern: Self-Contained Agent with Co-located Tools
 
-1. Raw invoice text is passed to the callable entry point.
-2. The Invoice Analyzer Agent invokes its tools in sequence: extract header info → extract line items → validate amounts → assess compliance.
-3. Each tool runs its own focused AI agent and returns a typed result.
-4. The orchestrating agent compiles all findings into a structured analysis report and returns it to the caller.
+The agent and its tools are self-contained in one file with no cross-process references, making the full capability easy to ship and expose as a single callable interface.
 
-</details>
+See the **Self-Contained Agent** process in `smart-workflow-demo`.
 
----
-
-### Feature-Grouped Agents and Tools
+### Pattern: Feature-Grouped Agents and Tools
 
 This pattern shows how to organize agents and tools by business domain when tools need to be shared across multiple agents. Rather than bundling everything inside a single callable, each agent and each tool group lives in its own process file under a common feature folder — making the domain boundary explicit and allowing tool reuse.
 
-<details>
-<summary><strong>Example (Shopping Demo process)</strong></summary>
-
-```
-processes/
-  Shopping/
-    agents/
-      ProductAgent.p.json
-      BrandAgent.p.json
-      SupplierAgent.p.json
-      CategoryAgent.p.json
-    tools/
-      ProductTools.p.json
-      BrandTools.p.json
-      SupplierTools.p.json
-      CategoryTools.p.json
-```
-
-</details>
-
----
+See the **Shopping Demo** process in `smart-workflow-demo`.
 
 ## Setup
 
