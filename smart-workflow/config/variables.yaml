@@ -9,10 +9,13 @@ Variables:
       DefaultInput: ""
       # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
       DefaultOutput: ""
-    WebSearch:
-      # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"
-      # If empty, all domains are allowed.
-      WhitelistDomains: ""
+    Tool:
+      WebSearch:
+        # Maximum number of search results returned per query.
+        MaxResults: ""
+        # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"
+        # If empty, all domains are allowed.
+        WhitelistDomains: ""
     Observability:
       Ivy:
         # Enable chat history recording for governance audit.

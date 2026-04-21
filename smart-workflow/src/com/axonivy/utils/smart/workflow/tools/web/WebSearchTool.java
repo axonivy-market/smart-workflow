@@ -16,7 +16,8 @@ import ch.ivyteam.ivy.environment.Ivy;
 public class WebSearchTool implements SmartWorkflowTool {
 
   private static final int DEFAULT_MAX_RESULTS = 5;
-  public static final String WHITELIST_DOMAINS = "AI.WebSearch.WhitelistDomains";
+  public static final String MAX_RESULTS = "AI.Tool.WebSearch.MaxResults";
+  public static final String WHITELIST_DOMAINS = "AI.Tool.WebSearch.WhitelistDomains";
 
   @Override
   public String name() {
@@ -45,9 +46,21 @@ public class WebSearchTool implements SmartWorkflowTool {
         .orElseThrow(() -> new IllegalStateException(
             "No SmartWebSearchEngine found. Register a SmartWebSearchEngineProvider via META-INF/services."));
     String query = (String) args.get("query");
-    List<SmartWebSearchResult> results = engine.search(query, DEFAULT_MAX_RESULTS);
+    List<SmartWebSearchResult> results = engine.search(query, readMaxResults());
     results = filterByWhitelistDomains(results);
     return new WebSearchToolResult(query, results);
+  }
+
+  static int readMaxResults() {
+    var configuredValue = StringUtils.defaultString(Ivy.var().get(MAX_RESULTS)).strip();
+    if (configuredValue.isEmpty()) {
+      return DEFAULT_MAX_RESULTS;
+    }
+    try {
+      return Integer.parseInt(configuredValue);
+    } catch (NumberFormatException e) {
+      return DEFAULT_MAX_RESULTS;
+    }
   }
 
   private List<SmartWebSearchResult> filterByWhitelistDomains(List<SmartWebSearchResult> results) {
