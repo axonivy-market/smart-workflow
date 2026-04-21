@@ -291,6 +291,7 @@
     }, {
       "id" : "f26",
       "type" : "UserTask",
+      "name" : "userFeedback",
       "config" : {
         "dialog" : "com.axonivy.utils.ai.HumanDecision:start(hibernate.HumanDecision)",
         "call" : {

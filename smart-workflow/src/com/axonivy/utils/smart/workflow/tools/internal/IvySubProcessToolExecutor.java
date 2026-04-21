@@ -13,12 +13,7 @@ import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartParamCaller;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
-import dev.langchain4j.exception.ToolArgumentsException;
 import dev.langchain4j.internal.Json;
-import dev.langchain4j.service.tool.ToolErrorContext;
-import dev.langchain4j.service.tool.ToolErrorHandlerResult;
-import dev.langchain4j.service.tool.ToolExecutionResult;
-import opennlp.tools.stemmer.snowball.englishStemmer;
 
 public class IvySubProcessToolExecutor {
 
@@ -45,11 +40,25 @@ public class IvySubProcessToolExecutor {
           SubProcessCallResult res = call(startable.get(), parameters);
           return ToolExecutionResultMessage.from(execTool, Json.toJson(res.asMap()));
         } catch (BpmError error) {
-          ToolErrorContext errorContext = ToolErrorContext.builder()
-                    .toolExecutionRequest(execTool)
-                   // .invocationContext(invocationContext)
-                    .build();
-          throw error;
+
+          throw BpmError.create(error)
+            .withAttribute("tool.id", execTool.id())
+            .withAttribute("tool.name", execTool.name())
+            .withAttribute("tool.parameters", execTool.arguments())
+            .build();
+
+          // return ToolExecutionResultMessage.builder()
+          //     .id(execTool.id())
+          //     .toolName(execTool.name())
+          //     .isError(true)
+          //     .text("failed to execute tool; BPM error occurred: " + error.getMessage())
+          //     .build();
+
+          // ToolErrorContext errorContext = ToolErrorContext.builder()
+          //           .toolExecutionRequest(execTool)
+          //          // .invocationContext(invocationContext)
+          //           .build();
+          // throw error;
             // ToolErrorHandlerResult errorHandlerResult;
             // if (e instanceof ToolArgumentsException) {
             //     errorHandlerResult = argumentsErrorHandler.handle(getCause(e), errorContext);
