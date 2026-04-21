@@ -117,6 +117,7 @@ Agents select this tool automatically when they need up-to-date or factual infor
 
 | Variable | Purpose | Default |
 | --- | --- | --- |
+| `AI.Tool.WebSearch.Engine` | Name of the search engine to use. Must match the `name()` of a registered `SmartWebSearchEngine`. If empty, the first available engine is used. | _(empty — first available)_ |
 | `AI.Tool.WebSearch.MaxResults` | Maximum number of search results returned per query | `5` |
 | `AI.Tool.WebSearch.WhitelistDomains` | Comma-separated list of allowed domains (e.g. `stackoverflow.com, github.com`). If empty, all domains are allowed. | _(empty — all domains)_ |
 

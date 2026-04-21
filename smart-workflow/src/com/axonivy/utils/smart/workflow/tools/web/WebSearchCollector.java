@@ -1,32 +1,45 @@
 package com.axonivy.utils.smart.workflow.tools.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
 
+import ch.ivyteam.ivy.environment.Ivy;
+
 public class WebSearchCollector {
 
-  private static SmartWebSearchEngine override;
-
-  public static void setOverride(SmartWebSearchEngine engine) {
-    override = engine;
-  }
+  public static final String ENGINE = "AI.Tool.WebSearch.Engine";
 
   public static List<SmartWebSearchEngine> allEngines() {
     var project = SpiProject.getSmartWorkflowPmv().project();
     return new SpiLoader(project).load(SmartWebSearchEngineProvider.class)
         .stream()
-        .flatMap(provider -> provider.getEngines().stream())
+        .flatMap(provider -> safeGetEngines(provider).stream())
         .collect(Collectors.toList());
   }
 
   public static Optional<SmartWebSearchEngine> findEngine() {
-    if (override != null) {
-      return Optional.of(override);
+    var configured = StringUtils.trimToEmpty(Ivy.var().get(ENGINE));
+    var engines = allEngines();
+    if (!configured.isEmpty()) {
+      return engines.stream()
+          .filter(e -> e.name().equalsIgnoreCase(configured))
+          .findFirst();
     }
-    return allEngines().stream().findFirst();
+    return engines.stream().findFirst();
+  }
+
+  private static List<SmartWebSearchEngine> safeGetEngines(SmartWebSearchEngineProvider provider) {
+    try {
+      return provider.getEngines();
+    } catch (Exception e) {
+      return new ArrayList<>();
+    }
   }
 }

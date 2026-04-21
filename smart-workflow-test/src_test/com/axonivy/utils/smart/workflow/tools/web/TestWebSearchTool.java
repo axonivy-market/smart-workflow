@@ -1,10 +1,9 @@
 package com.axonivy.utils.smart.workflow.tools.web;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ class TestWebSearchTool {
   void setup(AppFixture fixture) {
     fixture.var(WebSearchTool.MAX_RESULTS, "");
     fixture.var(WhitelistDomainFilter.WHITELIST_DOMAINS, "");
-    WebSearchCollector.setOverride(new DummySearchEngine());
+    fixture.var(WebSearchCollector.ENGINE, "dummy");
     DummySearchEngine.setResults(List.of(
         new SmartWebSearchResult("Result 1", "https://example.com/page1", "snippet 1"),
         new SmartWebSearchResult("Result 2", "https://other.org/page2", "snippet 2"),
@@ -32,7 +31,6 @@ class TestWebSearchTool {
 
   @AfterEach
   void tearDown() {
-    WebSearchCollector.setOverride(null);
     DummySearchEngine.reset();
   }
 
