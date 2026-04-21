@@ -3,7 +3,7 @@
   "id" : "19F1A2B3C4D5E006",
   "kind" : "CALLABLE_SUB",
   "config" : {
-    "data" : "Patterns.InvoiceAnalyzerData"
+    "data" : "Patterns.SelfContainedAgentData"
   },
   "elements" : [ {
       "id" : "f0",
@@ -296,6 +296,18 @@
       "connect" : [
         { "id" : "f24", "to" : "f13", "color" : "default" }
       ]
+    }, {
+      "id" : "f25",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "Pattern: Self-Contained Agent with Co-located Tools",
+        "",
+        "Agent and tools are self-contained in one file with no cross-process references, making the full capability easy to ship and expose as a single callable interface."
+      ],
+      "visual" : {
+        "at" : { "x" : 320, "y" : 224 },
+        "size" : { "width" : 510, "height" : 102 }
+      }
     } ],
   "layout" : {
     "lanes" : [ {

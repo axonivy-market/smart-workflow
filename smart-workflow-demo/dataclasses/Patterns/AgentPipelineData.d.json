@@ -1,6 +1,6 @@
 {
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
-  "simpleName" : "AgentWithToolsData",
+  "simpleName" : "AgentPipelineData",
   "namespace" : "Patterns",
   "fields" : [ {
     "name" : "invoiceStream",
@@ -11,7 +11,7 @@
     "comment" : "Text content extracted from the invoice image by the extraction agent"
   }, {
     "name" : "analysisResult",
-    "comment" : "Summary and analysis produced by the InvoiceAnalyzer agent"
+    "comment" : "Summary and analysis produced by the SelfContainedAgent"
   }, {
     "name" : "result",
     "type" : "java.util.List<com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.CaseNode>",
