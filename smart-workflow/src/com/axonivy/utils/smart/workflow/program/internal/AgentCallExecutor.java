@@ -20,6 +20,7 @@ import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
 
+import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.data.message.Content;
@@ -27,6 +28,8 @@ import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agentic.AgenticServices;
+import dev.langchain4j.agentic.UntypedAgent;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
@@ -43,10 +46,20 @@ public class AgentCallExecutor {
   interface ChatAgent extends DynamicAgent<String> {
     @Override
     String chat(List<Content> query);
+
+    @dev.langchain4j.agentic.declarative.HumanInTheLoop 
+    default String humanFallback(List<Content> query, Exception ex) {
+      Ivy.log().error("Agent execution failed, asking human for fallback", ex);
+      return "Human fallback response for query: " + query; // In real implementation, you would collect input from the user here 
+    }
   }
 
   interface Variable {
     String RESULT = "result";
+  }
+
+  private static class MyCustomEx extends RuntimeException {
+
   }
 
   @SuppressWarnings("unchecked")
@@ -70,8 +83,31 @@ public class AgentCallExecutor {
     configureGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
-    var agent = agentBuilder.build();
+    var agent = agentBuilder
+    //  .toolArgumentsErrorHandler((e,c) -> { throw new MyCustomEx(); })
+    //  .toolExecutionErrorHandler(null)
+      .build();
+
+
+    // var styledWriter = AgenticServices.sequenceBuilder()
+    //     .subAgents(agent)
+    //     .outputKey("result")
+    //     //.context(agenticScope -> contextSummarizer.summarize(agenticScope.contextAsConversation()))
+    //     .build();
+
+  // UntypedAgent styleReviewLoop = AgenticServices
+  //       .loopBuilder()
+  //       .subAgents(agent)
+  //       .maxIterations(5)
+  //       .testExitAtLoopEnd(true)
+  //       .exitCondition( (agenticScope, loopCounter) -> {
+  //           double score = agenticScope.readState("score", 0.0);
+  //           return loopCounter <= 3 ? score >= 0.8 : score >= 0.6;
+  //       })
+  //       .build();
+
     try {
+     // styledWriter.invoke(null);
       Object result = agent.chat(query.get().contents());
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
@@ -85,6 +121,9 @@ public class AgentCallExecutor {
       Ivy.log().info("Agent response: " + result);
     } catch (InputGuardrailException | OutputGuardrailException ex) {
       GuardrailErrors.throwError(ex);
+    } catch (BpmError error) {
+      Ivy.log().error("Agent execution failed due to unexpected error", error);
+      throw error;
     }
   }
 

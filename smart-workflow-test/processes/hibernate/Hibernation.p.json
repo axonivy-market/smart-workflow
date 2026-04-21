@@ -258,7 +258,14 @@
           "config" : {
             "errorCode" : "human:decision",
             "output" : {
-              "code" : "ivy.log.info(\"error data: \"+error.getProcessData());"
+              "code" : [
+                "import com.axonivy.utils.smart.workflow.utils.JsonUtils;",
+                "ivy.log.info(\"error data: \"+error.getProcessData());",
+                "",
+                "",
+                "String args = error.getAttribute(\"tool.arguments\") as String;",
+                "out.decision = JsonUtils.jsonValueToEntities(args, hibernate.HumanDecision.class) as hibernate.HumanDecision;"
+              ]
             }
           },
           "visual" : {
