@@ -5,6 +5,11 @@ Dialogs:
         smart:
           workflow:
             demo:
+              AxonIvyInfoChatForm:
+                InputPlaceholder: Ask about Axon Ivy... (Shift+Enter to send)
+                Send: Send
+                Subtitle: AI-powered search assistant
+                Title: Axon Ivy Info
               AxonIvySupportForm:
                 AxonIvySupport: Axon Ivy Support
                 InputPlaceholder: Type your question... (Shift+Enter to send)

@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvyInfoChatForm/Title')}</ui:define>
+    <ui:define name="content">
+      <h:outputScript library="js" name="info-chat.js" />
+      <h:outputStylesheet library="css" name="info-chat.css" />
+
+      <div class="info-chat-container">
+        <h:form id="chatForm">
+          <div class="info-chat-card">
+            <!-- Header -->
+            <div class="info-chat-header">
+              <div class="info-chat-header-icon">
+                <i class="pi pi-search"></i>
+              </div>
+              <div class="info-chat-header-text">
+                <h3 class="m-0">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvyInfoChatForm/Title')}</h3>
+                <span class="info-chat-subtitle">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvyInfoChatForm/Subtitle')}</span>
+              </div>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <p:scrollPanel id="chatArea" mode="native" styleClass="info-chat-messages">
+              <ui:repeat value="#{axonIvyInfoChatBean.chatHistory}" var="msg">
+                <div class="info-chat-msg-row #{msg.role eq 'user' ? 'info-chat-msg-user' : 'info-chat-msg-bot'}">
+                  <h:panelGroup rendered="#{msg.role ne 'user'}" styleClass="info-chat-avatar info-chat-avatar-bot">
+                    <i class="pi pi-bolt"></i>
+                  </h:panelGroup>
+                  <div class="info-chat-bubble #{msg.role eq 'user' ? 'info-chat-bubble-user' : 'info-chat-bubble-bot'}">
+                    <div class="info-chat-bubble-content">
+                      <h:outputText value="#{msg.htmlContent}" escape="#{msg.role eq 'user'}" />
+                    </div>
+                    <span class="info-chat-time">#{msg.timestamp}</span>
+                  </div>
+                  <h:panelGroup rendered="#{msg.role eq 'user'}" styleClass="info-chat-avatar info-chat-avatar-user">
+                    <i class="pi pi-user"></i>
+                  </h:panelGroup>
+                </div>
+              </ui:repeat>
+
+              <!-- Typing indicator -->
+              <h:panelGroup id="typingIndicator" rendered="#{axonIvyInfoChatBean.loading}" styleClass="info-chat-msg-row info-chat-msg-bot">
+                <span class="info-chat-avatar info-chat-avatar-bot">
+                  <i class="pi pi-bolt"></i>
+                </span>
+                <div class="info-chat-bubble info-chat-bubble-bot">
+                  <div class="info-chat-typing">
+                    <span class="info-chat-typing-dot"></span>
+                    <span class="info-chat-typing-dot"></span>
+                    <span class="info-chat-typing-dot"></span>
+                  </div>
+                </div>
+              </h:panelGroup>
+            </p:scrollPanel>
+
+            <!-- Input Area -->
+            <div class="info-chat-input-area">
+              <p:inputTextarea id="userInput" value="#{axonIvyInfoChatBean.userMessage}"
+                styleClass="info-chat-input"
+                placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvyInfoChatForm/InputPlaceholder')}"
+                onkeydown="return handleInfoChatKeyDown(event);" />
+              <p:commandButton id="sendBtn"
+                icon="pi pi-send"
+                styleClass="info-chat-send-btn"
+                onclick="return sendInfoMessageWithValidation();"
+                title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/AxonIvyInfoChatForm/Send')}" />
+            </div>
+          </div>
+
+          <p:remoteCommand name="sendMessage" actionListener="#{axonIvyInfoChatBean.sendMessage}" global="false"
+            update="chatArea userInput typingIndicator" process="@form"
+            oncomplete="getAnswer(); scrollInfoChatToBottom();" />
+          <p:remoteCommand name="getAnswer" actionListener="#{axonIvyInfoChatBean.getAnswer}"
+            update="chatArea userInput typingIndicator" global="false"
+            oncomplete="scrollInfoChatToBottom();" />
+        </h:form>
+      </div>
+    </ui:define>
+  </ui:composition>
+</h:body>
+</html>

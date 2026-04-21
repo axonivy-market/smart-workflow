@@ -1,0 +1,45 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "1A2B3C4D5E6F7A90",
+  "config" : {
+    "data" : "Business.AxonIvyInfoChatData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "AxonIvyInfoChat",
+      "config" : {
+        "signature" : "AxonIvyInfoChat",
+        "request" : {
+          "name" : "Axon Ivy Info Chat",
+          "description" : "Ask questions about Axon Ivy and get AI-powered answers with web search"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "description" : "Axon Ivy Info Chat demo"
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 560, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "DialogCall",
+      "name" : "Axon Ivy Info Chat",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.AxonIvyInfoChatForm:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}

@@ -1,0 +1,11 @@
+{
+    "$schema": "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+    "simpleName": "AxonIvyInfoChatResponse",
+    "namespace": "Business.AxonIvyInfoChat",
+    "fields": [
+        {
+            "name": "aiResult",
+            "comment": "AI-synthesized HTML response with summary and source links"
+        }
+    ]
+}

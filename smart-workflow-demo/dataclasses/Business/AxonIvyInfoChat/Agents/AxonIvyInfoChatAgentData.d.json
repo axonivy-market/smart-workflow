@@ -1,0 +1,14 @@
+{
+    "$schema": "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+    "simpleName": "AxonIvyInfoChatAgentData",
+    "namespace": "Business.AxonIvyInfoChat.Agents",
+    "fields": [
+        {
+            "name": "question"
+        },
+        {
+            "name": "result",
+            "type": "Business.AxonIvyInfoChat.AxonIvyInfoChatResponse"
+        }
+    ]
+}
