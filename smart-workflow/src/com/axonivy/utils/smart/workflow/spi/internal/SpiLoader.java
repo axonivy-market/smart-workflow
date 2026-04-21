@@ -12,15 +12,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.reflect.MethodUtils;
-
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.project.model.Project;
 
 public class SpiLoader {
   private final Project project;
 
-  private static final String JAVA_RUNTIME = "ch.ivyteam.ivy.java.JavaRuntime";
   private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
   private static final String EXCEPTION_PATTERN = "Failed to read service descriptor %s";
 
@@ -43,7 +40,7 @@ public class SpiLoader {
   }
 
   private static <T> List<T> findImpl(Project project, Class<T> type) {
-    ClassLoader loader = loaderOf(project);
+    ClassLoader loader = ProjectClassLoader.of(project);
     return findImpl(type, loader);
   }
 
@@ -55,20 +52,7 @@ public class SpiLoader {
     return implNames.stream().flatMap(ref -> {
       Optional<T> impl = load(loader, ref);
       return impl.stream();
-    })
-        .toList();
-  }
-
-  private static ClassLoader loaderOf(Project project) {
-    try {
-      var javaConf = Class.forName(JAVA_RUNTIME);
-      var of = MethodUtils.getMethodObject(javaConf, "of", Project.class);
-      var local = of.invoke(null, project);
-      var loader = MethodUtils.getMethodObject(javaConf, "getClassLoader");
-      return (ClassLoader) loader.invoke(local);
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
-    }
+    }).toList();
   }
 
   private static <T> Optional<T> load(ClassLoader loader, String typeName) {

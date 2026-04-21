@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.inject.util.Types;
 
+import ch.ivyteam.api.API;
+
 /**
  * Forked from ivy-core internals.
  * If this is useful somewhere else, leave me a note
@@ -28,11 +30,8 @@ public class QualifiedTypeLoader {
 
   private final ClassLoader classLoader;
 
-  public QualifiedTypeLoader() {
-    this(null);
-  }
-
   public QualifiedTypeLoader(ClassLoader classLoader) {
+    API.checkParameterNotNull(classLoader, "classLoader");
     this.classLoader = classLoader;
   }
 
@@ -95,9 +94,7 @@ public class QualifiedTypeLoader {
     if (primitive != null) {
       return primitive;
     }
-    return classLoader != null ?
-        Class.forName(type.rawType(), true, classLoader) :
-        Class.forName(type.rawType());
+    return Class.forName(type.rawType(), true, classLoader);
   }
 
   private Type[] loadParameters(QType qType) throws ClassNotFoundException {

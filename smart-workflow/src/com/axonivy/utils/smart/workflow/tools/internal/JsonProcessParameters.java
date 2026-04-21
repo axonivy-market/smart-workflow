@@ -4,14 +4,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import com.axonivy.utils.smart.workflow.spi.internal.ProjectClassLoader;
 import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ch.ivyteam.api.API;
 
 public class JsonProcessParameters {
 
@@ -21,16 +23,17 @@ public class JsonProcessParameters {
   private final ClassLoader classLoader;
 
   public JsonProcessParameters() {
-    this(null);
+    this(ProjectClassLoader.current());
   }
 
   public JsonProcessParameters(ClassLoader classLoader) {
+    API.checkParameterNotNull(classLoader, "classLoader");
     this.classLoader = classLoader;
   }
 
   public Map<String, Object> readParams(List<ToolParameter> parameters, String rawJsonArgs) {
     try {
-      if (CollectionUtils.isEmpty(parameters)) {
+      if (parameters.isEmpty()) {
         return Map.of();
       }
       return toParams(parameters, MAPPER.readTree(rawJsonArgs));
