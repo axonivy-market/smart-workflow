@@ -307,7 +307,17 @@
             "out" : "in",
             "out.iceCream" : "result.first.title"
           },
-          "code" : "ivy.log.info(\"user selected: \"+result.first.title);"
+          "code" : [
+            "import ch.ivyteam.ivy.bpm.error.BpmError;",
+            "import com.axonivy.utils.smart.workflow.tools.human.ErrorHandler;",
+            "import dev.langchain4j.data.message.ToolExecutionResultMessage;",
+            "import com.axonivy.utils.smart.workflow.demo.bean.ChatBean.ChatMessage;",
+            "import com.axonivy.utils.smart.workflow.memory.IvyMemory;",
+            "ivy.log.info(\"user selected: \"+result.first.title);",
+            "",
+            "",
+            "new ErrorHandler(BpmError.create(\"fake\").build()).resolve(result.first.title);"
+          ]
         }
       },
       "visual" : {
@@ -324,7 +334,7 @@
         "signature" : "askError"
       },
       "visual" : {
-        "at" : { "x" : 872, "y" : 248 }
+        "at" : { "x" : 872, "y" : 216 }
       },
       "connect" : [
         { "id" : "f29", "to" : "f24" }

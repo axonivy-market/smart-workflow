@@ -8,7 +8,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 
-public class IvyMemoryStore implements ChatMemoryStore {
+public class IvyMemoryRepoStore implements ChatMemoryStore {
 
   @Override
   public List<ChatMessage> getMessages(Object memoryId) {

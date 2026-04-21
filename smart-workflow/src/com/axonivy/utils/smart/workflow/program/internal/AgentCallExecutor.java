@@ -24,13 +24,12 @@ import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvide
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.Content;
+import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
-import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.agentic.AgenticServices;
-import dev.langchain4j.agentic.UntypedAgent;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
@@ -84,14 +83,19 @@ public class AgentCallExecutor {
     configureGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
+    IvyMemory memory = IvyMemory.of(Ivy.wfCase());
+    Ivy.log().info("Using memory with id: " + memory.id());
     var agent = agentBuilder
-      .chatMemory(IvyMemory.of(Ivy.wfCase()))
+      .chatMemory(memory)
       .build();
 
 
     try {
-     // styledWriter.invoke(null);
-      Object result = agent.chat(query.get().contents());
+      List<Content>  contents = query.get().contents();
+      // keep going without re-stating the initial user query!
+      // TODO verify: can we re-enter agent execution with a @Tool/System annotated chat?
+      List<Content> sanitized = memory.messages().isEmpty() ? contents : List.of(TextContent.from("continue with my selection from the tool"));
+      Object result = agent.chat(sanitized);
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
         String mapIt = mapTo + "=result";
