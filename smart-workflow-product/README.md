@@ -239,16 +239,16 @@ Developers implement `SmartWorkflowInputGuardrail`, expose it through a `Guardra
 
 ## Patterns
 
-The demos below illustrate **best practices** for structuring Axon Ivy agents and tools with Smart Workflow. Two complementary patterns are shown: one for tightly scoping an agent's tool access, and one for gaining full task-level observability over multi-step AI pipelines.
+The demos below illustrate **best practices** for structuring Axon Ivy agents and tools with Smart Workflow. Two complementary patterns are shown: one for tightly scoping an agent's tool access, and one for feature-grouped tool reuse.
 
-### Invoice Analyzer — Agent + Tools in One Callable
+### Self-Contained Agent — Agent + Tools in One Callable
 
 This pattern shows how to bundle an agent together with all of its tools inside a single callable subprocess. Everything the agent is permitted to call is defined in one file, creating a clear boundary around the feature that is easy to audit, test, and replace.
 
 The orchestrating agent and all its tools are co-located in the same process file. The agent's tool access is explicitly restricted to only the tools defined within that file — no other tools are reachable. This makes the agent's full capability visible at a glance and prevents unintended tool access.
 
 <details>
-<summary><strong>Demo flow (start Agent With Tools Demo process)</strong></summary>
+<summary><strong>Demo flow (start Agent Pipeline Demo)</strong></summary>
 
 1. Raw invoice text is passed to the callable entry point.
 2. The Invoice Analyzer Agent invokes its tools in sequence: extract header info → extract line items → validate amounts → assess compliance.
@@ -280,33 +280,6 @@ processes/
       SupplierTools.p.json
       CategoryTools.p.json
 ```
-
-</details>
-
----
-
-### Multi-Task Processes — Task-Per-Stage
-
-This pattern shows how wrapping each AI agent invocation in a dedicated Axon Ivy **task** gives every AI step its own lifecycle — enabling filtering, audit logging, and retry at the task level without changing the agent logic.
-
-Two independent flows are included to illustrate the pattern at different scales.
-
-<details>
-<summary><strong>Demo flow (start AI Order Processing Demo process)</strong></summary>
-
-1. Task 1 – `Product Extraction Agent` and `Pricing Agent` run sequentially to process the raw purchase order.
-2. Task 2 – `Invoice Generator Agent` combines the extracted products and pricing into a structured invoice object.
-3. Task 3 – `Quality Review Agent` and `Confirmation Agent` run sequentially to produce a quality report and a customer confirmation draft.
-
-</details>
-
-<details>
-<summary><strong>Demo flow (start AI Product Import Demo process)</strong></summary>
-
-1. Task 1 – `CSV Parser Agent` and `Data Validator Agent` parse and validate the import file sequentially.
-2. Task 2 – `Category Mapper Agent` and `Brand Resolver Agent` resolve product metadata sequentially.
-3. Task 3 – `Product Enrichment Agent` combines all metadata into enriched product data.
-4. Task 4 – `Import Report Agent` generates the final import summary.
 
 </details>
 
