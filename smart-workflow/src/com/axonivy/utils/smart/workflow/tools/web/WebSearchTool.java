@@ -1,11 +1,7 @@
 package com.axonivy.utils.smart.workflow.tools.web;
 
-import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,7 +13,6 @@ public class WebSearchTool implements SmartWorkflowTool {
 
   private static final int DEFAULT_MAX_RESULTS = 5;
   public static final String MAX_RESULTS = "AI.Tool.WebSearch.MaxResults";
-  public static final String WHITELIST_DOMAINS = "AI.Tool.WebSearch.WhitelistDomains";
 
   @Override
   public String name() {
@@ -47,7 +42,7 @@ public class WebSearchTool implements SmartWorkflowTool {
             "No SmartWebSearchEngine found. Register a SmartWebSearchEngineProvider via META-INF/services."));
     String query = (String) args.get("query");
     List<SmartWebSearchResult> results = engine.search(query, readMaxResults());
-    results = filterByWhitelistDomains(results);
+    results = new WhitelistDomainFilter().filter(results);
     return new WebSearchToolResult(query, results);
   }
 
@@ -61,38 +56,6 @@ public class WebSearchTool implements SmartWorkflowTool {
     } catch (NumberFormatException e) {
       return DEFAULT_MAX_RESULTS;
     }
-  }
-
-  private List<SmartWebSearchResult> filterByWhitelistDomains(List<SmartWebSearchResult> results) {
-    Set<String> whitelistDomains = readWhitelistDomains();
-    if (whitelistDomains.isEmpty()) {
-      return results;
-    }
-    return results.stream()
-        .filter(result -> isAllowedDomain(result.url(), whitelistDomains))
-        .collect(Collectors.toList());
-  }
-
-  private boolean isAllowedDomain(String url, Set<String> whitelistDomains) {
-    try {
-      String host = URI.create(url).getHost();
-      if (host == null) {
-        return false;
-      }
-      return whitelistDomains.stream()
-          .anyMatch(domain -> host.equals(domain) || host.endsWith("." + domain));
-    } catch (Exception e) {
-      return false;
-    }
-  }
-
-  static Set<String> readWhitelistDomains() {
-    var configuredValue = StringUtils.defaultString(Ivy.var().get(WHITELIST_DOMAINS));
-    return Arrays.stream(StringUtils.split(configuredValue, ','))
-        .map(String::strip)
-        .map(String::toLowerCase)
-        .filter(StringUtils::isNotBlank)
-        .collect(Collectors.toSet());
   }
 
   public record WebSearchToolResult(String query, List<SmartWebSearchResult> results) {}
