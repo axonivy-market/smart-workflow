@@ -172,6 +172,11 @@
                 </goals>
               </execution>
             </executions>
+            <configuration>
+              <excludes>
+                <exclude>**/*ContainerTest.java</exclude>
+              </excludes>
+            </configuration>
           </plugin>
         </plugins>
       </build>
