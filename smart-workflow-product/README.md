@@ -241,19 +241,19 @@ Developers implement `SmartWorkflowInputGuardrail`, expose it through a `Guardra
 
 The demos below illustrate **best practices** for structuring Axon Ivy agents and tools with Smart Workflow. Three complementary patterns are shown: one for tightly scoping an agent's tool access, one for linear task-based orchestration, and one for feature-grouped tool reuse.
 
-### Pattern: Agent Pipeline
+### Agent Pipeline
 
 A linear chain of agents where each one processes an input and passes the result to the next stage. Best practice: assign a dedicated task to each agent so that execution is tracked, resumable, and visible in the task history.
 
 See the **Agent Pipeline Demo** process in `smart-workflow-demo`.
 
-### Pattern: Self-Contained Agent with Co-located Tools
+### Self-Contained Agent with Co-located Tools
 
 The agent and its tools are self-contained in one file with no cross-process references, making the full capability easy to ship and expose as a single callable interface.
 
 See the **Self-Contained Agent** process in `smart-workflow-demo`.
 
-### Pattern: Feature-Grouped Agents and Tools
+### Feature-Grouped Agents and Tools
 
 This pattern shows how to organize agents and tools by business domain when tools need to be shared across multiple agents. Rather than bundling everything inside a single callable, each agent and each tool group lives in its own process file under a common feature folder — making the domain boundary explicit and allowing tool reuse.
 
