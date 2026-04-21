@@ -1,10 +1,19 @@
 {
   "name": "Axon Ivy",
-  "image": "mcr.microsoft.com/devcontainers/base:trixie",
-  "forwardPorts": [
-    8080
+  "dockerComposeFile": [
+    "compose.yml"
   ],
-  "onCreateCommand": "mvn clean package --batch-mode -Dmaven.test.skip=true -Divy.script.validation.skip=true -Divy.engine.directory=/usr/lib/axonivy-engine",
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/smart-workflow",
+  "runServices": [
+    "workspace",
+    "phoenix"
+  ],
+  "forwardPorts": [
+    8080,
+    6006
+  ],
+  "onCreateCommand": "bash .devcontainer/on-create.sh",
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
       "version": "25",
@@ -29,6 +38,7 @@
       ],
       "settings": {
         "axonivy.engine.releaseTrain": "/usr/lib/axonivy-engine",
+        "axonivy.engine.vmArgs": "-Dotel.traces.exporter=otlp -Dotel.exporter.otlp.endpoint=http://phoenix:6006 -Dotel.resource.attributes=openinference.project.name=smart-workflow",
         "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/",
         "java.server.launchMode": "Standard"
       }
