@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.rag.pipeline;
 
 import java.util.List;
 
-import com.axonivy.utils.smart.workflow.model.EmbeddingModelFactory;
 import com.axonivy.utils.smart.workflow.rag.RagConf;
 import com.axonivy.utils.smart.workflow.rag.document.processor.RagDocumentSplitter;
 import com.axonivy.utils.smart.workflow.rag.entity.RagResult;
@@ -31,7 +30,7 @@ public interface RagIngestor {
       if (segments.isEmpty()) {
         return new RagResult(MSG_NO_CONTENT);
       }
-      List<Embedding> embeddings = EmbeddingModelFactory.createFromIvyVars().embedAll(segments).content();
+      List<Embedding> embeddings = connector().embeddingModel().embedAll(segments).content();
       RagVectorStore store = connector().connect(collection);
       store.addAll(embeddings, segments);
       RagResult result = new RagResult();

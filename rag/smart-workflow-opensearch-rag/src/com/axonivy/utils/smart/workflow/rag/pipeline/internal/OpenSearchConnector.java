@@ -3,7 +3,6 @@ package com.axonivy.utils.smart.workflow.rag.pipeline.internal;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.model.EmbeddingModelFactory;
-import com.axonivy.utils.smart.workflow.model.EmbeddingModelFactory.EmbeddingConfig;
 import com.axonivy.utils.smart.workflow.rag.RagConf;
 import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchIndexMeta;
 import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;
@@ -12,12 +11,28 @@ import com.axonivy.utils.smart.workflow.rag.pipeline.RagVectorStore;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 
 public class OpenSearchConnector implements RagConnector {
 
   private static final String ERR_URL_NOT_CONFIGURED = "AI.RAG.OpenSearch.Url is not configured.";
   private static final String ERR_COLLECTION_REQUIRED = "collection is required";
   private static final String WARN_INDEX_EXISTS = "Could not check OpenSearch index existence for: %s";
+
+  private final EmbeddingModelFactory.EmbeddingConfig embeddingConfig;
+  private EmbeddingModel embeddingModel;
+
+  public OpenSearchConnector() {
+    this.embeddingConfig = EmbeddingModelFactory.resolvedEmbeddingConfig();
+  }
+
+  @Override
+  public EmbeddingModel embeddingModel() {
+    if (embeddingModel == null) {
+      embeddingModel = EmbeddingModelFactory.createFromIvyVars();
+    }
+    return embeddingModel;
+  }
 
   @Override
   public boolean indexExists(String collection) {
@@ -44,7 +59,6 @@ public class OpenSearchConnector implements RagConnector {
     }
     OpenSearchRestClient client = OpenSearchRestClient.fromIvyVars();
     client.ping();
-    EmbeddingConfig embeddingConfig = EmbeddingModelFactory.resolvedEmbeddingConfig();
     OpenSearchIndexMeta meta = new OpenSearchIndexMeta(
         embeddingConfig.providerName(),
         embeddingConfig.modelName(),
