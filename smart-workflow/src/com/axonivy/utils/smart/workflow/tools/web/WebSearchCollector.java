@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.tools.web;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ public class WebSearchCollector {
     var project = SpiProject.getSmartWorkflowPmv().project();
     return new SpiLoader(project).load(SmartWebSearchEngineProvider.class)
         .stream()
-        .flatMap(provider -> safeGetEngines(provider).stream())
+        .flatMap(provider -> getEngines(provider).stream())
         .collect(Collectors.toList());
   }
 
@@ -35,11 +35,12 @@ public class WebSearchCollector {
     return engines.stream().findFirst();
   }
 
-  private static List<SmartWebSearchEngine> safeGetEngines(SmartWebSearchEngineProvider provider) {
+  private static List<SmartWebSearchEngine> getEngines(SmartWebSearchEngineProvider provider) {
     try {
       return provider.getEngines();
     } catch (Exception e) {
-      return new ArrayList<>();
+      Ivy.log().error("Failed to load engines from provider: " + provider.name(), e);
+      return Collections.emptyList();
     }
   }
 }
