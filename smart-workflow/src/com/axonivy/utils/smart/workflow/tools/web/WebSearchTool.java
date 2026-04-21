@@ -41,9 +41,19 @@ public class WebSearchTool implements SmartWorkflowTool {
         .orElseThrow(() -> new IllegalStateException(
             "No SmartWebSearchEngine found. Register a SmartWebSearchEngineProvider via META-INF/services."));
     String query = (String) args.get("query");
-    List<SmartWebSearchResult> results = engine.search(query, readMaxResults());
-    results = new WhitelistDomainFilter().filter(results);
-    return new WebSearchToolResult(query, results);
+    List<SmartWebSearchResult> rawResults = engine.search(query, readMaxResults());
+    List<SmartWebSearchResult> filteredResults = new WhitelistDomainFilter().filter(rawResults);
+    return new WebSearchToolResult(query, filteredResults, noteFor(rawResults, filteredResults));
+  }
+
+  private static String noteFor(List<SmartWebSearchResult> raw, List<SmartWebSearchResult> filtered) {
+    if (!filtered.isEmpty()) {
+      return null;
+    }
+    if (raw.isEmpty()) {
+      return "No results returned by the search engine. The source may be rate-limited or the query may have no indexed matches. Do not speculate about the cause; report to the user that no results were available.";
+    }
+    return "All " + raw.size() + " result(s) were excluded by the configured domain whitelist.";
   }
 
   static int readMaxResults() {
@@ -58,5 +68,5 @@ public class WebSearchTool implements SmartWorkflowTool {
     }
   }
 
-  public record WebSearchToolResult(String query, List<SmartWebSearchResult> results) {}
+  public record WebSearchToolResult(String query, List<SmartWebSearchResult> results, String note) {}
 }

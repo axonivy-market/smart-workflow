@@ -54,6 +54,21 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-community-web-search-engine-duckduckgo</artifactId>
+      <version>1.12.2-beta22</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.datatype</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>com.arize</groupId>
       <artifactId>openinference-semantic-conventions</artifactId>
       <version>0.1.11</version>

@@ -1,11 +1,8 @@
-package com.axonivy.utils.smart.workflow.demo.tool.web;
+package com.axonivy.utils.smart.workflow.tools.web;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.axonivy.utils.smart.workflow.tools.web.SmartWebSearchEngine;
-import com.axonivy.utils.smart.workflow.tools.web.SmartWebSearchResult;
 
 import dev.langchain4j.community.web.search.duckduckgo.DuckDuckGoWebSearchEngine;
 import dev.langchain4j.web.search.WebSearchRequest;
