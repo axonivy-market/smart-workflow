@@ -259,12 +259,21 @@
             "errorCode" : "human:decision",
             "output" : {
               "code" : [
+                "import com.axonivy.utils.smart.workflow.tools.human.ErrorHandler;",
+                "import hibernate.HumanDecision;",
+                "import java.util.logging.Handler;",
+                "",
+                "",
                 "import com.axonivy.utils.smart.workflow.utils.JsonUtils;",
                 "ivy.log.info(\"error data: \"+error.getProcessData());",
                 "",
                 "",
                 "String args = error.getAttribute(\"tool.arguments\") as String;",
-                "out.decision = JsonUtils.jsonValueToEntities(args, hibernate.HumanDecision.class) as hibernate.HumanDecision;"
+                "ivy.log.info(\"error tool args: \"+args);",
+                "",
+                "out.decision = new ErrorHandler(error).args(HumanDecision.class) as HumanDecision;",
+                "",
+                "ivy.log.info(\"error args forwarded: \"+out.decision.question);"
               ]
             }
           },
@@ -315,7 +324,7 @@
         "signature" : "askError"
       },
       "visual" : {
-        "at" : { "x" : 872, "y" : 224 }
+        "at" : { "x" : 872, "y" : 248 }
       },
       "connect" : [
         { "id" : "f29", "to" : "f24" }
