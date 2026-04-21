@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
+import com.axonivy.utils.smart.workflow.memory.IvyMemory;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
@@ -84,27 +85,9 @@ public class AgentCallExecutor {
     configureSystemMessage(agentBuilder);
 
     var agent = agentBuilder
-    //  .toolArgumentsErrorHandler((e,c) -> { throw new MyCustomEx(); })
-    //  .toolExecutionErrorHandler(null)
+      .chatMemory(IvyMemory.of(Ivy.wfCase()))
       .build();
 
-
-    // var styledWriter = AgenticServices.sequenceBuilder()
-    //     .subAgents(agent)
-    //     .outputKey("result")
-    //     //.context(agenticScope -> contextSummarizer.summarize(agenticScope.contextAsConversation()))
-    //     .build();
-
-  // UntypedAgent styleReviewLoop = AgenticServices
-  //       .loopBuilder()
-  //       .subAgents(agent)
-  //       .maxIterations(5)
-  //       .testExitAtLoopEnd(true)
-  //       .exitCondition( (agenticScope, loopCounter) -> {
-  //           double score = agenticScope.readState("score", 0.0);
-  //           return loopCounter <= 3 ? score >= 0.8 : score >= 0.6;
-  //       })
-  //       .build();
 
     try {
      // styledWriter.invoke(null);
