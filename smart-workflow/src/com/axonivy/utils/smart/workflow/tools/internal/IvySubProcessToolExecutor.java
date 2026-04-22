@@ -87,6 +87,7 @@ public class IvySubProcessToolExecutor {
     } catch(Exception ex) {
       if (ex.getCause() instanceof BpmError error) {
         if (error.getId().equals("human:task")) {
+          error.setAttribute("tool.params", params);
           throw error;
         }
       }

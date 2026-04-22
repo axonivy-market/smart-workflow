@@ -29,7 +29,7 @@ public class IvyMemory implements ChatMemory {
   public static IvyMemory of(ICase caze) {
     var memory = caze.customFields().textField("chat.memory.id").getOrNull();
     if (memory == null) {
-      memory = GuidUtil.generateID();
+      memory = GuidUtil.generateID(); // TODO: to be unique: case+element id should be sufficient.
       caze.customFields().textField("chat.memory.id").set(memory);
     }
     return new IvyMemory(memory, new IvyVolatileStore());

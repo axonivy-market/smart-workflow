@@ -16,6 +16,12 @@ public class ErrorHandler {
     this.error = error;
   }
 
+  /**
+   * YAGNI -> error can propagate concrete params via attribute object!
+   * @param <T>
+   * @param clazz
+   * @return
+   */
   public <T> T args(Class<T> clazz) {
     String args = (String) error.getAttribute("tool.arguments");
     try {
@@ -35,7 +41,7 @@ public class ErrorHandler {
 
   public void resolve(String decision) {
     error.setAttribute("tool.decision", decision);
-
+    // TODO serious injection of user response into next agent call memory?
     IvyMemory memory = IvyMemory.of(Ivy.wfCase());
     var b4 = memory.messages();
     var invoke = b4.getLast();

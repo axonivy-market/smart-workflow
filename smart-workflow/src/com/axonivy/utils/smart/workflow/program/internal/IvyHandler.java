@@ -12,12 +12,13 @@ public class IvyHandler implements ToolExecutionErrorHandler {
     // TODO Auto-generated method stub
    // throw new UnsupportedOperationException("Unimplemented method 'handle'");
     if (throwable instanceof BpmError error) {
-
+      var params =context.invocationParameters();
       var execTool = context.toolExecutionRequest();
       throw BpmError.create(error)
           .withAttribute("tool.id", execTool.id())
           .withAttribute("tool.name", execTool.name())
           .withAttribute("tool.arguments", execTool.arguments())
+         // .withAttribute("tool.params", params)
           .build();
     }
 
