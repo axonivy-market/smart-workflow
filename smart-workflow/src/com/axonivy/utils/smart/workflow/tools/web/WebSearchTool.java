@@ -12,7 +12,6 @@ import ch.ivyteam.ivy.environment.Ivy;
 public class WebSearchTool implements SmartWorkflowTool {
 
   private static final int DEFAULT_MAX_RESULTS = 5;
-  public static final String MAX_RESULTS = "AI.Tool.WebSearch.MaxResults";
 
   @Override
   public String name() {
@@ -57,7 +56,7 @@ public class WebSearchTool implements SmartWorkflowTool {
   }
 
   static int readMaxResults() {
-    var configuredValue = StringUtils.defaultString(Ivy.var().get(MAX_RESULTS)).strip();
+    var configuredValue = StringUtils.defaultString(Ivy.var().get(WebSearchConf.MAX_RESULTS)).strip();
     if (configuredValue.isEmpty()) {
       return DEFAULT_MAX_RESULTS;
     }

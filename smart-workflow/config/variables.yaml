@@ -11,6 +11,8 @@ Variables:
       DefaultOutput: ""
     Tool:
       WebSearch:
+        # Name of the search engine to use. Must match the name() of a registered SmartWebSearchEngine. Example: "duckduckgo"
+        Engine: "duckduckgo"
         # Maximum number of search results returned per query.
         MaxResults: ""
         # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"

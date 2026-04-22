@@ -12,8 +12,6 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 public class WhitelistDomainFilter {
 
-  public static final String WHITELIST_DOMAINS = "AI.Tool.WebSearch.WhitelistDomains";
-
   private final Set<String> whitelistDomains;
 
   public WhitelistDomainFilter() {
@@ -47,7 +45,7 @@ public class WhitelistDomainFilter {
   }
 
   static Set<String> readWhitelistDomains() {
-    var configuredValue = StringUtils.defaultString(Ivy.var().get(WHITELIST_DOMAINS));
+    var configuredValue = StringUtils.defaultString(Ivy.var().get(WebSearchConf.WHITELIST_DOMAINS));
     return Arrays.stream(StringUtils.split(configuredValue, ','))
         .map(String::strip)
         .map(String::toLowerCase)

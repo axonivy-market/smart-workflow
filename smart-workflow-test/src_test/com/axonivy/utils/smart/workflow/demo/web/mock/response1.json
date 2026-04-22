@@ -1,0 +1,31 @@
+{
+  "id": "chatcmpl-websearch-1",
+  "object": "chat.completion",
+  "created": 1712345678,
+  "model": "gpt-4o-mini",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_ws001",
+            "type": "function",
+            "function": {
+              "name": "webSearch",
+              "arguments": "{\"query\":\"web search engine\"}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 200,
+    "completion_tokens": 30,
+    "total_tokens": 230
+  }
+}
