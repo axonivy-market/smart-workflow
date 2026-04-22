@@ -1,8 +1,9 @@
 package com.axonivy.utils.smart.workflow.demo.web;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.tools.web.DummySearchEngine;
 import com.axonivy.utils.smart.workflow.tools.web.SmartWebSearchResult;
-import com.axonivy.utils.smart.workflow.tools.web.WebSearchCollector;
+import com.axonivy.utils.smart.workflow.tools.web.WebSearchConf;
 
 import Features.WebSearchDemoData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
@@ -33,7 +34,7 @@ public class TestWebSearchDemo {
     fixture.var(OpenAiConf.API_KEY, "");
     fixture.var(GuardrailCollector.DEFAULT_INPUT_GUARDRAILS, "");
     MockOpenAI.defineChat(new WebSearchDemoChat()::respond);
-    fixture.var(WebSearchCollector.ENGINE, "dummy");
+    fixture.var(WebSearchConf.ENGINE, "dummy");
     DummySearchEngine.setResults(List.of(
         new SmartWebSearchResult("DuckDuckGo", "https://duckduckgo.com",
             "The Internet privacy company that empowers you to seamlessly take control of your personal information online."),
