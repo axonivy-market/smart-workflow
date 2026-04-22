@@ -167,5 +167,54 @@
       "connect" : [
         { "id" : "f29", "to" : "f22", "via" : [ { "x" : 784, "y" : 696 } ] }
       ]
+    }, {
+      "id" : "f40",
+      "type" : "RequestStart",
+      "name" : "PII Masking Guardrail Demo",
+      "config" : {
+        "signature" : "piiMaskingGuardrailDemo"
+      },
+      "visual" : {
+        "at" : { "x" : 344, "y" : 872 }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f43" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 784, "y" : 872 }
+      }
+    }, {
+      "id" : "f43",
+      "type" : "ProgramInterface",
+      "name" : "Call AI agent with PII in the message",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "inputGuardrails" : "[\"PiiMaskingInputGuardrail\"]",
+          "outputGuardrails" : "[\"PiiMaskingOutputGuardrail\"]",
+          "provider" : "",
+          "resultType" : "",
+          "resultMapping" : "in.result",
+          "query" : "\"Please confirm the following customer record for our CRM:\\nName: John Doe\\nEmail: john.doe@example.com\\nPhone: +1-555-123-4567\\nCredit Card: 4532015112830366\\nIP Address: 192.168.1.42\\n\\nEcho back a confirmation with each field.\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 872 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f44", "to" : "f42" }
+      ]
+    }, {
+      "id" : "f47",
+      "type" : "ProcessAnnotation",
+      "name" : "PII in the user message is replaced with hash placeholders before reaching the LLM. The output guardrail restores the original values in the AI response. The LLM never sees raw PII.",
+      "visual" : {
+        "at" : { "x" : 512, "y" : 768 },
+        "size" : { "width" : 398, "height" : 62 }
+      }
     } ]
 }

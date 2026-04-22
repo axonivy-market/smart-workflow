@@ -4,17 +4,19 @@ import java.util.List;
 
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.input.PiiMaskingInputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.output.PiiMaskingOutputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.output.SensitiveDataOutputGuardrail;
 
 public class DefaultGuardrailProvider implements GuardrailProvider {
   @Override
   public List<SmartWorkflowInputGuardrail> getInputGuardrails() {
-    return List.of(new PromptInjectionInputGuardrail());
+    return List.of(new PromptInjectionInputGuardrail(), new PiiMaskingInputGuardrail());
   }
 
   @Override
   public List<SmartWorkflowOutputGuardrail> getOutputGuardrails() {
-    return List.of(new SensitiveDataOutputGuardrail());
+    return List.of(new SensitiveDataOutputGuardrail(), new PiiMaskingOutputGuardrail());
   }
 }

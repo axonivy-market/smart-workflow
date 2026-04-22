@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.axonivy.utils.smart.workflow.governance.history.recorder.GuardrailExecutionRecorder;
+import com.axonivy.utils.smart.workflow.guardrails.pii.PiiDetector;
+import com.axonivy.utils.smart.workflow.guardrails.input.PiiMaskingInputGuardrail;
 
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.GuardrailResult.Failure;
@@ -22,10 +24,14 @@ public class InputGuardrailListener implements InputGuardrailExecutedListener {
   public void onEvent(InputGuardrailExecutedEvent event) {
     String guardrailName = event.guardrailClass().getSimpleName();
     String result = event.result().result().name();
-    String message = Optional.ofNullable(event.request())
+    String rawMessage = Optional.ofNullable(event.request())
         .map(r -> r.userMessage())
         .map(UserMessage::singleText)
         .orElse(null);
+    // Record the masked form so raw PII is never stored in audit history
+    String message = PiiMaskingInputGuardrail.class.getSimpleName().equals(guardrailName) && rawMessage != null
+        ? PiiDetector.detectAndMask(rawMessage).maskedText()
+        : rawMessage;
     String failureMessage = event.result().failures().stream()
         .map(Failure::message)
         .filter(m -> m != null && !m.isBlank())

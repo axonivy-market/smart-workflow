@@ -28,11 +28,25 @@ public class InputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkflo
   public InputGuardrailResult validate(InputGuardrailRequest request) {
     String message = Optional.ofNullable(request).map(InputGuardrailRequest::userMessage).map(UserMessage::singleText)
         .orElse(StringUtils.EMPTY);
-    return doValidate(message);
+    String invocationId = Optional.ofNullable(request)
+        .map(InputGuardrailRequest::requestParams)
+        .map(p -> p.invocationContext())
+        .map(ctx -> ctx.invocationId().toString())
+        .orElse(null);
+    return doValidate(message, invocationId);
   }
 
   private InputGuardrailResult doValidate(String message) {
-    GuardrailResult result = getDelegate().evaluate(message);
-    return result.isAllowed() ? success() : failure(result.getReason());
+    return doValidate(message, null);
+  }
+
+  private InputGuardrailResult doValidate(String message, String invocationId) {
+    GuardrailResult result = invocationId != null
+        ? getDelegate().evaluate(message, invocationId)
+        : getDelegate().evaluate(message);
+    if (!result.isAllowed()) {
+      return failure(result.getReason());
+    }
+    return result.hasRewrite() ? successWith(result.getRewrittenMessage()) : success();
   }
 }
