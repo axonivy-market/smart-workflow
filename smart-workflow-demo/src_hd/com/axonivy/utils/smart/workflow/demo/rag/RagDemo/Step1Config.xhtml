@@ -6,7 +6,7 @@
 
   <div class="rag-step-content">
     <!-- Vector Store Information -->
-    <div class="rag-step-intro mb-3">
+    <div class="rag-step-intro mb-3 mt-3">
       <h3 class="m-0 mb-1 text-2xl">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/VectorStoreTitle')}</h3>
     </div>
     <div class="mb-2">
@@ -150,16 +150,6 @@
           </p>
         </div>
       </div>
-    </div>
-
-    <div class="flex justify-content-end mt-5">
-      <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ContinueButton')}"
-        icon="si si-arrow-right-1" iconPos="right"
-        actionListener="#{logic.goToStep(2)}"
-        update="wizard-body wizard-steps"
-        process="@this"
-        disabled="#{not data.connectionOk}">
-      </p:commandButton>
     </div>
 
   </div>

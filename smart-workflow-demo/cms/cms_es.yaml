@@ -112,7 +112,6 @@ Dialogs:
                   Title: Smart Workflow RAG
                   Subtitle: Una guía paso a paso de la Generación Aumentada por Recuperación con Smart Workflow
                   IndexNameLabel: Nombre del almacén vectorial
-                  IndexNamePlaceholder: ej. hr-conocimiento
                   IndexNameDesc: "Un nombre único para identificar esta base de conocimiento en el almacén vectorial."
                   ChooseFileLabel: 'Elegir archivo (.pdf / .md / .txt)'
                   UploadLabel: Subir
@@ -126,7 +125,6 @@ Dialogs:
                   TokensUnit: tokens
                   NoDocumentsTitle: Aún no hay documentos
                   NoDocumentsDesc: 'Sube archivos <strong>.txt</strong> o <strong>.md</strong> y haz clic en <strong>Integrar</strong> para indexarlos.'
-                  PreviewColumn: Vista previa
                   SourceColumn: Fuente
                   ChunkIdColumn: ID de fragmento
                   Wizard:
@@ -165,7 +163,6 @@ Dialogs:
                     EmbedButton: Integrar
                     IndexExistsWarning: "El índice ya existe"
                     IndexExistsWarningDesc: "Ya existe un índice con este nombre. Por favor, elija un nombre de índice diferente."
-                    BackButton: Volver
                     FileUploadContainerTitle: Arrastra y suelta archivos aquí
                     FileUploadContainerHint: "Soporta .pdf, .md y .txt — un archivo a la vez"
                     PdfNote: "Los archivos PDF pueden tardar más en procesarse — se usa IA para extraer su contenido."
@@ -174,7 +171,6 @@ Dialogs:
                     FileSizeColumn: Tamaño
                   Step3:
                     Title: "Resultados de integración"
-                    BackButton: Volver a subir
                     ChatButton: Iniciar chat
                   Chatbot:
                     WelcomeTitle: "Hola, soy tu asistente de IA"

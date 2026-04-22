@@ -112,7 +112,6 @@ Dialogs:
                   Title: Smart Workflow RAG
                   Subtitle: Une visite guidée de la Génération Augmentée par Récupération avec Smart Workflow
                   IndexNameLabel: "Nom du store vectoriel"
-                  IndexNamePlaceholder: ex. hr-connaissances
                   IndexNameDesc: "Un nom unique pour identifier cette base de connaissances dans le store vectoriel."
                   ChooseFileLabel: 'Choisir un fichier (.pdf / .md / .txt)'
                   UploadLabel: Téléverser
@@ -126,7 +125,6 @@ Dialogs:
                   TokensUnit: tokens
                   NoDocumentsTitle: Aucun document pour le moment
                   NoDocumentsDesc: 'Téléversez des fichiers <strong>.txt</strong> ou <strong>.md</strong> et cliquez sur <strong>Intégrer</strong> pour les indexer.'
-                  PreviewColumn: Aperçu
                   SourceColumn: Source
                   ChunkIdColumn: ID du fragment
                   Wizard:
@@ -165,7 +163,6 @@ Dialogs:
                     EmbedButton: Intégrer
                     IndexExistsWarning: "L'index existe déjà"
                     IndexExistsWarningDesc: "Un index portant ce nom existe déjà. Veuillez choisir un autre nom d'index."
-                    BackButton: Retour
                     FileUploadContainerTitle: "Glissez-déposez vos fichiers ici"
                     FileUploadContainerHint: "Supporte .pdf, .md et .txt — un fichier à la fois"
                     PdfNote: "Les fichiers PDF peuvent prendre plus de temps — l'IA est utilisée pour en extraire le contenu."
@@ -174,7 +171,6 @@ Dialogs:
                     FileSizeColumn: Taille
                   Step3:
                     Title: "Résultats d'intégration"
-                    BackButton: "Retour au téléversement"
                     ChatButton: "Démarrer le chat"
                   Chatbot:
                     WelcomeTitle: "Bonjour, je suis votre assistant IA"

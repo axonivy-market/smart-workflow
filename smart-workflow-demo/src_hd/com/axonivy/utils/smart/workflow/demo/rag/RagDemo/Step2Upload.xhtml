@@ -6,7 +6,7 @@
 
   <div class="rag-step-content">
 
-    <div class="rag-step-intro mb-5">
+    <div class="rag-step-intro mb-5 mt-3">
       <h3 class="m-0 mb-1 text-2xl">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/Title')}</h3>
       <p class="m-0 text-gray-500">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/Subtitle')}</p>
     </div>
@@ -22,7 +22,8 @@
           <p:inputText id="index-name-input"
             value="#{data.indexName}"
             styleClass="w-full"
-            placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/IndexNamePlaceholder')}">
+            required="true"
+            label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/IndexNameLabel')}">
             <p:ajax listener="#{logic.checkIndexExists}" update="step2-panel" />
           </p:inputText>
           <p class="m-0 mt-2 line-height-3 text-color-secondary">
@@ -49,7 +50,7 @@
           </p>
           <p:fileUpload auto="true" multiple="false" accept=".txt,.md,.pdf"
             listener="#{logic.handleFileUpload}"
-            update="step2-panel"
+            update="step2-panel rag-footer"
             allowTypes="/(\.|\/)(txt|md|pdf)$/"
             label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/ChooseFileLabel')}"
             styleClass="rag-file-upload" />
@@ -79,35 +80,7 @@
         </h:panelGroup>
       </div>
 
-      <!-- Embed action -->
-      <div class="col-12">
-        <h:panelGroup id="embed-action-panel" layout="block">
 
-          <p:commandButton id="embed-btn"
-            value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/EmbedButton')}"
-            icon="si si-check-1"
-            actionListener="#{logic.embed}"
-            update="step2-panel messages"
-            process="step2-panel"
-            oncomplete="afterEmbedCmd()"
-            disabled="#{empty data.stagedFiles or empty data.indexName or data.indexExists}"
-            styleClass="w-full" />
-
-        </h:panelGroup>
-      </div>
-
-      <!-- Navigation -->
-      <div class="col-12">
-        <div class="flex justify-content-between mt-2">
-          <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/BackButton')}"
-            icon="si si-arrow-left-1"
-            styleClass="p-button-outlined"
-            actionListener="#{logic.goToStep(1)}"
-            update="wizard-body wizard-steps"
-            process="@this">
-          </p:commandButton>
-        </div>
-      </div>
 
     </h:panelGroup>
 

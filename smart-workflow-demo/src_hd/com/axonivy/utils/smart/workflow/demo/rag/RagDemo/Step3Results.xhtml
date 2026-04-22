@@ -8,7 +8,7 @@
 
     <!-- Index metadata panel -->
     <h:panelGroup rendered="#{data.indexMeta ne null}" layout="block"
-      styleClass="rag-meta-panel border-round-md py-3 px-4 mb-4">
+      styleClass="py-3 px-2 mt-3">
       <div class="grid">
         <div class="col-12 md:col-6">
           <div class="flex align-items-baseline gap-2 mb-1">
@@ -37,20 +37,17 @@
       </div>
     </h:panelGroup>
 
-    <!-- Chunk count label -->
-    <h:outputFormat rendered="#{not empty data.embeddedChunks}"
-      styleClass="font-semibold mb-2 block"
-      value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/EmbeddedChunksCount')}">
-      <f:param value="#{data.embeddedChunks.size()}" />
-    </h:outputFormat>
-
     <!-- Chunks table -->
     <h:panelGroup rendered="#{not empty data.embeddedChunks}" layout="block" styleClass="mb-4">
       <p:dataTable value="#{data.embeddedChunks}" var="chunk"
         paginator="true" rows="10" paginatorPosition="bottom"
         filteredValue="#{data.filteredChunks}">
-        <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/PreviewColumn')}"
-          filterBy="#{chunk.textPreview}" filterMatchMode="contains">
+        <p:column filterBy="#{chunk.textPreview}" filterMatchMode="contains">
+          <f:facet name="header">
+            <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/EmbeddedChunksCount')}">
+              <f:param value="#{data.embeddedChunks.size()}" />
+            </h:outputFormat>
+          </f:facet>
           <h:outputText value="#{chunk.textPreview}" />
         </p:column>
 
@@ -70,26 +67,6 @@
         <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/NoDocumentsDesc')}" escape="false" />
       </div>
     </h:panelGroup>
-
-    <!-- Navigation -->
-    <div class="flex justify-content-between mt-5">
-      <p:commandButton
-        value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step3/BackButton')}"
-        icon="si si-arrow-left-1"
-        styleClass="p-button-outlined"
-        actionListener="#{logic.goToStep(2)}"
-        update="wizard-body wizard-steps"
-        process="@this">
-        <f:param name="step" value="2" />
-      </p:commandButton>
-      <p:commandButton
-        value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step3/ChatButton')}"
-        icon="si si-conversation-chat-2" iconPos="right"
-        actionListener="#{logic.goToStep(4)}"
-        update="wizard-body wizard-steps messages"
-        process="@this">
-      </p:commandButton>
-    </div>
 
   </div>
 

@@ -112,7 +112,6 @@ Dialogs:
                   Title: Smart Workflow RAG
                   Subtitle: A guided walkthrough of Retrieval-Augmented Generation with Smart Workflow
                   IndexNameLabel: Vector store name
-                  IndexNamePlaceholder: e.g. hr-knowledge
                   IndexNameDesc: "A unique name to identify this knowledge base in the vector store."
                   ChooseFileLabel: 'Choose file (.pdf / .md / .txt)'
                   UploadLabel: Upload
@@ -126,7 +125,6 @@ Dialogs:
                   TokensUnit: tokens
                   NoDocumentsTitle: No documents yet
                   NoDocumentsDesc: 'Upload <strong>.txt</strong> or <strong>.md</strong> files and click <strong>Embed</strong> to index them.'
-                  PreviewColumn: Preview
                   SourceColumn: Source
                   ChunkIdColumn: Chunk ID
                   Wizard:
@@ -165,7 +163,6 @@ Dialogs:
                     EmbedButton: Embed
                     IndexExistsWarning: Index Already Exists
                     IndexExistsWarningDesc: "An index with this name already exists. Please choose a different index name."
-                    BackButton: Back
                     FileUploadContainerTitle: Drag & drop files here
                     FileUploadContainerHint: "Supports .pdf, .md and .txt — one file at a time"
                     PdfNote: "PDF files may take longer to process — AI is used to extract their content."
@@ -174,7 +171,6 @@ Dialogs:
                     FileSizeColumn: Size
                   Step3:
                     Title: Embedding Results
-                    BackButton: Back to Upload
                     ChatButton: Start Chatting
                   Chatbot:
                     WelcomeTitle: "Hello, I'm your AI Assistant"

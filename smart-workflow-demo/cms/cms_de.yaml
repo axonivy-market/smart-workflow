@@ -112,7 +112,6 @@ Dialogs:
                   Title: Smart Workflow RAG
                   Subtitle: Eine geführte Einführung in Retrieval-Augmented Generation mit Smart Workflow
                   IndexNameLabel: Name des Vektorspeichers
-                  IndexNamePlaceholder: z.B. hr-wissen
                   IndexNameDesc: "Ein eindeutiger Name zur Identifizierung dieser Wissensdatenbank im Vektorspeicher."
                   ChooseFileLabel: 'Datei auswählen (.pdf / .md / .txt)'
                   UploadLabel: Hochladen
@@ -126,7 +125,6 @@ Dialogs:
                   TokensUnit: Token
                   NoDocumentsTitle: Noch keine Dokumente
                   NoDocumentsDesc: 'Laden Sie <strong>.txt</strong>- oder <strong>.md</strong>-Dateien hoch und klicken Sie auf <strong>Einbetten</strong>, um sie zu indexieren.'
-                  PreviewColumn: Vorschau
                   SourceColumn: Quelle
                   ChunkIdColumn: Abschnitts-ID
                   Wizard:
@@ -165,7 +163,6 @@ Dialogs:
                     EmbedButton: Einbetten
                     IndexExistsWarning: Index bereits vorhanden
                     IndexExistsWarningDesc: "Ein Index mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Indexnamen."
-                    BackButton: Zurück
                     FileUploadContainerTitle: Dateien hier ablegen
                     FileUploadContainerHint: "Unterstützt .pdf, .md und .txt — eine Datei gleichzeitig"
                     PdfNote: "PDF-Dateien können länger dauern — KI wird verwendet, um ihren Inhalt zu extrahieren."
@@ -174,7 +171,6 @@ Dialogs:
                     FileSizeColumn: Größe
                   Step3:
                     Title: Einbettungsergebnisse
-                    BackButton: "Zurück zum Hochladen"
                     ChatButton: Chat starten
                   Chatbot:
                     WelcomeTitle: "Hallo, ich bin Ihr KI-Assistent"

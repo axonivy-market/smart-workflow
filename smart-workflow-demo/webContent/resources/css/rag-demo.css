@@ -80,12 +80,6 @@
 }
 
 /* ---- Index metadata panel (used in Step 3) ---- */
-
-.rag-meta-panel {
-  background: var(--surface-0);
-  border: 1px solid var(--surface-border);
-}
-
 .rag-meta-label {
   white-space: nowrap;
 }
@@ -134,7 +128,6 @@
   gap: 0;
   padding: 1rem 0 1.5rem;
   border-bottom: 1px solid var(--surface-border);
-  margin-bottom: 2rem;
 }
 
 .rag-wizard-step {
