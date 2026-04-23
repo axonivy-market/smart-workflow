@@ -1,8 +1,12 @@
 package com.axonivy.utils.smart.workflow.governance.history.entity;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -52,6 +56,34 @@ public class AgentConversationEntry {
 
   public String getToolExecutionsJson() { return toolExecutionsJson; }
   public void setToolExecutionsJson(String toolExecutionsJson) { this.toolExecutionsJson = toolExecutionsJson; }
+
+  private static final String DATE_TIME_FORMAT_PATTERN = "dd MMM yyyy HH:mm";
+
+  @JsonIgnore
+  public String getLastUpdatedText() {
+    if (lastUpdated == null) return "—";
+    try {
+      return LocalDateTime.parse(lastUpdated)
+          .format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN));
+    } catch (Exception e) {
+      return lastUpdated;
+    }
+  }
+
+  @JsonIgnore
+  public int getMessageCount() {
+    return ChatHistoryJsonParser.getMessageCount(this);
+  }
+
+  @JsonIgnore
+  public int getTotalTokens() {
+    return ChatHistoryJsonParser.getTotalTokens(this);
+  }
+
+  @JsonIgnore
+  public String getModelName() {
+    return ChatHistoryJsonParser.getModelName(this);
+  }
 
   public List<ToolExecution> getToolExecutions() {
     return JsonUtils.jsonValueToEntities(toolExecutionsJson, ToolExecution.class);

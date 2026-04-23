@@ -1,0 +1,54 @@
+
+.section-card {
+  border: 1px solid var(--surface-border);
+}
+
+.section-header {
+  padding: 12px 16px;
+}
+
+.filter-bar {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.badge {
+  padding: 2px 8px;
+  font-size: 0.82em;
+}
+
+.model-chip {
+  font-family: monospace;
+  padding: 2px 6px;
+}
+
+.history-table .ui-treetable-data tr:hover td {
+  background: var(--blue-50);
+  cursor: pointer;
+}
+
+.history-table .ui-treetable-data tr.ui-state-highlight td {
+  background: var(--blue-100);
+}
+
+/* case (parent) rows */
+.history-table .ui-treetable-data tr.ui-treetable-row:not(.ui-treetable-row-leaf) > td {
+  background: var(--surface-ground);
+  font-weight: 600;
+}
+
+/* task (child) rows */
+.history-table .ui-treetable-data tr.ui-treetable-row-leaf > td {
+  background: var(--surface-card);
+  border-left: 2px solid var(--primary-100);
+}
+
+.col-action { white-space: nowrap; }
+
+.filter-case-input { width: 300px; }
+.filter-model-select { width: 200px; }
+.filter-date-select { width: 160px; }
+
+.content-area {
+  max-width: 1400px;
+}

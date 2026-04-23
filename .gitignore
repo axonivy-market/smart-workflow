@@ -1,3 +1,7 @@
+# ide / tools
+.claude/
+.vscode/
+
 # general
 Thumbs.db
 .DS_Store

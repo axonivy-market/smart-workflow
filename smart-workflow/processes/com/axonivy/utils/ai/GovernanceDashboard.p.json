@@ -1,0 +1,104 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19CF475AAAAB4EC6",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.GovernanceDashboardData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "governanceDashboard",
+      "config" : {
+        "signature" : "governanceDashboard",
+        "request" : {
+          "name" : "Governance Dashboard"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 376, "y" : 224 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "DialogCall",
+      "name" : "Dashboard",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.HistoryDashboard:start()",
+        "output" : {
+          "map" : {
+            "out.selectedCaseUuid" : "result.selectedCaseUuid"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "DialogCall",
+      "name" : "Conversation",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.Conversations:start(String)",
+        "call" : {
+          "map" : {
+            "param.caseUuid" : "in.selectedCaseUuid"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 696, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f10", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Alternative",
+      "name" : "action?",
+      "config" : {
+        "conditions" : {
+          "f8" : "in.selectedCaseUuid != null"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 376, "y" : 64 },
+        "labelOffset" : { "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f5", "label" : {
+            "name" : "show conversations of case",
+            "offset" : { "x" : 1, "y" : -10 }
+          }, "color" : "default" },
+        { "id" : "f9", "to" : "f1", "label" : {
+            "name" : "close",
+            "offset" : { "x" : 25, "y" : -2 }
+          } }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "Script",
+      "name" : "Reset selection",
+      "config" : {
+        "output" : {
+          "code" : "out.selectedCaseUuid = null;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 840, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f3", "via" : [ { "x" : 840, "y" : 0 }, { "x" : 248, "y" : 0 } ], "color" : "default" }
+      ]
+    } ]
+}
