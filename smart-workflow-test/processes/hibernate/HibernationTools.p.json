@@ -29,7 +29,8 @@
         }
       },
       "tags" : [
-        "tool"
+        "tool",
+        "human"
       ],
       "visual" : {
         "at" : { "x" : 104, "y" : 176 }
@@ -375,5 +376,91 @@
       "connect" : [
         { "id" : "f34", "to" : "f3" }
       ]
+    }, {
+      "id" : "f36",
+      "type" : "CallSubStart",
+      "name" : "askUserSignalHD(HumanDecision)",
+      "config" : {
+        "signature" : "askUserSignalHD",
+        "input" : {
+          "params" : [
+            { "name" : "decision", "type" : "hibernate.HumanDecision", "desc" : "required: the decision which should be done by the human user" }
+          ],
+          "map" : {
+            "out.decision" : "param.decision"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "selected", "type" : "List<hibernate.Choice>", "desc" : "the users prefered choice" }
+          ],
+          "map" : {
+            "result.selected" : "in.selected"
+          }
+        }
+      },
+      "tags" : [
+        "tool",
+        "signal"
+      ],
+      "visual" : {
+        "at" : { "x" : 520, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f37", "to" : "f38" }
+      ]
+    }, {
+      "id" : "f38",
+      "type" : "UserTask",
+      "name" : "userFeedback",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.HumanDecision:start(hibernate.HumanDecision)",
+        "call" : {
+          "map" : {
+            "param.decision" : "in.decision"
+          },
+          "code" : "ivy.log.info(\"setup decision >>> : \"+in.decision.question);"
+        },
+        "task" : {
+          "name" : "Assisted: <%=in.decision.question%>",
+          "customFields" : [
+            { "name" : "memory.id", "type" : "STRING", "value" : "String.valueOf(ivy.case.getId())" }
+          ]
+        },
+        "case" : {
+          "customFields" : [
+            { "name" : "memory.id", "type" : "STRING", "value" : "String.valueOf(ivy.case.getId())" }
+          ]
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.selected" : "result.selected"
+          },
+          "code" : [
+            "import ch.ivyteam.ivy.bpm.error.BpmError;",
+            "import com.axonivy.utils.smart.workflow.tools.human.ErrorHandler;",
+            "import dev.langchain4j.data.message.ToolExecutionResultMessage;",
+            "import com.axonivy.utils.smart.workflow.demo.bean.ChatBean.ChatMessage;",
+            "import com.axonivy.utils.smart.workflow.memory.IvyMemory;",
+            "ivy.log.info(\"user selected: \"+result.first.title);",
+            "",
+            "",
+            "new ErrorHandler(BpmError.create(\"fake\").build()).resolveIntermediate(result.first.title);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 680, "y" : 272 }
+      },
+      "connect" : [
+        { "id" : "f385", "to" : "f386" }
+      ]
+    }, {
+      "id" : "f386",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 936, "y" : 272 }
+      }
     } ]
 }

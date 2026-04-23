@@ -40,6 +40,13 @@ public class IvySubProcessToolExecutor {
 
     try {
       Ivy.log().info("calling subprocess for tool: " + name + " with parameters: " + parameters);
+      if (startable.get().description().tags().contains("signal")) {
+        Ivy.log().info("subprocess is signal-based, sending signal with parameters");
+        //var memoryId = String.valueOf(Ivy.wf().getCurrentCase().getId()); // simplified!
+        Ivy.wf().signals().create()
+        //.data(memoryId)
+        .send("human:task2");
+      }
       SubProcessCallResult res = call(startable.get(), parameters);
       return ToolExecutionResultMessage.from(execTool, Json.toJson(res.asMap()));
     } catch (BpmError error) {
@@ -49,7 +56,8 @@ public class IvySubProcessToolExecutor {
         .withAttribute("tool.parameters", execTool.arguments())
         .build();
     } catch (Exception ex) {
-      if (name.equals("askUser")) {
+      if (startable.get().description().tags().contains("human")) {
+        Ivy.log().error("Error during human tool execution, likely due to missing user input. Failing with BPM error to trigger human fallback.", ex);
         throw BpmError.create("human:task").build();
       }
       throw ex;

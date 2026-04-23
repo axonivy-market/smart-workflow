@@ -360,7 +360,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "strictly ask the user instead of making bold decisions. present your users quests as HumanDecision (title+options)",
-          "tools" : "[\"askUser\"]",
+          "tools" : "[\"askUserSignal\"]",
           "resultType" : "String.class",
           "resultMapping" : "in.iceCream",
           "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"
@@ -386,7 +386,7 @@
         "signalCode" : "humans:answer:ice"
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 432 },
+        "at" : { "x" : 592, "y" : 456 },
         "description" : [
           "re-entry:",
           "- use todays natural capability to-renter via signal",
@@ -471,6 +471,86 @@
       },
       "connect" : [
         { "id" : "f52", "to" : "f46" }
+      ]
+    }, {
+      "id" : "f53",
+      "type" : "WaitEvent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.tools.human.HumanToolTask",
+        "eventId" : "in.memoryId",
+        "task" : {
+          "customFields" : [
+            { "name" : "memory.id", "type" : "STRING", "value" : "in.memoryId" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 416, "y" : 608 }
+      },
+      "connect" : [
+        { "id" : "f61", "to" : "f56" }
+      ]
+    }, {
+      "id" : "f54",
+      "type" : "RequestStart",
+      "name" : "askToolSignalHD",
+      "config" : {
+        "signature" : "askToolSignalHD"
+      },
+      "visual" : {
+        "at" : { "x" : 272, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f55", "to" : "f56" }
+      ]
+    }, {
+      "id" : "f56",
+      "type" : "ProgramInterface",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "strictly ask the user instead of making bold decisions. present your users quests as HumanDecision (title+options)",
+          "tools" : "[\"askUserSignalHD\"]",
+          "resultType" : "String.class",
+          "resultMapping" : "in.iceCream",
+          "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 456, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f57", "to" : "f58", "color" : "default" }
+      ]
+    }, {
+      "id" : "f58",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 600, "y" : 544 }
+      }
+    }, {
+      "id" : "f59",
+      "type" : "SignalStartEvent",
+      "name" : "human:task2",
+      "config" : {
+        "signalCode" : "human:task2",
+        "output" : {
+          "map" : {
+            "out.memoryId" : "signal.getSignalData() as String"
+          },
+          "code" : "out.memoryId = String.valueOf(ivy.case.getId()-1); // temp"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 416, "y" : 656 },
+        "description" : [
+          "re-entry:",
+          "- use todays natural capability to-renter via signal",
+          "- signal receiver should specific; to allow multiple use-cases of this pattern without altering the signal-code"
+        ]
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f53" }
       ]
     } ]
 }

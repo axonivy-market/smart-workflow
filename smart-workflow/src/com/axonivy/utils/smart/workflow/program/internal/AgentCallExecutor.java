@@ -14,6 +14,7 @@ import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryL
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.memory.IvyMemory;
+import com.axonivy.utils.smart.workflow.memory.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
@@ -83,8 +84,8 @@ public class AgentCallExecutor {
     configureGuardrails(agentBuilder);
     configureSystemMessage(agentBuilder);
 
-    IvyMemory memory = IvyMemory.of(Ivy.wfCase());
-    Ivy.log().info("Using memory with id: " + memory.id());
+    IvyMemory memory = new IvyMemory(String.valueOf(Ivy.wfCase().getId()), IvyVolatileStore.instance()); //IvyMemory.of(Ivy.wfCase());
+    Ivy.log().info("Using memory" + memory);
     var agent = agentBuilder
       .chatMemory(memory)
       .build();
@@ -105,7 +106,9 @@ public class AgentCallExecutor {
           Ivy.log().error("Failed to map result to " + mapTo, ex);
         }
       }
+
       Ivy.log().info("Agent response: " + result);
+      Ivy.log().debug("Full agent memory "+memory.id()+": " + memory.messages());
     } catch (InputGuardrailException | OutputGuardrailException ex) {
       GuardrailErrors.throwError(ex);
     } catch (BpmError error) {

@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.tools.human;
 
 import com.axonivy.utils.smart.workflow.memory.IvyMemory;
+import com.axonivy.utils.smart.workflow.memory.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
@@ -50,6 +51,24 @@ public class ErrorHandler {
       var request = ai.toolExecutionRequests().get(0);
       ToolExecutionResultMessage msg = ToolExecutionResultMessage.from(request, decision);
       memory.add(msg);
+    }
+  }
+
+  public void resolveIntermediate(String decision) {
+    //error.setAttribute("tool.decision", decision);
+    // TODO serious injection of user response into next agent call memory?
+    IvyMemory memory = new IvyMemory(String.valueOf(Ivy.wfCase().getId()), IvyVolatileStore.instance());
+    Ivy.log().info("Resolving human task memory: " + memory);
+    var b4 = memory.messages();
+    var invoke = b4.get(b4.size()-3);
+    Ivy.log().info("Last message in memory before resolving human task: " + invoke);
+    if (invoke instanceof AiMessage ai) {
+      // TODO: serious of tool execution requests that were interrupted in order to be
+      // solved by the user
+      var request = ai.toolExecutionRequests().get(0);
+      ToolExecutionResultMessage msg = ToolExecutionResultMessage.from(request, decision);
+      memory.add(msg);
+      Ivy.log().info("Added decision to memory: "+memory);
     }
   }
 }

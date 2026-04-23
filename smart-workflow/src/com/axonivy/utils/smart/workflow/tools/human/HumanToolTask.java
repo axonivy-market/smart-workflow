@@ -56,18 +56,26 @@ public class HumanToolTask implements IProcessIntermediateEventBean {
     CaseQuery withEnvelope = CaseQuery.create().where()
             .customField().stringField("memory.id").isNotNull();
     TaskQuery query = TaskQuery.create().where().state().isEqual(TaskState.WAITING_FOR_INTERMEDIATE_EVENT)
-            .and().cases(withEnvelope);
+            .and()
+            .customField().stringField("memory.id").isNotNull()
+            //.cases(withEnvelope)
+            ;
     List<ITask> tasks = query.executor().results();
     List<String> memoryIds = tasks.stream()
             .map(task -> task.getCase().customFields().stringField("memory.id").getOrNull())
             .collect(Collectors.toList());
    // return memoryIds;
-    return memoryIds; // tasks.stream().map(ITask::getCase).toList();
+    return tasks.stream()
+      .map(task -> task.customFields().stringField("memory.id").getOrNull()).toList();
   }
 
   private boolean humanResultAvailable(String id) {
-    return new IvyMemory(id, IvyVolatileStore.instance())
-        .messages().getLast().type() == ChatMessageType.TOOL_EXECUTION_RESULT;
+    IvyMemory memory = new IvyMemory(id, IvyVolatileStore.instance());
+    
+    if (memory.messages().isEmpty()) {
+      return false;
+    }
+    return memory.messages().getLast().type() == ChatMessageType.TOOL_EXECUTION_RESULT;
   }
 
 }

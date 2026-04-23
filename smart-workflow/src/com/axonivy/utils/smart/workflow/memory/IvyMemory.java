@@ -69,4 +69,9 @@ public class IvyMemory implements ChatMemory {
     store.deleteMessages(id);
   }
 
+  @Override
+  public String toString() {
+    return "IvyMemory{id='" + id + "', messages=" + messages() + "}";
+  }
+
 }
