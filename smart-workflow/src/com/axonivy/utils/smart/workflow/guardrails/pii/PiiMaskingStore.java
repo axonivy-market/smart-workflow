@@ -4,9 +4,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ch.ivyteam.ivy.environment.Ivy;
+
 public class PiiMaskingStore {
 
-  private static final long TTL_MS = 5 * 60 * 1000L;
+  public static final String TTL_VARIABLE = "AI.Guardrails.PiiMasking.MappingTtlMinutes";
+  private static final long DEFAULT_TTL_MINUTES = 5;
   private static final int MAX_ENTRIES = 10_000;
   private static final int EVICTION_FREQUENCY = 20;
 
@@ -14,6 +17,16 @@ public class PiiMaskingStore {
   private static int putCount = 0;
 
   record Entry(Map<String, String> placeholderToOriginal, long createdMs) {}
+
+  static long ttlMs() {
+    try {
+      String value = Ivy.var().get(TTL_VARIABLE);
+      if (value != null && !value.isBlank()) {
+        return Long.parseLong(value.strip()) * 60 * 1000L;
+      }
+    } catch (Exception ignored) {}
+    return DEFAULT_TTL_MINUTES * 60 * 1000L;
+  }
 
   public static void put(String invocationId, Map<String, String> mapping) {
     if (STORE.size() >= MAX_ENTRIES) {
@@ -33,9 +46,14 @@ public class PiiMaskingStore {
     return entry != null ? entry.placeholderToOriginal() : Collections.emptyMap();
   }
 
+  public static boolean containsKey(String invocationId) {
+    return invocationId != null && STORE.containsKey(invocationId);
+  }
+
   static void evictExpired() {
     long now = System.currentTimeMillis();
-    STORE.entrySet().removeIf(e -> now - e.getValue().createdMs() > TTL_MS);
+    long ttl = ttlMs();
+    STORE.entrySet().removeIf(e -> now - e.getValue().createdMs() > ttl);
   }
 
   static int size() {

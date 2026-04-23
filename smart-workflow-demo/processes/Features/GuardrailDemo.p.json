@@ -194,11 +194,12 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "inputGuardrails" : "[\"PiiMaskingInputGuardrail\"]",
-          "outputGuardrails" : "[\"PiiMaskingOutputGuardrail\"]",
+          "system" : "\"Values formatted as <TYPE_hash> are anonymized placeholders — the original sensitive data was removed before reaching you. Treat each placeholder as an opaque token and echo it back as-is.\"",
           "provider" : "",
-          "resultType" : "",
           "resultMapping" : "in.result",
-          "query" : "\"Please confirm the following customer record for our CRM:\\nName: John Doe\\nEmail: john.doe@example.com\\nPhone: +1-555-123-4567\\nCredit Card: 4532015112830366\\nIP Address: 192.168.1.42\\n\\nEcho back a confirmation with each field.\""
+          "query" : "\"Please review the following security profile and echo back each field in details:\\n\\nURL: https://api.example.com/v1/users?session=abc123def456\\nBearer Token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U\\nJWT: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI5ODc2NTQzMjEifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\\napi_key=sk-prod-1234567890abcdef\\npassword=MyS3cr3tP4ss!\\nAWS Key: AKIAIOSFODNN7EXAMPLE\\nDevice MAC: 00:1A:2B:3C:4D:5E\\nEmail: john.doe@example.com\\nPhone: +1-555-123-4567\\nBIC: DEUTDEDB\\nIBAN: DE89370400440532013000\\nCard Expiry: 12/2025\\nCard Number: 4532015112830366\\nVIN: 1HGBH41JXMN109186\\nSSN: 123-45-6789\\nDate of Birth: 15/06/1990\\nIP Address: 192.168.1.42\"",
+          "outputGuardrails" : "[\"PiiMaskingOutputGuardrail\"]",
+          "resultType" : ""
         }
       },
       "visual" : {
@@ -211,9 +212,9 @@
     }, {
       "id" : "f47",
       "type" : "ProcessAnnotation",
-      "name" : "PII in the user message is replaced with hash placeholders before reaching the LLM. The output guardrail restores the original values in the AI response. The LLM never sees raw PII.",
+      "name" : "PII in the user message is replaced with <TYPE_hash> placeholders (Presidio-style) before reaching the LLM. Covers: URL, bearer token, JWT, API key, password, AWS key, MAC, email, phone, SWIFT, IBAN, card expiry, card number, VIN, SSN, date of birth, IP. The output guardrail restores originals in the AI response.",
       "visual" : {
-        "at" : { "x" : 512, "y" : 768 },
+        "at" : { "x" : 520, "y" : 784 },
         "size" : { "width" : 398, "height" : 62 }
       }
     } ]
