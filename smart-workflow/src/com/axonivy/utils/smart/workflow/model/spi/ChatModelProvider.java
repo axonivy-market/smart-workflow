@@ -63,6 +63,11 @@ public interface ChatModelProvider {
     return false;
   }
 
+  default String resolveEmbeddingModelName(EmbeddingModelOptions options) {
+    return Optional.ofNullable(options)
+      .map(EmbeddingModelOptions::modelName)
+      .orElse("");}
+
   default Optional<EmbeddingModel> setupEmbedding(EmbeddingModelOptions options) {
     return Optional.empty();
   }

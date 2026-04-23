@@ -27,6 +27,7 @@ public class OpenSearchRestClient {
 
   private static final String OPENSEARCH_CLIENT = "openSearch";
   private static final String NDJSON = "application/x-ndjson";
+  private static final double NO_MIN_SCORE = 0.0;
 
   private interface Paths {
     String BULK = "_bulk";
@@ -38,6 +39,8 @@ public class OpenSearchRestClient {
     String BULK_PARTIAL = "OpenSearch bulk ingest had errors: %s";
     String PING_FAILED = "OpenSearch ping failed with status: %d";
     String CREATE_INDEX = "OpenSearch index creation failed for '%s' with status: %d — %s";
+    String GET_INDEX_META = "OpenSearch getIndexMeta failed for '%s' with status: %d — %s";
+    String LIST_DOCUMENTS = "OpenSearch listDocuments failed for '%s' with status: %d — %s";
   }
 
   private final WebTarget target;
@@ -57,7 +60,7 @@ public class OpenSearchRestClient {
 
   public void ping() {
     try (Response response = target.request(MediaType.APPLICATION_JSON).head()) {
-      if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+      if (!isSuccessful(response)) {
         throw new IllegalStateException(String.format(Errors.PING_FAILED, response.getStatus()));
       }
     }
@@ -65,7 +68,7 @@ public class OpenSearchRestClient {
 
   public boolean indexExists(String indexName) {
     try (Response response = target.path(indexName).request(MediaType.APPLICATION_JSON).head()) {
-      return response.getStatusInfo() == Response.Status.OK;
+      return isStatus(response, Response.Status.OK);
     }
   }
 
@@ -73,15 +76,23 @@ public class OpenSearchRestClient {
     String body = OpenSearchPayloadBuilder.buildCreateIndexBody(dimension, meta);
     try (Response response = target.path(indexName).request(MediaType.APPLICATION_JSON)
         .put(Entity.json(body))) {
-      if (response.getStatusInfo() == Response.Status.BAD_REQUEST) {
+      if (isStatus(response, Response.Status.BAD_REQUEST)) {
         // resource_already_exists_exception — index was created concurrently, safe to ignore
         return;
       }
-      if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+      if (!isSuccessful(response)) {
         String responseBody = response.readEntity(String.class);
         throw new IllegalStateException(String.format(Errors.CREATE_INDEX, indexName, response.getStatus(), responseBody));
       }
     }
+  }
+
+  private static boolean isSuccessful(Response response) {
+    return response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL;
+  }
+
+  private static boolean isStatus(Response response, Response.Status status) {
+    return response.getStatus() == status.getStatusCode();
   }
 
   public void bulkIngest(String indexName, List<Embedding> embeddings, List<TextSegment> segments) {
@@ -97,8 +108,13 @@ public class OpenSearchRestClient {
         Ivy.log().warn("Could not parse OpenSearch bulk response", ex);
       }
     }
-    target.path(indexName).path(Paths.MAPPING)
-        .request(MediaType.APPLICATION_JSON).put(Entity.json(OpenSearchPayloadBuilder.buildUpdateLastIngestedBody())).close();
+    try {
+      OpenSearchIndexMeta currentMeta = getIndexMeta(indexName);
+      target.path(indexName).path(Paths.MAPPING)
+          .request(MediaType.APPLICATION_JSON).put(Entity.json(OpenSearchPayloadBuilder.buildUpdateLastIngestedBody(currentMeta))).close();
+    } catch (RuntimeException ex) {
+      Ivy.log().warn("Could not refresh OpenSearch index meta after bulk ingest", ex);
+    }
   }
 
   public EmbeddingSearchResult<TextSegment> search(String indexName, EmbeddingSearchRequest request) {
@@ -111,6 +127,40 @@ public class OpenSearchRestClient {
         return OpenSearchPayloadBuilder.parseSearchResponse(responseBody, request.minScore());
       } catch (JsonProcessingException ex) {
         throw new IllegalStateException("Failed to parse OpenSearch search response", ex);
+      }
+    }
+  }
+
+  public OpenSearchIndexMeta getIndexMeta(String indexName) {
+    try (Response response = target.path(indexName).path(Paths.MAPPING)
+        .request(MediaType.APPLICATION_JSON).get()) {
+      if (!isSuccessful(response)) {
+        String body = response.readEntity(String.class);
+        throw new IllegalStateException(String.format(Errors.GET_INDEX_META, indexName, response.getStatus(), body));
+      }
+      String body = response.readEntity(String.class);
+      try {
+        return OpenSearchPayloadBuilder.parseIndexMeta(body);
+      } catch (JsonProcessingException ex) {
+        throw new IllegalStateException("Failed to parse index mapping response", ex);
+      }
+    }
+  }
+
+  public EmbeddingSearchResult<TextSegment> listDocuments(String indexName, int maxResults) {
+    String body = OpenSearchPayloadBuilder.buildListDocumentsBody(maxResults);
+    try (Response response = target.path(indexName).path(Paths.SEARCH)
+        .request(MediaType.APPLICATION_JSON)
+        .post(Entity.json(body))) {
+      if (!isSuccessful(response)) {
+        String responseBody = response.readEntity(String.class);
+        throw new IllegalStateException(String.format(Errors.LIST_DOCUMENTS, indexName, response.getStatus(), responseBody));
+      }
+      String responseBody = response.readEntity(String.class);
+      try {
+        return OpenSearchPayloadBuilder.parseSearchResponse(responseBody, NO_MIN_SCORE);
+      } catch (JsonProcessingException ex) {
+        throw new IllegalStateException("Failed to parse OpenSearch list documents response", ex);
       }
     }
   }

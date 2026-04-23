@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://primefaces.org/ui">
+  <h:panelGroup id="wizard-steps" layout="block"
+    styleClass="rag-wizard-steps flex align-items-center justify-content-center">
+
+    <h:panelGroup layout="block"
+    styleClass="rag-wizard-step #{data.currentStep == 1 ? 'active' : (data.currentStep gt 1 ? 'completed' : 'pending')}">
+    <div class="rag-step-circle">
+        <h:panelGroup rendered="#{data.currentStep gt 1}"><i class="si si-check-1" /></h:panelGroup>
+        <h:panelGroup rendered="#{data.currentStep le 1}"><h:outputText value="1" /></h:panelGroup>
+    </div>
+    <span class="rag-step-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Wizard/Step1Label')}</span>
+    </h:panelGroup>
+    <h:panelGroup layout="block"
+    styleClass="rag-step-connector #{data.currentStep gt 1 ? 'completed' : ''}" />
+
+    <h:panelGroup layout="block"
+    styleClass="rag-wizard-step #{data.currentStep == 2 ? 'active' : (data.currentStep gt 2 ? 'completed' : 'pending')}">
+    <div class="rag-step-circle">
+        <h:panelGroup rendered="#{data.currentStep gt 2}"><i class="si si-check-1" /></h:panelGroup>
+        <h:panelGroup rendered="#{data.currentStep le 2}"><h:outputText value="2" /></h:panelGroup>
+    </div>
+    <span class="rag-step-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Wizard/Step2Label')}</span>
+    </h:panelGroup>
+    <h:panelGroup layout="block"
+    styleClass="rag-step-connector #{data.currentStep gt 2 ? 'completed' : ''}" />
+
+    <h:panelGroup layout="block"
+    styleClass="rag-wizard-step #{data.currentStep == 3 ? 'active' : (data.currentStep gt 3 ? 'completed' : 'pending')}">
+    <div class="rag-step-circle">
+        <h:panelGroup rendered="#{data.currentStep gt 3}"><i class="si si-check-1" /></h:panelGroup>
+        <h:panelGroup rendered="#{data.currentStep le 3}"><h:outputText value="3" /></h:panelGroup>
+    </div>
+    <span class="rag-step-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Wizard/Step3Label')}</span>
+    </h:panelGroup>
+    <h:panelGroup layout="block"
+    styleClass="rag-step-connector #{data.currentStep gt 3 ? 'completed' : ''}" />
+
+    <h:panelGroup layout="block"
+    styleClass="rag-wizard-step #{data.currentStep == 4 ? 'active' : 'pending'}">
+    <div class="rag-step-circle">
+        <h:outputText value="4" />
+    </div>
+    <span class="rag-step-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Wizard/Step4Label')}</span>
+    </h:panelGroup>
+
+</h:panelGroup>
+</ui:composition>

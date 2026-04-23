@@ -1,0 +1,78 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "RagDemoData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.rag.RagDemo",
+  "fields" : [ {
+    "name" : "indexName",
+    "type" : "String"
+  }, {
+    "name" : "sources",
+    "type" : "java.util.List<String>"
+  }, {
+    "name" : "ragResult",
+    "type" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult"
+  }, {
+    "name" : "question",
+    "type" : "String"
+  }, {
+    "name" : "userInput",
+    "type" : "String"
+  }, {
+    "name" : "messages",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage>"
+  }, {
+    "name" : "stagedFiles",
+    "type" : "java.util.List<Features.RagDemo.UploadedFile>"
+  }, {
+    "name" : "embeddedChunks",
+    "type" : "java.util.List<Features.RagDemo.EmbeddedChunkView>"
+  }, {
+    "name" : "filteredChunks",
+    "type" : "java.util.List<Features.RagDemo.EmbeddedChunkView>"
+  }, {
+    "name" : "indexMeta",
+    "type" : "Features.RagDemo.IndexMetaView"
+  }, {
+    "name" : "uploadEvent",
+    "type" : "org.primefaces.event.FileUploadEvent"
+  }, {
+    "name" : "currentStep",
+    "type" : "Integer"
+  }, {
+    "name" : "cfgEmbeddingProvider",
+    "type" : "String"
+  }, {
+    "name" : "cfgEmbeddingModel",
+    "type" : "String"
+  }, {
+    "name" : "cfgChunkSize",
+    "type" : "String"
+  }, {
+    "name" : "cfgChunkOverlap",
+    "type" : "String"
+  }, {
+    "name" : "cfgMaxResults",
+    "type" : "String"
+  }, {
+    "name" : "cfgMinScore",
+    "type" : "String"
+  }, {
+    "name" : "indexExists",
+    "type" : "Boolean"
+  }, {
+    "name" : "cfgOpenSearchUrl",
+    "type" : "String"
+  }, {
+    "name" : "cfgOpenSearchAuthType",
+    "type" : "String"
+  }, {
+    "name" : "connectionOk",
+    "type" : "Boolean"
+  }, {
+    "name" : "pdfBinary",
+    "type" : "ch.ivyteam.ivy.scripting.objects.Binary"
+  }, {
+    "name" : "pdfExtractIndex",
+    "type" : "Integer"
+  } ]
+}

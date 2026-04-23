@@ -1,0 +1,102 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/PageTitle')}</ui:define>
+    <ui:define name="content">
+      <h:outputStylesheet library="css" name="rag-demo.css" />
+
+      <h:form id="form" enctype="multipart/form-data">
+
+        <!-- Page header -->
+        <div class="mb-4">
+          <div>
+            <h2 class="m-0">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Title')}</h2>
+            <p class="rag-subtitle m-0">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Subtitle')}</p>
+          </div>
+        </div>
+
+        <ui:include src="Steps.xhtml" />
+
+        <p:messages id="messages" styleClass="rag-messages" closable="true" />
+
+        <!-- Wizard body -->
+        <h:panelGroup id="wizard-body" layout="block" styleClass="rag-wizard-body">
+          <h:panelGroup rendered="#{data.currentStep eq 1}" layout="block">
+            <ui:include src="Step1Config.xhtml" />
+          </h:panelGroup>
+          <h:panelGroup rendered="#{data.currentStep eq 2}" layout="block">
+            <ui:include src="Step2Upload.xhtml" />
+          </h:panelGroup>
+          <h:panelGroup rendered="#{data.currentStep eq 3}" layout="block">
+            <ui:include src="Step3Results.xhtml" />
+          </h:panelGroup>
+          <h:panelGroup rendered="#{data.currentStep eq 4}" layout="block">
+            <div class="rag-step4-wrapper">
+              <ui:include src="Chatbot.xhtml" />
+            </div>
+          </h:panelGroup>
+
+        </h:panelGroup>
+
+        <p:remoteCommand name="afterEmbedCmd"
+          actionListener="#{logic.afterEmbed}"
+          update="wizard-body wizard-steps messages rag-footer"
+          oncomplete="if (args.embedSuccess) { setTimeout(loadDocumentsCmd, 500); }" />
+
+        <p:remoteCommand name="loadDocumentsCmd"
+          actionListener="#{logic.loadDocuments}"
+          update="wizard-body" />
+
+        <p:remoteCommand name="autoTestConnectionCmd"
+          autoRun="true"
+          actionListener="#{logic.testConnection}"
+          update="messages wizard-body rag-footer"
+          process="@this" />
+
+        <h:panelGroup id="rag-footer" layout="block">
+          <div class="rag-footer flex justify-content-end gap-3 mt-5">
+            <p:commandButton
+              rendered="#{data.currentStep eq 1}"
+              value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step1/ContinueButton')}"
+              icon="si si-arrow-right-1" iconPos="right"
+              actionListener="#{logic.goToStep(2)}"
+              update="wizard-body wizard-steps rag-footer"
+              process="@this"
+              disabled="#{not data.connectionOk}" />
+            <p:commandButton
+              rendered="#{data.currentStep eq 2}"
+              id="embed-btn"
+              value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/EmbedButton')}"
+              icon="si si-check-1"
+              actionListener="#{logic.embed}"
+              update="step2-panel messages rag-footer"
+              process="form"
+              oncomplete="afterEmbedCmd()"
+              disabled="#{empty data.stagedFiles}" />
+            <p:commandButton
+              rendered="#{data.currentStep eq 3}"
+              value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step3/ChatButton')}"
+              icon="si si-conversation-chat-2" iconPos="right"
+              actionListener="#{logic.goToStep(4)}"
+              update="wizard-body wizard-steps messages rag-footer"
+              process="@this" />
+            <p:commandButton
+              rendered="#{data.currentStep eq 4}"
+              value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Wizard/BackToUploadButton')}"
+              icon="si si-arrow-left-1"
+              styleClass="p-button-outlined"
+              actionListener="#{logic.goToStep(3)}"
+              update="wizard-body wizard-steps rag-footer"
+              process="@this" />
+            <p:commandButton id="proceed" actionListener="#{logic.close}" value="#{ivy.cms.co('/Labels/Close')}" icon="si si-close" styleClass="p-button-outlined" />
+          </div>
+        </h:panelGroup>
+      </h:form>
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+</html>
