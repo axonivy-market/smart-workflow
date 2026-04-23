@@ -7,5 +7,7 @@
   }, {
     "name" : "decision",
     "type" : "hibernate.HumanDecision"
+  }, {
+    "name" : "memoryId"
   } ]
 }

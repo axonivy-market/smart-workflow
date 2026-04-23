@@ -47,7 +47,7 @@ public class AgentCallExecutor {
     @Override
     String chat(List<Content> query);
 
-    @dev.langchain4j.agentic.declarative.HumanInTheLoop 
+    //@dev.langchain4j.agentic.declarative.HumanInTheLoop 
     default String humanFallback(List<Content> query, Exception ex) {
       Ivy.log().error("Agent execution failed, asking human for fallback", ex);
       return "Human fallback response for query: " + query; // In real implementation, you would collect input from the user here 

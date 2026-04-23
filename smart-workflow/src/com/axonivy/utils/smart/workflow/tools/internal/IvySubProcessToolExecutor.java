@@ -7,6 +7,8 @@ import java.util.Optional;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
+import ch.ivyteam.ivy.bpm.error.BpmErrorBuilder;
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.call.StartParameter;
 import ch.ivyteam.ivy.process.call.SubProcessCallResult;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
@@ -36,41 +38,22 @@ public class IvySubProcessToolExecutor {
     var parameters = new JsonProcessParameters()
         .readParams(toolParams, execTool.arguments());
 
-        try {
-          SubProcessCallResult res = call(startable.get(), parameters);
-          return ToolExecutionResultMessage.from(execTool, Json.toJson(res.asMap()));
-        } catch (BpmError error) {
-
-          throw BpmError.create(error)
-            .withAttribute("tool.id", execTool.id())
-            .withAttribute("tool.name", execTool.name())
-            .withAttribute("tool.parameters", execTool.arguments())
-            .build();
-
-          // return ToolExecutionResultMessage.builder()
-          //     .id(execTool.id())
-          //     .toolName(execTool.name())
-          //     .isError(true)
-          //     .text("failed to execute tool; BPM error occurred: " + error.getMessage())
-          //     .build();
-
-          // ToolErrorContext errorContext = ToolErrorContext.builder()
-          //           .toolExecutionRequest(execTool)
-          //          // .invocationContext(invocationContext)
-          //           .build();
-          // throw error;
-            // ToolErrorHandlerResult errorHandlerResult;
-            // if (e instanceof ToolArgumentsException) {
-            //     errorHandlerResult = argumentsErrorHandler.handle(getCause(e), errorContext);
-            // } else {
-            //     errorHandlerResult = executionErrorHandler.handle(getCause(e), errorContext);
-            // }
-
-            // return ToolExecutionResult.builder()
-            //         .isError(true)
-            //         .resultText("failed to execute tool; BPM error occurred")
-            //         .build();
-        }
+    try {
+      Ivy.log().info("calling subprocess for tool: " + name + " with parameters: " + parameters);
+      SubProcessCallResult res = call(startable.get(), parameters);
+      return ToolExecutionResultMessage.from(execTool, Json.toJson(res.asMap()));
+    } catch (BpmError error) {
+      throw BpmError.create(error)
+        .withAttribute("tool.id", execTool.id())
+        .withAttribute("tool.name", execTool.name())
+        .withAttribute("tool.parameters", execTool.arguments())
+        .build();
+    } catch (Exception ex) {
+      if (name.equals("askUser")) {
+        throw BpmError.create("human:task").build();
+      }
+      throw ex;
+    }
   }
 
   @SuppressWarnings("null")

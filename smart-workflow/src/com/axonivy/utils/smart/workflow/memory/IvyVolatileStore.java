@@ -13,6 +13,7 @@ import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 public class IvyVolatileStore implements ChatMemoryStore {
   
   private static final Map<String, List<ChatMessage>> store = new ConcurrentHashMap<>();
+  private static final IvyVolatileStore instance = new IvyVolatileStore();
 
   @Override
   public List<ChatMessage> getMessages(Object memoryId) {
@@ -27,6 +28,10 @@ public class IvyVolatileStore implements ChatMemoryStore {
   @Override
   public void deleteMessages(Object memoryId) {
     store.remove((String)memoryId);
+  }
+
+  public static ChatMemoryStore instance() {
+    return instance;  
   }
   
 }

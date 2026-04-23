@@ -91,6 +91,30 @@ public class TestHibernation {
   }
 
   @Test
+  void askUserOptions_toolTask(BpmClient client) {
+    MockOpenAI.defineChat(this::error);
+    client.mock()
+        .uiOf(BpmProcess.name("HibernationTools").elementName("userFeedback"))
+        .with((params, results) -> {
+          var decision = (HumanDecision) params.get("decision");
+          results.set("first", decision.getOptions().getFirst());
+        });
+    var result = client.start()
+        .process(HIBERNATION_PLAYGROUND.elementName("askToolIntermediate"))
+        .execute();
+
+    ITask last = result.workflow().activeTasks().getLast();
+    Assertions.assertThat(last.getName())
+        .isEqualTo("Assisted: Which ice cream would you like to eat today?");
+
+    var finished = client.start().anyActiveTask(result).as().everybody().execute();
+
+    HibernationData last2 = finished.data().last();
+    Assertions.assertThat(last2.getIceCream())
+        .contains("Chocolate");
+  }
+
+  @Test
   void askUserYesNo(BpmClient client) {
     var result = client.start()
         .process(HIBERNATION_PLAYGROUND.elementName("askYesOrNo"))

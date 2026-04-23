@@ -41,11 +41,12 @@
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 360, "y" : 176 }
+        "at" : { "x" : 520, "y" : 176 }
       }
     }, {
       "id" : "f3",
       "type" : "UserTask",
+      "name" : "userFeedback",
       "config" : {
         "dialog" : "com.axonivy.utils.ai.HumanDecision:start(hibernate.HumanDecision)",
         "call" : {
@@ -61,14 +62,25 @@
           "map" : {
             "out" : "in",
             "out.selected" : "result.selected"
-          }
+          },
+          "code" : [
+            "import ch.ivyteam.ivy.bpm.error.BpmError;",
+            "import com.axonivy.utils.smart.workflow.tools.human.ErrorHandler;",
+            "import dev.langchain4j.data.message.ToolExecutionResultMessage;",
+            "import com.axonivy.utils.smart.workflow.demo.bean.ChatBean.ChatMessage;",
+            "import com.axonivy.utils.smart.workflow.memory.IvyMemory;",
+            "ivy.log.info(\"user selected: \"+result.first.title);",
+            "",
+            "",
+            "new ErrorHandler(BpmError.create(\"fake\").build()).resolve(result.first.title);"
+          ]
         }
       },
       "visual" : {
         "at" : { "x" : 232, "y" : 176 }
       },
       "connect" : [
-        { "id" : "f4", "to" : "f1", "color" : "default" }
+        { "id" : "f35", "to" : "f1" }
       ]
     }, {
       "id" : "f5",

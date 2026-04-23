@@ -340,5 +340,137 @@
       "connect" : [
         { "id" : "f29", "to" : "f24" }
       ]
+    }, {
+      "id" : "f34",
+      "type" : "RequestStart",
+      "name" : "askTool",
+      "config" : {
+        "signature" : "askError2"
+      },
+      "visual" : {
+        "at" : { "x" : 456, "y" : 392 }
+      },
+      "connect" : [
+        { "id" : "f35", "to" : "f36" }
+      ]
+    }, {
+      "id" : "f36",
+      "type" : "ProgramInterface",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "strictly ask the user instead of making bold decisions. present your users quests as HumanDecision (title+options)",
+          "tools" : "[\"askUser\"]",
+          "resultType" : "String.class",
+          "resultMapping" : "in.iceCream",
+          "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 392 }
+      },
+      "connect" : [
+        { "id" : "f38", "to" : "f39", "color" : "default" }
+      ]
+    }, {
+      "id" : "f39",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 736, "y" : 392 }
+      }
+    }, {
+      "id" : "f40",
+      "type" : "SignalStartEvent",
+      "name" : "humans:answer",
+      "config" : {
+        "signalCode" : "humans:answer:ice"
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 432 },
+        "description" : [
+          "re-entry:",
+          "- use todays natural capability to-renter via signal",
+          "- signal receiver should specific; to allow multiple use-cases of this pattern without altering the signal-code"
+        ]
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f36" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "RequestStart",
+      "name" : "askToolIntermediate",
+      "config" : {
+        "signature" : "askError22"
+      },
+      "visual" : {
+        "at" : { "x" : 912, "y" : 496 }
+      },
+      "connect" : [
+        { "id" : "f43", "to" : "f46" }
+      ]
+    }, {
+      "id" : "f46",
+      "type" : "ProgramInterface",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "strictly ask the user instead of making bold decisions. present your users quests as HumanDecision (title+options)",
+          "tools" : "[\"askUser\"]",
+          "resultType" : "String.class",
+          "resultMapping" : "in.iceCream",
+          "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1048, "y" : 512 }
+      },
+      "boundaries" : [ {
+          "id" : "f50",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "human:task",
+          "config" : {
+            "errorCode" : "human:task",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.memoryId" : "error.getAttribute(\"memory.id\") as String;"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 1079, "y" : 544 }
+          },
+          "connect" : [
+            { "id" : "f51", "to" : "f49" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f47", "to" : "f48", "color" : "default" }
+      ]
+    }, {
+      "id" : "f48",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1192, "y" : 512 }
+      }
+    }, {
+      "id" : "f49",
+      "type" : "WaitEvent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.tools.human.HumanToolTask",
+        "eventId" : "in.memoryId",
+        "task" : {
+          "customFields" : [
+            { "name" : "memory.id", "type" : "STRING", "value" : "in.memoryId" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1024, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "f52", "to" : "f46" }
+      ]
     } ]
 }
