@@ -172,6 +172,7 @@ Dialogs:
                   Step3:
                     Title: Embedding Results
                     ChatButton: Start Chatting
+                    ReloadButton: Reload
                   Chatbot:
                     WelcomeTitle: "Hello, I'm your AI Assistant"
                     WelcomeDesc: I can help you find information from your indexed documents.

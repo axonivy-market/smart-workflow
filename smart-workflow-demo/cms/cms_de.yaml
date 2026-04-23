@@ -172,6 +172,7 @@ Dialogs:
                   Step3:
                     Title: Einbettungsergebnisse
                     ChatButton: Chat starten
+                    ReloadButton: Neu laden
                   Chatbot:
                     WelcomeTitle: "Hallo, ich bin Ihr KI-Assistent"
                     WelcomeDesc: Ich helfe Ihnen, Informationen aus Ihren indizierten Dokumenten zu finden.

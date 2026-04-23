@@ -172,6 +172,7 @@ Dialogs:
                   Step3:
                     Title: "Résultats d'intégration"
                     ChatButton: "Démarrer le chat"
+                    ReloadButton: Recharger
                   Chatbot:
                     WelcomeTitle: "Bonjour, je suis votre assistant IA"
                     WelcomeDesc: Je peux vous aider à trouver des informations dans vos documents indexés.

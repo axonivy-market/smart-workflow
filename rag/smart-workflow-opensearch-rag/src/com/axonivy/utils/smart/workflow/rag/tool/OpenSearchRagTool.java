@@ -22,7 +22,7 @@ public class OpenSearchRagTool implements SmartWorkflowTool {
   public List<ToolParameter> parameters() {
     return List.of(
         new ToolParameter("collection", "OpenSearch index name to query.", "java.lang.String"),
-        new ToolParameter("query", "The search query to find relevant content", "java.lang.String"),
+        new ToolParameter("query", "The complete user question to use as the search query. Pass the full user question without modification.", "java.lang.String"),
         new ToolParameter("maxResults", "Maximum number of results to return. Uses the configured default when null.", "java.lang.Integer"),
         new ToolParameter("minScore", "Minimum similarity score threshold between 0.0 and 1.0. Uses the configured default when null.", "java.lang.Double"));
   }

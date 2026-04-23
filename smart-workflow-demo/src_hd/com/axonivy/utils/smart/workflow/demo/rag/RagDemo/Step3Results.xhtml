@@ -33,6 +33,15 @@
             <span class="rag-meta-label font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/OverlapLabel')}:</span>
             <span class="rag-meta-value">#{data.indexMeta.chunkOverlap} #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/TokensUnit')}</span>
           </div>
+          <div class="flex justify-content-end mt-3">
+            <p:commandButton
+              value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step3/ReloadButton')}"
+              icon="si si-rotate-right"
+              styleClass="p-button-outlined"
+              actionListener="#{logic.loadDocuments}"
+              update="@form"
+              process="@this" />
+          </div>
         </div>
       </div>
     </h:panelGroup>
