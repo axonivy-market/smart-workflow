@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://primefaces.org/ui">
+
+  <div class="rag-step-content">
+
+    <!-- Index metadata panel -->
+    <h:panelGroup rendered="#{data.indexMeta ne null}" layout="block"
+      styleClass="py-3 px-2 mt-3">
+      <div class="grid">
+        <div class="col-12 md:col-6">
+          <div class="flex align-items-baseline gap-2 mb-1">
+            <span class="rag-meta-label font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/ProviderLabel')}:</span>
+            <span class="rag-meta-value">#{data.indexMeta.embeddingProvider}</span>
+          </div>
+          <div class="flex align-items-baseline gap-2 mb-1">
+            <span class="rag-meta-label font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/ModelLabel')}:</span>
+            <span class="rag-meta-value">#{data.indexMeta.embeddingModel}</span>
+          </div>
+          <div class="flex align-items-baseline gap-2">
+            <span class="rag-meta-label font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/CreatedLabel')}:</span>
+            <span class="rag-meta-value">#{data.indexMeta.createdAt}</span>
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="flex align-items-baseline gap-2 mb-1">
+            <span class="rag-meta-label font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/ChunkSizeLabel')}:</span>
+            <span class="rag-meta-value">#{data.indexMeta.chunkSize} #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/TokensUnit')}</span>
+          </div>
+          <div class="flex align-items-baseline gap-2">
+            <span class="rag-meta-label font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/OverlapLabel')}:</span>
+            <span class="rag-meta-value">#{data.indexMeta.chunkOverlap} #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/TokensUnit')}</span>
+          </div>
+          <div class="flex justify-content-end mt-3">
+            <p:commandButton
+              value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step3/ReloadButton')}"
+              icon="si si-rotate-right"
+              styleClass="p-button-outlined"
+              actionListener="#{logic.loadDocuments}"
+              update="@form"
+              process="@this" />
+          </div>
+        </div>
+      </div>
+    </h:panelGroup>
+
+    <!-- Chunks table -->
+    <h:panelGroup rendered="#{not empty data.embeddedChunks}" layout="block" styleClass="mb-4">
+      <p:dataTable value="#{data.embeddedChunks}" var="chunk"
+        paginator="true" rows="10" paginatorPosition="bottom"
+        filteredValue="#{data.filteredChunks}">
+        <p:column filterBy="#{chunk.textPreview}" filterMatchMode="contains">
+          <f:facet name="header">
+            <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/EmbeddedChunksCount')}">
+              <f:param value="#{data.embeddedChunks.size()}" />
+            </h:outputFormat>
+          </f:facet>
+          <h:outputText value="#{chunk.textPreview}" />
+        </p:column>
+
+      </p:dataTable>
+    </h:panelGroup>
+
+    <!-- Empty state -->
+    <h:panelGroup rendered="#{empty data.embeddedChunks}" layout="block"
+      styleClass="rag-empty-state flex flex-column align-items-center justify-content-center text-center py-8 px-6">
+      <div class="rag-empty-icon flex align-items-center justify-content-center border-circle mb-6">
+        <i class="si si-folder-empty text-4xl" />
+      </div>
+      <div class="rag-empty-title text-xl font-semibold mb-2">
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/NoDocumentsTitle')}
+      </div>
+      <div class="rag-empty-desc line-height-3">
+        <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/NoDocumentsDesc')}" escape="false" />
+      </div>
+    </h:panelGroup>
+
+  </div>
+
+</ui:composition>

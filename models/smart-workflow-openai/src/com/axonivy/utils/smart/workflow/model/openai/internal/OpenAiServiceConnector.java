@@ -31,6 +31,7 @@ public class OpenAiServiceConnector {
     String BASE_URL = PREFIX + "BaseUrl";
     String API_KEY = PREFIX + "APIKey";
     String DEFAULT_MODEL = PREFIX + "DefaultModel";
+    String DEFAULT_EMBEDDING_MODEL = PREFIX + "DefaultEmbeddingModel";
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {

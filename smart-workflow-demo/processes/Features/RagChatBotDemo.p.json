@@ -1,0 +1,61 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19D999BA081825C9",
+  "config" : {
+    "data" : "Features.RagChatBotDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "ragChatBotDemo",
+      "config" : {
+        "signature" : "ragChatBotDemo",
+        "request" : {
+          "name" : "RAG Chatbot Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 360, "y" : 64 }
+      }
+    }, {
+      "id" : "fn1",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "RAG Chatbot Demo",
+        "",
+        "Demonstrates a complete end-to-end RAG pipeline using OpenSearch as the vector store.",
+        "The wizard guides the user through four steps:",
+        "",
+        "1. Configuration — Review OpenSearch connection settings, authentication type, and embedding model. Test the connection before proceeding.",
+        "2. Upload & Embed — Enter an index name, upload .txt or .md files, and embed the documents into OpenSearch as searchable vector chunks.",
+        "3. Results — Inspect all indexed chunks with their source file and a content preview.",
+        "4. Chat — Ask questions answered by an AI agent that retrieves grounded context from the indexed documents via the openSearchSearch tool."
+      ],
+      "visual" : {
+        "at" : { "x" : 421, "y" : 248 },
+        "size" : { "width" : 725, "height" : 240 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "DialogCall",
+      "name" : "RAG Demo",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.rag.RagDemo:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}
