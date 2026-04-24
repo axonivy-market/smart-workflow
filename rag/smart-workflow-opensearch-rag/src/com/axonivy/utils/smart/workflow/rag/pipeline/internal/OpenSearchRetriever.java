@@ -27,7 +27,9 @@ public class OpenSearchRetriever implements RagRetriever {
   public RagResult search(String collection, String query, int maxResults, double minScore) {
     try {
       int effectiveMaxResults = maxResults > 0 ? maxResults : IvyVar.integer(RagConf.MAX_RESULTS, RagConf.FALLBACK_MAX_RESULTS);
-      double effectiveMinScore = minScore > 0 ? minScore : IvyVar.decimal(RagConf.MIN_SCORE, RagConf.FALLBACK_MIN_SCORE);
+      double effectiveMinScore = Double.isNaN(minScore) || minScore < 0
+          ? IvyVar.decimal(RagConf.MIN_SCORE, RagConf.FALLBACK_MIN_SCORE)
+          : minScore;
       EmbeddingModel embeddingModel = connector.embeddingModel();
       return performSearch(connector, collection, query, effectiveMaxResults, effectiveMinScore, embeddingModel);
     } catch (Exception ex) {

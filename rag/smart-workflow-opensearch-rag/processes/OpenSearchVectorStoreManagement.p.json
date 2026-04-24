@@ -60,10 +60,11 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchIngestor;",
+            "import com.axonivy.utils.smart.workflow.rag.pipeline.RagIngestor;",
             "import com.axonivy.utils.smart.workflow.rag.pipeline.RagResult;",
             "",
-            "if (in.sources == null || in.sources.isEmpty()) {",
-            "  in.result = new RagResult(\"No sources provided for ingestion.\");",
+            "if (in.sources == null) {",
+            "  in.result = new RagResult(RagIngestor.MSG_NO_CONTENT);",
             "} else {",
             "  in.result = new OpenSearchIngestor().ingest(in.collection, in.sources);",
             "}"
@@ -71,7 +72,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1264, "y" : 72 }
+        "at" : { "x" : 768, "y" : 72 }
       },
       "connect" : [
         { "id" : "f6", "to" : "f3" }
@@ -80,7 +81,7 @@
       "id" : "f3",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 1456, "y" : 72 }
+        "at" : { "x" : 960, "y" : 72 }
       }
     } ]
 }
