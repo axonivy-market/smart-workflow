@@ -93,42 +93,42 @@ final class OpenSearchPayloadBuilder {
     return root.toString();
   }
 
-public static String buildBulkNdjson(List<Embedding> embeddings, List<TextSegment> segments) {
-  int embeddingSize = embeddings.size();
-  int segmentSize = segments.size();
-  if (embeddingSize != segmentSize) {
-    throw new IllegalArgumentException(
-        String.format("Embeddings and segments must have the same size, but got embeddings=%d and segments=%d", embeddingSize, segmentSize));
-  }
-
-  StringBuilder stringBuilder = new StringBuilder();
-  for (int i = 0; i < embeddingSize; i++) {
-    Embedding embedding = embeddings.get(i);
-    if (embedding.vector() == null) {
-      continue;
+  public static String buildBulkNdjson(List<Embedding> embeddings, List<TextSegment> segments) {
+    int embeddingSize = embeddings.size();
+    int segmentSize = segments.size();
+    if (embeddingSize != segmentSize) {
+      throw new IllegalArgumentException(
+          String.format("Embeddings and segments must have the same size, but got embeddings=%d and segments=%d", embeddingSize, segmentSize));
     }
-    stringBuilder.append(buildActionNode()).append('\n');
-    stringBuilder.append(buildDocNode(embedding, segments.get(i))).append('\n');
-  }
-  return stringBuilder.toString();
-}
 
-private static ObjectNode buildActionNode() {
-  ObjectNode action = JsonUtils.getObjectMapper().createObjectNode();
-  action.putObject(Bulk.OP_INDEX).put(Fields.ID, UUID.randomUUID().toString());
-  return action;
-}
-
-private static ObjectNode buildDocNode(Embedding embedding, TextSegment segment) {
-  ObjectNode doc = JsonUtils.getObjectMapper().createObjectNode();
-  ArrayNode vectorArray = doc.putArray(Fields.VECTOR);
-  for (float v : embedding.vector()) {
-    vectorArray.add(v);
+    StringBuilder stringBuilder = new StringBuilder();
+    for (int i = 0; i < embeddingSize; i++) {
+      Embedding embedding = embeddings.get(i);
+      if (embedding.vector() == null) {
+        continue;
+      }
+      stringBuilder.append(buildActionNode()).append('\n');
+      stringBuilder.append(buildDocNode(embedding, segments.get(i))).append('\n');
+    }
+    return stringBuilder.toString();
   }
-  doc.put(Fields.TEXT, segment.text());
-  doc.set(Fields.METADATA, JsonUtils.getObjectMapper().valueToTree(segment.metadata().toMap()));
-  return doc;
-}
+
+  private static ObjectNode buildActionNode() {
+    ObjectNode action = JsonUtils.getObjectMapper().createObjectNode();
+    action.putObject(Bulk.OP_INDEX).put(Fields.ID, UUID.randomUUID().toString());
+    return action;
+  }
+
+  private static ObjectNode buildDocNode(Embedding embedding, TextSegment segment) {
+    ObjectNode doc = JsonUtils.getObjectMapper().createObjectNode();
+    ArrayNode vectorArray = doc.putArray(Fields.VECTOR);
+    for (float v : embedding.vector()) {
+      vectorArray.add(v);
+    }
+    doc.put(Fields.TEXT, segment.text());
+    doc.set(Fields.METADATA, JsonUtils.getObjectMapper().valueToTree(segment.metadata().toMap()));
+    return doc;
+  }
 
   public static String buildSearchBody(EmbeddingSearchRequest request) {
     int maxResults = request.maxResults();
