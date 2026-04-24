@@ -9,9 +9,6 @@
     "name" : "sources",
     "type" : "java.util.List<String>"
   }, {
-    "name" : "indexExists",
-    "type" : "boolean"
-  }, {
     "name" : "result",
     "type" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult"
   } ]
