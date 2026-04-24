@@ -20,8 +20,12 @@ public final class SpiProject {
       return current;
     }
     return current.getAllRequiredProcessModelVersions()
+        .toList().stream()
         .filter(smartWorkflow)
         .findAny()
-        .orElseThrow();
+        .orElseThrow(() -> new IllegalStateException(String.format(
+            "Cannot resolve Smart Workflow PMV. Expected libraryId='%s', currentLibraryId='%s'",
+            SmartWorkflow.LIBRARY_ID,
+            current.getLibraryId())));
   }
 }
