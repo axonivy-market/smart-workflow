@@ -21,7 +21,7 @@ Variables:
     RAG:
       # Default number of document segments returned per query.
       MaxResults: "5"
-      # Cosine similarity threshold (0.0–1.0). Segments below this score are excluded.
+      # Cosine similarity threshold (0.0 - 1.0). Segments below this score are excluded.
       MinScore: "0.6"
       # Number of tokens per document chunk when splitting.
       ChunkSize: "300"
