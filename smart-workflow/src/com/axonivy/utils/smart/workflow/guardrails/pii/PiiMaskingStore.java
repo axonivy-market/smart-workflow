@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.guardrails.pii;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -14,7 +15,7 @@ public class PiiMaskingStore {
   private static final int EVICTION_FREQUENCY = 20;
 
   private static final ConcurrentHashMap<String, Entry> STORE = new ConcurrentHashMap<>();
-  private static int putCount = 0;
+  private static final AtomicInteger putCount = new AtomicInteger();
 
   record Entry(Map<String, String> placeholderToOriginal, long createdMs) {}
 
@@ -33,7 +34,7 @@ public class PiiMaskingStore {
       evictExpired();
     }
     STORE.put(invocationId, new Entry(Map.copyOf(mapping), System.currentTimeMillis()));
-    if (++putCount % EVICTION_FREQUENCY == 0) {
+    if (putCount.incrementAndGet() % EVICTION_FREQUENCY == 0) {
       evictExpired();
     }
   }

@@ -94,40 +94,6 @@ public class TestPiiDetector {
   }
 
   @Test
-  void detectCreditCardExpiry() {
-    var result = PiiDetector.detectAndMask("Expires: 12/2025");
-    assertThat(result.hasPii()).isTrue();
-    assertThat(result.maskedText()).contains("<CREDIT_DEBIT_CARD_EXPIRY_");
-    assertThat(result.placeholderToOriginal()).containsValue("12/2025");
-  }
-
-  @Test
-  void detectIban() {
-    // DE89370400440532013000 is the canonical German IBAN example from ISO 13616
-    var result = PiiDetector.detectAndMask("IBAN: DE89370400440532013000");
-    assertThat(result.hasPii()).isTrue();
-    assertThat(result.maskedText()).contains("<INTERNATIONAL_BANK_ACCOUNT_NUMBER_");
-    assertThat(result.placeholderToOriginal()).containsValue("DE89370400440532013000");
-  }
-
-  @Test
-  void detectSwiftCode() {
-    var result = PiiDetector.detectAndMask("BIC: DEUTDEDB");
-    assertThat(result.hasPii()).isTrue();
-    assertThat(result.maskedText()).contains("<SWIFT_CODE_");
-    assertThat(result.placeholderToOriginal()).containsValue("DEUTDEDB");
-  }
-
-  @Test
-  void detectVin() {
-    // 1HGBH41JXMN109186 is the NHTSA documentation example VIN
-    var result = PiiDetector.detectAndMask("VIN: 1HGBH41JXMN109186");
-    assertThat(result.hasPii()).isTrue();
-    assertThat(result.maskedText()).contains("<VEHICLE_IDENTIFICATION_NUMBER_");
-    assertThat(result.placeholderToOriginal()).containsValue("1HGBH41JXMN109186");
-  }
-
-  @Test
   void detectSsn() {
     var result = PiiDetector.detectAndMask("SSN: 123-45-6789");
     assertThat(result.hasPii()).isTrue();

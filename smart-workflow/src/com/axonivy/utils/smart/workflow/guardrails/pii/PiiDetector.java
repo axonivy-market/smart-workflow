@@ -22,23 +22,22 @@ public class PiiDetector {
 
   private enum PiiType {
     URL("https?://[^\\s]+"),
-    // BEARER_TOKEN before JWT: "Bearer eyJ..." must match as a whole before the JWT portion is extracted.
+    // BEARER_TOKEN before JWT: "Bearer eyJ..." must match as a whole before the JWT
+    // portion is extracted.
     BEARER_TOKEN("(?i)\\bBearer\\s+[A-Za-z0-9\\-._~+/]{20,}={0,2}"),
     JWT("eyJ[A-Za-z0-9_-]+\\.eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]*"),
-    API_KEY("(?i)\\b(?:api[-_]?key|api[-_]?token|access[-_]?key|secret[-_]?key|auth[-_]?token)\\b\\s*[=:]\\s*[A-Za-z0-9\\-_.]{16,}"),
+    API_KEY(
+        "(?i)\\b(?:api[-_]?key|api[-_]?token|access[-_]?key|secret[-_]?key|auth[-_]?token)\\b\\s*[=:]\\s*[A-Za-z0-9\\-_.]{16,}"),
     PASSWORD("(?i)\\b(?:password|passwd|pwd|pass)\\b\\s*[=:]\\s*\\S{8,}"),
     AWS_ACCESS_KEY("\\b(AKIA|ASIA|AROA|ANPA|ANVA|APKA)[A-Z0-9]{16}\\b"),
     IP_ADDRESS(
         "\\b(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\b"),
     MAC_ADDRESS("\\b([0-9A-Fa-f]{2}[:\\-]){5}[0-9A-Fa-f]{2}\\b"),
     EMAIL("[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}"),
-    // + or 00 must not be preceded by alphanumeric to avoid matching within IBANs or other digit sequences.
+    // + or 00 must not be preceded by alphanumeric to avoid matching within IBANs
+    // or other digit sequences.
     PHONE("(?<![A-Za-z0-9])(?:\\+|00)[1-9]\\d{0,2}[\\s.\\-]?(?:\\(?\\d{1,4}\\)?[\\s.\\-]?){1,4}\\d{2,4}"),
-    SWIFT_CODE("\\b[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}(?:[A-Z0-9]{3})?\\b"),
-    INTERNATIONAL_BANK_ACCOUNT_NUMBER("\\b[A-Z]{2}[0-9]{2}[A-Z0-9]{4,30}\\b"),
-    CREDIT_DEBIT_CARD_EXPIRY("\\b(0[1-9]|1[0-2])[/\\-](20\\d{2}|\\d{2})\\b"),
     CREDIT_DEBIT_CARD_NUMBER("\\b(?:\\d[ \\-]?){13,19}\\b"),
-    VEHICLE_IDENTIFICATION_NUMBER("\\b[A-HJ-NPR-Z0-9]{17}\\b"),
     SSN("\\b(?!000|666|9\\d{2})\\d{3}[\\- ]\\d{2}[\\- ]\\d{4}\\b"),
     DATE_OF_BIRTH("\\b(0?[1-9]|[12]\\d|3[01])[/\\-.](0?[1-9]|1[0-2])[/\\-.](19|20)\\d{2}\\b");
 
