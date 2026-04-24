@@ -106,6 +106,79 @@ Dialogs:
                     Total: Total
                     ViewDetails: Voir les détails
                     YourCartIsEmpty: Votre panier est vide
+              rag:
+                RagDemo:
+                  PageTitle: RAG Demo
+                  Title: Smart Workflow RAG
+                  Subtitle: Une visite guidée de la Génération Augmentée par Récupération avec Smart Workflow
+                  IndexNameLabel: "Nom du store vectoriel"
+                  IndexNameDesc: "Un nom unique pour identifier cette base de connaissances dans le store vectoriel."
+                  ChooseFileLabel: 'Choisir un fichier (.pdf / .md / .txt)'
+                  UploadLabel: Téléverser
+                  EmbedButton: Intégrer
+                  EmbeddedChunksCount: 'Fragments intégrés ({0})'
+                  ProviderLabel: Fournisseur
+                  ModelLabel: Modèle
+                  CreatedLabel: Créé
+                  ChunkSizeLabel: Taille des fragments
+                  OverlapLabel: Chevauchement
+                  TokensUnit: tokens
+                  NoDocumentsTitle: Aucun document pour le moment
+                  NoDocumentsDesc: 'Téléversez des fichiers <strong>.txt</strong> ou <strong>.md</strong> et cliquez sur <strong>Intégrer</strong> pour les indexer.'
+                  SourceColumn: Source
+                  ChunkIdColumn: ID du fragment
+                  Wizard:
+                    Step1Label: Configuration
+                    Step2Label: "Téléverser et intégrer"
+                    Step3Label: "Résultats"
+                    Step4Label: Chat
+                    BackToUploadButton: "Retour aux résultats"
+                  Step1:
+                    VectorStoreTitle: "Magasin de vecteurs"
+                    UrlLabel: URL du serveur
+                    UrlDesc: URL de base du serveur OpenSearch.
+                    AuthTypeLabel: Authentification
+                    AuthTypeDesc: "Méthode d'authentification configurée pour cette instance OpenSearch."
+                    TestConnectionButton: Tester la connexion
+                    Title: "Configuration RAG"
+                    Subtitle: "Paramètres en lecture seule chargés depuis les variables Ivy. Pour les modifier, mettez à jour les variables dans la configuration Ivy."
+                    ContinueButton: Continuer
+                    ProviderLabel: "Fournisseur d'intégration"
+                    ProviderDesc: "Fournisseur IA utilisé pour générer des embeddings vectoriels. Utilise AI.DefaultProvider si vide."
+                    ModelLabel: "Modèle d'intégration"
+                    ModelDesc: "Modèle utilisé pour l'intégration. Si vide, le modèle par défaut du fournisseur est utilisé."
+                    ChunkSizeLabel: Taille des fragments
+                    ChunkSizeDesc: "Nombre maximum de tokens par fragment de document lors du découpage du texte source."
+                    ChunkSizeUnit: tokens
+                    ChunkOverlapLabel: Chevauchement des fragments
+                    ChunkOverlapDesc: "Tokens chevauchants entre fragments consécutifs pour préserver le contexte aux limites."
+                    ChunkOverlapUnit: tokens
+                    MaxResultsLabel: "Résultats max."
+                    MaxResultsDesc: "Nombre maximum de fragments correspondants renvoyés par requête de recherche."
+                    MinScoreLabel: Score minimum
+                    MinScoreDesc: "Seuil de similarité cosinus. Les fragments en dessous de ce score sont exclus."
+                  Step2:
+                    Title: "Téléverser et intégrer des documents"
+                    Subtitle: "Entrez un nom de store vectoriel, téléversez un fichier (.pdf, .md ou .txt), puis intégrez-le dans le store vectoriel."
+                    EmbedButton: Intégrer
+                    IndexExistsWarning: "L'index existe déjà"
+                    IndexExistsWarningDesc: "Un index portant ce nom existe déjà. Veuillez choisir un autre nom d'index."
+                    FileUploadContainerTitle: "Glissez-déposez vos fichiers ici"
+                    FileUploadContainerHint: "Supporte .pdf, .md et .txt — un fichier à la fois"
+                    PdfNote: "Les fichiers PDF peuvent prendre plus de temps — l'IA est utilisée pour en extraire le contenu."
+                    StagedFilesTitle: "En attente d'intégration"
+                    FileNameColumn: "Nom du fichier"
+                    FileSizeColumn: Taille
+                  Step3:
+                    Title: "Résultats d'intégration"
+                    ChatButton: "Démarrer le chat"
+                    ReloadButton: Recharger
+                  Chatbot:
+                    WelcomeTitle: "Bonjour, je suis votre assistant IA"
+                    WelcomeDesc: Je peux vous aider à trouver des informations dans vos documents indexés.
+                    InputPlaceholder: Posez une question sur vos documents...
+                    AssistantName: Assistant IA
+                    ThinkingText: Recherche dans les documents...
 Features:
   FileExtractionDemo:
     ExtractFromImagePrompt: Extract Invoice from image

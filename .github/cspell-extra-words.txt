@@ -1,1 +1,1 @@
-smartworkflow, Agentic, multimodal, langchain, azureopenai, openinference, arizephoenix, javaagent, Dotel, stackoverflow, duckduckgo
+smartworkflow, Agentic, multimodal, langchain, azureopenai, openinference, arizephoenix, javaagent, Dotel, stackoverflow, duckduckgo, opensearch
