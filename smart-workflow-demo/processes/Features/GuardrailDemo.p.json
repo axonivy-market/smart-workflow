@@ -9,7 +9,10 @@
       "type" : "RequestStart",
       "name" : "Prompt Injection Input Guardrail Demo",
       "config" : {
-        "signature" : "promptInjectionGuardrailDemo"
+        "signature" : "promptInjectionGuardrailDemo",
+        "request" : {
+          "name" : "Prompt Injection Guardrail Demo"
+        }
       },
       "visual" : {
         "at" : { "x" : 344, "y" : 232 }
@@ -94,7 +97,10 @@
       "type" : "RequestStart",
       "name" : "Sensitive Data Output Guardrail Demo",
       "config" : {
-        "signature" : "sensitiveDataOutputGuardrailDemo"
+        "signature" : "sensitiveDataOutputGuardrailDemo",
+        "request" : {
+          "name" : "Sensitive Data Output Guardrail Demo"
+        }
       },
       "visual" : {
         "at" : { "x" : 344, "y" : 552 }
@@ -167,5 +173,215 @@
       "connect" : [
         { "id" : "f29", "to" : "f22", "via" : [ { "x" : 784, "y" : 696 } ] }
       ]
+    }, {
+      "id" : "f50",
+      "type" : "RequestStart",
+      "name" : "Custom Guardrail Demo (Blocked)",
+      "config" : {
+        "signature" : "customGuardrailBlocked",
+        "request" : {
+          "name" : "Custom Guardrail Demo - Blocked"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 936 }
+      },
+      "connect" : [
+        { "id" : "f51", "to" : "f53" }
+      ]
+    }, {
+      "id" : "f52",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 816, "y" : 936 }
+      }
+    }, {
+      "id" : "f53",
+      "type" : "ProgramInterface",
+      "name" : "Call agent (query mentions competitor)",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a helpful assistant.",
+          "inputGuardrails" : "[\"BlockCompetitorMentionGuardrail\"]",
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "\"How does AxonIvy compare to Beta Technologies for BPM workflows?\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 528, "y" : 936 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "boundaries" : [ {
+          "id" : "f57",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "Guardrail blocked competitor mention",
+          "config" : {
+            "errorCode" : "smartworkflow:guardrail:input:violation",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 584, "y" : 977 },
+            "labelOffset" : { "x" : -80, "y" : 25 },
+            "icon" : "res:/webContent/icons/shield.png"
+          },
+          "connect" : [
+            { "id" : "f58", "to" : "f55" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f54", "to" : "f59" }
+      ]
+    }, {
+      "id" : "f55",
+      "type" : "Script",
+      "name" : "Log violation message",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.violationMessage = in.error.getMessage();",
+            "ivy.log.warn(\"[CustomGuardrailDemo] Query blocked by custom guardrail: {0}\", in.violationMessage);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 696, "y" : 1056 }
+      },
+      "connect" : [
+        { "id" : "f56", "to" : "f52" }
+      ]
+    }, {
+      "id" : "f59",
+      "type" : "Script",
+      "name" : "Log allowed result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.warn(\"[CustomGuardrailDemo] Query allowed through custom guardrail.\");",
+            "ivy.log.warn(\"Result: {0}\", in.result);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 696, "y" : 936 }
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f52" }
+      ]
+    }, {
+      "id" : "f61",
+      "type" : "RequestStart",
+      "name" : "Custom Guardrail Demo (Allowed)",
+      "config" : {
+        "signature" : "customGuardrailAllowed",
+        "request" : {
+          "name" : "Custom Guardrail Demo - Allowed"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 1200 }
+      },
+      "connect" : [
+        { "id" : "f62", "to" : "f63" }
+      ]
+    }, {
+      "id" : "f64",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 816, "y" : 1200 }
+      }
+    }, {
+      "id" : "f63",
+      "type" : "ProgramInterface",
+      "name" : "Call agent (normal query, no competitor)",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a helpful assistant.",
+          "inputGuardrails" : "[\"BlockCompetitorMentionGuardrail\"]",
+          "tools" : "[]",
+          "resultMapping" : "in.result",
+          "query" : "\"What are the key benefits of using workflow automation in enterprises?\""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 528, "y" : 1200 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "boundaries" : [ {
+          "id" : "f65",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "Guardrail blocked",
+          "config" : {
+            "errorCode" : "smartworkflow:guardrail:input:violation",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 584, "y" : 1241 },
+            "labelOffset" : { "x" : -60, "y" : 25 },
+            "icon" : "res:/webContent/icons/shield.png"
+          },
+          "connect" : [
+            { "id" : "f66", "to" : "f67" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f68", "to" : "f69" }
+      ]
+    }, {
+      "id" : "f67",
+      "type" : "Script",
+      "name" : "Log violation message",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.violationMessage = in.error.getMessage();",
+            "ivy.log.warn(\"[CustomGuardrailDemo] Unexpected block: {0}\", in.violationMessage);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 704, "y" : 1328 }
+      },
+      "connect" : [
+        { "id" : "f70", "to" : "f64" }
+      ]
+    }, {
+      "id" : "f69",
+      "type" : "Script",
+      "name" : "Log allowed result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.warn(\"[CustomGuardrailDemo] Normal query passed custom guardrail.\");",
+            "ivy.log.warn(\"Result: {0}\", in.result);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 696, "y" : 1200 }
+      },
+      "connect" : [
+        { "id" : "f71", "to" : "f64" }
+      ]
+    }, {
+      "id" : "f72",
+      "type" : "ProcessAnnotation",
+      "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries containing specific competitor tokens. Two variants: blocked query (mentions competitor \"Beta Technologies\") and allowed query (neutral).",
+      "visual" : {
+        "at" : { "x" : 536, "y" : 816 },
+        "size" : { "width" : 480, "height" : 78 }
+      }
     } ]
 }

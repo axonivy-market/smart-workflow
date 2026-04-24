@@ -1,7 +1,7 @@
 {
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
-  "simpleName" : "InvoiceAnalyzerData",
-  "namespace" : "agents.callable",
+  "simpleName" : "SelfContainedAgentData",
+  "namespace" : "Patterns",
   "fields" : [ {
     "name" : "invoiceContent",
     "comment" : "Text content of the invoice — main input for the agent and tools"

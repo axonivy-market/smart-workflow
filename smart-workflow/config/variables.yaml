@@ -9,10 +9,19 @@ Variables:
       DefaultInput: ""
       # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
       DefaultOutput: ""
+    Tool:
+      WebSearch:
+        # Name of the search engine to use. Must match the name() of a registered SmartWebSearchEngine. Example: "duckduckgo"
+        Engine: "duckduckgo"
+        # Maximum number of search results returned per query.
+        MaxResults: ""
+        # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"
+        # If empty, all domains are allowed.
+        WhitelistDomains: ""
     RAG:
       # Default number of document segments returned per query.
       MaxResults: "5"
-      # Cosine similarity threshold (0.0â€“1.0). Segments below this score are excluded.
+      # Cosine similarity threshold (0.0–1.0). Segments below this score are excluded.
       MinScore: "0.6"
       # Number of tokens per document chunk when splitting.
       ChunkSize: "300"
@@ -30,6 +39,9 @@ Variables:
         #[password]
         ApiKey: ${decrypt:}
     Observability:
+      CustomFields:
+        # Enable marking of workflow custom fields to track AI usage provenance.
+        Enabled: "true"
       Ivy:
         # Enable chat history recording for governance audit.
         Enabled: ""

@@ -28,6 +28,7 @@ public class SpiLoader {
   public <T> Set<T> load(Class<T> type) {
     return projectsInScope()
         .flatMap(p -> findImpl(p, type).stream())
+        .filter(type::isInstance)
         .distinct()
         .collect(Collectors.toSet());
   }

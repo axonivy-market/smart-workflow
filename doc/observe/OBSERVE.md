@@ -58,3 +58,21 @@ You can reveal them by adding a filter, expressing the UUID of the Case respecti
 - Task with UUID 2afa6db6-35d6-4f72-af05-711963888b0b:
 
   `span_kind == 'LLM' and ivy.task == '2afa6db6-35d6-4f72-af05-711963888b0b'`
+
+
+## AI-assisted Custom Fields
+
+Smart Workflow automatically marks Cases and Tasks with a custom field when an AI agent is invoked during their execution.
+This provides a lightweight, built-in way to track AI usage directly on workflow entities without requiring an external tracing platform.
+
+### Custom Field
+
+| Field key    | Type   | Label        | Scope      |
+|--------------|--------|--------------|------------|
+| `aiAssisted` | STRING | AI-assisted  | Task, Case |
+
+The field is set to `SMART_WORKFLOW` when the AI agent is used within the context of a Task or Case.
+
+### Configuration
+
+The feature is enabled by default. To disable it, set `AI.Observability.CustomFields.Enabled=false` in the `config/variables.yaml` of your project.

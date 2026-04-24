@@ -9,7 +9,10 @@
       "type" : "RequestStart",
       "name" : "extractFromCMS",
       "config" : {
-        "signature" : "extractFromCMS"
+        "signature" : "extractFromCMS",
+        "request" : {
+          "name" : "File Extraction Demo (CMS)"
+        }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 64 }
@@ -67,7 +70,10 @@
       "type" : "RequestStart",
       "name" : "extractFromBinary",
       "config" : {
-        "signature" : "extractFromBinary"
+        "signature" : "extractFromBinary",
+        "request" : {
+          "name" : "File Extraction Demo (Binary)"
+        }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 200 }
