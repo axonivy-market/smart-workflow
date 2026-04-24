@@ -66,7 +66,8 @@ public interface ChatModelProvider {
   default String resolveEmbeddingModelName(EmbeddingModelOptions options) {
     return Optional.ofNullable(options)
       .map(EmbeddingModelOptions::modelName)
-      .orElse("");}
+      .orElse("");
+  }
 
   default Optional<EmbeddingModel> setupEmbedding(EmbeddingModelOptions options) {
     return Optional.empty();

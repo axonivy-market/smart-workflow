@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
@@ -120,6 +121,21 @@ class OpenSearchRagContainerTest {
     var result = store.search(request);
     assertThat(result.matches()).hasSize(2);
     assertThat(result.matches().get(0).embedded().text()).isEqualTo("Exact match");
+  }
+
+  @Test
+  void searchOnNonExistentIndexThrowsIllegalStateException() {
+    var store = new OpenSearchConnector().vectorStore("it-missing-index");
+    var request = EmbeddingSearchRequest.builder()
+        .queryEmbedding(Embedding.from(new float[]{0.1f, 0.2f, 0.3f}))
+        .maxResults(5)
+        .minScore(0.0)
+        .build();
+
+    assertThatThrownBy(() -> store.search(request))
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessageContaining("it-missing-index")
+        .hasMessageContaining("404");
   }
 
   @Test

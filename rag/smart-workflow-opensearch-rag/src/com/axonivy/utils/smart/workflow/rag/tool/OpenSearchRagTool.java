@@ -2,6 +2,7 @@ package com.axonivy.utils.smart.workflow.rag.tool;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchRetriever;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
@@ -31,8 +32,10 @@ public class OpenSearchRagTool implements SmartWorkflowTool {
   public Object execute(Map<String, Object> args) {
     String collection = (String) args.get("collection");
     String query = (String) args.get("query");
-    Integer maxResults = (Integer) args.get("maxResults");
-    Double minScore = (Double) args.get("minScore");
+    int maxResults = Optional.ofNullable((Integer) args.get("maxResults"))
+      .orElse(-1);
+    double minScore = Optional.ofNullable((Double) args.get("minScore"))
+      .orElse(Double.NaN);
     return new OpenSearchRetriever().search(collection, query, maxResults, minScore);
   }
 }
