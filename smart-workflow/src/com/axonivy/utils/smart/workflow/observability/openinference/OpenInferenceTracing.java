@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.arize.semconv.trace.SemanticConventions;
+import com.axonivy.utils.smart.workflow.observability.AiListenerProvider;
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.GuardrailRecorder;
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.OpenInferenceCollector;
 import com.axonivy.utils.smart.workflow.observability.openinference.internal.ToolCollector;
@@ -18,27 +19,26 @@ import ch.ivyteam.ivy.trace.Attribute;
 import ch.ivyteam.ivy.trace.Span;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.observability.api.event.AiServiceCompletedEvent;
 import dev.langchain4j.observability.api.event.AiServiceErrorEvent;
 import dev.langchain4j.observability.api.event.AiServiceRequestIssuedEvent;
 import dev.langchain4j.observability.api.event.AiServiceResponseReceivedEvent;
+import dev.langchain4j.observability.api.event.AiServiceStartedEvent;
 import dev.langchain4j.observability.api.event.GuardrailExecutedEvent;
 import dev.langchain4j.observability.api.event.InputGuardrailExecutedEvent;
 import dev.langchain4j.observability.api.event.OutputGuardrailExecutedEvent;
-import dev.langchain4j.observability.api.event.AiServiceStartedEvent;
 import dev.langchain4j.observability.api.event.ToolExecutedEvent;
 import dev.langchain4j.observability.api.listener.AiServiceCompletedListener;
 import dev.langchain4j.observability.api.listener.AiServiceErrorListener;
 import dev.langchain4j.observability.api.listener.AiServiceListener;
 import dev.langchain4j.observability.api.listener.AiServiceRequestIssuedListener;
 import dev.langchain4j.observability.api.listener.AiServiceResponseReceivedListener;
+import dev.langchain4j.observability.api.listener.AiServiceStartedListener;
 import dev.langchain4j.observability.api.listener.InputGuardrailExecutedListener;
 import dev.langchain4j.observability.api.listener.OutputGuardrailExecutedListener;
-import dev.langchain4j.observability.api.listener.AiServiceStartedListener;
 import dev.langchain4j.observability.api.listener.ToolExecutedEventListener;
 
-public class OpenInferenceTracing implements ChatModelListener {
+public class OpenInferenceTracing implements AiListenerProvider {
 
   public interface Var {
     String PREFIX = "AI.Observability.Openinference.";
@@ -76,7 +76,8 @@ public class OpenInferenceTracing implements ChatModelListener {
         .collect(Collectors.toList());
   }
 
-  public List<AiServiceListener<?>> configure() {
+  @Override
+  public List<AiServiceListener<?>> provide() {
     if (!IvyVar.bool(OpenInferenceTracing.Var.ENABLED)) {
       return List.of();
     }
