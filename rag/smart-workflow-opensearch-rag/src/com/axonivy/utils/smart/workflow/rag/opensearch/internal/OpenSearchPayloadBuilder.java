@@ -94,8 +94,15 @@ final class OpenSearchPayloadBuilder {
   }
 
 public static String buildBulkNdjson(List<Embedding> embeddings, List<TextSegment> segments) {
+  int embeddingSize = embeddings.size();
+  int segmentSize = segments.size();
+  if (embeddingSize != segmentSize) {
+    throw new IllegalArgumentException(
+        String.format("Embeddings and segments must have the same size, but got embeddings=%d and segments=%d", embeddingSize, segmentSize));
+  }
+
   StringBuilder stringBuilder = new StringBuilder();
-  for (int i = 0; i < embeddings.size(); i++) {
+  for (int i = 0; i < embeddingSize; i++) {
     Embedding embedding = embeddings.get(i);
     if (embedding.vector() == null) {
       continue;

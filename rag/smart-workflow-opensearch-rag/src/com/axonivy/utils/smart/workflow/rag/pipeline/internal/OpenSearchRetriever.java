@@ -32,8 +32,12 @@ public class OpenSearchRetriever implements RagRetriever {
       return performSearch(connector, collection, query, effectiveMaxResults, effectiveMinScore, embeddingModel);
     } catch (Exception ex) {
       Ivy.log().error(ERR_SEARCH_FAILED, ex);
-      return new RagResult(ex.getMessage());
+      return new RagResult(errorMessage(ex));
     }
   }
 
+  private String errorMessage(Exception ex) {
+    String message = ex.getMessage();
+    return message == null || message.isBlank() ? ERR_SEARCH_FAILED : message;
+  }
 }
