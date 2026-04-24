@@ -25,17 +25,15 @@ public class PiiDetector {
     // BEARER_TOKEN before JWT: "Bearer eyJ..." must match as a whole before the JWT portion is extracted.
     BEARER_TOKEN("(?i)\\bBearer\\s+[A-Za-z0-9\\-._~+/]{20,}={0,2}"),
     JWT("eyJ[A-Za-z0-9_-]+\\.eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]*"),
-    API_KEY(
-        "(?i)\\b(?:api[-_]?key|api[-_]?token|access[-_]?key|secret[-_]?key|auth[-_]?token)\\b\\s*[=:]\\s*([A-Za-z0-9\\-_.]{16,})",
-        1),
-    PASSWORD("(?i)\\b(?:password|passwd|pwd|pass)\\b\\s*[=:]\\s*(\\S{8,})", 1),
+    API_KEY("(?i)\\b(?:api[-_]?key|api[-_]?token|access[-_]?key|secret[-_]?key|auth[-_]?token)\\b\\s*[=:]\\s*[A-Za-z0-9\\-_.]{16,}"),
+    PASSWORD("(?i)\\b(?:password|passwd|pwd|pass)\\b\\s*[=:]\\s*\\S{8,}"),
     AWS_ACCESS_KEY("\\b(AKIA|ASIA|AROA|ANPA|ANVA|APKA)[A-Z0-9]{16}\\b"),
     IP_ADDRESS(
         "\\b(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\b"),
     MAC_ADDRESS("\\b([0-9A-Fa-f]{2}[:\\-]){5}[0-9A-Fa-f]{2}\\b"),
     EMAIL("[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}"),
-    // + or 00 prefix required to avoid false positives with raw digit sequences (credit cards, IBANs).
-    PHONE("(?:\\+|00)[1-9]\\d{0,2}[\\s.\\-]?(?:\\(?\\d{1,4}\\)?[\\s.\\-]?){1,4}\\d{2,4}"),
+    // + or 00 must not be preceded by alphanumeric to avoid matching within IBANs or other digit sequences.
+    PHONE("(?<![A-Za-z0-9])(?:\\+|00)[1-9]\\d{0,2}[\\s.\\-]?(?:\\(?\\d{1,4}\\)?[\\s.\\-]?){1,4}\\d{2,4}"),
     SWIFT_CODE("\\b[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}(?:[A-Z0-9]{3})?\\b"),
     INTERNATIONAL_BANK_ACCOUNT_NUMBER("\\b[A-Z]{2}[0-9]{2}[A-Z0-9]{4,30}\\b"),
     CREDIT_DEBIT_CARD_EXPIRY("\\b(0[1-9]|1[0-2])[/\\-](20\\d{2}|\\d{2})\\b"),
@@ -45,15 +43,9 @@ public class PiiDetector {
     DATE_OF_BIRTH("\\b(0?[1-9]|[12]\\d|3[01])[/\\-.](0?[1-9]|1[0-2])[/\\-.](19|20)\\d{2}\\b");
 
     final Pattern pattern;
-    final int valueGroup;
 
     PiiType(String regex) {
-      this(regex, 0);
-    }
-
-    PiiType(String regex, int valueGroup) {
       this.pattern = Pattern.compile(regex);
-      this.valueGroup = valueGroup;
     }
   }
 
@@ -70,28 +62,17 @@ public class PiiDetector {
       Matcher matcher = type.pattern.matcher(masked);
       StringBuffer sb = new StringBuffer();
       while (matcher.find()) {
-        String piiValue = matcher.group(type.valueGroup);
+        String piiValue = matcher.group();
 
         if (type == PiiType.CREDIT_DEBIT_CARD_NUMBER && !isValidCreditCard(piiValue)) {
-          matcher.appendReplacement(sb, Matcher.quoteReplacement(matcher.group()));
+          matcher.appendReplacement(sb, Matcher.quoteReplacement(piiValue));
           continue;
         }
 
         String placeholder = "<" + type.name() + "_" + sha256Prefix(piiValue) + ">";
         placeholderToOriginal.put(placeholder, piiValue);
         countByType.merge(type.name(), 1, Integer::sum);
-
-        String replacement;
-        if (type.valueGroup > 0) {
-          String fullMatch = matcher.group();
-          int start = matcher.start(type.valueGroup) - matcher.start();
-          int end = matcher.end(type.valueGroup) - matcher.start();
-          replacement = fullMatch.substring(0, start) + placeholder + fullMatch.substring(end);
-        } else {
-          replacement = placeholder;
-        }
-
-        matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
+        matcher.appendReplacement(sb, Matcher.quoteReplacement(placeholder));
       }
       matcher.appendTail(sb);
       masked = sb.toString();
