@@ -1,12 +1,11 @@
 package com.axonivy.utils.smart.workflow.observability.customfields;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +28,7 @@ import ch.ivyteam.test.resource.ResourceResponder;
 @RestResourceTest
 class TestCustomFieldTrackingListener {
 
-  private static final BpmProcess MULTI_TASK = BpmProcess.name("MultiTaskProcesses");
+  private static final BpmProcess AGENT_PIPELINE = BpmProcess.name("AgentPipeline");
   private static final String AI_ASSISTED = CustomFieldTrackingListener.AI_ASSISTED;
   private static final String SMART_WORKFLOW = CustomFieldTrackingValue.SMART_WORKFLOW.name();
 
@@ -52,7 +51,7 @@ class TestCustomFieldTrackingListener {
   void doesNotMarkTasksOrCaseWhenDisabled(BpmClient client, AppFixture fixture) {
     fixture.var(CustomFieldTrackingListener.Var.ENABLED, "false");
 
-    var res = runMultiTaskDemoToCompletion(client);
+    var res = runAgentPipelineToCompletion(client);
 
     ICase icase = res.workflow().activeCase();
     assertThat(icase.customFields().stringField(AI_ASSISTED).get())
@@ -67,7 +66,7 @@ class TestCustomFieldTrackingListener {
 
   @Test
   void marksTasksAndCaseWhenEnabled(BpmClient client) {
-    var res = runMultiTaskDemoToCompletion(client);
+    var res = runAgentPipelineToCompletion(client);
 
     ICase icase = res.workflow().activeCase();
     assertThat(icase.getState()).isEqualTo(CaseState.DONE);
@@ -83,15 +82,13 @@ class TestCustomFieldTrackingListener {
 
     assertThat(customFieldsByTaskName)
         .as("workflow tasks assisted by the AI element should be marked")
-        .containsEntry("AI Order Processing Demo", "") // this task is not assisted by AI
-        .containsEntry("Task 1: Order Analysis", SMART_WORKFLOW)
-        .containsEntry("Task 2: Invoice Generation", SMART_WORKFLOW)
-        .containsEntry("Task 3: Review and Finalization", SMART_WORKFLOW);
+        .containsEntry("Task 1: Image Extraction", SMART_WORKFLOW)
+        .containsEntry("Task 2: Invoice Analysis", SMART_WORKFLOW);
   }
 
-  private ExecutionResult runMultiTaskDemoToCompletion(BpmClient client) {
+  private ExecutionResult runAgentPipelineToCompletion(BpmClient client) {
     var res = client.start()
-        .process(MULTI_TASK.elementName("multiTaskDemo"))
+        .process(AGENT_PIPELINE.elementName("startAgentPipeline"))
         .as().systemUser().execute();
     while (res.workflow().anyActiveTask().isPresent()) {
       res = client.start().anyActiveTask(res).as().systemUser().execute();
