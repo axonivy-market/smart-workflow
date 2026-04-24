@@ -13,6 +13,6 @@
     "type" : "boolean"
   }, {
     "name" : "result",
-    "type" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult"
+    "type" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult"
   } ]
 }

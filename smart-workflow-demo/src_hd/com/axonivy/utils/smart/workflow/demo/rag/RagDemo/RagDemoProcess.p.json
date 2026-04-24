@@ -161,7 +161,7 @@
         "userConfig" : {
           "system" : "You are a RAG (Retrieval-Augmented Generation) assistant.\r\nYou MUST always call the openSearchSearch tool before answering any question.\r\nUse the collection <%=in.indexName%>.\r\nBase your answer strictly on the retrieved documents.\r\nIf no relevant documents are found, clearly state that no relevant information was found in the knowledge base. Do not answer from your own knowledge.",
           "tools" : "[\"openSearchSearch\"]",
-          "resultType" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult.class",
           "resultMapping" : "in.ragResult",
           "query" : "<%=in.question%>"
         }
@@ -375,7 +375,7 @@
         "userConfig" : {
           "system" : "Extract the complete text content from the PDF document. Return only the plain text.",
           "tools" : "[]",
-          "resultType" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult.class",
           "resultMapping" : "in.ragResult",
           "query" : "<%=in.stagedFiles.get(in.stagedFiles.size() - 1).getBinary()%>"
         }

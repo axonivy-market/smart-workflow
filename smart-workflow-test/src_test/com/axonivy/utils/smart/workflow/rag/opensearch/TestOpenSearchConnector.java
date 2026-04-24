@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.rag.opensearch;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector;
@@ -23,11 +22,11 @@ public class TestOpenSearchConnector {
 
   @Test
   void missingMandatoryConfigs() {
-    assertThatThrownBy(() -> connector.connect(""))
+    assertThatThrownBy(() -> connector.vectorStore(""))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("collection is required");
 
-    assertThatThrownBy(() -> connector.connect("my-index"))
+    assertThatThrownBy(() -> connector.vectorStore("my-index"))
         .isInstanceOf(IllegalStateException.class)
         .hasMessageContaining("AI.RAG.OpenSearch.Url is not configured");
   }

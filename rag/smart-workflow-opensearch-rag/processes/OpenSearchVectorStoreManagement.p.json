@@ -23,7 +23,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "result", "type" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult", "desc" : "Ingestion result: answer contains the number of indexed segments, error contains failure details." }
+            { "name" : "result", "type" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult", "desc" : "Ingestion result: answer contains the number of indexed segments, error contains failure details." }
           ],
           "map" : {
             "result.result" : "in.result"
@@ -102,7 +102,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConnector;",
-            "import com.axonivy.utils.smart.workflow.rag.entity.RagResult;",
+            "import com.axonivy.utils.smart.workflow.rag.pipeline.RagResult;",
             "",
             "try {",
             "  new OpenSearchConnector().connect(in.collection);",

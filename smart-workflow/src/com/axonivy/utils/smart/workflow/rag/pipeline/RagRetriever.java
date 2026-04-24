@@ -3,9 +3,6 @@ package com.axonivy.utils.smart.workflow.rag.pipeline;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.axonivy.utils.smart.workflow.rag.entity.RagMatch;
-import com.axonivy.utils.smart.workflow.rag.entity.RagResult;
-
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 
@@ -20,7 +17,7 @@ public interface RagRetriever {
         .maxResults(maxResults)
         .minScore(minScore)
         .build();
-    RagVectorStore store = connector.connect(collection);
+    RagVectorStore store = connector.vectorStore(collection);
     var matches = store.search(searchRequest).matches().stream()
         .map(match -> new RagMatch(
             match.embedded().text(),

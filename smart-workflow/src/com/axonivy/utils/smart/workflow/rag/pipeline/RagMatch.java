@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.rag.entity;
+package com.axonivy.utils.smart.workflow.rag.pipeline;
 
 import java.util.Map;
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.axonivy.utils.smart.workflow.rag.RagConf;
 import com.axonivy.utils.smart.workflow.rag.document.processor.RagDocumentSplitter;
-import com.axonivy.utils.smart.workflow.rag.entity.RagResult;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -31,7 +30,7 @@ public interface RagIngestor {
         return new RagResult(MSG_NO_CONTENT);
       }
       List<Embedding> embeddings = connector().embeddingModel().embedAll(segments).content();
-      RagVectorStore store = connector().connect(collection);
+      RagVectorStore store = connector().vectorStore(collection);
       store.addAll(embeddings, segments);
       RagResult result = new RagResult();
       result.setAnswer(String.format(MSG_INDEXED_FORMAT, segments.size()));

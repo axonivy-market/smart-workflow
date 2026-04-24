@@ -93,7 +93,7 @@ public class TestRagRetriever {
       }
 
       @Override
-      public RagVectorStore connect(String collection) {
+      public RagVectorStore vectorStore(String collection) {
         return new RagVectorStore() {
           @Override
           public void addAll(List<Embedding> embeddings, List<TextSegment> segments) {}

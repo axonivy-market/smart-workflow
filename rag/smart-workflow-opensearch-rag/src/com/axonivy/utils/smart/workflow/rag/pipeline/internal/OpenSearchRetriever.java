@@ -1,8 +1,8 @@
 package com.axonivy.utils.smart.workflow.rag.pipeline.internal;
 
 import com.axonivy.utils.smart.workflow.rag.RagConf;
-import com.axonivy.utils.smart.workflow.rag.entity.RagResult;
 import com.axonivy.utils.smart.workflow.rag.pipeline.RagConnector;
+import com.axonivy.utils.smart.workflow.rag.pipeline.RagResult;
 import com.axonivy.utils.smart.workflow.rag.pipeline.RagRetriever;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 

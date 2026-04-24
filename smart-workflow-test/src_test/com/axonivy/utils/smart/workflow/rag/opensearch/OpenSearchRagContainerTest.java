@@ -1,10 +1,9 @@
 package com.axonivy.utils.smart.workflow.rag.opensearch;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.Duration;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
@@ -53,13 +52,13 @@ class OpenSearchRagContainerTest {
 
   @Test
   void connectReturnsVectorStore() {
-    var store = new OpenSearchConnector().connect("it-connect-index");
+    var store = new OpenSearchConnector().vectorStore("it-connect-index");
     assertThat(store).isInstanceOf(OpenSearchVectorStore.class);
   }
 
   @Test
   void addAllCreatesIndexLazily() {
-    new OpenSearchConnector().connect("it-lazy-index")
+    new OpenSearchConnector().vectorStore("it-lazy-index")
         .addAll(
             List.of(Embedding.from(new float[]{0.1f, 0.2f, 0.3f})),
             List.of(TextSegment.from("Lazy index creation test")));
@@ -69,7 +68,7 @@ class OpenSearchRagContainerTest {
 
   @Test
   void searchAfterIngestReturnsMatchingSegment() {
-    var store = new OpenSearchConnector().connect("it-search-index");
+    var store = new OpenSearchConnector().vectorStore("it-search-index");
     float[] vector = {0.1f, 0.2f, 0.3f, 0.4f, 0.5f};
     Embedding embedding = Embedding.from(vector);
 
@@ -95,7 +94,7 @@ class OpenSearchRagContainerTest {
 
   @Test
   void searchReturnsTopKByScore() {
-    var store = new OpenSearchConnector().connect("it-topk-index");
+    var store = new OpenSearchConnector().vectorStore("it-topk-index");
     float[] queryVector = {1.0f, 0.0f, 0.0f};
 
     store.addAll(
@@ -125,7 +124,7 @@ class OpenSearchRagContainerTest {
 
   @Test
   void addAllAppendsToExistingIndex() {
-    var store = new OpenSearchConnector().connect("it-append-index");
+    var store = new OpenSearchConnector().vectorStore("it-append-index");
 
     store.addAll(List.of(Embedding.from(new float[]{0.1f, 0.0f})),
         List.of(TextSegment.from("First batch")));

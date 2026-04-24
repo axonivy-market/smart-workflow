@@ -49,7 +49,7 @@ public class OpenSearchConnector implements RagConnector {
   }
 
   @Override
-  public RagVectorStore connect(String collection) {
+  public RagVectorStore vectorStore(String collection) {
     if (StringUtils.isBlank(collection)) {
       throw new IllegalArgumentException(ERR_COLLECTION_REQUIRED);
     }

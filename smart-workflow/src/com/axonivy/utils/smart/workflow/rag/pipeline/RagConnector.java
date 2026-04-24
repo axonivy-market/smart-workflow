@@ -8,7 +8,7 @@ public interface RagConnector {
 
   boolean indexExists(String collection);
 
-  RagVectorStore connect(String collection);
+  RagVectorStore vectorStore(String collection);
 
   default EmbeddingModel embeddingModel() {
     return EmbeddingModelFactory.createFromIvyVars();

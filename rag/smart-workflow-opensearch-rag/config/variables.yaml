@@ -6,8 +6,7 @@ Variables:
     RAG:
       OpenSearch:
         # Base URL of the OpenSearch server.
-        # Demo/dev (Docker, security disabled): "http://localhost:19600"
-        # Production (AWS OpenSearch): "https://my-opensearch.us-east-1.es.amazonaws.com"
+        # Example: "http://localhost:19600"
         Url: ""
         # API key for the OpenSearch server.
         # Leave blank when using username/password auth or when security is disabled.

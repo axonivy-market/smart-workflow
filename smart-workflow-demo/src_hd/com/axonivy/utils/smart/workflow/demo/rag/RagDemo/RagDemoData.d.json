@@ -10,7 +10,7 @@
     "type" : "java.util.List<String>"
   }, {
     "name" : "ragResult",
-    "type" : "com.axonivy.utils.smart.workflow.rag.entity.RagResult"
+    "type" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult"
   }, {
     "name" : "question",
     "type" : "String"
