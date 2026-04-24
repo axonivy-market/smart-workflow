@@ -9,6 +9,15 @@ Variables:
       DefaultInput: ""
       # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
       DefaultOutput: ""
+    Tool:
+      WebSearch:
+        # Name of the search engine to use. Must match the name() of a registered SmartWebSearchEngine. Example: "duckduckgo"
+        Engine: "duckduckgo"
+        # Maximum number of search results returned per query.
+        MaxResults: ""
+        # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"
+        # If empty, all domains are allowed.
+        WhitelistDomains: ""
     Observability:
       CustomFields:
         # Enable marking of workflow custom fields to track AI usage provenance.

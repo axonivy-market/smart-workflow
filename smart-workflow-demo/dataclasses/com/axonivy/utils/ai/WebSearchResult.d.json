@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "WebSearchResult",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "title",
+    "comment" : "The title of the search result page"
+  }, {
+    "name" : "url",
+    "comment" : "The URL of the search result page"
+  }, {
+    "name" : "snippet",
+    "comment" : "A brief excerpt from the search result page"
+  } ]
+}
