@@ -4,6 +4,11 @@
   "namespace" : "Features",
   "fields" : [ {
     "name" : "result",
+    "type" : "String",
+    "modifiers" : [ ]
+  }, {
+    "name" : "violationMessage",
+    "type" : "String",
     "modifiers" : [ ]
   }, {
     "name" : "error",

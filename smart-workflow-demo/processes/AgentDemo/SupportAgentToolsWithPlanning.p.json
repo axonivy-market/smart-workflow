@@ -9,7 +9,10 @@
       "type" : "RequestStart",
       "name" : "startPlanning",
       "config" : {
-        "signature" : "startPlanning"
+        "signature" : "startPlanning",
+        "request" : {
+          "name" : "Support Agent with Planning Demo"
+        }
       },
       "tags" : [
         "demo"
