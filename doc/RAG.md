@@ -14,7 +14,7 @@ Smart Workflow provides callable subprocesses and AI tools that handle steps 1 a
 
 [OpenSearch](https://opensearch.org/) is a scalable, open-source search and analytics engine that supports k-NN vector search — making it a natural fit for RAG workloads.
 
-The `smart-workflow-opensearch-rag` module provides a callable subprocess for setup and two AI tools that an agent can invoke at runtime.
+The `smart-workflow-opensearch-rag` module provides a callable subprocess for setup and an AI tool that an agent can invoke at runtime.
 
 #### Callable: `createVectorStore`
 

@@ -37,10 +37,12 @@ public class OpenSearchRestClient {
 
   private interface Errors {
     String BULK_PARTIAL = "OpenSearch bulk ingest had errors: %s";
+    String BULK_FAILED = "OpenSearch bulkIngest failed for '%s' with status: %d — %s";
     String PING_FAILED = "OpenSearch ping failed with status: %d";
     String CREATE_INDEX = "OpenSearch index creation failed for '%s' with status: %d — %s";
     String GET_INDEX_META = "OpenSearch getIndexMeta failed for '%s' with status: %d — %s";
     String LIST_DOCUMENTS = "OpenSearch listDocuments failed for '%s' with status: %d — %s";
+    String SEARCH_FAILED = "OpenSearch search failed for '%s' with status: %d — %s";
   }
 
   private final WebTarget target;
@@ -95,12 +97,21 @@ public class OpenSearchRestClient {
     return response.getStatus() == status.getStatusCode();
   }
 
+  private static String requireSuccessful(Response response, String errorTemplate, String indexName) {
+    String body = response.readEntity(String.class);
+    if (!isSuccessful(response)) {
+      throw new IllegalStateException(
+          String.format(errorTemplate, indexName, response.getStatus(), body));
+    }
+    return body;
+  }
+
   public void bulkIngest(String indexName, List<Embedding> embeddings, List<TextSegment> segments) {
     String ndjson = OpenSearchPayloadBuilder.buildBulkNdjson(embeddings, segments);
     try (Response response = target.path(indexName).path(Paths.BULK)
         .request(MediaType.APPLICATION_JSON)
         .post(Entity.entity(ndjson, NDJSON))) {
-      String responseBody = response.readEntity(String.class);
+      String responseBody = requireSuccessful(response, Errors.BULK_FAILED, indexName);
       try {
         OpenSearchPayloadBuilder.parseBulkError(responseBody)
             .ifPresent(error -> Ivy.log().warn(String.format(Errors.BULK_PARTIAL, error)));
@@ -122,7 +133,7 @@ public class OpenSearchRestClient {
     try (Response response = target.path(indexName).path(Paths.SEARCH)
         .request(MediaType.APPLICATION_JSON)
         .post(Entity.json(body))) {
-      String responseBody = response.readEntity(String.class);
+      String responseBody = requireSuccessful(response, Errors.SEARCH_FAILED, indexName);
       try {
         return OpenSearchPayloadBuilder.parseSearchResponse(responseBody, request.minScore());
       } catch (JsonProcessingException ex) {
@@ -134,11 +145,7 @@ public class OpenSearchRestClient {
   public OpenSearchIndexMeta getIndexMeta(String indexName) {
     try (Response response = target.path(indexName).path(Paths.MAPPING)
         .request(MediaType.APPLICATION_JSON).get()) {
-      if (!isSuccessful(response)) {
-        String body = response.readEntity(String.class);
-        throw new IllegalStateException(String.format(Errors.GET_INDEX_META, indexName, response.getStatus(), body));
-      }
-      String body = response.readEntity(String.class);
+      String body = requireSuccessful(response, Errors.GET_INDEX_META, indexName);
       try {
         return OpenSearchPayloadBuilder.parseIndexMeta(body);
       } catch (JsonProcessingException ex) {
@@ -152,11 +159,7 @@ public class OpenSearchRestClient {
     try (Response response = target.path(indexName).path(Paths.SEARCH)
         .request(MediaType.APPLICATION_JSON)
         .post(Entity.json(body))) {
-      if (!isSuccessful(response)) {
-        String responseBody = response.readEntity(String.class);
-        throw new IllegalStateException(String.format(Errors.LIST_DOCUMENTS, indexName, response.getStatus(), responseBody));
-      }
-      String responseBody = response.readEntity(String.class);
+      String responseBody = requireSuccessful(response, Errors.LIST_DOCUMENTS, indexName);
       try {
         return OpenSearchPayloadBuilder.parseSearchResponse(responseBody, NO_MIN_SCORE);
       } catch (JsonProcessingException ex) {
