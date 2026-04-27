@@ -10,12 +10,12 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
-import com.axonivy.utils.smart.workflow.observability.customfields.CustomFieldTrackingListener;
-import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
+import com.axonivy.utils.smart.workflow.observability.AiListeners;
+import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
+import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
@@ -23,11 +23,11 @@ import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvide
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
+import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
-import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
@@ -128,9 +128,8 @@ public class AgentCallExecutor {
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);
     var modelName = chatModel.defaultRequestParameters().modelName();
-    new CustomFieldTrackingListener().configure().forEach(agentBuilder::registerListener);
-    new ChatHistoryListener().configure().forEach(agentBuilder::registerListener);
-    new OpenInferenceTracing(provider.name(), modelName).configure().forEach(agentBuilder::registerListener);
+    AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName)))
+      .forEach(agentBuilder::registerListener);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
