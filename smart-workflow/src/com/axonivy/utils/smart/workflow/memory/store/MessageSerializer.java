@@ -6,9 +6,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -19,16 +24,24 @@ import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.CustomMessage;
 import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.internal.Json;
 
 public class MessageSerializer {
+
+static final ObjectMapper MAPPER2 = new ObjectMapper().setVisibility(
+      PropertyAccessor.FIELD,
+      Visibility.ANY)
+      .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 
   private static final ObjectMapper MAPPER = new ObjectMapper();
   static {
@@ -60,22 +73,45 @@ public class MessageSerializer {
     //   }
     // })
     ;
+    mod.addDeserializer(Content.class, new JsonDeserializer<Content>() {
+      @Override
+      public Content deserialize(JsonParser p, DeserializationContext ctxt)
+          throws IOException, JacksonException {
+        // TODO Auto-generated method stub
+        //return super.deserialize(p, ctxt, intoValue);
+        var node = p.readValueAsTree();
+        if (node.get("text") instanceof TextNode text) {
+          return TextContent.from(text.asText());
+        }
+        return null;
+      }
+    });
     MAPPER.registerModule(mod);
 
     MAPPER.addMixIn(UserMessage.class, UserMessageMixIn.class);
-   // MAPPER.addMixIn(UserMessage.Builder.class, ThirdPartyBuilderMixIn.class);
+    MAPPER.addMixIn(UserMessage.Builder.class, ThirdPartyBuilderMixIn.class);
 
   }
 
 @JsonDeserialize(builder = UserMessage.Builder.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class UserMessageMixIn { }
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonIncludeProperties("content")
+public abstract class UserMessageMixIn { 
 
-// @JsonPOJOBuilder(withPrefix = "")
-// public abstract class ThirdPartyBuilderMixIn {
-//     // Optional: if builder has a different method name for build, annotate it:
-//     @JsonPOJOBuilder(buildMethodName = "build");
-// }
+  @JsonCreator
+  static UserMessage create(Object ignored) {
+    return null;
+  } // only to attach annotation via mix-in; body ignored
+
+}
+
+
+@JsonPOJOBuilder(withPrefix = "")
+public abstract class ThirdPartyBuilderMixIn {
+    // Optional: if builder has a different method name for build, annotate it:
+    //@JsonPOJOBuilder(buildMethodName = "build");
+
+}
 
   public static class Messages {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = As.PROPERTY, property = "type")
@@ -98,7 +134,7 @@ public abstract class UserMessageMixIn { }
   public static String write(List<ChatMessage> messages) {
     try {
       Messages msgs = new Messages(new ArrayList<>(messages));
-      var raw = Json.toJson(msgs);
+      var raw = MAPPER2.writeValueAsString(msgs);
       return raw;
     } catch (Exception e) {
       throw new RuntimeException("Failed to serialize messages", e);

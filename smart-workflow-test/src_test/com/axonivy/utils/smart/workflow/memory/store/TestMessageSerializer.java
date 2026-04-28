@@ -19,6 +19,8 @@ class TestMessageSerializer {
     var user = new UserMessage(List.of(new TextContent("hey there")));
     var json = MessageSerializer.write(List.of(user));
     System.out.println(json);
+    assertThat(json).contains("hey there");
+    assertThat(json).doesNotContain("null");
 
     var messages = MessageSerializer.read(json);
     assertThat(messages).hasSize(1);
