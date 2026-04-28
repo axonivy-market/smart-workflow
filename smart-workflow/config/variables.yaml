@@ -13,6 +13,35 @@ Variables:
         # How long (in minutes) to retain PII mappings between input and output guardrails.
         # Increase for workflows with human-in-the-loop steps that may take longer than the default.
         MappingTtlMinutes: ""
+    Tool:
+      WebSearch:
+        # Name of the search engine to use. Must match the name() of a registered SmartWebSearchEngine. Example: "duckduckgo"
+        Engine: "duckduckgo"
+        # Maximum number of search results returned per query.
+        MaxResults: ""
+        # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"
+        # If empty, all domains are allowed.
+        WhitelistDomains: ""
+    RAG:
+      # Default number of document segments returned per query.
+      MaxResults: "5"
+      # Cosine similarity threshold (0.0 - 1.0). Segments below this score are excluded.
+      MinScore: "0.6"
+      # Number of tokens per document chunk when splitting.
+      ChunkSize: "300"
+      # Number of overlapping tokens between consecutive chunks.
+      ChunkOverlap: "20"
+      EmbeddingModel:
+        # Provider used to generate embeddings. Only providers that support embedding are valid.
+        # When blank, falls back to AI.DefaultProvider.
+        Provider: ""
+        # Embedding model name. When blank, defaults to the provider's DefaultEmbeddingModel variable.
+        # Example: "text-embedding-3-small" (OpenAI), "gemini-embedding-001" (Gemini)
+        Name: ""
+        # Optional separate API key for embedding calls (billed separately from chat).
+        # When blank, the provider's own API key variable is used.
+        #[password]
+        ApiKey: ${decrypt:}
     Observability:
       CustomFields:
         # Enable marking of workflow custom fields to track AI usage provenance.

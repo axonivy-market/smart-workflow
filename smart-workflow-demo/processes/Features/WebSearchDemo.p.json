@@ -1,0 +1,86 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "C9E4F821B5A73D06",
+  "config" : {
+    "data" : "Features.WebSearchDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "start",
+      "config" : {
+        "signature" : "start"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 704, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Prepare search query",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.query = \"web search engine\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f5", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Search the web",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a research assistant. You receive a search query. Use the webSearch tool to find current information on the internet. From the search results, populate the query field with the original search query, write a concise summary of the key findings, and include all individual search results with their title, URL and snippet. Return a complete WebSearchSummary.",
+          "resultType" : "com.axonivy.utils.ai.WebSearchSummary.class",
+          "tools" : "[\"webSearch\"]",
+          "resultMapping" : "in.searchSummary",
+          "query" : "<%=in.query%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 440, "y" : 65 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Log result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.warn(\"Web search complete - Query: \\\"{0}\\\"\", in.searchSummary.query);",
+            "ivy.log.warn(\"Summary: {0}\", in.searchSummary.summary);",
+            "for (com.axonivy.utils.ai.WebSearchResult result : in.searchSummary.results) {",
+            "  ivy.log.warn(\"  [{0}] {1}\", result.title, result.url);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 608, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}

@@ -9,7 +9,10 @@
       "type" : "RequestStart",
       "name" : "start",
       "config" : {
-        "signature" : "start"
+        "signature" : "start",
+        "request" : {
+          "name" : "Support Agent with Tools Demo"
+        }
       },
       "tags" : [
         "demo"
@@ -35,7 +38,7 @@
         "userConfig" : {
           "system" : "You are a Support Agent",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket.class",
-          "tools" : "[\"sumarizeProblem\"]",
+          "tools" : "[\"summarizeProblem\"]",
           "resultMapping" : "in.supportTicket",
           "query" : "I have error 404 in Cockpit"
         }

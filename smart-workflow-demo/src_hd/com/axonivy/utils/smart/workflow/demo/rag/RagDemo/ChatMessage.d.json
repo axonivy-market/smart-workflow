@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ChatMessage",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.rag.RagDemo",
+  "fields" : [ {
+    "name" : "role",
+    "type" : "String"
+  }, {
+    "name" : "content",
+    "type" : "String"
+  }, {
+    "name" : "timestamp",
+    "type" : "String"
+  } ]
+}
