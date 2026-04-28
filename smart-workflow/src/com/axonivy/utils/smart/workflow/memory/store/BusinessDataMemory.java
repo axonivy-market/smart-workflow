@@ -1,38 +1,20 @@
 package com.axonivy.utils.smart.workflow.memory.store;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
 import com.fasterxml.jackson.databind.deser.ValueInstantiator;
 import com.fasterxml.jackson.databind.deser.ValueInstantiators;
 import com.fasterxml.jackson.databind.deser.impl.PropertyValueBuffer;
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import ch.ivyteam.ivy.environment.Ivy;
-import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageType;
-import dev.langchain4j.data.message.CustomMessage;
-import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.data.message.ToolExecutionResultMessage;
-import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.internal.Json;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 
 public class BusinessDataMemory implements ChatMemoryStore {
@@ -64,109 +46,20 @@ public class BusinessDataMemory implements ChatMemoryStore {
     }
   }
 
-  public static class ChatMessageInstantiator extends StdValueInstantiator {
-
-    public ChatMessageInstantiator(DeserializationConfig config, JavaType raw) {
-      super(config, raw);
-    }
-
-    @Override
-    public Object createUsingDefault(DeserializationContext ctxt) throws IOException {
-      // TODO Auto-generated method stub
-      return super.createUsingDefault(ctxt);
-    }
-
-    @Override
-    public ValueInstantiator createContextual(DeserializationContext ctxt, BeanDescription beanDesc)
-        throws JsonMappingException {
-      // TODO Auto-generated method stub
-
-      return super.createContextual(ctxt, beanDesc);
-    }
-
-    @Override
-    public Object createFromObjectWith(DeserializationContext ctxt, Object[] args) throws IOException {
-      // TODO Auto-generated method stub
-      return super.createFromObjectWith(ctxt, args);
-    }
-
-    @Override
-    public Object createFromObjectWith(DeserializationContext ctxt, SettableBeanProperty[] props,
-        PropertyValueBuffer buffer) throws IOException {
-      // TODO Auto-generated method stub
-      return super.createFromObjectWith(ctxt, props, buffer);
-    }
-
-  }
-
   public static record ChatMemory(String id, String messages) {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    static {
-      MAPPER.activateDefaultTyping(new LaissezFaireSubTypeValidator(), ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS);
-      MAPPER.registerSubtypes(
-        new NamedType(UserMessage.class, UserMessage.class.getSimpleName()),
-        new NamedType(SystemMessage.class, SystemMessage.class.getSimpleName()),
-        new NamedType(AiMessage.class, AiMessage.class.getSimpleName()),
-        new NamedType(CustomMessage.class, CustomMessage.class.getSimpleName()),
-        new NamedType(ToolExecutionResultMessage.class, ToolExecutionResultMessage.class.getSimpleName())
-      );
-
-      MAPPER.registerModules(new SimpleModule(){
-
-@Override
-  public void setupModule(SetupContext context) {
-    super.setupModule(context);
-
-    context.addValueInstantiators(new ValueInstantiators.Base(){
-      @Override
-      public ValueInstantiator findValueInstantiator(DeserializationConfig config,
-          BeanDescription beanDesc, ValueInstantiator defaultInstantiator) {
-        JavaType raw = beanDesc.getType();
-        if (ChatMessage.class.isAssignableFrom(raw.getRawClass())) {
-          var us = config.getTypeFactory().constructType(UserMessage.class);
-          return new ChatMessageInstantiator(config, us);
-        }
-        return defaultInstantiator;
-      }
-    });
-  }
-      });
-    }
 
     public ChatMemory(String id, List<ChatMessage> messages) {
       this(id, read(messages));
     }
 
     private static String read(List<ChatMessage> messages) {
-      try {
-        Messages msgs = new Messages(new ArrayList<>(messages));
-        var raw = Json.toJson(msgs);
-        return raw;
-      } catch (Exception e) {
-        throw new RuntimeException("Failed to serialize messages", e);
-      }
+      return MessageSerializer.write(messages);
     }
 
     public List<ChatMessage> getMessages() {
-      try {
-        return MAPPER.readValue(messages, Messages.class).messages;
-      } catch (Exception e) {
-        throw new RuntimeException("Failed to deserialize messages", e);
-      } 
-    }
-
-    public static class Messages {
-      @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, 
-         include = As.PROPERTY, property = "type")
-      public ArrayList<ChatMessage> messages;
-
-      @JsonCreator
-      public Messages(@JsonProperty("messages") ArrayList<ChatMessage> messages) {
-        this.messages = new ArrayList<>(messages);
-      }
+      return MessageSerializer.read(messages);
     }
 
   }
-  
+
 }
