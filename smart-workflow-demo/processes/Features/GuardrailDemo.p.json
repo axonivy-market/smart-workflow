@@ -210,7 +210,12 @@
       },
       "visual" : {
         "at" : { "x" : 560, "y" : 944 },
-        "size" : { "width" : 160, "height" : 62 }
+        "size" : { "width" : 160, "height" : 62 },
+        "description" : [
+          "Call AI agent with PII in the message",
+          "The following fake credentials and PII data are used for testing purposes only.",
+          "They do not correspond to any real persons, accounts, or systems."
+        ]
       },
       "connect" : [
         { "id" : "f44", "to" : "f42" }

@@ -188,11 +188,11 @@ public class TestPiiDetector {
 
   @Test
   void maskPassword() {
-    var result = PiiDetector.detectAndMask("password=MySecretP4ss!");
+    var result = PiiDetector.detectAndMask("password=MySecretP4ss!123@");
     assertThat(result.hasPii()).isTrue();
     assertThat(result.maskedText()).contains("<PASSWORD_");
-    assertThat(result.maskedText()).doesNotContain("MySecretP4ss!");
-    assertThat(result.placeholderToOriginal()).containsValue("password=MySecretP4ss!");
+    assertThat(result.maskedText()).doesNotContain("MySecretP4ss!123@");
+    assertThat(result.placeholderToOriginal()).containsValue("password=MySecretP4ss!123@");
   }
 
 }
