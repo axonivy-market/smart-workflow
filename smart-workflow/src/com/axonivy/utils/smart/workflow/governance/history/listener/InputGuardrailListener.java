@@ -30,7 +30,9 @@ public class InputGuardrailListener implements InputGuardrailExecutedListener {
         .orElse(null);
 
     String invocationId = Optional.ofNullable(event.request())
-        .map(r -> r.requestParams().invocationContext().invocationId().toString())
+        .map(r -> r.requestParams())
+        .map(p -> p.invocationContext())
+        .map(ctx -> ctx.invocationId().toString())
         .orElse(null);
     String message = PiiMaskingStore.containsKey(invocationId) && rawMessage != null
         ? PiiDetector.detectAndMask(rawMessage).maskedText()
