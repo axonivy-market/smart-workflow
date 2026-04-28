@@ -5,18 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.primefaces.model.map.Circle;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
@@ -109,11 +105,11 @@ public class BusinessDataMemory implements ChatMemoryStore {
     static {
       MAPPER.activateDefaultTyping(new LaissezFaireSubTypeValidator(), ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS);
       MAPPER.registerSubtypes(
-        new NamedType(UserMessage.class, ChatMessageType.USER.name().toLowerCase()),
-        new NamedType(SystemMessage.class, ChatMessageType.SYSTEM.name().toLowerCase()),
-        new NamedType(AiMessage.class, ChatMessageType.AI.name().toLowerCase()),
-        new NamedType(CustomMessage.class, ChatMessageType.CUSTOM.name().toLowerCase()),
-        new NamedType(ToolExecutionResultMessage.class, ChatMessageType.TOOL_EXECUTION_RESULT.name().toLowerCase())
+        new NamedType(UserMessage.class, UserMessage.class.getSimpleName()),
+        new NamedType(SystemMessage.class, SystemMessage.class.getSimpleName()),
+        new NamedType(AiMessage.class, AiMessage.class.getSimpleName()),
+        new NamedType(CustomMessage.class, CustomMessage.class.getSimpleName()),
+        new NamedType(ToolExecutionResultMessage.class, ToolExecutionResultMessage.class.getSimpleName())
       );
 
       MAPPER.registerModules(new SimpleModule(){
@@ -131,26 +127,10 @@ public class BusinessDataMemory implements ChatMemoryStore {
           var us = config.getTypeFactory().constructType(UserMessage.class);
           return new ChatMessageInstantiator(config, us);
         }
-
-
-        // if (List.class.isAssignableFrom(raw)) {
-        //   if (defaultInstantiator instanceof StdValueInstantiator &&
-        //       beanDesc.getType() instanceof CollectionType) {
-        //     return new IvyListInstantiator(
-        //         (StdValueInstantiator) defaultInstantiator,
-        //         (CollectionType) beanDesc.getType());
-        //   }
-        // }
         return defaultInstantiator;
       }
     });
   }
-
-        // @Override
-        // public <T> SimpleModule addDeserializer(Class<T> type, JsonDeserializer<? extends T> deser) {
-        //   // TODO Auto-generated method stub
-        //   return super.addDeserializer(UserMessage.class, );
-        // }
       });
     }
 
@@ -169,7 +149,6 @@ public class BusinessDataMemory implements ChatMemoryStore {
     }
 
     public List<ChatMessage> getMessages() {
-      System.out.println("Deserializing messages: " + messages);
       try {
         return MAPPER.readValue(messages, Messages.class).messages;
       } catch (Exception e) {
