@@ -195,9 +195,4 @@ public class TestPiiDetector {
     assertThat(result.placeholderToOriginal()).containsValue("password=MySecretP4ss!");
   }
 
-  @Test
-  void countByTypeTracksDetections() {
-    var result = PiiDetector.detectAndMask("user@example.com and admin@example.org");
-    assertThat(result.countByType()).containsEntry("EMAIL", 2);
-  }
 }

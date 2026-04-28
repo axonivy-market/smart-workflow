@@ -13,8 +13,7 @@ import java.util.regex.Pattern;
 
 public class PiiDetector {
 
-  public record MaskingResult(String maskedText, Map<String, String> placeholderToOriginal,
-      Map<String, Integer> countByType) {
+  public record MaskingResult(String maskedText, Map<String, String> placeholderToOriginal) {
     public boolean hasPii() {
       return !placeholderToOriginal.isEmpty();
     }
@@ -36,7 +35,12 @@ public class PiiDetector {
     EMAIL("[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}"),
     // + or 00 must not be preceded by alphanumeric to avoid matching within IBANs
     // or other digit sequences.
+    // Known limitation: long numeric reference codes with a +/00 prefix can still false-positive.
+    // Reliable phone detection requires NLP (e.g. libphonenumber).
     PHONE("(?<![A-Za-z0-9])(?:\\+|00)[1-9]\\d{0,2}[\\s.\\-]?(?:\\(?\\d{1,4}\\)?[\\s.\\-]?){1,4}\\d{2,4}"),
+    // Known limitation: Luhn validation rejects most random sequences but any 13–19 digit value
+    // that passes Luhn by coincidence (invoice numbers, serial numbers) will be masked.
+    // Context-aware detection requires NLP.
     CREDIT_DEBIT_CARD_NUMBER("\\b(?:\\d[ \\-]?){13,19}\\b"),
     SSN("\\b(?!000|666|9\\d{2})\\d{3}[\\- ]\\d{2}[\\- ]\\d{4}\\b"),
     DATE_OF_BIRTH("\\b(0?[1-9]|[12]\\d|3[01])[/\\-.](0?[1-9]|1[0-2])[/\\-.](19|20)\\d{2}\\b");
@@ -50,11 +54,10 @@ public class PiiDetector {
 
   public static MaskingResult detectAndMask(String text) {
     if (text == null || text.isEmpty()) {
-      return new MaskingResult(text, Map.of(), Map.of());
+      return new MaskingResult(text, Map.of());
     }
 
     Map<String, String> placeholderToOriginal = new LinkedHashMap<>();
-    Map<String, Integer> countByType = new LinkedHashMap<>();
     String masked = text;
 
     for (PiiType type : PiiType.values()) {
@@ -70,14 +73,13 @@ public class PiiDetector {
 
         String placeholder = "<" + type.name() + "_" + sha256Prefix(piiValue) + ">";
         placeholderToOriginal.put(placeholder, piiValue);
-        countByType.merge(type.name(), 1, Integer::sum);
         matcher.appendReplacement(sb, Matcher.quoteReplacement(placeholder));
       }
       matcher.appendTail(sb);
       masked = sb.toString();
     }
 
-    return new MaskingResult(masked, Map.copyOf(placeholderToOriginal), Map.copyOf(countByType));
+    return new MaskingResult(masked, Map.copyOf(placeholderToOriginal));
   }
 
   public static String restore(String text, Map<String, String> placeholderToOriginal) {
