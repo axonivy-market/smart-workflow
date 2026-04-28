@@ -10,6 +10,12 @@ import com.axonivy.utils.smart.workflow.guardrails.pii.PiiMaskingStore;
 
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 
+/**
+ * Dear Bug Hunter,
+ * The credentials and PII values used in these tests are intentionally included for testing purposes only
+ * and do not provide access to any production systems or real persons.
+ * Please do not submit them as part of our bug bounty program.
+ */
 @IvyProcessTest
 public class TestPiiMaskingInputGuardrail {
 

@@ -212,7 +212,6 @@
         "at" : { "x" : 560, "y" : 944 },
         "size" : { "width" : 160, "height" : 62 },
         "description" : [
-          "Call AI agent with PII in the message",
           "The following fake credentials and PII data are used for testing purposes only.",
           "They do not correspond to any real persons, accounts, or systems."
         ]
@@ -225,8 +224,8 @@
       "type" : "ProcessAnnotation",
       "name" : "PII in the user message is replaced with <TYPE_hash> placeholders before reaching the LLM. Covers: URL, bearer token, JWT, API key, password, AWS key, MAC, email, phone, card number, SSN, date of birth, IP. The output guardrail restores originals in the AI response.",
       "visual" : {
-        "at" : { "x" : 561, "y" : 837 },
-        "size" : { "width" : 466, "height" : 74 }
+        "at" : { "x" : 583, "y" : 845 },
+        "size" : { "width" : 513, "height" : 85 }
       }
     }, {
       "id" : "f50",

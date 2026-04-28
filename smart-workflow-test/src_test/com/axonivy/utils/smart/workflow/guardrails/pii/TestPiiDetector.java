@@ -11,8 +11,12 @@ import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 @IvyProcessTest
 public class TestPiiDetector {
 
-  // The following fake credentials and PII data are used for testing purposes only.
-  // They do not correspond to any real persons, accounts, or systems.
+  /**
+   * Dear Bug Hunter,
+   * The credentials and PII values below are intentionally included for testing purposes only
+   * and do not provide access to any production systems or real persons.
+   * Please do not submit them as part of our bug bounty program.
+   */
 
   @Test
   void detectEmail() {
