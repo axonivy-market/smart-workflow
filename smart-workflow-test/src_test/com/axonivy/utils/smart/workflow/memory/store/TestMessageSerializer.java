@@ -18,6 +18,7 @@ class TestMessageSerializer {
   void readWrite() {
     var user = new UserMessage(List.of(new TextContent("hey there")));
     var json = MessageSerializer.write(List.of(user));
+    System.out.println(json);
 
     var messages = MessageSerializer.read(json);
     assertThat(messages).hasSize(1);
