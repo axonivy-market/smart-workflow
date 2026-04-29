@@ -2,6 +2,8 @@
 
 **Smart Workflow** brings AI directly into Axon Ivy, so developers can build, run, and improve AI agents inside existing Axon processes. It lets business workflows leverage large language models to understand natural language, make autonomous decisions, and adapt to changing requirements — all without heavy architectural changes.
 
+### Key features
+
 Key benefits of Smart Workflow:
 
 - **Familiar setup:** Drop AI agents into BPMN processes with no structural changes and configure everything through Axon Ivy’s standard interfaces.
@@ -424,6 +426,8 @@ To function effectively, AI agents require tools to perform tasks. Smart Workflo
 
 For step-by-step instructions on creating both tool types, see the [Tools Guide](../doc/TOOLS.md).
 
+![Tool configurations screenshot showing available tools and settings](img/tool-configurations.png)
+
 ### Defining AI agent
 
 To define an AI agent, create a program element backed by the `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java bean. In the `Configuration` tab, you can access and customize detailed settings for your AI agent.
@@ -463,3 +467,103 @@ To address this need, the Smart Workflow AI agent can produce output as a Java o
 You can easily configure this by specifying both the expected result type and the target object to map the result to in the `Output` section.
 
 ![Other configurations](img/agent-other-configurations.png)
+
+## Components
+
+### Exposed CALLABLE_SUB processes
+
+##### `invokeAgent(String,String,List<String>,Class)`
+
+**Input Parameters**
+
+| Name | Type | Description |
+|---|---|---|
+| query | String | The user query/message to send to the AI agent |
+| systemMessage | String | System message to define agent behavior |
+| tools | List<String> | List of tool names available to the agent. Keep empty to use all tools |
+| resultType | Class | Expected result type class for structured output. Keep null for String result |
+
+**Result Parameters**
+
+| Name | Type | Description |
+|---|---|---|
+| resultObject | Object | The AI agent response result |
+
+### Maven artifacts
+
+1. com.axonivy.utils.ai:smart-workflow-demo
+
+```xml
+<dependency>
+  <groupId>com.axonivy.utils.ai</groupId>
+  <artifactId>smart-workflow-demo</artifactId>
+  <version>${version}</version>
+  <type>iar</type>
+</dependency>
+```
+
+2. com.axonivy.utils.ai:smart-workflow-openai
+
+```xml
+<dependency>
+  <groupId>com.axonivy.utils.ai</groupId>
+  <artifactId>smart-workflow-openai</artifactId>
+  <version>${version}</version>
+  <type>iar</type>
+</dependency>
+```
+
+3. com.axonivy.utils.ai:smart-workflow-azure-openai
+
+```xml
+<dependency>
+  <groupId>com.axonivy.utils.ai</groupId>
+  <artifactId>smart-workflow-azure-openai</artifactId>
+  <version>${version}</version>
+  <type>iar</type>
+</dependency>
+```
+
+4. com.axonivy.utils.ai:smart-workflow-gemini
+
+```xml
+<dependency>
+  <groupId>com.axonivy.utils.ai</groupId>
+  <artifactId>smart-workflow-gemini</artifactId>
+  <version>${version}</version>
+  <type>iar</type>
+</dependency>
+```
+
+5. com.axonivy.utils.ai:smart-workflow-xai
+
+```xml
+<dependency>
+  <groupId>com.axonivy.utils.ai</groupId>
+  <artifactId>smart-workflow-xai</artifactId>
+  <version>${version}</version>
+  <type>iar</type>
+</dependency>
+```
+
+6. com.axonivy.utils.ai:smart-workflow-anthropic
+
+```xml
+<dependency>
+  <groupId>com.axonivy.utils.ai</groupId>
+  <artifactId>smart-workflow-anthropic</artifactId>
+  <version>${version}</version>
+  <type>iar</type>
+</dependency>
+```
+
+7. com.axonivy.utils.ai:smart-workflow
+
+```xml
+<dependency>
+  <groupId>com.axonivy.utils.ai</groupId>
+  <artifactId>smart-workflow</artifactId>
+  <version>${version}</version>
+  <type>iar</type>
+</dependency>
+```
