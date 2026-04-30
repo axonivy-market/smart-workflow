@@ -1,0 +1,117 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19D9B40B0E198091",
+  "config" : {
+    "data" : "Patterns.HumanInTheLoop.HibernationData"
+  },
+  "elements" : [ {
+      "id" : "f23",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 560, "y" : 224 }
+      }
+    }, {
+      "id" : "f24",
+      "type" : "ProgramInterface",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "strictly ask the user instead of making bold decisions. present your users requests as HumanDecision (title+options)",
+          "tools" : "[\"askUserDecision\"]",
+          "resultType" : "String.class",
+          "resultMapping" : "in.iceCream",
+          "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 352, "y" : 224 }
+      },
+      "boundaries" : [ {
+          "id" : "f32",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "human:decision",
+          "config" : {
+            "errorCode" : "human:decision",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.decision" : "error.getAttribute(\"decision\") as com.axonivy.utils.smart.workflow.human.HumanDecision"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 384, "y" : 202 },
+            "labelOffset" : { "x" : 57, "y" : -15 },
+            "icon" : "std:Escalation"
+          },
+          "connect" : [
+            { "id" : "f33", "to" : "f26" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f25", "to" : "f23", "color" : "default" }
+      ]
+    }, {
+      "id" : "f26",
+      "type" : "UserTask",
+      "name" : "UserFeedback",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.HumanDecision:start(com.axonivy.utils.smart.workflow.human.HumanDecision)",
+        "call" : {
+          "map" : {
+            "param.decision" : "in.decision"
+          },
+          "code" : "ivy.log.info(\"Awaiting user decision >>> : \"+in.decision.question);"
+        },
+        "task" : {
+          "name" : "Assisted: <%=in.decision.question%>"
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.iceCream" : "result.first.title"
+          },
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.tools.human.DecisionMaker;",
+            "",
+            "ivy.log.info(\"user selected: \"+result.first.title);",
+            "new DecisionMaker(in.aiMemoryId).resolve(result.first.title);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 352, "y" : 120 }
+      },
+      "connect" : [
+        { "id" : "f27", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "RequestStart",
+      "name" : "joinedForces",
+      "config" : {
+        "signature" : "joinedForces"
+      },
+      "visual" : {
+        "at" : { "x" : 176, "y" : 224 }
+      },
+      "connect" : [
+        { "id" : "f29", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f34",
+      "type" : "ProcessAnnotation",
+      "name" : [
+        "# Human-in-the-Loop Demo",
+        "",
+        "Shows the integration of a human user in open-goal initatives. ",
+        "",
+        "1. The user decision is provided as tool; to allow optional decision making based on the task",
+        "2. The memory of the on-going Agent is persisted and auto re-stored after the user's decision"
+      ],
+      "visual" : {
+        "at" : { "x" : 425, "y" : 465 },
+        "size" : { "width" : 558, "height" : 158 }
+      }
+    } ]
+}
