@@ -5,10 +5,14 @@ Variables:
     DefaultProvider: ""
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
-      # Default input guardrails. Separated by comma. Example: "PromptInjectionInputGuardrail, GuardrailTwo"
+      # Default input guardrails. Separated by comma. Available: PromptInjectionInputGuardrail, PiiMaskingInputGuardrail
       DefaultInput: ""
-      # Default output guardrails. Separated by comma. Example: "SensitiveDataOutputGuardrail, GuardrailTwo"
+      # Default output guardrails. Separated by comma. Available: SensitiveDataOutputGuardrail, PiiMaskingOutputGuardrail
       DefaultOutput: ""
+      PiiMasking:
+        # How long (in minutes) to retain PII mappings between input and output guardrails.
+        # Increase for workflows with human-in-the-loop steps that may take longer than the default.
+        MappingTtlMinutes: ""
     Tool:
       WebSearch:
         # Name of the search engine to use. Must match the name() of a registered SmartWebSearchEngine. Example: "duckduckgo"

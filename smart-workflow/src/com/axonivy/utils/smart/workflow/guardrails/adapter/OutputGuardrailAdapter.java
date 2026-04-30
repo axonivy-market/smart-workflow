@@ -31,11 +31,25 @@ public class OutputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkfl
         .map(response -> response.aiMessage())
         .map(AiMessage::text)
         .orElse(StringUtils.EMPTY);
-    return doValidate(message);
+    String invocationId = Optional.ofNullable(request)
+        .map(OutputGuardrailRequest::requestParams)
+        .map(p -> p.invocationContext())
+        .map(ctx -> ctx.invocationId().toString())
+        .orElse(null);
+    return doValidate(message, invocationId);
   }
 
   private OutputGuardrailResult doValidate(String message) {
-    GuardrailResult result = getDelegate().evaluate(message);
-    return result.isAllowed() ? success() : fatal(result.getReason());
+    return doValidate(message, null);
+  }
+
+  private OutputGuardrailResult doValidate(String message, String invocationId) {
+    GuardrailResult result = invocationId != null
+        ? getDelegate().evaluate(message, invocationId)
+        : getDelegate().evaluate(message);
+    if (!result.isAllowed()) {
+      return fatal(result.getReason());
+    }
+    return result.hasRewrite() ? successWith(result.getRewrittenMessage()) : success();
   }
 }

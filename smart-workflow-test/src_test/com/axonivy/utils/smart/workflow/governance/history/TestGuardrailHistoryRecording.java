@@ -119,6 +119,7 @@ public class TestGuardrailHistoryRecording {
         .commonParams(GuardrailRequestParams.builder()
             .userMessageTemplate("")
             .variables(java.util.Map.of())
+            .invocationContext(invocationCtx)
             .build())
         .build();
     return InputGuardrailExecutedEvent.builder()
@@ -146,6 +147,7 @@ public class TestGuardrailHistoryRecording {
         .requestParams(GuardrailRequestParams.builder()
             .userMessageTemplate("")
             .variables(java.util.Map.of())
+            .invocationContext(invocationCtx)
             .build())
         .build();
     return OutputGuardrailExecutedEvent.builder()

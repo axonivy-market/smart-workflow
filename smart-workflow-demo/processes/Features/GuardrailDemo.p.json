@@ -174,6 +174,60 @@
         { "id" : "f29", "to" : "f22", "via" : [ { "x" : 784, "y" : 696 } ] }
       ]
     }, {
+      "id" : "f40",
+      "type" : "RequestStart",
+      "name" : "PII Masking Guardrail Demo",
+      "config" : {
+        "signature" : "piiMaskingGuardrailDemo"
+      },
+      "visual" : {
+        "at" : { "x" : 320, "y" : 944 }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f43" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 792, "y" : 944 }
+      }
+    }, {
+      "id" : "f43",
+      "type" : "ProgramInterface",
+      "name" : "Call AI agent with PII in the message",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "inputGuardrails" : "[\"PiiMaskingInputGuardrail\"]",
+          "system" : "\"Values formatted as <TYPE_hash> are anonymized placeholders — the original sensitive data was removed before reaching you. Treat each placeholder as an opaque token and echo it back as-is.\"",
+          "provider" : "",
+          "resultMapping" : "in.result",
+          "query" : "\"Please review the following security profile and echo back each field in details:\\n\\nURL: https://api.example.com/v1/users?session=abc123def456\\nBearer Token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U\\nJWT: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI5ODc2NTQzMjEifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\\napi_key=sk-prod-1234567890abcdef\\npassword=MyS3cr3tP4ss!\\nAWS Key: AKIAIOSFODNN7EXAMPLE\\nDevice MAC: 00:1A:2B:3C:4D:5E\\nEmail: john.doe@example.com\\nPhone: +1-555-123-4567\\nCard Number: 4532015112830366\\nSSN: 123-45-6789\\nDate of Birth: 15/06/1990\\nIP Address: 192.168.1.42\"",
+          "outputGuardrails" : "[\"PiiMaskingOutputGuardrail\"]",
+          "resultType" : ""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 944 },
+        "size" : { "width" : 160, "height" : 62 },
+        "description" : [
+          "The following fake credentials and PII data are used for testing purposes only.",
+          "They do not correspond to any real persons, accounts, or systems."
+        ]
+      },
+      "connect" : [
+        { "id" : "f44", "to" : "f42" }
+      ]
+    }, {
+      "id" : "f47",
+      "type" : "ProcessAnnotation",
+      "name" : "PII in the user message is replaced with <TYPE_hash> placeholders before reaching the LLM. Covers: URL, bearer token, JWT, API key, password, AWS key, MAC, email, phone, card number, SSN, date of birth, IP. The output guardrail restores originals in the AI response.",
+      "visual" : {
+        "at" : { "x" : 583, "y" : 845 },
+        "size" : { "width" : 513, "height" : 85 }
+      }
+    }, {
       "id" : "f50",
       "type" : "RequestStart",
       "name" : "Custom Guardrail Demo (Blocked)",
@@ -184,7 +238,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 312, "y" : 936 }
+        "at" : { "x" : 320, "y" : 1168 }
       },
       "connect" : [
         { "id" : "f51", "to" : "f53" }
@@ -193,7 +247,7 @@
       "id" : "f52",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 816, "y" : 936 }
+        "at" : { "x" : 896, "y" : 1160 }
       }
     }, {
       "id" : "f53",
@@ -210,7 +264,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 528, "y" : 936 },
+        "at" : { "x" : 560, "y" : 1168 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "boundaries" : [ {
@@ -227,7 +281,7 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 584, "y" : 977 },
+            "at" : { "x" : 616, "y" : 1209 },
             "labelOffset" : { "x" : -80, "y" : 25 },
             "icon" : "res:/webContent/icons/shield.png"
           },
@@ -251,7 +305,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 696, "y" : 1056 }
+        "at" : { "x" : 712, "y" : 1272 }
       },
       "connect" : [
         { "id" : "f56", "to" : "f52" }
@@ -269,7 +323,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 696, "y" : 936 }
+        "at" : { "x" : 720, "y" : 1160 }
       },
       "connect" : [
         { "id" : "f60", "to" : "f52" }
@@ -285,7 +339,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 312, "y" : 1200 }
+        "at" : { "x" : 328, "y" : 1368 }
       },
       "connect" : [
         { "id" : "f62", "to" : "f63" }
@@ -294,7 +348,7 @@
       "id" : "f64",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 816, "y" : 1200 }
+        "at" : { "x" : 864, "y" : 1368 }
       }
     }, {
       "id" : "f63",
@@ -311,7 +365,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 528, "y" : 1200 },
+        "at" : { "x" : 528, "y" : 1368 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "boundaries" : [ {
@@ -328,7 +382,7 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 584, "y" : 1241 },
+            "at" : { "x" : 584, "y" : 1409 },
             "labelOffset" : { "x" : -60, "y" : 25 },
             "icon" : "res:/webContent/icons/shield.png"
           },
@@ -352,7 +406,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 704, "y" : 1328 }
+        "at" : { "x" : 704, "y" : 1496 }
       },
       "connect" : [
         { "id" : "f70", "to" : "f64" }
@@ -370,7 +424,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 696, "y" : 1200 }
+        "at" : { "x" : 712, "y" : 1368 }
       },
       "connect" : [
         { "id" : "f71", "to" : "f64" }
@@ -380,7 +434,7 @@
       "type" : "ProcessAnnotation",
       "name" : "Demonstrates a custom SPI-registered guardrail (BlockCompetitorMentionGuardrail) that blocks queries containing specific competitor tokens. Two variants: blocked query (mentions competitor \"Beta Technologies\") and allowed query (neutral).",
       "visual" : {
-        "at" : { "x" : 536, "y" : 816 },
+        "at" : { "x" : 568, "y" : 1056 },
         "size" : { "width" : 480, "height" : 78 }
       }
     } ]
