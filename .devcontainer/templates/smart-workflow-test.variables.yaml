@@ -4,7 +4,7 @@ Variables:
     Providers:
       OpenAI:
         #[password]
-        APIKey: ""
+        APIKey:
     Observability:
       Openinference:
         Enabled: true
