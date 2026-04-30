@@ -1,17 +1,18 @@
-# Devcontainer
+# Dev Container
 
-Our Smart-Workflow development environment is accessible via a devcontainer.
+Our Smart-Workflow development environment is accessible via a Dev Container.
 The container removes the complexity of setting up your workspace and
-provides sidecar services like RAG or Tracing via third-party tools.
+provides sidecar services like [RAG](../RAG.md) or [Tracing](../observe/OBSERVE.md) via third-party tools.
 
-Therefore the Devcontainer is perfect for: 
+Therefore, the Dev Container is perfect for:
 - new users that want to explore the full capabilities of Smart-Workflow
 - developers that want to avoid the "runs on my machine" disappointment
   when going to Q&A and production
 
 ## Local machine
 
-Your local machine can run the Smart-Workflow Devcontainer with a few simple steps. Locally run, this produces no costs and leverages the power of your hardware.
+Your local machine can run the Smart-Workflow Dev Container with a few simple steps.
+Locally run, this produces no costs and leverages the power of your hardware.
 
 ### Requirements
 
@@ -23,12 +24,16 @@ Your local machine can run the Smart-Workflow Devcontainer with a few simple ste
 1. Clone this repository to your machine.
 2. Open the repository folder in VS Code.
 3. Run **Dev Containers: Reopen in Container** from the command palette.
+4. Wait until you see the Axon Ivy Welcome page (this can take a few minutes).
+5. Enter your API key in `smart-workflow-test/config/variables.yaml` via Import `AI.Providers.OpenAI.APIKey`.
 
 
 ## GitHub hosted
 
 To run a Smart-Workflow dev environment no local environment is required.
 You can run it right in the browser, hosted by GitHub.
+
+![gh-init](../img/devcontainer-codespace-init.png)
 
 ### How to start
 
@@ -37,9 +42,12 @@ You can run it right in the browser, hosted by GitHub.
 3. Click the `...` menu (or **Configure and create codespace**) to select options before launch.
 4. Set the machine type to a **4-core** option.
 5. Create the codespace and wait until VS Code starts.
-6. The devcontainer is initialized automatically; once startup tasks finish, you can run and demo Smart-Workflow immediately.
+6. Wait until you see the Axon Ivy Welcome page (this can take 5-10 minutes).
+7. Enter your API key in `smart-workflow-test/config/variables.yaml`
+8. Run a demo from smart-workflow-demos or start developing your feature.
 
 ### Cost tip
 
-To avoid unexpected costs, stop your codespace as soon as your session is finished. In GitHub, open the **Codespaces** page and choose **Stop codespace** for inactive environments instead of leaving them running in the background.
+To avoid unexpected costs, stop your codespace as soon as your session is finished. 
+In GitHub, open the **Codespaces** page and choose **Stop codespace** for inactive environments instead of leaving them running in the background.
 
