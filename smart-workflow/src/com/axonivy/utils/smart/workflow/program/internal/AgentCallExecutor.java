@@ -2,9 +2,8 @@ package com.axonivy.utils.smart.workflow.program.internal;
 
 import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -14,8 +13,8 @@ import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
-import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
+import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
@@ -23,13 +22,12 @@ import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvide
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
-import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.service.AiServices;
-import dev.langchain4j.service.tool.ToolExecutor;
+import dev.langchain4j.service.tool.AiServiceTool;
 import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
 
@@ -136,8 +134,8 @@ public class AgentCallExecutor {
     List<String> toolFilter = executeListOfStrings(Conf.TOOLS).orElse(null);
     ToolProvider ivyTools = new IvySubProcessToolsProvider().filtering(toolFilter);
     agentBuilder.toolProvider(request -> {
-      Map<ToolSpecification, ToolExecutor> all = new HashMap<>(ivyTools.provideTools(request).tools());
-      all.putAll(SmartWorkflowToolsProvider.provideTools(toolFilter).tools());
+      List<AiServiceTool> all = new ArrayList<>(ivyTools.provideTools(request).aiServiceTools());
+      all.addAll(SmartWorkflowToolsProvider.provideTools(toolFilter).aiServiceTools());
       return new ToolProviderResult(all);
     });
   }
