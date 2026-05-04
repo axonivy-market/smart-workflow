@@ -93,4 +93,47 @@ public class TestPiiMaskingGuardrail {
     assertThat(result.isAllowed()).isTrue();
     assertThat(result.getRewrittenMessage()).isEmpty();
   }
+
+  @Test
+  void noPiiInputThenPiiInputAreIndependent() {
+    // First invocation: no PII — must not poison state for next invocation
+    guardrail.evaluate("What is the weather today?", "inv-8");
+    guardrail.evaluate("It will be sunny.", "inv-8");
+
+    // Second invocation on same instance: input with PII must still be masked
+    var inputResult = guardrail.evaluate("My email is user@example.com", "inv-9");
+    assertThat(inputResult.getRewrittenMessage()).isPresent();
+    assertThat(inputResult.getRewrittenMessage().get()).contains("<EMAIL_");
+  }
+
+  @Test
+  void mappingClearedAfterOutputPhase() {
+    // Input phase stores mapping; output phase must remove it
+    var inputResult = guardrail.evaluate("IP: 192.168.1.1", "inv-10");
+    assertThat(inputResult.getRewrittenMessage()).isPresent();
+    String maskedIp = inputResult.getRewrittenMessage().get();
+    guardrail.evaluate("The server is at " + maskedIp, "inv-10");
+
+    // A third call with the same invocationId must start a fresh input phase
+    var result = guardrail.evaluate("New message: 192.168.1.1", "inv-10");
+    assertThat(result.getRewrittenMessage()).isPresent();
+    assertThat(result.getRewrittenMessage().get()).contains("<IP_ADDRESS_");
+  }
+
+  @Test
+  void concurrentInvocationsAreIndependent() {
+    var r1 = guardrail.evaluate("Email: user@example.com", "inv-A");
+    var r2 = guardrail.evaluate("Call me at +1 555 123 4567", "inv-B");
+
+    assertThat(r1.getRewrittenMessage()).isPresent();
+    assertThat(r2.getRewrittenMessage()).isPresent();
+    String maskedEmail = r1.getRewrittenMessage().get();
+    assertThat(maskedEmail).contains("<EMAIL_");
+
+    // Output for inv-A must restore its own email, not inv-B's phone
+    var out1 = guardrail.evaluate("Contact " + maskedEmail, "inv-A");
+    assertThat(out1.getRewrittenMessage()).isPresent();
+    assertThat(out1.getRewrittenMessage().get()).contains("user@example.com");
+    assertThat(out1.getRewrittenMessage().get()).doesNotContain("+1");
+  }
 }
