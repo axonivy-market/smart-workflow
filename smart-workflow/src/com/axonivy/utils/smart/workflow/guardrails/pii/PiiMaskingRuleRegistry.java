@@ -4,9 +4,7 @@ import java.util.List;
 
 /**
  * Rules for Personally Identifiable Information (PII) — data that directly identifies
- * a person. Access secrets such as URLs, JWTs, bearer tokens, API keys, passwords, and
- * AWS keys are intentionally excluded: those are credentials, not identity data, and
- * will be handled by a dedicated CredentialMaskingGuardrail.
+ * a person.
  */
 public class PiiMaskingRuleRegistry {
 
