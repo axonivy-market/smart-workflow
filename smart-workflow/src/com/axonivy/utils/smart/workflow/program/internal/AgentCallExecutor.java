@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.utils.smart.workflow.governance.history.listener.ChatHistoryListener;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
+import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.observability.customfields.CustomFieldTrackingListener;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
@@ -144,9 +146,10 @@ public class AgentCallExecutor {
   }
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    Set<GuardrailProvider> providers = GuardrailCollector.allProviders();
     List<String> inputGuardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
-    agentBuilder.inputGuardrails(GuardrailCollector.inputGuardrailAdapters(inputGuardrailFilters));
+    agentBuilder.inputGuardrails(GuardrailCollector.inputGuardrailAdapters(providers, inputGuardrailFilters));
     List<String> outputGuardrailFilters = executeListOfStrings(Conf.OUTPUT_GUARD_RAILS).orElse(null);
-    agentBuilder.outputGuardrails(GuardrailCollector.outputGuardrailAdapters(outputGuardrailFilters));
+    agentBuilder.outputGuardrails(GuardrailCollector.outputGuardrailAdapters(providers, outputGuardrailFilters));
   }
 }

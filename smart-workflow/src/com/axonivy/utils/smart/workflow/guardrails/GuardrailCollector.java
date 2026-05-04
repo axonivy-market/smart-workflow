@@ -34,7 +34,11 @@ public class GuardrailCollector {
   }
 
   public static List<InputGuardrailAdapter> inputGuardrailAdapters(List<String> filters) {
-    return guardrailAdapters(filters,
+    return inputGuardrailAdapters(allProviders(), filters);
+  }
+
+  public static List<InputGuardrailAdapter> inputGuardrailAdapters(Set<GuardrailProvider> providers, List<String> filters) {
+    return guardrailAdapters(providers, filters,
         DEFAULT_INPUT_GUARDRAILS,
         GuardrailProvider::getInputGuardrails,
         InputGuardrailAdapter::new);
@@ -45,7 +49,11 @@ public class GuardrailCollector {
   }
 
   public static List<OutputGuardrailAdapter> outputGuardrailAdapters(List<String> filters) {
-    return guardrailAdapters(filters,
+    return outputGuardrailAdapters(allProviders(), filters);
+  }
+
+  public static List<OutputGuardrailAdapter> outputGuardrailAdapters(Set<GuardrailProvider> providers, List<String> filters) {
+    return guardrailAdapters(providers, filters,
         DEFAULT_OUTPUT_GUARDRAILS,
         GuardrailProvider::getOutputGuardrails,
         OutputGuardrailAdapter::new);
@@ -61,6 +69,7 @@ public class GuardrailCollector {
   }
 
   private static <G extends SmartWorkflowGuardrail, A extends AbstractGuardrailAdapter<G>> List<A> guardrailAdapters(
+      Set<GuardrailProvider> providers,
       List<String> filters,
       String defaultVariableKey,
       Function<GuardrailProvider, List<G>> providerExtractor,
@@ -73,7 +82,7 @@ public class GuardrailCollector {
       return List.of();
     }
 
-    Map<String, G> guardrailsByName = allProviders().stream()
+    Map<String, G> guardrailsByName = providers.stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
         .collect(Collectors.toMap(SmartWorkflowGuardrail::name, g -> g, (existing, _) -> existing));
 

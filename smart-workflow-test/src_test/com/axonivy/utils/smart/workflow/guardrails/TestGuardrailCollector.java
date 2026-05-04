@@ -58,7 +58,7 @@ public class TestGuardrailCollector {
   void allInputGuardrailNames() {
     var names = GuardrailCollector.allInputGuardrailNames();
     assertThat(names).containsExactlyInAnyOrder(
-        "PromptInjectionInputGuardrail", "PiiMaskingInputGuardrail", "DummyInputGuardrail", "SecondDummyInputGuardrail", "BlockCompetitorMentionGuardrail");
+        "PromptInjectionInputGuardrail", "PiiMaskingGuardrail", "DummyInputGuardrail", "SecondDummyInputGuardrail", "BlockCompetitorMentionGuardrail");
   }
 
   @Test
@@ -84,6 +84,6 @@ public class TestGuardrailCollector {
   void allOutputGuardrailNames() {
     var names = GuardrailCollector.allOutputGuardrailNames();
     assertThat(names).containsExactlyInAnyOrder(
-        "SensitiveDataOutputGuardrail", "PiiMaskingOutputGuardrail", "DummyOutputGuardrail", "SecondDummyOutputGuardrail");
+        "SensitiveDataOutputGuardrail", "PiiMaskingGuardrail", "DummyOutputGuardrail", "SecondDummyOutputGuardrail");
   }
 }

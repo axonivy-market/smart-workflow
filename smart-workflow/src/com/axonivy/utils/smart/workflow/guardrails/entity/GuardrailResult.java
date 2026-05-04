@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.workflow.guardrails.entity;
 
+import java.util.Optional;
+
 public class GuardrailResult {
   private Boolean allowed;
   private String reason;
@@ -31,11 +33,7 @@ public class GuardrailResult {
     return reason;
   }
 
-  public boolean hasRewrite() {
-    return rewrittenMessage != null;
-  }
-
-  public String getRewrittenMessage() {
-    return rewrittenMessage;
+  public Optional<String> getRewrittenMessage() {
+    return Optional.ofNullable(rewrittenMessage);
   }
 }

@@ -50,6 +50,6 @@ public class OutputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkfl
     if (!result.isAllowed()) {
       return fatal(result.getReason());
     }
-    return result.hasRewrite() ? successWith(result.getRewrittenMessage()) : success();
+    return result.getRewrittenMessage().map(this::successWith).orElseGet(this::success);
   }
 }
