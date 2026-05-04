@@ -43,13 +43,10 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Classify problem then create a task if neccessary.\r\nCheck for missing information like version, classify problem: Portal or Core or Market product, check create a task to handle it, return the task detail link, then summarize problem, reply to question",
-          "inputGuardrails" : "PiiMaskingGuardrail",
-          "provider" : "",
-          "resultMapping" : "in.result",
-          "query" : "<%=in.ticketDescription%>",
           "tools" : "[\"createAxonIvySupportTask\"]",
           "resultType" : "Business.AxonIvySupportDemo.AxonIvySupportResponse.class",
-          "outputGuardrails" : "PiiMaskingGuardrail"
+          "resultMapping" : "in.result",
+          "query" : "<%=in.ticketDescription%>"
         },
         "exceptionHandler" : "f8"
       },
