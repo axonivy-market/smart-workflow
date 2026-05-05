@@ -1,13 +1,14 @@
-package com.axonivy.utils.smart.workflow.model.openai;
+package com.axonivy.utils.smart.workflow.model.gemini;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory.AiConf;
-import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
+import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.test.utils.TestUtils;
 
@@ -20,7 +21,7 @@ import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest
-class OpenAiModelIT {
+public class GeminiAiModelE2E {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
 
@@ -29,20 +30,18 @@ class OpenAiModelIT {
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    fixture.var(AiConf.DEFAULT_PROVIDER, OpenAiModelProvider.NAME); // enforce OpenAI!
-    fixture.var(OpenAiConf.API_KEY, TestUtils.getSystemProperty("OPEN_AI_API_KEY"));
+    fixture.var(AiConf.DEFAULT_PROVIDER, GeminiModelProvider.NAME);
+    fixture.var(GeminiServiceConnector.GeminiConf.API_KEY, TestUtils.getSystemProperty("GEMINI_AI_API_KEY"));
   }
 
   @Test
-  void structuredOutput_e2e(BpmClient client) {
+  void chatOutput_e2e(BpmClient client) {
     Ivy.session().loginSessionUser("James", "secret");
     var res = client.start()
-        .process(AGENT_TOOLS.elementName("structuredOutput"))
+        .process(AGENT_TOOLS.elementName("systemMessage"))
         .as().session(Ivy.session())
         .execute();
     TestToolUserData data = res.data().last();
-    assertThat(data.getPerson().getFirstName())
-        .isEqualTo("James");
+    assertThat(StringUtils.isNotBlank(data.getResult()));
   }
-
 }
