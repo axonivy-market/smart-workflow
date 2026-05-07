@@ -11,12 +11,17 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
+import com.axonivy.utils.smart.workflow.memory.IvyMemory;
+import com.axonivy.utils.smart.workflow.memory.id.IdStore;
+import com.axonivy.utils.smart.workflow.memory.id.ProcessDataField;
+import com.axonivy.utils.smart.workflow.memory.store.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
+import com.axonivy.utils.smart.workflow.tools.human.internal.HumanInTheLoop;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
 
@@ -27,9 +32,11 @@ import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.memory.ChatMemoryService;
 import dev.langchain4j.service.tool.AiServiceTool;
 import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 
 public class AgentCallExecutor {
 
@@ -63,15 +70,17 @@ public class AgentCallExecutor {
     }
 
     var agentBuilder = AiServices.builder(agentType);
+    var memory = configureMemory(agentBuilder);
+    var human = configureHumanInTheLoop(memory, agentBuilder);
     configureModel(agentBuilder, structured.isPresent());
-
     configureToolProvider(agentBuilder);
     configureGuardrails(agentBuilder);
-    configureSystemMessage(agentBuilder);
-
+    configureSystemMessage(human, agentBuilder);
     var agent = agentBuilder.build();
+
     try {
-      Object result = agent.chat(query.get().contents());
+      List<Content> contents = human.userMessage(query.get().contents());
+      Object result = agent.chat(contents);
       var mapTo = context.config().get(Conf.MAP_TO);
       if (mapTo != null) {
         String mapIt = mapTo + "=result";
@@ -81,7 +90,6 @@ public class AgentCallExecutor {
           Ivy.log().error("Failed to map result to " + mapTo, ex);
         }
       }
-      Ivy.log().info("Agent response: " + result);
     } catch (InputGuardrailException | OutputGuardrailException ex) {
       GuardrailErrors.throwError(ex);
     }
@@ -109,11 +117,29 @@ public class AgentCallExecutor {
             .toList());
   }
 
-  private void configureSystemMessage(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+  private void configureSystemMessage(HumanInTheLoop human, AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    if (human.isRestoredConversion()) {
+      return; // keep system message from initial conversion
+    }
     var systemMessage = QueryExpander.expandMacro(Conf.SYSTEM, context);
     if (systemMessage.isPresent()) {
       agentBuilder.systemMessageProvider(_ -> systemMessage.get());
     }
+  }
+
+  private MemoryContext configureMemory(AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    var store = new IvyVolatileStore();
+    var memory = new IvyMemory(ChatMemoryService.DEFAULT, store);
+    agentBuilder.chatMemory(memory);
+    return new MemoryContext(new ProcessDataField(context.script()), store);
+  }
+
+  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) { }
+
+  private HumanInTheLoop configureHumanInTheLoop(MemoryContext memory, AiServices<? extends DynamicAgent<?>> agentBuilder) {
+    HumanInTheLoop humanInTheLoop = new HumanInTheLoop(memory.memoryId, memory.store);
+    agentBuilder.registerListeners(humanInTheLoop.provide());
+    return humanInTheLoop;
   }
 
   private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured) {
@@ -138,6 +164,7 @@ public class AgentCallExecutor {
       all.addAll(SmartWorkflowToolsProvider.provideTools(toolFilter).aiServiceTools());
       return new ToolProviderResult(all);
     });
+    agentBuilder.toolExecutionErrorHandler(new IvyToolErrorHandler());
   }
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {

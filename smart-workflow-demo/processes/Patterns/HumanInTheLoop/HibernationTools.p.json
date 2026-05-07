@@ -1,0 +1,65 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19D9B41DA478DA79",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "Patterns.HumanInTheLoop.HibernationToolsData"
+  },
+  "elements" : [ {
+      "id" : "f30",
+      "type" : "CallSubStart",
+      "name" : "askUserDecision(HumanDecision)",
+      "config" : {
+        "signature" : "askUserDecision",
+        "input" : {
+          "params" : [
+            { "name" : "decision", "type" : "com.axonivy.utils.smart.workflow.human.HumanDecision", "desc" : "required: the decision which should be done by the human user" }
+          ],
+          "map" : {
+            "out.decision" : "param.decision"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "selected", "type" : "List<com.axonivy.utils.smart.workflow.human.Choice>", "desc" : "the users preferred choice" }
+          ],
+          "map" : {
+            "result.selected" : "in.selected"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 144, "y" : 96 }
+      },
+      "connect" : [
+        { "id" : "f31", "to" : "f32" }
+      ]
+    }, {
+      "id" : "f32",
+      "type" : "ErrorEnd",
+      "name" : "human:decision",
+      "config" : {
+        "throws" : {
+          "error" : "human:decision"
+        },
+        "code" : "error.setAttribute(\"decision\", in.decision);"
+      },
+      "visual" : {
+        "at" : { "x" : 416, "y" : 96 },
+        "icon" : "std:EscalationThrow"
+      }
+    }, {
+      "id" : "f33",
+      "type" : "ProcessAnnotation",
+      "name" : "Distributes the decision to be made",
+      "visual" : {
+        "at" : { "x" : 560, "y" : 48 }
+      },
+      "connect" : [
+        { "id" : "f34", "to" : "f32" }
+      ]
+    } ]
+}

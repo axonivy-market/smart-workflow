@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "HumanDecisionData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.HumanDecision",
+  "fields" : [ {
+    "name" : "decision",
+    "type" : "com.axonivy.utils.smart.workflow.human.HumanDecision"
+  }, {
+    "name" : "chosen",
+    "type" : "List<com.axonivy.utils.smart.workflow.human.Choice>"
+  }, {
+    "name" : "choice",
+    "type" : "com.axonivy.utils.smart.workflow.human.Choice"
+  } ]
+}
