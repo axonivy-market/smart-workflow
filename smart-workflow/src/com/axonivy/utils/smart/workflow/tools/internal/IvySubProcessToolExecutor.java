@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
+import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.process.call.StartParameter;
 import ch.ivyteam.ivy.process.call.SubProcessCallResult;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
@@ -36,11 +37,9 @@ public class IvySubProcessToolExecutor {
         .readParams(toolParams, execTool.arguments());
 
     SubProcessCallResult res = call(startable.get(), parameters);
-
     return ToolExecutionResultMessage.from(execTool, Json.toJson(res.asMap()));
   }
 
-  @SuppressWarnings("null")
   private static SubProcessCallResult call(SubProcessCallStartEvent callable, Map<String, Object> params) {
     if (params.isEmpty()) {
       return callable.call();
@@ -49,7 +48,15 @@ public class IvySubProcessToolExecutor {
     for (var entry : params.entrySet()) {
       pCaller = callable.withParam(entry.getKey(), entry.getValue());
     }
-    return pCaller.call();
+    try {
+      return pCaller.call();
+    } catch(Exception ex) {
+      if (ex.getCause() instanceof BpmError error) {
+        error.setAttribute("tool.params", params);
+        throw error;
+      }
+      throw ex;
+    }
   }
 
 }

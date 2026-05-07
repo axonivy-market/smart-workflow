@@ -1,0 +1,29 @@
+package com.axonivy.utils.smart.workflow.memory.store;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+
+public class IvyVolatileStore implements ChatMemoryStore {
+  
+  private final Map<String, List<ChatMessage>> store = new ConcurrentHashMap<>();
+
+  @Override
+  public List<ChatMessage> getMessages(Object memoryId) {
+    return store.computeIfAbsent((String)memoryId, _ -> new java.util.ArrayList<>());
+  }
+
+  @Override
+  public void updateMessages(Object memoryId, List<ChatMessage> messages) {
+    store.put((String)memoryId, messages);
+  }
+
+  @Override
+  public void deleteMessages(Object memoryId) {
+    store.remove((String)memoryId);
+  }
+  
+}
