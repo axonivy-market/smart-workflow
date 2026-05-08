@@ -173,9 +173,9 @@
               </execution>
             </executions>
             <configuration>
-              <excludes>
-                <exclude>**/*ContainerTest.java</exclude>
-              </excludes>
+              <includes>
+                <include>**/*E2E.java</include>
+              </includes>
             </configuration>
           </plugin>
         </plugins>

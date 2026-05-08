@@ -1,14 +1,13 @@
-package com.axonivy.utils.smart.workflow.model.gemini;
+package com.axonivy.utils.smart.workflow.model.xai;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory.AiConf;
-import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector;
+import com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.test.utils.TestUtils;
 
@@ -21,7 +20,7 @@ import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest
-public class GeminiAiModelIT {
+class XAiModelE2E {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
 
@@ -30,18 +29,20 @@ public class GeminiAiModelIT {
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    fixture.var(AiConf.DEFAULT_PROVIDER, GeminiModelProvider.NAME);
-    fixture.var(GeminiServiceConnector.GeminiConf.API_KEY, TestUtils.getSystemProperty("GEMINI_AI_API_KEY"));
+    fixture.var(AiConf.DEFAULT_PROVIDER, XAiModelProvider.NAME); // enforce xAI!
+    fixture.var(XAiServiceConnector.XAiConf.API_KEY, TestUtils.getSystemProperty("XAI_API_KEY"));
   }
 
   @Test
-  void chatOutput_e2e(BpmClient client) {
+  void structuredOutput_e2e(BpmClient client) {
     Ivy.session().loginSessionUser("James", "secret");
     var res = client.start()
-        .process(AGENT_TOOLS.elementName("systemMessage"))
+        .process(AGENT_TOOLS.elementName("structuredOutput"))
         .as().session(Ivy.session())
         .execute();
     TestToolUserData data = res.data().last();
-    assertThat(StringUtils.isNotBlank(data.getResult()));
+    assertThat(data.getPerson().getFirstName())
+        .isEqualTo("James");
   }
+
 }

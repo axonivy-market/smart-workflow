@@ -20,7 +20,7 @@ import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest
-class AnthropicModelIT {
+class AnthropicModelE2E {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
 
