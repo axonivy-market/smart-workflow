@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
-class WebSearchIT {
+class WebSearchE2E {
 
   @Test
   void duckduckgo_reachable() {
