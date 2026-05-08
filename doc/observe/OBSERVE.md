@@ -1,6 +1,6 @@
 # Observability
 
-In AI assisted adaptive process initiatives its crucial to observe execution paths of the AI agents.
+In AI-assisted adaptive process initiatives, it's crucial to observe execution paths of the AI agents.
 With observation tools you remain in control of spent costs, used models and processed data.
 
 ## Tracing with Arize Phoenix
@@ -48,7 +48,7 @@ To query costs, models or prompts from past AI assistant runs open Arize Phoenix
 
 #### Filters
 
-If you like to dig deeper. Note that its possible to track AI interactions over a complete Case or Task.
+If you like to dig deeper. Note that it's possible to track AI interactions over a complete Case or Task.
 You can reveal them by adding a filter, expressing the UUID of the Case respectively the Task.
 
 - Case with UUID 6407c9bd-be10-4334-9ca9-c9b846fc1f57:
