@@ -1,0 +1,639 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Start Demo — landing page.
+   sd- prefix for content/layout only.
+   Carousel mechanics fully reuse fd- classes from finish-demo.css:
+     fd-step-navigator, fd-steps-wrapper, fd-step-panel, fd-active,
+     fd-go-back, fdSlideInRight/Left, fd-nav-btn, fd-step-dots,
+     fd-dot, fd-dot-active, fd-cap-icon--*.
+   Theme colors are defined in start-demo-light.css / start-demo-dark.css
+   and loaded dynamically via start-demo-#{ivyFreyaTheme.mode}.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Page layout ─────────────────────────────────────────────────── */
+.sd-page {
+  min-width: 980px;
+  margin: 0 auto;
+}
+
+/* ── Stable carousel height (nav buttons never jump) ─────────────── */
+/* Scoped to .sd-page to avoid touching FinishDemo's carousel.        */
+.sd-page .fd-steps-wrapper {
+  height: 70vh;
+}
+
+.sd-page .fd-step-panel {
+  height: 100%;
+}
+
+/* Override finish-demo.css display:block so the panel can be a flex  */
+/* column — lets sd-slide-body stretch and scroll independently.      */
+.sd-page .fd-step-panel.fd-active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Hero welcome section ────────────────────────────────────────── */
+.sd-hero {
+  text-align: center;
+  padding: 32px 24px 28px;
+  margin-bottom: 28px;
+}
+
+.sd-hero-title {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--sd-title);
+  line-height: 1.15;
+  margin-bottom: 14px;
+  letter-spacing: -.5px;
+}
+
+.sd-hero-title span {
+  color: var(--primary-color);
+}
+
+/* ── Slide body card ─────────────────────────────────────────────── */
+/* Wraps content inside each fd-step-panel. Provides the white card   */
+/* appearance; carousel show/hide/animation come from finish-demo.css */
+.sd-slide-body {
+  background: var(--sd-surface);
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: var(--sd-shadow);
+  border: 1px solid var(--sd-border-subtle);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* ── Welcome slide (Slide 0) ─────────────────────────────────────── */
+.sd-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  padding: 40px 32px;
+}
+
+/* ── Slide header ────────────────────────────────────────────────── */
+.sd-slide-header {
+  margin-bottom: 22px;
+}
+
+.sd-slide-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--sd-title);
+  margin-bottom: 4px;
+}
+
+/* ── Process steps grid (Slide 0) ────────────────────────────────── */
+.sd-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.sd-step-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--sd-surface-deep);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--sd-border-subtle);
+  transition: box-shadow .2s, border-color .2s;
+}
+
+.sd-step-card:hover {
+  box-shadow: 0 4px 16px rgba(99,102,241,.1);
+  border-color: var(--sd-accent-border);
+}
+
+.sd-step-card--span2 {
+  grid-column: span 2;
+}
+
+.sd-step-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.sd-step-num {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--sd-muted);
+  letter-spacing: .5px;
+  margin-bottom: 2px;
+}
+
+.sd-step-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sd-title);
+  margin-bottom: 4px;
+}
+
+.sd-step-desc {
+  font-size: 13px;
+  color: var(--sd-body);
+  line-height: 1.55;
+}
+
+/* ── AI capabilities grid (Slide 1) ──────────────────────────────── */
+.sd-ai-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.sd-ai-card {
+  background: var(--sd-surface-deep);
+  border-radius: 14px;
+  padding: 20px 18px;
+  border: 1px solid var(--sd-border-subtle);
+  text-align: center;
+  transition: box-shadow .2s, border-color .2s;
+}
+
+.sd-ai-card:hover {
+  box-shadow: 0 4px 20px rgba(99,102,241,.12);
+  border-color: var(--sd-accent-border);
+}
+
+.sd-ai-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 12px;
+}
+
+.sd-ai-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sd-title);
+  margin-bottom: 8px;
+}
+
+.sd-ai-desc {
+  font-size: 13px;
+  color: var(--sd-body);
+  line-height: 1.55;
+}
+
+/* ── Footer (Cancel + Start Demo) ────────────────────────────────── */
+.sd-footer {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  bottom: 0;
+  background: transparent;
+  padding: 14px 0 4px;
+  margin-top: 16px;
+}
+
+.sd-cancel-btn,
+a.sd-cancel-btn {
+  font-size: 14px;
+  color: var(--sd-muted);
+  text-decoration: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  transition: color .2s;
+  display: inline-block;
+}
+
+.sd-cancel-btn:hover,
+a.sd-cancel-btn:hover {
+  color: var(--sd-body);
+  text-decoration: none;
+}
+
+/* ── Demo Accounts table ─────────────────────────────────────────── */
+.sd-accounts-table {
+  margin-top: 22px;
+  border: 1px solid var(--sd-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sd-accounts-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sd-body);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: 10px 16px;
+  background: var(--sd-surface-deep);
+  border-bottom: 1px solid var(--sd-border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sd-accounts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr;
+}
+
+.sd-accounts-row {
+  display: contents;
+}
+
+.sd-accounts-row > span {
+  padding: 9px 14px;
+  color: var(--sd-text-strong);
+  border-bottom: 1px solid var(--sd-border-subtle);
+  display: flex;
+  align-items: center;
+}
+
+.sd-accounts-row:last-child > span {
+  border-bottom: none;
+}
+
+.sd-accounts-header > span {
+  font-weight: bold;
+  letter-spacing: .5px;
+  background: var(--sd-surface-deep);
+  border-bottom: 1px solid var(--sd-border);
+}
+
+.sd-account-name {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--sd-title) !important;
+}
+
+.sd-account-role {
+  font-weight: 600;
+  padding: 3px 10px !important;
+  border-radius: 20px;
+  display: inline-flex !important;
+  align-items: center;
+  width: fit-content;
+  margin: auto 14px;
+}
+
+.sd-role--blue   { background: var(--sd-role-blue-bg);   color: var(--sd-role-blue-color); }
+.sd-role--indigo { background: var(--sd-role-indigo-bg); color: var(--sd-role-indigo-color); }
+.sd-role--amber  { background: var(--sd-role-amber-bg);  color: var(--sd-role-amber-color); }
+
+/* ── Before / After comparison slide (Slide 2) ───────────────────── */
+.sd-compare-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.sd-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.sd-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sd-stat-before {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--sd-stat-before-color);
+  text-decoration: line-through;
+  opacity: .75;
+}
+
+.sd-stat-arrow {
+  color: var(--sd-muted);
+  font-size: 16px;
+}
+
+.sd-stat-after {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--sd-stat-after-color);
+}
+
+.sd-stat-label {
+  font-size: 11px;
+  color: var(--sd-muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.sd-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.sd-compare-col {
+  border-radius: 14px;
+  padding: 18px 20px;
+  border: 1px solid;
+}
+
+.sd-compare-before {
+  background: var(--sd-compare-before-bg);
+  border-color: var(--sd-compare-before-border);
+}
+
+.sd-compare-after {
+  background: var(--sd-compare-after-bg);
+  border-color: var(--sd-compare-after-border);
+}
+
+.sd-compare-col-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid;
+}
+
+.sd-compare-before .sd-compare-col-header {
+  color: var(--sd-compare-before-header-color);
+  border-bottom-color: var(--sd-compare-before-border);
+}
+
+.sd-compare-after .sd-compare-col-header {
+  color: var(--sd-compare-after-header-color);
+  border-bottom-color: var(--sd-compare-after-border);
+}
+
+.sd-compare-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sd-compare-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--sd-body);
+  line-height: 1.5;
+}
+
+.sd-compare-list li i {
+  font-size: 15px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.sd-compare-before .sd-compare-list li i { color: var(--sd-compare-before-icon); }
+.sd-compare-after  .sd-compare-list li i { color: var(--sd-compare-after-icon); }
+
+/* ── Are You Ready slide (Slide 3) ──────────────────────────────── */
+.sd-ready-hero {
+  padding: 8px 0 20px;
+}
+
+/* ── Pre-demo document downloads ─────────────────────────────────── */
+.sd-download-section {
+  border: 1px solid var(--sd-border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.sd-download-header {
+  background: var(--sd-download-header-bg);
+  padding: 14px 20px;
+}
+
+.sd-download-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 7px;
+}
+
+.sd-download-header-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sd-title);
+}
+
+.sd-download-header-title i {
+  color: #6366f1;
+  font-size: 16px;
+}
+
+.sd-download-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.sd-details-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6366f1;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sd-details-toggle:hover { color: #4f46e5; }
+
+.sd-details-chevron {
+  font-size: 14px;
+  transition: transform .25s ease;
+}
+
+.sd-download-header-desc {
+  color: var(--sd-body);
+  line-height: 1.55;
+}
+
+/* ── Collapsible body ─────────────────────────────────────────────── */
+.sd-download-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s ease;
+}
+
+.sd-download-body.sd-download-body--open {
+  max-height: 600px;
+  border-top: 1px solid var(--sd-border-subtle);
+}
+
+.sd-download-group-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--sd-muted);
+  padding: 7px 20px;
+  background: var(--sd-surface-deep);
+  border-top: 1px solid var(--sd-border-subtle);
+  border-bottom: 1px solid var(--sd-border-subtle);
+}
+
+.sd-download-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 20px;
+  gap: 12px;
+  border-bottom: 1px solid var(--sd-border-subtle);
+  background: var(--sd-surface);
+  transition: background .15s;
+}
+
+.sd-download-row:hover {
+  background: var(--sd-surface-deep);
+}
+
+.sd-download-row:last-child {
+  border-bottom: none;
+}
+
+.sd-download-row-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sd-download-row-info > i {
+  font-size: 17px;
+  color: var(--sd-muted);
+  flex-shrink: 0;
+}
+
+.sd-download-row-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sd-text-strong);
+  line-height: 1.35;
+}
+
+.sd-download-row-sub {
+  font-size: 12px;
+  color: var(--sd-muted);
+  margin-top: 1px;
+}
+
+.sd-gen-timeline {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Step hint text inside timeline cards */
+.sd-gen-step-hint {
+  font-size: 12px;
+  color: var(--sd-muted);
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* Done banner */
+.sd-gen-done-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: var(--sd-done-banner-bg);
+  border: 1px solid var(--sd-done-banner-border);
+  border-radius: 10px;
+  color: var(--sd-done-banner-color);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sd-gen-done-banner .ti {
+  font-size: 20px;
+  color: var(--sd-done-banner-icon);
+  flex-shrink: 0;
+}
+
+/* ── Role-guard dialog ───────────────────────────────────────────── */
+.sd-role-warn-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.sd-role-warn-msg {
+  font-size: 14px;
+  color: var(--sd-body);
+  line-height: 1.65;
+}
+
+.sd-role-warn-msg strong {
+  color: var(--sd-title);
+}
+
+.sd-role-warn-msg code {
+  font-family: monospace;
+  font-size: 13px;
+  background: var(--sd-code-bg);
+  border: 1px solid var(--sd-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--sd-text-strong);
+}
+
+.sd-role-warn-close {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .sd-hero-title { font-size: 1.9rem; }
+  .sd-slide-body { padding: 20px; }
+  .sd-steps-grid { grid-template-columns: 1fr; }
+  .sd-step-card--span2 { grid-column: span 1; }
+  .sd-ai-grid { grid-template-columns: 1fr; }
+  .sd-compare-grid { grid-template-columns: 1fr; }
+  .sd-compare-stats { gap: 20px; }
+  .sd-footer { flex-wrap: wrap; gap: 12px; }
+  /* More height for stacked content; hide sub-labels to save space */
+  .sd-page .fd-steps-wrapper { height: clamp(480px, 72vh, 680px); }
+  .sd-download-row { padding: 9px 14px; }
+  .sd-download-row-sub { display: none; }
+}

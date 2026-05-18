@@ -1,0 +1,26 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierOnboardingDeclineData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingDecline",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest",
+    "modifiers" : [ ]
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
+    "modifiers" : [ ]
+  }, {
+    "name" : "declineRecord",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord",
+    "modifiers" : [ ]
+  }, {
+    "name" : "notificationRecords",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.NotificationRecord>",
+    "modifiers" : [ ]
+  }, {
+    "name" : "auditTrail",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>",
+    "modifiers" : [ ]
+  } ]
+}

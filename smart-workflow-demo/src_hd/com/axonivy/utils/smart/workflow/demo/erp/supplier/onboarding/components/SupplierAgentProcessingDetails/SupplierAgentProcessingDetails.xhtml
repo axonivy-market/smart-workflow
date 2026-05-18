@@ -1,0 +1,190 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<cc:interface componentType="IvyComponent">
+  <cc:attribute name="bean" required="true" />
+  <cc:attribute name="agentResponse" required="true" />
+  <cc:attribute name="readOnly" type="java.lang.Boolean" default="false" />
+</cc:interface>
+
+<cc:implementation>
+  <ui:fragment rendered="#{not cc.attrs.readOnly}">
+    <p:remoteCommand name="runStep1"
+      actionListener="#{cc.attrs.bean.runStep1}"
+      update="checklist-panel"
+      oncomplete="soValidation.onStepDone(1);"
+      onerror="soValidation.onStepError(1);"
+      global="false" />
+    <p:remoteCommand name="runStep2"
+      actionListener="#{cc.attrs.bean.runStep2}"
+      update="checklist-panel"
+      oncomplete="soValidation.onStepDone(2);"
+      onerror="soValidation.onStepError(2);"
+      global="false" />
+    <p:remoteCommand name="runStep3"
+      actionListener="#{cc.attrs.bean.runStep3}"
+      update="checklist-panel"
+      oncomplete="soValidation.onStepDone(3);"
+      onerror="soValidation.onStepError(3);"
+      global="false" />
+    <p:remoteCommand name="runStep4"
+      actionListener="#{cc.attrs.bean.runStep4}"
+      update="@form footer-right-panel"
+      oncomplete="soValidation.onAllStepsDone();"
+      onerror="soValidation.onStepError(4);"
+      global="false" />
+    <p:remoteCommand name="startAnalysisRC"
+      actionListener="#{cc.attrs.bean.startAnalysis}"
+      update="checklist-panel"
+      oncomplete="soValidation.invokeStep(1);"
+      onerror="soValidation.onAnalysisError();"
+      global="false" />
+  </ui:fragment>
+
+  <p:messages id="step-messages" globalOnly="true" showDetail="true"
+    styleClass="so-step-error-messages" closable="false" />
+  <h:panelGroup id="agent-decision-panel" layout="block">
+    <ui:fragment rendered="#{not cc.attrs.readOnly and cc.attrs.bean.analysisComplete and not empty cc.attrs.agentResponse.routingDecision}">
+      <div class="so-clarification-banner so-agent-decision-box #{cc.attrs.bean.decisionBoxCssClass} mb-3 align-items-center">
+        <div class="so-clarification-banner-icon">
+          <i class="ti ti-robot text-4xl" />
+        </div>
+        <div class="so-clarification-banner-main">
+          <div class="so-clarification-banner-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/AgentDecisionTitle')}</div>
+          <div class="so-clarification-banner-desc border-none pb-0"><h:outputText value="#{cc.attrs.agentResponse.feedback}" /></div>
+        </div>
+      </div>
+    </ui:fragment>
+  </h:panelGroup>
+  <ui:fragment rendered="#{not cc.attrs.readOnly}">
+    <h:panelGroup id="analyze-panel" layout="block">
+      <div class="so-card mb-3">
+        <div class="flex align-items-end justify-content-between gap-3">
+          <div>
+            <div class="so-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/AnalyzeTitle')}</div>
+            <div>
+              #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/AnalyzeDescription')}
+            </div>
+          </div>
+          <p:commandButton id="analyzeBtn"
+            value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/AnalyzeButton')}"
+            icon="ti ti-robot"
+            styleClass="ui-button-primary so-analyze-btn"
+            disabled="#{cc.attrs.bean.analysisStarted}"
+            onclick="soValidation.startAnalysis(); return false;"
+            type="button" />
+        </div>
+      </div>
+    </h:panelGroup>
+  </ui:fragment>
+
+  <h:panelGroup id="risk-score-panel" layout="block">
+    <ui:fragment rendered="#{not cc.attrs.readOnly and cc.attrs.bean.analysisComplete and cc.attrs.agentResponse.riskScore != null}">
+      <div class="so-card mb-3">
+        <div class="so-card-title mb-3">
+          <i class="ti ti-chart-bar" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/RiskScoreTitle')}
+          <button type="button" class="so-info-btn"
+            onclick="PF('riskScoreHelpDialog').show()"
+            title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/RiskScoreCalculatedTooltip')}">
+            <i class="ti ti-info-circle" />
+          </button>
+        </div>
+        <div class="flex align-items-center gap-4">
+          <div class="so-score-circle #{cc.attrs.bean.scoreCircleCssClass}">
+            <h:outputText value="#{cc.attrs.agentResponse.riskScore.aggregate}" />
+            <span>/100</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-semibold mb-1">
+              <h:outputText value="#{cc.attrs.agentResponse.riskScore.level}" />
+              — <h:outputText value="#{cc.attrs.bean.thresholdLabel}" />
+            </div>
+            <div class="so-score-bars">
+              <div class="so-score-bar-row">
+                <span class="so-score-bar-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/FinancialStabilityLabel')}</span>
+                <div class="so-score-bar-track">
+                  <div class="so-score-bar-fill #{cc.attrs.bean.getScoreBarClass(cc.attrs.agentResponse.riskScore.financialStability)} #{cc.attrs.bean.getScoreWidthClass(cc.attrs.agentResponse.riskScore.financialStability)}" />
+                </div>
+                <span class="so-score-bar-num"><h:outputText value="#{cc.attrs.agentResponse.riskScore.financialStability}" /></span>
+              </div>
+              <div class="so-score-bar-row">
+                <span class="so-score-bar-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/PolicyComplianceLabel')}</span>
+                <div class="so-score-bar-track">
+                  <div class="so-score-bar-fill #{cc.attrs.bean.getScoreBarClass(cc.attrs.agentResponse.riskScore.policyCompliance)} #{cc.attrs.bean.getScoreWidthClass(cc.attrs.agentResponse.riskScore.policyCompliance)}" />
+                </div>
+                <span class="so-score-bar-num"><h:outputText value="#{cc.attrs.agentResponse.riskScore.policyCompliance}" /></span>
+              </div>
+              <div class="so-score-bar-row">
+                <span class="so-score-bar-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/CertificationValidityLabel')}</span>
+                <div class="so-score-bar-track">
+                  <div class="so-score-bar-fill #{cc.attrs.bean.getScoreBarClass(cc.attrs.agentResponse.riskScore.certValidity)} #{cc.attrs.bean.getScoreWidthClass(cc.attrs.agentResponse.riskScore.certValidity)}" />
+                </div>
+                <span class="so-score-bar-num"><h:outputText value="#{cc.attrs.agentResponse.riskScore.certValidity}" /></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ui:fragment>
+  </h:panelGroup>
+
+  <h:panelGroup id="checklist-panel" layout="block" styleClass="js-checklist-panel">
+    <div class="so-card mb-3">
+      <div class="so-card-title mb-3">
+        <i class="ti ti-list-check mr-2" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/ValidationStepsTitle')}
+      </div>
+      <div class="so-tl">
+        <ui:repeat value="#{cc.attrs.agentResponse.processingSteps}" var="step">
+          <div class="#{cc.attrs.bean.getStepRowClass(step)} so-tl-item">
+            <div class="so-tl-left">
+              <div class="so-tl-bubble #{cc.attrs.bean.getStepBubbleClass(step)}">
+                <i class="ti #{cc.attrs.bean.getStepStatusIcon(step)}" />
+              </div>
+              <div class="so-tl-line" />
+            </div>
+            <div class="so-tl-card">
+              <div class="so-tl-card-header so-tl-card-header--clickable"
+                onclick="soTlToggle(this)"
+                title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/ExpandCollapseTooltip')}">
+                <span class="so-tl-card-title"><h:outputText value="#{step.name}" /></span>
+                <ui:fragment rendered="#{step.stepKey == 'POLICY_VALIDATION'}">
+                  <button type="button" class="so-info-btn"
+                    onclick="event.stopPropagation(); PF('policyRulesDialog').show()"
+                    title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/ViewPolicyRulesTooltip')}">
+                    <i class="ti ti-info-circle" />
+                  </button>
+                </ui:fragment>
+                <span class="so-tl-card-time"><h:outputText value="#{cc.attrs.bean.getFormattedDuration(step)}" /></span>
+                <i class="ti ti-chevron-down so-tl-chevron" />
+              </div>
+              <ui:fragment rendered="#{not empty step.logLines}">
+                <div class="so-tl-lines">
+                  <ui:repeat value="#{step.logLines}" var="line">
+                    <div class="so-tl-line-item #{cc.attrs.bean.getSeverityClass(line.severity)}">
+                      <i class="ti #{cc.attrs.bean.getSeverityIcon(line.severity)}" />
+                      <span class="#{line.italic ? 'font-italic' : ''}"><h:outputText value="#{line.message}" /></span>
+                    </div>
+                  </ui:repeat>
+                </div>
+              </ui:fragment>
+            </div>
+          </div>
+        </ui:repeat>
+      </div>
+      <span id="stepFailedFlag"
+        data-failed="#{cc.attrs.bean.hasFailedStep}"
+        class="hidden" />
+    </div>
+  </h:panelGroup>
+
+  <ui:include src="RiskScoreHelpDialog.xhtml" />
+  <ui:include src="PolicyRulesDialog.xhtml" />
+
+  <ui:fragment rendered="#{not cc.attrs.readOnly}">
+    <h:outputScript library="js" name="supplier-validation.js" target="head" />
+  </ui:fragment>
+
+</cc:implementation>
+
+</html>

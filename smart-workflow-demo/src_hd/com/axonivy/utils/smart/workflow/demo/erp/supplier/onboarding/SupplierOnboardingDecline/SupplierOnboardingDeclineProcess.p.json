@@ -1,0 +1,81 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19DE693E7CFEF309",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingDecline.SupplierOnboardingDeclineData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start(OnboardingRequest,SupplierAgentResponse,DeclineRecord,List,List)",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
+            { "name" : "declineRecord", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord", "desc" : "" },
+            { "name" : "notificationRecords", "type" : "java.util.List", "desc" : "" },
+            { "name" : "auditTrail", "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>", "desc" : "" }
+          ],
+          "map" : {
+            "out.request" : "param.request",
+            "out.agentResponse" : "param.agentResponse",
+            "out.declineRecord" : "param.declineRecord",
+            "out.notificationRecords" : "param.notificationRecords",
+            "out.auditTrail" : "param.auditTrail"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
+            { "name" : "declineRecord", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord", "desc" : "" },
+            { "name" : "notificationRecords", "type" : "java.util.List", "desc" : "" },
+            { "name" : "auditTrail", "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>", "desc" : "" }
+          ],
+          "map" : {
+            "result.request" : "in.request",
+            "result.agentResponse" : "in.agentResponse",
+            "result.declineRecord" : "in.declineRecord",
+            "result.notificationRecords" : "in.notificationRecords",
+            "result.auditTrail" : "in.auditTrail"
+          }
+        },
+        "guid" : "19DE693E7FD3CB03"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "close()",
+      "config" : {
+        "signature" : "close",
+        "guid" : "19DE693E83D2F72B"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    } ]
+}

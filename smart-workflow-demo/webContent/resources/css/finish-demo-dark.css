@@ -1,0 +1,58 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Finish Demo — dark-mode variables.
+   Loaded dynamically via finish-demo-#{ivyFreyaTheme.mode}.css.
+   Palette: cool blue-slate (Tailwind Slate family).
+   Badge backgrounds harmonised at the same perceptual darkness.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Surfaces & text ───────────────────────────────────────────── */
+  --fd-title:           #e2e8f0;   /* slate-200 */
+  --fd-body:            #94a3b8;   /* slate-400 */
+  --fd-muted:           #64748b;   /* slate-500 */
+  --fd-surface:         #1e293b;   /* slate-800 */
+  --fd-surface-deep:    #0f172a;   /* slate-900 */
+  --fd-border-subtle:   #334155;   /* slate-700 */
+  --fd-shadow:          0 2px 16px rgba(0,0,0,.35);
+
+  /* ── Hero banner ───────────────────────────────────────────────── */
+  --fd-hero-bg:         linear-gradient(135deg, #0e1a2e 0%, #1a1040 100%);
+  --fd-hero-border:     #334155;
+  --fd-hero-icon-bg:    #1e293b;
+
+  /* ── Flow strip ────────────────────────────────────────────────── */
+  --fd-arrow-color:     #475569;   /* slate-600 */
+
+  /* ── Nav arrow buttons ─────────────────────────────────────────── */
+  --fd-nav-bg:          #1e293b;
+  --fd-nav-border:      #334155;
+  --fd-nav-color:       #94a3b8;
+  --fd-nav-hover-bg:    #1a1040;
+
+  /* ── Step panel cards ──────────────────────────────────────────── */
+  --fd-type-user-bg:     #0e2038;
+  --fd-type-user-color:  #7dd3fc;   /* sky-300   */
+  --fd-type-user-border: #1a3a5c;
+  --fd-type-ai-bg:       #1a1040;
+  --fd-type-ai-color:    #c084fc;   /* purple-400 */
+  --fd-type-ai-border:   #3d2a6b;
+  --fd-type-done-bg:     #0e2820;
+  --fd-type-done-color:  #4ade80;   /* green-400  */
+  --fd-type-done-border: #1a4d38;
+
+  /* ── Tags ──────────────────────────────────────────────────────── */
+  --fd-tag-bg:          #1e293b;
+  --fd-tag-color:       #94a3b8;
+  --fd-tag-border:      #334155;
+
+  /* ── Dot indicators ────────────────────────────────────────────── */
+  --fd-dot-bg:          #334155;
+
+  /* ── Capability icon badges ────────────────────────────────────── */
+  /* All backgrounds in #0e–#1a darkness range — harmonious          */
+  --fd-cap-blue-bg:     #0e2038;   --fd-cap-blue-color:   #7dd3fc;   /* sky-300    */
+  --fd-cap-purple-bg:   #1a1040;   --fd-cap-purple-color: #c084fc;   /* purple-400 */
+  --fd-cap-amber-bg:    #281e08;   --fd-cap-amber-color:  #fcd34d;   /* amber-300  */
+  --fd-cap-green-bg:    #0a2618;   --fd-cap-green-color:  #4ade80;   /* green-400  */
+  --fd-cap-indigo-bg:   #141038;   --fd-cap-indigo-color: #818cf8;   /* indigo-400 */
+}

@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<cc:interface componentType="IvyComponent">
+  <cc:attribute name="auditTrail" required="true" type="java.util.List" />
+</cc:interface>
+
+<cc:implementation>
+
+  <!-- fields needs to be inside a h:form tag (which is normaly added by the outer page) -->
+
+  <div class="so-card">
+    <div class="so-card-title"><i class="ti ti-list-details" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/AuditTrail/Title')}</div>
+    <ui:fragment rendered="#{empty cc.attrs.auditTrail}">
+      <div class="text-sm text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/AuditTrail/EmptyMessage')}</div>
+    </ui:fragment>
+    <ui:fragment rendered="#{not empty cc.attrs.auditTrail}">
+      <div class="so-tl">
+        <ui:repeat value="#{cc.attrs.auditTrail}" var="entry">
+          <div class="so-tl-item">
+            <div class="so-tl-left">
+              <div class="so-tl-bubble #{entry.actorType eq 'AGENT' ? 'so-tl-bubble-agent' : (entry.actorType eq 'SYSTEM' ? 'so-tl-bubble-pending' : (entry.actorType eq 'APPROVER' ? 'so-tl-bubble-completed' : 'so-tl-bubble-user'))}">
+                <i class="ti #{entry.actorType eq 'AGENT' ? 'ti-robot' : (entry.actorType eq 'SYSTEM' ? 'ti-settings' : (entry.actorType eq 'APPROVER' ? 'ti-user-check' : 'ti-user'))}" />
+              </div>
+              <div class="so-tl-line" />
+            </div>
+            <div class="so-tl-card">
+              <div class="so-tl-card-header so-tl-card-header--clickable"
+                onclick="soTlToggle(this)"
+                title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/AuditTrail/ExpandCollapseTooltip')}">
+                <span class="so-tl-card-title">#{entry.action}</span>
+                <span class="so-tl-card-time">#{entry.timestamp}</span>
+                <i class="ti ti-chevron-down so-tl-chevron" />
+              </div>
+              <div class="so-tl-lines">
+                <div class="so-tl-line-item so-log-line-ok">
+                  <i class="ti ti-user" />
+                  <span>#{entry.actor} (#{entry.actorType})</span>
+                </div>
+                <ui:fragment rendered="#{not empty entry.technicalDetail}">
+                  <div class="so-tl-line-item">
+                    <i class="ti ti-info-circle" />
+                    <span>#{entry.technicalDetail}</span>
+                  </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{not empty entry.resolvedItems}">
+                  <div class="so-tl-line-item so-tl-line-separator">
+                    <i class="ti ti-checkbox" />
+                    <span class="font-semibold text-xs">Resolved items</span>
+                  </div>
+                  <ui:repeat value="#{entry.resolvedItems}" var="ri">
+                    <div class="so-tl-line-item so-tl-resolved-item">
+                      <i class="ti #{ri.resolutionType eq 'Document uploaded' ? 'ti-file-certificate' : 'ti-message'} so-text-muted" />
+                      <div class="flex flex-column gap-1 min-w-0">
+                        <div class="text-sm font-semibold">#{ri.problem}</div>
+                        <div class="flex align-items-center gap-2">
+                          <span class="so-badge so-badge-green text-xs">#{ri.resolutionType}</span>
+                        </div>
+                        <ui:fragment rendered="#{not empty ri.explanation}">
+                          <div class="text-xs so-text-muted mt-1">#{ri.explanation}</div>
+                        </ui:fragment>
+                      </div>
+                    </div>
+                  </ui:repeat>
+                </ui:fragment>
+              </div>
+            </div>
+          </div>
+        </ui:repeat>
+      </div>
+    </ui:fragment>
+  </div>
+
+  <h:outputScript library="js" name="supplier-validation.js" target="head" />
+
+</cc:implementation>
+
+</html>

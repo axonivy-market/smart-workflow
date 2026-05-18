@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://primefaces.org/ui">
+  <p:dialog header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/RiskScoreHelpDialogHeader')}"
+    widgetVar="riskScoreHelpDialog"
+    modal="true"
+    resizable="false"
+    styleClass="so-help-dialog"
+    width="520"
+    height="70vh">
+    <div class="so-help-body">
+    <p class="so-help-intro">Three components are each scored 0–100, then averaged into the aggregate. All three are <strong>computed deterministically by code</strong> from extracted documents and rule findings — no AI estimation involved.</p>
+
+    <div class="so-help-section">
+        <div class="so-help-section-title"><i class="ti ti-building-bank" /> Financial Stability <span class="so-help-badge so-help-badge-code">Code</span></div>
+        <div class="so-help-rule">Starts at <strong>100</strong> — computed deterministically from financial rule findings</div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> FAILURE finding → deducts that rule's full configured risk score</div>
+        <div class="so-help-rule so-help-rule-yellow"><i class="ti ti-minus" /> WARNING finding → deducts half of that rule's configured risk score</div>
+        <div class="so-help-rule"><i class="ti ti-info-circle" /> Each document type's worst finding counts once; clamped to 0–100</div>
+    </div>
+
+    <div class="so-help-section">
+        <div class="so-help-section-title"><i class="ti ti-clipboard-check" /> Policy Compliance <span class="so-help-badge so-help-badge-code">Code</span></div>
+        <div class="so-help-rule">Starts at <strong>100</strong> — computed deterministically from policy findings</div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> FAILURE finding → deducts that rule's full configured risk score</div>
+        <div class="so-help-rule so-help-rule-yellow"><i class="ti ti-minus" /> WARNING finding → deducts half of that rule's configured risk score</div>
+        <div class="so-help-rule"><i class="ti ti-info-circle" /> Clamped to 0–100; overrides the AI's own estimate</div>
+    </div>
+
+    <div class="so-help-section">
+        <div class="so-help-section-title"><i class="ti ti-certificate" /> Certification Validity <span class="so-help-badge so-help-badge-code">Code</span></div>
+        <div class="so-help-rule">Starts at <strong>100</strong></div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> −30 if Commercial Register not submitted</div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> −30 if required Certification missing (volume &gt; €50k or manufacturing)</div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> −15 if Self-Declaration not submitted</div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> −15 if Annual Report not submitted</div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> −40 per expired certificate (valid-until date is in the past)</div>
+        <div class="so-help-rule so-help-rule-yellow"><i class="ti ti-minus" /> −10 per certificate expiring within 6 months</div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> −20 per certification FAILURE finding not already counted above</div>
+    </div>
+
+    <div class="so-help-formula-box">
+        aggregate = floor((Financial Stability + Policy Compliance + Cert Validity) ÷ 3) · all components clamped 0–100
+    </div>
+
+    <div class="so-help-thresholds">
+        <div class="so-help-threshold so-help-threshold-green"><i class="ti ti-circle-check" /> ≥ 80 — <strong>GREEN</strong> → Approval</div>
+        <div class="so-help-threshold so-help-threshold-yellow"><i class="ti ti-alert-triangle" /> 45–79 — <strong>YELLOW</strong> → Clarification</div>
+        <div class="so-help-threshold so-help-threshold-red"><i class="ti ti-circle-x" /> &lt; 45 — <strong>RED</strong> → Decline</div>
+    </div>
+    </div>
+  </p:dialog>
+</ui:composition>

@@ -6,32 +6,32 @@
     "name" : "searchTerm"
   }, {
     "name" : "filteredProducts",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.product.Product>",
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.erp.product.model.Product>",
     "modifiers" : [ ]
   }, {
     "name" : "searched",
     "type" : "Boolean"
   }, {
     "name" : "searchCriteria",
-    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductSearchCriteria"
   }, {
     "name" : "cartItems",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem>",
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.erp.store.CartItem>",
     "modifiers" : [ ]
   }, {
     "name" : "productToCart",
-    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.Product"
   }, {
     "name" : "selectedCartItem",
-    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.store.CartItem"
   }, {
     "name" : "translatedSearchTerm"
   }, {
     "name" : "categories",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>",
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory>",
     "modifiers" : [ ]
   }, {
     "name" : "searchResponse",
-    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.SearchResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.store.SearchResponse"
   } ]
 }

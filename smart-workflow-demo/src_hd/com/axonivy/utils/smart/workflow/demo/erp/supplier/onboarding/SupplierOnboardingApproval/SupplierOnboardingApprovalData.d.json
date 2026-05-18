@@ -1,0 +1,36 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierOnboardingApprovalData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest"
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
+  }, {
+    "name" : "approvalStage",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage"
+  }, {
+    "name" : "approvalDecision",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalDecision"
+  }, {
+    "name" : "approvalComment",
+    "type" : "String"
+  }, {
+    "name" : "approvalActor",
+    "type" : "String"
+  }, {
+    "name" : "approvalAt",
+    "type" : "String"
+  }, {
+    "name" : "approvalRecord",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalRecord"
+  }, {
+    "name" : "auditEntry",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry"
+  }, {
+    "name" : "auditTrail",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>"
+  } ]
+}

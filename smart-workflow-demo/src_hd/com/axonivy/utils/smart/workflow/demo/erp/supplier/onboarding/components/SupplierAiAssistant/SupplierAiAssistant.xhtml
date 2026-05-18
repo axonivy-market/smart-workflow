@@ -1,0 +1,282 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui">
+
+<cc:interface componentType="IvyComponent">
+  <!-- Enable drag/drop upload mode in the assistant input area -->
+  <cc:attribute name="uploadEnabled" type="java.lang.Boolean" default="false" />
+  <!-- Listener for text/markdown upload -->
+  <cc:attribute name="uploadListener" method-signature="void listener(org.primefaces.event.FileUploadEvent)" />
+  <!-- Listener called to confirm parsing the uploaded document -->
+  <cc:attribute name="confirmParseListener" method-signature="java.lang.Object action()" />
+  <!-- Name of last uploaded document -->
+  <cc:attribute name="uploadedFileName" type="java.lang.String" default="" />
+  <!-- Whether the uploaded document is waiting for user confirmation -->
+  <cc:attribute name="awaitingConfirmation" type="java.lang.Boolean" default="false" />
+  <!-- Feedback shown below the upload area -->
+  <cc:attribute name="parseFeedback" type="java.lang.String" default="" />
+  <!-- List of queued documents for multi-document upload (List of UploadedDocumentEntry) -->
+  <cc:attribute name="uploadedDocuments" type="java.util.List" />
+  <!-- Listener called when user removes a queued document -->
+  <cc:attribute name="removeDocumentListener"
+    method-signature="void listener(javax.faces.event.ActionEvent)" />
+
+  <!-- Agent chat attributes -->
+  <!-- Whether agent chat is enabled (true when agentSubProcessSignature is non-null) -->
+  <cc:attribute name="agentEnabled" type="java.lang.Boolean" default="false" />
+  <!-- Adds the user message to history; called before getAnswerListener -->
+  <cc:attribute name="sendMessageListener" method-signature="void action()" />
+  <!-- Calls the agent subprocess and appends the response to history -->
+  <cc:attribute name="getAnswerListener" method-signature="void action()" />
+  <!-- Full chat history (List of AssistantChatMessage) -->
+  <cc:attribute name="chatHistory" type="java.util.List" />
+  <!-- Bound to the user's current message input -->
+  <cc:attribute name="userMessage" type="java.lang.String" />
+  <!-- AgentGuidance list: questionPattern shown as chips, instruction goes to system prompt -->
+  <cc:attribute name="guidanceList" type="java.util.List" />
+</cc:interface>
+
+<cc:implementation>
+  <h:outputStylesheet library="css" name="chat-ui.css" />
+  <h:outputStylesheet library="css" name="supplier-chatbot.css" />
+  <h:outputScript library="js" name="erp-chatbot.js" />
+
+  <div id="#{cc.clientId}" class="messenger-container flex flex-column so-ai-chat-wrapper">
+
+    <!-- Messages area — agent-enabled only -->
+    <ui:fragment rendered="#{cc.attrs.agentEnabled}">
+
+      <!-- Sticky header — only when conversation has started -->
+      <ui:fragment rendered="#{not empty cc.attrs.chatHistory}">
+      <div class="so-ai-sticky-header">
+        <div class="flex flex-column flex-1" style="min-width:0;">
+          <span class="so-ai-header-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/AssistantName')}</span>
+          <span class="so-ai-header-subtitle">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/HeaderSubtitle')}</span>
+        </div>
+      </div>
+      </ui:fragment>
+
+      <div class="messages-area flex-1 overflow-auto p-3" id="#{cc.clientId}-messages-area">
+        <h:panelGroup layout="block" styleClass="chat-content" id="chat-content">
+
+          <!-- Welcome state: shown when no conversation has started yet -->
+          <ui:fragment rendered="#{empty cc.attrs.chatHistory}">
+            <div id="#{cc.clientId}-welcome" class="rag-welcome-state flex flex-column align-items-center">
+              <div class="rag-welcome-avatar flex align-items-center justify-content-center border-circle mb-3">
+                <i class="ti ti-robot text-white" />
+              </div>
+              <div class="so-card-title mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/AssistantName')}</div>
+            </div>
+          </ui:fragment>
+
+          <!-- Guidance chips — always visible when list is present -->
+          <ui:fragment rendered="#{not empty cc.attrs.guidanceList}">
+            <div class="so-ai-chips w-full mt-2 mb-5">
+              <ui:repeat value="#{cc.attrs.guidanceList}" var="guidance">
+                <div class="so-ai-chip"
+                     data-question="#{guidance.questionPattern}"
+                     onclick="assistantChipClick(this);">#{guidance.questionPattern}</div>
+              </ui:repeat>
+            </div>
+          </ui:fragment>
+
+          <!-- Chat messages -->
+          <ui:repeat value="#{cc.attrs.chatHistory}" var="msg">
+            <h:panelGroup rendered="#{msg.user}" layout="block"
+              styleClass="user-message-row flex justify-content-end mb-3">
+              <div class="user-message">
+                <div class="message-bubble sent"><h:outputText value="#{msg.content.trim()}" escape="true" /></div>
+                <div class="message-time text-right mt-1">#{msg.timestamp}</div>
+              </div>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{not msg.user}" layout="block"
+              styleClass="assistant-message-row mb-3">
+              <div class="assistant-content">
+                <div class="assistant-name font-semibold mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/AssistantName')}</div>
+                <div class="message-content"><h:outputText value="#{msg.content.trim()}" escape="true" /></div>
+                <div class="message-time text-right mt-1">#{msg.timestamp}</div>
+              </div>
+            </h:panelGroup>
+          </ui:repeat>
+
+          <!-- Thinking indicator — shown by JS while the agent is processing -->
+          <div class="assistant-message-row mb-3 thinking-status rag-hidden" id="#{cc.clientId}-thinking">
+            <div class="assistant-content">
+              <div class="assistant-name font-semibold mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/AssistantName')}</div>
+              <div class="flex align-items-center gap-2">
+                <div class="thinking-spinner">
+                  <span class="thinking-dot" /><span class="thinking-dot" /><span class="thinking-dot" />
+                </div>
+                <span class="thinking-text text-color-secondary" id="#{cc.clientId}-thinking-text">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingText')}</span>
+              </div>
+            </div>
+          </div>
+
+        </h:panelGroup>
+      </div>
+    </ui:fragment>
+
+    <!-- Upload strip — shown above composer when files are queued or feedback exists -->
+    <ui:fragment rendered="#{cc.attrs.uploadEnabled
+        and (not empty cc.attrs.uploadedDocuments
+             or not empty cc.attrs.uploadedFileName
+             or not empty cc.attrs.parseFeedback)}">
+      <h:form id="assistant-confirm-form">
+        <div class="so-ai-upload-meta">
+          <!-- Multi-document list -->
+          <ui:fragment rendered="#{not empty cc.attrs.uploadedDocuments}">
+            <ui:repeat value="#{cc.attrs.uploadedDocuments}" var="doc">
+              <div class="so-ai-upload-file" title="#{doc.fileName}">
+                <i class="ti ti-file so-ai-upload-file-icon" />
+                <span class="so-ai-upload-file-name">#{doc.fileName}</span>
+                <p:commandLink
+                  actionListener="#{cc.attrs.removeDocumentListener}"
+                  process="@this"
+                  update="@all"
+                  styleClass="so-ai-remove-file-btn"
+                  title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/RemoveButtonTitle')}">
+                  <i class="ti ti-x" />
+                  <f:attribute name="fileName" value="#{doc.fileName}" />
+                </p:commandLink>
+              </div>
+            </ui:repeat>
+          </ui:fragment>
+          <!-- Fallback: single-file display -->
+          <ui:fragment rendered="#{empty cc.attrs.uploadedDocuments and not empty cc.attrs.uploadedFileName}">
+            <div class="so-ai-upload-file" title="#{cc.attrs.uploadedFileName}">
+              <i class="ti ti-file-upload so-ai-upload-file-icon" />
+              <span>#{cc.attrs.uploadedFileName}</span>
+            </div>
+          </ui:fragment>
+          <p:commandButton
+            icon="ti ti-check"
+            title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ConfirmParseTitle')}"
+            ariaLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ConfirmParseTitle')}"
+            action="#{cc.attrs.confirmParseListener}"
+            process="@this"
+            update="@all"
+            styleClass="p-button-rounded so-ai-confirm-btn"
+            disabled="#{not cc.attrs.awaitingConfirmation}" />
+        </div>
+        <ui:fragment rendered="#{not empty cc.attrs.parseFeedback}">
+          <div class="so-ai-upload-feedback my-2 mx-3">#{cc.attrs.parseFeedback}</div>
+        </ui:fragment>
+      </h:form>
+    </ui:fragment>
+
+    <!-- Composer — agent enabled -->
+    <ui:fragment rendered="#{cc.attrs.agentEnabled}">
+      <h:form id="assistant-chat-form">
+        <div class="message-input-area surface-border surface-0 border-top-1 p-3">
+          <div class="flex align-items-end gap-2">
+            <ui:fragment rendered="#{cc.attrs.uploadEnabled}">
+              <p:fileUpload id="assistantDocUpload"
+                widgetVar="assistantDocUploadWidget"
+                listener="#{cc.attrs.uploadListener}"
+                mode="advanced"
+                auto="true"
+                dragDropSupport="false"
+                process="@this"
+                update="@all"
+                allowTypes="/(\.|\/)(txt|md|pdf)$/"
+                accept=".txt,.md,.pdf"
+                sizeLimit="5242880"
+                invalidFileMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidFileMessage')}"
+                invalidSizeMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidSizeMessage')}"
+                style="display:none;" />
+              <p:commandButton id="assistant-upload-trigger"
+                type="button"
+                icon="ti ti-file-upload"
+                ariaLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/UploadTriggerTitle')}"
+                title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/UploadTriggerTitle')}"
+                styleClass="so-ai-upload-trigger"
+                onclick="PF('assistantDocUploadWidget').show(); return false;" />
+            </ui:fragment>
+
+            <p:inputTextarea id="assistant-question"
+              value="#{cc.attrs.userMessage}"
+              rows="1"
+              autoResize="true"
+              maxlength="2000"
+              styleClass="flex-1 message-input"
+              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InputPlaceholder')}"
+              onkeydown="assistantHandleKeyDown(event);" />
+
+            <p:commandButton id="assistant-send"
+              widgetVar="assistantSendCmd"
+              icon="si si-arrow-up-1"
+              styleClass="p-button-rounded send-btn"
+              action="#{cc.attrs.sendMessageListener}"
+              process="assistant-question"
+              update="#{cc.clientId}"
+              global="false"
+              onclick="var w=document.getElementById('#{cc.clientId}-welcome');if(w)w.style.display='none';"
+              oncomplete="assistantShowThinking('#{cc.clientId}'); assistantGetAnswer();" />
+
+            <p:inputText id="assistant-chip-question"
+              value="#{cc.attrs.userMessage}"
+              type="hidden" />
+
+            <p:remoteCommand name="assistantChipSend"
+              action="#{cc.attrs.sendMessageListener}"
+              process="assistant-chip-question"
+              update="#{cc.clientId}"
+              global="false"
+              oncomplete="assistantShowThinking('#{cc.clientId}'); assistantGetAnswer();" />
+
+            <p:remoteCommand name="assistantGetAnswer"
+              action="#{cc.attrs.getAnswerListener}"
+              update="#{cc.clientId}:chat-content"
+              global="false"
+              partialSubmit="true"
+              oncomplete="assistantAfterAnswer('#{cc.clientId}');" />
+          </div>
+        </div>
+      </h:form>
+    </ui:fragment>
+
+    <!-- Composer — upload-only (agent disabled) -->
+    <ui:fragment rendered="#{not cc.attrs.agentEnabled}">
+      <div class="message-input-area surface-border surface-0 border-top-1 p-3">
+        <div class="flex align-items-end gap-2">
+          <ui:fragment rendered="#{cc.attrs.uploadEnabled}">
+            <h:form id="assistant-upload-form">
+              <p:fileUpload id="assistantDocUpload"
+                widgetVar="assistantDocUploadWidget"
+                listener="#{cc.attrs.uploadListener}"
+                mode="advanced"
+                auto="true"
+                dragDropSupport="false"
+                process="@this"
+                update="@all"
+                allowTypes="/(\.|\/)(txt|md|pdf)$/"
+                accept=".txt,.md,.pdf"
+                sizeLimit="5242880"
+                invalidFileMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidFileMessage')}"
+                invalidSizeMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidSizeMessage')}"
+                style="display:none;" />
+              <p:commandButton id="assistant-upload-trigger"
+                type="button"
+                icon="ti ti-file-upload"
+                ariaLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/UploadTriggerTitle')}"
+                title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/UploadTriggerTitle')}"
+                styleClass="so-ai-upload-trigger"
+                onclick="PF('assistantDocUploadWidget').show(); return false;" />
+            </h:form>
+          </ui:fragment>
+          <p:inputTextarea id="assistant-question"
+            styleClass="flex-1 message-input"
+            placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InputPlaceholder')}"
+            disabled="true" />
+          <p:commandButton id="assistant-send"
+            icon="si si-arrow-up-1"
+            styleClass="p-button-rounded send-btn"
+            disabled="true" />
+        </div>
+      </div>
+    </ui:fragment>
+
+  </div>
+</cc:implementation>
+</html>

@@ -1,0 +1,18 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierOnboardingCompletionData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingCompletion",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest"
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
+  }, {
+    "name" : "auditTrail",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>"
+  }, {
+    "name" : "summary",
+    "type" : "String"
+  } ]
+}

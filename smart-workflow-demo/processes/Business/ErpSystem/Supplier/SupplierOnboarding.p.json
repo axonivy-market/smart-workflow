@@ -1,0 +1,1123 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19DB8AF613F649E4",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.SupplierOnboardingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "supplierOnboarding",
+      "config" : {
+        "signature" : "supplierOnboarding",
+        "request" : {
+          "name" : "Supplier Onboarding",
+          "description" : "Request a new supplier onboarding process"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f100", "to" : "f209" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 4800, "y" : 208 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "DialogCall",
+      "name" : "Supplier request form",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRequestForm:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.request" : "result.request"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f102", "to" : "f150" }
+      ]
+    }, {
+      "id" : "f150",
+      "type" : "Alternative",
+      "name" : "Check status",
+      "config" : {
+        "conditions" : {
+          "f152" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus.REQUEST.equals(in.request.status)",
+          "f153" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus.DB_CHECK.equals(in.request.status)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 792, "y" : 208 },
+        "labelOffset" : { "x" : -40, "y" : 24 }
+      },
+      "connect" : [
+        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 792, "y" : 336 } ], "label" : {
+            "name" : "Save Draft",
+            "segment" : 1.12,
+            "offset" : { "x" : -23, "y" : -21 }
+          } },
+        { "id" : "f153", "to" : "f162", "label" : {
+            "name" : "Submit",
+            "offset" : { "x" : -3, "y" : -18 }
+          } },
+        { "id" : "f156", "to" : "f155", "label" : {
+            "name" : "Cancel",
+            "offset" : { "x" : -31, "y" : -2 }
+          } }
+      ]
+    }, {
+      "id" : "f151",
+      "type" : "TaskSwitchEvent",
+      "name" : "Continue supplier request",
+      "config" : {
+        "task" : {
+          "name" : "Continue supplier request - <%= in1.request.supplier.businessName %>",
+          "description" : "Continue filling out the supplier request form",
+          "responsible" : {
+            "type" : "USER_FROM_ATTRIBUTE",
+            "script" : "in1.sessionUsername"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 336 }
+      },
+      "connect" : [
+        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 624, "y" : 320 } ] }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "SubProcessCall",
+      "name" : "AI Agent: Check duplicate supplier",
+      "config" : {
+        "processCall" : "Business/ErpSystem/Supplier/Agents/SupplierValidationAgent:callDuplicateCheck(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.agentResponse" : "result.agentResponse",
+            "out.request" : "result.request"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1056, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f103", "to" : "f160" }
+      ]
+    }, {
+      "id" : "f160",
+      "type" : "TaskSwitchEvent",
+      "name" : "Review duplicate check result",
+      "config" : {
+        "task" : {
+          "name" : "Review duplicate check - <%= in1.request.supplier.businessName %>",
+          "description" : "Review the agent duplicate check result and decide how to proceed",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1224, "y" : 208 },
+        "labelOffset" : { "x" : 17, "y" : 33 }
+      },
+      "connect" : [
+        { "id" : "f161", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "DialogCall",
+      "name" : "Duplicate check result",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierDuplicateCheck:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request",
+            "param.agentResponse" : "in.agentResponse"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.request" : "result.request",
+            "out.continueWithSuggestedSupplier" : "result.useExistingSupplier"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1376, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f104", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Alternative",
+      "name" : "Use suggested supplier?",
+      "config" : {
+        "conditions" : {
+          "f105" : "in.continueWithSuggestedSupplier != null && in.continueWithSuggestedSupplier"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1536, "y" : 208 },
+        "labelOffset" : { "y" : 40 }
+      },
+      "connect" : [
+        { "id" : "f105", "to" : "f170", "label" : {
+            "name" : "Yes",
+            "offset" : { "x" : 25, "y" : -10 }
+          } },
+        { "id" : "f106", "to" : "f171", "label" : {
+            "name" : "No",
+            "offset" : { "x" : -3, "y" : -18 }
+          } }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Continue with suggested supplier",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "",
+            "in.request.status = OnboardingStatus.SUPPLIER_DATA;",
+            "ivy.case.name = SupplierOnboardingProcessService.suggestedSupplierCaseName(in.request);"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 1864, "y" : 80 }
+      },
+      "connect" : [
+        { "id" : "f107", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "DialogCall",
+      "name" : "Supplier registration form",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRegistrationForm:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.request" : "result.request",
+            "out.goBack" : "result.goBack"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1864, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f108", "to" : "f165" }
+      ]
+    }, {
+      "id" : "f165",
+      "type" : "Alternative",
+      "name" : "Back from registration?",
+      "config" : {
+        "conditions" : {
+          "f166" : "in.goBack != null && in.goBack"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2000, "y" : 208 },
+        "labelOffset" : { "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "f166", "to" : "f6", "via" : [ { "x" : 2000, "y" : 312 }, { "x" : 1384, "y" : 312 } ], "label" : {
+            "name" : "Back",
+            "segment" : 1.5,
+            "offset" : { "x" : -127, "y" : -18 }
+          } },
+        { "id" : "f167", "to" : "f10", "label" : {
+            "name" : "Proceed",
+            "offset" : { "x" : -3, "y" : -10 }
+          } }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "Script",
+      "name" : "Registration data captured",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "",
+            "in.goBack = false;",
+            "in.request.status = OnboardingStatus.SUPPLIER_DATA;",
+            "in.summary = \"New supplier information captured (placeholder path).\";"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 2144, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f109", "to" : "f128" }
+      ]
+    }, {
+      "id" : "f180",
+      "type" : "Script",
+      "name" : "Post-Agent Setup",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "",
+            "in.summary = SupplierOnboardingProcessService.applyRoutingState(in.request, in.agentResponse, in.routingDecision);",
+            "String caseName = SupplierOnboardingProcessService.buildPostAgentCaseName(in.request, in.routingDecision);",
+            "if (caseName != null && !caseName.isBlank()) {",
+            "  ivy.case.name = caseName;",
+            "}"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 2736, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f181", "to" : "f13" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "DialogCall",
+      "name" : "Agent processing",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierAgentProcessing:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.agentResponse" : "result.agentResponse",
+            "out.routingDecision" : "result.routingDecision"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2560, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f111", "to" : "f180" }
+      ]
+    }, {
+      "id" : "f13",
+      "type" : "Alternative",
+      "name" : "Routing decision",
+      "config" : {
+        "conditions" : {
+          "f112" : "\"APPROVAL\".equalsIgnoreCase(in.routingDecision)",
+          "f113" : "\"CLARIFICATION\".equalsIgnoreCase(in.routingDecision)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2880, "y" : 208 },
+        "labelOffset" : { "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "f112", "to" : "f14", "label" : {
+            "name" : "Green - Approval",
+            "offset" : { "x" : 1, "y" : -18 }
+          } },
+        { "id" : "f113", "to" : "f201", "label" : {
+            "name" : "Yellow - Clarification",
+            "segment" : 0.51,
+            "offset" : { "x" : 57, "y" : 52 }
+          } },
+        { "id" : "f114", "to" : "f24", "via" : [ { "x" : 2880, "y" : 320 } ], "label" : {
+            "name" : "Red - Decline",
+            "offset" : { "x" : 105, "y" : 26 }
+          } }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "TaskSwitchEvent",
+      "name" : "Supervisor approval task",
+      "config" : {
+        "task" : {
+          "name" : "Supervisor approval - <%= in1.request.supplier.businessName %>",
+          "description" : "Approve supplier onboarding request",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"ProcurementDirector\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3096, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f115", "to" : "f15" }
+      ]
+    }, {
+      "id" : "f15",
+      "type" : "DialogCall",
+      "name" : "Supervisor approval dialog",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request",
+            "param.agentResponse" : "in.agentResponse",
+            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage.SUPERVISOR",
+            "param.auditTrail" : "in.auditTrail"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.lastApprovalDecision" : "result.approvalDecision",
+            "out.lastApprovalComment" : "result.approvalComment",
+            "out.lastApprovalActor" : "result.approvalActor",
+            "out.lastApprovalAt" : "result.approvalAt",
+            "out.lastApprovalStage" : "result.approvalStage",
+            "out.lastApprovalRecord" : "result.approvalRecord",
+            "out.lastAuditEntry" : "result.auditEntry"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3352, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f116", "to" : "f185" }
+      ]
+    }, {
+      "id" : "f185",
+      "type" : "Script",
+      "name" : "Capture supervisor approval",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "",
+            "in.approvalRecords = SupplierOnboardingProcessService.ensureAndAdd(in.approvalRecords, in.lastApprovalRecord);",
+            "in.auditTrail = SupplierOnboardingProcessService.ensureAndAdd(in.auditTrail, in.lastAuditEntry);"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 3544, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f185a", "to" : "f16" }
+      ]
+    }, {
+      "id" : "f16",
+      "type" : "TaskSwitchEvent",
+      "name" : "QM/ISM approval task",
+      "config" : {
+        "task" : {
+          "name" : "QM/ISM approval - <%= in1.request.supplier.businessName %>",
+          "description" : "Second approval for supplier onboarding",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"QualityManager\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3688, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f117", "to" : "f17" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "DialogCall",
+      "name" : "QM/ISM approval dialog",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request",
+            "param.agentResponse" : "in.agentResponse",
+            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage.QM_ISM",
+            "param.auditTrail" : "in.auditTrail"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.lastApprovalDecision" : "result.approvalDecision",
+            "out.lastApprovalComment" : "result.approvalComment",
+            "out.lastApprovalActor" : "result.approvalActor",
+            "out.lastApprovalAt" : "result.approvalAt",
+            "out.lastApprovalStage" : "result.approvalStage",
+            "out.lastApprovalRecord" : "result.approvalRecord",
+            "out.lastAuditEntry" : "result.auditEntry"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3816, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f118", "to" : "f186" }
+      ]
+    }, {
+      "id" : "f186",
+      "type" : "Script",
+      "name" : "Capture QM/ISM approval",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "",
+            "in.approvalRecords = SupplierOnboardingProcessService.ensureAndAdd(in.approvalRecords, in.lastApprovalRecord);",
+            "in.auditTrail = SupplierOnboardingProcessService.ensureAndAdd(in.auditTrail, in.lastAuditEntry);"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 3968, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f186a", "to" : "f18" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "Script",
+      "name" : "Complete Request",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.CompletionContext;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import java.util.ArrayList;",
+            "",
+            "CompletionContext ctx = SupplierOnboardingProcessService.completeRequest(in.request, ivy.case.getId().toString());",
+            "in.summary = ctx.summary();",
+            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
+            "in.auditTrail.add(ctx.auditEntry());",
+            "ivy.case.name = ctx.caseName();"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 4152, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f119", "to" : "f19t" }
+      ]
+    }, {
+      "id" : "f19t",
+      "type" : "TaskSwitchEvent",
+      "name" : "Completion review task",
+      "config" : {
+        "task" : {
+          "name" : "Supplier onboarding completed — <%= in1.request.supplier.businessName %>",
+          "description" : "Review the completion summary and finalize the supplier onboarding.",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"ProcurementDirector\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 4320, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f119t", "to" : "f19" }
+      ]
+    }, {
+      "id" : "f19",
+      "type" : "DialogCall",
+      "name" : "Completion summary",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingCompletion:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>,String)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request",
+            "param.agentResponse" : "in.agentResponse",
+            "param.auditTrail" : "in.auditTrail",
+            "param.summary" : "in.summary"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 4480, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f120", "to" : "f196" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "TaskSwitchEvent",
+      "name" : "Clarification task",
+      "config" : {
+        "task" : {
+          "name" : "Clarification required (cycle <%= in1.clarificationCycleDisplay != null ? in1.clarificationCycleDisplay : 1 %> of <%= in1.maxClarificationRetries != null ? in1.maxClarificationRetries : 3 %>) - <%= in1.request.supplier.businessName %>",
+          "description" : "Provide additional supplier information for re-evaluation",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2880, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f121", "to" : "f21" }
+      ]
+    }, {
+      "id" : "f21",
+      "type" : "DialogCall",
+      "name" : "Clarification dialog",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierClarification:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem>,int,int)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request",
+            "param.agentResponse" : "in.agentResponse",
+            "param.clarificationItems" : "in.clarificationItems",
+            "param.clarificationCycle" : "in.clarificationCycleDisplay != null ? in.clarificationCycleDisplay : 1",
+            "param.maxRetries" : "in.maxClarificationRetries != null ? in.maxClarificationRetries : 3"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.request" : "result.request",
+            "out.lastClarificationNotes" : "result.additionalNotes",
+            "out.escalateToQmIsm" : "result.escalateToQmIsm",
+            "out.withdrawRequest" : "result.withdraw"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3032, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f122", "to" : "f211" }
+      ]
+    }, {
+      "id" : "f21w",
+      "type" : "Alternative",
+      "name" : "Withdraw request?",
+      "config" : {
+        "conditions" : {
+          "f21w1" : "in.withdrawRequest != null && in.withdrawRequest"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3320, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f21w1", "to" : "f24", "via" : [ { "x" : 3320, "y" : 320 } ], "label" : {
+            "name" : "Withdraw",
+            "offset" : { "x" : 29, "y" : -10 }
+          } },
+        { "id" : "f21w2", "to" : "f21alt", "label" : {
+            "name" : "Continue",
+            "offset" : { "x" : 30, "y" : -10 }
+          } }
+      ]
+    }, {
+      "id" : "f21alt",
+      "type" : "Alternative",
+      "name" : "Escalate to QM/ISM?",
+      "config" : {
+        "conditions" : {
+          "f21alt1" : "in.escalateToQmIsm != null && in.escalateToQmIsm"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3472, "y" : 528 },
+        "labelOffset" : { "x" : 88, "y" : 16 }
+      },
+      "connect" : [
+        { "id" : "f21alt1", "to" : "f21e", "label" : {
+            "name" : "Escalate",
+            "offset" : { "x" : -20, "y" : -18 }
+          } },
+        { "id" : "f21alt2", "to" : "f22", "label" : {
+            "name" : "No escalation",
+            "offset" : { "x" : 30, "y" : -10 }
+          } }
+      ]
+    }, {
+      "id" : "f21e",
+      "type" : "TaskSwitchEvent",
+      "name" : "QM/ISM assistance task",
+      "config" : {
+        "task" : {
+          "name" : "QM/ISM assistance requested — <%= in1.request.supplier.businessName %>",
+          "description" : "The requester has asked for QM/ISM Manager assistance. Please provide or confirm the missing supplier information.",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"QualityManager\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3472, "y" : 640 }
+      },
+      "connect" : [
+        { "id" : "f21e1", "to" : "f21f" }
+      ]
+    }, {
+      "id" : "f21f",
+      "type" : "DialogCall",
+      "name" : "QM/ISM clarification dialog",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierClarification:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem>,int,int)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request",
+            "param.agentResponse" : "in.agentResponse",
+            "param.clarificationItems" : "in.clarificationItems",
+            "param.clarificationCycle" : "in.clarificationCycleDisplay != null ? in.clarificationCycleDisplay : 1",
+            "param.maxRetries" : "in.maxClarificationRetries != null ? in.maxClarificationRetries : 3"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.request" : "result.request",
+            "out.qmIsmAdditionalNotes" : "result.additionalNotes"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3664, "y" : 640 }
+      },
+      "connect" : [
+        { "id" : "f21f1", "to" : "f21g" }
+      ]
+    }, {
+      "id" : "f21g",
+      "type" : "Script",
+      "name" : "Capture QM/ISM response",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import java.util.ArrayList;",
+            "",
+            "int cycle = (in.clarificationRetryCount != null ? in.clarificationRetryCount : 0) + 1;",
+            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
+            "in.auditTrail.add(SupplierOnboardingProcessService.buildQmIsmAuditEntry(cycle, in.qmIsmAdditionalNotes));"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 3904, "y" : 640 }
+      },
+      "connect" : [
+        { "id" : "f21g1", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "Script",
+      "name" : "Increment clarification retries",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.ClarificationRetryResult;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import java.util.ArrayList;",
+            "",
+            "in.request.status = OnboardingStatus.CLARIFICATION_REQUIRED;",
+            "if (in.clarificationRetryCount == null) { in.clarificationRetryCount = 0; }",
+            "ClarificationRetryResult retry = SupplierOnboardingProcessService.processRetry(",
+            "    in.request, in.clarificationRetryCount, in.lastClarificationNotes,",
+            "    in.escalateToQmIsm != null && in.escalateToQmIsm, in.clarificationItems);",
+            "in.clarificationRetryCount = retry.newCount();",
+            "in.summary = retry.summary();",
+            "if (in.clarificationRecords == null) { in.clarificationRecords = new ArrayList(); }",
+            "in.clarificationRecords.add(retry.clarificationRecord());",
+            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
+            "in.auditTrail.add(retry.auditEntry());",
+            "in.lastClarificationNotes = null;",
+            "in.escalateToQmIsm = false;",
+            "in.withdrawRequest = false;",
+            "",
+            "// If all clarification items are resolved, override risk score to 100 and route to APPROVAL",
+            "boolean allResolved = in.clarificationItems != null && !in.clarificationItems.isEmpty();",
+            "if (allResolved) {",
+            "  for (ClarificationItem ci : in.clarificationItems) {",
+            "    if (!ci.isResolved()) { allResolved = false; break; }",
+            "  }",
+            "}",
+            "if (allResolved) {",
+            "  if (in.agentResponse != null && in.agentResponse.getRiskScore() != null) {",
+            "    in.agentResponse.getRiskScore().setFinancialStability(100);",
+            "    in.agentResponse.getRiskScore().setPolicyCompliance(100);",
+            "    in.agentResponse.getRiskScore().setCertValidity(100);",
+            "    in.agentResponse.getRiskScore().setAggregate(100);",
+            "    in.agentResponse.getRiskScore().setLevel(RiskLevel.GREEN);",
+            "  }",
+            "  in.routingDecision = \"APPROVAL\";",
+            "}"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 3472, "y" : 424 }
+      },
+      "connect" : [
+        { "id" : "f123", "to" : "f23" }
+      ]
+    }, {
+      "id" : "f23",
+      "type" : "Alternative",
+      "name" : "Retry allowed?",
+      "config" : {
+        "conditions" : {
+          "f124" : "in.clarificationRetryCount != null && in.maxClarificationRetries != null && in.clarificationRetryCount <= in.maxClarificationRetries"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3656, "y" : 424 },
+        "labelOffset" : { "x" : 80, "y" : 16 }
+      },
+      "connect" : [
+        { "id" : "f124", "to" : "f128", "via" : [ { "x" : 3896, "y" : 424 }, { "x" : 3896, "y" : 712 }, { "x" : 2296, "y" : 712 } ], "label" : {
+            "name" : "Retry Validation",
+            "segment" : 2.15,
+            "offset" : { "x" : 54, "y" : 20 }
+          } },
+        { "id" : "f125", "to" : "f24", "label" : {
+            "name" : "Exceeded Retries",
+            "offset" : { "x" : 57, "y" : 3 }
+          } }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "Script",
+      "name" : "Decline request",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.DeclineOrchestrationResult;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import java.util.ArrayList;",
+            "",
+            "in.request.setStatus(OnboardingStatus.DECLINED);",
+            "in.routingDecision = \"DECLINE\";",
+            "String requestedBy = in.request != null ? in.request.getRequestedBy() : null;",
+            "DeclineOrchestrationResult decline = SupplierOnboardingProcessService.buildDecline(",
+            "    in.request, in.agentResponse,",
+            "    in.withdrawRequest != null && in.withdrawRequest, requestedBy);",
+            "in.summary = decline.summary();",
+            "in.declineRecord = decline.declineRecord();",
+            "in.notificationRecords = decline.notificationRecords();",
+            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
+            "in.auditTrail.add(decline.auditEntry());",
+            "if (in.request != null) { in.request.setDeclinedAt(decline.declineRecord().getDeclinedAt()); }",
+            "in.withdrawRequest = false;",
+            "ivy.case.name = decline.caseName();"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 3656, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "f126", "to" : "f24t" }
+      ]
+    }, {
+      "id" : "f24t",
+      "type" : "TaskSwitchEvent",
+      "name" : "Decline review task",
+      "config" : {
+        "task" : {
+          "name" : "Supplier onboarding declined — <%= in1.request.supplier.businessName %>",
+          "description" : "Review the decline summary. Risk score below threshold. No ERP record created.",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"ProcurementDirector\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3864, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "f126t", "to" : "f25" }
+      ]
+    }, {
+      "id" : "f25",
+      "type" : "DialogCall",
+      "name" : "Decline summary",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingDecline:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord,java.util.List,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request",
+            "param.agentResponse" : "in.agentResponse",
+            "param.declineRecord" : "in.declineRecord",
+            "param.notificationRecords" : "in.notificationRecords",
+            "param.auditTrail" : "in.auditTrail"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 4160, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "f195", "to" : "f196", "via" : [ { "x" : 4672, "y" : 320 } ] }
+      ]
+    }, {
+      "id" : "f128",
+      "type" : "Alternative",
+      "visual" : {
+        "at" : { "x" : 2296, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f129", "to" : "f191", "label" : {
+            "name" : "Continue"
+          } }
+      ]
+    }, {
+      "id" : "f155",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 792, "y" : 120 }
+      }
+    }, {
+      "id" : "f162",
+      "type" : "TaskSwitchEvent",
+      "name" : "Agent perform duplicate check",
+      "config" : {
+        "task" : {
+          "name" : "Use Supplier Agent to review duplicate check - <%= in1.request.supplier.businessName %>",
+          "description" : "Agent perform duplicate check",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
+          },
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 896, "y" : 208 },
+        "labelOffset" : { "x" : 25, "y" : 33 }
+      },
+      "connect" : [
+        { "id" : "f163", "to" : "f5", "color" : "default" }
+      ]
+    }, {
+      "id" : "f170",
+      "type" : "TaskSwitchEvent",
+      "name" : "Continue with suggested supplier",
+      "config" : {
+        "task" : {
+          "name" : "Continue with suggested supplier - <%= in1.request.supplier.businessName %>",
+          "description" : "Continue onboarding with the existing suggested supplier",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1536, "y" : 80 },
+        "labelOffset" : { "x" : -95, "y" : 9 }
+      },
+      "connect" : [
+        { "id" : "f172", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f171",
+      "type" : "TaskSwitchEvent",
+      "name" : "Register new supplier",
+      "config" : {
+        "task" : {
+          "name" : "Register new supplier - <%= in1.request.supplier.businessName %>",
+          "description" : "Fill in the registration details for the new supplier",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1688, "y" : 208 },
+        "labelOffset" : { "x" : 25, "y" : -23 }
+      },
+      "connect" : [
+        { "id" : "f173", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f191",
+      "type" : "TaskSwitchEvent",
+      "name" : "Validate supplier",
+      "config" : {
+        "task" : {
+          "name" : "Validate supplier - <%= in1.request.supplier.businessName %>",
+          "description" : "Run AI validation and review results before proceeding",
+          "responsible" : {
+            "type" : "MEMBERS_FROM_ATTRIBUTE",
+            "script" : "java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 2400, "y" : 208 },
+        "labelOffset" : { "x" : 17, "y" : 33 }
+      },
+      "connect" : [
+        { "id" : "f193", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f196",
+      "type" : "DialogCall",
+      "name" : "Finish Demo",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FinishDemo:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 4672, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f197", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f198",
+      "type" : "DialogCall",
+      "name" : "Start demo",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.StartDemo:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 440, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f199", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f201",
+      "type" : "Script",
+      "name" : "Build clarification context",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.ClarificationContextResult;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationRecord;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import java.util.ArrayList;",
+            "",
+            "ClarificationContextResult ctx = SupplierOnboardingProcessService.buildClarificationContext(",
+            "    in.request, in.agentResponse,",
+            "    in.clarificationRetryCount != null ? in.clarificationRetryCount : 0,",
+            "    in.routingDecision);",
+            "in.clarificationItems = ctx.clarificationItems();",
+            "in.clarificationCycleDisplay = ctx.cycleDisplay();",
+            "if (in.maxClarificationRetries == null || in.maxClarificationRetries < 1) { in.maxClarificationRetries = 3; }",
+            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
+            "in.auditTrail.add(ctx.auditEntry());",
+            "if (in.clarificationRecords == null) { in.clarificationRecords = new ArrayList<ClarificationRecord>(); }",
+            "ivy.case.name = ctx.caseName();"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 2880, "y" : 416 }
+      },
+      "connect" : [
+        { "id" : "f202", "to" : "f20" }
+      ]
+    }, {
+      "id" : "f209",
+      "type" : "Script",
+      "name" : "Save session username",
+      "config" : {
+        "output" : {
+          "code" : "in.sessionUsername = ivy.session.getSessionUserName();"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f210", "to" : "f198", "color" : "default" }
+      ]
+    }, {
+      "id" : "f211",
+      "type" : "Script",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;",
+            "",
+            "// If all clarification items are resolved, override risk score to 100 and route to APPROVAL",
+            "boolean allResolved = in.clarificationItems != null && !in.clarificationItems.isEmpty();",
+            "",
+            "if (allResolved) {",
+            "  for (ClarificationItem ci : in.clarificationItems) {",
+            "    if (!ci.isResolved()) { allResolved = false; break; }",
+            "  }",
+            "}",
+            "if (allResolved) {",
+            "  if (in.agentResponse != null && in.agentResponse.getRiskScore() != null) {",
+            "    in.agentResponse.getRiskScore().setFinancialStability(100);",
+            "    in.agentResponse.getRiskScore().setPolicyCompliance(100);",
+            "    in.agentResponse.getRiskScore().setCertValidity(100);",
+            "    in.agentResponse.getRiskScore().setAggregate(100);",
+            "    in.agentResponse.getRiskScore().setLevel(RiskLevel.GREEN);",
+            "  }",
+            "  in.routingDecision = \"APPROVAL\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 3192, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f212", "to" : "f21w", "color" : "default" }
+      ]
+    } ]
+}

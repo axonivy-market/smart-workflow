@@ -1,0 +1,9 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierRequestFormData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRequestForm",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest"
+  } ]
+}

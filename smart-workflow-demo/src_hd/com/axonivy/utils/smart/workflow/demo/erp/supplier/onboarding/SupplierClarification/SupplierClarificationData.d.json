@@ -1,0 +1,30 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierClarificationData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierClarification",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest"
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
+  }, {
+    "name" : "clarificationItems",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem>"
+  }, {
+    "name" : "clarificationCycle",
+    "type" : "int"
+  }, {
+    "name" : "maxRetries",
+    "type" : "int"
+  }, {
+    "name" : "additionalNotes",
+    "type" : "String"
+  }, {
+    "name" : "escalateToQmIsm",
+    "type" : "Boolean"
+  }, {
+    "name" : "withdraw",
+    "type" : "Boolean"
+  } ]
+}

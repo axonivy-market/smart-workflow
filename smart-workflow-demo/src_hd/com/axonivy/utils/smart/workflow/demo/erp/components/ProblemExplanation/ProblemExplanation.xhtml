@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<cc:interface componentType="IvyComponent">
+  <cc:attribute name="item"         required="true" />
+  <cc:attribute name="bean"         required="true" />
+  <cc:attribute name="itemIndex"    required="true" type="java.lang.Integer" />
+  <cc:attribute name="updateTargets" required="true" type="java.lang.String" />
+</cc:interface>
+
+<cc:implementation>
+
+  <div class="so-resolve-panel p-3 border-1 surface-border border-round mt-2">
+
+    <!-- Info hint -->
+    <div class="flex align-items-start gap-2 mb-3 p-3 border-round so-info-box">
+      <i class="ti ti-info-circle text-lg mt-1 so-text-primary" />
+      <div class="text-sm so-text-muted">
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/ProblemExplanation/InfoHint')}
+      </div>
+    </div>
+
+    <!-- Explanation textarea -->
+    <div class="field mb-3">
+      <label class="text-sm font-medium so-text-primary block mb-1">
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/ProblemExplanation/ExplanationLabel')}
+      </label>
+      <p:inputTextarea
+        value="#{cc.attrs.item.explanation}"
+        rows="4"
+        styleClass="w-full text-sm"
+        placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/ProblemExplanation/ExplanationPlaceholder')}" />
+    </div>
+
+    <!-- Save button -->
+    <div class="flex justify-content-end">
+      <p:commandButton
+        value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/ProblemExplanation/SaveButton')}"
+        icon="ti ti-check"
+        styleClass="so-btn-primary"
+        actionListener="#{cc.attrs.bean.markItemResolved(cc.attrs.itemIndex)}"
+        update="#{cc.attrs.updateTargets}"
+        process="@form" />
+    </div>
+
+  </div>
+
+</cc:implementation>
+
+</html>

@@ -115,7 +115,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductRepository;",
             "",
             "in.filteredProducts =  ProductRepository.getInstance().findByCategories(in.searchResponse.categoryIds);"
           ]
@@ -134,7 +134,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductRepository;",
             "",
             "in.filteredProducts = ProductRepository.getInstance().findAll();"
           ]
@@ -160,7 +160,7 @@
         "signature" : "addToCart",
         "input" : {
           "params" : [
-            { "name" : "product", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product", "desc" : "" }
+            { "name" : "product", "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.Product", "desc" : "" }
           ],
           "map" : {
             "out.productToCart" : "param.product"
@@ -187,7 +187,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.store.CartItem;",
             "",
             "boolean existingInCart = false;",
             "if (in.cartItems.size() > 0) {",
@@ -265,7 +265,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductRepository;",
             "",
             "in.filteredProducts = ProductRepository.getInstance().findAll();"
           ]
@@ -285,7 +285,7 @@
         "signature" : "decreaseQuantity",
         "input" : {
           "params" : [
-            { "name" : "item", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem", "desc" : "" }
+            { "name" : "item", "type" : "com.axonivy.utils.smart.workflow.demo.erp.store.CartItem", "desc" : "" }
           ],
           "map" : {
             "out.selectedCartItem" : "param.item"
@@ -334,7 +334,7 @@
         "signature" : "increaseQuantity",
         "input" : {
           "params" : [
-            { "name" : "item", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.store.CartItem", "desc" : "" }
+            { "name" : "item", "type" : "com.axonivy.utils.smart.workflow.demo.erp.store.CartItem", "desc" : "" }
           ],
           "map" : {
             "out.selectedCartItem" : "param.item"
@@ -400,8 +400,8 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
-            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryRepository;",
             "",
             "in.categories = ProductCategoryRepository.getInstance().findAll();"
           ]
@@ -422,7 +422,7 @@
         "userConfig" : {
           "model" : "\"gpt-4.1\"",
           "system" : "Role:\r\nYou are a Product Category Extraction Agent. Your job is to analyze a user’s message and return the most relevant product categories from a predefined list.\r\n\r\nCategory data in JSON:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.categories) %>\r\n\r\nInstructions:\r\n\r\nConsider the user message and the provided product categories.\r\n\r\nSelect all categories that best match the user’s intent or described product needs.\r\n\r\nIf no category matches, return an empty list.\r\n\r\nDo not create new categories; only use the ones given in the list.\r\n\r\nAlways return the result as a list category ID\r\n\r\nExample result: [\"asdq34dskfsdf234\",\"34234lkn2lk34234\"]",
-          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.store.SearchResponse.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.store.SearchResponse.class",
           "tools" : "[]",
           "resultMapping" : "in.searchResponse",
           "query" : "<%= in.searchTerm %>"
@@ -462,11 +462,11 @@
       "type" : "SubProcessCall",
       "name" : "Create search criteria",
       "config" : {
-        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction)",
+        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction)",
         "call" : {
           "map" : {
             "param.productInfo" : "in.translatedSearchTerm",
-            "param.action" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction.CREATE_CRITERIA"
+            "param.action" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction.CREATE_CRITERIA"
           }
         },
         "output" : {
@@ -489,7 +489,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductRepository;",
             "",
             "in.filteredProducts = ProductRepository.getInstance().findAll();"
           ]

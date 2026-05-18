@@ -1,0 +1,55 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Finish Demo — light-mode variables.
+   Loaded dynamically via finish-demo-#{ivyFreyaTheme.mode}.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Surfaces & text ───────────────────────────────────────────── */
+  --fd-title:           #1e293b;
+  --fd-body:            #475569;
+  --fd-muted:           #94a3b8;
+  --fd-surface:         #ffffff;
+  --fd-surface-deep:    #f8fafc;
+  --fd-border-subtle:   #f1f5f9;
+  --fd-shadow:          0 2px 16px rgba(0,0,0,.06);
+
+  /* ── Hero banner ───────────────────────────────────────────────── */
+  --fd-hero-bg:         linear-gradient(135deg, #f0f9ff 0%, #ede9fe 100%);
+  --fd-hero-border:     #c7d2fe;
+  --fd-hero-icon-bg:    #ffffff;
+
+  /* ── Flow strip ────────────────────────────────────────────────── */
+  --fd-arrow-color:     #cbd5e1;
+
+  /* ── Nav arrow buttons ─────────────────────────────────────────── */
+  --fd-nav-bg:          #ffffff;
+  --fd-nav-border:      #e2e8f0;
+  --fd-nav-color:       #475569;
+  --fd-nav-hover-bg:    #f5f3ff;
+
+  /* ── Step panel cards ──────────────────────────────────────────── */
+  --fd-type-user-bg:     #eff6ff;
+  --fd-type-user-color:  #3b82f6;
+  --fd-type-user-border: #bfdbfe;
+  --fd-type-ai-bg:       #f5f3ff;
+  --fd-type-ai-color:    #7c3aed;
+  --fd-type-ai-border:   #ddd6fe;
+  --fd-type-done-bg:     #f0fdf4;
+  --fd-type-done-color:  #16a34a;
+  --fd-type-done-border: #bbf7d0;
+
+  /* ── Tags ──────────────────────────────────────────────────────── */
+  --fd-tag-bg:          #f1f5f9;
+  --fd-tag-color:       #475569;
+  --fd-tag-border:      #e2e8f0;
+
+  /* ── Dot indicators ────────────────────────────────────────────── */
+  --fd-dot-bg:          #cbd5e1;
+
+  /* ── Capability icon badges ────────────────────────────────────── */
+  --fd-cap-blue-bg:     #dbeafe;   --fd-cap-blue-color:   #2563eb;
+  --fd-cap-purple-bg:   #ede9fe;   --fd-cap-purple-color: #7c3aed;
+  --fd-cap-amber-bg:    #fef3c7;   --fd-cap-amber-color:  #d97706;
+  --fd-cap-green-bg:    #d1fae5;   --fd-cap-green-color:  #059669;
+  --fd-cap-indigo-bg:   #e0e7ff;   --fd-cap-indigo-color: #4f46e5;
+}

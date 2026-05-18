@@ -1,0 +1,456 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/PageTitle')}</ui:define>
+    <ui:define name="content">
+
+      <h:outputStylesheet library="css" name="supplier-onboarding.css" />
+      <h:outputStylesheet library="css" name="supplier-onboarding-#{ivyFreyaTheme.mode}.css" />
+      <h:outputStylesheet library="css" name="finish-demo.css" />
+      <h:outputStylesheet library="css" name="finish-demo-#{ivyFreyaTheme.mode}.css" />
+      <h:outputStylesheet library="css" name="start-demo.css" />
+      <h:outputStylesheet library="css" name="start-demo-#{ivyFreyaTheme.mode}.css" />
+      <h:outputScript library="js" name="start-demo.js" target="body" />
+
+      <div class="sd-page">
+
+        <!-- ── Step navigator — reuses fd- classes from finish-demo.css ── -->
+        <div class="fd-step-navigator">
+
+          <button id="sd-prev" class="fd-nav-btn" type="button"
+            onclick="sdPrevSlide()" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/PrevButtonTitle')}">
+            <i class="ti ti-chevron-left"></i>
+          </button>
+
+          <div class="fd-steps-wrapper">
+
+            <!-- Slide 0: Welcome -->
+            <div class="fd-step-panel" data-step="0">              <div class="sd-slide-body sd-welcome">
+                <div class="sd-hero-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/WelcomeTo')}<br/><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/WelcomeProductName')}</span></div>
+                <div class="text-lg mt-4">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/WelcomeDesc')}
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 1: Process steps -->
+            <div class="fd-step-panel" data-step="1">              <div class="sd-slide-body">
+                <div class="sd-slide-header">
+                  <div class="sd-slide-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Slide1Title')}</div>
+                  <div>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Slide1Sub')}</div>
+                </div>
+                <div class="sd-steps-grid">
+
+                  <div class="sd-step-card">
+                    <div class="sd-step-icon fd-cap-icon--blue"><i class="ti ti-upload"></i></div>
+                    <div>
+                      <div class="sd-step-num">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step01Num')}</div>
+                      <div class="sd-step-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step01Name')}</div>
+                      <div class="sd-step-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step01Desc')}</div>
+                    </div>
+                  </div>
+
+                  <div class="sd-step-card">
+                    <div class="sd-step-icon fd-cap-icon--blue"><i class="ti ti-object-scan"></i></div>
+                    <div>
+                      <div class="sd-step-num">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step02Num')}</div>
+                      <div class="sd-step-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step02Name')}</div>
+                      <div class="sd-step-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step02Desc')}</div>
+                    </div>
+                  </div>
+
+                  <div class="sd-step-card">
+                    <div class="sd-step-icon fd-cap-icon--purple"><i class="ti ti-message-chatbot"></i></div>
+                    <div>
+                      <div class="sd-step-num">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step03Num')}</div>
+                      <div class="sd-step-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step03Name')}</div>
+                      <div class="sd-step-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step03Desc')}</div>
+                    </div>
+                  </div>
+
+                  <div class="sd-step-card">
+                    <div class="sd-step-icon fd-cap-icon--amber"><i class="ti ti-shield-search"></i></div>
+                    <div>
+                      <div class="sd-step-num">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step04Num')}</div>
+                      <div class="sd-step-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step04Name')}</div>
+                      <div class="sd-step-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step04Desc')}</div>
+                    </div>
+                  </div>
+
+                  <div class="sd-step-card">
+                    <div class="sd-step-icon fd-cap-icon--green"><i class="ti ti-chart-bar"></i></div>
+                    <div>
+                      <div class="sd-step-num">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step05Num')}</div>
+                      <div class="sd-step-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step05Name')}</div>
+                      <div class="sd-step-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step05Desc')}</div>
+                    </div>
+                  </div>
+
+                  <div class="sd-step-card">
+                    <div class="sd-step-icon fd-cap-icon--indigo"><i class="ti ti-ai-gateway"></i></div>
+                    <div>
+                      <div class="sd-step-num">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step06Num')}</div>
+                      <div class="sd-step-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step06Name')}</div>
+                      <div class="sd-step-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step06Desc')}</div>
+                    </div>
+                  </div>
+
+                  <div class="sd-step-card sd-step-card--span2">
+                    <div class="sd-step-icon fd-cap-icon--green"><i class="ti ti-circle-check"></i></div>
+                    <div>
+                      <div class="sd-step-num">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step07Num')}</div>
+                      <div class="sd-step-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step07Name')}</div>
+                      <div class="sd-step-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Step07Desc')}</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- Slide 2: Before vs After comparison -->
+            <div class="fd-step-panel" data-step="2">
+              <div class="sd-slide-body">
+
+                <div class="sd-slide-header">
+                  <div class="sd-slide-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Slide2Title')}</div>
+                  <div>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Slide2Sub')}</div>
+                </div>
+
+                <!-- Key metrics comparison -->
+                <div class="sd-compare-stats">
+                  <div class="sd-stat">
+                    <div class="sd-stat-row">
+                      <span class="sd-stat-before">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatTimeBefore')}</span>
+                      <span class="sd-stat-arrow"><i class="ti ti-arrow-right"></i></span>
+                      <span class="sd-stat-after">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatTimeAfter')}</span>
+                    </div>
+                    <div class="sd-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatTimeLabel')}</div>
+                  </div>
+                  <div class="sd-stat">
+                    <div class="sd-stat-row">
+                      <span class="sd-stat-before">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatStepsBefore')}</span>
+                      <span class="sd-stat-arrow"><i class="ti ti-arrow-right"></i></span>
+                      <span class="sd-stat-after">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatStepsAfter')}</span>
+                    </div>
+                    <div class="sd-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatStepsLabel')}</div>
+                  </div>
+                  <div class="sd-stat">
+                    <div class="sd-stat-row">
+                      <span class="sd-stat-before">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatErrorBefore')}</span>
+                      <span class="sd-stat-arrow"><i class="ti ti-arrow-right"></i></span>
+                      <span class="sd-stat-after">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatErrorAfter')}</span>
+                    </div>
+                    <div class="sd-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatErrorLabel')}</div>
+                  </div>
+                </div>
+
+                <!-- Side-by-side comparison -->
+                <div class="sd-compare-grid">
+
+                  <div class="sd-compare-col sd-compare-before">
+                    <div class="sd-compare-col-header">
+                      <i class="ti ti-mood-sad"></i> #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/TraditionalHeader')}
+                    </div>
+                    <ul class="sd-compare-list">
+                      <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem1')}</span></li>
+                      <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem2')}</span></li>
+                      <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem3')}</span></li>
+                      <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem4')}</span></li>
+                      <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem5')}</span></li>
+                      <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem6')}</span></li>
+                    </ul>
+                  </div>
+
+                  <div class="sd-compare-col sd-compare-after">
+                    <div class="sd-compare-col-header">
+                      <i class="ti ti-sparkles"></i> #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AiPoweredHeader')}
+                    </div>
+                    <ul class="sd-compare-list">
+                      <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem1')}</span></li>
+                      <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem2')}</span></li>
+                      <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem3')}</span></li>
+                      <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem4')}</span></li>
+                      <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem5')}</span></li>
+                      <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem6')}</span></li>
+                    </ul>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Slide 3: Are You Ready? -->
+            <div class="fd-step-panel" data-step="3">
+              <div class="sd-slide-body">
+
+                <!-- Hero -->
+                <div class="sd-ready-hero">
+                  <div class="sd-slide-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/ReadyTitle')}</div>
+                  <div>
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/ReadySub')}
+                  </div>
+                </div>
+
+                <!-- ── Before You Start: download demo documents ───────── -->
+                <h:form id="download-form">
+                  <div class="sd-download-section">
+
+                    <!-- Header (always visible) -->
+                    <div class="sd-download-header">
+                      <div class="sd-download-header-top">
+                        <div class="sd-download-header-title">
+                          <i class="ti ti-info-circle"></i> #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeYouStartTitle')}
+                        </div>
+                        <div class="sd-download-header-actions">
+                          <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DownloadAllButton')}" icon="ti ti-download"
+                            ajax="false" immediate="true">
+                            <p:fileDownload value="#{startDemoBean.downloadAllDocuments()}" />
+                          </p:commandButton>
+                          <a class="sd-details-toggle" href="#"
+                            onclick="sdToggleDownloads(this); return false;">
+                            <i class="ti ti-files"></i>
+                            <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/FileDetailsToggle')}</span>
+                            <i class="ti ti-chevron-down sd-details-chevron"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="sd-download-header-desc">
+                        <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeYouStartDesc')}" escape="false" />
+                      </div>
+                    </div>
+
+                    <!-- Collapsible file list -->
+                    <div class="sd-download-body">
+
+                      <!-- Company Information -->
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-building-community"></i>
+                          <div>
+                            <div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocCompanyInfoName')}</div>
+                            <div class="sd-download-row-sub">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocCompanyInfoSub')}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Certifications group -->
+                      <div class="sd-download-group-label">
+                        <i class="ti ti-certificate"></i> #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocGroupCertifications')}
+                      </div>
+
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-rosette"></i>
+                          <div><div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocIso9001Name')}</div></div>
+                        </div>
+                      </div>
+
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-rosette"></i>
+                          <div><div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocIso14001Name')}</div></div>
+                        </div>
+                      </div>
+
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-rosette"></i>
+                          <div><div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocIso27001Name')}</div></div>
+                        </div>
+                      </div>
+
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-rosette"></i>
+                          <div><div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocGdprName')}</div></div>
+                        </div>
+                      </div>
+
+                      <!-- Legal Documents group -->
+                      <div class="sd-download-group-label">
+                        <i class="ti ti-file-text"></i> #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocGroupLegal')}
+                      </div>
+
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-file-description"></i>
+                          <div>
+                            <div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocCommercialRegName')}</div>
+                            <div class="sd-download-row-sub">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocCommercialRegSub')}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-file-text"></i>
+                          <div>
+                            <div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocSelfDeclarationName')}</div>
+                            <div class="sd-download-row-sub">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocSelfDeclarationSub')}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-report-analytics"></i>
+                          <div>
+                            <div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocAnnualReportName')}</div>
+                            <div class="sd-download-row-sub">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocAnnualReportSub')}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="sd-download-row">
+                        <div class="sd-download-row-info">
+                          <i class="ti ti-building-bank"></i>
+                          <div>
+                            <div class="sd-download-row-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocBankingStatementName')}</div>
+                            <div class="sd-download-row-sub">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DocBankingStatementSub')}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div><!-- .sd-download-body -->
+
+                  </div>
+                </h:form>
+
+                <h:form id="gen-form">
+
+                  <!-- Remote commands for each generation step -->
+                  <p:remoteCommand name="sdGenStep1"
+                    actionListener="#{startDemoBean.generateVectorStore}"
+                    update="sd-gen-panel"
+                    oncomplete="sdGen.onStepDone(1);"
+                    onerror="sdGen.onStepError(1);"
+                    global="false" />
+                  <p:remoteCommand name="sdGenStep2"
+                    actionListener="#{startDemoBean.generateCompliancePolicies}"
+                    update="sd-gen-panel"
+                    oncomplete="setTimeout(function(){sdGen.onStepDone(2);}, 2000);"
+                    onerror="sdGen.onStepError(2);"
+                    global="false" />
+                  <p:remoteCommand name="sdGenStep3"
+                    actionListener="#{startDemoBean.generateFinancialPolicies}"
+                    update="sd-gen-panel"
+                    oncomplete="setTimeout(function(){sdGen.onStepDone(3);}, 2000);"
+                    onerror="sdGen.onStepError(3);"
+                    global="false" />
+
+                  <!-- Generate Data button -->
+                  <div class="flex justify-content-center mb-3">
+                    <p:commandButton id="sdGenBtn"
+                      value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/GenerateDataButton')}"
+                      icon="ti ti-database-plus"
+                      styleClass="ui-button-primary sd-gen-btn"
+                      onclick="sdGen.start(); return false;"
+                      type="button" />
+                  </div>
+
+                  <!-- Timeline panel — updated after every step -->
+                  <h:panelGroup id="sd-gen-panel" layout="block">
+                    <div class="sd-gen-timeline js-sd-gen-timeline #{startDemoBean.generationStarted ? '' : 'hidden'}">
+                      <div class="so-tl js-sd-tl">
+
+                        <!-- Step 1: RAG Knowledge Base -->
+                        <div class="#{startDemoBean.getStepClass(startDemoBean.step1Status)}">
+                          <div class="so-tl-left">
+                            <div class="#{startDemoBean.getBubbleClass(startDemoBean.step1Status)}">
+                              <i class="#{startDemoBean.getStatusIcon(startDemoBean.step1Status)}" />
+                            </div>
+                            <div class="so-tl-line" />
+                          </div>
+                          <div class="so-tl-card">
+                            <div class="so-tl-card-header">
+                              <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1Title')}</span>
+                              <span class="sd-gen-step-hint">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1Hint')}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Step 2: Compliance Policies -->
+                        <div class="#{startDemoBean.getStepClass(startDemoBean.step2Status)}">
+                          <div class="so-tl-left">
+                            <div class="#{startDemoBean.getBubbleClass(startDemoBean.step2Status)}">
+                              <i class="#{startDemoBean.getStatusIcon(startDemoBean.step2Status)}" />
+                            </div>
+                            <div class="so-tl-line" />
+                          </div>
+                          <div class="so-tl-card">
+                            <div class="so-tl-card-header">
+                              <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen2Title')}</span>
+                              <span class="sd-gen-step-hint">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen2Hint')}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Step 3: Financial Policies -->
+                        <div class="#{startDemoBean.getStepClass(startDemoBean.step3Status)}">
+                          <div class="so-tl-left">
+                            <div class="#{startDemoBean.getBubbleClass(startDemoBean.step3Status)}">
+                              <i class="#{startDemoBean.getStatusIcon(startDemoBean.step3Status)}" />
+                            </div>
+                            <div class="so-tl-line" />
+                          </div>
+                          <div class="so-tl-card">
+                            <div class="so-tl-card-header">
+                              <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen3Title')}</span>
+                              <span class="sd-gen-step-hint">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen3Hint')}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div><!-- .so-tl -->
+
+                      <!-- Done banner (shown when all steps complete) -->
+                      <ui:fragment rendered="#{startDemoBean.generationDone}">
+                        <div class="sd-gen-done-banner">
+                          <i class="ti ti-circle-check" />
+                          <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/GenDoneBanner')}" escape="false" />
+                        </div>
+                      </ui:fragment>
+
+                    </div><!-- .sd-gen-timeline -->
+                  </h:panelGroup>
+                </h:form>
+
+              </div><!-- .sd-slide-body -->
+            </div>
+
+          </div><!-- .fd-steps-wrapper -->
+
+          <button id="sd-next" class="fd-nav-btn" type="button"
+            onclick="sdNextSlide()" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/NextButtonTitle')}">
+            <i class="ti ti-chevron-right"></i>
+          </button>
+
+        </div><!-- .fd-step-navigator -->
+
+        <!-- ── Dot indicators ────────────────────────────────────── -->
+        <div class="fd-step-dots">
+          <span class="fd-dot" onclick="sdGoToSlide(0)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Dot0Title')}"></span>
+          <span class="fd-dot" onclick="sdGoToSlide(1)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Dot1Title')}"></span>
+          <span class="fd-dot" onclick="sdGoToSlide(2)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Dot2Title')}"></span>
+          <span class="fd-dot" onclick="sdGoToSlide(3)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Dot3Title')}"></span>
+        </div>
+
+        <!-- ── Footer: Cancel + Start Demo ──────────────────────── -->
+        <h:form id="form" styleClass="sd-footer">
+          <p:commandLink id="cancel" actionListener="#{ivyWorkflowView.cancel()}" value="#{ivy.cms.co('/Labels/Cancel')}" />
+          <p:commandButton id="proceed" actionListener="#{logic.close}"
+            value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StartDemoButton')}" icon="pi pi-check" />
+        </h:form>
+
+      </div><!-- .sd-page -->
+
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+
+</html>

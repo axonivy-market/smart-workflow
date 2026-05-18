@@ -3,7 +3,7 @@
   "id" : "1994B47EF9815D17",
   "kind" : "HTML_DIALOG",
   "config" : {
-    "data" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductCreation.ProductCreationData"
+    "data" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.ProductCreation.ProductCreationData"
   },
   "elements" : [ {
       "id" : "f0",
@@ -79,11 +79,11 @@
       "type" : "SubProcessCall",
       "name" : "AI: Dry run product",
       "config" : {
-        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction)",
+        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction)",
         "call" : {
           "map" : {
             "param.productInfo" : "in.productInfo",
-            "param.action" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentAction.DRY_RUN"
+            "param.action" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction.DRY_RUN"
           }
         },
         "output" : {
@@ -134,7 +134,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.utils.UploadedFileUtils;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.util.UploadedFileUtils;",
             "",
             "in.productInfo = UploadedFileUtils.processUploadedFile(in.uploadEvent.getFile());",
             "",
@@ -183,7 +183,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryRepository;",
             "",
             "ivy.log.error(in.response.product.category.name);",
             "",
@@ -205,7 +205,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierRepository;",
             "",
             "in.response.product.supplier = SupplierRepository.getInstance().create(in.response.product.supplier);",
             "in.response.isSupplierExisting = true;"
@@ -251,7 +251,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandRepository;",
             "",
             "in.response.product.brand = BrandRepository.getInstance().create(in.response.product.brand);",
             "in.response.isBrandExisting  = true;"
@@ -291,7 +291,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.product.ProductRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductRepository;",
             "",
             "in.response.product = ProductRepository.getInstance().create(in.response.product);",
             "in.isProductCreated  = true;"
@@ -345,7 +345,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.utils.ImageUtils;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.util.ImageUtils;",
             "",
             "in.imageBase64 = ImageUtils.inputStreamToBase64(in.imageUploadEvent.getFile().getInputStream(), in.imageUploadEvent.getFile().getFileName());",
             "",
@@ -366,7 +366,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.product.image.ProductImageRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductImageRepository;",
             "",
             "in.response.product.imageId = ProductImageRepository.getInstance().create(in.response.product.image);"
           ]
@@ -385,11 +385,11 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory;",
-            "import com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier;",
-            "import com.axonivy.utils.smart.workflow.demo.shopping.brand.Brand;",
-            "import com.axonivy.utils.smart.workflow.demo.shopping.utils.ImageUtils;",
-            "import com.axonivy.utils.smart.workflow.demo.shopping.product.image.ProductImage;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.util.ImageUtils;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.model.ProductImage;",
             "",
             "if (in.response.product.category == null) {",
             "  in.response.product.category = new ProductCategory();",
@@ -421,7 +421,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.supplier.SupplierRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierRepository;",
             "",
             "in.similarSuppliers = SupplierRepository.getInstance().findAll();"
           ]
@@ -440,7 +440,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryRepository;",
             "",
             "in.similarProductCategories = ProductCategoryRepository.getInstance().findAll();"
           ]

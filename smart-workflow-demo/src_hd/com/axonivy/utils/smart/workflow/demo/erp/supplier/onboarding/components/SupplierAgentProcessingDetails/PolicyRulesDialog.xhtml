@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://primefaces.org/ui">
+  <p:dialog header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/PolicyRulesDialogHeader')}"
+    widgetVar="policyRulesDialog"
+    modal="true"
+    resizable="false"
+    styleClass="so-help-dialog"
+    width="560"
+    height="70vh">
+    <div class="so-help-body">
+      <p class="so-help-intro">
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/PolicyRulesDialogIntro')}
+      </p>
+
+      <div class="so-help-section">
+        <div class="so-help-section-title"><i class="ti ti-clipboard-check" /> Policy Compliance Scoring</div>
+        <div class="so-help-rule">Policy Compliance starts at <strong>100</strong></div>
+        <div class="so-help-rule so-help-rule-red"><i class="ti ti-minus" /> Full deduction per FAILURE finding</div>
+        <div class="so-help-rule so-help-rule-yellow"><i class="ti ti-minus" /> Half deduction per WARNING finding</div>
+      </div>
+
+      <div class="so-policy-rules-list">
+        <ui:repeat value="#{cc.attrs.bean.policyRules}" var="policyRule" varStatus="prs">
+          <div class="so-policy-rule-item">
+            <div class="so-policy-rule-num">#{prs.index + 1}</div>
+            <div class="so-policy-rule-body">
+              <div class="so-policy-rule-text">#{policyRule.rule}</div>
+              <div class="so-policy-rule-target">#{policyRule.target}</div>
+            </div>
+            <div class="so-policy-rule-deduct so-help-rule-red">
+              <i class="ti ti-minus" />#{policyRule.riskScore}
+            </div>
+          </div>
+        </ui:repeat>
+      </div>
+    </div>
+  </p:dialog>
+</ui:composition>

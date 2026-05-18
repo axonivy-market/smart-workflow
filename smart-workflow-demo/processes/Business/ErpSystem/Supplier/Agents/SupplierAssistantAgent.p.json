@@ -1,0 +1,301 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19DF0A0D30B47830",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.SupplierAssistantAgentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "askSupplierAssistant(String,String,String)",
+      "config" : {
+        "signature" : "askSupplierAssistant",
+        "input" : {
+          "params" : [
+            { "name" : "question", "type" : "String", "desc" : "Latest user message (without chat history)" },
+            { "name" : "chatHistory", "type" : "String", "desc" : "Formatted chat history of previous turns (user and assistant)" },
+            { "name" : "guidanceContext", "type" : "String", "desc" : "Compiled guidance from AgentGuidance records for the agent system prompt" }
+          ],
+          "map" : {
+            "out.question" : "param.question",
+            "out.chatHistory" : "param.chatHistory",
+            "out.guidanceContext" : "param.guidanceContext"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "aiResponse", "type" : "String", "desc" : "Agent response text" }
+          ],
+          "map" : {
+            "result.aiResponse" : "in.aiResponse"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "Script",
+      "name" : "Build query with history",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.formattedQuery = \"\";",
+            "if (in.chatHistory != null && !in.chatHistory.isEmpty()) {",
+            "  in.formattedQuery += \"Chat history:\\n\" + in.chatHistory;",
+            "}",
+            "",
+            "in.formattedQuery += \"\\n\\n---\\n\\nUser message:\\n\" + in.question;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 752, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "ProgramInterface",
+      "name" : "Supplier Assistant Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a helpful supplier onboarding assistant for an ERP procurement system. Your role is to answer questions about the supplier onboarding process, look up existing suppliers, and guide users through the form.\\n\\nAlways be concise and professional. Use available tools when you need to look up information. If a question is unrelated to supplier onboarding, politely decline.\\n\\nWhen the user asks about policies, process steps, required documents, certifications, risk scoring, approval routing, or banking requirements, use the openSearchSearch tool with collection '<%= com.axonivy.utils.smart.workflow.demo.erp.rag.SupplierOnboardingKnowledge.COLLECTION %>' to retrieve accurate policy information before answering.\\n\\n<%= in.guidanceContext %>",
+          "tools" : "[\"parseOnboardingRequest\", \"openSearchSearch\"]",
+          "resultMapping" : "in.aiResponse",
+          "query" : "<%= in.question %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 64 },
+        "size" : { "width" : 200, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f40",
+      "type" : "CallSubStart",
+      "name" : "parseOnboardingRequest(String,InputStream)",
+      "config" : {
+        "signature" : "parseOnboardingRequest",
+        "input" : {
+          "params" : [
+            { "name" : "content", "type" : "String", "desc" : "Uploaded onboarding document content (.txt/.md)" },
+            { "name" : "inputStream", "type" : "java.io.InputStream", "desc" : "Document binary stream for OCR (for .pdf files)" }
+          ],
+          "map" : {
+            "out.parseContent" : "param.content",
+            "out.inputStream" : "param.inputStream"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "draft", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "Parsed onboarding request values extracted from uploaded content" },
+            { "name" : "feedback", "type" : "String", "desc" : "Parse status message for the caller" }
+          ],
+          "map" : {
+            "result.draft" : "in.parsedDraft",
+            "result.feedback" : "in.parseFeedback"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 200 },
+        "description" : "Parses onboarding document text and returns structured draft values for the onboarding form."
+      },
+      "connect" : [
+        { "id" : "f60", "to" : "f41" }
+      ]
+    }, {
+      "id" : "f41",
+      "type" : "Alternative",
+      "name" : "Type?",
+      "config" : {
+        "conditions" : {
+          "f61" : "org.apache.commons.lang3.StringUtils.isNotBlank(in.parseContent)",
+          "f63" : "in.inputStream != null"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 200 },
+        "labelOffset" : { "x" : -16, "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "f61", "to" : "f47", "label" : {
+            "name" : "text",
+            "offset" : { "x" : -7, "y" : -10 }
+          } },
+        { "id" : "f63", "to" : "f50", "via" : [ { "x" : 280, "y" : 472 } ], "label" : {
+            "name" : "PDF",
+            "offset" : { "x" : 25, "y" : -106 }
+          } }
+      ]
+    }, {
+      "id" : "f50",
+      "type" : "ProgramInterface",
+      "name" : "OCR: Extract Document Text",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a supplier onboarding document OCR specialist. Extract all text content from the uploaded document exactly as it appears, preserving structure, labels, values, and layout.",
+          "tools" : "[]",
+          "resultMapping" : "in.parseContent",
+          "query" : "Extract all text content from this supplier onboarding document:\r\n\r\n---\r\n\r\n<%=in.inputStream%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 472 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "boundaries" : [ {
+          "id" : "f52",
+          "type" : "ErrorBoundaryEvent",
+          "config" : {
+            "errorCode" : "ivy:error:program:exception",
+            "output" : {
+              "code" : [
+                "ivy.log.error(\"OCR failed: \" + error.getMessage(), error);",
+                "in.inputStream = null;",
+                "in.parsedDraft = null;",
+                "in.parseFeedback = \"OCR failed: \" + error.getMessage();"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 472, "y" : 509 }
+          },
+          "connect" : [
+            { "id" : "c52", "to" : "f45", "via" : [ { "x" : 968, "y" : 512 } ] }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "c50", "to" : "f51" }
+      ]
+    }, {
+      "id" : "f51",
+      "type" : "Script",
+      "name" : "Release Document Stream",
+      "config" : {
+        "output" : {
+          "code" : "in.inputStream = null;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 344 }
+      },
+      "connect" : [
+        { "id" : "f69", "to" : "f47" }
+      ]
+    }, {
+      "id" : "f47",
+      "type" : "Script",
+      "name" : "Load departments",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.department.model.Department;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.department.repository.DepartmentRepository;",
+            "",
+            "java.util.List<Department> depts = DepartmentRepository.getInstance().findAll();",
+            "StringBuilder sb = new StringBuilder();",
+            "for (Department d : depts) {",
+            "  sb.append(d.getId()).append(\": \").append(d.getName()).append(\"\\n\");",
+            "}",
+            "in.departmentContext = sb.toString().trim();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 200 }
+      },
+      "connect" : [
+        { "id" : "f67", "to" : "f42" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "ProgramInterface",
+      "name" : "Parse onboarding request draft",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a procurement assistant that extracts supplier onboarding fields from plain text or markdown. Return only the requested structured object fields. Keep all other fields null.\\n\\nThe content may contain multiple documents separated by '--- DOCUMENT: filename ---' markers. Extract and merge all available fields across all documents. In case of conflicts, prefer the most specific or most recently listed value.\\n\\nFields to extract:\\n- department: use the department ID from the list below that best matches the context (e.g. DEPT-003)\\n- productsServicesNeeded\\n- expectedAnnualVolume (number only, no currency symbol)\\n- urgency (NORMAL, HIGH, or CRITICAL)\\n- neededByDate (yyyy-MM-dd)\\n- additionalNotes\\n- supplier.businessName\\n- supplier.legalForm (e.g. GmbH, AG, SE)\\n- supplier.vatId\\n- supplier.commercialRegisterNo\\n- supplier.businessPurpose\\n- supplier.phone\\n- supplier.email\\n- supplier.website\\n- supplier.businessAddress.street1\\n- supplier.businessAddress.street2\\n- supplier.businessAddress.city\\n- supplier.businessAddress.state\\n- supplier.businessAddress.zipCode\\n- supplier.businessAddress.country (ISO code if possible, otherwise country name)\\n- supplier.primaryContact.firstName\\n- supplier.primaryContact.lastName\\n- supplier.primaryContact.jobTitle\\n- supplier.primaryContact.email\\n- supplier.primaryContact.phone\\n- supplier.banking.iban\\n- supplier.banking.bic\\n- supplier.banking.bankName\\n- supplier.certifications: list of certifications found in the document. For each, provide:\\n  - type: one of ISO_9001, ISO_14001, ISO_27001, GDPR_DPA (match based on the certification name or standard reference)\\n  - certNumber: the certificate number or reference code\\n  - expiryDate: expiry date in yyyy-MM-dd format\\n\\nAvailable departments (ID: Name):\\n<%= in.departmentContext %>",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest.class",
+          "resultMapping" : "in.parsedDraft",
+          "query" : "Extract supplier onboarding values from this document content:\\n\\n<TEXT>\\n<%= in.parseContent %>\\n</TEXT>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 600, "y" : 200 },
+        "size" : { "width" : 176, "height" : 70 }
+      },
+      "boundaries" : [ {
+          "id" : "f46",
+          "type" : "ErrorBoundaryEvent",
+          "config" : {
+            "errorCode" : "ivy:error:program:exception",
+            "output" : {
+              "code" : [
+                "ivy.log.error(\"Failed to parse onboarding document: \" + error.getMessage(), error);",
+                "in.parsedDraft = null;",
+                "in.parseFeedback = \"Failed to parse document: \" + error.getMessage();"
+              ]
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 648, "y" : 237 }
+          },
+          "connect" : [
+            { "id" : "f66", "to" : "f45", "via" : [ { "x" : 624, "y" : 296 }, { "x" : 968, "y" : 296 } ] }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f68", "to" : "f44" }
+      ]
+    }, {
+      "id" : "f44",
+      "type" : "Script",
+      "name" : "Set parse feedback",
+      "config" : {
+        "output" : {
+          "code" : [
+            "if (in.parsedDraft == null) {",
+            "  in.parseFeedback = \"No structured values were extracted from the document.\";",
+            "} else {",
+            "  in.parseFeedback = \"Document parsed successfully.\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 816, "y" : 200 },
+        "size" : { "width" : 188, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f64", "to" : "f45" }
+      ]
+    }, {
+      "id" : "f45",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 968, "y" : 200 }
+      }
+    } ]
+}
