@@ -8,9 +8,12 @@
     <relativePath />
   </parent>
   <groupId>com.axonivy.utils.ai</groupId>
-  <artifactId>smart-workflow-demo</artifactId>
+  <artifactId>smart-workflow-ollama</artifactId>
   <version>14.0.0-SNAPSHOT</version>
   <packaging>iar</packaging>
+  <properties>
+    <langchain4j.version>1.15.0</langchain4j.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>com.axonivy.ivy.api</groupId>
@@ -23,22 +26,27 @@
       <type>iar</type>
     </dependency>
     <dependency>
-      <groupId>com.axonivy.utils.ai</groupId>
-      <artifactId>smart-workflow-openai</artifactId>
-      <version>${project.version}</version>
-      <type>iar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.axonivy.utils.ai</groupId>
-      <artifactId>smart-workflow-ollama</artifactId>
-      <version>${project.version}</version>
-      <type>iar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.axonivy.utils.ai</groupId>
-      <artifactId>smart-workflow-opensearch-rag</artifactId>
-      <version>${project.version}</version>
-      <type>iar</type>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-ollama</artifactId>
+      <version>${langchain4j.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dev.langchain4j</groupId>
+          <artifactId>langchain4j-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dev.langchain4j</groupId>
+          <artifactId>langchain4j-http-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dev.langchain4j</groupId>
+          <artifactId>langchain4j-http-client-jdk</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <repositories>
