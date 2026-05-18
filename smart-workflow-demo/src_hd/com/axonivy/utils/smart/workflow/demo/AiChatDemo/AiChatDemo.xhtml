@@ -1,0 +1,206 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">AI Chat Demo</ui:define>
+    <ui:define name="content">
+
+      <h:outputStylesheet library="css" name="chat-ui.css" />
+      <h:outputScript library="js" name="chat.js" />
+
+      <!-- Override RAG-specific thinking phases with generic ones -->
+      <script>
+        thinkingPhases.splice(0, thinkingPhases.length,
+          'Thinking\u2026',
+          'Processing your message\u2026',
+          'Generating response\u2026'
+        );
+      </script>
+
+      <h:form id="aiChatForm">
+        <h:panelGroup id="ai-chat-panel" layout="block"
+          styleClass="messenger-container flex flex-column surface-0"
+          style="height: calc(100vh - 180px); min-height: 480px; border: 1px solid var(--surface-border); border-radius: 12px; overflow: hidden;">
+
+          <!-- ── Header ───────────────────────────────────────────── -->
+          <div class="flex align-items-center justify-content-between px-4 py-3 flex-shrink-0"
+            style="background: linear-gradient(135deg, var(--ivy-primary-color) 0%, color-mix(in srgb, var(--ivy-primary-color), #000 20%) 100%); color: white;">
+
+            <div class="flex align-items-center gap-3">
+              <!-- Avatar -->
+              <div class="flex align-items-center justify-content-center border-circle flex-shrink-0"
+                style="width:42px; height:42px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);">
+                <i class="si si-robot" style="font-size:1.2rem; color:white;"></i>
+              </div>
+              <!-- Title + status -->
+              <div>
+                <div class="font-bold" style="font-size:1rem; letter-spacing:0.01em;">AI Chat Demo</div>
+                <div class="flex align-items-center gap-1 mt-1">
+                  <span style="width:7px; height:7px; border-radius:50%; background:#4ade80; display:inline-block;"></span>
+                  <span style="font-size:0.75rem; opacity:0.85;">Ready</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- New Chat button -->
+            <p:commandButton icon="pi pi-refresh" title="New Chat"
+              styleClass="p-button-rounded p-button-sm"
+              style="background: rgba(255,255,255,0.15) !important; border: 1px solid rgba(255,255,255,0.3) !important; color: white !important;"
+              actionListener="#{logic.clearChat()}"
+              update="ai-chat-panel"
+              global="false"
+              oncomplete="onClearChat();" />
+          </div>
+
+          <!-- ── Messages area ──────────────────────────────────────── -->
+          <div class="messages-area flex-1 overflow-auto p-3 p-md-4"
+            style="background: var(--surface-50);">
+            <div class="chat-content rag-chat-inner mx-auto">
+
+              <!-- Welcome state (shown when no messages) -->
+              <ui:fragment rendered="#{empty data.messages}">
+                <div class="flex flex-column align-items-center justify-content-center rag-welcome-state">
+                  <div class="rag-welcome-avatar flex align-items-center justify-content-center border-circle mb-4">
+                    <i class="si si-robot text-white"></i>
+                  </div>
+                  <div class="text-2xl font-bold mb-2" style="color: var(--text-color);">Hello! How can I help?</div>
+                  <p class="text-center m-0 line-height-3 mb-4" style="color: var(--text-color-secondary); max-width: 420px;">
+                    Ask me anything — I can answer questions, explain concepts, write code, or just have a conversation.
+                  </p>
+                  <!-- Suggestion chips -->
+                  <div class="flex flex-wrap gap-2 justify-content-center">
+                    <span class="px-3 py-2 border-round-xl text-sm cursor-pointer"
+                      style="background: var(--surface-0); border: 1px solid var(--surface-border); color: var(--text-color-secondary);"
+                      onclick="setSuggestion('What can you help me with?')">
+                      What can you help me with?
+                    </span>
+                    <span class="px-3 py-2 border-round-xl text-sm cursor-pointer"
+                      style="background: var(--surface-0); border: 1px solid var(--surface-border); color: var(--text-color-secondary);"
+                      onclick="setSuggestion('Tell me a fun fact')">
+                      Tell me a fun fact
+                    </span>
+                    <span class="px-3 py-2 border-round-xl text-sm cursor-pointer"
+                      style="background: var(--surface-0); border: 1px solid var(--surface-border); color: var(--text-color-secondary);"
+                      onclick="setSuggestion('Explain smart-workflow in one paragraph')">
+                      Explain smart-workflow briefly
+                    </span>
+                  </div>
+                </div>
+              </ui:fragment>
+
+              <!-- Message history -->
+              <ui:repeat value="#{data.messages}" var="message">
+
+                <!-- User message -->
+                <h:panelGroup rendered="#{message.role eq 'user'}" layout="block"
+                  styleClass="user-message-row flex justify-content-end mb-4">
+                  <div class="user-message">
+                    <div class="message-bubble sent">
+                      <h:outputText value="#{message.content}" />
+                    </div>
+                    <div class="message-time mt-1 text-right">
+                      <h:outputText value="#{message.timestamp}" />
+                    </div>
+                  </div>
+                </h:panelGroup>
+
+                <!-- Assistant message -->
+                <h:panelGroup rendered="#{message.role ne 'user'}" layout="block"
+                  styleClass="assistant-message-row mb-4">
+                  <div class="assistant-content">
+                    <div class="flex align-items-center gap-2 mb-2">
+                      <div class="flex align-items-center justify-content-center border-circle flex-shrink-0"
+                        style="width:28px; height:28px; background: var(--ivy-primary-color);">
+                        <i class="si si-robot" style="font-size:0.75rem; color:white;"></i>
+                      </div>
+                      <span class="assistant-name text-sm font-semibold">AI Assistant</span>
+                    </div>
+                    <div class="message-content pl-5">
+                      <h:outputText value="#{message.content}" />
+                    </div>
+                    <div class="message-time pl-5 mt-1">
+                      <h:outputText value="#{message.timestamp}" />
+                    </div>
+                  </div>
+                </h:panelGroup>
+
+              </ui:repeat>
+
+              <!-- Thinking indicator -->
+              <div class="assistant-message-row mb-4 thinking-status rag-hidden" id="thinking-indicator">
+                <div class="assistant-content">
+                  <div class="flex align-items-center gap-2 mb-2">
+                    <div class="flex align-items-center justify-content-center border-circle flex-shrink-0"
+                      style="width:28px; height:28px; background: var(--ivy-primary-color);">
+                      <i class="si si-robot" style="font-size:0.75rem; color:white;"></i>
+                    </div>
+                    <span class="assistant-name text-sm font-semibold">AI Assistant</span>
+                  </div>
+                  <div class="flex align-items-center gap-2 pl-5">
+                    <div class="thinking-spinner">
+                      <span class="thinking-dot"></span>
+                      <span class="thinking-dot"></span>
+                      <span class="thinking-dot"></span>
+                    </div>
+                    <span class="thinking-text" id="thinking-text" style="color: var(--text-color-secondary);">Thinking...</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── Input area ─────────────────────────────────────────── -->
+          <div class="message-input-area flex-shrink-0 border-top-1 surface-border p-3"
+            style="background: var(--surface-0);">
+            <div class="rag-chat-inner mx-auto">
+              <div class="flex align-items-end gap-2">
+                <div class="flex-1">
+                  <p:inputTextarea id="chat-input"
+                    value="#{data.userInput}"
+                    rows="1"
+                    autoResize="true"
+                    maxlength="4000"
+                    styleClass="w-full message-input"
+                    placeholder="Ask me anything... (Enter to send, Shift+Enter for new line)"
+                    onkeydown="handleChatInputKeydown(event);" />
+                </div>
+                <p:commandButton id="send-btn"
+                  icon="si si-arrow-up-1"
+                  styleClass="p-button-rounded send-btn"
+                  actionListener="#{logic.chat()}"
+                  update="ai-chat-panel"
+                  process="@form"
+                  global="false"
+                  onstart="showThinking()"
+                  oncomplete="onChatComplete();" />
+              </div>
+              <div class="text-center mt-2">
+                <span style="font-size: 0.72rem; color: var(--text-color-secondary);">
+                  AI responses may be inaccurate. Always verify important information.
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </h:panelGroup>
+      </h:form>
+
+      <!-- Suggestion chip handler -->
+      <script>
+        function setSuggestion(text) {
+          var input = document.querySelector('.message-input');
+          if (input) {
+            input.value = text;
+            input.focus();
+          }
+        }
+      </script>
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+</html>
