@@ -1,4 +1,4 @@
-let thinkingPhases = [
+const thinkingPhases = [
   'Searching documents',
   'Analyzing relevant content',
   'Generating response'
