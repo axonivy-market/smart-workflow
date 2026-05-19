@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.http.client.HttpClientBuilder;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel.OllamaChatModelBuilder;
 
@@ -30,13 +31,17 @@ public class OllamaServiceConnector {
         StringUtils.defaultIfBlank(Ivy.var().get(OllamaConf.DEFAULT_MODEL), FALLBACK_DEFAULT_MODEL));
 
     return OllamaChatModel.builder()
-        .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
+        .httpClientBuilder(httpClientBuilder())
         .baseUrl(baseUrl())
         .modelName(selectedModel)
         .temperature(DEFAULT_TEMPERATURE)
         .timeout(timeout())
         .logRequests(true)
         .logResponses(true);
+  }
+
+  public static HttpClientBuilder httpClientBuilder() {
+    return new SmartHttpClientBuilderFactory().create();
   }
 
   public static String baseUrl() {

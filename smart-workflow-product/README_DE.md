@@ -346,18 +346,18 @@ Example Configuration:
 
 </details>
 
-#### Ollama-Modelle
+#### Ollama Models
 
 <details>
 
 <summary>Ollama setup instructions</summary>
-Mit Ollama können Open-Source-Modelle (Llama, Gemma, Qwen, Mistral, ...) lokal oder auf Ihrer eigenen Infrastruktur ausgeführt werden. Importieren Sie das Projekt `smart-workflow-ollama`, installieren Sie [Ollama](https://ollama.com/) und laden Sie das gewünschte Modell herunter (z. B. `ollama pull llama3.2`).
+Ollama lets you run open-source models (Llama, Gemma, Qwen, Mistral, ...) locally or on your own infrastructure. Import the `smart-workflow-ollama` project, install [Ollama](https://ollama.com/), and pull the model you want to use (e.g. `ollama pull llama3.2`).
 
-Konfigurieren Sie die `BaseUrl` Ihres Ollama-Servers (Standard: `http://localhost:11434`) und das `DefaultModel`. Ein API-Schlüssel ist nicht erforderlich.
+Configure the `BaseUrl` of your Ollama server (defaults to `http://localhost:11434`) and the `DefaultModel`. No API key is required.
 
-> **Hinweis:** Die Unterstützung für strukturierte Ausgaben hängt vom verwendeten Modell ab. Aktuelle Modelle (Llama 3.1+, Gemma 3, Qwen 3, Mistral Nemo, ...) können auf Ollama 0.3.0+ JSON-Schema-basierte Antworten zurückgeben. Ältere oder kleinere Modelle liefern möglicherweise unstrukturierten Text.
+> **Note:** Structured output support depends on the underlying model. Recent models (Llama 3.1+, Gemma 3, Qwen 3, Mistral Nemo, ...) can return JSON-schema-constrained responses on Ollama 0.3.0+. Older or smaller models may return free-form text and break structured extraction.
 
-> **Hinweis zu Embeddings:** Laden Sie ein dediziertes Embedding-Modell wie `nomic-embed-text` oder `mxbai-embed-large` herunter und setzen Sie es als `DefaultEmbeddingModel`, um RAG-Funktionen mit Ollama zu nutzen.
+> **Note on embeddings:** Pull a dedicated embedding model such as `nomic-embed-text` or `mxbai-embed-large` and set it as `DefaultEmbeddingModel` to use the RAG features with Ollama.
 
 ```yaml
 @variables.ollama@
