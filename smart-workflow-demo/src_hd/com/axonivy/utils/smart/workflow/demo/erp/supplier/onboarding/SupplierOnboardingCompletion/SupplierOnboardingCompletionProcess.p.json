@@ -8,20 +8,18 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",
-      "name" : "start(OnboardingRequest,SupplierAgentResponse,List<AuditTrailEntry>,String)",
+      "name" : "start(OnboardingRequest,SupplierAgentResponse,String)",
       "config" : {
         "signature" : "start",
         "input" : {
           "params" : [
             { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
             { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
-            { "name" : "auditTrail", "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>", "desc" : "" },
             { "name" : "summary", "type" : "String", "desc" : "" }
           ],
           "map" : {
             "out.request" : "param.request",
             "out.agentResponse" : "param.agentResponse",
-            "out.auditTrail" : "param.auditTrail",
             "out.summary" : "param.summary"
           }
         },

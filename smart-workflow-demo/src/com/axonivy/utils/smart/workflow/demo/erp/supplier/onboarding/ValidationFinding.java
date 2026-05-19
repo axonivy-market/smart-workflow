@@ -1,8 +1,10 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding;
 
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskKind;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;
 
 import dev.langchain4j.model.output.structured.Description;
+
 
 public class ValidationFinding {
 
@@ -29,8 +31,17 @@ public class ValidationFinding {
   @Description("The type of risk this finding relates to: FINANCIAL_STABILITY, POLICY_COMPLIANCE, or CERTIFICATION_VALIDITY")
   private RiskType riskType;
 
+  @Description("The kind of check that produced this finding: MISSING_DOC or AI_VALIDATION")
+  private RiskKind riskKind;
+
   /** Runtime-only: true once the supplier has addressed this finding on the Clarification task. Not part of LLM extraction. */
   private boolean resolved;
+
+  /** AI-generated explanation or context for this finding, populated by the validation agent. Not part of LLM extraction. */
+  private String aiExplanation;
+
+  /** Runtime-only: explanation text entered by the user for DUPLICATE or OTHER type findings on the Clarification task. Not part of LLM extraction. */
+  private String userExplanation;
 
   public ValidationFinding() {
   }
@@ -90,11 +101,45 @@ public class ValidationFinding {
     this.riskType = riskType;
   }
 
+  public RiskKind getRiskKind() {
+    return riskKind;
+  }
+
+  public void setRiskKind(RiskKind riskKind) {
+    this.riskKind = riskKind;
+  }
+
   public boolean isResolved() {
     return resolved;
   }
 
   public void setResolved(boolean resolved) {
     this.resolved = resolved;
+  }
+
+  public String getAiExplanation() {
+    return aiExplanation;
+  }
+
+  public void setAiExplanation(String aiExplanation) {
+    this.aiExplanation = aiExplanation;
+  }
+
+  public String getUserExplanation() {
+    return userExplanation;
+  }
+
+  public void setUserExplanation(String userExplanation) {
+    this.userExplanation = userExplanation;
+  }
+
+  public ClarificationProblemType getProblemType() {
+    if (documentTypeKey != null && !documentTypeKey.isBlank()) return ClarificationProblemType.DOCUMENT;
+    if (riskKind == RiskKind.MISSING_DOC) return ClarificationProblemType.DOCUMENT;
+    String src = source != null ? source.toLowerCase() : "";
+    if (src.contains("duplicate") || src.contains("erp")) return ClarificationProblemType.DUPLICATE;
+    String msg = message != null ? message.toLowerCase() : "";
+    if (msg.contains("duplicate")) return ClarificationProblemType.DUPLICATE;
+    return ClarificationProblemType.OTHER;
   }
 }

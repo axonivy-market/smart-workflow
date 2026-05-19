@@ -26,50 +26,98 @@
         stepTitle="Supplier Onboarding"
         stepSubtitle="#{stepSubtitle}" />
 
-      <!-- Main 2-column content area -->
-      <div class="so-page-content">
-        <p:messages id="form-messages" />
-        <div class="grid" style="align-items: flex-start; margin-top: 0;">
+      <!-- Main 2-column content area — fixed/resizable AI panel -->
+      <div class="so-body-columns">
 
-          <!-- Left: page-specific form content -->
-          <div class="col-12 lg:col-8 xl:col-9">
+        <!-- Left: form content + sticky footer -->
+        <div class="so-form-column flex flex-column">
+          <p:messages id="form-messages" />
+          <div class="so-main-content flex-1">
             <ui:insert name="form-content">
               <!-- Default placeholder — pages override this slot -->
             </ui:insert>
           </div>
-
-          <!-- Right: AI assistant sidebar -->
-          <div class="col-12 lg:col-4 xl:col-3">
-            <ic:com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.components.SupplierAiAssistant
-              id="supplier-ai-assistant"
-              uploadEnabled="#{assistantUploadEnabled and resolvedAssistantBean.assistantUploadEnabled}"
-              uploadListener="#{resolvedAssistantBean.addUploadedDocument}"
-              confirmParseListener="#{resolvedAssistantBean.confirmAssistantDocumentParse}"
-              uploadedFileName="#{resolvedAssistantBean.assistantUploadedFileName}"
-              awaitingConfirmation="#{resolvedAssistantBean.assistantAwaitingConfirmation}"
-              parseFeedback="#{resolvedAssistantBean.assistantParseFeedback}"
-              uploadedDocuments="#{resolvedAssistantBean.uploadedDocuments}"
-              removeDocumentListener="#{resolvedAssistantBean.removeUploadedDocument}"
-              agentEnabled="#{resolvedAssistantBean.agentSubProcessSignature != null}"
-              sendMessageListener="#{resolvedAssistantBean.sendAgentMessage}"
-              getAnswerListener="#{resolvedAssistantBean.getAgentAnswer}"
-              chatHistory="#{resolvedAssistantBean.agentChatHistory}"
-              userMessage="#{resolvedAssistantBean.agentUserMessage}"
-              guidanceList="#{guidanceListOverride != null ? guidanceListOverride : resolvedAssistantBean.agentGuidance}" />
+          <!-- Sticky footer inside form column -->
+          <div class="so-page-footer">
+            <div class="so-page-footer-left">
+              <ui:insert name="footer-left" />
+            </div>
+            <h:panelGroup layout="block" id="footer-right-panel" styleClass="so-page-footer-right">
+              <ui:insert name="footer-right" />
+            </h:panelGroup>
           </div>
-
         </div>
+
+        <!-- Resize handle -->
+        <div class="so-resize-handle" id="so-resize-handle"></div>
+
+        <!-- Right: AI assistant panel -->
+        <div class="so-ai-col" id="so-ai-col">
+          <ic:com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.components.SupplierAiAssistant
+            id="supplier-ai-assistant"
+            uploadEnabled="#{assistantUploadEnabled and resolvedAssistantBean.assistantUploadEnabled}"
+            uploadListener="#{resolvedAssistantBean.addUploadedDocument}"
+            confirmParseListener="#{resolvedAssistantBean.confirmAssistantDocumentParse}"
+            uploadedFileName="#{resolvedAssistantBean.assistantUploadedFileName}"
+            awaitingConfirmation="#{resolvedAssistantBean.assistantAwaitingConfirmation}"
+            parseFeedback="#{resolvedAssistantBean.assistantParseFeedback}"
+            uploadedDocuments="#{resolvedAssistantBean.uploadedDocuments}"
+            removeDocumentListener="#{resolvedAssistantBean.removeUploadedDocument}"
+            agentEnabled="#{resolvedAssistantBean.agentSubProcessSignature != null}"
+            sendMessageListener="#{resolvedAssistantBean.sendAgentMessage}"
+            getAnswerListener="#{resolvedAssistantBean.getAgentAnswer}"
+            chatHistory="#{resolvedAssistantBean.agentChatHistory}"
+            userMessage="#{resolvedAssistantBean.agentUserMessage}"
+            guidanceList="#{guidanceListOverride != null ? guidanceListOverride : resolvedAssistantBean.agentGuidance}" />
+        </div>
+
       </div>
 
-      <!-- Footer -->
-      <div class="so-page-footer">
-        <div class="so-page-footer-left">
-          <ui:insert name="footer-left" />
-        </div>
-        <h:panelGroup layout="block" id="footer-right-panel" styleClass="so-page-footer-right" >
-          <ui:insert name="footer-right" />
-        </h:panelGroup>
-      </div>
+      <script>
+        (function () {
+          function initPanelResize() {
+            var handle = document.getElementById('so-resize-handle');
+            var panel  = document.getElementById('so-ai-col');
+            if (!handle || !panel) return;
+
+            var MIN_W = 300, MAX_W = 600;
+            var startX, startW;
+
+            handle.addEventListener('mousedown', function (e) {
+              startX = e.clientX;
+              startW = panel.offsetWidth;
+              handle.classList.add('so-dragging');
+              document.body.style.cursor     = 'col-resize';
+              document.body.style.userSelect = 'none';
+
+              function onMove(e) {
+                var delta = startX - e.clientX;
+                var w = Math.min(MAX_W, Math.max(MIN_W, startW + delta));
+                panel.style.width = w + 'px';
+                panel.style.flex  = '0 0 ' + w + 'px';
+              }
+
+              function onUp() {
+                handle.classList.remove('so-dragging');
+                document.body.style.cursor     = '';
+                document.body.style.userSelect = '';
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup',   onUp);
+              }
+
+              document.addEventListener('mousemove', onMove);
+              document.addEventListener('mouseup',   onUp);
+              e.preventDefault();
+            });
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPanelResize);
+          } else {
+            initPanelResize();
+          }
+        })();
+      </script>
 
     </ui:define>
   </ui:composition>

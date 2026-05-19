@@ -45,8 +45,9 @@
         <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/AnnualVolumeLabel')}</label>
         <p:inputNumber id="annual-volume"
           value="#{cc.attrs.bean.request.expectedAnnualVolume}"
-          symbol=" EUR" symbolLocation="suffix"
-          decimalPlaces="0"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/AnnualVolumeLabel')}"
+          symbol="€"
           placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/AnnualVolumePlaceholder')}"
           disabled="#{cc.attrs.readOnly}" />
       </div>

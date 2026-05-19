@@ -37,9 +37,9 @@
                   </h:outputFormat>
                 </div>
                 <div class="so-clarification-banner-meta">
-                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/BannerMetaTemplate')}">
-                    <f:param value="#{data.request.caseReference}" />
-                    <f:param value="#{data.declineRecord.declinedAt}" />
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/BannerMetaTemplate')}" escape="false">
+                    <f:param value="#{ivy.case.name}" />
+                    <f:param value="#{supplierOnboardingDeclineBean.declineEntry.timestamp}" />
                   </h:outputFormat>
                   · <a href="#" class="so-banner-toggle-link" onclick="soToggleBannerScore(this); return false;">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/ShowDetailsLink')}</a>
                 </div>
@@ -82,7 +82,7 @@
                 <!-- Decline Reasons -->
                 <div class="so-card mb-3">
                   <div class="so-card-title"><i class="ti ti-alert-circle" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/DeclineReasonsTitle')}</div>
-                  <ui:repeat value="#{data.declineRecord.declineReasons}" var="reason" varStatus="vs">
+                  <ui:repeat value="#{supplierOnboardingDeclineBean.declineEntry.declineReasons}" var="reason" varStatus="vs">
                     <div class="so-notification-row">
                       <div class="so-decline-reason-num">#{vs.index + 1}</div>
                       <span>#{reason}</span>
@@ -111,7 +111,7 @@
             </div>
             <!-- Full audit trail -->
             <ic:com.axonivy.utils.smart.workflow.demo.erp.components.AuditTrail
-              auditTrail="#{data.auditTrail}" />
+              auditTrail="#{data.request.auditTrail}" />
           </p:tab>
 
           <!-- ── Tab 2: Supplier Details ──────────────────────────────── -->

@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocument;
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentRepository;
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskKind;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RuleType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule;
@@ -22,6 +24,8 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProces
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierPolicyRuleRepository;
+
+import ch.ivyteam.ivy.environment.Ivy;
 
 /**
  * Runner helper for document extraction and policy validation steps in the
@@ -121,13 +125,13 @@ public class ValidationRunner {
         continue;
       }
       boolean present = docs != null && docs.stream().anyMatch(d -> docType.equals(d.getDocumentType()));
+      RiskKind messageKind = present ? RiskKind.AI_VALIDATION : RiskKind.MISSING_DOC;
       ValidationFinding f = new ValidationFinding(
           present ? "PASSED" : "FAILURE",
-          present
-              ? "Required document present: " + docType.getLabel()
-              : "Required document missing: " + docType.getLabel(),
+          Ivy.cms().co(messageKind.getCmsUri(), Arrays.asList(docType.getLabel())),
           docType.name(), RiskType.CERTIFICATION_VALIDITY);
       f.setDocumentTypeKey(docType.getDocumentTypeKey());
+      f.setRiskKind(RiskKind.MISSING_DOC);
       findings.add(f);
     }
     return findings;
@@ -470,6 +474,7 @@ public class ValidationRunner {
     }
     for (ValidationFinding f : ruleResult.getFindings()) {
       f.setRiskType(RiskType.FINANCIAL_STABILITY);
+      f.setRiskKind(RiskKind.AI_VALIDATION);
       accumulated.add(f);
     }
   }
@@ -695,7 +700,67 @@ public class ValidationRunner {
   }
 
   /**
-   * Adds all findings from {@code ruleResult} into the {@code accumulated} list.
+   * Filters an existing list of policy findings for re-use on a re-run.
+   *
+   * <p>Removes findings where {@code resolved == true} AND {@code riskKind == MISSING_DOC}.
+   * All other findings (including unresolved MISSING_DOC and all AI_VALIDATION findings)
+   * are kept so they pre-populate {@code accumulatedFindings} and lock in already-evaluated rules.</p>
+   *
+   * @return a mutable copy; never null.
+   */
+  public static List<ValidationFinding> filterExistingFindings(
+      List<ValidationFinding> existingFindings) {
+    if (existingFindings == null || existingFindings.isEmpty()) {
+      return new ArrayList<>();
+    }
+    List<ValidationFinding> kept = new ArrayList<>();
+    for (ValidationFinding f : existingFindings) {
+      if (f.isResolved() && RiskKind.MISSING_DOC.equals(f.getRiskKind())) {
+        continue;
+      }
+      kept.add(f);
+    }
+    return kept;
+  }
+
+  /**
+   * Returns {@code true} when the filtered existing findings already contain at least one entry
+   * whose {@code source} matches {@code rule.getTarget()} (case-insensitive, trimmed).
+   * Used to skip the AI call for already-evaluated rules during a re-run.
+   */
+  public static boolean isRuleAlreadyEvaluated(SupplierPolicyRule rule,
+      List<ValidationFinding> filteredExistingFindings) {
+    if (rule == null || filteredExistingFindings == null || filteredExistingFindings.isEmpty()) {
+      return false;
+    }
+    String ruleTarget = normalizeKey(rule.getTarget());
+    for (ValidationFinding f : filteredExistingFindings) {
+      if (ruleTarget.equals(normalizeKey(f.getSource()))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns a mutable copy of {@code filteredExistingFindings} to use as the initial value for
+   * {@code accumulatedFindings} in the policy rule loop. Returns an empty list when null.
+   */
+  public static List<ValidationFinding> initAccumulatedFromExisting(
+      List<ValidationFinding> filteredExistingFindings) {
+    if (filteredExistingFindings == null || filteredExistingFindings.isEmpty()) {
+      return new ArrayList<>();
+    }
+    return new ArrayList<>(filteredExistingFindings);
+  }
+
+  /**
+   * Adds all findings from {@code ruleResult} into the {@code accumulated} list,
+   * skipping any finding that is already represented:
+   * <ul>
+   *   <li>by {@code documentTypeKey} (case-insensitive) when non-null, or</li>
+   *   <li>by {@code source} (case-insensitive) when {@code documentTypeKey} is null.</li>
+   * </ul>
    */
   public static void mergeRuleFindings(List<ValidationFinding> accumulated,
       PolicyValidationResult ruleResult) {
@@ -704,16 +769,45 @@ public class ValidationRunner {
     }
     for (ValidationFinding f : ruleResult.getFindings()) {
       f.setRiskType(RiskType.POLICY_COMPLIANCE);
-      accumulated.add(f);
+      f.setRiskKind(RiskKind.AI_VALIDATION);
+      if (!isDuplicate(accumulated, f)) {
+        accumulated.add(f);
+      }
     }
   }
 
+  private static boolean isDuplicate(List<ValidationFinding> accumulated, ValidationFinding incoming) {
+    String docKey = incoming.getDocumentTypeKey();
+    String source = incoming.getSource();
+    for (ValidationFinding existing : accumulated) {
+      if (docKey != null) {
+        if (docKey.equalsIgnoreCase(existing.getDocumentTypeKey())) {
+          return true;
+        }
+      } else if (source != null && source.equalsIgnoreCase(existing.getSource())
+          && existing.getDocumentTypeKey() == null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
-   * Wraps a list of findings into a new {@link PolicyValidationResult}.
+   * Wraps a list of findings into a new {@link PolicyValidationResult},
+   * deduplicating by message content (preserves first occurrence).
    */
   public static PolicyValidationResult wrapFindings(List<ValidationFinding> findings) {
     PolicyValidationResult result = new PolicyValidationResult();
-    result.setFindings(findings != null ? findings : new ArrayList<>());
+    findings = findings != null ? findings : new ArrayList<>();
+    List<ValidationFinding> distinct = new ArrayList<>();
+    java.util.Set<String> seenMessages = new java.util.LinkedHashSet<>();
+    for (ValidationFinding f : findings) {
+      if (seenMessages.add(f.getMessage())) {
+        f.setUserExplanation(null);
+        distinct.add(f);
+      }
+    }
+    result.setFindings(distinct);
     return result;
   }
 
@@ -735,6 +829,7 @@ public class ValidationRunner {
         "Policy validation failed: " + msg));
     ValidationFinding errorFinding = new ValidationFinding(
         "FAILURE", "Policy validation could not complete: " + msg, "system", RiskType.POLICY_COMPLIANCE);
+    errorFinding.setRiskKind(RiskKind.AI_VALIDATION);
     result.getFindings().add(errorFinding);
     result.setProcessingStep(step);
     return "Policy validation failed: " + msg;

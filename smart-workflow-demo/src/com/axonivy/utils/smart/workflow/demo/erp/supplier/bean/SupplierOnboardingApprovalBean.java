@@ -14,10 +14,11 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentRes
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalDecision;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalRecord;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditEntryKind;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditUserItemType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval.SupplierOnboardingApprovalData;
@@ -74,9 +75,6 @@ public class SupplierOnboardingApprovalBean extends ReadOnlySupplierDetailsBean 
     if (data.getApprovalAt() == null || data.getApprovalAt().isBlank()) {
       data.setApprovalAt(Instant.now().toString());
     }
-    data.setApprovalRecord(buildApprovalRecord(
-        data.getApprovalDecision(), data.getApprovalComment(),
-        data.getApprovalActor(), data.getApprovalAt(), data.getApprovalStage()));
     data.setAuditEntry(buildAuditEntry(
         data.getApprovalDecision(), data.getApprovalComment(),
         data.getApprovalActor(), data.getApprovalAt(), data.getApprovalStage()));
@@ -88,18 +86,7 @@ public class SupplierOnboardingApprovalBean extends ReadOnlySupplierDetailsBean 
     closeMethod.invoke(el, new Object[0]);
   }
 
-  // ── Approval record / audit entry builders ───────────────────────────────
-
-  public ApprovalRecord buildApprovalRecord(ApprovalDecision decision, String comment,
-      String actor, String decidedAt, ApprovalStage stage) {
-    ApprovalRecord record = new ApprovalRecord();
-    record.setStage(stage);
-    record.setActorDisplayName(actor);
-    record.setDecision(decision);
-    record.setComment(comment);
-    record.setDecidedAt(decidedAt);
-    return record;
-  }
+  // ── Audit entry builder ───────────────────────────────────────────────────
 
   public AuditTrailEntry buildAuditEntry(ApprovalDecision decision, String comment,
       String actor, String timestamp, ApprovalStage stage) {
@@ -107,13 +94,14 @@ public class SupplierOnboardingApprovalBean extends ReadOnlySupplierDetailsBean 
     entry.setTimestamp(timestamp != null ? timestamp : Instant.now().toString());
     entry.setActor(actor);
     entry.setActorType(AuditActorType.APPROVER);
+    entry.setKind(AuditEntryKind.USER);
+    entry.setItemType(AuditUserItemType.APPROVAL);
     String stageName = stage != null ? stage.name() : "";
-    entry.setAction(stageName + " approval decision: " + decision);
-    String detail = String.valueOf(stage);
-    if (comment != null && !comment.isBlank()) {
-      detail = detail + " - comment: " + comment;
-    }
-    entry.setTechnicalDetail(detail);
+    entry.setAction(stageName + " approval decision");
+    entry.setTechnicalDetail(null);
+    entry.setStage(stage);
+    entry.setDecision(decision);
+    entry.setComment(comment);
     return entry;
   }
 

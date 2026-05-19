@@ -11,16 +11,8 @@
     "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
     "modifiers" : [ ]
   }, {
-    "name" : "declineRecord",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord",
-    "modifiers" : [ ]
-  }, {
     "name" : "notificationRecords",
     "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.NotificationRecord>",
-    "modifiers" : [ ]
-  }, {
-    "name" : "auditTrail",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>",
     "modifiers" : [ ]
   } ]
 }

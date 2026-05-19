@@ -13,27 +13,6 @@
   }, {
     "name" : "summary"
   }, {
-    "name" : "approvalRecords",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalRecord>"
-  }, {
-    "name" : "auditTrail",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>"
-  }, {
-    "name" : "lastApprovalDecision",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalDecision"
-  }, {
-    "name" : "lastApprovalComment"
-  }, {
-    "name" : "lastApprovalActor"
-  }, {
-    "name" : "lastApprovalAt"
-  }, {
-    "name" : "lastApprovalStage",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage"
-  }, {
-    "name" : "lastApprovalRecord",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalRecord"
-  }, {
     "name" : "lastAuditEntry",
     "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry"
   }, {
@@ -52,20 +31,8 @@
     "name" : "goBack",
     "type" : "Boolean"
   }, {
-    "name" : "declineRecord",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord"
-  }, {
     "name" : "notificationRecords",
     "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.NotificationRecord>"
-  }, {
-    "name" : "clarificationItems",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem>"
-  }, {
-    "name" : "clarificationItemList",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItemList"
-  }, {
-    "name" : "clarificationRecords",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationRecord>"
   }, {
     "name" : "clarificationCycleDisplay",
     "type" : "java.lang.Integer"

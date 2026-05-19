@@ -9,6 +9,463 @@ Dialogs:
                 AxonIvySupport: Support Axon Ivy
                 InputPlaceholder: Tapez votre question... (Shift+Entrée pour envoyer)
                 Send: Envoyer
+              erp:
+                components:
+                  AuditTrail:
+                    EmptyMessage: Aucune entrée d'audit enregistrée pour l'instant.
+                    ExpandCollapseTooltip: Cliquer pour développer / réduire
+                    Title: Journal d'audit complet
+                  LegalDocuments:
+                    AdditionalDocumentSubtitle: Document supplémentaire
+                    AnnualReportLabel: Dernier rapport annuel
+                    AnnualReportSubtitle: Rapport financier de l’exercice fiscal le plus récent
+                    BrowseFilesLink: ou parcourir les fichiers
+                    CommercialRegisterLabel: Extrait du registre du commerce
+                    CommercialRegisterSubtitle: Document officiel du registre du commerce
+                    DragAndDropHint: Glissez et déposez des fichiers supplémentaires ici
+                    SelfDeclarationLabel: Auto-déclaration
+                    SelfDeclarationSubtitle: Confirmer la conformité avec la politique d'achats
+                  ProblemExplanation:
+                    ExplanationLabel: Votre explication
+                    ExplanationPlaceholder: Décrivez la situation et votre plan de résolution...
+                    InfoHint: Veuillez fournir une brève explication pour aider l'approbateur à comprendre le contexte et comment vous prévoyez de résoudre ce problème.
+                    SaveButton: Marquer comme résolu
+                supplier:
+                  onboarding:
+                    FinishDemo:
+                      HeroSub: Nous espérons que vous avez vécu une excellente expérience avec <strong>Smart Workflow</strong>.<br/>Voici un résumé de tout ce que l'IA a géré pour vous — de manière autonome, précise et entièrement traçable.
+                      PageTitle: Smart Workflow — Résumé du processus IA
+                      Panel0Desc: Le processus d'intégration commence lorsqu'un fournisseur soumet sa demande via le portail Smart Workflow. Tous les documents justificatifs requis — immatriculation commerciale, certificats fiscaux et états financiers — sont téléversés à cette étape.
+                      Panel0Detail1: Le fournisseur complète le profil de l'entreprise et les coordonnées
+                      Panel0Detail2: Téléverse les documents de certification et financiers requis
+                      Panel0Detail3: Smart Workflow valide l'exhaustivité du téléversement avant traitement
+                      Panel0Num: Étape 01 sur 07
+                      Panel0Tag1: Portail fournisseur
+                      Panel0Tag2: Chargement de documents
+                      Panel0Tag3: Démarrage du flux de travail
+                      Panel0Title: Chargement de documents
+                      Panel1Desc: L'IA lit les PDFs téléversés à l'aide de modèles de vision-langage, identifie les champs de données fournisseur dans plusieurs documents et pré-remplit automatiquement l'ensemble du formulaire d'intégration — sans saisie manuelle.
+                      Panel1Detail1: Structures et tableaux PDF analysés avec des modèles de vision-langage
+                      Panel1Detail2: Plus de 15 champs de données fournisseur identifiés et extraits automatiquement
+                      Panel1Detail3: Formulaire d'intégration complet rempli automatiquement avec des données validées
+                      Panel1Num: Étape 02 sur 07
+                      Panel1Tag1: LLM
+                      Panel1Tag2: Sortie structurée
+                      Panel1Tag3: Multi-document
+                      Panel1Tag4: Aucune saisie manuelle
+                      Panel1Title: Extraction de documents par IA
+                      Panel2Desc: Un assistant IA propulsé par RAG est disponible sur chaque écran — répondant aux questions sur les règles de politique, expliquant les exigences de conformité et clarifiant les seuils de risque en temps réel.
+                      Panel2Detail1: Documents de politique récupérés par recherche de similarité vectorielle
+                      Panel2Detail2: Questions des fournisseurs et des examinateurs répondues tout au long du processus
+                      Panel2Detail3: Conseils de conformité contextuels fournis à chaque étape
+                      Panel2Num: Étape 03 sur 07
+                      Panel2Tag1: RAG
+                      Panel2Tag2: Recherche vectorielle
+                      Panel2Tag3: Agent de chat
+                      Panel2Tag4: Conscient du contexte
+                      Panel2Title: Guide contextuel Q&amp;R
+                      Panel3Desc: L'IA compare tous les documents soumis aux règles de politique d'achats, identifiant les certifications manquantes, les accréditations expirées et les lacunes de conformité — avec un raisonnement complet et une traçabilité totale.
+                      Panel3Detail1: Tous les documents validés contre plus de 12 règles de politique d'achats
+                      Panel3Detail2: Lacunes de conformité identifiées et éléments nécessitant attention signalés
+                      Panel3Detail3: Rapport de validation détaillé avec des résultats explicables généré
+                      Panel3Num: Étape 04 sur 07
+                      Panel3Tag1: Moteur de règles
+                      Panel3Tag2: Référence croisée
+                      Panel3Tag3: IA explicable
+                      Panel3Tag4: Traçabilité
+                      Panel3Title: Validation de documents
+                      Panel4Desc: L'IA calcule un score de risque composite selon trois dimensions — stabilité financière, conformité aux politiques et validité des certifications — fournissant une évaluation objective et auditable sur 100.
+                      Panel4Detail1: États financiers analysés pour les indicateurs de stabilité et de liquidité
+                      Panel4Detail2: Historique de conformité, certifications et alignement politique recoupés
+                      Panel4Detail3: Score de risque composite pondéré avec ventilation complète produit
+                      Panel4Num: Étape 05 sur 07
+                      Panel4Tag1: Analyse financière
+                      Panel4Tag2: Modèle de risque
+                      Panel4Tag3: Score pondéré
+                      Panel4Tag4: Noté /100
+                      Panel4Title: Calcul du risque
+                      Panel5Desc: 'Sur la base du contexte complet — données extraites, score de risque, résultats de validation et politique — l''IA a décidé du chemin du processus de manière autonome : approuver, demander des clarifications ou refuser.'
+                      Panel5Detail1: Toutes les entrées évaluées par rapport aux règles de décision de routage configurables
+                      Panel5Detail2: Chemin de résultat optimal déterminé sans triage humain
+                      Panel5Detail3: Branche de flux de travail appropriée déclenchée avec une piste d'audit complète
+                      Panel5Num: Étape 06 sur 07
+                      Panel5Tag1: Moteur de décision
+                      Panel5Tag2: IA agentique
+                      Panel5Tag3: Zéro triage
+                      Panel5Tag4: Autonome
+                      Panel5Title: Routage autonome
+                      Panel6Desc: La demande d'intégration a été entièrement traitée et clôturée. Toutes les données extraites, décisions IA, résultats de validation et la piste d'audit complète sont enregistrés de manière permanente et accessibles pour la révision de conformité.
+                      Panel6Detail1: Toutes les décisions et raisonnements IA enregistrés dans le journal d'audit permanent
+                      Panel6Detail2: Dossier fournisseur mis à jour dans le système avec le résultat final
+                      Panel6Detail3: Parties prenantes notifiées de la décision et de l'achèvement du processus
+                      Panel6Num: Étape 07 sur 07
+                      Panel6Tag1: Piste d'audit
+                      Panel6Tag2: Conformité
+                      Panel6Tag3: Processus terminé
+                      Panel6Title: Dossier clôturé
+                      ProgressText: Étape {0} sur {1}
+                      Step0DotTitle: Chargement de documents
+                      Step0FlowLabel: Chargement<br />de documents
+                      Step1DotTitle: Extraction par IA
+                      Step1FlowLabel: Extraction<br />par IA
+                      Step2DotTitle: Guide Q&R
+                      Step2FlowLabel: Guide<br />Q&amp;R
+                      Step3DotTitle: Validation de documents
+                      Step3FlowLabel: Validation de<br />documents
+                      Step4DotTitle: Score de risque
+                      Step4FlowLabel: Score de<br />risque
+                      Step5DotTitle: Routage autonome
+                      Step5FlowLabel: Routage<br />autonome
+                      Step6DotTitle: Dossier clôturé
+                      Step6FlowLabel: Dossier<br />clôturé
+                    StartDemo:
+                      AfterItem1: Le fournisseur téléverse les documents une fois via un formulaire structuré et guidé
+                      AfterItem2: L'IA visuelle extrait automatiquement 15+ champs des PDFs en quelques secondes — aucune saisie manuelle
+                      AfterItem3: 12+ règles de politique d'approvisionnement vérifiées instantanément avec raisonnement IA complet
+                      AfterItem4: 'Routage autonome : approuver, demander une clarification ou refuser — aucun triage nécessaire'
+                      AfterItem5: Score de risque composite basé sur la stabilité financière, la conformité et les données de certification
+                      AfterItem6: Chaque décision, donnée extraite et raisonnement de l'IA enregistré de façon permanente
+                      AiPoweredHeader: Smart Workflow piloté par l'IA
+                      BeforeItem1: Le fournisseur envoie des documents par e-mail — les achats cherchent dans les pièces jointes
+                      BeforeItem2: Le personnel lit manuellement les PDFs et saisit les données dans des tableurs ou des formulaires ERP
+                      BeforeItem3: Les vérifications de conformité sont ad-hoc, incohérentes et effectuées des jours après la soumission
+                      BeforeItem4: Le routage d'approbation est décidé en réunions de comité — des délais de plusieurs semaines
+                      BeforeItem5: L'évaluation des risques repose sur le jugement personnel, sans standard de notation
+                      BeforeItem6: Les décisions restent dans des fils d'e-mail — aucune piste d'audit structurée pour la conformité
+                      BeforeYouStartDesc: La démo vous demande de téléverser des documents sur une entreprise afin que l'IA puisse extraire des informations, évaluer les risques et noter le fournisseur. Nous avons préparé ces documents pour vous — téléchargez-les et utilisez-les lorsque vous y êtes invité
+                        pendant la démo. Cliquez ensuite sur <strong>Générer des données</strong> ci-dessous pour configurer l'environnement de démo.
+                      BeforeYouStartTitle: Avant de commencer
+                      DataAlreadyGeneratedBanner: Les données de démonstration sont déjà prêtes — profitez de la démo !
+                      DocAnnualReportName: Rapport annuel
+                      DocAnnualReportSub: Rapport financier du dernier exercice fiscal
+                      DocBankingStatementName: Relevé bancaire
+                      DocBankingStatementSub: Relevé de compte bancaire récent
+                      DocCommercialRegName: Extrait du registre du commerce
+                      DocCommercialRegSub: Document officiel du registre du commerce
+                      DocCompanyInfoName: Lettre d'offre fournisseur
+                      DocCompanyInfoSub: Lettre d'offre officielle avec périmètre, conditions commerciales et coordonnées bancaires
+                      DocGdprName: Accord de traitement des données RGPD
+                      DocGroupCertifications: Certifications
+                      DocGroupLegal: Documents juridiques
+                      DocIso14001Name: ISO 14001 — Management environnemental
+                      DocIso27001Name: ISO 27001 — Sécurité de l'information
+                      DocIso9001Name: ISO 9001 — Management de la qualité
+                      DocSelfDeclarationName: Autodéclaration de l'entreprise
+                      DocSelfDeclarationSub: Autodéclaration de conformité et de politique
+                      Dot0Title: Bienvenue
+                      Dot1Title: Le processus
+                      Dot2Title: Traditionnel vs. IA
+                      Dot3Title: Générer des données
+                      DownloadAllButton: Tout télécharger
+                      FileDetailsHide: Masquer les détails
+                      FileDetailsToggle: Détails des fichiers
+                      Gen1Hint: Intégrer les documents de politique dans le magasin vectoriel
+                      Gen1RunningSubtitle: Intégration des documents de politique dans la base vectorielle…
+                      Gen1Title: Construire la base de connaissances RAG
+                      Gen2Hint: 6 règles de certification et réglementation
+                      Gen2RunningSubtitle: Création des règles de certification et réglementaires…
+                      Gen2Title: Créer des politiques de certification et réglementation
+                      Gen3Hint: 6 règles de risque financier et fournisseurs démo
+                      Gen3RunningSubtitle: Création des règles de risque financier et fournisseurs de démo…
+                      Gen3Title: Créer des politiques financières
+                      GenDoneBanner: Données de démo prêtes — cliquez sur <strong>Démarrer la démo</strong> pour commencer !
+                      GenProcessingSubtitle: Traitement en cours…
+                      GenRetryButton: Réessayer
+                      GenerateDataButton: Générer des données
+                      NextButtonTitle: Suivant
+                      PageTitle: Smart Workflow — Démo d'intégration fournisseur
+                      PrevButtonTitle: Précédent
+                      ReadySub: Générez des fournisseurs exemples, des règles de politique d'approvisionnement et la base de connaissances RAG pour explorer l'expérience complète de la démo.
+                      ReadyTitle: Êtes-vous prêt ?
+                      Slide1Sub: 7 étapes du téléversement de documents à la clôture du dossier — entièrement piloté par l'IA
+                      Slide1Title: Le processus d'intégration
+                      Slide2Sub: Pourquoi l'ancienne méthode échoue — et comment l'IA transforme chaque étape
+                      Slide2Title: Intégration traditionnelle vs. flux de travail piloté par l'IA
+                      StartDemoButton: Démarrer la démo
+                      StatErrorAfter: Quasi sans erreur
+                      StatErrorBefore: ~30% de taux d'erreur
+                      StatErrorLabel: Précision de saisie des données
+                      StatStepsAfter: Entièrement automatisé
+                      StatStepsBefore: 30+ étapes manuelles
+                      StatStepsLabel: Étapes du processus
+                      StatTimeAfter: Minutes
+                      StatTimeBefore: 3–6 semaines
+                      StatTimeLabel: Délai d'intégration
+                      Step01Desc: Le fournisseur soumet sa candidature avec le profil de l'entreprise et tous les documents justificatifs requis.
+                      Step01Name: Téléversement de documents
+                      Step01Num: Étape 01
+                      Step02Desc: Le modèle de langage visuel lit les PDFs et remplit automatiquement 15+ champs. Aucune saisie manuelle requise.
+                      Step02Name: Extraction IA
+                      Step02Num: Étape 02
+                      Step03Desc: Un assistant IA alimenté par RAG répond aux questions de conformité sur chaque écran en temps réel.
+                      Step03Name: Assistance Q&R
+                      Step03Num: Étape 03
+                      Step04Desc: L'IA vérifie 12+ règles de politique d'approvisionnement et signale les lacunes de conformité avec un raisonnement complet.
+                      Step04Name: Validation des documents
+                      Step04Num: Étape 04
+                      Step05Desc: Score de risque composite basé sur la stabilité financière, la conformité et la validité des certifications.
+                      Step05Name: Notation des risques
+                      Step05Num: Étape 05
+                      Step06Desc: L'IA décide du résultat — approuver, demander une clarification ou refuser — sans triage humain.
+                      Step06Name: Routage autonome
+                      Step06Num: Étape 06
+                      Step07Desc: Toutes les décisions, données extraites et raisonnements de l'IA sont enregistrés de façon permanente pour audit de conformité.
+                      Step07Name: Dossier clôturé
+                      Step07Num: Étape 07
+                      TraditionalHeader: Processus traditionnel
+                      WelcomeDesc: Découvrez un processus d'intégration fournisseur piloté par l'IA qui automatise l'extraction de documents, la validation de conformité, la notation des risques et le routage autonome — avec une traçabilité complète.
+                      WelcomeProductName: Axon Ivy Smart Workflow
+                      WelcomeTo: Bienvenue dans
+                    SupplierAgentProcessing:
+                      ContinueButton: Continuer
+                      ContinueToApprovalButton: Continuer vers l''approbation
+                      ContinueToClarificationButton: Continuer vers la clarification
+                      InitialMessage: Cliquez sur Analyser pour lancer la validation par IA. J'extrairai les documents, vérifierai la conformité aux politiques, validerai la santé financière et calculerai un score de risque étape par étape.
+                      StepSubtitle: 'Étape 4 sur 6 — Agent : Validation et notation des risques'
+                      ViewDeclineButton: Voir le refus
+                    SupplierClarification:
+                      AdditionalInfoRequired: Informations supplémentaires sur le fournisseur requises — veuillez consulter l'onglet des résultats de l'agent.
+                      AdditionalNotesPlaceholder: Expliquez pourquoi certains documents manquent ou fournissez des informations alternatives pour l'équipe QM...
+                      AdditionalNotesTitle: Notes supplémentaires / Explication
+                      AnalysisResultTab: Résultat de l'analyse
+                      BannerDescTemplate: L'Agent fournisseur a calculé un score de risque de {0}/100 en raison d'informations manquantes ou insuffisantes. Veuillez fournir les détails demandés afin que l'agent puisse réévaluer et poursuivre le workflow.
+                      BannerMetaTemplate: 'Cas : {0}<br />Soumis par : {1}'
+                      BannerTitle: 'Clarification requise : {0}'
+                      CertValidityLabel: Validité des certif.
+                      ClarificationTab: Clarification
+                      DocumentAcceptedTypes: PDF · TXT · MD · DOC · DOCX acceptés
+                      EscalateButton: Demander l'assistance QM/ISM
+                      FinalAttemptDesc: C'est la dernière occasion de fournir les informations manquantes. Si la réévaluation échoue encore après cette soumission, la demande sera automatiquement refusée.
+                      FinalAttemptTitle: Dernière tentative de clarification (cycle {0} sur {1})
+                      FinancialStabilityLabel: Stabilité financière
+                      InitialMessage: Veuillez fournir les documents et informations manquants afin que l'agent puisse réévaluer votre demande.
+                      ItemsTitle: Éléments nécessitant une clarification
+                      PolicyComplianceLabel: Conformité aux politiques
+                      RiskScoreBadge: JAUNE
+                      RiskScoreLabel: Score de risque
+                      ShowDetailsLink: afficher les détails
+                      StepSubtitle: 'Étape 5b sur 6 — Clarification requise : Informations supplémentaires nécessaires'
+                      SubmitButton: Soumettre & réévaluer
+                      SupplierDetailsTab: Détails du fournisseur
+                      WithdrawButton: Retirer la demande
+                    SupplierDuplicateCheck:
+                      AgentSectionTitle: Agent fournisseur — Vérification de la base de données terminée
+                      AgentSubtitleTemplate: Recherché "{0}" — {1} correspondance(s) potentielle(s) trouvée(s).
+                      BusinessPurposeLabel: 'Objet social :'
+                      Chips: Comment la similarité est-elle calculée ?|Quand utiliser un fournisseur existant ?|Que se passe-t-il si aucune correspondance n’est trouvée ?
+                      ClickCardHint: Cliquez sur une carte pour la sélectionner
+                      CreateNewDesc: Procéder à l’enregistrement complet — nom, adresse, contacts, coordonnées bancaires et documents de conformité.
+                      CreateNewTitle: Créer un nouveau fournisseur
+                      EmailLabel: 'E-mail :'
+                      InitialMessage: J’ai analysé la base de données des fournisseurs à la recherche de correspondances potentielles. Consultez les résultats ci-dessous et choisissez comment procéder.
+                      LegalFormLabel: 'Forme juridique :'
+                      NoDuplicatesDesc: Aucun fournisseur similaire n’existe dans la base de données. Vous pouvez procéder à l’enregistrement de ce nouveau fournisseur.
+                      NoDuplicatesTitle: Aucun doublon trouvé
+                      PotentialMatchBadge: Correspondance potentielle
+                      PotentialMatchesTitle: Correspondances potentielles ({0})
+                      ProceedTitle: Comment souhaitez-vous procéder ?
+                      StepSubtitle: 'Étape 2 sur 6 — Agent : Vérification des doublons et similarité'
+                      UseExistingDesc: Lier cette demande à un fournisseur déjà enregistré et ignorer le nouvel enregistrement.
+                      UseExistingTitle: Utiliser un fournisseur existant
+                      VatIdLabel: 'N° TVA :'
+                    SupplierOnboardingApproval:
+                      AnalysisResultTab: Résultat de l'analyse
+                      ApprovalChainTitle: Chaîne d'approbation
+                      ApprovalCommentPlaceholder: 'Facultatif : Ajouter un commentaire pour l''enregistrement d''approbation et la piste d''audit...'
+                      ApprovalCommentTitle: Commentaire d'approbation
+                      ApprovalTab: Approbation
+                      BannerDesc: L'agent fournisseur a terminé la validation et le calcul du score de risque. Votre approbation est requise avant que le fournisseur puisse être ajouté à l'ERP.
+                      BannerMetaTemplate: 'Soumis par : {0}'
+                      BannerTitleTemplate: 'Approbation requise : {0}'
+                      InitialMessage: Examinez les conclusions de l'agent, confirmez le profil du fournisseur et approuvez la demande d'intégration pour poursuivre avec la comptabilisation ERP.
+                      ProcurementDirectorRole: Directeur des achats
+                      QmIsmManagerName: Responsable QM/ISM
+                      QmIsmManagerRole: Qualité et ISM
+                      RiskScoreLabel: Score de risque
+                      StatusApproved: Approuvé
+                      StatusPending: En attente
+                      StatusWaiting: En attente
+                      StepSubtitle: 'Étape 5a sur 6 - Tâche humaine : Approbation du superviseur et QM/ISM'
+                      SupervisorName: Superviseur
+                      SupplierDetailsTab: Détails du fournisseur
+                    SupplierOnboardingCompletion:
+                      AnalysisResultTab: Résultat de l'analyse
+                      AuditEmptyState: Aucune entrée d'audit capturée pour l'instant.
+                      AuditTimelineTitle: Chronologie d'audit
+                      BannerDescTemplate: L'agent fournisseur a calculé un score de risque de <b>{0}/100 (Vert)</b> qui satisfait le seuil minimum. La demande a été approuvée et le fournisseur est maintenant intégré.
+                      BannerMetaTemplate: 'Dossier : {0}<br />Terminé : {1}'
+                      BannerTitleTemplate: 'Fournisseur intégré avec succès : {0}'
+                      CertValidityLabel: Validité du cert.
+                      CompletionSummaryTab: Résumé de finalisation
+                      FinancialStabilityLabel: Stabilité financière
+                      InitialMessage: L'intégration du fournisseur est terminée. Consultez la chronologie d'audit complète ci-dessous.
+                      PolicyComplianceLabel: Conformité aux politiques
+                      RiskScoreBadge: VERT
+                      RiskScoreLabel: Score de risque
+                      ShowDetailsLink: afficher les détails
+                      StepSubtitle: Étape 6 sur 6 — Résumé final
+                      SupplierDetailsTab: Détails du fournisseur
+                    SupplierOnboardingDecline:
+                      AnalysisResultTab: Résultat de l'analyse
+                      BannerDescTemplate: L'agent fournisseur a calculé un score de risque de <b>{0}/100 (Rouge)</b> qui est inférieur au seuil minimum. La demande ne peut pas continuer et aucun enregistrement ERP n'a été créé.
+                      BannerMetaTemplate: 'Dossier : {0}<br />Refusé : {1}'
+                      BannerTitleTemplate: 'Demande fournisseur refusée : {0}'
+                      CertValidityLabel: Validité du cert.
+                      DeclineReasonsTitle: Motifs de refus
+                      DeclineSummaryTab: Résumé de refus
+                      FinancialStabilityLabel: Stabilité financière
+                      NotificationsSentTitle: Notifications envoyées
+                      PolicyComplianceLabel: Conformité aux politiques
+                      RiskScoreBadge: ROUGE
+                      RiskScoreLabel: Score de risque
+                      SentBadge: Envoyé
+                      ShowDetailsLink: afficher les détails
+                      StepSubtitle: 'Étape 5c sur 6 — Demande refusée : Score de risque inférieur au seuil'
+                      SupplierDetailsTab: Détails du fournisseur
+                    SupplierRegistrationForm:
+                      Chips: 📋 Quelles certifications sont obligatoires ?|🏠 L'IBAN est-il requis ?|🔍 Qu'est-ce qu'un numéro de TVA ?
+                      InitialMessage: Je vais vous aider à compléter l'enregistrement du fournisseur. Remplissez les coordonnées de l'entreprise, les contacts, les informations bancaires et les certifications. Les champs obligatoires sont marqués d'un *.
+                      SaveDraftButton: Enregistrer le brouillon
+                      StepSubtitle: Étape 3 sur 6 — Nouvel enregistrement de fournisseur
+                      SubmitButton: Soumettre pour validation par l'agent
+                    SupplierRequestForm:
+                      AdditionalNotesLabel: Notes supplémentaires
+                      AdditionalNotesPlaceholder: Tout contexte supplémentaire pour l'équipe achats ou QM...
+                      BusinessPurposeLabel: Objet commercial *
+                      BusinessPurposePlaceholder: p. ex. Logistique / Transport
+                      CheckSupplierButton: Consulter la base de données fournisseurs
+                      Chips: 💡 Quelles infos faut-il pour un nouveau fournisseur ?|🔍 Comment fonctionne la vérification BD ?|📋 Qu'est-ce qu'un objet commercial valide ?
+                      DepartmentLabel: Département / Centre de coûts *
+                      DepartmentPlaceholder: -- Sélectionner un département --
+                      ExpectedAnnualVolumeLabel: Volume annuel prévu (€) *
+                      InitialMessage: Bonjour ! Je peux vous aider à remplir la demande fournisseur. Je vérifierai votre base de données interne dès que vous soumettrez — quel fournisseur souhaitez-vous intégrer ?
+                      NeededByLabel: Nécessaire avant
+                      ProcurementContextTitle: Contexte d'achat
+                      ProductsServicesLabel: Produits / Services requis *
+                      ProductsServicesPlaceholder: Décrivez les produits ou services spécifiques requis auprès de ce fournisseur...
+                      RequestDetailsTitle: Détails de la demande
+                      RequestedByLabel: Demandé par
+                      SaveDraftButton: Enregistrer le brouillon
+                      SelectCountryPlaceholder: -- Sélectionner un pays --
+                      StepSubtitle: Étape 1 sur 6 — Demande initiale & questionnaire
+                      SupplierCountryLabel: Pays du fournisseur *
+                      SupplierInfoTitle: Informations fournisseur
+                      SupplierNameLabel: Nom du fournisseur *
+                      SupplierNamePlaceholder: p. ex. Acme GmbH, Müller Logistik AG
+                      SupplierWebsiteLabel: Site web du fournisseur
+                      SupplierWebsitePlaceholder: https://www.fournisseur.com
+                      UrgencyLabel: Urgence *
+                    components:
+                      SupplierAgentProcessingDetails:
+                        AgentDecisionTitle: Décision de l'agent
+                        AnalyzeButton: Analyser
+                        AnalyzeDescription: Exécuter l'extraction par IA, la validation de politique, la validation financière et la notation des risques.
+                        AnalyzeTitle: Validation fournisseur par IA
+                        CertificationValidityLabel: Validité des certifications
+                        ExpandCollapseTooltip: Cliquer pour développer / réduire
+                        FinancialStabilityLabel: Stabilité financière
+                        PolicyComplianceLabel: Conformité aux politiques
+                        PolicyFindingsTitle: Résultats de validation de politique
+                        PolicyRulesDialogHeader: Règles de politique d'intégration des fournisseurs
+                        PolicyRulesDialogIntro: Ces règles sont évaluées par l'IA lors de l'étape de validation des politiques. Chaque règle comporte une déduction maximale en cas de violation — déduction complète pour ÉCHEC, moitié pour AVERTISSEMENT.
+                        RiskScoreCalculatedTooltip: Comment le score de risque est-il calculé ?
+                        RiskScoreHelpDialogHeader: Comment le score de risque est calculé
+                        RiskScoreTitle: Score de risque
+                        StepDocumentExtraction: Extraction de documents
+                        StepFinancialValidation: Validation financière
+                        StepPolicyValidation: Validation des politiques
+                        StepRiskScoreCalculation: Calcul du score de risque
+                        ThresholdAboveMin: Au-dessus du seuil minimum (≥ 40)
+                        ThresholdGreen: Au-dessus du seuil d'approbation ≥ 70
+                        ThresholdRed: En dessous du seuil minimum (< 40)
+                        ThresholdYellow: Clarification requise (40-69)
+                        ValidationStepsTitle: Étapes de validation
+                        ViewPolicyRulesTooltip: Voir les règles de politique
+                      SupplierAiAssistant:
+                        AssistantName: Assistant IA fournisseur
+                        ConfirmParseRequired: Téléchargez d'abord un fichier .txt ou .md, puis confirmez l'analyse.
+                        ConfirmParseTitle: Confirmer l''analyse
+                        FileEmptyMessage: Le fichier téléchargé est vide.
+                        FileUploadedReadyMessage: Fichier téléchargé. Cliquez sur Confirmer l'analyse pour appliquer les valeurs au formulaire.
+                        FilesQueuedTemplate: '{0} fichier(s) en attente'
+                        FilesReadyTemplate: '{0} fichier(s) prêt(s). Cliquez sur Confirmer l''analyse pour appliquer.'
+                        HeaderSubtitle: Conseils d''approvisionnement assistés par IA
+                        InputPlaceholder: Posez une question...
+                        InvalidFileMessage: Seuls les fichiers .txt et .md sont pris en charge.
+                        InvalidSizeMessage: La taille maximale du fichier est de 5 Mo.
+                        NoFileUploadedMessage: Aucun fichier n'a été téléchargé. Veuillez choisir un fichier .txt ou .md.
+                        NoValuesExtracted: Aucune valeur structurée n'a pu être extraite du document.
+                        ParseFailedTemplate: 'Échec de l''analyse du document : {0}'
+                        ParseSuccess: Document analysé et champs du formulaire mis à jour.
+                        RemoveButtonTitle: Supprimer
+                        ThinkingText: Réflexion en cours...
+                        UploadTriggerTitle: Téléverser le brouillon fournisseur
+                      SupplierDetails:
+                        AdditionalNotesLabel: Notes supplémentaires
+                        AdditionalNotesPlaceholder: Contexte supplémentaire pour l'équipe d'approvisionnement ou QM
+                        AnnualVolumeLabel: Volume annuel prévu (€)
+                        AnnualVolumePlaceholder: ex. 50000
+                        BankNameLabel: Nom de la banque
+                        BankNamePlaceholder: ex. Commerzbank AG
+                        BankingPaymentTitle: Banque & paiement
+                        BicLabel: BIC / SWIFT
+                        BicPlaceholder: ex. COBADEFFXXX
+                        BusinessPurposeLabel: Objet social
+                        BusinessPurposePlaceholder: ex. Logistique / Transport
+                        CertificationsCardSubtitle: Téléversez vos certificats
+                        CertificationsCardTitle: Certifications & conformité
+                        CityLabel: Ville
+                        CityPlaceholder: ex. Munich
+                        CommercialRegNoLabel: Numéro de registre commercial
+                        CommercialRegNoPlaceholder: ex. HRB 123456
+                        CompanyDetailsTitle: Détails de l'entreprise
+                        CompanyNameLabel: Nom légal de l'entreprise
+                        CompanyNamePlaceholder: ex. Acme GmbH
+                        ContactEmailLabel: E-mail
+                        ContactEmailPlaceholder: contact@fournisseur.com
+                        ContactFirstNameLabel: Prénom
+                        ContactFirstNamePlaceholder: Prénom
+                        ContactJobTitleLabel: Titre du poste
+                        ContactJobTitlePlaceholder: ex. Directeur commercial
+                        ContactLastNameLabel: Nom de famille
+                        ContactLastNamePlaceholder: Nom de famille
+                        ContactPhoneLabel: Téléphone
+                        ContactPhonePlaceholder: +33 1 23 45 67 89
+                        CountryLabel: Pays
+                        CountrySelectDefault: -- Sélectionner un pays --
+                        DepartmentLabel: Département / Centre de coûts
+                        DepartmentPlaceholder: ex. DEPT-001
+                        IbanLabel: IBAN
+                        IbanPlaceholder: ex. DE39 3704 0044 0532 0130 00
+                        LegalFormLabel: Forme juridique
+                        LegalFormSelectDefault: -- Sélectionner --
+                        NeededByDateLabel: Date requise
+                        PrimaryContactTitle: Contact principal
+                        ProcurementContextTitle: Contexte d'approvisionnement
+                        ProductsServicesLabel: Produits / Services nécessaires
+                        ProductsServicesPlaceholder: Décrivez les produits ou services nécessaires de ce fournisseur
+                        RequestedByLabel: Demandé par
+                        RequestedByPlaceholder: ex. john.dupont
+                        RequiredDocsCardSubtitle: Téléversez les documents de conformité
+                        RequiredDocsCardTitle: Documents requis
+                        StreetLabel: Rue & numéro
+                        StreetPlaceholder: ex. Industriestraße 42
+                        UrgencyLabel: Urgence
+                        VatIdLabel: Numéro de TVA
+                        VatIdPlaceholder: ex. DE123456789
+                        WebsiteLabel: Site web
+                        WebsitePlaceholder: https://www.fournisseur.com
+                        ZipCodeLabel: Code postal
+                        ZipCodePlaceholder: ex. 80339
+                      SupplierOnboardingSteps:
+                        BannerTitle: Intégration des fournisseurs
+                        Step1: Demande
+                        Step2: Vérification BDD
+                        Step3: Données fournisseur
+                        Step4: Validation
+                        Step5: Score de risque
+                        Step6Complete: Terminé
+                        Step6Declined: Refusé
               rag:
                 RagDemo:
                   Chatbot:
@@ -179,454 +636,10 @@ Dialogs:
                     Total: Total
                     ViewDetails: Voir les détails
                     YourCartIsEmpty: Votre panier est vide
-              erp:
-                components:
-                  AuditTrail:
-                    EmptyMessage: Aucune entrée d'audit enregistrée pour l'instant.
-                    ExpandCollapseTooltip: Cliquer pour développer / réduire
-                    Title: Journal d'audit complet
-                  LegalDocuments:
-                    AdditionalDocumentSubtitle: Document supplémentaire
-                    AnnualReportLabel: Dernier rapport annuel
-                    AnnualReportSubtitle: Rapport financier de l’exercice fiscal le plus récent
-                    BrowseFilesLink: ou parcourir les fichiers
-                    CommercialRegisterLabel: Extrait du registre du commerce
-                    CommercialRegisterSubtitle: Document officiel du registre du commerce
-                    DragAndDropHint: Glissez et déposez des fichiers supplémentaires ici
-                    SelfDeclarationLabel: Auto-déclaration
-                    SelfDeclarationSubtitle: Confirmer la conformité avec la politique d'achats
-                  ProblemExplanation:
-                    ExplanationLabel: Votre explication
-                    ExplanationPlaceholder: Décrivez la situation et votre plan de résolution...
-                    InfoHint: Veuillez fournir une brève explication pour aider l'approbateur à comprendre le contexte et comment vous prévoyez de résoudre ce problème.
-                    SaveButton: Marquer comme résolu
-                supplier:
-                  onboarding:
-                    components:
-                      SupplierAgentProcessingDetails:
-                        AgentDecisionTitle: "Décision de l'agent"
-                        AnalyzeButton: Analyser
-                        AnalyzeDescription: "Exécuter l'extraction par IA, la validation de politique, la validation financière et la notation des risques."
-                        AnalyzeTitle: Validation fournisseur par IA
-                        CertificationValidityLabel: Validité des certifications
-                        ExpandCollapseTooltip: "Cliquer pour développer / réduire"
-                        FinancialStabilityLabel: Stabilité financière
-                        PolicyComplianceLabel: Conformité aux politiques
-                        PolicyRulesDialogHeader: "Règles de politique d'intégration des fournisseurs"
-                        PolicyRulesDialogIntro: "Ces règles sont évaluées par l'IA lors de l'étape de validation des politiques. Chaque règle comporte une déduction maximale en cas de violation — déduction complète pour ÉCHEC, moitié pour AVERTISSEMENT."
-                        RiskScoreCalculatedTooltip: Comment le score de risque est-il calculé ?
-                        RiskScoreHelpDialogHeader: Comment le score de risque est calculé
-                        RiskScoreTitle: Score de risque
-                        StepDocumentExtraction: Extraction de documents
-                        StepFinancialValidation: Validation financi\u00e8re
-                        StepPolicyValidation: Validation des politiques
-                        StepRiskScoreCalculation: Calcul du score de risque
-                        ThresholdAboveMin: 'Au-dessus du seuil minimum (\u2265 40)'
-                        ThresholdGreen: 'Au-dessus du seuil d''approbation \u2265 70'
-                        ThresholdRed: 'En dessous du seuil minimum (< 40)'
-                        ThresholdYellow: 'Clarification requise (40-69)'
-                        ValidationStepsTitle: "\u00c9tapes de validation"
-                        ViewPolicyRulesTooltip: Voir les r\u00e8gles de politique
-                      SupplierAiAssistant:
-                        AssistantName: Assistant IA fournisseur
-                        ConfirmParseRequired: 'T\u00e9l\u00e9chargez d''abord un fichier .txt ou .md, puis confirmez l''analyse.'
-                        ConfirmParseTitle: Confirmer l''analyse
-                        FileEmptyMessage: 'Le fichier t\u00e9l\u00e9charg\u00e9 est vide.'
-                        FilesQueuedTemplate: '{0} fichier(s) en attente'
-                        FilesReadyTemplate: '{0} fichier(s) pr\u00eat(s). Cliquez sur Confirmer l''analyse pour appliquer.'
-                        FileUploadedReadyMessage: 'Fichier t\u00e9l\u00e9charg\u00e9. Cliquez sur Confirmer l''analyse pour appliquer les valeurs au formulaire.'
-                        HeaderSubtitle: Conseils d''approvisionnement assist\u00e9s par IA
-                        InputPlaceholder: Posez une question...
-                        InvalidFileMessage: Seuls les fichiers .txt et .md sont pris en charge.
-                        InvalidSizeMessage: La taille maximale du fichier est de 5 Mo.
-                        NoFileUploadedMessage: 'Aucun fichier n''a \u00e9t\u00e9 t\u00e9l\u00e9charg\u00e9. Veuillez choisir un fichier .txt ou .md.'
-                        NoValuesExtracted: 'Aucune valeur structur\u00e9e n''a pu \u00eatre extraite du document.'
-                        ParseFailedTemplate: '\u00c9chec de l''analyse du document : {0}'
-                        ParseSuccess: 'Document analys\u00e9 et champs du formulaire mis \u00e0 jour.'
-                        RemoveButtonTitle: Supprimer
-                        ThinkingText: Réflexion en cours...
-                        UploadTriggerTitle: Téléverser le brouillon fournisseur
-                      SupplierDetails:
-                        AdditionalNotesLabel: Notes supplémentaires
-                        AdditionalNotesPlaceholder: Contexte supplémentaire pour l'équipe d'approvisionnement ou QM
-                        AnnualVolumeLabel: Volume annuel prévu (EUR)
-                        AnnualVolumePlaceholder: ex. 50000
-                        BankNameLabel: Nom de la banque
-                        BankNamePlaceholder: ex. Commerzbank AG
-                        BankingPaymentTitle: Banque & paiement
-                        BicLabel: BIC / SWIFT
-                        BicPlaceholder: ex. COBADEFFXXX
-                        BusinessPurposeLabel: Objet social
-                        BusinessPurposePlaceholder: ex. Logistique / Transport
-                        CertificationsCardSubtitle: Téléversez vos certificats
-                        CertificationsCardTitle: Certifications & conformité
-                        CityLabel: Ville
-                        CityPlaceholder: ex. Munich
-                        CommercialRegNoLabel: Numéro de registre commercial
-                        CommercialRegNoPlaceholder: ex. HRB 123456
-                        CompanyDetailsTitle: Détails de l'entreprise
-                        CompanyNameLabel: Nom légal de l'entreprise
-                        CompanyNamePlaceholder: ex. Acme GmbH
-                        ContactEmailLabel: E-mail
-                        ContactEmailPlaceholder: contact@fournisseur.com
-                        ContactFirstNameLabel: Prénom
-                        ContactFirstNamePlaceholder: Prénom
-                        ContactJobTitleLabel: Titre du poste
-                        ContactJobTitlePlaceholder: ex. Directeur commercial
-                        ContactLastNameLabel: Nom de famille
-                        ContactLastNamePlaceholder: Nom de famille
-                        ContactPhoneLabel: Téléphone
-                        ContactPhonePlaceholder: '+33 1 23 45 67 89'
-                        CountryLabel: Pays
-                        CountrySelectDefault: '-- Sélectionner un pays --'
-                        DepartmentLabel: Département / Centre de coûts
-                        DepartmentPlaceholder: ex. DEPT-001
-                        IbanLabel: IBAN
-                        IbanPlaceholder: ex. DE39 3704 0044 0532 0130 00
-                        LegalFormLabel: Forme juridique
-                        LegalFormSelectDefault: '-- Sélectionner --'
-                        NeededByDateLabel: Date requise
-                        PrimaryContactTitle: Contact principal
-                        ProcurementContextTitle: Contexte d'approvisionnement
-                        ProductsServicesLabel: Produits / Services nécessaires
-                        ProductsServicesPlaceholder: Décrivez les produits ou services nécessaires de ce fournisseur
-                        RequestedByLabel: Demandé par
-                        RequestedByPlaceholder: ex. john.dupont
-                        RequiredDocsCardSubtitle: Téléversez les documents de conformité
-                        RequiredDocsCardTitle: Documents requis
-                        StreetLabel: Rue & numéro
-                        StreetPlaceholder: ex. Industriestraße 42
-                        UrgencyLabel: Urgence
-                        VatIdLabel: Numéro de TVA
-                        VatIdPlaceholder: ex. DE123456789
-                        WebsiteLabel: Site web
-                        WebsitePlaceholder: https://www.fournisseur.com
-                        ZipCodeLabel: Code postal
-                        ZipCodePlaceholder: ex. 80339
-                      SupplierOnboardingSteps:
-                        BannerTitle: Intégration des fournisseurs
-                        Step1: Demande
-                        Step2: Vérification BDD
-                        Step3: Données fournisseur
-                        Step4: Validation
-                        Step5: Score de risque
-                        Step6Complete: Terminé
-                        Step6Declined: Refusé
-                    SupplierAgentProcessing:
-                      ContinueButton: Continuer
-                      ContinueToApprovalButton: Continuer vers l''approbation
-                      ContinueToClarificationButton: Continuer vers la clarification
-                      InitialMessage: 'Cliquez sur Analyser pour lancer la validation par IA. J''extrairai les documents, v\u00e9rifierai la conformit\u00e9 aux politiques, validerai la sant\u00e9 financi\u00e8re et calculerai un score de risque \u00e9tape par \u00e9tape.'
-                      StepSubtitle: '\u00c9tape 4 sur 6 \u2014 Agent : Validation et notation des risques'
-                      ViewDeclineButton: Voir le refus
-                    SupplierClarification:
-                      AdditionalInfoRequired: "Informations supplémentaires sur le fournisseur requises — veuillez consulter l'onglet des résultats de l'agent."
-                      AdditionalNotesPlaceholder: "Expliquez pourquoi certains documents manquent ou fournissez des informations alternatives pour l'équipe QM..."
-                      AdditionalNotesTitle: 'Notes supplémentaires / Explication'
-                      AnalysisResultTab: "Résultat de l'analyse"
-                      BannerDescTemplate: "L'Agent fournisseur a calculé un score de risque de {0}/100 (Jaune) en raison d'informations manquantes ou insuffisantes. Veuillez fournir les détails demandés afin que l'agent puisse réévaluer et poursuivre le workflow."
-                      BannerMetaTemplate: 'Cas : {0} · Soumis par : {1} · Cycle : {2}'
-                      BannerTitle: 'Clarification requise : {0}'
-                      CertValidityLabel: Validité des certif.
-                      ClarificationTab: Clarification
-                      DocumentAcceptedTypes: PDF · TXT · MD · DOC · DOCX acceptés
-                      EscalateButton: Demander l'assistance QM/ISM
-                      FinalAttemptTitle: 'Dernière tentative de clarification (cycle {0} sur {1})'
-                      FinalAttemptDesc: "C'est la dernière occasion de fournir les informations manquantes. Si la réévaluation échoue encore après cette soumission, la demande sera automatiquement refusée."
-                      FinancialStabilityLabel: Stabilité financière
-                      InitialMessage: Veuillez fournir les documents et informations manquants afin que l'agent puisse réévaluer votre demande.
-                      ItemsTitle: Éléments nécessitant une clarification
-                      PolicyComplianceLabel: Conformité aux politiques
-                      RiskScoreBadge: JAUNE
-                      RiskScoreLabel: Score de risque
-                      ShowDetailsLink: afficher les détails
-                      StepSubtitle: 'Étape 5b sur 6 — Clarification requise : Informations supplémentaires nécessaires'
-                      SubmitButton: 'Soumettre & réévaluer'
-                      SupplierDetailsTab: Détails du fournisseur
-                      WithdrawButton: Retirer la demande
-                    SupplierDuplicateCheck:
-                      AgentSubtitleTemplate: 'Recherché "{0}" — {1} correspondance(s) potentielle(s) trouvée(s).'
-                      AgentSectionTitle: Agent fournisseur — Vérification de la base de données terminée
-                      BusinessPurposeLabel: 'Objet social :'
-                      Chips: 'Comment la similarité est-elle calculée ?|Quand utiliser un fournisseur existant ?|Que se passe-t-il si aucune correspondance n’est trouvée ?'
-                      ClickCardHint: Cliquez sur une carte pour la sélectionner
-                      CreateNewDesc: 'Procéder à l’enregistrement complet — nom, adresse, contacts, coordonnées bancaires et documents de conformité.'
-                      CreateNewTitle: Créer un nouveau fournisseur
-                      EmailLabel: 'E-mail :'
-                      InitialMessage: 'J’ai analysé la base de données des fournisseurs à la recherche de correspondances potentielles. Consultez les résultats ci-dessous et choisissez comment procéder.'
-                      LegalFormLabel: 'Forme juridique :'
-                      NoDuplicatesDesc: "Aucun fournisseur similaire n’existe dans la base de données. Vous pouvez procéder à l’enregistrement de ce nouveau fournisseur."
-                      NoDuplicatesTitle: Aucun doublon trouvé
-                      PotentialMatchBadge: Correspondance potentielle
-                      PotentialMatchesTitle: 'Correspondances potentielles ({0})'
-                      ProceedTitle: Comment souhaitez-vous procéder ?
-                      StepSubtitle: 'Étape 2 sur 6 — Agent : Vérification des doublons et similarité'
-                      UseExistingDesc: 'Lier cette demande à un fournisseur déjà enregistré et ignorer le nouvel enregistrement.'
-                      UseExistingTitle: Utiliser un fournisseur existant
-                      VatIdLabel: 'N° TVA :'
-                    SupplierOnboardingApproval:
-                      AnalysisResultTab: Résultat de l'analyse
-                      ApprovalChainTitle: Chaîne d'approbation
-                      ApprovalCommentPlaceholder: 'Facultatif : Ajouter un commentaire pour l''enregistrement d''approbation et la piste d''audit...'
-                      ApprovalCommentTitle: Commentaire d'approbation
-                      ApprovalTab: Approbation
-                      BannerDesc: L'agent fournisseur a terminé la validation et le calcul du score de risque. Votre approbation est requise avant que le fournisseur puisse être ajouté à l'ERP.
-                      BannerMetaTemplate: 'Soumis par : {0}'
-                      BannerTitleTemplate: 'Approbation requise : {0}'
-                      InitialMessage: Examinez les conclusions de l'agent, confirmez le profil du fournisseur et approuvez la demande d'intégration pour poursuivre avec la comptabilisation ERP.
-                      ProcurementDirectorRole: Directeur des achats
-                      QmIsmManagerName: Responsable QM/ISM
-                      QmIsmManagerRole: Qualité et ISM
-                      RiskScoreLabel: Score de risque
-                      StatusApproved: Approuvé
-                      StatusPending: En attente
-                      StatusWaiting: En attente
-                      StepSubtitle: 'Étape 5a sur 6 - Tâche humaine : Approbation du superviseur et QM/ISM'
-                      SupervisorName: Superviseur
-                      SupplierDetailsTab: Détails du fournisseur
-                    SupplierOnboardingCompletion:
-                      AnalysisResultTab: Résultat de l'analyse
-                      AuditEmptyState: Aucune entrée d'audit capturée pour l'instant.
-                      AuditTimelineTitle: Chronologie d'audit
-                      BannerDescTemplate: "L'agent fournisseur a calculé un score de risque de <b>{0}/100 (Vert)</b> qui satisfait le seuil minimum. La demande a été approuvée et le fournisseur est maintenant intégré."
-                      BannerMetaTemplate: 'Dossier : {0} \u00b7 Terminé : {1}'
-                      BannerTitleTemplate: 'Fournisseur intégré avec succès : {0}'
-                      CertValidityLabel: Validité du cert.
-                      CompletionSummaryTab: Résumé de finalisation
-                      FinancialStabilityLabel: Stabilité financière
-                      InitialMessage: "L'intégration du fournisseur est terminée. Consultez la chronologie d'audit complète ci-dessous."
-                      PolicyComplianceLabel: Conformité aux politiques
-                      RiskScoreBadge: VERT
-                      RiskScoreLabel: Score de risque
-                      ShowDetailsLink: afficher les détails
-                      StepSubtitle: 'Étape 6 sur 6 \u2014 Résumé final'
-                      SupplierDetailsTab: Détails du fournisseur
-                    SupplierOnboardingDecline:
-                      AnalysisResultTab: Résultat de l'analyse
-                      BannerDescTemplate: "L'agent fournisseur a calculé un score de risque de <b>{0}/100 (Rouge)</b> qui est inférieur au seuil minimum. La demande ne peut pas continuer et aucun enregistrement ERP n'a été créé."
-                      BannerMetaTemplate: 'Dossier : {0} \u00b7 Refusé : {1}'
-                      BannerTitleTemplate: 'Demande fournisseur refusée : {0}'
-                      CertValidityLabel: Validité du cert.
-                      DeclineReasonsTitle: Motifs de refus
-                      DeclineSummaryTab: Résumé de refus
-                      FinancialStabilityLabel: Stabilité financière
-                      NotificationsSentTitle: Notifications envoyées
-                      PolicyComplianceLabel: Conformité aux politiques
-                      RiskScoreBadge: ROUGE
-                      RiskScoreLabel: Score de risque
-                      SentBadge: Envoyé
-                      ShowDetailsLink: afficher les détails
-                      StepSubtitle: 'Étape 5c sur 6 \u2014 Demande refusée : Score de risque inférieur au seuil'
-                      SupplierDetailsTab: Détails du fournisseur
-                    SupplierRegistrationForm:
-                      Chips: '\uD83D\uDCCB Quelles certifications sont obligatoires ?|\uD83C\uDFE0 L''IBAN est-il requis ?|\uD83D\uDD0D Qu''est-ce qu''un numéro de TVA ?'
-                      InitialMessage: "Je vais vous aider \u00e0 compl\u00e9ter l'enregistrement du fournisseur. Remplissez les coordonn\u00e9es de l'entreprise, les contacts, les informations bancaires et les certifications. Les champs obligatoires sont marqu\u00e9s d'un *."
-                      SaveDraftButton: Enregistrer le brouillon
-                      StepSubtitle: 'Étape 3 sur 6 \u2014 Nouvel enregistrement de fournisseur'
-                      SubmitButton: Soumettre pour validation par l'agent
-                    SupplierRequestForm:
-                      AdditionalNotesLabel: Notes suppl\u00e9mentaires
-                      AdditionalNotesPlaceholder: Tout contexte suppl\u00e9mentaire pour l'\u00e9quipe achats ou QM...
-                      BusinessPurposeLabel: 'Objet commercial *'
-                      BusinessPurposePlaceholder: "p. ex. Logistique / Transport"
-                      CheckSupplierButton: Consulter la base de donn\u00e9es fournisseurs
-                      Chips: '\uD83D\uDCA1 Quelles infos faut-il pour un nouveau fournisseur ?|\uD83D\uDD0D Comment fonctionne la v\u00e9rification BD ?|\uD83D\uDCCB Qu''est-ce qu''un objet commercial valide ?'
-                      DepartmentLabel: 'D\u00e9partement / Centre de co\u00fbts *'
-                      DepartmentPlaceholder: '-- S\u00e9lectionner un d\u00e9partement --'
-                      ExpectedAnnualVolumeLabel: 'Volume annuel pr\u00e9vu (\u20ac) *'
-                      InitialMessage: "Bonjour\u00a0! Je peux vous aider \u00e0 remplir la demande fournisseur. Je v\u00e9rifierai votre base de donn\u00e9es interne d\u00e8s que vous soumettrez \u2014 quel fournisseur souhaitez-vous int\u00e9grer\u00a0?"
-                      NeededByLabel: N\u00e9cessaire avant
-                      ProcurementContextTitle: Contexte d'achat
-                      ProductsServicesLabel: 'Produits / Services requis *'
-                      ProductsServicesPlaceholder: D\u00e9crivez les produits ou services sp\u00e9cifiques requis aupr\u00e8s de ce fournisseur...
-                      RequestDetailsTitle: D\u00e9tails de la demande
-                      RequestedByLabel: Demand\u00e9 par
-                      SaveDraftButton: Enregistrer le brouillon
-                      SelectCountryPlaceholder: '-- S\u00e9lectionner un pays --'
-                      StepSubtitle: '\u00c9tape 1 sur 6 \u2014 Demande initiale & questionnaire'
-                      SupplierCountryLabel: 'Pays du fournisseur *'
-                      SupplierInfoTitle: Informations fournisseur
-                      SupplierNameLabel: 'Nom du fournisseur *'
-                      SupplierNamePlaceholder: 'p. ex. Acme GmbH, M\u00fcller Logistik AG'
-                      SupplierWebsiteLabel: Site web du fournisseur
-                      SupplierWebsitePlaceholder: https://www.fournisseur.com
-                      UrgencyLabel: 'Urgence *'
-                    FinishDemo:
-                      HeroSub: 'Nous espérons que vous avez vécu une excellente expérience avec <strong>Smart Workflow</strong>.<br/>Voici un résumé de tout ce que l''IA a géré pour vous — de manière autonome, précise et entièrement traçable.'
-                      PageTitle: Smart Workflow — Résumé du processus IA
-                      Step0FlowLabel: 'Chargement<br />de documents'
-                      Step1FlowLabel: 'Extraction<br />par IA'
-                      Step2FlowLabel: 'Guide<br />Q&amp;R'
-                      Step3FlowLabel: 'Validation de<br />documents'
-                      Step4FlowLabel: 'Score de<br />risque'
-                      Step5FlowLabel: 'Routage<br />autonome'
-                      Step6FlowLabel: 'Dossier<br />clôturé'
-                      Step0DotTitle: Chargement de documents
-                      Step1DotTitle: Extraction par IA
-                      Step2DotTitle: Guide Q&R
-                      Step3DotTitle: Validation de documents
-                      Step4DotTitle: Score de risque
-                      Step5DotTitle: Routage autonome
-                      Step6DotTitle: Dossier clôturé
-                      Panel0Num: Étape 01 sur 07
-                      Panel0Title: Chargement de documents
-                      Panel0Desc: "Le processus d'intégration commence lorsqu'un fournisseur soumet sa demande via le portail Smart Workflow. Tous les documents justificatifs requis — immatriculation commerciale, certificats fiscaux et états financiers — sont téléversés à cette étape."
-                      Panel0Detail1: Le fournisseur complète le profil de l'entreprise et les coordonnées
-                      Panel0Detail2: Téléverse les documents de certification et financiers requis
-                      Panel0Detail3: Smart Workflow valide l'exhaustivité du téléversement avant traitement
-                      Panel0Tag1: Portail fournisseur
-                      Panel0Tag2: Chargement de documents
-                      Panel0Tag3: Démarrage du flux de travail
-                      Panel1Num: Étape 02 sur 07
-                      Panel1Title: Extraction de documents par IA
-                      Panel1Desc: "L'IA lit les PDFs téléversés à l'aide de modèles de vision-langage, identifie les champs de données fournisseur dans plusieurs documents et pré-remplit automatiquement l'ensemble du formulaire d'intégration — sans saisie manuelle."
-                      Panel1Detail1: Structures et tableaux PDF analysés avec des modèles de vision-langage
-                      Panel1Detail2: Plus de 15 champs de données fournisseur identifiés et extraits automatiquement
-                      Panel1Detail3: Formulaire d'intégration complet rempli automatiquement avec des données validées
-                      Panel1Tag1: LLM
-                      Panel1Tag2: Sortie structurée
-                      Panel1Tag3: Multi-document
-                      Panel1Tag4: Aucune saisie manuelle
-                      Panel2Num: Étape 03 sur 07
-                      Panel2Title: Guide contextuel Q&amp;R
-                      Panel2Desc: "Un assistant IA propulsé par RAG est disponible sur chaque écran — répondant aux questions sur les règles de politique, expliquant les exigences de conformité et clarifiant les seuils de risque en temps réel."
-                      Panel2Detail1: Documents de politique récupérés par recherche de similarité vectorielle
-                      Panel2Detail2: Questions des fournisseurs et des examinateurs répondues tout au long du processus
-                      Panel2Detail3: Conseils de conformité contextuels fournis à chaque étape
-                      Panel2Tag1: RAG
-                      Panel2Tag2: Recherche vectorielle
-                      Panel2Tag3: Agent de chat
-                      Panel2Tag4: Conscient du contexte
-                      Panel3Num: Étape 04 sur 07
-                      Panel3Title: Validation de documents
-                      Panel3Desc: "L'IA compare tous les documents soumis aux règles de politique d'achats, identifiant les certifications manquantes, les accréditations expirées et les lacunes de conformité — avec un raisonnement complet et une traçabilité totale."
-                      Panel3Detail1: Tous les documents validés contre plus de 12 règles de politique d'achats
-                      Panel3Detail2: Lacunes de conformité identifiées et éléments nécessitant attention signalés
-                      Panel3Detail3: Rapport de validation détaillé avec des résultats explicables généré
-                      Panel3Tag1: Moteur de règles
-                      Panel3Tag2: Référence croisée
-                      Panel3Tag3: IA explicable
-                      Panel3Tag4: Traçabilité
-                      Panel4Num: Étape 05 sur 07
-                      Panel4Title: Calcul du risque
-                      Panel4Desc: "L'IA calcule un score de risque composite selon trois dimensions — stabilité financière, conformité aux politiques et validité des certifications — fournissant une évaluation objective et auditable sur 100."
-                      Panel4Detail1: États financiers analysés pour les indicateurs de stabilité et de liquidité
-                      Panel4Detail2: 'Historique de conformité, certifications et alignement politique recoupés'
-                      Panel4Detail3: Score de risque composite pondéré avec ventilation complète produit
-                      Panel4Tag1: Analyse financière
-                      Panel4Tag2: Modèle de risque
-                      Panel4Tag3: Score pondéré
-                      Panel4Tag4: Noté /100
-                      Panel5Num: Étape 06 sur 07
-                      Panel5Title: Routage autonome
-                      Panel5Desc: "Sur la base du contexte complet — données extraites, score de risque, résultats de validation et politique — l'IA a décidé du chemin du processus de manière autonome : approuver, demander des clarifications ou refuser."
-                      Panel5Detail1: Toutes les entrées évaluées par rapport aux règles de décision de routage configurables
-                      Panel5Detail2: Chemin de résultat optimal déterminé sans triage humain
-                      Panel5Detail3: Branche de flux de travail appropriée déclenchée avec une piste d'audit complète
-                      Panel5Tag1: Moteur de décision
-                      Panel5Tag2: IA agentique
-                      Panel5Tag3: Zéro triage
-                      Panel5Tag4: Autonome
-                      Panel6Num: Étape 07 sur 07
-                      Panel6Title: Dossier clôturé
-                      Panel6Desc: "La demande d'intégration a été entièrement traitée et clôturée. Toutes les données extraites, décisions IA, résultats de validation et la piste d'audit complète sont enregistrés de manière permanente et accessibles pour la révision de conformité."
-                      Panel6Detail1: Toutes les décisions et raisonnements IA enregistrés dans le journal d'audit permanent
-                      Panel6Detail2: Dossier fournisseur mis à jour dans le système avec le résultat final
-                      Panel6Detail3: Parties prenantes notifiées de la décision et de l'achèvement du processus
-                      Panel6Tag1: Piste d'audit
-                      Panel6Tag2: Conformité
-                      Panel6Tag3: Processus terminé
-                      ProgressText: 'Étape {0} sur {1}'
-                    StartDemo:
-                      PageTitle: Smart Workflow — Démo d'intégration fournisseur
-                      PrevButtonTitle: Précédent
-                      NextButtonTitle: Suivant
-                      Dot0Title: Bienvenue
-                      Dot1Title: Le processus
-                      Dot2Title: Traditionnel vs. IA
-                      Dot3Title: Générer des données
-                      WelcomeTo: Bienvenue dans
-                      WelcomeProductName: Axon Ivy Smart Workflow
-                      WelcomeDesc: "Découvrez un processus d'intégration fournisseur piloté par l'IA qui automatise l'extraction de documents, la validation de conformité, la notation des risques et le routage autonome — avec une traçabilité complète."
-                      Slide1Title: "Le processus d'intégration"
-                      Slide1Sub: "7 étapes du téléversement de documents à la clôture du dossier — entièrement piloté par l'IA"
-                      Step01Num: Étape 01
-                      Step01Name: Téléversement de documents
-                      Step01Desc: "Le fournisseur soumet sa candidature avec le profil de l'entreprise et tous les documents justificatifs requis."
-                      Step02Num: Étape 02
-                      Step02Name: Extraction IA
-                      Step02Desc: 'Le modèle de langage visuel lit les PDFs et remplit automatiquement 15+ champs. Aucune saisie manuelle requise.'
-                      Step03Num: Étape 03
-                      Step03Name: 'Assistance Q&R'
-                      Step03Desc: "Un assistant IA alimenté par RAG répond aux questions de conformité sur chaque écran en temps réel."
-                      Step04Num: Étape 04
-                      Step04Name: Validation des documents
-                      Step04Desc: "L'IA vérifie 12+ règles de politique d'approvisionnement et signale les lacunes de conformité avec un raisonnement complet."
-                      Step05Num: Étape 05
-                      Step05Name: Notation des risques
-                      Step05Desc: 'Score de risque composite basé sur la stabilité financière, la conformité et la validité des certifications.'
-                      Step06Num: Étape 06
-                      Step06Name: Routage autonome
-                      Step06Desc: "L'IA décide du résultat — approuver, demander une clarification ou refuser — sans triage humain."
-                      Step07Num: Étape 07
-                      Step07Name: Dossier clôturé
-                      Step07Desc: "Toutes les décisions, données extraites et raisonnements de l'IA sont enregistrés de façon permanente pour audit de conformité."
-                      Slide2Title: "Intégration traditionnelle vs. flux de travail piloté par l'IA"
-                      Slide2Sub: "Pourquoi l'ancienne méthode échoue — et comment l'IA transforme chaque étape"
-                      StatTimeLabel: "Délai d'intégration"
-                      StatTimeBefore: '3–6 semaines'
-                      StatTimeAfter: Minutes
-                      StatStepsLabel: Étapes du processus
-                      StatStepsBefore: '30+ étapes manuelles'
-                      StatStepsAfter: Entièrement automatisé
-                      StatErrorLabel: Précision de saisie des données
-                      StatErrorBefore: '~30% de taux d''erreur'
-                      StatErrorAfter: Quasi sans erreur
-                      TraditionalHeader: Processus traditionnel
-                      AiPoweredHeader: "Smart Workflow piloté par l'IA"
-                      BeforeItem1: "Le fournisseur envoie des documents par e-mail — les achats cherchent dans les pièces jointes"
-                      BeforeItem2: "Le personnel lit manuellement les PDFs et saisit les données dans des tableurs ou des formulaires ERP"
-                      BeforeItem3: "Les vérifications de conformité sont ad-hoc, incohérentes et effectuées des jours après la soumission"
-                      BeforeItem4: "Le routage d'approbation est décidé en réunions de comité — des délais de plusieurs semaines"
-                      BeforeItem5: "L'évaluation des risques repose sur le jugement personnel, sans standard de notation"
-                      BeforeItem6: "Les décisions restent dans des fils d'e-mail — aucune piste d'audit structurée pour la conformité"
-                      AfterItem1: "Le fournisseur téléverse les documents une fois via un formulaire structuré et guidé"
-                      AfterItem2: "L'IA visuelle extrait automatiquement 15+ champs des PDFs en quelques secondes — aucune saisie manuelle"
-                      AfterItem3: "12+ règles de politique d'approvisionnement vérifiées instantanément avec raisonnement IA complet"
-                      AfterItem4: "Routage autonome : approuver, demander une clarification ou refuser — aucun triage nécessaire"
-                      AfterItem5: Score de risque composite basé sur la stabilité financière, la conformité et les données de certification
-                      AfterItem6: "Chaque décision, donnée extraite et raisonnement de l'IA enregistré de façon permanente"
-                      ReadyTitle: Êtes-vous prêt ?
-                      ReadySub: "Générez des fournisseurs exemples, des règles de politique d'approvisionnement et la base de connaissances RAG pour explorer l'expérience complète de la démo."
-                      BeforeYouStartTitle: Avant de commencer
-                      DownloadAllButton: Tout télécharger
-                      FileDetailsToggle: Détails des fichiers
-                      BeforeYouStartDesc: "La démo vous demande de téléverser des documents sur une entreprise afin que l'IA puisse extraire des informations, évaluer les risques et noter le fournisseur. Nous avons préparé ces documents pour vous — téléchargez-les et utilisez-les lorsque vous y êtes invité pendant la démo. Cliquez ensuite sur <strong>Générer des données</strong> ci-dessous pour configurer l'environnement de démo."
-                      DocCompanyInfoName: Informations sur l'entreprise
-                      DocCompanyInfoSub: "Profil de l'entreprise avec adresse, contacts et coordonnées bancaires"
-                      DocGroupCertifications: Certifications
-                      DocIso9001Name: 'ISO 9001 — Management de la qualité'
-                      DocIso14001Name: "ISO 14001 — Management environnemental"
-                      DocIso27001Name: "ISO 27001 — Sécurité de l'information"
-                      DocGdprName: Accord de traitement des données RGPD
-                      DocGroupLegal: Documents juridiques
-                      DocCommercialRegName: Extrait du registre du commerce
-                      DocCommercialRegSub: Document officiel du registre du commerce
-                      DocSelfDeclarationName: "Autodéclaration de l'entreprise"
-                      DocSelfDeclarationSub: Autodéclaration de conformité et de politique
-                      DocAnnualReportName: Rapport annuel
-                      DocAnnualReportSub: Rapport financier du dernier exercice fiscal
-                      DocBankingStatementName: Relevé bancaire
-                      DocBankingStatementSub: Relevé de compte bancaire récent
-                      GenerateDataButton: Générer des données
-                      Gen1Title: Construire la base de connaissances RAG
-                      Gen1Hint: Intégrer les documents de politique dans le magasin vectoriel
-                      Gen2Title: 'Créer des politiques de certification et réglementation'
-                      Gen2Hint: '6 règles de certification et réglementation'
-                      Gen3Title: Créer des politiques financières
-                      Gen3Hint: '6 règles de risque financier et fournisseurs démo'
-                      GenDoneBanner: "Données de démo prêtes — cliquez sur <strong>Démarrer la démo</strong> pour commencer !"
-                      StartDemoButton: Démarrer la démo
+Enum:
+  RiskKind:
+    AI_VALIDATION: 'Document requis présent : {0}'
+    MISSING_DOC: 'Document requis manquant : {0}'
 Features:
   FileExtractionDemo:
     ExtractFromImagePrompt: Extract Invoice from image
@@ -725,12 +738,12 @@ Labels:
   Close: Fermer
   Confirm: Confirmer
   Description: Description
-  Finish: Terminer
   Download: Télécharger
+  Finish: Terminer
   Optional: Optionnel
   Replace: Remplacer
   Required: Obligatoire
   Resolve: Résoudre
   Status: Statut
-  View: Afficher
   Upload: Téléverser
+  View: Afficher

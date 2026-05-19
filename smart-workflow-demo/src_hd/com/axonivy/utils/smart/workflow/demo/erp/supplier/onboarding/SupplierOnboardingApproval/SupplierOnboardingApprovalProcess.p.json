@@ -15,33 +15,19 @@
           "params" : [
             { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
             { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
-            { "name" : "approvalStage", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage", "desc" : "" },
-            { "name" : "auditTrail", "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>", "desc" : "" }
+            { "name" : "approvalStage", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage", "desc" : "" }
           ],
           "map" : {
             "out.request" : "param.request",
             "out.agentResponse" : "param.agentResponse",
-            "out.approvalStage" : "param.approvalStage",
-            "out.auditTrail" : "param.auditTrail"
+            "out.approvalStage" : "param.approvalStage"
           }
         },
         "result" : {
           "params" : [
-            { "name" : "approvalDecision", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalDecision", "desc" : "" },
-            { "name" : "approvalComment", "type" : "String", "desc" : "" },
-            { "name" : "approvalActor", "type" : "String", "desc" : "" },
-            { "name" : "approvalAt", "type" : "String", "desc" : "" },
-            { "name" : "approvalStage", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage", "desc" : "" },
-            { "name" : "approvalRecord", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalRecord", "desc" : "" },
             { "name" : "auditEntry", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry", "desc" : "" }
           ],
           "map" : {
-            "result.approvalDecision" : "in.approvalDecision",
-            "result.approvalComment" : "in.approvalComment",
-            "result.approvalActor" : "in.approvalActor",
-            "result.approvalAt" : "in.approvalAt",
-            "result.approvalStage" : "in.approvalStage",
-            "result.approvalRecord" : "in.approvalRecord",
             "result.auditEntry" : "in.auditEntry"
           }
         },

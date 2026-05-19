@@ -267,13 +267,13 @@ public final class SupplierOnboardingKnowledge {
       + "3. Requester withdrawal: The requester can withdraw the request at any point during a "
       + "clarification cycle. The decline is recorded as withdrawn by the requester.\n"
       + "When a request is declined the system:\n"
-      + "- Creates a DeclineRecord containing: declined timestamp, declined-by actor, "
-      + "list of decline reasons, aggregate risk score, and risk score level.\n"
+      + "- Appends a final AuditTrailEntry to OnboardingRequest.auditTrail containing: "
+      + "decline timestamp, declined-by actor, and the list of decline reasons (taken from "
+      + "FAILURE-severity validation findings, up to 5 reasons).\n"
       + "- Sends email notifications to: the requester, the supervisor, and the QM Manager.\n"
       + "- Creates a \"Decline review\" task so the involved parties can review the decline summary.\n"
-      + "- Records a final audit trail entry with actor type AGENT (automatic) or USER (withdrawal).\n"
       + "After the decline review task is completed the process routes to the completion screen "
-      + "which shows the full decline summary including the DeclineRecord and notifications sent.";
+      + "which shows the full decline summary including the audit trail and notifications sent.";
 
   // ── Registry ──────────────────────────────────────────────────────────────
 

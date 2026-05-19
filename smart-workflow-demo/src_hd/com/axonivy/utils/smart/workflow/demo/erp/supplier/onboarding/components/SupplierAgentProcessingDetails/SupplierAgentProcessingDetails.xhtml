@@ -172,6 +172,19 @@
           </div>
         </ui:repeat>
       </div>
+      <ui:fragment rendered="#{not empty cc.attrs.bean.policyValidationFindings}">
+        <div class="border-top-1 surface-border mt-3 pt-3">
+          <div class="so-card-title mb-2">
+            <i class="ti ti-shield-check mr-2" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/PolicyFindingsTitle')}
+          </div>
+          <ui:repeat value="#{cc.attrs.bean.policyValidationFindings}" var="finding">
+            <div class="so-finding-row #{cc.attrs.bean.getFindingRowClass(finding)}">
+              <i class="ti #{cc.attrs.bean.getFindingIcon(finding)}" />
+              <span><h:outputText value="#{finding.message}" /></span>
+            </div>
+          </ui:repeat>
+        </div>
+      </ui:fragment>
       <span id="stepFailedFlag"
         data-failed="#{cc.attrs.bean.hasFailedStep}"
         class="hidden" />

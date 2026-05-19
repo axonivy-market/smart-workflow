@@ -24,13 +24,7 @@
     "name" : "approvalAt",
     "type" : "String"
   }, {
-    "name" : "approvalRecord",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalRecord"
-  }, {
     "name" : "auditEntry",
     "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry"
-  }, {
-    "name" : "auditTrail",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>"
   } ]
 }

@@ -8,39 +8,31 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",
-      "name" : "start(OnboardingRequest,SupplierAgentResponse,DeclineRecord,List,List)",
+      "name" : "start(OnboardingRequest,SupplierAgentResponse,List)",
       "config" : {
         "signature" : "start",
         "input" : {
           "params" : [
             { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
             { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
-            { "name" : "declineRecord", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord", "desc" : "" },
-            { "name" : "notificationRecords", "type" : "java.util.List", "desc" : "" },
-            { "name" : "auditTrail", "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>", "desc" : "" }
+            { "name" : "notificationRecords", "type" : "java.util.List", "desc" : "" }
           ],
           "map" : {
             "out.request" : "param.request",
             "out.agentResponse" : "param.agentResponse",
-            "out.declineRecord" : "param.declineRecord",
-            "out.notificationRecords" : "param.notificationRecords",
-            "out.auditTrail" : "param.auditTrail"
+            "out.notificationRecords" : "param.notificationRecords"
           }
         },
         "result" : {
           "params" : [
             { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
             { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
-            { "name" : "declineRecord", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord", "desc" : "" },
-            { "name" : "notificationRecords", "type" : "java.util.List", "desc" : "" },
-            { "name" : "auditTrail", "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>", "desc" : "" }
+            { "name" : "notificationRecords", "type" : "java.util.List", "desc" : "" }
           ],
           "map" : {
             "result.request" : "in.request",
             "result.agentResponse" : "in.agentResponse",
-            "result.declineRecord" : "in.declineRecord",
-            "result.notificationRecords" : "in.notificationRecords",
-            "result.auditTrail" : "in.auditTrail"
+            "result.notificationRecords" : "in.notificationRecords"
           }
         },
         "guid" : "19DE693E7FD3CB03"

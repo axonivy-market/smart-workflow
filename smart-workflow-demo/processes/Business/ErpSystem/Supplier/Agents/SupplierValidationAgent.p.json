@@ -166,17 +166,19 @@
     }, {
       "id" : "f7",
       "type" : "CallSubStart",
-      "name" : "validateAgainstPolicy(Supplier,DocumentExtractionResult)",
+      "name" : "validateAgainstPolicy(Supplier,DocumentExtractionResult,OnboardingRequest)",
       "config" : {
         "signature" : "validateAgainstPolicy",
         "input" : {
           "params" : [
             { "name" : "supplier", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier", "desc" : "The supplier need to validate" },
-            { "name" : "documents", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtractionResult", "desc" : "documents need to validate" }
+            { "name" : "documents", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtractionResult", "desc" : "documents need to validate" },
+            { "name" : "onboardingRequest", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "Full request for reading/writing policyValidationFindings on incremental re-runs" }
           ],
           "map" : {
             "out.extractionResult" : "param.documents",
-            "out.supplier" : "param.supplier"
+            "out.supplier" : "param.supplier",
+            "out.onboardingRequest" : "param.onboardingRequest"
           }
         },
         "result" : {
@@ -231,7 +233,9 @@
             "",
             "in.policyRules = ValidationRunner.loadPolicyRules();",
             "in.ruleIndex = 0;",
-            "in.accumulatedFindings = new ArrayList<ValidationFinding>();",
+            "in.existingFindings = (in.onboardingRequest != null) ? in.onboardingRequest.getPolicyValidationFindings() : null;",
+            "in.filteredExistingFindings = ValidationRunner.filterExistingFindings(in.existingFindings);",
+            "in.accumulatedFindings = ValidationRunner.initAccumulatedFromExisting(in.filteredExistingFindings);",
             "in.isProceeded = false;"
           ]
         }
@@ -268,17 +272,14 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
             "",
+            "in.ruleAlreadyEvaluated = ValidationRunner.isRuleAlreadyEvaluated(",
+            "    in.policyRules.get(in.ruleIndex), in.filteredExistingFindings);",
             "in.ruleDocumentFound = ValidationRunner.hasRuleDocument(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult);",
             "in.ruleContext = ValidationRunner.buildRuleDocContext(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult, in.supplierContext);",
             "in.ruleSystemPrompt = ValidationRunner.buildSingleRuleSystemPrompt(",
-            "    in.policyRules.get(in.ruleIndex));",
-            "",
-            "ivy.log.error(\"test\");",
-            "",
-            "import dev.langchain4j.internal.Json;",
-            "ivy.log.error(Json.toJson(in.policyRules.get(in.ruleIndex)));"
+            "    in.policyRules.get(in.ruleIndex));"
           ]
         }
       },
@@ -286,7 +287,45 @@
         "at" : { "x" : 944, "y" : 752 }
       },
       "connect" : [
-        { "id" : "f9docc", "to" : "f9doccheck" }
+        { "id" : "f9docc", "to" : "f9skip" }
+      ]
+    }, {
+      "id" : "f9skip",
+      "type" : "Alternative",
+      "name" : "Rule Already Evaluated?",
+      "config" : {
+        "conditions" : {
+          "f9skip1" : "in.ruleAlreadyEvaluated"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1073, "y" : 751 },
+        "labelOffset" : { "x" : 48, "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "f9skip1", "to" : "f9skipmerge", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : 16, "y" : -2 }
+          } },
+        { "id" : "f9skip0", "to" : "f9doccheck", "label" : {
+            "name" : "no",
+            "offset" : { "x" : 1, "y" : 7 }
+          } }
+      ]
+    }, {
+      "id" : "f9skipmerge",
+      "type" : "Script",
+      "name" : "Advance Index (skip)",
+      "config" : {
+        "output" : {
+          "code" : "in.ruleIndex = in.ruleIndex + 1;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1072, "y" : 856 }
+      },
+      "connect" : [
+        { "id" : "f9skipmerge_c", "to" : "f9loop", "via" : [ { "x" : 784, "y" : 856 } ] }
       ]
     }, {
       "id" : "f9doccheck",
@@ -298,12 +337,19 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1072, "y" : 752 },
-        "labelOffset" : { "x" : 80, "y" : -8 }
+        "at" : { "x" : 1264, "y" : 752 },
+        "labelOffset" : { "x" : 32, "y" : 32 }
       },
       "connect" : [
-        { "id" : "f9doccheck1", "to" : "f9ai" },
-        { "id" : "f9doccheck0", "to" : "f9merge" }
+        { "id" : "f9doccheck1", "to" : "f9ai", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : 17, "y" : -5 }
+          } },
+        { "id" : "f9doccheck0", "to" : "f9merge", "label" : {
+            "name" : "no",
+            "segment" : 0.41,
+            "offset" : { "x" : 3, "y" : -6 }
+          } }
       ]
     }, {
       "id" : "f9ai",
@@ -320,11 +366,11 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1072, "y" : 632 },
+        "at" : { "x" : 1264, "y" : 648 },
         "size" : { "width" : 128 }
       },
       "connect" : [
-        { "id" : "f9aic", "to" : "f9merge", "via" : [ { "x" : 1304, "y" : 632 } ] }
+        { "id" : "f9aic", "to" : "f9merge", "via" : [ { "x" : 1600, "y" : 648 } ] }
       ]
     }, {
       "id" : "f9merge",
@@ -336,15 +382,17 @@
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
             "",
             "ValidationRunner.mergeRuleFindings(in.accumulatedFindings, in.ruleFindings);",
-            "in.ruleIndex = in.ruleIndex + 1;"
+            "in.ruleIndex = in.ruleIndex + 1;",
+            "",
+            "in.ruleFindings.getFindings().clear();"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 1304, "y" : 752 }
+        "at" : { "x" : 1600, "y" : 752 }
       },
       "connect" : [
-        { "id" : "f9mergec", "to" : "f9loop", "via" : [ { "x" : 1304, "y" : 824 }, { "x" : 784, "y" : 824 } ] }
+        { "id" : "f9mergec", "to" : "f9loop", "via" : [ { "x" : 1600, "y" : 936 }, { "x" : 784, "y" : 936 } ] }
       ]
     }, {
       "id" : "f9fin",
@@ -359,7 +407,10 @@
             "ValidationRunner.mergePresenceFindings(in.policyValidationResult, in.documentPresenceFindings);",
             "ValidationRunner.finalizePolicyStep(in.processingStep, in.policyValidationResult);",
             "in.policyRuleEvaluations = ValidationRunner.evaluatePolicyRules(in.policyValidationResult);",
-            "in.policyComplianceScore = ValidationRunner.computePolicyComplianceScore(in.policyValidationResult);"
+            "in.policyComplianceScore = ValidationRunner.computePolicyComplianceScore(in.policyValidationResult);",
+            "if (in.onboardingRequest != null) {",
+            "  in.onboardingRequest.setPolicyValidationFindings(in.policyValidationResult.getFindings());",
+            "}"
           ]
         }
       },
@@ -405,7 +456,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1360 },
+        "at" : { "x" : 96, "y" : 1440 },
         "labelOffset" : { "x" : 25, "y" : 49 },
         "description" : "Computes a 3-component risk score (financialStability, policyCompliance, certValidity). Call AFTER validateAgainstPolicy and validateFinancialPolicy."
       },
@@ -416,7 +467,7 @@
       "id" : "ra1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 872, "y" : 1360 }
+        "at" : { "x" : 872, "y" : 1440 }
       }
     }, {
       "id" : "ra2",
@@ -433,7 +484,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 1360 }
+        "at" : { "x" : 392, "y" : 1440 }
       },
       "connect" : [
         { "id" : "ra11", "to" : "ra1" }
@@ -464,7 +515,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1264 }
+        "at" : { "x" : 96, "y" : 1344 }
       },
       "connect" : [
         { "id" : "dc10", "to" : "dc20" }
@@ -473,7 +524,7 @@
       "id" : "dc1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 856, "y" : 1264 }
+        "at" : { "x" : 856, "y" : 1344 }
       }
     }, {
       "id" : "dc20",
@@ -496,7 +547,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 264, "y" : 1264 }
+        "at" : { "x" : 264, "y" : 1344 }
       },
       "connect" : [
         { "id" : "dc20c", "to" : "dc2" }
@@ -516,7 +567,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 448, "y" : 1264 },
+        "at" : { "x" : 448, "y" : 1344 },
         "size" : { "width" : 152, "height" : 62 }
       },
       "connect" : [
@@ -536,7 +587,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 680, "y" : 1264 }
+        "at" : { "x" : 680, "y" : 1344 }
       },
       "connect" : [
         { "id" : "dc12", "to" : "dc1" }
@@ -590,7 +641,7 @@
         "tool"
       ],
       "visual" : {
-        "at" : { "x" : 96, "y" : 1104 },
+        "at" : { "x" : 96, "y" : 1184 },
         "description" : "Validates the supplier's financial health against financial rules (solvency, tax, banking). Call AFTER extractDocuments."
       },
       "connect" : [
@@ -624,7 +675,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 880, "y" : 1008 }
+        "at" : { "x" : 880, "y" : 1088 }
       },
       "connect" : [
         { "id" : "f39", "to" : "vf8end" }
@@ -644,7 +695,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 344, "y" : 1104 }
+        "at" : { "x" : 344, "y" : 1184 }
       },
       "connect" : [
         { "id" : "vf1c", "to" : "vf2" }
@@ -668,7 +719,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 528, "y" : 1104 }
+        "at" : { "x" : 528, "y" : 1184 }
       },
       "connect" : [
         { "id" : "vf2c", "to" : "vf3loop" }
@@ -683,7 +734,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 672, "y" : 1104 },
+        "at" : { "x" : 672, "y" : 1184 },
         "labelOffset" : { "x" : -24, "y" : -16 }
       },
       "connect" : [
@@ -715,7 +766,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 944, "y" : 1104 }
+        "at" : { "x" : 944, "y" : 1184 }
       },
       "connect" : [
         { "id" : "vf4docc", "to" : "vf5check" }
@@ -730,7 +781,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1080, "y" : 1104 },
+        "at" : { "x" : 1080, "y" : 1184 },
         "labelOffset" : { "x" : 80, "y" : -8 }
       },
       "connect" : [
@@ -752,7 +803,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1320, "y" : 976 },
+        "at" : { "x" : 1320, "y" : 1056 },
         "size" : { "width" : 128 }
       },
       "connect" : [
@@ -768,15 +819,17 @@
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
             "",
             "ValidationRunner.mergeFinancialRuleFindings(in.accumulatedFindings, in.ruleFindings);",
-            "in.ruleIndex = in.ruleIndex + 1;"
+            "in.ruleIndex = in.ruleIndex + 1;",
+            "",
+            "in.ruleFindings.getFindings().clear();"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 1320, "y" : 1104 }
+        "at" : { "x" : 1320, "y" : 1184 }
       },
       "connect" : [
-        { "id" : "vf6mergec", "to" : "vf3loop", "via" : [ { "x" : 1320, "y" : 1176 }, { "x" : 672, "y" : 1176 } ] }
+        { "id" : "vf6mergec", "to" : "vf3loop", "via" : [ { "x" : 1320, "y" : 1256 }, { "x" : 672, "y" : 1256 } ] }
       ]
     }, {
       "id" : "vf7fin",
@@ -794,7 +847,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 672, "y" : 904 }
+        "at" : { "x" : 672, "y" : 984 }
       },
       "connect" : [
         { "id" : "vf7finc", "to" : "vf8end" }
@@ -803,7 +856,7 @@
       "id" : "vf8end",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 880, "y" : 904 }
+        "at" : { "x" : 880, "y" : 984 }
       }
     }, {
       "id" : "f33",
@@ -818,7 +871,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1080, "y" : 976 }
+        "at" : { "x" : 1080, "y" : 1056 }
       },
       "connect" : [
         { "id" : "f34", "to" : "vf6ai" }
@@ -833,7 +886,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 672, "y" : 1008 },
+        "at" : { "x" : 672, "y" : 1088 },
         "labelOffset" : { "x" : -32, "y" : 0 }
       },
       "connect" : [

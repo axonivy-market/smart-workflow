@@ -39,8 +39,8 @@
                   </h:outputFormat>
                 </div>
                 <div class="so-clarification-banner-meta">
-                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingCompletion/BannerMetaTemplate')}">
-                    <f:param value="#{data.request.caseReference}" />
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingCompletion/BannerMetaTemplate')}" escape="false">
+                    <f:param value="#{ivy.case.name}" />
                     <f:param value="#{data.request.completedAt}" />
                   </h:outputFormat>
                   · <a href="#" class="so-banner-toggle-link" onclick="soToggleBannerScore(this); return false;">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingCompletion/ShowDetailsLink')}</a>
@@ -79,49 +79,8 @@
             </div>
 
             <!-- Audit Timeline -->
-            <div class="so-card">
-              <div class="so-card-title mb-3"><i class="ti ti-timeline mr-2" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingCompletion/AuditTimelineTitle')}</div>
-              <ui:fragment rendered="#{empty data.auditTrail}">
-                <div class="text-sm text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingCompletion/AuditEmptyState')}</div>
-              </ui:fragment>
-              <ui:fragment rendered="#{not empty data.auditTrail}">
-                <div class="so-tl">
-                  <ui:repeat value="#{data.auditTrail}" var="entry" varStatus="vs">
-                    <div class="so-tl-item so-checklist-item completed">
-                      <div class="so-tl-left">
-                        <div class="so-tl-bubble #{supplierOnboardingCompletionBean.getAuditBubbleClass(entry.actorType)}">
-                          <i class="ti #{supplierOnboardingCompletionBean.getAuditIcon(entry.actorType)}" />
-                        </div>
-                        <ui:fragment rendered="#{!vs.last}">
-                          <div class="so-tl-line" />
-                        </ui:fragment>
-                      </div>
-                      <div class="so-tl-card mb-2">
-                        <div class="so-tl-card-header so-tl-card-header--clickable"
-                          onclick="soTlToggle(this)"
-                          title="Click to expand / collapse">
-                          <span class="so-tl-card-title">#{entry.action}</span>
-                          <span class="so-tl-card-time">#{entry.timestamp}</span>
-                          <i class="ti ti-chevron-down so-tl-chevron" />
-                        </div>
-                        <div class="so-tl-lines">
-                          <div class="so-tl-line-item">
-                            <i class="ti #{supplierOnboardingCompletionBean.getAuditIcon(entry.actorType)}" />
-                            <span>#{entry.actor} (#{entry.actorType})</span>
-                          </div>
-                          <ui:fragment rendered="#{not empty entry.technicalDetail}">
-                            <div class="so-tl-line-item">
-                              <i class="ti ti-code" />
-                              <span style="font-style:italic">#{entry.technicalDetail}</span>
-                            </div>
-                          </ui:fragment>
-                        </div>
-                      </div>
-                    </div>
-                  </ui:repeat>
-                </div>
-              </ui:fragment>
-            </div>
+            <ic:com.axonivy.utils.smart.workflow.demo.erp.components.AuditTrail
+              auditTrail="#{data.request.auditTrail}" />
           </p:tab>
 
           <!-- ── Tab 2: Supplier Details ─────────────────────────────────────── -->

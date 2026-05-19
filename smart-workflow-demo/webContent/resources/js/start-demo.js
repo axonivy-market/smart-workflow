@@ -67,11 +67,15 @@
     var first = wrapper.querySelector('.fd-step-panel[data-step="0"]');
     if (first) first.classList.add('fd-active');
 
-    // Disable Start Demo until data generation completes
-    var proceed = document.getElementById('form:proceed');
-    if (proceed) {
-      proceed.disabled = true;
-      proceed.classList.add('ui-state-disabled');
+    // Disable Start Demo until data generation completes,
+    // unless data is already generated (server signals via hidden element)
+    var alreadyGenEl = document.getElementById('gen-form:data-already-generated');
+    if (!alreadyGenEl) {
+      var proceed = document.getElementById('form:proceed');
+      if (proceed) {
+        proceed.disabled = true;
+        proceed.classList.add('ui-state-disabled');
+      }
     }
 
     syncUI();
@@ -95,7 +99,13 @@ window.sdToggleDownloads = function (link) {
   var chevron = link ? link.querySelector('.sd-details-chevron') : null;
   if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
   var label = link ? link.querySelector('span') : null;
-  if (label) label.textContent = open ? 'Hide details' : 'File details';
+  if (label) {
+    var hideEl   = document.getElementById('gen-form:file-details-hide');
+    var toggleEl = document.getElementById('gen-form:file-details-toggle');
+    label.textContent = open
+      ? (hideEl   && hideEl.textContent   ? hideEl.textContent.trim()   : 'Hide details')
+      : (toggleEl && toggleEl.textContent ? toggleEl.textContent.trim() : 'File details');
+  }
 };
 
 /**
@@ -108,11 +118,12 @@ var sdGen = (function () {
   var _running = false;
   var TOTAL_STEPS = 3;
 
-  var STEP_SUBTITLES = [
-    'Ingesting policy documents into vector store…',
-    'Creating 6 certification &amp; regulatory rules…',
-    'Creating 6 financial risk rules &amp; demo suppliers…'
-  ];
+  function _getStepSubtitle(n) {
+    var el = document.getElementById('gen-form:gen' + n + '-running-subtitle');
+    if (el && el.textContent) { return el.textContent.trim(); }
+    var fallback = document.getElementById('gen-form:gen-processing-subtitle');
+    return (fallback && fallback.textContent) ? fallback.textContent.trim() : 'Processing\u2026';
+  }
 
   /* ── DOM helpers ────────────────────────────────────────────────── */
 
@@ -149,7 +160,7 @@ var sdGen = (function () {
       sub.className = 'so-checklist-subtitle';
       card.appendChild(sub);
     }
-    if (sub) { sub.textContent = STEP_SUBTITLES[n - 1] || 'Processing…'; }
+    if (sub) { sub.textContent = _getStepSubtitle(n); }
   }
 
   /* ── Step invocation ────────────────────────────────────────────── */
@@ -204,7 +215,10 @@ var sdGen = (function () {
       btn.disabled = false;
       btn.classList.remove('ui-state-disabled');
       var text = btn.querySelector('.ui-button-text');
-      if (text) { text.textContent = 'Retry'; }
+      if (text) {
+        var retryEl = document.getElementById('gen-form:gen-retry-button');
+        text.textContent = (retryEl && retryEl.textContent) ? retryEl.textContent.trim() : 'Retry';
+      }
     }
   }
 

@@ -25,7 +25,9 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRu
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.StepStatus;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.utils.IvyAdapterService;
@@ -402,8 +404,11 @@ public class SupplierAgentProcessingBean implements Serializable {
       Map<String, Object> params = new LinkedHashMap<>();
       params.put("supplier", request.getSupplier());
       params.put("documents", extractionResult);
+      params.put("onboardingRequest", request);
       Map<String, Object> result = IvyAdapterService.startSubProcessInApplication(
-          "validateAgainstPolicy(com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtractionResult)",
+          "validateAgainstPolicy(com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier,"
+              + "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtractionResult,"
+              + "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest)",
           params);
       this.policyValidationResult = result != null
           ? (PolicyValidationResult) result.get("policyValidationResult") : null;
@@ -477,6 +482,10 @@ public class SupplierAgentProcessingBean implements Serializable {
           : "Analysis complete.";
       agentResponse.setFeedback(orchestrationSummary);
       syncAgentResponse(agentResponse);
+      AuditTrailEntry analysisEntry =
+          SupplierOnboardingProcessService.buildAgentAnalysisAuditEntry(request, agentResponse);
+      request.setAuditTrail(
+          SupplierOnboardingProcessService.ensureAndAdd(request.getAuditTrail(), analysisEntry));
     } catch (Exception e) {
       step.setStatus(StepStatus.FAILED);
       addStepErrorMessage(KEY_STEP_RISK_SCORE_CALCULATION, e);
@@ -525,7 +534,11 @@ public class SupplierAgentProcessingBean implements Serializable {
   }
 
   private void addStepErrorMessage(String stepKey, Exception e) {
-    String displayName = steps.stream()
+    List<AgentProcessingStep> stepList = (agentResponse != null
+        && agentResponse.getProcessingSteps() != null)
+        ? agentResponse.getProcessingSteps()
+        : new ArrayList<>();
+    String displayName = stepList.stream()
         .filter(s -> stepKey.equals(s.getStepKey()))
         .map(AgentProcessingStep::getName)
         .findFirst()
@@ -545,6 +558,13 @@ public class SupplierAgentProcessingBean implements Serializable {
   }
 
   // ── Getters ─────────────────────────────────────────────────────────────────
+
+  public List<ValidationFinding> getPolicyValidationFindings() {
+    if (request == null || request.getPolicyValidationFindings() == null) {
+      return java.util.Collections.emptyList();
+    }
+    return request.getPolicyValidationFindings();
+  }
 
   public OnboardingRequest getRequest() {
     return request;

@@ -53,6 +53,26 @@
     "comment" : "Running list of findings accumulated across all rule iterations",
     "modifiers" : [ ]
   }, {
+    "name" : "existingFindings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding>",
+    "comment" : "Existing findings from prior run (from onboardingRequest.policyValidationFindings), null on first run",
+    "modifiers" : [ ]
+  }, {
+    "name" : "filteredExistingFindings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding>",
+    "comment" : "Subset of existingFindings kept for re-use: all findings except resolved MISSING_DOC ones",
+    "modifiers" : [ ]
+  }, {
+    "name" : "ruleAlreadyEvaluated",
+    "type" : "Boolean",
+    "comment" : "True when the current rule already has a finding in filteredExistingFindings; AI call is skipped",
+    "modifiers" : [ ]
+  }, {
+    "name" : "onboardingRequest",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest",
+    "comment" : "Full OnboardingRequest passed into validateAgainstPolicy; used to read/write policyValidationFindings",
+    "modifiers" : [ ]
+  }, {
     "name" : "policySystemPrompt",
     "comment" : "Composed system prompt for policy validation (rules injected into CMS template)"
   }, {

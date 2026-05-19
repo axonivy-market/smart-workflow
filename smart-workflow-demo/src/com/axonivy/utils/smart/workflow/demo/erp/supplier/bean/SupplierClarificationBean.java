@@ -6,10 +6,9 @@ import javax.faces.context.FacesContext;
 
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentObjectType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRiskScore;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationProblemType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
@@ -31,8 +30,13 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
 
   private SupplierAgentResponse agentResponse;
 
-  /** Typed clarification items loaded during init (avoids repeated EL reads). */
-  private final java.util.List<ClarificationItem> clarificationItems = new java.util.ArrayList<>();
+  /** Snapshot of the agent's original sub-scores, captured once during {@link #init}. */
+  private int originalFinancialStability;
+  private int originalPolicyCompliance;
+  private int originalCertValidity;
+
+  /** Non-PASSED findings loaded from request.policyValidationFindings during init. */
+  private final java.util.List<ValidationFinding> clarificationFindings = new java.util.ArrayList<>();
 
   /** Index of the currently expanded resolve panel (-1 = none). */
   private int expandedItemIndex = -1;
@@ -46,18 +50,18 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
     if (agentResponse == null) {
       agentResponse = (SupplierAgentResponse) ctx.getApplication()
           .evaluateExpressionGet(ctx, "#{data.agentResponse}", Object.class);
+      if (agentResponse != null && agentResponse.getRiskScore() != null) {
+        SupplierRiskScore rs = agentResponse.getRiskScore();
+        originalFinancialStability = rs.getFinancialStability();
+        originalPolicyCompliance   = rs.getPolicyCompliance();
+        originalCertValidity       = rs.getCertValidity();
+      }
     }
-    if (clarificationItems.isEmpty()) {
-      Object raw = ctx.getApplication()
-          .evaluateExpressionGet(ctx, "#{data.clarificationItems}", Object.class);
-      if (raw instanceof java.util.List<?> list) {
-        for (Object element : list) {
-          switch (element) {
-            case ClarificationItem ci -> clarificationItems.add(ci);
-            case String s -> clarificationItems.add(
-                new ClarificationItem(s, ClarificationProblemType.OTHER, null));
-            default -> { /* skip unknown elements */ }
-          }
+    if (clarificationFindings.isEmpty() && request != null
+        && request.getPolicyValidationFindings() != null) {
+      for (ValidationFinding f : request.getPolicyValidationFindings()) {
+        if (f.getSeverity() == null || !"PASSED".equalsIgnoreCase(f.getSeverity())) {
+          clarificationFindings.add(f);
         }
       }
     }
@@ -89,6 +93,30 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
 
   // ── Risk level helpers (YELLOW context) ──────────────────────────────────
 
+  public String getBannerModifierClass() {
+    return switch (getRiskLevel()) {
+      case GREEN -> "so-success-banner";
+      case RED   -> "so-decline-banner";
+      default    -> "";
+    };
+  }
+
+  public String getBannerBadgeClass() {
+    return switch (getRiskLevel()) {
+      case GREEN -> "so-badge-green";
+      case RED   -> "so-badge-red";
+      default    -> "so-badge-yellow";
+    };
+  }
+
+  public String getBannerBadgeLabel() {
+    return switch (getRiskLevel()) {
+      case GREEN -> Ivy.cms().co(CMS_COMPL + "RiskScoreBadge");
+      case RED   -> Ivy.cms().co(CMS_DECL  + "RiskScoreBadge");
+      default    -> Ivy.cms().co(CMS_SC    + "RiskScoreBadge");
+    };
+  }
+
   public String getDecisionBoxCssClass() {
     RiskLevel level = getRiskLevel();
     if (level == RiskLevel.GREEN) return "so-agent-decision-green";
@@ -104,6 +132,9 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
   }
 
   private static final String CMS_SAPD = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/";
+  private static final String CMS_SC   = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/";
+  private static final String CMS_COMPL = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingCompletion/";
+  private static final String CMS_DECL  = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/";
 
   public String getThresholdLabel() {
     RiskLevel level = getRiskLevel();
@@ -208,7 +239,7 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
 
   /**
    * Toggles the resolve panel for the given item index.
-   * Also sets {@code pendingDocumentType} if the item has a documentTypeKey
+   * Also sets {@code pendingDocumentType} if the finding has a documentTypeKey
    * so that the SingleLegalDocument upload widget is pre-targeted.
    */
   public void toggleResolve(int index) {
@@ -216,10 +247,10 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
       expandedItemIndex = -1;
     } else {
       expandedItemIndex = index;
-      if (index >= 0 && index < clarificationItems.size()) {
-        ClarificationItem item = clarificationItems.get(index);
-        if (item.getDocumentTypeKey() != null) {
-          setPendingDocumentType(item.getDocumentTypeKey());
+      if (index >= 0 && index < clarificationFindings.size()) {
+        ValidationFinding finding = clarificationFindings.get(index);
+        if (finding.getDocumentTypeKey() != null) {
+          setPendingDocumentType(finding.getDocumentTypeKey());
         }
       }
     }
@@ -239,52 +270,77 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
 
   /**
    * Called when a document is uploaded via the per-item SingleLegalDocument component.
-   * Marks the corresponding clarification item as resolved.
+   * Marks the corresponding finding as resolved.
    */
   @Override
   public void onDocumentSaved(com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocument doc) {
     super.onDocumentSaved(doc);
-    if (expandedItemIndex >= 0 && expandedItemIndex < clarificationItems.size()) {
-      ClarificationItem item = clarificationItems.get(expandedItemIndex);
-      item.setResolved(true);
-      if (item.getFinding() != null) {
-        item.getFinding().setResolved(true);
-      }
+    if (expandedItemIndex >= 0 && expandedItemIndex < clarificationFindings.size()) {
+      clarificationFindings.get(expandedItemIndex).setResolved(true);
+      recalculateScore();
     }
   }
 
   // ── Getters ───────────────────────────────────────────────────────────────
 
   /**
-   * Returns clarification items as a typed array so the JSF EL validator
+   * Returns clarification findings as a typed array so the JSF EL validator
    * can infer the element type (List&lt;T&gt; generics are not visible to EL).
    */
-  public ClarificationItem[] getClarificationItemsArray() {
-    return clarificationItems.toArray(ClarificationItem[]::new);
+  public ValidationFinding[] getValidationFindingsArray() {
+    return clarificationFindings.toArray(ValidationFinding[]::new);
   }
 
   /**
-   * Marks the clarification item at the given index as resolved.
+   * Marks the finding at the given index as resolved.
    * Called by ProblemExplanation component after explanation is saved.
    */
   public void markItemResolved(int index) {
-    if (index >= 0 && index < clarificationItems.size()) {
-      ClarificationItem item = clarificationItems.get(index);
-      item.setResolved(true);
-      if (item.getFinding() != null) {
-        item.getFinding().setResolved(true);
-      }
+    if (index >= 0 && index < clarificationFindings.size()) {
+      clarificationFindings.get(index).setResolved(true);
+      recalculateScore();
     }
     expandedItemIndex = -1;
   }
 
   /**
-   * Returns true when all clarification items have been resolved.
+   * Boosts each sub-score proportionally to the fraction of resolved findings,
+   * then recomputes the aggregate and risk level on the bean's cached {@code agentResponse}.
+   *
+   * <p>Always computed from the original scores captured during {@link #init} to avoid
+   * compounding boosts across multiple resolve actions.
+   */
+  private void recalculateScore() {
+    if (agentResponse == null || agentResponse.getRiskScore() == null || clarificationFindings.isEmpty()) {
+      return;
+    }
+    long resolved = clarificationFindings.stream().filter(ValidationFinding::isResolved).count();
+    double ratio = (double) resolved / clarificationFindings.size();
+
+    SupplierRiskScore score = agentResponse.getRiskScore();
+    int newFinancial = boost(originalFinancialStability, ratio);
+    int newPolicy    = boost(originalPolicyCompliance,   ratio);
+    int newCert      = boost(originalCertValidity,       ratio);
+    int newAggregate = (newFinancial + newPolicy + newCert) / 3;
+
+    score.setFinancialStability(newFinancial);
+    score.setPolicyCompliance(newPolicy);
+    score.setCertValidity(newCert);
+    score.setAggregate(newAggregate);
+    score.setLevel(RiskLevel.fromScore(newAggregate));
+  }
+
+  private static int boost(int original, double resolvedRatio) {
+    return Math.min(100, (int) Math.round(original + (100 - original) * resolvedRatio));
+  }
+
+  /**
+   * Returns true when all clarification findings have been resolved.
    * Used to switch the footer Submit button to a success style.
    */
   public boolean isAllItemsResolved() {
-    return !clarificationItems.isEmpty()
-        && clarificationItems.stream().allMatch(ClarificationItem::isResolved);
+    return !clarificationFindings.isEmpty()
+        && clarificationFindings.stream().allMatch(ValidationFinding::isResolved);
   }
 
   public SupplierAgentResponse getAgentResponse() {

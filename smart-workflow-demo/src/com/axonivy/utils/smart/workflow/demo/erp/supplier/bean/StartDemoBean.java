@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -36,6 +37,21 @@ public class StartDemoBean implements Serializable {
   private String step3Status = "pending";
   private boolean generationStarted = false;
   private boolean generationDone = false;
+
+  @PostConstruct
+  public void init() {
+    if (isDataAlreadyGenerated()) {
+      generationDone = true;
+    }
+  }
+
+  public boolean isDataAlreadyGenerated() {
+    var rules = SupplierPolicyRuleRepository.getInstance().findAll();
+    boolean hasPolicyRules    = rules.stream().anyMatch(r -> r.getRuleType() == RuleType.POLICY);
+    boolean hasFinancialRules = rules.stream().anyMatch(r -> r.getRuleType() == RuleType.FINANCIAL);
+    boolean hasSuppliers      = !SupplierRepository.getInstance().findAll().isEmpty();
+    return hasPolicyRules && hasFinancialRules && hasSuppliers;
+  }
 
   // ── Step actions (invoked by p:remoteCommand) ─────────────────────────────
 
@@ -145,15 +161,15 @@ public class StartDemoBean implements Serializable {
   // ── Download all demo documents as ZIP ───────────────────────────────────
 
   private static final List<String[]> DEMO_DOCS = List.of(
-      new String[]{"CompanyInformation.pdf",              "/Files/ERP/DemoCompany/CompanyInformation"},
-      new String[]{"ISO9001-QualityManagement.pdf",       "/Files/ERP/DemoCompany/Certifications/ISO9001"},
-      new String[]{"ISO14001-EnvironmentalManagement.pdf","/Files/ERP/DemoCompany/Certifications/ISO14001"},
-      new String[]{"ISO27001-InformationSecurity.pdf",    "/Files/ERP/DemoCompany/Certifications/ISO27001"},
-      new String[]{"GDPR-DataProcessingAgreement.pdf",    "/Files/ERP/DemoCompany/Certifications/GDPR"},
-      new String[]{"CommercialRegister.pdf",              "/Files/ERP/DemoCompany/LegalDocuments/CommercialRegister"},
-      new String[]{"SelfDeclaration.pdf",                 "/Files/ERP/DemoCompany/LegalDocuments/SelfDeclaration"},
-      new String[]{"AnnualReport.pdf",                    "/Files/ERP/DemoCompany/LegalDocuments/AnnualReport"},
-      new String[]{"BankingStatement.pdf",                "/Files/ERP/DemoCompany/LegalDocuments/BankingStatement"}
+      new String[]{"OfferLetter.pdf",              "/Files/ERP/DemoCompany/OfferLetter"},
+      new String[]{"ISO9001_QualityManagement.pdf",       "/Files/ERP/DemoCompany/Certifications/ISO9001"},
+      new String[]{"ISO14001_EnvironmentalManagement.pdf","/Files/ERP/DemoCompany/Certifications/ISO14001"},
+      new String[]{"ISO27001_InformationSecurity.pdf",    "/Files/ERP/DemoCompany/Certifications/ISO27001"},
+      new String[]{"GDPR_DataProcessingAgreement.pdf",    "/Files/ERP/DemoCompany/Certifications/GDPR"},
+      new String[]{"Company_Registration_Extract.pdf",              "/Files/ERP/DemoCompany/LegalDocuments/CommercialRegister"},
+      new String[]{"Self_Declaration.pdf",                 "/Files/ERP/DemoCompany/LegalDocuments/SelfDeclaration"},
+      new String[]{"Annual_Report.pdf",                    "/Files/ERP/DemoCompany/LegalDocuments/AnnualReport"},
+      new String[]{"Banking_Statement.pdf",                "/Files/ERP/DemoCompany/LegalDocuments/BankingStatement"}
   );
 
   public StreamedContent downloadAllDocuments() {

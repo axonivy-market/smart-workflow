@@ -1,9 +1,13 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dev.langchain4j.model.output.structured.Description;
@@ -44,8 +48,11 @@ public class OnboardingRequest {
   @Description("Existing suppliers matched during the duplicate check step")
   private List<Supplier> matchedSuppliers;
 
-  @Description("Case reference number, e.g. SC-2026-003")
-  private String caseReference;
+  @Description("Policy validation findings saved from the most recent agent analysis run")
+  private List<ValidationFinding> policyValidationFindings;
+
+  @Description("Case UUID from Ivy.wfCase().uuid()")
+  private String caseUuid;
 
   @Description("Completion timestamp in ISO-8601 text format")
   private String completedAt;
@@ -55,6 +62,9 @@ public class OnboardingRequest {
 
   @Description("Decline timestamp in ISO-8601 text format, set only on the RED path")
   private String declinedAt;
+
+  @Description("Full ordered audit trail for this onboarding request")
+  private List<AuditTrailEntry> auditTrail;
 
   public OnboardingRequest() {
   }
@@ -147,12 +157,20 @@ public class OnboardingRequest {
     this.matchedSuppliers = matchedSuppliers;
   }
 
-  public String getCaseReference() {
-    return caseReference;
+  public List<ValidationFinding> getPolicyValidationFindings() {
+    return policyValidationFindings;
   }
 
-  public void setCaseReference(String caseReference) {
-    this.caseReference = caseReference;
+  public void setPolicyValidationFindings(List<ValidationFinding> policyValidationFindings) {
+    this.policyValidationFindings = policyValidationFindings;
+  }
+
+  public String getCaseUuid() {
+    return caseUuid;
+  }
+
+  public void setCaseUuid(String caseUuid) {
+    this.caseUuid = caseUuid;
   }
 
   public String getCompletedAt() {
@@ -177,5 +195,48 @@ public class OnboardingRequest {
 
   public void setDeclinedAt(String declinedAt) {
     this.declinedAt = declinedAt;
+  }
+
+  public List<AuditTrailEntry> getAuditTrail() {
+    return auditTrail;
+  }
+
+  public void setAuditTrail(List<AuditTrailEntry> auditTrail) {
+    this.auditTrail = auditTrail;
+  }
+
+  /**
+   * Builds a structured list of label-value summary lines from this request's fields.
+   * Used to populate a REQUEST-type {@link AuditTrailEntry} at submission time.
+   */
+  public List<RequestSummaryLine> buildSummaryLines() {
+    List<RequestSummaryLine> lines = new ArrayList<>();
+    if (requestedBy != null && !requestedBy.isBlank())
+      lines.add(new RequestSummaryLine("Requested by", requestedBy));
+    if (department != null && !department.isBlank())
+      lines.add(new RequestSummaryLine("Department", department));
+    if (supplier != null && supplier.getBusinessName() != null && !supplier.getBusinessName().isBlank()) {
+      String supplierVal = supplier.getBusinessName();
+      if (supplier.getVatId() != null && !supplier.getVatId().isBlank())
+        supplierVal += " · VAT " + supplier.getVatId();
+      lines.add(new RequestSummaryLine("Supplier", supplierVal));
+    }
+    if (supplier != null && supplier.getBusinessAddress() != null) {
+      var addr = supplier.getBusinessAddress();
+      String loc = Stream.of(addr.getCity(), addr.getCountry())
+          .filter(s -> s != null && !s.isBlank()).collect(Collectors.joining(", "));
+      if (!loc.isBlank()) lines.add(new RequestSummaryLine("Location", loc));
+    }
+    if (productsServicesNeeded != null && !productsServicesNeeded.isBlank())
+      lines.add(new RequestSummaryLine("Products / services", productsServicesNeeded));
+    if (expectedAnnualVolume != null)
+      lines.add(new RequestSummaryLine("Annual volume", String.format("EUR %.0f", expectedAnnualVolume)));
+    if (urgency != null && !urgency.isBlank())
+      lines.add(new RequestSummaryLine("Urgency", urgency));
+    if (neededByDate != null)
+      lines.add(new RequestSummaryLine("Needed by", neededByDate.toString()));
+    if (additionalNotes != null && !additionalNotes.isBlank())
+      lines.add(new RequestSummaryLine("Notes", additionalNotes));
+    return lines;
   }
 }

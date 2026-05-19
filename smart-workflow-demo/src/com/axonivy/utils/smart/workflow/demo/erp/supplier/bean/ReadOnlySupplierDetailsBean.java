@@ -21,6 +21,7 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierContact;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.Country;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 
 /**
  * Abstract base bean providing read-only access to supplier details.
@@ -112,6 +113,13 @@ public abstract class ReadOnlySupplierDetailsBean
 
   public OnboardingRequest getRequest() {
     return request;
+  }
+
+  public List<ValidationFinding> getPolicyValidationFindings() {
+    if (request == null || request.getPolicyValidationFindings() == null) {
+      return java.util.Collections.emptyList();
+    }
+    return request.getPolicyValidationFindings();
   }
 
   public Supplier getSupplier() {

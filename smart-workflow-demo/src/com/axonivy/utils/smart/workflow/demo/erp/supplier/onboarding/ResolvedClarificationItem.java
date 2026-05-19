@@ -13,15 +13,15 @@ public class ResolvedClarificationItem {
   private String resolutionType;
 
   /** Optional explanation text entered by the user. Null for document-upload resolutions. */
-  private String explanation;
+  private String userExplanation;
 
   public ResolvedClarificationItem() {
   }
 
-  public ResolvedClarificationItem(String problem, String resolutionType, String explanation) {
+  public ResolvedClarificationItem(String problem, String resolutionType, String userExplanation) {
     this.problem = problem;
     this.resolutionType = resolutionType;
-    this.explanation = explanation;
+    this.userExplanation = userExplanation;
   }
 
   public String getProblem() {
@@ -40,11 +40,11 @@ public class ResolvedClarificationItem {
     this.resolutionType = resolutionType;
   }
 
-  public String getExplanation() {
-    return explanation;
+  public String getUserExplanation() {
+    return userExplanation;
   }
 
-  public void setExplanation(String explanation) {
-    this.explanation = explanation;
+  public void setUserExplanation(String userExplanation) {
+    this.userExplanation = userExplanation;
   }
 }

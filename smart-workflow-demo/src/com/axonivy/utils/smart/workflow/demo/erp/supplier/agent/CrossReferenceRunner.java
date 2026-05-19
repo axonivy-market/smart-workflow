@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskKind;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
@@ -78,8 +79,10 @@ public class CrossReferenceRunner {
       step.setStatus(StepStatus.COMPLETED);
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "Cross-reference check error: " + e.getMessage(), e);
-      result.getFindings().add(new ValidationFinding(
-          "FAILURE", "Cross-reference check failed: " + e.getMessage(), "system", RiskType.POLICY_COMPLIANCE));
+      ValidationFinding errorFinding = new ValidationFinding(
+          "FAILURE", "Cross-reference check failed: " + e.getMessage(), "system", RiskType.POLICY_COMPLIANCE);
+      errorFinding.setRiskKind(RiskKind.AI_VALIDATION);
+      result.getFindings().add(errorFinding);
       step.setStatus(StepStatus.FAILED);
       step.getLogLines().add(new AgentProcessingStep.LogLine(
           LogLineSeverity.ERROR, "Cross-reference check failed: " + e.getMessage()));
@@ -91,6 +94,7 @@ public class CrossReferenceRunner {
     }
 
     for (ValidationFinding finding : result.getFindings()) {
+      finding.setRiskKind(RiskKind.AI_VALIDATION);
       LogLineSeverity sev = LogLineSeverity.OK;
       if ("FAILURE".equals(finding.getSeverity())) {
         sev = LogLineSeverity.ERROR;

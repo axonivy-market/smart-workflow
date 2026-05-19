@@ -9,9 +9,6 @@
     "name" : "agentResponse",
     "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
   }, {
-    "name" : "auditTrail",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>"
-  }, {
     "name" : "summary",
     "type" : "String"
   } ]

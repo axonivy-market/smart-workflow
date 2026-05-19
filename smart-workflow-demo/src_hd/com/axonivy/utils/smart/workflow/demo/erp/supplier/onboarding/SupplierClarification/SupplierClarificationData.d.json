@@ -9,17 +9,13 @@
     "name" : "agentResponse",
     "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
   }, {
-    "name" : "clarificationItems",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem>"
-  }, {
     "name" : "clarificationCycle",
     "type" : "int"
   }, {
     "name" : "maxRetries",
     "type" : "int"
   }, {
-    "name" : "additionalNotes",
-    "type" : "String"
+    "name" : "additionalNotes"
   }, {
     "name" : "escalateToQmIsm",
     "type" : "Boolean"

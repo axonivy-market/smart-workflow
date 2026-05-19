@@ -25,7 +25,7 @@
       "id" : "f1",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 4800, "y" : 208 }
+        "at" : { "x" : 4912, "y" : 208 }
       }
     }, {
       "id" : "f4",
@@ -348,7 +348,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 2880, "y" : 208 },
+        "at" : { "x" : 2992, "y" : 208 },
         "labelOffset" : { "y" : -24 }
       },
       "connect" : [
@@ -361,7 +361,7 @@
             "segment" : 0.51,
             "offset" : { "x" : 57, "y" : 52 }
           } },
-        { "id" : "f114", "to" : "f24", "via" : [ { "x" : 2880, "y" : 320 } ], "label" : {
+        { "id" : "f114", "to" : "f24", "via" : [ { "x" : 2992, "y" : 320 } ], "label" : {
             "name" : "Red - Decline",
             "offset" : { "x" : 105, "y" : 26 }
           } }
@@ -381,7 +381,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3096, "y" : 208 }
+        "at" : { "x" : 3208, "y" : 208 }
       },
       "connect" : [
         { "id" : "f115", "to" : "f15" }
@@ -391,30 +391,23 @@
       "type" : "DialogCall",
       "name" : "Supervisor approval dialog",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage)",
         "call" : {
           "map" : {
             "param.request" : "in.request",
             "param.agentResponse" : "in.agentResponse",
-            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage.SUPERVISOR",
-            "param.auditTrail" : "in.auditTrail"
+            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage.SUPERVISOR"
           }
         },
         "output" : {
           "map" : {
             "out" : "in",
-            "out.lastApprovalDecision" : "result.approvalDecision",
-            "out.lastApprovalComment" : "result.approvalComment",
-            "out.lastApprovalActor" : "result.approvalActor",
-            "out.lastApprovalAt" : "result.approvalAt",
-            "out.lastApprovalStage" : "result.approvalStage",
-            "out.lastApprovalRecord" : "result.approvalRecord",
             "out.lastAuditEntry" : "result.auditEntry"
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 3352, "y" : 208 }
+        "at" : { "x" : 3464, "y" : 208 }
       },
       "connect" : [
         { "id" : "f116", "to" : "f185" }
@@ -426,16 +419,14 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
-            "",
-            "in.approvalRecords = SupplierOnboardingProcessService.ensureAndAdd(in.approvalRecords, in.lastApprovalRecord);",
-            "in.auditTrail = SupplierOnboardingProcessService.ensureAndAdd(in.auditTrail, in.lastAuditEntry);"
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new java.util.ArrayList()); }",
+            "in.request.getAuditTrail().add(in.lastAuditEntry);"
           ]
         },
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3544, "y" : 208 }
+        "at" : { "x" : 3656, "y" : 208 }
       },
       "connect" : [
         { "id" : "f185a", "to" : "f16" }
@@ -455,7 +446,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3688, "y" : 208 }
+        "at" : { "x" : 3800, "y" : 208 }
       },
       "connect" : [
         { "id" : "f117", "to" : "f17" }
@@ -465,30 +456,23 @@
       "type" : "DialogCall",
       "name" : "QM/ISM approval dialog",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage)",
         "call" : {
           "map" : {
             "param.request" : "in.request",
             "param.agentResponse" : "in.agentResponse",
-            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage.QM_ISM",
-            "param.auditTrail" : "in.auditTrail"
+            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage.QM_ISM"
           }
         },
         "output" : {
           "map" : {
             "out" : "in",
-            "out.lastApprovalDecision" : "result.approvalDecision",
-            "out.lastApprovalComment" : "result.approvalComment",
-            "out.lastApprovalActor" : "result.approvalActor",
-            "out.lastApprovalAt" : "result.approvalAt",
-            "out.lastApprovalStage" : "result.approvalStage",
-            "out.lastApprovalRecord" : "result.approvalRecord",
             "out.lastAuditEntry" : "result.auditEntry"
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 3816, "y" : 208 }
+        "at" : { "x" : 3928, "y" : 208 }
       },
       "connect" : [
         { "id" : "f118", "to" : "f186" }
@@ -500,16 +484,14 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
-            "",
-            "in.approvalRecords = SupplierOnboardingProcessService.ensureAndAdd(in.approvalRecords, in.lastApprovalRecord);",
-            "in.auditTrail = SupplierOnboardingProcessService.ensureAndAdd(in.auditTrail, in.lastAuditEntry);"
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new java.util.ArrayList()); }",
+            "in.request.getAuditTrail().add(in.lastAuditEntry);"
           ]
         },
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3968, "y" : 208 }
+        "at" : { "x" : 4080, "y" : 208 }
       },
       "connect" : [
         { "id" : "f186a", "to" : "f18" }
@@ -527,15 +509,15 @@
             "",
             "CompletionContext ctx = SupplierOnboardingProcessService.completeRequest(in.request, ivy.case.getId().toString());",
             "in.summary = ctx.summary();",
-            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
-            "in.auditTrail.add(ctx.auditEntry());",
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(ctx.auditEntry());",
             "ivy.case.name = ctx.caseName();"
           ]
         },
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 4152, "y" : 208 }
+        "at" : { "x" : 4264, "y" : 208 }
       },
       "connect" : [
         { "id" : "f119", "to" : "f19t" }
@@ -555,7 +537,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 4320, "y" : 208 }
+        "at" : { "x" : 4432, "y" : 208 }
       },
       "connect" : [
         { "id" : "f119t", "to" : "f19" }
@@ -565,18 +547,17 @@
       "type" : "DialogCall",
       "name" : "Completion summary",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingCompletion:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>,String)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingCompletion:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,String)",
         "call" : {
           "map" : {
             "param.request" : "in.request",
             "param.agentResponse" : "in.agentResponse",
-            "param.auditTrail" : "in.auditTrail",
             "param.summary" : "in.summary"
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 4480, "y" : 208 }
+        "at" : { "x" : 4592, "y" : 208 }
       },
       "connect" : [
         { "id" : "f120", "to" : "f196" }
@@ -596,7 +577,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 2880, "y" : 528 }
+        "at" : { "x" : 2992, "y" : 528 }
       },
       "connect" : [
         { "id" : "f121", "to" : "f21" }
@@ -606,12 +587,11 @@
       "type" : "DialogCall",
       "name" : "Clarification dialog",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierClarification:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem>,int,int)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierClarification:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,int,int)",
         "call" : {
           "map" : {
             "param.request" : "in.request",
             "param.agentResponse" : "in.agentResponse",
-            "param.clarificationItems" : "in.clarificationItems",
             "param.clarificationCycle" : "in.clarificationCycleDisplay != null ? in.clarificationCycleDisplay : 1",
             "param.maxRetries" : "in.maxClarificationRetries != null ? in.maxClarificationRetries : 3"
           }
@@ -627,7 +607,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3032, "y" : 528 }
+        "at" : { "x" : 3144, "y" : 528 }
       },
       "connect" : [
         { "id" : "f122", "to" : "f211" }
@@ -642,10 +622,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3320, "y" : 528 }
+        "at" : { "x" : 3432, "y" : 528 }
       },
       "connect" : [
-        { "id" : "f21w1", "to" : "f24", "via" : [ { "x" : 3320, "y" : 320 } ], "label" : {
+        { "id" : "f21w1", "to" : "f24", "via" : [ { "x" : 3432, "y" : 320 } ], "label" : {
             "name" : "Withdraw",
             "offset" : { "x" : 29, "y" : -10 }
           } },
@@ -664,7 +644,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3472, "y" : 528 },
+        "at" : { "x" : 3584, "y" : 528 },
         "labelOffset" : { "x" : 88, "y" : 16 }
       },
       "connect" : [
@@ -692,7 +672,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3472, "y" : 640 }
+        "at" : { "x" : 3584, "y" : 640 }
       },
       "connect" : [
         { "id" : "f21e1", "to" : "f21f" }
@@ -702,12 +682,11 @@
       "type" : "DialogCall",
       "name" : "QM/ISM clarification dialog",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierClarification:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem>,int,int)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierClarification:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,int,int)",
         "call" : {
           "map" : {
             "param.request" : "in.request",
             "param.agentResponse" : "in.agentResponse",
-            "param.clarificationItems" : "in.clarificationItems",
             "param.clarificationCycle" : "in.clarificationCycleDisplay != null ? in.clarificationCycleDisplay : 1",
             "param.maxRetries" : "in.maxClarificationRetries != null ? in.maxClarificationRetries : 3"
           }
@@ -721,7 +700,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3664, "y" : 640 }
+        "at" : { "x" : 3832, "y" : 640 }
       },
       "connect" : [
         { "id" : "f21f1", "to" : "f21g" }
@@ -737,14 +716,14 @@
             "import java.util.ArrayList;",
             "",
             "int cycle = (in.clarificationRetryCount != null ? in.clarificationRetryCount : 0) + 1;",
-            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
-            "in.auditTrail.add(SupplierOnboardingProcessService.buildQmIsmAuditEntry(cycle, in.qmIsmAdditionalNotes));"
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(SupplierOnboardingProcessService.buildQmIsmAuditEntry(cycle, in.qmIsmAdditionalNotes));"
           ]
         },
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3904, "y" : 640 }
+        "at" : { "x" : 3832, "y" : 536 }
       },
       "connect" : [
         { "id" : "f21g1", "to" : "f22" }
@@ -757,7 +736,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.ClarificationRetryResult;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
@@ -767,22 +746,21 @@
             "if (in.clarificationRetryCount == null) { in.clarificationRetryCount = 0; }",
             "ClarificationRetryResult retry = SupplierOnboardingProcessService.processRetry(",
             "    in.request, in.clarificationRetryCount, in.lastClarificationNotes,",
-            "    in.escalateToQmIsm != null && in.escalateToQmIsm, in.clarificationItems);",
+            "    in.escalateToQmIsm != null && in.escalateToQmIsm);",
             "in.clarificationRetryCount = retry.newCount();",
             "in.summary = retry.summary();",
-            "if (in.clarificationRecords == null) { in.clarificationRecords = new ArrayList(); }",
-            "in.clarificationRecords.add(retry.clarificationRecord());",
-            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
-            "in.auditTrail.add(retry.auditEntry());",
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(retry.auditEntry());",
             "in.lastClarificationNotes = null;",
             "in.escalateToQmIsm = false;",
             "in.withdrawRequest = false;",
             "",
-            "// If all clarification items are resolved, override risk score to 100 and route to APPROVAL",
-            "boolean allResolved = in.clarificationItems != null && !in.clarificationItems.isEmpty();",
+            "// If all clarification findings are resolved, override risk score to 100 and route to APPROVAL",
+            "java.util.List<ValidationFinding> findings = in.request != null ? in.request.getPolicyValidationFindings() : null;",
+            "boolean allResolved = findings != null && !findings.isEmpty();",
             "if (allResolved) {",
-            "  for (ClarificationItem ci : in.clarificationItems) {",
-            "    if (!ci.isResolved()) { allResolved = false; break; }",
+            "  for (ValidationFinding f : findings) {",
+            "    if (!\"PASSED\".equalsIgnoreCase(f.getSeverity()) && !f.isResolved()) { allResolved = false; break; }",
             "  }",
             "}",
             "if (allResolved) {",
@@ -800,7 +778,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3472, "y" : 424 }
+        "at" : { "x" : 3584, "y" : 424 }
       },
       "connect" : [
         { "id" : "f123", "to" : "f23" }
@@ -811,15 +789,21 @@
       "name" : "Retry allowed?",
       "config" : {
         "conditions" : {
+          "f124a" : "\"APPROVAL\".equalsIgnoreCase(in.routingDecision)",
           "f124" : "in.clarificationRetryCount != null && in.maxClarificationRetries != null && in.clarificationRetryCount <= in.maxClarificationRetries"
         }
       },
       "visual" : {
-        "at" : { "x" : 3656, "y" : 424 },
+        "at" : { "x" : 3768, "y" : 424 },
         "labelOffset" : { "x" : 80, "y" : 16 }
       },
       "connect" : [
-        { "id" : "f124", "to" : "f128", "via" : [ { "x" : 3896, "y" : 424 }, { "x" : 3896, "y" : 712 }, { "x" : 2296, "y" : 712 } ], "label" : {
+        { "id" : "f124a", "to" : "f13", "via" : [ { "x" : 4144, "y" : 424 }, { "x" : 4144, "y" : 832 }, { "x" : 2888, "y" : 832 }, { "x" : 2888, "y" : 208 } ], "label" : {
+            "name" : "All resolved",
+            "segment" : 2.27,
+            "offset" : { "x" : 24, "y" : -25 }
+          } },
+        { "id" : "f124", "to" : "f128", "via" : [ { "x" : 4016, "y" : 424 }, { "x" : 4016, "y" : 712 }, { "x" : 2296, "y" : 712 } ], "label" : {
             "name" : "Retry Validation",
             "segment" : 2.15,
             "offset" : { "x" : 54, "y" : 20 }
@@ -848,11 +832,9 @@
             "    in.request, in.agentResponse,",
             "    in.withdrawRequest != null && in.withdrawRequest, requestedBy);",
             "in.summary = decline.summary();",
-            "in.declineRecord = decline.declineRecord();",
             "in.notificationRecords = decline.notificationRecords();",
-            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
-            "in.auditTrail.add(decline.auditEntry());",
-            "if (in.request != null) { in.request.setDeclinedAt(decline.declineRecord().getDeclinedAt()); }",
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(decline.auditEntry());",
             "in.withdrawRequest = false;",
             "ivy.case.name = decline.caseName();"
           ]
@@ -860,7 +842,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3656, "y" : 320 }
+        "at" : { "x" : 3768, "y" : 320 }
       },
       "connect" : [
         { "id" : "f126", "to" : "f24t" }
@@ -880,7 +862,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3864, "y" : 320 }
+        "at" : { "x" : 3976, "y" : 320 }
       },
       "connect" : [
         { "id" : "f126t", "to" : "f25" }
@@ -890,22 +872,20 @@
       "type" : "DialogCall",
       "name" : "Decline summary",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingDecline:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.DeclineRecord,java.util.List,java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry>)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingDecline:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,java.util.List)",
         "call" : {
           "map" : {
             "param.request" : "in.request",
             "param.agentResponse" : "in.agentResponse",
-            "param.declineRecord" : "in.declineRecord",
-            "param.notificationRecords" : "in.notificationRecords",
-            "param.auditTrail" : "in.auditTrail"
+            "param.notificationRecords" : "in.notificationRecords"
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 4160, "y" : 320 }
+        "at" : { "x" : 4272, "y" : 320 }
       },
       "connect" : [
-        { "id" : "f195", "to" : "f196", "via" : [ { "x" : 4672, "y" : 320 } ] }
+        { "id" : "f195", "to" : "f196", "via" : [ { "x" : 4784, "y" : 320 } ] }
       ]
     }, {
       "id" : "f128",
@@ -1017,7 +997,7 @@
         "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FinishDemo:start()"
       },
       "visual" : {
-        "at" : { "x" : 4672, "y" : 208 }
+        "at" : { "x" : 4784, "y" : 208 }
       },
       "connect" : [
         { "id" : "f197", "to" : "f1", "color" : "default" }
@@ -1042,28 +1022,32 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.ClarificationContextResult;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationRecord;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType;",
             "import java.util.ArrayList;",
             "",
-            "ClarificationContextResult ctx = SupplierOnboardingProcessService.buildClarificationContext(",
-            "    in.request, in.agentResponse,",
-            "    in.clarificationRetryCount != null ? in.clarificationRetryCount : 0,",
-            "    in.routingDecision);",
-            "in.clarificationItems = ctx.clarificationItems();",
-            "in.clarificationCycleDisplay = ctx.cycleDisplay();",
+            "int cycle = (in.clarificationRetryCount != null ? in.clarificationRetryCount : 0) + 1;",
+            "in.clarificationCycleDisplay = cycle;",
             "if (in.maxClarificationRetries == null || in.maxClarificationRetries < 1) { in.maxClarificationRetries = 3; }",
-            "if (in.auditTrail == null) { in.auditTrail = new ArrayList(); }",
-            "in.auditTrail.add(ctx.auditEntry());",
-            "if (in.clarificationRecords == null) { in.clarificationRecords = new ArrayList<ClarificationRecord>(); }",
-            "ivy.case.name = ctx.caseName();"
+            "String supplierName = in.request != null && in.request.getSupplier() != null && in.request.getSupplier().getBusinessName() != null ? in.request.getSupplier().getBusinessName() : \"Supplier\";",
+            "ivy.case.name = \"Supplier Onboarding Clarification - Cycle \" + cycle + \" - \" + supplierName;",
+            "int agg = (in.agentResponse != null && in.agentResponse.getRiskScore() != null) ? in.agentResponse.getRiskScore().getAggregate() : 0;",
+            "String lvl = (in.agentResponse != null && in.agentResponse.getRiskScore() != null && in.agentResponse.getRiskScore().getLevel() != null) ? in.agentResponse.getRiskScore().getLevel().name() : \"YELLOW\";",
+            "String requester = (in.request != null && in.request.getRequestedBy() != null) ? in.request.getRequestedBy() : \"Requester\";",
+            "AuditTrailEntry entry = new AuditTrailEntry();",
+            "entry.setTimestamp(java.time.Instant.now().toString());",
+            "entry.setActor(requester);",
+            "entry.setActorType(AuditActorType.USER);",
+            "entry.setAction(\"Clarification required \\u2014 cycle \" + cycle + \", risk score \" + agg + \"/100 (\" + lvl + \")\");",
+            "entry.setTechnicalDetail(in.routingDecision);",
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(entry);"
           ]
         },
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 2880, "y" : 416 }
+        "at" : { "x" : 2992, "y" : 416 }
       },
       "connect" : [
         { "id" : "f202", "to" : "f20" }
@@ -1089,15 +1073,16 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;",
             "",
-            "// If all clarification items are resolved, override risk score to 100 and route to APPROVAL",
-            "boolean allResolved = in.clarificationItems != null && !in.clarificationItems.isEmpty();",
+            "// If all clarification findings are resolved, override risk score to 100 and route to APPROVAL",
+            "java.util.List<ValidationFinding> findings = in.request != null ? in.request.getPolicyValidationFindings() : null;",
+            "boolean allResolved = findings != null && !findings.isEmpty();",
             "",
             "if (allResolved) {",
-            "  for (ClarificationItem ci : in.clarificationItems) {",
-            "    if (!ci.isResolved()) { allResolved = false; break; }",
+            "  for (ValidationFinding f : findings) {",
+            "    if (!\"PASSED\".equalsIgnoreCase(f.getSeverity()) && !f.isResolved()) { allResolved = false; break; }",
             "  }",
             "}",
             "if (allResolved) {",
@@ -1114,7 +1099,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3192, "y" : 528 }
+        "at" : { "x" : 3304, "y" : 528 }
       },
       "connect" : [
         { "id" : "f212", "to" : "f21w", "color" : "default" }

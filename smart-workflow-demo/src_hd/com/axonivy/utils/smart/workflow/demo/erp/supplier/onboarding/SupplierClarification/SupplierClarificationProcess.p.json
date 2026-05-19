@@ -8,21 +8,19 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",
-      "name" : "start(OnboardingRequest,SupplierAgentResponse,List,int,int)",
+      "name" : "start(OnboardingRequest,SupplierAgentResponse,int,int)",
       "config" : {
         "signature" : "start",
         "input" : {
           "params" : [
             { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
             { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
-            { "name" : "clarificationItems", "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationItem>", "desc" : "" },
             { "name" : "clarificationCycle", "type" : "int", "desc" : "" },
             { "name" : "maxRetries", "type" : "int", "desc" : "" }
           ],
           "map" : {
             "out.request" : "param.request",
             "out.agentResponse" : "param.agentResponse",
-            "out.clarificationItems" : "param.clarificationItems",
             "out.clarificationCycle" : "param.clarificationCycle",
             "out.maxRetries" : "param.maxRetries"
           }
@@ -47,13 +45,13 @@
         "at" : { "x" : 96, "y" : 64 }
       },
       "connect" : [
-        { "id" : "f2", "to" : "f1" }
+        { "id" : "f6", "to" : "f1" }
       ]
     }, {
       "id" : "f1",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 224, "y" : 64 }
+        "at" : { "x" : 256, "y" : 64 }
       }
     }, {
       "id" : "f3",
@@ -72,7 +70,7 @@
       "id" : "f4",
       "type" : "HtmlDialogExit",
       "visual" : {
-        "at" : { "x" : 224, "y" : 160 }
+        "at" : { "x" : 256, "y" : 160 }
       }
     } ]
 }

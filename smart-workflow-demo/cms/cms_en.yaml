@@ -9,6 +9,463 @@ Dialogs:
                 AxonIvySupport: Axon Ivy Support
                 InputPlaceholder: Type your question... (Shift+Enter to send)
                 Send: Send
+              erp:
+                components:
+                  AuditTrail:
+                    EmptyMessage: No audit entries captured yet.
+                    ExpandCollapseTooltip: Click to expand / collapse
+                    Title: Full Audit Trail
+                  LegalDocuments:
+                    AdditionalDocumentSubtitle: Additional document
+                    AnnualReportLabel: Last Annual Report
+                    AnnualReportSubtitle: Most recent fiscal year financial report
+                    BrowseFilesLink: or browse files
+                    CommercialRegisterLabel: Company Registration Extract
+                    CommercialRegisterSubtitle: Official commercial register document
+                    DragAndDropHint: Drag and drop additional files here
+                    SelfDeclarationLabel: Self-Declaration
+                    SelfDeclarationSubtitle: Confirm compliance with procurement policy
+                  ProblemExplanation:
+                    ExplanationLabel: Your Explanation
+                    ExplanationPlaceholder: Describe the situation and your resolution plan...
+                    InfoHint: Please provide a brief explanation to help the approver understand the context and how you plan to resolve this issue.
+                    SaveButton: Mark as Resolved
+                supplier:
+                  onboarding:
+                    FinishDemo:
+                      HeroSub: We hope you had a great experience with <strong>Smart Workflow</strong>.<br/>Here is a summary of everything the AI handled for you — autonomously, accurately, and fully auditable.
+                      PageTitle: Smart Workflow — AI Process Summary
+                      Panel0Desc: The onboarding process begins when a supplier submits their application through the Smart Workflow portal. All required supporting documents — business registration, tax certificates, and financial statements — are uploaded at this stage.
+                      Panel0Detail1: Supplier completes company profile and contact information
+                      Panel0Detail2: Uploads required certification and financial documents
+                      Panel0Detail3: Smart Workflow validates upload completeness before processing
+                      Panel0Num: Step 01 of 07
+                      Panel0Tag1: Supplier Portal
+                      Panel0Tag2: Document Upload
+                      Panel0Tag3: Workflow Start
+                      Panel0Title: Document Upload
+                      Panel1Desc: AI reads uploaded PDFs using vision-language models, identifies supplier data fields across multiple documents, and automatically pre-fills the entire onboarding form — zero manual typing required.
+                      Panel1Detail1: Parsed PDF structures and tables using vision-language models
+                      Panel1Detail2: Identified and extracted 15+ supplier data fields automatically
+                      Panel1Detail3: Auto-populated the complete onboarding form with validated data
+                      Panel1Num: Step 02 of 07
+                      Panel1Tag1: LLM
+                      Panel1Tag2: Structured Output
+                      Panel1Tag3: Multi-doc
+                      Panel1Tag4: Zero Manual Entry
+                      Panel1Title: AI Document Extraction
+                      Panel2Desc: A RAG-powered AI assistant is available at every screen — answering questions about policy rules, explaining compliance requirements, and clarifying risk thresholds in real time throughout the process.
+                      Panel2Detail1: Retrieved policy documents using vector similarity search
+                      Panel2Detail2: Answered supplier and reviewer questions throughout the process
+                      Panel2Detail3: Provided contextual compliance guidance at each step
+                      Panel2Num: Step 03 of 07
+                      Panel2Tag1: RAG
+                      Panel2Tag2: Vector Search
+                      Panel2Tag3: Chat Agent
+                      Panel2Tag4: Context-aware
+                      Panel2Title: Contextual Q&amp;A Guidance
+                      Panel3Desc: AI cross-checks all submitted documents against procurement policy rules, identifying missing certifications, expired credentials, and compliance gaps — with complete reasoning and full traceability.
+                      Panel3Detail1: Validated all documents against 12+ procurement policy rules
+                      Panel3Detail2: Identified compliance gaps and flagged items requiring attention
+                      Panel3Detail3: Generated a detailed validation report with explainable findings
+                      Panel3Num: Step 04 of 07
+                      Panel3Tag1: Policy Engine
+                      Panel3Tag2: Cross-reference
+                      Panel3Tag3: Explainable AI
+                      Panel3Tag4: Traceability
+                      Panel3Title: Document Validation
+                      Panel4Desc: AI computes a composite risk score across three dimensions — financial stability, policy compliance, and certification validity — delivering an objective, auditable rating out of 100.
+                      Panel4Detail1: Analysed financial statements for stability and liquidity indicators
+                      Panel4Detail2: Cross-referenced compliance history, certifications, and policy alignment
+                      Panel4Detail3: Produced a weighted composite risk score with full breakdown
+                      Panel4Num: Step 05 of 07
+                      Panel4Tag1: Financial Analysis
+                      Panel4Tag2: Risk Model
+                      Panel4Tag3: Weighted Scoring
+                      Panel4Tag4: Scored /100
+                      Panel4Title: Risk Calculation
+                      Panel5Desc: 'Based on the complete context — extracted data, risk score, validation findings, and policy — the AI decided the process path autonomously: approve, request clarification, or decline.'
+                      Panel5Detail1: Evaluated all inputs against configurable routing decision rules
+                      Panel5Detail2: Determined the optimal outcome path without human triage
+                      Panel5Detail3: Triggered the appropriate workflow branch with a full audit trail
+                      Panel5Num: Step 06 of 07
+                      Panel5Tag1: Decision Engine
+                      Panel5Tag2: Agentic AI
+                      Panel5Tag3: Zero Triage
+                      Panel5Tag4: Autonomous
+                      Panel5Title: Autonomous Routing
+                      Panel6Desc: The onboarding request has been fully processed and closed. All extracted data, AI decisions, validation findings, and the complete audit trail are permanently recorded and accessible for compliance review.
+                      Panel6Detail1: All AI decisions and reasoning recorded in the permanent audit log
+                      Panel6Detail2: Supplier record updated in the system with the final outcome
+                      Panel6Detail3: Stakeholders notified of the decision and process completion
+                      Panel6Num: Step 07 of 07
+                      Panel6Tag1: Audit Trail
+                      Panel6Tag2: Compliance
+                      Panel6Tag3: Process Complete
+                      Panel6Title: Case Closed
+                      ProgressText: Step {0} of {1}
+                      Step0DotTitle: Document Upload
+                      Step0FlowLabel: Document<br />Upload
+                      Step1DotTitle: AI Extraction
+                      Step1FlowLabel: AI<br />Extraction
+                      Step2DotTitle: Q&A Guidance
+                      Step2FlowLabel: Q&amp;A<br />Guidance
+                      Step3DotTitle: Document Validation
+                      Step3FlowLabel: Document<br />Validation
+                      Step4DotTitle: Risk Scoring
+                      Step4FlowLabel: Risk<br />Scoring
+                      Step5DotTitle: Autonomous Routing
+                      Step5FlowLabel: Autonomous<br />Routing
+                      Step6DotTitle: Case Closed
+                      Step6FlowLabel: Case<br />Closed
+                    StartDemo:
+                      AfterItem1: Supplier uploads documents once via a structured, guided form
+                      AfterItem2: Vision AI auto-extracts 15+ fields from PDFs in seconds — zero manual entry
+                      AfterItem3: 12+ procurement policy rules checked instantly with full AI reasoning
+                      AfterItem4: 'Autonomous routing: approve, request clarification, or decline — no triage needed'
+                      AfterItem5: Composite risk score across financial stability, compliance, and certification data
+                      AfterItem6: Every decision, extracted datum, and AI rationale permanently recorded
+                      AiPoweredHeader: AI-Powered Smart Workflow
+                      BeforeItem1: Supplier sends documents by email — procurement hunts through attachments
+                      BeforeItem2: Staff manually reads PDFs and types data into spreadsheets or ERP forms
+                      BeforeItem3: Compliance checks are ad-hoc, inconsistent, and done days after submission
+                      BeforeItem4: Approval routing decided in committee meetings — delays measured in weeks
+                      BeforeItem5: Risk evaluation relies on personal judgement, with no scoring standard
+                      BeforeItem6: Decisions live in email threads — no structured audit trail for compliance
+                      BeforeYouStartDesc: The demo asks you to upload documents about a company so the AI can extract information, assess risks, and score the supplier. We have prepared these documents for you — just download them and use them when prompted during the demo. Then click <strong>Generate
+                        Data</strong> below to set up the demo environment.
+                      BeforeYouStartTitle: Before You Start
+                      DataAlreadyGeneratedBanner: Demo data is already set up — enjoy the demo!
+                      DocAnnualReportName: Annual Report
+                      DocAnnualReportSub: Most recent fiscal year financial report
+                      DocBankingStatementName: Banking Statement
+                      DocBankingStatementSub: Recent bank account statement
+                      DocCommercialRegName: Company Registration Extract
+                      DocCommercialRegSub: Official commercial register document
+                      DocCompanyInfoName: Supplier Onboarding Offer Letter
+                      DocCompanyInfoSub: Official offer letter with scope of supply, commercial terms, and banking details
+                      DocGdprName: GDPR Data Processing Agreement
+                      DocGroupCertifications: Certifications
+                      DocGroupLegal: Legal Documents
+                      DocIso14001Name: ISO 14001 — Environmental Management
+                      DocIso27001Name: ISO 27001 — Information Security
+                      DocIso9001Name: ISO 9001 — Quality Management
+                      DocSelfDeclarationName: Company Self-Declaration
+                      DocSelfDeclarationSub: Compliance and policy self-declaration
+                      Dot0Title: Welcome
+                      Dot1Title: The Process
+                      Dot2Title: Traditional vs. AI
+                      Dot3Title: Generate Data
+                      DownloadAllButton: Download All
+                      FileDetailsHide: Hide details
+                      FileDetailsToggle: File details
+                      Gen1Hint: Ingest policy documents into vector store
+                      Gen1RunningSubtitle: Ingesting policy documents into vector store…
+                      Gen1Title: Build RAG Knowledge Base
+                      Gen2Hint: 6 certification & regulatory rules
+                      Gen2RunningSubtitle: Creating certification & regulatory rules…
+                      Gen2Title: Create Certification & Regulatory Policies
+                      Gen3Hint: 6 financial risk rules & demo suppliers
+                      Gen3RunningSubtitle: Creating financial risk rules & demo suppliers…
+                      Gen3Title: Create Financial Policies
+                      GenDoneBanner: Demo data ready — click <strong>Start Demo</strong> to begin!
+                      GenProcessingSubtitle: Processing…
+                      GenRetryButton: Retry
+                      GenerateDataButton: Generate Data
+                      NextButtonTitle: Next
+                      PageTitle: Smart Workflow — Supplier Onboarding Demo
+                      PrevButtonTitle: Previous
+                      ReadySub: Generate sample suppliers, procurement policy rules, and the RAG knowledge base to explore the full demo experience.
+                      ReadyTitle: Are You Ready?
+                      Slide1Sub: 7 steps from document upload to case closed — fully powered by AI
+                      Slide1Title: The Onboarding Process
+                      Slide2Sub: Why the old way breaks down — and how AI transforms every step
+                      Slide2Title: Traditional Onboarding vs. AI-Powered Workflow
+                      StartDemoButton: Start Demo
+                      StatErrorAfter: Near-zero errors
+                      StatErrorBefore: ~30% error rate
+                      StatErrorLabel: Data entry accuracy
+                      StatStepsAfter: Fully automated
+                      StatStepsBefore: 30+ manual steps
+                      StatStepsLabel: Process steps
+                      StatTimeAfter: Minutes
+                      StatTimeBefore: 3–6 weeks
+                      StatTimeLabel: Time to onboard
+                      Step01Desc: Supplier submits application with company profile and all required supporting documents.
+                      Step01Name: Document Upload
+                      Step01Num: Step 01
+                      Step02Desc: Vision-language model reads PDFs and auto-fills 15+ fields. Zero manual entry required.
+                      Step02Name: AI Extraction
+                      Step02Num: Step 02
+                      Step03Desc: RAG-powered AI assistant answers compliance questions at every screen in real time.
+                      Step03Name: Q&A Guidance
+                      Step03Num: Step 03
+                      Step04Desc: AI cross-checks 12+ procurement policy rules and flags compliance gaps with full reasoning.
+                      Step04Name: Document Validation
+                      Step04Num: Step 04
+                      Step05Desc: Composite risk score across financial stability, compliance, and certification validity.
+                      Step05Name: Risk Scoring
+                      Step05Num: Step 05
+                      Step06Desc: AI decides the outcome — approve, request clarification, or decline — without human triage.
+                      Step06Name: Autonomous Routing
+                      Step06Num: Step 06
+                      Step07Desc: All decisions, extracted data, and AI reasoning are permanently recorded for compliance review.
+                      Step07Name: Case Closed
+                      Step07Num: Step 07
+                      TraditionalHeader: Traditional Process
+                      WelcomeDesc: Experience an AI-driven supplier onboarding process that automates document extraction, compliance validation, risk scoring, and autonomous routing — with full auditability.
+                      WelcomeProductName: Axon Ivy Smart Workflow
+                      WelcomeTo: Welcome to
+                    SupplierAgentProcessing:
+                      ContinueButton: Continue
+                      ContinueToApprovalButton: Continue to Approval
+                      ContinueToClarificationButton: Continue to Clarification
+                      InitialMessage: Click Analyze to run AI-powered validation. I'll extract documents, check policy compliance, validate financial health, and calculate a risk score step by step.
+                      StepSubtitle: 'Step 4 of 6 — Agent: Validation & Risk Scoring'
+                      ViewDeclineButton: View Decline
+                    SupplierClarification:
+                      AdditionalInfoRequired: Additional supplier information required — please check the agent findings tab for details.
+                      AdditionalNotesPlaceholder: Explain why certain documents are missing, or provide alternative information for the QM team...
+                      AdditionalNotesTitle: Additional Notes / Explanation
+                      AnalysisResultTab: Analysis Result
+                      BannerDescTemplate: The Supplier Agent calculated a risk score of {0}/100 due to missing or insufficient information. Please provide the requested details so the agent can re-evaluate and continue the workflow.
+                      BannerMetaTemplate: 'Case: {0} <br />Submitted by: {1}'
+                      BannerTitle: 'Clarification Required: {0}'
+                      CertValidityLabel: Cert. Validity
+                      ClarificationTab: Clarification
+                      DocumentAcceptedTypes: PDF · TXT · MD · DOC · DOCX accepted
+                      EscalateButton: Request QM/ISM Assistance
+                      FinalAttemptDesc: This is the last opportunity to provide the missing information. If re-evaluation still fails after this submission, the request will be automatically declined.
+                      FinalAttemptTitle: Final clarification attempt (cycle {0} of {1})
+                      FinancialStabilityLabel: Financial Stability
+                      InitialMessage: Please provide the missing documents and information so the agent can re-evaluate your request.
+                      ItemsTitle: Items Requiring Clarification
+                      PolicyComplianceLabel: Policy Compliance
+                      RiskScoreBadge: YELLOW
+                      RiskScoreLabel: Risk Score
+                      ShowDetailsLink: show details
+                      StepSubtitle: 'Step 5b of 6 — Clarification Required: Additional Information Needed'
+                      SubmitButton: Submit & Re-evaluate
+                      SupplierDetailsTab: Supplier Details
+                      WithdrawButton: Withdraw Request
+                    SupplierDuplicateCheck:
+                      AgentSectionTitle: Supplier Agent — Database Check Complete
+                      AgentSubtitleTemplate: Searched for "{0}" — {1} potential match(es) found.
+                      BusinessPurposeLabel: 'Business Purpose:'
+                      Chips: How is similarity calculated?|When should I use an existing supplier?|What if no matches are found?
+                      ClickCardHint: Click a card to select it
+                      CreateNewDesc: Proceed with full registration — name, address, contacts, banking, and compliance documents.
+                      CreateNewTitle: Create a new supplier
+                      EmailLabel: 'Email:'
+                      InitialMessage: I’ve scanned the supplier database for potential matches. Review the results below and choose how to proceed.
+                      LegalFormLabel: 'Legal Form:'
+                      NoDuplicatesDesc: No similar suppliers exist in the database. You can proceed to register this as a new supplier.
+                      NoDuplicatesTitle: No duplicates found
+                      PotentialMatchBadge: Potential match
+                      PotentialMatchesTitle: Potential Matches ({0})
+                      ProceedTitle: How would you like to proceed?
+                      StepSubtitle: 'Step 2 of 6 — Agent: Duplicate & Similarity Check'
+                      UseExistingDesc: Link this request to an already-registered supplier and skip re-registration.
+                      UseExistingTitle: Use existing supplier
+                      VatIdLabel: 'VAT ID:'
+                    SupplierOnboardingApproval:
+                      AnalysisResultTab: Analysis Result
+                      ApprovalChainTitle: Approval Chain
+                      ApprovalCommentPlaceholder: 'Optional: Add a comment for the approval record and audit trail...'
+                      ApprovalCommentTitle: Approval Comment
+                      ApprovalTab: Approval
+                      BannerDesc: The Supplier Agent has completed validation and risk scoring. Your approval is required before the supplier can be added to ERP.
+                      BannerMetaTemplate: 'Submitted by: {0}'
+                      BannerTitleTemplate: 'Approval Required: {0}'
+                      InitialMessage: Review the agent findings, confirm the supplier profile, and approve the onboarding request to continue to ERP posting.
+                      ProcurementDirectorRole: Procurement Director
+                      QmIsmManagerName: QM/ISM Manager
+                      QmIsmManagerRole: Quality and ISM
+                      RiskScoreLabel: Risk Score
+                      StatusApproved: Approved
+                      StatusPending: Pending
+                      StatusWaiting: Waiting
+                      StepSubtitle: 'Step 5a of 6 - Human Task: Supervisor and QM/ISM Approval'
+                      SupervisorName: Supervisor
+                      SupplierDetailsTab: Supplier Details
+                    SupplierOnboardingCompletion:
+                      AnalysisResultTab: Analysis Result
+                      AuditEmptyState: No audit entries captured yet.
+                      AuditTimelineTitle: Audit Timeline
+                      BannerDescTemplate: The Supplier Agent calculated a risk score of <b>{0}/100 (Green)</b> which meets the minimum threshold. The request has been approved and the supplier is now onboarded.
+                      BannerMetaTemplate: 'Case: {0}<br />Completed: {1}'
+                      BannerTitleTemplate: 'Supplier Successfully Onboarded: {0}'
+                      CertValidityLabel: Cert. Validity
+                      CompletionSummaryTab: Completion Summary
+                      FinancialStabilityLabel: Financial Stability
+                      InitialMessage: Supplier onboarding is complete. Review the full audit timeline below.
+                      PolicyComplianceLabel: Policy Compliance
+                      RiskScoreBadge: GREEN
+                      RiskScoreLabel: Risk Score
+                      ShowDetailsLink: show details
+                      StepSubtitle: Step 6 of 6 — End Summary
+                      SupplierDetailsTab: Supplier Details
+                    SupplierOnboardingDecline:
+                      AnalysisResultTab: Analysis Result
+                      BannerDescTemplate: The Supplier Agent calculated a risk score of <b>{0}/100 (Red)</b> which is below the minimum threshold. The request cannot proceed and no ERP record has been created.
+                      BannerMetaTemplate: 'Case: {0}<br />Declined: {1}'
+                      BannerTitleTemplate: 'Supplier Request Declined: {0}'
+                      CertValidityLabel: Cert. Validity
+                      DeclineReasonsTitle: Decline Reasons
+                      DeclineSummaryTab: Decline Summary
+                      FinancialStabilityLabel: Financial Stability
+                      NotificationsSentTitle: Notifications Sent
+                      PolicyComplianceLabel: Policy Compliance
+                      RiskScoreBadge: RED
+                      RiskScoreLabel: Risk Score
+                      SentBadge: Sent
+                      ShowDetailsLink: show details
+                      StepSubtitle: 'Step 5c of 6 — Request Declined: Risk Score Below Threshold'
+                      SupplierDetailsTab: Supplier Details
+                    SupplierRegistrationForm:
+                      Chips: \uD83D\uDCCB What certifications are mandatory?|\uD83C\uDFE0 Is IBAN required?|\uD83D\uDD0D What is a VAT ID?
+                      InitialMessage: I'll help you complete the supplier registration. Fill in the company details, contact, banking info, and certifications. Required fields are marked with *.
+                      SaveDraftButton: Save Draft
+                      StepSubtitle: Step 3 of 6 \u2014 New Supplier Registration
+                      SubmitButton: Submit for Agent Validation
+                    SupplierRequestForm:
+                      AdditionalNotesLabel: Additional Notes
+                      AdditionalNotesPlaceholder: Any additional context for the procurement or QM team...
+                      BusinessPurposeLabel: Business Purpose *
+                      BusinessPurposePlaceholder: e.g. Logistics / Transport
+                      CheckSupplierButton: Check Supplier Database
+                      Chips: \uD83D\uDCA1 What info do I need for a new supplier?|\uD83D\uDD0D How does the DB check work?|\uD83D\uDCCB What is a valid business purpose?
+                      DepartmentLabel: Department / Cost Center *
+                      DepartmentPlaceholder: -- Select Department --
+                      ExpectedAnnualVolumeLabel: Expected Annual Volume (EUR)
+                      InitialMessage: Hi! I can help you fill out the supplier request. I'll check your internal supplier database as soon as you submit — what supplier are you looking to onboard?
+                      NeededByLabel: Needed By
+                      ProcurementContextTitle: Procurement Context
+                      ProductsServicesLabel: Products / Services Needed *
+                      ProductsServicesPlaceholder: Describe the specific products or services required from this supplier...
+                      RequestDetailsTitle: Request Details
+                      RequestedByLabel: Requested By
+                      SaveDraftButton: Save Draft
+                      SelectCountryPlaceholder: -- Select Country --
+                      StepSubtitle: Step 1 of 6 \u2014 Initial Request & Questionnaire
+                      SupplierCountryLabel: Supplier Country *
+                      SupplierInfoTitle: Supplier Information
+                      SupplierNameLabel: Supplier Name *
+                      SupplierNamePlaceholder: e.g. Acme GmbH, M\u00fcller Logistik AG
+                      SupplierWebsiteLabel: Supplier Website
+                      SupplierWebsitePlaceholder: https://www.supplier.com
+                      UrgencyLabel: Urgency *
+                    components:
+                      SupplierAgentProcessingDetails:
+                        AgentDecisionTitle: Agent Decision
+                        AnalyzeButton: Analyze
+                        AnalyzeDescription: Run AI-powered extraction, policy validation, financial validation, and risk scoring.
+                        AnalyzeTitle: AI Supplier Validation
+                        CertificationValidityLabel: Certification Validity
+                        ExpandCollapseTooltip: Click to expand / collapse
+                        FinancialStabilityLabel: Financial Stability
+                        PolicyComplianceLabel: Policy Compliance
+                        PolicyFindingsTitle: Policy Validation Findings
+                        PolicyRulesDialogHeader: Supplier Onboarding Policy Rules
+                        PolicyRulesDialogIntro: These rules are evaluated by AI during the Policy Validation step. Each rule carries a maximum deduction if violated — full deduction for FAILURE, half for WARNING.
+                        RiskScoreCalculatedTooltip: How is the risk score calculated?
+                        RiskScoreHelpDialogHeader: How the Risk Score is Calculated
+                        RiskScoreTitle: Risk Score
+                        StepDocumentExtraction: Document Extraction
+                        StepFinancialValidation: Financial Validation
+                        StepPolicyValidation: Policy Validation
+                        StepRiskScoreCalculation: Risk Score Calculation
+                        ThresholdAboveMin: Above minimum threshold (\u2265 40)
+                        ThresholdGreen: Above approval threshold \u2265 70
+                        ThresholdRed: Below minimum threshold (< 40)
+                        ThresholdYellow: Clarification required (40-69)
+                        ValidationStepsTitle: Validation Steps
+                        ViewPolicyRulesTooltip: View policy rules
+                      SupplierAiAssistant:
+                        AssistantName: Supplier AI Assistant
+                        ConfirmParseRequired: Upload a .txt or .md file first, then confirm parsing.
+                        ConfirmParseTitle: Confirm Parse
+                        FileEmptyMessage: The uploaded file is empty.
+                        FileUploadedReadyMessage: File uploaded. Click Confirm Parse to apply values to the form.
+                        FilesQueuedTemplate: '{0} file(s) queued'
+                        FilesReadyTemplate: '{0} file(s) ready. Click Confirm Parse to apply.'
+                        HeaderSubtitle: AI-powered procurement guidance
+                        InputPlaceholder: Ask something...
+                        InvalidFileMessage: Only .txt and .md files are supported.
+                        InvalidSizeMessage: Max file size is 5 MB.
+                        NoFileUploadedMessage: No file was uploaded. Please choose a .txt or .md file.
+                        NoValuesExtracted: No structured values were extracted from the document.
+                        ParseFailedTemplate: 'Failed to parse document: {0}'
+                        ParseSuccess: Document parsed and form fields were updated.
+                        RemoveButtonTitle: Remove
+                        ThinkingText: Thinking...
+                        UploadTriggerTitle: Upload supplier draft
+                      SupplierDetails:
+                        AdditionalNotesLabel: Additional Notes
+                        AdditionalNotesPlaceholder: Any additional context for the procurement or QM team
+                        AnnualVolumeLabel: Expected Annual Volume (EUR)
+                        AnnualVolumePlaceholder: e.g. 50000
+                        BankNameLabel: Bank Name
+                        BankNamePlaceholder: e.g. Commerzbank AG
+                        BankingPaymentTitle: Banking & Payment
+                        BicLabel: BIC / SWIFT
+                        BicPlaceholder: e.g. COBADEFFXXX
+                        BusinessPurposeLabel: Business Purpose
+                        BusinessPurposePlaceholder: e.g. Logistics / Transport
+                        CertificationsCardSubtitle: Upload your certificates
+                        CertificationsCardTitle: Certifications & Compliance
+                        CityLabel: City
+                        CityPlaceholder: e.g. München
+                        CommercialRegNoLabel: Commercial Register No.
+                        CommercialRegNoPlaceholder: e.g. HRB 123456
+                        CompanyDetailsTitle: Company Details
+                        CompanyNameLabel: Legal Company Name
+                        CompanyNamePlaceholder: e.g. Acme GmbH
+                        ContactEmailLabel: Email
+                        ContactEmailPlaceholder: contact@supplier.com
+                        ContactFirstNameLabel: First Name
+                        ContactFirstNamePlaceholder: First name
+                        ContactJobTitleLabel: Job Title
+                        ContactJobTitlePlaceholder: e.g. Sales Manager
+                        ContactLastNameLabel: Last Name
+                        ContactLastNamePlaceholder: Last name
+                        ContactPhoneLabel: Phone
+                        ContactPhonePlaceholder: +49 89 123456
+                        CountryLabel: Country
+                        CountrySelectDefault: -- Select Country --
+                        DepartmentLabel: Department / Cost Center
+                        DepartmentPlaceholder: e.g. DEPT-001
+                        IbanLabel: IBAN
+                        IbanPlaceholder: e.g. DE39 3704 0044 0532 0130 00
+                        LegalFormLabel: Legal Form
+                        LegalFormSelectDefault: -- Select --
+                        NeededByDateLabel: Needed By Date
+                        PrimaryContactTitle: Primary Contact
+                        ProcurementContextTitle: Procurement Context
+                        ProductsServicesLabel: Products / Services Needed
+                        ProductsServicesPlaceholder: Describe what products or services are needed from this supplier
+                        RequestedByLabel: Requested By
+                        RequestedByPlaceholder: e.g. john.doe
+                        RequiredDocsCardSubtitle: Upload compliance documents
+                        RequiredDocsCardTitle: Required Documents
+                        StreetLabel: Street & Number
+                        StreetPlaceholder: e.g. Industriestraße 42
+                        UrgencyLabel: Urgency
+                        VatIdLabel: VAT ID
+                        VatIdPlaceholder: e.g. DE123456789
+                        WebsiteLabel: Website
+                        WebsitePlaceholder: https://www.supplier.com
+                        ZipCodeLabel: ZIP Code
+                        ZipCodePlaceholder: e.g. 80339
+                      SupplierOnboardingSteps:
+                        BannerTitle: Supplier Onboarding
+                        Step1: Request
+                        Step2: DB Check
+                        Step3: Supplier Data
+                        Step4: Validation
+                        Step5: Risk Score
+                        Step6Complete: Complete
+                        Step6Declined: Declined
               rag:
                 RagDemo:
                   Chatbot:
@@ -179,454 +636,10 @@ Dialogs:
                     Total: Total
                     ViewDetails: View Details
                     YourCartIsEmpty: Your cart is empty
-              erp:
-                components:
-                  AuditTrail:
-                    EmptyMessage: No audit entries captured yet.
-                    ExpandCollapseTooltip: Click to expand / collapse
-                    Title: Full Audit Trail
-                  LegalDocuments:
-                    AdditionalDocumentSubtitle: Additional document
-                    AnnualReportLabel: Last Annual Report
-                    AnnualReportSubtitle: Most recent fiscal year financial report
-                    BrowseFilesLink: or browse files
-                    CommercialRegisterLabel: Company Registration Extract
-                    CommercialRegisterSubtitle: Official commercial register document
-                    DragAndDropHint: Drag and drop additional files here
-                    SelfDeclarationLabel: Self-Declaration
-                    SelfDeclarationSubtitle: Confirm compliance with procurement policy
-                  ProblemExplanation:
-                    ExplanationLabel: Your Explanation
-                    ExplanationPlaceholder: Describe the situation and your resolution plan...
-                    InfoHint: Please provide a brief explanation to help the approver understand the context and how you plan to resolve this issue.
-                    SaveButton: Mark as Resolved
-                supplier:
-                  onboarding:
-                    components:
-                      SupplierAgentProcessingDetails:
-                        AgentDecisionTitle: Agent Decision
-                        AnalyzeButton: Analyze
-                        AnalyzeDescription: 'Run AI-powered extraction, policy validation, financial validation, and risk scoring.'
-                        AnalyzeTitle: AI Supplier Validation
-                        CertificationValidityLabel: Certification Validity
-                        ExpandCollapseTooltip: Click to expand / collapse
-                        FinancialStabilityLabel: Financial Stability
-                        PolicyComplianceLabel: Policy Compliance
-                        PolicyRulesDialogHeader: Supplier Onboarding Policy Rules
-                        PolicyRulesDialogIntro: 'These rules are evaluated by AI during the Policy Validation step. Each rule carries a maximum deduction if violated — full deduction for FAILURE, half for WARNING.'
-                        RiskScoreCalculatedTooltip: 'How is the risk score calculated?'
-                        RiskScoreHelpDialogHeader: How the Risk Score is Calculated
-                        RiskScoreTitle: Risk Score
-                        StepDocumentExtraction: Document Extraction
-                        StepFinancialValidation: Financial Validation
-                        StepPolicyValidation: Policy Validation
-                        StepRiskScoreCalculation: Risk Score Calculation
-                        ThresholdAboveMin: 'Above minimum threshold (\u2265 40)'
-                        ThresholdGreen: 'Above approval threshold \u2265 70'
-                        ThresholdRed: 'Below minimum threshold (< 40)'
-                        ThresholdYellow: 'Clarification required (40-69)'
-                        ValidationStepsTitle: Validation Steps
-                        ViewPolicyRulesTooltip: View policy rules
-                      SupplierAiAssistant:
-                        AssistantName: Supplier AI Assistant
-                        ConfirmParseRequired: 'Upload a .txt or .md file first, then confirm parsing.'
-                        ConfirmParseTitle: Confirm Parse
-                        FileEmptyMessage: 'The uploaded file is empty.'
-                        FilesQueuedTemplate: '{0} file(s) queued'
-                        FilesReadyTemplate: '{0} file(s) ready. Click Confirm Parse to apply.'
-                        FileUploadedReadyMessage: 'File uploaded. Click Confirm Parse to apply values to the form.'
-                        HeaderSubtitle: AI-powered procurement guidance
-                        InputPlaceholder: Ask something...
-                        InvalidFileMessage: Only .txt and .md files are supported.
-                        InvalidSizeMessage: Max file size is 5 MB.
-                        NoFileUploadedMessage: 'No file was uploaded. Please choose a .txt or .md file.'
-                        NoValuesExtracted: 'No structured values were extracted from the document.'
-                        ParseFailedTemplate: 'Failed to parse document: {0}'
-                        ParseSuccess: 'Document parsed and form fields were updated.'
-                        RemoveButtonTitle: Remove
-                        ThinkingText: Thinking...
-                        UploadTriggerTitle: Upload supplier draft
-                      SupplierDetails:
-                        AdditionalNotesLabel: Additional Notes
-                        AdditionalNotesPlaceholder: Any additional context for the procurement or QM team
-                        AnnualVolumeLabel: Expected Annual Volume (EUR)
-                        AnnualVolumePlaceholder: e.g. 50000
-                        BankNameLabel: Bank Name
-                        BankNamePlaceholder: e.g. Commerzbank AG
-                        BankingPaymentTitle: Banking & Payment
-                        BicLabel: BIC / SWIFT
-                        BicPlaceholder: e.g. COBADEFFXXX
-                        BusinessPurposeLabel: Business Purpose
-                        BusinessPurposePlaceholder: e.g. Logistics / Transport
-                        CertificationsCardSubtitle: Upload your certificates
-                        CertificationsCardTitle: Certifications & Compliance
-                        CityLabel: City
-                        CityPlaceholder: e.g. München
-                        CommercialRegNoLabel: Commercial Register No.
-                        CommercialRegNoPlaceholder: e.g. HRB 123456
-                        CompanyDetailsTitle: Company Details
-                        CompanyNameLabel: Legal Company Name
-                        CompanyNamePlaceholder: e.g. Acme GmbH
-                        ContactEmailLabel: Email
-                        ContactEmailPlaceholder: contact@supplier.com
-                        ContactFirstNameLabel: First Name
-                        ContactFirstNamePlaceholder: First name
-                        ContactJobTitleLabel: Job Title
-                        ContactJobTitlePlaceholder: e.g. Sales Manager
-                        ContactLastNameLabel: Last Name
-                        ContactLastNamePlaceholder: Last name
-                        ContactPhoneLabel: Phone
-                        ContactPhonePlaceholder: '+49 89 123456'
-                        CountryLabel: Country
-                        CountrySelectDefault: '-- Select Country --'
-                        DepartmentLabel: Department / Cost Center
-                        DepartmentPlaceholder: e.g. DEPT-001
-                        IbanLabel: IBAN
-                        IbanPlaceholder: e.g. DE39 3704 0044 0532 0130 00
-                        LegalFormLabel: Legal Form
-                        LegalFormSelectDefault: '-- Select --'
-                        NeededByDateLabel: Needed By Date
-                        PrimaryContactTitle: Primary Contact
-                        ProcurementContextTitle: Procurement Context
-                        ProductsServicesLabel: Products / Services Needed
-                        ProductsServicesPlaceholder: Describe what products or services are needed from this supplier
-                        RequestedByLabel: Requested By
-                        RequestedByPlaceholder: e.g. john.doe
-                        RequiredDocsCardSubtitle: Upload compliance documents
-                        RequiredDocsCardTitle: Required Documents
-                        StreetLabel: Street & Number
-                        StreetPlaceholder: e.g. Industriestraße 42
-                        UrgencyLabel: Urgency
-                        VatIdLabel: VAT ID
-                        VatIdPlaceholder: e.g. DE123456789
-                        WebsiteLabel: Website
-                        WebsitePlaceholder: https://www.supplier.com
-                        ZipCodeLabel: ZIP Code
-                        ZipCodePlaceholder: e.g. 80339
-                      SupplierOnboardingSteps:
-                        BannerTitle: Supplier Onboarding
-                        Step1: Request
-                        Step2: DB Check
-                        Step3: Supplier Data
-                        Step4: Validation
-                        Step5: Risk Score
-                        Step6Complete: Complete
-                        Step6Declined: Declined
-                    SupplierAgentProcessing:
-                      ContinueButton: Continue
-                      ContinueToApprovalButton: Continue to Approval
-                      ContinueToClarificationButton: Continue to Clarification
-                      InitialMessage: 'Click Analyze to run AI-powered validation. I''ll extract documents, check policy compliance, validate financial health, and calculate a risk score step by step.'
-                      StepSubtitle: 'Step 4 of 6 — Agent: Validation & Risk Scoring'
-                      ViewDeclineButton: View Decline
-                    SupplierClarification:
-                      AdditionalInfoRequired: Additional supplier information required — please check the agent findings tab for details.
-                      AdditionalNotesPlaceholder: Explain why certain documents are missing, or provide alternative information for the QM team...
-                      AdditionalNotesTitle: 'Additional Notes / Explanation'
-                      AnalysisResultTab: Analysis Result
-                      BannerDescTemplate: 'The Supplier Agent calculated a risk score of {0}/100 (Yellow) due to missing or insufficient information. Please provide the requested details so the agent can re-evaluate and continue the workflow.'
-                      BannerMetaTemplate: 'Case: {0} · Submitted by: {1} · Cycle: {2}'
-                      BannerTitle: 'Clarification Required: {0}'
-                      CertValidityLabel: Cert. Validity
-                      ClarificationTab: Clarification
-                      DocumentAcceptedTypes: PDF · TXT · MD · DOC · DOCX accepted
-                      EscalateButton: Request QM/ISM Assistance
-                      FinalAttemptTitle: 'Final clarification attempt (cycle {0} of {1})'
-                      FinalAttemptDesc: This is the last opportunity to provide the missing information. If re-evaluation still fails after this submission, the request will be automatically declined.
-                      FinancialStabilityLabel: Financial Stability
-                      InitialMessage: Please provide the missing documents and information so the agent can re-evaluate your request.
-                      ItemsTitle: Items Requiring Clarification
-                      PolicyComplianceLabel: Policy Compliance
-                      RiskScoreBadge: YELLOW
-                      RiskScoreLabel: Risk Score
-                      ShowDetailsLink: show details
-                      StepSubtitle: 'Step 5b of 6 — Clarification Required: Additional Information Needed'
-                      SubmitButton: 'Submit & Re-evaluate'
-                      SupplierDetailsTab: Supplier Details
-                      WithdrawButton: Withdraw Request
-                    SupplierDuplicateCheck:
-                      AgentSubtitleTemplate: 'Searched for "{0}" — {1} potential match(es) found.'
-                      AgentSectionTitle: Supplier Agent — Database Check Complete
-                      BusinessPurposeLabel: 'Business Purpose:'
-                      Chips: 'How is similarity calculated?|When should I use an existing supplier?|What if no matches are found?'
-                      ClickCardHint: Click a card to select it
-                      CreateNewDesc: 'Proceed with full registration — name, address, contacts, banking, and compliance documents.'
-                      CreateNewTitle: Create a new supplier
-                      EmailLabel: 'Email:'
-                      InitialMessage: 'I’ve scanned the supplier database for potential matches. Review the results below and choose how to proceed.'
-                      LegalFormLabel: 'Legal Form:'
-                      NoDuplicatesDesc: No similar suppliers exist in the database. You can proceed to register this as a new supplier.
-                      NoDuplicatesTitle: No duplicates found
-                      PotentialMatchBadge: Potential match
-                      PotentialMatchesTitle: 'Potential Matches ({0})'
-                      ProceedTitle: How would you like to proceed?
-                      StepSubtitle: 'Step 2 of 6 — Agent: Duplicate & Similarity Check'
-                      UseExistingDesc: 'Link this request to an already-registered supplier and skip re-registration.'
-                      UseExistingTitle: Use existing supplier
-                      VatIdLabel: 'VAT ID:'
-                    SupplierOnboardingApproval:
-                      AnalysisResultTab: Analysis Result
-                      ApprovalChainTitle: Approval Chain
-                      ApprovalCommentPlaceholder: 'Optional: Add a comment for the approval record and audit trail...'
-                      ApprovalCommentTitle: Approval Comment
-                      ApprovalTab: Approval
-                      BannerDesc: The Supplier Agent has completed validation and risk scoring. Your approval is required before the supplier can be added to ERP.
-                      BannerMetaTemplate: 'Submitted by: {0}'
-                      BannerTitleTemplate: 'Approval Required: {0}'
-                      InitialMessage: Review the agent findings, confirm the supplier profile, and approve the onboarding request to continue to ERP posting.
-                      ProcurementDirectorRole: Procurement Director
-                      QmIsmManagerName: QM/ISM Manager
-                      QmIsmManagerRole: Quality and ISM
-                      RiskScoreLabel: Risk Score
-                      StatusApproved: Approved
-                      StatusPending: Pending
-                      StatusWaiting: Waiting
-                      StepSubtitle: 'Step 5a of 6 - Human Task: Supervisor and QM/ISM Approval'
-                      SupervisorName: Supervisor
-                      SupplierDetailsTab: Supplier Details
-                    SupplierOnboardingCompletion:
-                      AnalysisResultTab: Analysis Result
-                      AuditEmptyState: No audit entries captured yet.
-                      AuditTimelineTitle: Audit Timeline
-                      BannerDescTemplate: 'The Supplier Agent calculated a risk score of <b>{0}/100 (Green)</b> which meets the minimum threshold. The request has been approved and the supplier is now onboarded.'
-                      BannerMetaTemplate: 'Case: {0} \u00b7 Completed: {1}'
-                      BannerTitleTemplate: 'Supplier Successfully Onboarded: {0}'
-                      CertValidityLabel: Cert. Validity
-                      CompletionSummaryTab: Completion Summary
-                      FinancialStabilityLabel: Financial Stability
-                      InitialMessage: Supplier onboarding is complete. Review the full audit timeline below.
-                      PolicyComplianceLabel: Policy Compliance
-                      RiskScoreBadge: GREEN
-                      RiskScoreLabel: Risk Score
-                      ShowDetailsLink: show details
-                      StepSubtitle: 'Step 6 of 6 \u2014 End Summary'
-                      SupplierDetailsTab: Supplier Details
-                    SupplierOnboardingDecline:
-                      AnalysisResultTab: Analysis Result
-                      BannerDescTemplate: 'The Supplier Agent calculated a risk score of <b>{0}/100 (Red)</b> which is below the minimum threshold. The request cannot proceed and no ERP record has been created.'
-                      BannerMetaTemplate: 'Case: {0} \u00b7 Declined: {1}'
-                      BannerTitleTemplate: 'Supplier Request Declined: {0}'
-                      CertValidityLabel: Cert. Validity
-                      DeclineReasonsTitle: Decline Reasons
-                      DeclineSummaryTab: Decline Summary
-                      FinancialStabilityLabel: Financial Stability
-                      NotificationsSentTitle: Notifications Sent
-                      PolicyComplianceLabel: Policy Compliance
-                      RiskScoreBadge: RED
-                      RiskScoreLabel: Risk Score
-                      SentBadge: Sent
-                      ShowDetailsLink: show details
-                      StepSubtitle: 'Step 5c of 6 \u2014 Request Declined: Risk Score Below Threshold'
-                      SupplierDetailsTab: Supplier Details
-                    SupplierRegistrationForm:
-                      Chips: '\uD83D\uDCCB What certifications are mandatory?|\uD83C\uDFE0 Is IBAN required?|\uD83D\uDD0D What is a VAT ID?'
-                      InitialMessage: "I'll help you complete the supplier registration. Fill in the company details, contact, banking info, and certifications. Required fields are marked with *."
-                      SaveDraftButton: Save Draft
-                      StepSubtitle: 'Step 3 of 6 \u2014 New Supplier Registration'
-                      SubmitButton: Submit for Agent Validation
-                    SupplierRequestForm:
-                      AdditionalNotesLabel: Additional Notes
-                      AdditionalNotesPlaceholder: Any additional context for the procurement or QM team...
-                      BusinessPurposeLabel: 'Business Purpose *'
-                      BusinessPurposePlaceholder: e.g. Logistics / Transport
-                      CheckSupplierButton: Check Supplier Database
-                      Chips: '\uD83D\uDCA1 What info do I need for a new supplier?|\uD83D\uDD0D How does the DB check work?|\uD83D\uDCCB What is a valid business purpose?'
-                      DepartmentLabel: 'Department / Cost Center *'
-                      DepartmentPlaceholder: '-- Select Department --'
-                      ExpectedAnnualVolumeLabel: 'Expected Annual Volume (\u20ac) *'
-                      InitialMessage: "Hi! I can help you fill out the supplier request. I'll check your internal supplier database as soon as you submit \u2014 what supplier are you looking to onboard?"
-                      NeededByLabel: Needed By
-                      ProcurementContextTitle: Procurement Context
-                      ProductsServicesLabel: 'Products / Services Needed *'
-                      ProductsServicesPlaceholder: Describe the specific products or services required from this supplier...
-                      RequestDetailsTitle: Request Details
-                      RequestedByLabel: Requested By
-                      SaveDraftButton: Save Draft
-                      SelectCountryPlaceholder: '-- Select Country --'
-                      StepSubtitle: 'Step 1 of 6 \u2014 Initial Request & Questionnaire'
-                      SupplierCountryLabel: 'Supplier Country *'
-                      SupplierInfoTitle: Supplier Information
-                      SupplierNameLabel: 'Supplier Name *'
-                      SupplierNamePlaceholder: 'e.g. Acme GmbH, M\u00fcller Logistik AG'
-                      SupplierWebsiteLabel: Supplier Website
-                      SupplierWebsitePlaceholder: https://www.supplier.com
-                      UrgencyLabel: 'Urgency *'
-                    FinishDemo:
-                      HeroSub: 'We hope you had a great experience with <strong>Smart Workflow</strong>.<br/>Here is a summary of everything the AI handled for you — autonomously, accurately, and fully auditable.'
-                      PageTitle: Smart Workflow — AI Process Summary
-                      Step0FlowLabel: 'Document<br />Upload'
-                      Step1FlowLabel: 'AI<br />Extraction'
-                      Step2FlowLabel: 'Q&amp;A<br />Guidance'
-                      Step3FlowLabel: 'Document<br />Validation'
-                      Step4FlowLabel: 'Risk<br />Scoring'
-                      Step5FlowLabel: 'Autonomous<br />Routing'
-                      Step6FlowLabel: 'Case<br />Closed'
-                      Step0DotTitle: Document Upload
-                      Step1DotTitle: AI Extraction
-                      Step2DotTitle: Q&A Guidance
-                      Step3DotTitle: Document Validation
-                      Step4DotTitle: Risk Scoring
-                      Step5DotTitle: Autonomous Routing
-                      Step6DotTitle: Case Closed
-                      Panel0Num: Step 01 of 07
-                      Panel0Title: Document Upload
-                      Panel0Desc: The onboarding process begins when a supplier submits their application through the Smart Workflow portal. All required supporting documents — business registration, tax certificates, and financial statements — are uploaded at this stage.
-                      Panel0Detail1: Supplier completes company profile and contact information
-                      Panel0Detail2: Uploads required certification and financial documents
-                      Panel0Detail3: Smart Workflow validates upload completeness before processing
-                      Panel0Tag1: Supplier Portal
-                      Panel0Tag2: Document Upload
-                      Panel0Tag3: Workflow Start
-                      Panel1Num: Step 02 of 07
-                      Panel1Title: AI Document Extraction
-                      Panel1Desc: 'AI reads uploaded PDFs using vision-language models, identifies supplier data fields across multiple documents, and automatically pre-fills the entire onboarding form — zero manual typing required.'
-                      Panel1Detail1: Parsed PDF structures and tables using vision-language models
-                      Panel1Detail2: Identified and extracted 15+ supplier data fields automatically
-                      Panel1Detail3: Auto-populated the complete onboarding form with validated data
-                      Panel1Tag1: LLM
-                      Panel1Tag2: Structured Output
-                      Panel1Tag3: Multi-doc
-                      Panel1Tag4: Zero Manual Entry
-                      Panel2Num: Step 03 of 07
-                      Panel2Title: Contextual Q&amp;A Guidance
-                      Panel2Desc: A RAG-powered AI assistant is available at every screen — answering questions about policy rules, explaining compliance requirements, and clarifying risk thresholds in real time throughout the process.
-                      Panel2Detail1: Retrieved policy documents using vector similarity search
-                      Panel2Detail2: Answered supplier and reviewer questions throughout the process
-                      Panel2Detail3: Provided contextual compliance guidance at each step
-                      Panel2Tag1: RAG
-                      Panel2Tag2: Vector Search
-                      Panel2Tag3: Chat Agent
-                      Panel2Tag4: Context-aware
-                      Panel3Num: Step 04 of 07
-                      Panel3Title: Document Validation
-                      Panel3Desc: 'AI cross-checks all submitted documents against procurement policy rules, identifying missing certifications, expired credentials, and compliance gaps — with complete reasoning and full traceability.'
-                      Panel3Detail1: Validated all documents against 12+ procurement policy rules
-                      Panel3Detail2: Identified compliance gaps and flagged items requiring attention
-                      Panel3Detail3: Generated a detailed validation report with explainable findings
-                      Panel3Tag1: Policy Engine
-                      Panel3Tag2: Cross-reference
-                      Panel3Tag3: Explainable AI
-                      Panel3Tag4: Traceability
-                      Panel4Num: Step 05 of 07
-                      Panel4Title: Risk Calculation
-                      Panel4Desc: 'AI computes a composite risk score across three dimensions — financial stability, policy compliance, and certification validity — delivering an objective, auditable rating out of 100.'
-                      Panel4Detail1: Analysed financial statements for stability and liquidity indicators
-                      Panel4Detail2: 'Cross-referenced compliance history, certifications, and policy alignment'
-                      Panel4Detail3: Produced a weighted composite risk score with full breakdown
-                      Panel4Tag1: Financial Analysis
-                      Panel4Tag2: Risk Model
-                      Panel4Tag3: Weighted Scoring
-                      Panel4Tag4: Scored /100
-                      Panel5Num: Step 06 of 07
-                      Panel5Title: Autonomous Routing
-                      Panel5Desc: 'Based on the complete context — extracted data, risk score, validation findings, and policy — the AI decided the process path autonomously: approve, request clarification, or decline.'
-                      Panel5Detail1: Evaluated all inputs against configurable routing decision rules
-                      Panel5Detail2: Determined the optimal outcome path without human triage
-                      Panel5Detail3: Triggered the appropriate workflow branch with a full audit trail
-                      Panel5Tag1: Decision Engine
-                      Panel5Tag2: Agentic AI
-                      Panel5Tag3: Zero Triage
-                      Panel5Tag4: Autonomous
-                      Panel6Num: Step 07 of 07
-                      Panel6Title: Case Closed
-                      Panel6Desc: 'The onboarding request has been fully processed and closed. All extracted data, AI decisions, validation findings, and the complete audit trail are permanently recorded and accessible for compliance review.'
-                      Panel6Detail1: All AI decisions and reasoning recorded in the permanent audit log
-                      Panel6Detail2: Supplier record updated in the system with the final outcome
-                      Panel6Detail3: Stakeholders notified of the decision and process completion
-                      Panel6Tag1: Audit Trail
-                      Panel6Tag2: Compliance
-                      Panel6Tag3: Process Complete
-                      ProgressText: 'Step {0} of {1}'
-                    StartDemo:
-                      PageTitle: Smart Workflow — Supplier Onboarding Demo
-                      PrevButtonTitle: Previous
-                      NextButtonTitle: Next
-                      Dot0Title: Welcome
-                      Dot1Title: The Process
-                      Dot2Title: Traditional vs. AI
-                      Dot3Title: Generate Data
-                      WelcomeTo: Welcome to
-                      WelcomeProductName: Axon Ivy Smart Workflow
-                      WelcomeDesc: Experience an AI-driven supplier onboarding process that automates document extraction, compliance validation, risk scoring, and autonomous routing — with full auditability.
-                      Slide1Title: The Onboarding Process
-                      Slide1Sub: '7 steps from document upload to case closed — fully powered by AI'
-                      Step01Num: Step 01
-                      Step01Name: Document Upload
-                      Step01Desc: Supplier submits application with company profile and all required supporting documents.
-                      Step02Num: Step 02
-                      Step02Name: AI Extraction
-                      Step02Desc: 'Vision-language model reads PDFs and auto-fills 15+ fields. Zero manual entry required.'
-                      Step03Num: Step 03
-                      Step03Name: 'Q&A Guidance'
-                      Step03Desc: RAG-powered AI assistant answers compliance questions at every screen in real time.
-                      Step04Num: Step 04
-                      Step04Name: Document Validation
-                      Step04Desc: 'AI cross-checks 12+ procurement policy rules and flags compliance gaps with full reasoning.'
-                      Step05Num: Step 05
-                      Step05Name: Risk Scoring
-                      Step05Desc: 'Composite risk score across financial stability, compliance, and certification validity.'
-                      Step06Num: Step 06
-                      Step06Name: Autonomous Routing
-                      Step06Desc: 'AI decides the outcome — approve, request clarification, or decline — without human triage.'
-                      Step07Num: Step 07
-                      Step07Name: Case Closed
-                      Step07Desc: All decisions, extracted data, and AI reasoning are permanently recorded for compliance review.
-                      Slide2Title: Traditional Onboarding vs. AI-Powered Workflow
-                      Slide2Sub: Why the old way breaks down — and how AI transforms every step
-                      StatTimeLabel: Time to onboard
-                      StatTimeBefore: '3–6 weeks'
-                      StatTimeAfter: Minutes
-                      StatStepsLabel: Process steps
-                      StatStepsBefore: 30+ manual steps
-                      StatStepsAfter: Fully automated
-                      StatErrorLabel: Data entry accuracy
-                      StatErrorBefore: '~30% error rate'
-                      StatErrorAfter: Near-zero errors
-                      TraditionalHeader: Traditional Process
-                      AiPoweredHeader: AI-Powered Smart Workflow
-                      BeforeItem1: Supplier sends documents by email — procurement hunts through attachments
-                      BeforeItem2: Staff manually reads PDFs and types data into spreadsheets or ERP forms
-                      BeforeItem3: Compliance checks are ad-hoc, inconsistent, and done days after submission
-                      BeforeItem4: Approval routing decided in committee meetings — delays measured in weeks
-                      BeforeItem5: Risk evaluation relies on personal judgement, with no scoring standard
-                      BeforeItem6: Decisions live in email threads — no structured audit trail for compliance
-                      AfterItem1: Supplier uploads documents once via a structured, guided form
-                      AfterItem2: 'Vision AI auto-extracts 15+ fields from PDFs in seconds — zero manual entry'
-                      AfterItem3: '12+ procurement policy rules checked instantly with full AI reasoning'
-                      AfterItem4: 'Autonomous routing: approve, request clarification, or decline — no triage needed'
-                      AfterItem5: Composite risk score across financial stability, compliance, and certification data
-                      AfterItem6: Every decision, extracted datum, and AI rationale permanently recorded
-                      ReadyTitle: Are You Ready?
-                      ReadySub: Generate sample suppliers, procurement policy rules, and the RAG knowledge base to explore the full demo experience.
-                      BeforeYouStartTitle: Before You Start
-                      DownloadAllButton: Download All
-                      FileDetailsToggle: File details
-                      BeforeYouStartDesc: 'The demo asks you to upload documents about a company so the AI can extract information, assess risks, and score the supplier. We have prepared these documents for you — just download them and use them when prompted during the demo. Then click <strong>Generate Data</strong> below to set up the demo environment.'
-                      DocCompanyInfoName: Company Information
-                      DocCompanyInfoSub: 'Company profile with address, contacts, and banking details'
-                      DocGroupCertifications: Certifications
-                      DocIso9001Name: 'ISO 9001 — Quality Management'
-                      DocIso14001Name: 'ISO 14001 — Environmental Management'
-                      DocIso27001Name: 'ISO 27001 — Information Security'
-                      DocGdprName: GDPR Data Processing Agreement
-                      DocGroupLegal: Legal Documents
-                      DocCommercialRegName: Company Registration Extract
-                      DocCommercialRegSub: Official commercial register document
-                      DocSelfDeclarationName: Company Self-Declaration
-                      DocSelfDeclarationSub: Compliance and policy self-declaration
-                      DocAnnualReportName: Annual Report
-                      DocAnnualReportSub: Most recent fiscal year financial report
-                      DocBankingStatementName: Banking Statement
-                      DocBankingStatementSub: Recent bank account statement
-                      GenerateDataButton: Generate Data
-                      Gen1Title: Build RAG Knowledge Base
-                      Gen1Hint: Ingest policy documents into vector store
-                      Gen2Title: 'Create Certification & Regulatory Policies'
-                      Gen2Hint: '6 certification & regulatory rules'
-                      Gen3Title: Create Financial Policies
-                      Gen3Hint: '6 financial risk rules & demo suppliers'
-                      GenDoneBanner: 'Demo data ready — click <strong>Start Demo</strong> to begin!'
-                      StartDemoButton: Start Demo
+Enum:
+  RiskKind:
+    AI_VALIDATION: 'Required document present: {0}'
+    MISSING_DOC: 'Required document missing: {0}'
 Features:
   FileExtractionDemo:
     ExtractFromImagePrompt: Extract Invoice from image
@@ -823,12 +836,12 @@ Labels:
   Close: Close
   Confirm: Confirm
   Description: Description
-  Finish: Finish
   Download: Download
+  Finish: Finish
   Optional: Optional
   Replace: Replace
   Required: Required
   Resolve: Resolve
   Status: Status
-  View: View
   Upload: Upload
+  View: View

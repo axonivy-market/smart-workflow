@@ -4,10 +4,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import java.util.List;
+
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentObjectType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 
@@ -165,6 +168,18 @@ public class SupplierOnboardingDeclineBean extends ReadOnlySupplierDetailsBean {
       case "WARNING" -> "ti-alert-triangle";
       default        -> "ti-circle-check";
     };
+  }
+
+  // ── Decline audit entry ───────────────────────────────────────────────────
+
+  public AuditTrailEntry getDeclineEntry() {
+    List<AuditTrailEntry> trail = request != null ? request.getAuditTrail() : null;
+    if (trail == null || trail.isEmpty()) return null;
+    for (int i = trail.size() - 1; i >= 0; i--) {
+      AuditTrailEntry e = trail.get(i);
+      if (e.getDeclineReasons() != null && !e.getDeclineReasons().isEmpty()) return e;
+    }
+    return trail.get(trail.size() - 1);
   }
 
   // ── Notification avatar initials ──────────────────────────────────────────

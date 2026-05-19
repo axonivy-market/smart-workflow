@@ -11,9 +11,7 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: var(--so-shadow);
-  position: sticky;
-  top: 10px;
-  height: 100vh;
+  height: 100%;
 }
 
 /* Override rag-welcome-state min/max heights for this compact context */
