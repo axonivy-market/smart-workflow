@@ -10,3 +10,5 @@ Variables:
         # The default embedding model, if not explicitly specified.
         # E.g. nomic-embed-text, mxbai-embed-large
         DefaultEmbeddingModel: nomic-embed-text
+        # Maximum time to wait for a single chat/embedding response, in seconds.
+        TimeoutSeconds: 300

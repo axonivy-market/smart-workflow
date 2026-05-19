@@ -1,6 +1,6 @@
 {
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
-  "id" : "1A20000000000001",
+  "id" : "1A000048E5325667",
   "config" : {
     "data" : "AgentDemo.AiChatDemoData"
   },

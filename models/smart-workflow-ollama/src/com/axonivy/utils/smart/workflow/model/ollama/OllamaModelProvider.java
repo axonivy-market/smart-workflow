@@ -63,6 +63,7 @@ public class OllamaModelProvider implements ChatModelProvider {
     var builder = OllamaEmbeddingModel.builder()
         .baseUrl(OllamaServiceConnector.baseUrl())
         .modelName(modelName)
+        .timeout(OllamaServiceConnector.timeout())
         .logRequests(true)
         .logResponses(true);
     return Optional.of(builder.build());

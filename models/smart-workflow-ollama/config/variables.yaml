@@ -10,3 +10,6 @@ Variables:
         # The default embedding model, if not explicitly specified.
         # E.g. nomic-embed-text, mxbai-embed-large
         DefaultEmbeddingModel: ""
+        # Maximum time to wait for a single chat/embedding response, in seconds.
+        # Local Ollama on CPU can need minutes for large models or cold starts; tune to your hardware.
+        TimeoutSeconds: "300"

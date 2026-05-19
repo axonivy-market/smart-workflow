@@ -1,6 +1,6 @@
 {
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
-  "id" : "1A20000000000002",
+  "id" : "1A000027140DB900",
   "kind" : "HTML_DIALOG",
   "config" : {
     "data" : "com.axonivy.utils.smart.workflow.demo.AiChatDemo.AiChatDemoData"
@@ -11,10 +11,10 @@
       "name" : "start()",
       "config" : {
         "signature" : "start",
-        "guid" : "1A200000000000A1"
+        "guid" : "1A000036B82E4340"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 64 }
+        "at" : { "x" : 240, "y" : 96 }
       },
       "connect" : [
         { "id" : "c0", "to" : "f1" }
@@ -23,17 +23,17 @@
       "id" : "f1",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 224, "y" : 64 }
+        "at" : { "x" : 368, "y" : 96 }
       }
     }, {
       "id" : "f3",
       "type" : "HtmlDialogEventStart",
       "name" : "close",
       "config" : {
-        "guid" : "1A200000000000A2"
+        "guid" : "1A0001BF0B31B250"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 160 }
+        "at" : { "x" : 240, "y" : 168 }
       },
       "connect" : [
         { "id" : "c1", "to" : "f4" }
@@ -42,7 +42,7 @@
       "id" : "f4",
       "type" : "HtmlDialogExit",
       "visual" : {
-        "at" : { "x" : 224, "y" : 160 }
+        "at" : { "x" : 368, "y" : 168 }
       }
     }, {
       "id" : "f5",
@@ -50,10 +50,10 @@
       "name" : "chat",
       "config" : {
         "signature" : "chat",
-        "guid" : "1A200000000000A3"
+        "guid" : "1A0000F9E1FC9217"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 256 }
+        "at" : { "x" : 240, "y" : 296 }
       },
       "connect" : [
         { "id" : "c2", "to" : "f6" }
@@ -68,14 +68,14 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 256, "y" : 256 },
+        "at" : { "x" : 400, "y" : 296 },
         "labelOffset" : { "x" : 24, "y" : -24 }
       },
       "connect" : [
         { "id" : "c3", "to" : "f7", "label" : {
             "name" : "no"
           } },
-        { "id" : "c4", "to" : "f10", "via" : [ { "x" : 256, "y" : 336 }, { "x" : 960, "y" : 336 } ], "label" : {
+        { "id" : "c4", "to" : "f10", "via" : [ { "x" : 400, "y" : 376 }, { "x" : 1104, "y" : 376 } ], "label" : {
             "name" : "yes",
             "segment" : 1.5
           } }
@@ -102,7 +102,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 416, "y" : 256 }
+        "at" : { "x" : 560, "y" : 296 }
       },
       "connect" : [
         { "id" : "c5", "to" : "f8" }
@@ -122,7 +122,7 @@
         "exceptionHandler" : "f15"
       },
       "visual" : {
-        "at" : { "x" : 608, "y" : 256 },
+        "at" : { "x" : 752, "y" : 296 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "connect" : [
@@ -149,7 +149,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 800, "y" : 256 }
+        "at" : { "x" : 944, "y" : 296 }
       },
       "connect" : [
         { "id" : "c7", "to" : "f10" }
@@ -158,7 +158,7 @@
       "id" : "f10",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 960, "y" : 256 }
+        "at" : { "x" : 1104, "y" : 296 }
       }
     }, {
       "id" : "f11",
@@ -166,10 +166,10 @@
       "name" : "clearChat",
       "config" : {
         "signature" : "clearChat",
-        "guid" : "1A200000000000A4"
+        "guid" : "1A0019126E15BD48"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 408 }
+        "at" : { "x" : 240, "y" : 448 }
       },
       "connect" : [
         { "id" : "c8", "to" : "f12" }
@@ -189,7 +189,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 256, "y" : 408 }
+        "at" : { "x" : 400, "y" : 448 }
       },
       "connect" : [
         { "id" : "c9", "to" : "f13" }
@@ -198,7 +198,7 @@
       "id" : "f13",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 416, "y" : 408 }
+        "at" : { "x" : 560, "y" : 448 }
       }
     }, {
       "id" : "f15",
@@ -222,7 +222,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1040, "y" : 256 }
+        "at" : { "x" : 1184, "y" : 296 }
       },
       "connect" : [
         { "id" : "c10", "to" : "f10" }
