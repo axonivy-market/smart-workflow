@@ -2,13 +2,15 @@ package com.axonivy.utils.smart.workflow.model.ollama.internal;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
+
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel.OllamaChatModelBuilder;
 
 public class OllamaServiceConnector {
 
-  private static final int DEFAULT_TEMPERATURE = 0;
+  private static final double DEFAULT_TEMPERATURE = 0.0;
   private static final String FALLBACK_BASE_URL = "http://localhost:11434";
   private static final String FALLBACK_DEFAULT_MODEL = "llama3.2";
 
@@ -24,9 +26,10 @@ public class OllamaServiceConnector {
         StringUtils.defaultIfBlank(Ivy.var().get(OllamaConf.DEFAULT_MODEL), FALLBACK_DEFAULT_MODEL));
 
     return OllamaChatModel.builder()
+        .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
         .baseUrl(baseUrl())
         .modelName(selectedModel)
-        .temperature(Double.valueOf(DEFAULT_TEMPERATURE))
+        .temperature(DEFAULT_TEMPERATURE)
         .logRequests(true)
         .logResponses(true);
   }

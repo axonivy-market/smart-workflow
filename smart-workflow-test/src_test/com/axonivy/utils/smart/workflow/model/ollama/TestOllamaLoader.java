@@ -14,6 +14,7 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
+import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 
 @IvyTest
@@ -52,10 +53,10 @@ public class TestOllamaLoader {
   }
 
   @Test
-  void structuredOutputIsUnsupported() {
-    // Ollama does not support JSON schema structured output; setup must not throw
+  void structuredOutputIsAdvertisedAsSupported() {
     ChatModel model = provider.setup(new ModelOptions(MODEL, true, List.of()));
-    assertThat(model).isNotNull();
+    assertThat(model.supportedCapabilities())
+        .contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 
   @Test
