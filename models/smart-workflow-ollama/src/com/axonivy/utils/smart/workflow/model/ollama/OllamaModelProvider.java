@@ -12,7 +12,6 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
-import dev.langchain4j.model.chat.request.ResponseFormat;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
 
@@ -24,8 +23,7 @@ public class OllamaModelProvider implements ChatModelProvider {
   public ChatModel setup(ModelOptions options) {
     var builder = OllamaServiceConnector.buildChatModel(options.modelName());
     if (options.structuredOutput()) {
-      builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
-          .responseFormat(ResponseFormat.JSON);
+      builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
     }
     builder.listeners(options.listeners());
     return builder.build();
