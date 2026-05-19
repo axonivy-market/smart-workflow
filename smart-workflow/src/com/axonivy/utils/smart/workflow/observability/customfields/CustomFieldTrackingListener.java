@@ -2,6 +2,7 @@ package com.axonivy.utils.smart.workflow.observability.customfields;
 
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.observability.AiListenerProvider;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.workflow.ICase;
@@ -10,7 +11,7 @@ import dev.langchain4j.observability.api.event.AiServiceStartedEvent;
 import dev.langchain4j.observability.api.listener.AiServiceListener;
 import dev.langchain4j.observability.api.listener.AiServiceStartedListener;
 
-public class CustomFieldTrackingListener implements AiServiceStartedListener {
+public class CustomFieldTrackingListener implements AiServiceStartedListener, AiListenerProvider {
 
   public interface Var {
     String PREFIX = "AI.Observability.CustomFields.";
@@ -19,7 +20,8 @@ public class CustomFieldTrackingListener implements AiServiceStartedListener {
 
   public static final String AI_ASSISTED = "aiAssisted";
 
-  public List<AiServiceListener<?>> configure() {
+  @Override
+  public List<AiServiceListener<?>> provide() {
     if (!IvyVar.bool(Var.ENABLED)) {
       return List.of();
     }
