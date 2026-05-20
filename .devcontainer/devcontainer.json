@@ -7,11 +7,13 @@
   "workspaceFolder": "/workspaces/smart-workflow",
   "runServices": [
     "workspace",
-    "phoenix"
+    "phoenix",
+    "opensearch"
   ],
   "forwardPorts": [
     8080,
-    6006
+    6006,
+    9200
   ],
   "onCreateCommand": "bash .devcontainer/on-create.sh",
   "features": {
