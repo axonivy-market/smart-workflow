@@ -14,9 +14,7 @@ None of them should call third-party services on the wire or cause long executio
 - Plain JUnit 5 — pure Java logic, no Ivy runtime needed
 - `@IvyTest` — code reads Ivy variables or uses SPI loading
 - `@IvyProcessTest` — code requires a full Ivy process context
-
-See the [Mocking](#mocking) section for techniques to keep tests fast when the code under test interacts with LLMs.
-
+- `@RestResourceTest` — lightweight REST-resource tests; preferred when mocking external LLM interactions to keep tests isolated and fast. See the [Mocking](#-mocking) section.
 
 ### 🐳 Integration Tests
 
@@ -66,7 +64,7 @@ Follow these three steps to write such a test:
 
 **1. Create a Demo or Test process that invokes an Agent / LLM.**
 
-The Process should call an Agent exactly in the manner you like to test. Define 'messages', 'tools', 'output', .. as needed.
+The Process should call an Agent exactly in the manner you like to test. Define 'messages', 'tools', 'output', ... as needed.
 
 **2. Record the real REST response.**
 
