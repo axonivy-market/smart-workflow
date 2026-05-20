@@ -51,9 +51,9 @@ You can run it right in the browser, hosted by GitHub.
 To avoid unexpected costs, stop your codespace as soon as your session is finished. 
 In GitHub, open the **Codespaces** page and choose **Stop codespace** for inactive environments instead of leaving them running in the background.
 
-## Sidecar services
+### Sidecar services
 
-The Dev Container starts the following services automatically:
+The Dev Container starts these services automatically:
 
 | Service | Image | Port | Purpose |
 |---|---|---|---|
@@ -61,16 +61,8 @@ The Dev Container starts the following services automatically:
 | `phoenix` | `arizephoenix/phoenix:nightly` | `6006` | OpenInference tracing UI — see [Tracing](../observe/OBSERVE.md). |
 | `opensearch` | `opensearchproject/opensearch:2.11.0` | `9200` | Vector store for [RAG](../RAG.md). Started with security disabled and `discovery.type=single-node` for local development only. |
 
-`smart-workflow-test/config/variables.yaml` is pre-populated with
-`AI.RAG.OpenSearch.Url: http://opensearch:9200`, so RAG demos and tests
-connect automatically with no manual configuration. No username, password,
-or API key is required in the local dev environment.
-
-The `workspace` service waits for the OpenSearch health check before
-`on-create.sh` runs, so the engine is built only once all sidecars are ready.
 
 > **Note:** OpenSearch memory is capped at 512 MB
 > (`OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m`) to keep the dev container
 > lightweight. Raise this value in `.devcontainer/compose.yml` if you ingest
 > large datasets.
-
