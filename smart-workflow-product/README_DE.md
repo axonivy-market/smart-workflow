@@ -45,7 +45,8 @@ KI-gestützten Agenten, der in einen Geschäftsworkflow integriert ist. Der Agen
 wurde entwickelt, um Supportprobleme zu klassifizieren, auf fehlende
 Informationen zu prüfen und automatisch Supportaufgaben zu erstellen.
 
-**Übersicht über den Arbeitsablauf:**
+<details>
+<summary><strong>Workflow Overview</strong></summary>
 
 1. **Eingabe:** Der Agent erhält eine Support-Anfrage und den Benutzernamen des
    Meldenden.
@@ -58,7 +59,10 @@ Informationen zu prüfen und automatisch Supportaufgaben zu erstellen.
 4. **Zusammenfassung und Antwort:** Der Agent fasst das Problem zusammen und
    antwortet dem Benutzer mit einer detaillierten Antwort.
 
-**Technische Details:**
+</details>
+
+<details>
+<summary><strong>Technical Details</strong></summary>
 
 - Der Agent ist als aufrufbarer Unterprozess implementiert
   (`AxonIvySupportAgent.p.json`) und verwendet die Java-Bean
@@ -73,7 +77,10 @@ Informationen zu prüfen und automatisch Supportaufgaben zu erstellen.
   Details wie die Klassifizierung, den Link zur erstellten Aufgabe und eine
   Zusammenfassung des Support-Problems.
 
-**Beispiel für die Konfiguration des Agenten:**
+</details>
+
+<details>
+<summary><strong>Agent Configuration Example</strong></summary>
 
 Um den Agenten zu konfigurieren, definieren Sie ein Programmelement mit den
 folgenden Einstellungen:
@@ -83,7 +90,10 @@ folgenden Einstellungen:
 Diese Konfiguration stellt sicher, dass der Agent nur das angegebene Tool
 verwendet und dessen Ausgabe als strukturiertes Java-Objekt zurückgibt.
 
-**Beispiel für einen Demolauf:**
+</details>
+
+<details>
+<summary><strong>Demo Run Example</strong></summary>
 
 Angenommen, ein Benutzer reicht eine Support-Anfrage ein: „Ich habe einen NPE,
 wenn ich Case Details in Portal 12.0.9 öffne.“
@@ -105,15 +115,21 @@ Summary: The problem is a NullPointerException (NPE) occurring when opening Case
 Diese Antwort wird dem Objekt „ `” „AxonIvySupportResponse” „` ” zugeordnet und
 kann direkt in nachfolgenden Workflow-Schritten verwendet werden.
 
-So führen Sie die Demo aus:
+</details>
+
+<details>
+<summary><strong>How to Run the Demo</strong></summary>
 
 1. Stellen Sie sicher, dass Sie den Abschnitt [Konfigurationen](#configurations)
    ausgefüllt haben.
-2. Starten Sie den Axon Ivy Support Agent-Prozess mit einer Support-Frage und
-   einem Benutzernamen.
+2. Start **Axon Ivy Support** process with a support question and username.
 3. Überprüfen Sie die Antwort des Agenten, die eine Klassifizierung, die
    Erstellung einer Aufgabe (falls erforderlich) und eine Zusammenfassung
    enthält.
+
+</details>
+
+---
 
 ### Shopping-Demo
 
@@ -125,7 +141,8 @@ Schritt-für-Schritt-Anleitungen eingehen. Wenn Sie sich mit der Implementierung
 befassen möchten, sehen Sie sich bitte das Demo-Projekt „ `” unter
 smart-workflow-demo` an.
 
-**Produkterstellung**
+<details>
+<summary><strong>Product creation</strong></summary>
 
 Traditionell muss der Shopbetreiber beim Hinzufügen eines Produkts viele Felder
 manuell ausfüllen und abhängige Datensätze (Lieferant, Marke, Kategorie)
@@ -175,7 +192,7 @@ Entwickler müssen vier Agenten erstellen.
   - Marke erstellen: Erstellen Sie anhand der bereitgestellten Informationen
     eine neue Marke.
 
-Demo flow
+Demo flow (start **Create new product** process)
 
 1. Der Betreiber lädt Produktspezifikationen und Bilddateien hoch.
 2. Smart Workflow analysiert die Dateien und extrahiert Produktattribute (Titel,
@@ -195,7 +212,10 @@ Demo flow
 Der neue KI-gestützte Prozess führte zu weniger Fehlern, deutlich weniger
 manuellem Aufwand und einer wesentlich schnelleren Veröffentlichung.
 
-**Semantische Suche**
+</details>
+
+<details>
+<summary><strong>Semantic search</strong></summary>
 
 Vor der Einführung der KI gaben Käufer Suchbegriffe wie „rotes Kleid“ ein,
 wendeten dann manuell Filter (Preis, Marke, Kategorie) an und durchsuchten die
@@ -211,7 +231,7 @@ tooling, and easier deployment.
 Entwickler müssen ein zusätzliches `Tool „Produkt nach Kriterien finden”` zum
 `Produkt-Agenten` hinzufügen, wobei die Eingabe die Suchkriterien sind.
 
-Demo flow
+Demo flow (start **Shopping Store** process)
 
 1. Käufer: tippt oder sagt „Ich brauche ein rotes Kleid für 100 Dollar für eine
    Party heute Abend.“
@@ -221,8 +241,156 @@ Demo flow
    Suchanfragen für die Produkte um.
 4. Geben Sie die Top-Produkte zurück, die den Kriterien entsprechen.
 
-Um die Demodaten schnell einzurichten, führen Sie den Prozess „ `“ aus.
-Erstellen Sie Daten für die Shopping-Demo „` “ aus der Prozessliste.
+To quickly set up the demo data, start **Create data for shopping demo** from
+the process list.
+
+</details>
+
+---
+
+### File Extraction Demo
+
+This demo shows how to build a process that reads invoice data directly from
+uploaded images and PDF files — with no manual data entry. Using multimodal
+language models, the AI reads the document content and returns structured Java
+objects that subsequent process steps can use immediately.
+
+To extract from a file, include the file content in the agent's user message.
+The AI reads it and maps the result to the specified Java class — no special
+tooling or file-system access required.
+
+<details>
+<summary><strong>Demo flow</strong></summary>
+
+- Start **File Extraction Demo (CMS)** or **File Extraction Demo (Binary)** from
+  the process list.
+
+  1. The process loads an invoice image and a PDF.
+  2. The file contents are included in the agent's user message.
+  3. The AI reads and extracts the invoice fields.
+  4. The result is returned as a typed Java object ready for the next process
+     step.
+
+</details>
+
+Not all providers support multimodal input — see the [Models Contribution
+Guideline](../doc/MODELS.md#file-extraction-support) for supported providers and
+file types.
+
+---
+
+### Guardrail Demo
+
+This demo shows how built-in Smart Workflow guardrails protect AI agents from
+prompt injection attacks and prevent sensitive data from leaking in AI
+responses. Without protection, a malicious user can craft a message that
+overrides the system prompt or tricks the agent into revealing internal data.
+
+Two defense layers are configured in the agent's `inputGuardrails` /
+`outputGuardrails` fields:
+
+- `PromptInjectionInputGuardrail` — inspects user input before it reaches the AI
+  model and blocks known injection patterns
+- `SensitiveDataOutputGuardrail` — scans the AI response before it is returned
+  and blocks output containing API keys or private keys
+
+Default guardrails can be set globally in `variables.yaml` under
+`AI.Guardrails.DefaultInput` and `AI.Guardrails.DefaultOutput` — any agent
+without explicit guardrails inherits these defaults.
+
+<details>
+<summary><strong>Demo flow</strong></summary>
+
+- **Prompt injection** (start **Prompt Injection Guardrail Demo** process)
+
+  1. A crafted malicious message is submitted. The
+     `PromptInjectionInputGuardrail` intercepts it before the AI is called and
+     raises an error.
+  2. The process catches the error via an `ErrorBoundaryEvent` and routes to a
+     safe fallback path.
+
+- **Sensitive data output** (start **Sensitive Data Output Guardrail Demo**
+  process)
+
+  1. A message instructs the agent to include sensitive data in its response.
+     The `SensitiveDataOutputGuardrail` intercepts the response after the model
+     returns and blocks it.
+  2. The error boundary catches this violation and routes to the safe fallback
+     path again.
+
+</details>
+
+---
+
+### Custom Guardrail Demo
+
+This demo shows how to implement and register a domain-specific business rule as
+a reusable custom guardrail. A company policy requires that agents never mention
+competitor products. The `BlockCompetitorMentionGuardrail` enforces this rule in
+one place — once registered, it can be added to any agent by name without
+touching individual system prompts.
+
+Developers implement `SmartWorkflowInputGuardrail`, expose it through a
+`GuardrailProvider`, and register the provider in
+`META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`.
+The guardrail name then appears automatically in the Available Input Guardrails
+list. Each agent opts in via `inputGuardrails:
+["BlockCompetitorMentionGuardrail"]`; to apply it to every agent, add it to
+`AI.Guardrails.DefaultInput` in `variables.yaml`.
+
+<details>
+<summary><strong>Demo flow</strong></summary>
+
+- **Blocked query** (start **Custom Guardrail Demo - Blocked** process)
+
+  1. A user submits a query that mentions a competitor product.
+  2. `BlockCompetitorMentionGuardrail` detects the mention and blocks the
+     request before the AI model is called.
+  3. The process catches the error and routes to a safe fallback path.
+
+- **Allowed query** (start **Custom Guardrail Demo - Allowed** process)
+
+  1. A user submits a query with no competitor mentions.
+  2. `BlockCompetitorMentionGuardrail` finds nothing to block and allows the
+     request through.
+  3. The agent processes the query and responds normally.
+
+</details>
+
+---
+
+## Best Practices
+
+The demos below illustrate **best practices** for structuring Axon Ivy agents
+and tools with Smart Workflow. Three complementary patterns are shown: one for
+tightly scoping an agent's tool access, one for linear task-based orchestration,
+and one for feature-grouped tool reuse.
+
+### Agent Pipeline
+
+A linear chain of agents where each one processes an input and passes the result
+to the next stage. Best practice: assign a dedicated task to each agent so that
+execution is tracked, resumable, and visible in the task history.
+
+See the **Agent Pipeline Demo** process in `smart-workflow-demo`.
+
+### Self-Contained Agent with Co-located Tools
+
+The agent and its tools are self-contained in one file with no cross-process
+references, making the full capability easy to ship and expose as a single
+callable interface.
+
+See the **Self-Contained Agent** process in `smart-workflow-demo`.
+
+### Feature-Grouped Agents and Tools
+
+This pattern shows how to organize agents and tools by business domain when
+tools need to be shared across multiple agents. Rather than bundling everything
+inside a single callable, each agent and each tool group lives in its own
+process file under a common feature folder — making the domain boundary explicit
+and allowing tool reuse.
+
+See the **Shopping Demo** process in `smart-workflow-demo`.
 
 ## Setup
 
@@ -309,7 +477,6 @@ Example Configuration:
 
 <summary>x.AI setup instructions</summary>
 x.AI models are supported, import the `smart-workflow-xai` to work with these.
-
 
 ```yaml
 @variables.xai@
