@@ -10,14 +10,14 @@ public class ProjectClassLoader {
   private static final String JAVA_RUNTIME = "ch.ivyteam.ivy.java.JavaRuntime";
 
   public static ClassLoader current() {
-    return of(IProcessModelVersion.current().project());
+    return of(IProcessModelVersion.current());
   }
 
-  public static ClassLoader of(Project project) {
+  public static ClassLoader of(IProcessModelVersion pmv) {
     try {
       var javaConf = Class.forName(JAVA_RUNTIME);
       var of = MethodUtils.getMethodObject(javaConf, "of", Project.class);
-      var local = of.invoke(null, project);
+      var local = of.invoke(null, pmv.project());
       var loader = MethodUtils.getMethodObject(javaConf, "getClassLoader");
       return (ClassLoader) loader.invoke(local);
     } catch (Exception ex) {
