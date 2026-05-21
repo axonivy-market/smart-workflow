@@ -16,7 +16,6 @@ import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
-import ch.ivyteam.ivy.project.model.Project;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 
