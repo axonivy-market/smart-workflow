@@ -13,16 +13,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
-import ch.ivyteam.ivy.project.model.Project;
 
 public class SpiLoader {
-  private final Project project;
+  private final IProcessModelVersion pmv;
 
   private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
   private static final String EXCEPTION_PATTERN = "Failed to read service descriptor %s";
 
-  public SpiLoader(Project project) {
-    this.project = project;
+  public SpiLoader(IProcessModelVersion pmv) {
+    this.pmv = pmv;
   }
 
   public <T> Set<T> load(Class<T> type) {
@@ -33,15 +32,12 @@ public class SpiLoader {
         .collect(Collectors.toSet());
   }
 
-  private Stream<Project> projectsInScope() {
-    var pmv = IProcessModelVersion.of(project);
-    var dependendees = pmv.getAllDependentProcessModelVersions()
-        .map(IProcessModelVersion::project);
-    return Stream.concat(Stream.of(project), dependendees);
+  private Stream<IProcessModelVersion> projectsInScope() {
+    return Stream.concat(Stream.of(pmv), pmv.getAllDependentProcessModelVersions());
   }
 
-  private static <T> List<T> findImpl(Project project, Class<T> type) {
-    ClassLoader loader = ProjectClassLoader.of(project);
+  private static <T> List<T> findImpl(IProcessModelVersion pmv, Class<T> type) {
+    ClassLoader loader = ProjectClassLoader.of(pmv);
     return findImpl(type, loader);
   }
 

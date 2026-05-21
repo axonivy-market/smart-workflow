@@ -40,8 +40,8 @@ public class TestAzureOpenAiLoader {
 
   @Test
   void load() {
-    Project project = IProcessModelVersion.current().project();
-    var impls = new SpiLoader(project).load(ChatModelProvider.class);
+    var pmv = IProcessModelVersion.current();
+    var impls = new SpiLoader(pmv).load(ChatModelProvider.class);
     assertThat(impls).isNotEmpty();
     var azureModel = impls.stream().filter(p -> (p instanceof AzureOpenAiModelProvider)).toList();
     assertThat(azureModel).as("SPI loader finds Azure OpenAI implementor").isNotEmpty();
