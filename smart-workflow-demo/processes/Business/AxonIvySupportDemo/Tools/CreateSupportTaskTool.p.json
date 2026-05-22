@@ -81,17 +81,15 @@
       ]
     }, {
       "id" : "f9",
-      "type" : "Script",
+      "type" : "ProgramInterface",
       "name" : "Use AI to create support ticket object",
       "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.agent.AxonIvySupportTicketAgent;",
-            "",
-            "in.customInstructions.add(\"Find Ivy version or Portal version or Core version\");",
-            "",
-            "in.supportTicket = AxonIvySupportTicketAgent.createSupportTicketWithoutApprovalInfo(in.ticketDescription, in.customInstructions);"
-          ]
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instruction to follow:\n- Don't fill information related to approval\n- Find Ivy version or Portal version or Core version\n<%=in.customInstructions%>",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket.class",
+          "resultMapping" : "in.supportTicket",
+          "query" : "<%=in.ticketDescription%>"
         }
       },
       "visual" : {
@@ -133,25 +131,22 @@
       ]
     }, {
       "id" : "f17",
-      "type" : "Script",
+      "type" : "ProgramInterface",
       "name" : "Use AI to create task info",
       "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.agent.TaskInfoAgent;",
-            "in.customInstructions.add(\"Return task detail url\");",
-            "",
-            "in.taskInfo = TaskInfoAgent.createTaskInfo(in.ticketDescription, in.customInstructions);",
-            "",
-            "in.taskInfo.responsible = in.supportTicket.type.getRoleName();"
-          ]
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instruction to follow:\n- Return task detail url\n<%=in.customInstructions%>",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
+          "resultMapping" : "in.taskInfo",
+          "query" : "<%=in.ticketDescription%>"
         }
       },
       "visual" : {
         "at" : { "x" : 1408, "y" : 296 }
       },
       "connect" : [
-        { "id" : "f18", "to" : "f19" }
+        { "id" : "f18", "to" : "f35" }
       ]
     }, {
       "id" : "f19",
@@ -282,6 +277,21 @@
       },
       "connect" : [
         { "id" : "f34", "to" : "f28", "via" : [ { "x" : 2184, "y" : 688 } ] }
+      ]
+    }, {
+      "id" : "f35",
+      "type" : "Script",
+      "name" : "Preserve responsible",
+      "config" : {
+        "output" : {
+          "code" : "in.taskInfo.responsible = in.supportTicket.type.getRoleName();"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1480, "y" : 392 }
+      },
+      "connect" : [
+        { "id" : "f36", "to" : "f19" }
       ]
     } ]
 }
