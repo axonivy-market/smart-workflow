@@ -15,6 +15,7 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProces
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.StepStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierRepository;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria;
@@ -80,7 +81,7 @@ public class CrossReferenceRunner {
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "Cross-reference check error: " + e.getMessage(), e);
       ValidationFinding errorFinding = new ValidationFinding(
-          "FAILURE", "Cross-reference check failed: " + e.getMessage(), "system", RiskType.POLICY_COMPLIANCE);
+          FindingSeverity.FAILURE, "Cross-reference check failed: " + e.getMessage(), "system", RiskType.POLICY_COMPLIANCE);
       errorFinding.setRiskKind(RiskKind.AI_VALIDATION);
       result.getFindings().add(errorFinding);
       step.setStatus(StepStatus.FAILED);
@@ -95,14 +96,12 @@ public class CrossReferenceRunner {
 
     for (ValidationFinding finding : result.getFindings()) {
       finding.setRiskKind(RiskKind.AI_VALIDATION);
-      LogLineSeverity sev = LogLineSeverity.OK;
-      if ("FAILURE".equals(finding.getSeverity())) {
-        sev = LogLineSeverity.ERROR;
-      } else if ("WARNING".equals(finding.getSeverity())) {
-        sev = LogLineSeverity.WARNING;
-      }
-      step.getLogLines().add(new AgentProcessingStep.LogLine(sev, finding.getMessage()));
+      FindingSeverity sev = finding.getSeverity();
+      LogLineSeverity logSev = sev == FindingSeverity.FAILURE ? LogLineSeverity.ERROR
+          : sev == FindingSeverity.WARNING ? LogLineSeverity.WARNING : LogLineSeverity.OK;
+      step.getLogLines().add(new AgentProcessingStep.LogLine(logSev, finding.getMessage()));
     }
+
 
     result.setProcessingStep(step);
     return result;
@@ -157,7 +156,7 @@ public class CrossReferenceRunner {
   public static ValidationFinding validateCompanyRegister(String registerNo, String country) {
     String source = "Company Register";
     if (registerNo == null || registerNo.trim().isEmpty()) {
-      return new ValidationFinding("WARNING",
+      return new ValidationFinding(FindingSeverity.WARNING,
           "No commercial register number provided — manual verification required", source, RiskType.POLICY_COMPLIANCE);
     }
     String cleaned = registerNo.trim().toUpperCase().replace(" ", "");
@@ -170,7 +169,7 @@ public class CrossReferenceRunner {
       valid = !cleaned.isEmpty();
       detail = valid ? "company registration document verified" : "register number is empty";
     }
-    String severity = valid ? "PASSED" : "WARNING";
+    FindingSeverity severity = valid ? FindingSeverity.PASSED : FindingSeverity.WARNING;
     return new ValidationFinding(severity, "Company Register: " + registerNo + " — " + detail, source, RiskType.POLICY_COMPLIANCE);
   }
 
@@ -181,7 +180,7 @@ public class CrossReferenceRunner {
   public static ValidationFinding validateVatId(String vatId, String country) {
     String source = "VAT Validation";
     if (vatId == null || vatId.trim().isEmpty()) {
-      return new ValidationFinding("WARNING",
+      return new ValidationFinding(FindingSeverity.WARNING,
           "No VAT ID provided — may be exempt for sole traders or certain legal forms", source, RiskType.POLICY_COMPLIANCE);
     }
     String cleaned = vatId.trim().replace(" ", "").replace("-", "").toUpperCase();
@@ -192,13 +191,13 @@ public class CrossReferenceRunner {
       pattern = VAT_PATTERNS.get(cleaned.substring(0, 2));
     }
     if (pattern == null) {
-      return new ValidationFinding("PASSED",
+      return new ValidationFinding(FindingSeverity.PASSED,
           "VAT ID " + vatId + " — accepted (no country-specific format rule configured)", source, RiskType.POLICY_COMPLIANCE);
     }
     if (cleaned.matches(pattern)) {
-      return new ValidationFinding("PASSED", "VAT ID " + vatId + " — confirmed", source, RiskType.POLICY_COMPLIANCE);
+      return new ValidationFinding(FindingSeverity.PASSED, "VAT ID " + vatId + " — confirmed", source, RiskType.POLICY_COMPLIANCE);
     }
-    return new ValidationFinding("FAILURE",
+    return new ValidationFinding(FindingSeverity.FAILURE,
         "VAT ID " + vatId + " — format invalid for country " + countryCode
             + " (expected pattern: " + pattern + ")", source, RiskType.POLICY_COMPLIANCE);
   }
@@ -212,7 +211,7 @@ public class CrossReferenceRunner {
       List<Supplier> matchedSuppliers) {
     String source = "ERP Duplicate Check";
     if (matchedSuppliers == null || matchedSuppliers.isEmpty()) {
-      return new ValidationFinding("PASSED",
+      return new ValidationFinding(FindingSeverity.PASSED,
           "No duplicate in ERP — no similar suppliers found", source, RiskType.POLICY_COMPLIANCE);
     }
     long count = 0;
@@ -222,10 +221,10 @@ public class CrossReferenceRunner {
       }
     }
     if (count == 0) {
-      return new ValidationFinding("PASSED",
+      return new ValidationFinding(FindingSeverity.PASSED,
           "No duplicate in ERP (distinct from existing supplier record)", source, RiskType.POLICY_COMPLIANCE);
     }
-    return new ValidationFinding("WARNING",
+    return new ValidationFinding(FindingSeverity.WARNING,
         "Possible ERP duplicate: " + count + " similar supplier(s) found — manual review recommended",
         source, RiskType.POLICY_COMPLIANCE);
   }
@@ -238,7 +237,7 @@ public class CrossReferenceRunner {
       String excludeSupplierId) {
     String source = "ERP Duplicate Check";
     if (businessName == null || businessName.trim().isEmpty()) {
-      return new ValidationFinding("WARNING",
+      return new ValidationFinding(FindingSeverity.WARNING,
           "Business name not provided — ERP duplicate check skipped", source, RiskType.POLICY_COMPLIANCE);
     }
     SupplierSearchCriteria criteria = new SupplierSearchCriteria();
@@ -249,7 +248,7 @@ public class CrossReferenceRunner {
     SupplierAgentResponse response = SupplierRepository.getInstance().findSimilarSuppliers(criteria);
     List<Supplier> matches = response.getSuppliers();
     if (matches == null || matches.isEmpty()) {
-      return new ValidationFinding("PASSED",
+      return new ValidationFinding(FindingSeverity.PASSED,
           "No duplicate in ERP — no similar suppliers found", source, RiskType.POLICY_COMPLIANCE);
     }
     long count = 0;
@@ -259,10 +258,10 @@ public class CrossReferenceRunner {
       }
     }
     if (count == 0) {
-      return new ValidationFinding("PASSED",
+      return new ValidationFinding(FindingSeverity.PASSED,
           "No duplicate in ERP (distinct from existing supplier record)", source, RiskType.POLICY_COMPLIANCE);
     }
-    return new ValidationFinding("WARNING",
+    return new ValidationFinding(FindingSeverity.WARNING,
         "Possible ERP duplicate: " + count + " similar supplier(s) found — manual review recommended",
         source, RiskType.POLICY_COMPLIANCE);
   }

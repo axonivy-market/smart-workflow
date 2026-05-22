@@ -20,8 +20,8 @@
         <ui:repeat value="#{cc.attrs.auditTrail}" var="entry">
           <div class="so-tl-item">
             <div class="so-tl-left">
-              <div class="so-tl-bubble #{entry.actorType eq 'AGENT' ? 'so-tl-bubble-agent' : (entry.actorType eq 'SYSTEM' ? 'so-tl-bubble-pending' : (entry.actorType eq 'APPROVER' ? 'so-tl-bubble-completed' : 'so-tl-bubble-user'))}">
-                <i class="ti #{entry.actorType eq 'AGENT' ? 'ti-robot' : (entry.actorType eq 'SYSTEM' ? 'ti-settings' : (entry.actorType eq 'APPROVER' ? 'ti-user-check' : 'ti-user'))}" />
+              <div class="so-tl-bubble #{entry.bubbleClass}">
+                <i class="ti #{entry.icon}" />
               </div>
               <div class="so-tl-line" />
             </div>
@@ -43,7 +43,7 @@
                 <div class="so-tl-line-item so-log-line-ok">
                   <i class="ti ti-user" />
                   <span>#{entry.actor}</span>
-                  <span class="so-badge text-xs #{entry.actorTypeBadgeClass}">#{entry.actorType}</span>
+                  <span class="so-badge text-xs #{entry.actorTypeBadgeClass}">#{entry.actorRoleLabel}</span>
                 </div>
 
                 <!-- REQUEST item type: structured summary lines from the submitted form -->
@@ -57,8 +57,20 @@
                   </ui:repeat>
                 </ui:fragment>
 
-                <!-- Default: technicalDetail, comment, resolvedItems (AI entries + non-REQUEST USER entries) -->
+                <!-- Default: technicalDetail, matchedSupplierNames, comment, resolvedItems (AI entries + non-REQUEST USER entries) -->
                 <ui:fragment rendered="#{empty entry.requestSummaryLines}">
+                  <ui:fragment rendered="#{not empty entry.matchedSupplierNames}">
+                    <div class="so-tl-line-item so-tl-line-separator">
+                      <i class="ti ti-building-store" />
+                      <span class="font-semibold">Matched Suppliers</span>
+                    </div>
+                    <ui:repeat value="#{entry.matchedSupplierNames}" var="matchedName">
+                      <div class="so-tl-line-item">
+                        <i class="ti ti-building so-text-muted" />
+                        <span class="text-sm">#{matchedName}</span>
+                      </div>
+                    </ui:repeat>
+                  </ui:fragment>
                   <ui:fragment rendered="#{not empty entry.technicalDetail}">
                     <div class="so-tl-line-item">
                       <i class="ti ti-info-circle" />
@@ -102,12 +114,12 @@
                       <span class="font-semibold">Validation Findings</span>
                     </div>
                     <ui:repeat value="#{entry.findings}" var="f">
-                      <div class="so-tl-line-item #{f.severity eq 'FAILURE' ? 'so-log-line-error' : (f.severity eq 'WARNING' ? 'so-log-line-warning' : 'so-log-line-ok')}">
-                        <i class="ti #{f.severity eq 'FAILURE' ? 'ti-circle-x' : (f.severity eq 'WARNING' ? 'ti-alert-triangle' : 'ti-circle-check')} align-self-start" />
+                      <div class="so-tl-line-item #{f.logClass}">
+                        <i class="ti #{f.icon} align-self-start" />
                         <div class="flex flex-column gap-1 min-w-0">
                           <span class="text-sm">#{f.message}</span>
                           <div class="flex align-items-center gap-2">
-                            <span class="so-badge text-xs #{f.severity eq 'FAILURE' ? 'so-badge-red' : (f.severity eq 'WARNING' ? 'so-badge-yellow' : 'so-badge-green')}">#{f.severity}</span>
+                            <span class="so-badge text-xs #{f.badgeClass}">#{f.severity}</span>
                             <span class="so-text-muted text-xs">#{f.source}</span>
                           </div>
                         </div>

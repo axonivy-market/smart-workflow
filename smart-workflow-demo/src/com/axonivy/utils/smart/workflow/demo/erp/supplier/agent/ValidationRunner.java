@@ -22,6 +22,7 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProces
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.StepStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierPolicyRuleRepository;
 
@@ -127,7 +128,7 @@ public class ValidationRunner {
       boolean present = docs != null && docs.stream().anyMatch(d -> docType.equals(d.getDocumentType()));
       RiskKind messageKind = present ? RiskKind.AI_VALIDATION : RiskKind.MISSING_DOC;
       ValidationFinding f = new ValidationFinding(
-          present ? "PASSED" : "FAILURE",
+          present ? FindingSeverity.PASSED : FindingSeverity.FAILURE,
           Ivy.cms().co(messageKind.getCmsUri(), Arrays.asList(docType.getLabel())),
           docType.name(), RiskType.CERTIFICATION_VALIDITY);
       f.setDocumentTypeKey(docType.getDocumentTypeKey());
@@ -345,18 +346,14 @@ public class ValidationRunner {
     StringBuilder summary = new StringBuilder();
     if (result.getFindings() != null) {
       for (ValidationFinding finding : result.getFindings()) {
-        String sevKey = finding.getSeverity() != null ? finding.getSeverity().toUpperCase() : "";
-        if ("PASSED".equals(sevKey)) {
+        FindingSeverity sev = finding.getSeverity();
+        if (sev == FindingSeverity.PASSED) {
           continue;
         }
-        LogLineSeverity logSev = LogLineSeverity.OK;
-        if ("FAILURE".equals(sevKey)) {
-          logSev = LogLineSeverity.ERROR;
-        } else if ("WARNING".equals(sevKey)) {
-          logSev = LogLineSeverity.WARNING;
-        }
+        LogLineSeverity logSev = sev == FindingSeverity.FAILURE ? LogLineSeverity.ERROR
+            : sev == FindingSeverity.WARNING ? LogLineSeverity.WARNING : LogLineSeverity.OK;
         step.getLogLines().add(new AgentProcessingStep.LogLine(logSev, finding.getMessage()));
-        summary.append("[").append(finding.getSeverity()).append("] ")
+        summary.append("[").append(sev).append("] ")
                .append(finding.getMessage()).append("\n");
       }
     }
@@ -402,15 +399,11 @@ public class ValidationRunner {
     StringBuilder summary = new StringBuilder();
     if (result.getFindings() != null) {
       for (ValidationFinding finding : result.getFindings()) {
-        String sevKey = finding.getSeverity() != null ? finding.getSeverity().toUpperCase() : "";
-        LogLineSeverity logSev = LogLineSeverity.OK;
-        if ("FAILURE".equals(sevKey)) {
-          logSev = LogLineSeverity.ERROR;
-          summary.append("[").append(finding.getSeverity()).append("] ")
-                 .append(finding.getMessage()).append("\n");
-        } else if ("WARNING".equals(sevKey)) {
-          logSev = LogLineSeverity.WARNING;
-          summary.append("[").append(finding.getSeverity()).append("] ")
+        FindingSeverity sev = finding.getSeverity();
+        LogLineSeverity logSev = sev == FindingSeverity.FAILURE ? LogLineSeverity.ERROR
+            : sev == FindingSeverity.WARNING ? LogLineSeverity.WARNING : LogLineSeverity.OK;
+        if (sev == FindingSeverity.FAILURE || sev == FindingSeverity.WARNING) {
+          summary.append("[").append(sev).append("] ")
                  .append(finding.getMessage()).append("\n");
         }
         step.getLogLines().add(new AgentProcessingStep.LogLine(logSev, finding.getMessage()));
@@ -552,7 +545,7 @@ public class ValidationRunner {
       if (target == null) {
         continue;
       }
-      int rank = severityRank(finding.getSeverity());
+      int rank = finding.getSeverity() != null ? finding.getSeverity().rank : 0;
       if (rank <= 0) {
         continue;
       }
@@ -578,20 +571,6 @@ public class ValidationRunner {
       }
     }
     return null;
-  }
-
-  private static int severityRank(String severity) {
-    if (severity == null) {
-      return 0;
-    }
-    String key = severity.trim().toUpperCase();
-    if ("FAILURE".equals(key)) {
-      return 2;
-    }
-    if ("WARNING".equals(key)) {
-      return 1;
-    }
-    return 0;
   }
 
   private static String normalizeKey(String key) {
@@ -684,19 +663,24 @@ public class ValidationRunner {
   public static String buildSingleRuleSystemPrompt(SupplierPolicyRule rule) {
     int fullDeduction = rule.getRiskScore();
     int halfDeduction = Math.round(fullDeduction / 2.0f);
-    return "You are a supplier compliance auditor evaluating a single policy rule for supplier onboarding.\n\n"
-        + "RULE UNDER EVALUATION:\n"
-        + "Target: " + rule.getTarget() + "\n"
-        + "Policy: " + rule.getRule() + "\n"
-        + "Risk Score Deduction: " + fullDeduction + " points if violated\n\n"
-        + "Based on the supplier context and document content provided, evaluate whether this rule is satisfied.\n"
-        + "Produce a PolicyValidationResult with one or more ValidationFinding entries:\n"
-        + "- severity: PASSED (rule met), WARNING (partial/advisory), or FAILURE (rule violated)\n"
-        + "- message: specific explanation relevant to this rule\n"
-        + "- source: use \"" + rule.getTarget() + "\" as the source\n"
-        + "- documentTypeKey: CERTIFICATION:<NAME> or DOCUMENT:<NAME> if document-relevant, otherwise null\n"
-        + "- score: points deducted from the compliance score — 0 for PASSED, " + halfDeduction + " for WARNING, " + fullDeduction + " for FAILURE\n\n"
-        + "Focus ONLY on this specific rule. Do not evaluate or invent findings for other rules.";
+    return """
+        You are a supplier compliance auditor evaluating a single policy rule for supplier onboarding.
+
+        RULE UNDER EVALUATION:
+        Target: %s
+        Policy: %s
+        Risk Score Deduction: %d points if violated
+
+        Based on the supplier context and document content provided, evaluate whether this rule is satisfied.
+        Produce a PolicyValidationResult with one or more ValidationFinding entries:
+        - severity: PASSED (rule met), WARNING (partial/advisory), or FAILURE (rule violated)
+        - message: specific explanation relevant to this rule
+        - source: use "%s" as the source
+        - documentTypeKey: CERTIFICATION:<NAME> or DOCUMENT:<NAME> if document-relevant, otherwise null
+        - score: points deducted from the compliance score — 0 for PASSED, %d for WARNING, %d for FAILURE
+
+        Focus ONLY on this specific rule. Do not evaluate or invent findings for other rules."""
+        .formatted(rule.getTarget(), rule.getRule(), fullDeduction, rule.getTarget(), halfDeduction, fullDeduction);
   }
 
   /**
@@ -828,7 +812,7 @@ public class ValidationRunner {
     step.getLogLines().add(new AgentProcessingStep.LogLine(LogLineSeverity.ERROR,
         "Policy validation failed: " + msg));
     ValidationFinding errorFinding = new ValidationFinding(
-        "FAILURE", "Policy validation could not complete: " + msg, "system", RiskType.POLICY_COMPLIANCE);
+        FindingSeverity.FAILURE, "Policy validation could not complete: " + msg, "system", RiskType.POLICY_COMPLIANCE);
     errorFinding.setRiskKind(RiskKind.AI_VALIDATION);
     result.getFindings().add(errorFinding);
     result.setProcessingStep(step);

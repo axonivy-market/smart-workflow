@@ -5,8 +5,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalDecision;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage;
 import dev.langchain4j.model.output.structured.Description;
 
 public class AuditTrailEntry {
@@ -41,17 +39,17 @@ public class AuditTrailEntry {
   /** Resolved clarification items attached to this entry. Runtime-only, not part of LLM extraction. */
   private List<ResolvedClarificationItem> resolvedItems;
 
-  /** Semantic kind: AI for agent/system entries, USER for human-authored entries. */
-  private AuditEntryKind kind;
+  /** Explicit type of this audit entry — drives rendering and field ownership. */
+  private AuditEntryType entryType;
 
-  /** For USER entries: APPROVAL (decision) or REQUEST (initial submission summary). */
-  private AuditUserItemType itemType;
-
-  /** Populated only when itemType == REQUEST. Structured summary lines from the onboarding form. */
+  /** Populated only when entryType == REQUEST_SUBMITTED or REGISTRATION_CAPTURED. */
   private List<RequestSummaryLine> requestSummaryLines;
 
   /** Snapshot of ValidationFindings captured when an AI analysis completes. */
   private List<ValidationFinding> findings;
+
+  /** Names of matched/duplicate suppliers found during duplicate check. Set only on duplicate-check entries. */
+  private List<String> matchedSupplierNames;
 
   public String getTimestamp() {
     return timestamp;
@@ -83,15 +81,35 @@ public class AuditTrailEntry {
     };
   }
 
-  /** CSS badge class matching the actor-type bubble colour. */
+  /** CSS badge class: APPROVAL entries get green; agents purple; system gray; users blue. */
   public String getActorTypeBadgeClass() {
+    if (entryType == AuditEntryType.APPROVAL) return "so-badge-green";
     if (actorType == null) return "so-badge-gray";
     return switch (actorType) {
-      case APPROVER -> "so-badge-green";
-      case AGENT    -> "so-badge-purple";
-      case SYSTEM   -> "so-badge-gray";
-      case USER     -> "so-badge-blue";
+      case AGENT  -> "so-badge-purple";
+      case SYSTEM -> "so-badge-gray";
+      default     -> "so-badge-blue";
     };
+  }
+
+  /** CSS bubble class for the timeline node — APPROVAL entries use the completed style. */
+  public String getBubbleClass() {
+    if (entryType == AuditEntryType.APPROVAL) return "so-tl-bubble-completed";
+    return actorType != null ? actorType.bubbleClass : "so-tl-bubble-user";
+  }
+
+  /** Tabler icon name for the timeline bubble — APPROVAL entries use user-check. */
+  public String getIcon() {
+    if (entryType == AuditEntryType.APPROVAL) return "ti-user-check";
+    return actorType != null ? actorType.icon : "ti-user";
+  }
+
+  /** Display label for the actor role shown in the audit trail badge. */
+  public String getActorRoleLabel() {
+    if (entryType == AuditEntryType.APPROVAL) return "Approver";
+    if (actorType == AuditActorType.AGENT)    return "Agent";
+    if (actorType == AuditActorType.SYSTEM)   return "System";
+    return "User";
   }
 
   public String getActor() {
@@ -166,20 +184,12 @@ public class AuditTrailEntry {
     this.resolvedItems = resolvedItems;
   }
 
-  public AuditEntryKind getKind() {
-    return kind;
+  public AuditEntryType getEntryType() {
+    return entryType;
   }
 
-  public void setKind(AuditEntryKind kind) {
-    this.kind = kind;
-  }
-
-  public AuditUserItemType getItemType() {
-    return itemType;
-  }
-
-  public void setItemType(AuditUserItemType itemType) {
-    this.itemType = itemType;
+  public void setEntryType(AuditEntryType entryType) {
+    this.entryType = entryType;
   }
 
   public List<RequestSummaryLine> getRequestSummaryLines() {
@@ -196,5 +206,13 @@ public class AuditTrailEntry {
 
   public void setFindings(List<ValidationFinding> findings) {
     this.findings = findings;
+  }
+
+  public List<String> getMatchedSupplierNames() {
+    return matchedSupplierNames;
+  }
+
+  public void setMatchedSupplierNames(List<String> matchedSupplierNames) {
+    this.matchedSupplierNames = matchedSupplierNames;
   }
 }

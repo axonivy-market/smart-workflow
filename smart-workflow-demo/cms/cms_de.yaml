@@ -63,7 +63,7 @@ Dialogs:
                       Panel2Tag2: Vektorsuche
                       Panel2Tag3: Chat-Agent
                       Panel2Tag4: Kontextbewusst
-                      Panel2Title: Kontextuelle F&amp;A-Beratung
+                      Panel2Title: Kontextuelle F&A-Beratung
                       Panel3Desc: Die KI gleicht alle eingereichten Dokumente mit Beschaffungsrichtlinien ab und identifiziert fehlende Zertifizierungen, abgelaufene Nachweise und Compliance-Lücken — mit vollständiger Nachvollziehbarkeit.
                       Panel3Detail1: Alle Dokumente gegen 12+ Beschaffungsrichtlinien validiert
                       Panel3Detail2: Compliance-Lücken identifiziert und Elemente markiert, die Aufmerksamkeit erfordern
@@ -109,7 +109,7 @@ Dialogs:
                       Step1DotTitle: KI-Extraktion
                       Step1FlowLabel: KI-<br />Extraktion
                       Step2DotTitle: F&A-Beratung
-                      Step2FlowLabel: F&amp;A-<br />Beratung
+                      Step2FlowLabel: F&A-<br />Beratung
                       Step3DotTitle: Dokumentvalidierung
                       Step3FlowLabel: Dokument-<br />Validierung
                       Step4DotTitle: Risikobewertung
@@ -172,6 +172,8 @@ Dialogs:
                       GenProcessingSubtitle: Verarbeitung…
                       GenRetryButton: Wiederholen
                       GenerateDataButton: Daten generieren
+                      KbChunksDesc: Unten sind die Wissensdatenbankeinträge, die dem Chatbot in dieser Demo als Wissensbasis dienen.
+                      KbTabKnowledgeBase: RAG-Wissensdatenbank
                       NextButtonTitle: Weiter
                       PageTitle: Smart Workflow — Lieferanten-Onboarding Demo
                       PrevButtonTitle: Zurück
@@ -221,12 +223,10 @@ Dialogs:
                       ContinueToApprovalButton: Weiter zur Genehmigung
                       ContinueToClarificationButton: Weiter zur Klärung
                       InitialMessage: Klicken Sie auf Analysieren, um die KI-gestützte Validierung zu starten. Ich extrahiere Dokumente, prüfe die Richtlinienkonformität, validiere die finanzielle Gesundheit und berechne Schritt für Schritt einen Risiko-Score.
-                      StepSubtitle: 'Schritt 4 von 6 — Agent: Validierung & Risikobewertung'
+                      StepSubtitle: Schritt 4 von 6 — Validierung & Risikobewertung
                       ViewDeclineButton: Ablehnung anzeigen
                     SupplierClarification:
                       AdditionalInfoRequired: Zusätzliche Lieferanteninformationen erforderlich — bitte überprüfen Sie den Tab mit den Agentenergebnissen.
-                      AdditionalNotesPlaceholder: Erläutern Sie, warum bestimmte Dokumente fehlen, oder geben Sie alternative Informationen für das QM-Team an...
-                      AdditionalNotesTitle: Zusätzliche Hinweise / Erklärung
                       AnalysisResultTab: Analyseergebnis
                       BannerDescTemplate: Der Lieferanten-Agent hat einen Risiko-Score von {0}/100 berechnet, da Informationen fehlen oder unzureichend sind. Bitte stellen Sie die angeforderten Details bereit, damit der Agent die Anfrage neu bewerten kann.
                       BannerMetaTemplate: 'Fall: {0}Eingereicht von: {1}'
@@ -249,25 +249,26 @@ Dialogs:
                       SupplierDetailsTab: Lieferantendetails
                       WithdrawButton: Anfrage zurückziehen
                     SupplierDuplicateCheck:
+                      AgentAnalysisLabel: Agentenanalyse
+                      ConfirmDialogMessage: In der Datenbank sind mögliche Duplikate vorhanden. Möchten Sie dennoch einen neuen Lieferantendatensatz anlegen?
+                      ConfirmDialogTitle: Mögliche Duplikate gefunden
                       AgentSectionTitle: Lieferanten-Agent — Datenbankprüfung abgeschlossen
                       AgentSubtitleTemplate: Gesucht nach "{0}" — {1} potenzielleübereinstimmung(en) gefunden.
+                      SearchConditionLabel: Suchbedingung
+                      SearchConditionTemplate: 'Name="{0}"  Land="{1}"'
                       BusinessPurposeLabel: 'Geschäftszweck:'
-                      Chips: Wie wird Ähnlichkeit berechnet?|Wann sollte ich einen vorhandenen Lieferanten verwenden?|Was passiert, wenn keine Übereinstimmungen gefunden werden?
-                      ClickCardHint: Klicken Sie auf eine Karte, um sie auszuwählen
-                      CreateNewDesc: Mit der vollständigen Registrierung fortfahren — Name, Adresse, Kontakte, Banking und Compliance-Dokumente.
-                      CreateNewTitle: Neuen Lieferanten erstellen
-                      EmailLabel: 'E-Mail:'
-                      InitialMessage: Ich habe die Lieferantendatenbank nach möglichen Übereinstimmungen durchsucht. Überprüfen Sie die Ergebnisse unten und entscheiden Sie, wie Sie vorgehen möchten.
+                      Chips: Wie wird Ähnlichkeit berechnet?|Was passiert, wenn keine Übereinstimmungen gefunden werden?|Kann ich einen vorhandenen Lieferanten verwenden?
+                      EmailLabel: E-Mail
+                      InitialMessage: Ich habe die Lieferantendatenbank nach möglichen Übereinstimmungen durchsucht. Überprüfen Sie die Ergebnisse unten und bestätigen Sie, um mit der Erstellung eines neuen Lieferanten fortzufahren.
                       LegalFormLabel: 'Rechtsform:'
                       NoDuplicatesDesc: Es sind keine ähnlichen Lieferanten in der Datenbank vorhanden. Sie können mit der Registrierung dieses neuen Lieferanten fortfahren.
                       NoDuplicatesTitle: Keine Duplikate gefunden
                       PotentialMatchBadge: Mögliche Übereinstimmung
                       PotentialMatchesTitle: Mögliche Übereinstimmungen ({0})
-                      ProceedTitle: Wie möchten Sie vorgehen?
-                      StepSubtitle: 'Schritt 2 von 6 — Agent: Duplikat- & Ähnlichkeitsprüfung'
-                      UseExistingDesc: Diese Anfrage mit einem bereits registrierten Lieferanten verknüpfen und die erneute Registrierung überspringen.
-                      UseExistingTitle: Vorhandenen Lieferanten verwenden
-                      VatIdLabel: 'USt-ID:'
+                      StepSubtitle: Schritt 2 von 6 — Duplikat- & Ähnlichkeitsprüfung
+                      VatIdLabel: USt-ID
+                      WarningDesc: '{0} mögliche übereinstimmende Lieferant(en) in der Datenbank gefunden. Bitte überprüfen Sie vor der Bestätigung.'
+                      WarningTitle: Mögliche Übereinstimmungen gefunden
                     SupplierOnboardingApproval:
                       AnalysisResultTab: Analyseergebnis
                       ApprovalChainTitle: Genehmigungskette
@@ -366,8 +367,6 @@ Dialogs:
                         FinancialStabilityLabel: Finanzielle Stabilität
                         PolicyComplianceLabel: Richtlinienkonformität
                         PolicyFindingsTitle: Ergebnisse der Richtlinienvalidierung
-                        PolicyRulesDialogHeader: Richtlinien für die Lieferantenaufnahme
-                        PolicyRulesDialogIntro: Diese Regeln werden vom KI während des Richtlinienvalidierungsschritts ausgewertet. Jede Regel enthält einen maximalen Abzug bei Verletzung — voller Abzug für FEHLER, halb für WARNUNG.
                         RiskScoreCalculatedTooltip: Wie wird der Risiko-Score berechnet?
                         RiskScoreHelpDialogHeader: Wie der Risiko-Score berechnet wird
                         RiskScoreTitle: Risiko-Score
@@ -380,7 +379,6 @@ Dialogs:
                         ThresholdRed: Unter dem Mindestschwellenwert (< 40)
                         ThresholdYellow: Klärung erforderlich (40-69)
                         ValidationStepsTitle: Validierungsschritte
-                        ViewPolicyRulesTooltip: Richtlinien anzeigen
                       SupplierAiAssistant:
                         AssistantName: Lieferanten-KI-Assistent
                         ConfirmParseRequired: Laden Sie zuerst eine .txt- oder .md-Datei hoch und bestätigen Sie dann das Parsen.

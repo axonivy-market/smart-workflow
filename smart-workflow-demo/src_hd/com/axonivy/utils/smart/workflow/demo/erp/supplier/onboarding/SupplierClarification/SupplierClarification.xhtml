@@ -98,13 +98,9 @@
               </div>
             </div>
 
-            <div class="grid">
-              <!-- Left column -->
-              <div class="col-12 xl:col-8">
-
-                <!-- Missing items -->
-                <div class="so-card mb-3">
-                  <div class="flex justify-content-between align-items-center border-bottom-1 surface-border pb-2 mb-3">
+            <!-- Missing items -->
+            <div class="so-card mb-3">
+              <div class="flex justify-content-between align-items-center border-bottom-1 surface-border pb-2 mb-3">
                     <span class="text-base font-semibold">
                       <i class="ti ti-alert-circle mr-2" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/ItemsTitle')}
                     </span>
@@ -169,20 +165,6 @@
                     </div>
                   </ui:fragment>
                   </p:outputPanel>
-                </div>
-
-                <!-- Notes -->
-                <div class="so-card">
-                  <div class="so-card-title"><i class="ti ti-message-circle" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/AdditionalNotesTitle')}</div>
-                  <p:inputTextarea
-                    id="additionalNotes"
-                    value="#{data.additionalNotes}"
-                    rows="4"
-                    autoResize="false"
-                    style="width:100%;"
-                    placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/AdditionalNotesPlaceholder')}" />
-                </div>
-              </div>
             </div>
 
           </p:tab>

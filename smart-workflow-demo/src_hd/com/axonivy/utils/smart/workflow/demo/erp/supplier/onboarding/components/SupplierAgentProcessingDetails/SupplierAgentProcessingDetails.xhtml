@@ -148,13 +148,6 @@
                 onclick="soTlToggle(this)"
                 title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/ExpandCollapseTooltip')}">
                 <span class="so-tl-card-title"><h:outputText value="#{step.name}" /></span>
-                <ui:fragment rendered="#{step.stepKey == 'POLICY_VALIDATION'}">
-                  <button type="button" class="so-info-btn"
-                    onclick="event.stopPropagation(); PF('policyRulesDialog').show()"
-                    title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/ViewPolicyRulesTooltip')}">
-                    <i class="ti ti-info-circle" />
-                  </button>
-                </ui:fragment>
                 <span class="so-tl-card-time"><h:outputText value="#{cc.attrs.bean.getFormattedDuration(step)}" /></span>
                 <i class="ti ti-chevron-down so-tl-chevron" />
               </div>
@@ -178,8 +171,8 @@
             <i class="ti ti-shield-check mr-2" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/PolicyFindingsTitle')}
           </div>
           <ui:repeat value="#{cc.attrs.bean.policyValidationFindings}" var="finding">
-            <div class="so-finding-row #{cc.attrs.bean.getFindingRowClass(finding)}">
-              <i class="ti #{cc.attrs.bean.getFindingIcon(finding)}" />
+            <div class="so-finding-row #{finding.rowClass}">
+              <i class="ti #{finding.icon}" />
               <span><h:outputText value="#{finding.message}" /></span>
             </div>
           </ui:repeat>
@@ -192,7 +185,6 @@
   </h:panelGroup>
 
   <ui:include src="RiskScoreHelpDialog.xhtml" />
-  <ui:include src="PolicyRulesDialog.xhtml" />
 
   <ui:fragment rendered="#{not cc.attrs.readOnly}">
     <h:outputScript library="js" name="supplier-validation.js" target="head" />

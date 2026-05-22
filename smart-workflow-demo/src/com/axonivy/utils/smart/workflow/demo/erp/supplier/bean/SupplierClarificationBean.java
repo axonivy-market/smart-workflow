@@ -11,6 +11,7 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProces
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -60,7 +61,7 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
     if (clarificationFindings.isEmpty() && request != null
         && request.getPolicyValidationFindings() != null) {
       for (ValidationFinding f : request.getPolicyValidationFindings()) {
-        if (f.getSeverity() == null || !"PASSED".equalsIgnoreCase(f.getSeverity())) {
+        if (f.getSeverity() != FindingSeverity.PASSED) {
           clarificationFindings.add(f);
         }
       }
@@ -215,26 +216,6 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
     return String.format("%.1fs", step.getDurationMs() / 1000.0);
   }
 
-  // ── Findings ──────────────────────────────────────────────────────────────
-
-  public String getFindingRowClass(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) return "so-finding-green";
-    return switch (finding.getSeverity().toUpperCase()) {
-      case "FAILURE" -> "so-finding-red";
-      case "WARNING" -> "so-finding-yellow";
-      default        -> "so-finding-green";
-    };
-  }
-
-  public String getFindingIcon(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) return "ti-circle-check";
-    return switch (finding.getSeverity().toUpperCase()) {
-      case "FAILURE" -> "ti-circle-x";
-      case "WARNING" -> "ti-alert-triangle";
-      default        -> "ti-circle-check";
-    };
-  }
-
   // ── Resolve / expand ─────────────────────────────────────────────────────
 
   /**
@@ -277,7 +258,6 @@ public class SupplierClarificationBean extends ReadOnlySupplierDetailsBean {
     super.onDocumentSaved(doc);
     if (expandedItemIndex >= 0 && expandedItemIndex < clarificationFindings.size()) {
       clarificationFindings.get(expandedItemIndex).setResolved(true);
-      recalculateScore();
     }
   }
 

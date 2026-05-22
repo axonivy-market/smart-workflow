@@ -63,7 +63,7 @@ Dialogs:
                       Panel2Tag2: Vector Search
                       Panel2Tag3: Chat Agent
                       Panel2Tag4: Context-aware
-                      Panel2Title: Contextual Q&amp;A Guidance
+                      Panel2Title: Contextual Q&A Guidance
                       Panel3Desc: AI cross-checks all submitted documents against procurement policy rules, identifying missing certifications, expired credentials, and compliance gaps — with complete reasoning and full traceability.
                       Panel3Detail1: Validated all documents against 12+ procurement policy rules
                       Panel3Detail2: Identified compliance gaps and flagged items requiring attention
@@ -109,7 +109,7 @@ Dialogs:
                       Step1DotTitle: AI Extraction
                       Step1FlowLabel: AI<br />Extraction
                       Step2DotTitle: Q&A Guidance
-                      Step2FlowLabel: Q&amp;A<br />Guidance
+                      Step2FlowLabel: Q&A<br />Guidance
                       Step3DotTitle: Document Validation
                       Step3FlowLabel: Document<br />Validation
                       Step4DotTitle: Risk Scoring
@@ -172,6 +172,8 @@ Dialogs:
                       GenProcessingSubtitle: Processing…
                       GenRetryButton: Retry
                       GenerateDataButton: Generate Data
+                      KbChunksDesc: Below are the knowledge base entries used to provide knowledge for the chatbot you are going to use in this demo.
+                      KbTabKnowledgeBase: RAG Knowledge base
                       NextButtonTitle: Next
                       PageTitle: Smart Workflow — Supplier Onboarding Demo
                       PrevButtonTitle: Previous
@@ -221,12 +223,10 @@ Dialogs:
                       ContinueToApprovalButton: Continue to Approval
                       ContinueToClarificationButton: Continue to Clarification
                       InitialMessage: Click Analyze to run AI-powered validation. I'll extract documents, check policy compliance, validate financial health, and calculate a risk score step by step.
-                      StepSubtitle: 'Step 4 of 6 — Agent: Validation & Risk Scoring'
+                      StepSubtitle: Step 4 of 6 — Validation & Risk Scoring
                       ViewDeclineButton: View Decline
                     SupplierClarification:
                       AdditionalInfoRequired: Additional supplier information required — please check the agent findings tab for details.
-                      AdditionalNotesPlaceholder: Explain why certain documents are missing, or provide alternative information for the QM team...
-                      AdditionalNotesTitle: Additional Notes / Explanation
                       AnalysisResultTab: Analysis Result
                       BannerDescTemplate: The Supplier Agent calculated a risk score of {0}/100 due to missing or insufficient information. Please provide the requested details so the agent can re-evaluate and continue the workflow.
                       BannerMetaTemplate: 'Case: {0} <br />Submitted by: {1}'
@@ -249,25 +249,26 @@ Dialogs:
                       SupplierDetailsTab: Supplier Details
                       WithdrawButton: Withdraw Request
                     SupplierDuplicateCheck:
+                      AgentAnalysisLabel: Agent Analysis
+                      ConfirmDialogMessage: There are potential duplicate suppliers in the database. Do you still want to proceed with creating a new supplier record?
+                      ConfirmDialogTitle: Potential Duplicates Found
                       AgentSectionTitle: Supplier Agent — Database Check Complete
                       AgentSubtitleTemplate: Searched for "{0}" — {1} potential match(es) found.
-                      BusinessPurposeLabel: 'Business Purpose:'
-                      Chips: How is similarity calculated?|When should I use an existing supplier?|What if no matches are found?
-                      ClickCardHint: Click a card to select it
-                      CreateNewDesc: Proceed with full registration — name, address, contacts, banking, and compliance documents.
-                      CreateNewTitle: Create a new supplier
-                      EmailLabel: 'Email:'
-                      InitialMessage: I’ve scanned the supplier database for potential matches. Review the results below and choose how to proceed.
-                      LegalFormLabel: 'Legal Form:'
+                      SearchConditionLabel: Search Condition
+                      SearchConditionTemplate: 'name="{0}"  country="{1}"'
+                      BusinessPurposeLabel: Business Purpose
+                      Chips: How is similarity calculated?|What if no matches are found?|Can I use an existing supplier?
+                      EmailLabel: Email
+                      InitialMessage: I’ve scanned the supplier database for potential matches. Review the results below and confirm to proceed with creating a new supplier.
+                      LegalFormLabel: Legal Form
                       NoDuplicatesDesc: No similar suppliers exist in the database. You can proceed to register this as a new supplier.
                       NoDuplicatesTitle: No duplicates found
                       PotentialMatchBadge: Potential match
                       PotentialMatchesTitle: Potential Matches ({0})
-                      ProceedTitle: How would you like to proceed?
-                      StepSubtitle: 'Step 2 of 6 — Agent: Duplicate & Similarity Check'
-                      UseExistingDesc: Link this request to an already-registered supplier and skip re-registration.
-                      UseExistingTitle: Use existing supplier
-                      VatIdLabel: 'VAT ID:'
+                      StepSubtitle: ‘Step 2 of 6 — Duplicate & Similarity Check’
+                      VatIdLabel: VAT ID
+                      WarningDesc: '{0} potential matching supplier(s) found in the database. Please review before confirming.'
+                      WarningTitle: Potential Matches Found
                     SupplierOnboardingApproval:
                       AnalysisResultTab: Analysis Result
                       ApprovalChainTitle: Approval Chain
@@ -366,8 +367,6 @@ Dialogs:
                         FinancialStabilityLabel: Financial Stability
                         PolicyComplianceLabel: Policy Compliance
                         PolicyFindingsTitle: Policy Validation Findings
-                        PolicyRulesDialogHeader: Supplier Onboarding Policy Rules
-                        PolicyRulesDialogIntro: These rules are evaluated by AI during the Policy Validation step. Each rule carries a maximum deduction if violated — full deduction for FAILURE, half for WARNING.
                         RiskScoreCalculatedTooltip: How is the risk score calculated?
                         RiskScoreHelpDialogHeader: How the Risk Score is Calculated
                         RiskScoreTitle: Risk Score
@@ -380,7 +379,6 @@ Dialogs:
                         ThresholdRed: Below minimum threshold (< 40)
                         ThresholdYellow: Clarification required (40-69)
                         ValidationStepsTitle: Validation Steps
-                        ViewPolicyRulesTooltip: View policy rules
                       SupplierAiAssistant:
                         AssistantName: Supplier AI Assistant
                         ConfirmParseRequired: Upload a .txt or .md file first, then confirm parsing.

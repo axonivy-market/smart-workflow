@@ -118,13 +118,6 @@
 .so-audit-action { color: #94a3b8; }
 .so-audit-detail { background: #0f172a; }
 
-/* ── Match card selected ─────────────────────────────────────────── */
-.so-match-card--selected { background: #1a1040; }
-
-/* ── Option icons ────────────────────────────────────────────────── */
-.so-option-icon--purple { background: #1a1040; }
-.so-option-icon--green  { background: #0e2820; }
-
 /* ── Doc row expand panel ────────────────────────────────────────── */
 .so-doc-row-expand { background: #1e293b; }
 
@@ -228,10 +221,6 @@
 .so-help-threshold-green  { background: #0e2820; color: #6ee7b7; border-color: #1a4d38; }
 .so-help-threshold-yellow { background: #231a08; color: #fcd34d; border-color: #4a3a0a; }
 .so-help-threshold-red    { background: #2a1520; color: #fda4af; border-color: #6b2d40; }
-
-/* ── Policy rules dialog ─────────────────────────────────────────── */
-.so-policy-rule-item { background: #0f172a; border-color: #334155; }
-.so-policy-rule-text { color: #94a3b8; }
 
 /* ── Clarification upload area ───────────────────────────────────── */
 .so-clarification-upload .ui-fileupload-buttonbar {

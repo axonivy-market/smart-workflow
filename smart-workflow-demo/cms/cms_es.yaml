@@ -63,7 +63,7 @@ Dialogs:
                       Panel2Tag2: Búsqueda vectorial
                       Panel2Tag3: Agente de chat
                       Panel2Tag4: Consciente del contexto
-                      Panel2Title: Guía contextual de P&amp;R
+                      Panel2Title: Guía contextual de P&R
                       Panel3Desc: La IA compara todos los documentos enviados con las reglas de política de adquisiciones, identificando certificaciones faltantes, credenciales vencidas y brechas de cumplimiento — con razonamiento completo y trazabilidad total.
                       Panel3Detail1: Todos los documentos validados contra más de 12 reglas de política de adquisiciones
                       Panel3Detail2: Brechas de cumplimiento identificadas y elementos marcados que requieren atención
@@ -109,7 +109,7 @@ Dialogs:
                       Step1DotTitle: Extracción con IA
                       Step1FlowLabel: Extracción<br />con IA
                       Step2DotTitle: Guía P&R
-                      Step2FlowLabel: Guía<br />P&amp;R
+                      Step2FlowLabel: Guía<br />P&R
                       Step3DotTitle: Validación de documentos
                       Step3FlowLabel: Validación de<br />documentos
                       Step4DotTitle: Puntuación de riesgo
@@ -172,6 +172,8 @@ Dialogs:
                       GenProcessingSubtitle: Procesando…
                       GenRetryButton: Reintentar
                       GenerateDataButton: Generar datos
+                      KbChunksDesc: A continuación se muestran las entradas de la base de conocimiento utilizadas para proporcionar conocimiento al chatbot que usará en esta demo.
+                      KbTabKnowledgeBase: Base de conocimiento RAG
                       NextButtonTitle: Siguiente
                       PageTitle: Smart Workflow — Demo de incorporación de proveedores
                       PrevButtonTitle: Anterior
@@ -221,12 +223,10 @@ Dialogs:
                       ContinueToApprovalButton: Continuar a aprobación
                       ContinueToClarificationButton: Continuar a aclaración
                       InitialMessage: Haga clic en Analizar para ejecutar la validación con IA. Extraeré documentos, verificaré el cumplimiento de políticas, validaré la salud financiera y calcularé una puntuación de riesgo paso a paso.
-                      StepSubtitle: 'Paso 4 de 6 — Agente: Validación y Puntuación de Riesgo'
+                      StepSubtitle: Paso 4 de 6 — Validación y Puntuación de Riesgo
                       ViewDeclineButton: Ver rechazo
                     SupplierClarification:
                       AdditionalInfoRequired: Información adicional del proveedor requerida — por favor revise la pestaña de resultados del agente.
-                      AdditionalNotesPlaceholder: Explique por qué faltan ciertos documentos o proporcione información alternativa para el equipo de QM...
-                      AdditionalNotesTitle: Notas adicionales / Explicación
                       AnalysisResultTab: Resultado del análisis
                       BannerDescTemplate: El Agente de Proveedor calculó una puntuación de riesgo de {0}/100 debido a información faltante o insuficiente. Proporcione los detalles solicitados para que el agente pueda reevaluar y continuar el flujo de trabajo.
                       BannerMetaTemplate: 'Caso: {0}<br />Enviado por: {1}'
@@ -249,25 +249,26 @@ Dialogs:
                       SupplierDetailsTab: Detalles del proveedor
                       WithdrawButton: Retirar solicitud
                     SupplierDuplicateCheck:
+                      AgentAnalysisLabel: Análisis del agente
+                      ConfirmDialogMessage: Existen proveedores potencialmente duplicados en la base de datos. ¿Desea continuar y crear un nuevo registro de proveedor?
+                      ConfirmDialogTitle: Posibles duplicados encontrados
                       AgentSectionTitle: Agente de proveedor — Verificación de base de datos completada
                       AgentSubtitleTemplate: Buscado "{0}" — {1} coincidencia(s) potencial(es) encontrada(s).
-                      BusinessPurposeLabel: 'Propósito empresarial:'
-                      Chips: ¿Cómo se calcula la similitud?|¿Cuándo debo usar un proveedor existente?|¿Qué pasa si no se encuentran coincidencias?
-                      ClickCardHint: Haga clic en una tarjeta para seleccionarla
-                      CreateNewDesc: Proceder con el registro completo — nombre, dirección, contactos, datos bancarios y documentos de cumplimiento.
-                      CreateNewTitle: Crear nuevo proveedor
-                      EmailLabel: 'Correo electrónico:'
-                      InitialMessage: He analizado la base de datos de proveedores en busca de posibles coincidencias. Revise los resultados a continuación y elija cómo proceder.
-                      LegalFormLabel: 'Forma jurídica:'
+                      SearchConditionLabel: Condición de búsqueda
+                      SearchConditionTemplate: 'nombre="{0}"  país="{1}"'
+                      BusinessPurposeLabel: Propósito empresarial
+                      Chips: ¿Cómo se calcula la similitud?|¿Qué pasa si no se encuentran coincidencias?|¿Puedo usar un proveedor existente?
+                      EmailLabel: Correo electrónico
+                      InitialMessage: He analizado la base de datos de proveedores en busca de posibles coincidencias. Revise los resultados a continuación y confirme para proceder con la creación de un nuevo proveedor.
+                      LegalFormLabel: Forma jurídica
                       NoDuplicatesDesc: No existen proveedores similares en la base de datos. Puede proceder a registrar este como nuevo proveedor.
                       NoDuplicatesTitle: No se encontraron duplicados
                       PotentialMatchBadge: Coincidencia potencial
                       PotentialMatchesTitle: Coincidencias potenciales ({0})
-                      ProceedTitle: ¿Cómo desea proceder?
-                      StepSubtitle: 'Paso 2 de 6 — Agente: Verificación de duplicados y similitud'
-                      UseExistingDesc: Vincular esta solicitud a un proveedor ya registrado y omitir el nuevo registro.
-                      UseExistingTitle: Usar proveedor existente
-                      VatIdLabel: 'ID IVA:'
+                      StepSubtitle: Paso 2 de 6 — Verificación de duplicados y similitud
+                      VatIdLabel: ID IVA
+                      WarningDesc: '{0} proveedor(es) potencialmente duplicado(s) encontrado(s) en la base de datos. Por favor revise antes de confirmar.'
+                      WarningTitle: Coincidencias potenciales encontradas
                     SupplierOnboardingApproval:
                       AnalysisResultTab: Resultado del análisis
                       ApprovalChainTitle: Cadena de aprobación
@@ -366,8 +367,6 @@ Dialogs:
                         FinancialStabilityLabel: Estabilidad Financiera
                         PolicyComplianceLabel: Cumplimiento de Política
                         PolicyFindingsTitle: Resultados de Validación de Política
-                        PolicyRulesDialogHeader: Reglas de Política de Incorporación de Proveedores
-                        PolicyRulesDialogIntro: Estas reglas son evaluadas por IA durante el paso de Validación de Política. Cada regla tiene una deducción máxima si se viola — deducción completa por FALLO, mitad por ADVERTENCIA.
                         RiskScoreCalculatedTooltip: ¿Cómo se calcula la puntuación de riesgo?
                         RiskScoreHelpDialogHeader: Cómo se Calcula la Puntuación de Riesgo
                         RiskScoreTitle: Puntuación de Riesgo
@@ -380,7 +379,6 @@ Dialogs:
                         ThresholdRed: Por debajo del umbral mínimo (< 40)
                         ThresholdYellow: Aclaración requerida (40-69)
                         ValidationStepsTitle: Pasos de Validación
-                        ViewPolicyRulesTooltip: Ver reglas de política
                       SupplierAiAssistant:
                         AssistantName: Asistente IA de Proveedores
                         ConfirmParseRequired: Primero cargue un archivo .txt o .md y luego confirme el análisis.

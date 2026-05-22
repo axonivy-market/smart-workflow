@@ -9,8 +9,6 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentRes
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
-
 import ch.ivyteam.ivy.environment.Ivy;
 
 /**
@@ -145,48 +143,6 @@ public class SupplierOnboardingCompletionBean extends ReadOnlySupplierDetailsBea
   public String getFormattedDuration(AgentProcessingStep step) {
     if (step == null || step.getDurationMs() == null) return "";
     return String.format("%.1fs", step.getDurationMs() / 1000.0);
-  }
-
-  // ── Findings ──────────────────────────────────────────────────────────────
-
-  public String getFindingRowClass(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) return "so-finding-green";
-    return switch (finding.getSeverity().toUpperCase()) {
-      case "FAILURE" -> "so-finding-red";
-      case "WARNING" -> "so-finding-yellow";
-      default        -> "so-finding-green";
-    };
-  }
-
-  public String getFindingIcon(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) return "ti-circle-check";
-    return switch (finding.getSeverity().toUpperCase()) {
-      case "FAILURE" -> "ti-circle-x";
-      case "WARNING" -> "ti-alert-triangle";
-      default        -> "ti-circle-check";
-    };
-  }
-
-  // ── Audit timeline ────────────────────────────────────────────────────────
-
-  public String getAuditBubbleClass(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType actorType) {
-    if (actorType == null) return "so-tl-bubble-completed";
-    return switch (actorType) {
-      case APPROVER -> "so-tl-bubble-completed";
-      case AGENT    -> "so-tl-bubble-running";
-      case USER     -> "so-tl-bubble-completed";
-      default       -> "so-tl-bubble-completed";
-    };
-  }
-
-  public String getAuditIcon(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType actorType) {
-    if (actorType == null) return "ti-cpu";
-    return switch (actorType) {
-      case APPROVER -> "ti-user-check";
-      case AGENT    -> "ti-robot";
-      case USER     -> "ti-user";
-      default       -> "ti-cpu";
-    };
   }
 
   // ── Notification avatar initials ──────────────────────────────────────────

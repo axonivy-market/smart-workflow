@@ -16,14 +16,11 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProces
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalDecision;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditEntryKind;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditEntryType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditUserItemType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval.SupplierOnboardingApprovalData;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
-
 import ch.ivyteam.ivy.environment.Ivy;
 
 /**
@@ -93,9 +90,8 @@ public class SupplierOnboardingApprovalBean extends ReadOnlySupplierDetailsBean 
     AuditTrailEntry entry = new AuditTrailEntry();
     entry.setTimestamp(timestamp != null ? timestamp : Instant.now().toString());
     entry.setActor(actor);
-    entry.setActorType(AuditActorType.APPROVER);
-    entry.setKind(AuditEntryKind.USER);
-    entry.setItemType(AuditUserItemType.APPROVAL);
+    entry.setActorType(AuditActorType.USER);
+    entry.setEntryType(AuditEntryType.APPROVAL);
     String stageName = stage != null ? stage.name() : "";
     entry.setAction(stageName + " approval decision");
     entry.setTechnicalDetail(null);
@@ -224,26 +220,6 @@ public class SupplierOnboardingApprovalBean extends ReadOnlySupplierDetailsBean 
   public String getFormattedDuration(AgentProcessingStep step) {
     if (step == null || step.getDurationMs() == null) return "";
     return String.format("%.1fs", step.getDurationMs() / 1000.0);
-  }
-
-  // ── Findings ──────────────────────────────────────────────────────────────
-
-  public String getFindingRowClass(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) return "so-finding-green";
-    return switch (finding.getSeverity().toUpperCase()) {
-      case "FAILURE" -> "so-finding-red";
-      case "WARNING" -> "so-finding-yellow";
-      default        -> "so-finding-green";
-    };
-  }
-
-  public String getFindingIcon(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) return "ti-circle-check";
-    return switch (finding.getSeverity().toUpperCase()) {
-      case "FAILURE" -> "ti-circle-x";
-      case "WARNING" -> "ti-alert-triangle";
-      default        -> "ti-circle-check";
-    };
   }
 
   // ── Getters ───────────────────────────────────────────────────────────────

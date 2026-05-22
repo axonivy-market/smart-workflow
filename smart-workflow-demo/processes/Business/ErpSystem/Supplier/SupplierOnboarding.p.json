@@ -25,7 +25,7 @@
       "id" : "f1",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 4912, "y" : 208 }
+        "at" : { "x" : 5024, "y" : 208 }
       }
     }, {
       "id" : "f4",
@@ -123,7 +123,30 @@
         "at" : { "x" : 1056, "y" : 208 }
       },
       "connect" : [
-        { "id" : "f103", "to" : "f160" }
+        { "id" : "f103", "to" : "f5a" }
+      ]
+    }, {
+      "id" : "f5a",
+      "type" : "Script",
+      "name" : "Capture duplicate check audit entry",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import java.util.ArrayList;",
+            "",
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(SupplierOnboardingProcessService.buildDuplicateCheckAuditEntry(in.request, in.agentResponse));"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 1232, "y" : 208 },
+        "size" : { "width" : 136, "height" : 54 }
+      },
+      "connect" : [
+        { "id" : "f5a1", "to" : "f160" }
       ]
     }, {
       "id" : "f160",
@@ -140,7 +163,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1224, "y" : 208 },
+        "at" : { "x" : 1392, "y" : 208 },
         "labelOffset" : { "x" : 17, "y" : 33 }
       },
       "connect" : [
@@ -161,61 +184,15 @@
         "output" : {
           "map" : {
             "out" : "in",
-            "out.request" : "result.request",
-            "out.continueWithSuggestedSupplier" : "result.useExistingSupplier"
+            "out.request" : "result.request"
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 1376, "y" : 208 }
+        "at" : { "x" : 1544, "y" : 208 }
       },
       "connect" : [
-        { "id" : "f104", "to" : "f7" }
-      ]
-    }, {
-      "id" : "f7",
-      "type" : "Alternative",
-      "name" : "Use suggested supplier?",
-      "config" : {
-        "conditions" : {
-          "f105" : "in.continueWithSuggestedSupplier != null && in.continueWithSuggestedSupplier"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 1536, "y" : 208 },
-        "labelOffset" : { "y" : 40 }
-      },
-      "connect" : [
-        { "id" : "f105", "to" : "f170", "label" : {
-            "name" : "Yes",
-            "offset" : { "x" : 25, "y" : -10 }
-          } },
-        { "id" : "f106", "to" : "f171", "label" : {
-            "name" : "No",
-            "offset" : { "x" : -3, "y" : -18 }
-          } }
-      ]
-    }, {
-      "id" : "f8",
-      "type" : "Script",
-      "name" : "Continue with suggested supplier",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
-            "",
-            "in.request.status = OnboardingStatus.SUPPLIER_DATA;",
-            "ivy.case.name = SupplierOnboardingProcessService.suggestedSupplierCaseName(in.request);"
-          ]
-        },
-        "sudo" : true
-      },
-      "visual" : {
-        "at" : { "x" : 1864, "y" : 80 }
-      },
-      "connect" : [
-        { "id" : "f107", "to" : "f9" }
+        { "id" : "f104", "to" : "f171" }
       ]
     }, {
       "id" : "f9",
@@ -231,40 +208,15 @@
         "output" : {
           "map" : {
             "out" : "in",
-            "out.request" : "result.request",
-            "out.goBack" : "result.goBack"
+            "out.request" : "result.request"
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 1864, "y" : 208 }
+        "at" : { "x" : 1968, "y" : 208 }
       },
       "connect" : [
-        { "id" : "f108", "to" : "f165" }
-      ]
-    }, {
-      "id" : "f165",
-      "type" : "Alternative",
-      "name" : "Back from registration?",
-      "config" : {
-        "conditions" : {
-          "f166" : "in.goBack != null && in.goBack"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 2000, "y" : 208 },
-        "labelOffset" : { "y" : -24 }
-      },
-      "connect" : [
-        { "id" : "f166", "to" : "f6", "via" : [ { "x" : 2000, "y" : 312 }, { "x" : 1384, "y" : 312 } ], "label" : {
-            "name" : "Back",
-            "segment" : 1.5,
-            "offset" : { "x" : -127, "y" : -18 }
-          } },
-        { "id" : "f167", "to" : "f10", "label" : {
-            "name" : "Proceed",
-            "offset" : { "x" : -3, "y" : -10 }
-          } }
+        { "id" : "f108", "to" : "f10" }
       ]
     }, {
       "id" : "f10",
@@ -274,16 +226,19 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import java.util.ArrayList;",
             "",
-            "in.goBack = false;",
             "in.request.status = OnboardingStatus.SUPPLIER_DATA;",
-            "in.summary = \"New supplier information captured (placeholder path).\";"
+            "in.summary = \"New supplier information captured (placeholder path).\";",
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(SupplierOnboardingProcessService.buildRegistrationAuditEntry(in.request));"
           ]
         },
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 2144, "y" : 208 }
+        "at" : { "x" : 2256, "y" : 208 }
       },
       "connect" : [
         { "id" : "f109", "to" : "f128" }
@@ -307,7 +262,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 2736, "y" : 208 }
+        "at" : { "x" : 2848, "y" : 208 }
       },
       "connect" : [
         { "id" : "f181", "to" : "f13" }
@@ -332,7 +287,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 2560, "y" : 208 }
+        "at" : { "x" : 2672, "y" : 208 }
       },
       "connect" : [
         { "id" : "f111", "to" : "f180" }
@@ -348,7 +303,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 2992, "y" : 208 },
+        "at" : { "x" : 3104, "y" : 208 },
         "labelOffset" : { "y" : -24 }
       },
       "connect" : [
@@ -361,7 +316,7 @@
             "segment" : 0.51,
             "offset" : { "x" : 57, "y" : 52 }
           } },
-        { "id" : "f114", "to" : "f24", "via" : [ { "x" : 2992, "y" : 320 } ], "label" : {
+        { "id" : "f114", "to" : "f24", "via" : [ { "x" : 3104, "y" : 320 } ], "label" : {
             "name" : "Red - Decline",
             "offset" : { "x" : 105, "y" : 26 }
           } }
@@ -381,7 +336,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3208, "y" : 208 }
+        "at" : { "x" : 3320, "y" : 208 }
       },
       "connect" : [
         { "id" : "f115", "to" : "f15" }
@@ -407,7 +362,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3464, "y" : 208 }
+        "at" : { "x" : 3576, "y" : 208 }
       },
       "connect" : [
         { "id" : "f116", "to" : "f185" }
@@ -426,7 +381,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3656, "y" : 208 }
+        "at" : { "x" : 3768, "y" : 208 }
       },
       "connect" : [
         { "id" : "f185a", "to" : "f16" }
@@ -446,7 +401,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3800, "y" : 208 }
+        "at" : { "x" : 3912, "y" : 208 }
       },
       "connect" : [
         { "id" : "f117", "to" : "f17" }
@@ -472,7 +427,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3928, "y" : 208 }
+        "at" : { "x" : 4040, "y" : 208 }
       },
       "connect" : [
         { "id" : "f118", "to" : "f186" }
@@ -491,7 +446,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 4080, "y" : 208 }
+        "at" : { "x" : 4192, "y" : 208 }
       },
       "connect" : [
         { "id" : "f186a", "to" : "f18" }
@@ -517,7 +472,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 4264, "y" : 208 }
+        "at" : { "x" : 4376, "y" : 208 }
       },
       "connect" : [
         { "id" : "f119", "to" : "f19t" }
@@ -537,7 +492,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 4432, "y" : 208 }
+        "at" : { "x" : 4544, "y" : 208 }
       },
       "connect" : [
         { "id" : "f119t", "to" : "f19" }
@@ -557,7 +512,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 4592, "y" : 208 }
+        "at" : { "x" : 4704, "y" : 208 }
       },
       "connect" : [
         { "id" : "f120", "to" : "f196" }
@@ -572,12 +527,12 @@
           "description" : "Provide additional supplier information for re-evaluation",
           "responsible" : {
             "type" : "MEMBERS_FROM_ATTRIBUTE",
-            "script" : "java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
+            "script" : "in1.clarificationCycleDisplay != null && in1.clarificationCycleDisplay > 1 ? java.util.Arrays.asList(\"QualityManager\", \"#\" + in1.sessionUsername) : java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 2992, "y" : 528 }
+        "at" : { "x" : 3104, "y" : 528 }
       },
       "connect" : [
         { "id" : "f121", "to" : "f21" }
@@ -607,7 +562,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3144, "y" : 528 }
+        "at" : { "x" : 3256, "y" : 528 }
       },
       "connect" : [
         { "id" : "f122", "to" : "f211" }
@@ -622,10 +577,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3432, "y" : 528 }
+        "at" : { "x" : 3544, "y" : 528 }
       },
       "connect" : [
-        { "id" : "f21w1", "to" : "f24", "via" : [ { "x" : 3432, "y" : 320 } ], "label" : {
+        { "id" : "f21w1", "to" : "f24", "via" : [ { "x" : 3544, "y" : 320 } ], "label" : {
             "name" : "Withdraw",
             "offset" : { "x" : 29, "y" : -10 }
           } },
@@ -644,7 +599,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3584, "y" : 528 },
+        "at" : { "x" : 3696, "y" : 528 },
         "labelOffset" : { "x" : 88, "y" : 16 }
       },
       "connect" : [
@@ -672,7 +627,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3584, "y" : 640 }
+        "at" : { "x" : 3696, "y" : 640 }
       },
       "connect" : [
         { "id" : "f21e1", "to" : "f21f" }
@@ -700,7 +655,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3832, "y" : 640 }
+        "at" : { "x" : 3944, "y" : 640 }
       },
       "connect" : [
         { "id" : "f21f1", "to" : "f21g" }
@@ -723,7 +678,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3832, "y" : 536 }
+        "at" : { "x" : 3944, "y" : 536 }
       },
       "connect" : [
         { "id" : "f21g1", "to" : "f22" }
@@ -736,6 +691,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.ClarificationRetryResult;",
@@ -760,7 +716,7 @@
             "boolean allResolved = findings != null && !findings.isEmpty();",
             "if (allResolved) {",
             "  for (ValidationFinding f : findings) {",
-            "    if (!\"PASSED\".equalsIgnoreCase(f.getSeverity()) && !f.isResolved()) { allResolved = false; break; }",
+            "    if (f.getSeverity() != FindingSeverity.PASSED && !f.isResolved()) { allResolved = false; break; }",
             "  }",
             "}",
             "if (allResolved) {",
@@ -778,7 +734,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3584, "y" : 424 }
+        "at" : { "x" : 3696, "y" : 424 }
       },
       "connect" : [
         { "id" : "f123", "to" : "f23" }
@@ -794,16 +750,16 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3768, "y" : 424 },
+        "at" : { "x" : 3880, "y" : 424 },
         "labelOffset" : { "x" : 80, "y" : 16 }
       },
       "connect" : [
-        { "id" : "f124a", "to" : "f13", "via" : [ { "x" : 4144, "y" : 424 }, { "x" : 4144, "y" : 832 }, { "x" : 2888, "y" : 832 }, { "x" : 2888, "y" : 208 } ], "label" : {
+        { "id" : "f124a", "to" : "f13", "via" : [ { "x" : 4256, "y" : 424 }, { "x" : 4256, "y" : 832 }, { "x" : 3000, "y" : 832 }, { "x" : 3000, "y" : 208 } ], "label" : {
             "name" : "All resolved",
             "segment" : 2.27,
             "offset" : { "x" : 24, "y" : -25 }
           } },
-        { "id" : "f124", "to" : "f128", "via" : [ { "x" : 4016, "y" : 424 }, { "x" : 4016, "y" : 712 }, { "x" : 2296, "y" : 712 } ], "label" : {
+        { "id" : "f124", "to" : "f128", "via" : [ { "x" : 4128, "y" : 424 }, { "x" : 4128, "y" : 712 }, { "x" : 2408, "y" : 712 } ], "label" : {
             "name" : "Retry Validation",
             "segment" : 2.15,
             "offset" : { "x" : 54, "y" : 20 }
@@ -842,7 +798,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 3768, "y" : 320 }
+        "at" : { "x" : 3880, "y" : 320 }
       },
       "connect" : [
         { "id" : "f126", "to" : "f24t" }
@@ -862,7 +818,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3976, "y" : 320 }
+        "at" : { "x" : 4088, "y" : 320 }
       },
       "connect" : [
         { "id" : "f126t", "to" : "f25" }
@@ -882,16 +838,16 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 4272, "y" : 320 }
+        "at" : { "x" : 4384, "y" : 320 }
       },
       "connect" : [
-        { "id" : "f195", "to" : "f196", "via" : [ { "x" : 4784, "y" : 320 } ] }
+        { "id" : "f195", "to" : "f196", "via" : [ { "x" : 4896, "y" : 320 } ] }
       ]
     }, {
       "id" : "f128",
       "type" : "Alternative",
       "visual" : {
-        "at" : { "x" : 2296, "y" : 208 }
+        "at" : { "x" : 2408, "y" : 208 }
       },
       "connect" : [
         { "id" : "f129", "to" : "f191", "label" : {
@@ -927,27 +883,6 @@
         { "id" : "f163", "to" : "f5", "color" : "default" }
       ]
     }, {
-      "id" : "f170",
-      "type" : "TaskSwitchEvent",
-      "name" : "Continue with suggested supplier",
-      "config" : {
-        "task" : {
-          "name" : "Continue with suggested supplier - <%= in1.request.supplier.businessName %>",
-          "description" : "Continue onboarding with the existing suggested supplier",
-          "responsible" : {
-            "type" : "MEMBERS_FROM_ATTRIBUTE",
-            "script" : "java.util.Arrays.asList(\"Procurement\", \"#\" + in1.sessionUsername)"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 1536, "y" : 80 },
-        "labelOffset" : { "x" : -95, "y" : 9 }
-      },
-      "connect" : [
-        { "id" : "f172", "to" : "f8" }
-      ]
-    }, {
       "id" : "f171",
       "type" : "TaskSwitchEvent",
       "name" : "Register new supplier",
@@ -962,11 +897,34 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1688, "y" : 208 },
+        "at" : { "x" : 1672, "y" : 208 },
         "labelOffset" : { "x" : 25, "y" : -23 }
       },
       "connect" : [
-        { "id" : "f173", "to" : "f9" }
+        { "id" : "f173", "to" : "f171a" }
+      ]
+    }, {
+      "id" : "f171a",
+      "type" : "Script",
+      "name" : "Capture duplicate decision (new)",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
+            "import java.util.ArrayList;",
+            "",
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(SupplierOnboardingProcessService.buildDuplicateDecisionAuditEntry(in.request, false));"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 1816, "y" : 209 },
+        "size" : { "width" : 128, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f171a1", "to" : "f9" }
       ]
     }, {
       "id" : "f191",
@@ -983,7 +941,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 2400, "y" : 208 },
+        "at" : { "x" : 2512, "y" : 208 },
         "labelOffset" : { "x" : 17, "y" : 33 }
       },
       "connect" : [
@@ -997,7 +955,7 @@
         "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FinishDemo:start()"
       },
       "visual" : {
-        "at" : { "x" : 4784, "y" : 208 }
+        "at" : { "x" : 4896, "y" : 208 }
       },
       "connect" : [
         { "id" : "f197", "to" : "f1", "color" : "default" }
@@ -1047,7 +1005,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 2992, "y" : 416 }
+        "at" : { "x" : 3104, "y" : 416 }
       },
       "connect" : [
         { "id" : "f202", "to" : "f20" }
@@ -1070,9 +1028,11 @@
     }, {
       "id" : "f211",
       "type" : "Script",
+      "name" : "Post processing",
       "config" : {
         "output" : {
           "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;",
             "",
@@ -1082,7 +1042,7 @@
             "",
             "if (allResolved) {",
             "  for (ValidationFinding f : findings) {",
-            "    if (!\"PASSED\".equalsIgnoreCase(f.getSeverity()) && !f.isResolved()) { allResolved = false; break; }",
+            "    if (f.getSeverity() != FindingSeverity.PASSED && !f.isResolved()) { allResolved = false; break; }",
             "  }",
             "}",
             "if (allResolved) {",
@@ -1099,7 +1059,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 3304, "y" : 528 }
+        "at" : { "x" : 3416, "y" : 528 }
       },
       "connect" : [
         { "id" : "f212", "to" : "f21w", "color" : "default" }

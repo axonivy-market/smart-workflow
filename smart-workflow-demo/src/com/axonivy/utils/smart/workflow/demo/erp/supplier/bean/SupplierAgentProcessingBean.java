@@ -20,14 +20,13 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtracti
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.PolicyValidationResult;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.RiskScoreResult;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.StepStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.utils.IvyAdapterService;
@@ -272,36 +271,6 @@ public class SupplierAgentProcessingBean implements Serializable {
     return String.format("%.1fs", seconds);
   }
 
-  // ── Policy rules ────────────────────────────────────────────────────────────
-
-  public List<SupplierPolicyRule> getPolicyRules() {
-    return ValidationRunner.loadPolicyRules();
-  }
-
-  // ── Findings ────────────────────────────────────────────────────────────────
-
-  public String getFindingRowClass(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) {
-      return "so-finding-green";
-    }
-      return switch (finding.getSeverity().toUpperCase()) {
-          case "FAILURE" -> "so-finding-red";
-          case "WARNING" -> "so-finding-yellow";
-          default -> "so-finding-green";
-      };
-  }
-
-  public String getFindingIcon(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) {
-      return "ti-circle-check";
-    }
-      return switch (finding.getSeverity().toUpperCase()) {
-          case "FAILURE" -> "ti-circle-x";
-          case "WARNING" -> "ti-alert-triangle";
-          default -> "ti-circle-check";
-      };
-  }
-
   // ── Routing button ──────────────────────────────────────────────────────────
 
   public String getContinueButtonLabel() {
@@ -466,12 +435,12 @@ public class SupplierAgentProcessingBean implements Serializable {
       List<ValidationFinding> findings = new ArrayList<>();
       if (policyValidationResult != null && policyValidationResult.getFindings() != null) {
         policyValidationResult.getFindings().stream()
-            .filter(f -> "FAILURE".equalsIgnoreCase(f.getSeverity()) || "WARNING".equalsIgnoreCase(f.getSeverity()))
+            .filter(f -> f.getSeverity() == FindingSeverity.FAILURE || f.getSeverity() == FindingSeverity.WARNING)
             .forEach(findings::add);
       }
       if (financialValidationResult != null && financialValidationResult.getFindings() != null) {
         financialValidationResult.getFindings().stream()
-            .filter(f -> "FAILURE".equalsIgnoreCase(f.getSeverity()) || "WARNING".equalsIgnoreCase(f.getSeverity()))
+            .filter(f -> f.getSeverity() == FindingSeverity.FAILURE || f.getSeverity() == FindingSeverity.WARNING)
             .filter(f -> findings.stream().noneMatch(existing -> java.util.Objects.equals(existing.getMessage(), f.getMessage())))
             .forEach(findings::add);
       }

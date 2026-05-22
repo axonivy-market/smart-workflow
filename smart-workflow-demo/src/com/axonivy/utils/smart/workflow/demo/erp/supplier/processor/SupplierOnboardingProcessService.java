@@ -8,14 +8,14 @@ import com.axonivy.utils.smart.workflow.demo.erp.shared.Address;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditEntryKind;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditEntryType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditUserItemType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationProblemType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.NotificationRecord;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ResolvedClarificationItem;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 
 public class SupplierOnboardingProcessService {
@@ -43,8 +43,7 @@ public class SupplierOnboardingProcessService {
     entry.setTimestamp(Instant.now().toString());
     entry.setActor(requesterName(req));
     entry.setActorType(AuditActorType.USER);
-    entry.setKind(AuditEntryKind.USER);
-    entry.setItemType(AuditUserItemType.REQUEST);
+    entry.setEntryType(AuditEntryType.REQUEST_SUBMITTED);
     entry.setAction("Supplier onboarding request submitted");
     entry.setRequestSummaryLines(req != null ? req.buildSummaryLines() : List.of());
     return entry;
@@ -60,18 +59,13 @@ public class SupplierOnboardingProcessService {
     req.setStatus(OnboardingStatus.REQUEST);
   }
 
-  public static String suggestedSupplierCaseName(OnboardingRequest req) {
-    String name = supplierName(req);
-    return "Supplier Onboarding - " + name + " (existing)";
-  }
-
   public static AuditTrailEntry buildQmIsmAuditEntry(int cycle, String notes) {
     String detail = notes != null ? notes : "";
     AuditTrailEntry entry = new AuditTrailEntry();
     entry.setTimestamp(Instant.now().toString());
     entry.setActor("QM/ISM Manager");
     entry.setActorType(AuditActorType.USER);
-    entry.setKind(AuditEntryKind.USER);
+    entry.setEntryType(AuditEntryType.QM_ASSISTANCE);
     entry.setAction("QM/ISM clarification assistance provided — cycle " + cycle);
     entry.setTechnicalDetail(detail.length() > 200 ? detail.substring(0, 200) : detail);
     return entry;
@@ -101,7 +95,7 @@ public class SupplierOnboardingProcessService {
     entry.setTimestamp(now);
     entry.setActor(submitter);
     entry.setActorType(AuditActorType.USER);
-    entry.setKind(AuditEntryKind.USER);
+    entry.setEntryType(AuditEntryType.CLARIFICATION_SUBMITTED);
     entry.setAction("Clarification cycle " + newCount + " submitted — re-evaluating");
     entry.setTechnicalDetail(notes.length() > 200 ? notes.substring(0, 200) : notes);
     if (!resolved.isEmpty()) {
@@ -126,7 +120,7 @@ public class SupplierOnboardingProcessService {
       if (resp != null && resp.getValidationFindings() != null) {
         int count = 0;
         for (ValidationFinding f : resp.getValidationFindings()) {
-          if ("FAILURE".equalsIgnoreCase(f.getSeverity())) {
+          if (f.getSeverity() == FindingSeverity.FAILURE) {
             sb.append(" ").append(f.getMessage()).append(";");
             if (++count >= 5) {
               break;
@@ -144,7 +138,7 @@ public class SupplierOnboardingProcessService {
     List<String> reasons = new ArrayList<>();
     if (resp != null && resp.getValidationFindings() != null) {
       for (ValidationFinding f : resp.getValidationFindings()) {
-        if ("FAILURE".equalsIgnoreCase(f.getSeverity())) {
+        if (f.getSeverity() == FindingSeverity.FAILURE) {
           reasons.add(f.getMessage());
         }
         if (reasons.size() >= 5) {
@@ -184,14 +178,55 @@ public class SupplierOnboardingProcessService {
     entry.setTimestamp(now);
     entry.setActor(isWithdrawal ? requesterName(req) : "Supplier Agent");
     entry.setActorType(isWithdrawal ? AuditActorType.USER : AuditActorType.AGENT);
-    entry.setKind(isWithdrawal ? AuditEntryKind.USER : AuditEntryKind.AI);
+    entry.setEntryType(AuditEntryType.DECLINE);
     entry.setAction(isWithdrawal
         ? "Request withdrawn by requester"
         : "Automatic decline: risk score " + agg + "/100 (" + lvl + ") — below threshold 40");
-    entry.setTechnicalDetail("DECLINE");
     entry.setDeclineReasons(reasons);
 
     return new DeclineOrchestrationResult(summary, "Supplier Onboarding Declined - " + name, notifications, entry);
+  }
+
+  public static AuditTrailEntry buildDuplicateCheckAuditEntry(OnboardingRequest req, SupplierAgentResponse resp) {
+    int count = (req != null && req.getMatchedSuppliers() != null) ? req.getMatchedSuppliers().size() : 0;
+    List<String> names = new ArrayList<>();
+    if (req != null && req.getMatchedSuppliers() != null) {
+      for (com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier s : req.getMatchedSuppliers()) {
+        if (s.getBusinessName() != null) names.add(s.getBusinessName());
+      }
+    }
+    AuditTrailEntry entry = new AuditTrailEntry();
+    entry.setTimestamp(Instant.now().toString());
+    entry.setActor("Supplier Validation Agent");
+    entry.setActorType(AuditActorType.AGENT);
+    entry.setEntryType(AuditEntryType.DUPLICATE_CHECK);
+    entry.setAction("Duplicate check complete \u2014 " + count + " match(es) found");
+    if (!names.isEmpty()) entry.setMatchedSupplierNames(names);
+    return entry;
+  }
+
+  public static AuditTrailEntry buildDuplicateDecisionAuditEntry(OnboardingRequest req, boolean usedSuggested) {
+    String name = supplierName(req);
+    AuditTrailEntry entry = new AuditTrailEntry();
+    entry.setTimestamp(Instant.now().toString());
+    entry.setActor(requesterName(req));
+    entry.setActorType(AuditActorType.USER);
+    entry.setEntryType(AuditEntryType.DUPLICATE_DECISION);
+    entry.setAction(usedSuggested
+        ? "Duplicate review: proceeding with existing supplier \u2018" + name + "\u2019"
+        : "Duplicate review: registering \u2018" + name + "\u2019 as new supplier");
+    return entry;
+  }
+
+  public static AuditTrailEntry buildRegistrationAuditEntry(OnboardingRequest req) {
+    AuditTrailEntry entry = new AuditTrailEntry();
+    entry.setTimestamp(Instant.now().toString());
+    entry.setActor(requesterName(req));
+    entry.setActorType(AuditActorType.USER);
+    entry.setEntryType(AuditEntryType.REGISTRATION_CAPTURED);
+    entry.setAction("Supplier registration details captured \u2014 " + supplierName(req));
+    entry.setRequestSummaryLines(req != null ? req.buildSummaryLines() : List.of());
+    return entry;
   }
 
   public static AuditTrailEntry buildAgentAnalysisAuditEntry(
@@ -210,7 +245,7 @@ public class SupplierOnboardingProcessService {
     entry.setTimestamp(now);
     entry.setActor("Supplier Validation Agent");
     entry.setActorType(AuditActorType.AGENT);
-    entry.setKind(AuditEntryKind.AI);
+    entry.setEntryType(AuditEntryType.AI_ANALYSIS);
     entry.setAction("AI analysis complete — Risk: " + agg + "/100 (" + lvl + ") → " + routing);
     if (req != null && req.getPolicyValidationFindings() != null) {
       entry.setFindings(new ArrayList<>(req.getPolicyValidationFindings()));
@@ -232,9 +267,8 @@ public class SupplierOnboardingProcessService {
     entry.setTimestamp(now);
     entry.setActor("Supplier Agent");
     entry.setActorType(AuditActorType.SYSTEM);
-    entry.setKind(AuditEntryKind.AI);
+    entry.setEntryType(AuditEntryType.COMPLETION);
     entry.setAction("Supplier onboarding completed for: " + name);
-    entry.setTechnicalDetail("COMPLETED");
 
     return new CompletionContext(
         "Supplier Onboarding Completed - " + name,

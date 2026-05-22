@@ -1,9 +1,0 @@
-{
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
-  "id" : "19DF09C77D06149E",
-  "kind" : "CALLABLE_SUB",
-  "config" : {
-    "data" : "com.axonivy.utils.ai.SupplierDuplicateCheckAgentData"
-  },
-  "elements" : [ ]
-}

@@ -1,34 +1,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
   xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
-  xmlns:pe="http://primefaces.org/ui/extensions">
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui">
 <h:body>
-  <ui:composition template="/layouts/frame-10-full-width.xhtml">
-    <ui:define name="title">SupplierOnboardingDeclined</ui:define>
-    <ui:define name="content">
+  <ui:composition template="/layouts/template/SupplierOnboardingTemplate.xhtml">
 
-      <h3>
-        This is an 
-        <a href="https://developer.axonivy.com/doc/">Html Dialog</a>
-        implemented with JSF and <a href="http://primefaces.org/">Primefaces</a> as widget library
-      </h3>
+    <ui:param name="status" value="DECLINED" />
 
+    <ui:define name="form-content">
       <h:form id="form">
-        <p:messages />
-        <h:panelGrid columns="2">
 
-          
-
-        </h:panelGrid>
-        <br />
-        <div class="command-btns">
-          <p:commandLink id="cancel" actionListener="#{ivyWorkflowView.cancel()}" process="@this" value="Cancel" />
-          <p:commandButton id="proceed" actionListener="#{logic.close}" value="Proceed" update="form" icon="pi pi-check" />
+        <div class="so-alert so-alert-red mb-3">
+          <span class="so-alert-icon"><i class="ti ti-circle-x" /></span>
+          <div>
+            <div class="font-semibold">Onboarding Declined</div>
+            <div>This supplier onboarding request has been declined.</div>
+          </div>
         </div>
-      </h:form>
 
+      </h:form>
     </ui:define>
+
+    <ui:define name="footer-right">
+      <p:commandButton id="close"
+        value="#{ivy.cms.co('/Labels/Close')}"
+        styleClass="ui-button-secondary"
+        actionListener="#{logic.close}" />
+    </ui:define>
+
   </ui:composition>
 </h:body>
-
 </html>

@@ -63,7 +63,7 @@ Dialogs:
                       Panel2Tag2: Recherche vectorielle
                       Panel2Tag3: Agent de chat
                       Panel2Tag4: Conscient du contexte
-                      Panel2Title: Guide contextuel Q&amp;R
+                      Panel2Title: Guide contextuel Q&R
                       Panel3Desc: L'IA compare tous les documents soumis aux règles de politique d'achats, identifiant les certifications manquantes, les accréditations expirées et les lacunes de conformité — avec un raisonnement complet et une traçabilité totale.
                       Panel3Detail1: Tous les documents validés contre plus de 12 règles de politique d'achats
                       Panel3Detail2: Lacunes de conformité identifiées et éléments nécessitant attention signalés
@@ -109,7 +109,7 @@ Dialogs:
                       Step1DotTitle: Extraction par IA
                       Step1FlowLabel: Extraction<br />par IA
                       Step2DotTitle: Guide Q&R
-                      Step2FlowLabel: Guide<br />Q&amp;R
+                      Step2FlowLabel: Guide<br />Q&R
                       Step3DotTitle: Validation de documents
                       Step3FlowLabel: Validation de<br />documents
                       Step4DotTitle: Score de risque
@@ -172,6 +172,8 @@ Dialogs:
                       GenProcessingSubtitle: Traitement en cours…
                       GenRetryButton: Réessayer
                       GenerateDataButton: Générer des données
+                      KbChunksDesc: Vous trouverez ci-dessous les entrées de la base de connaissances utilisées pour alimenter le chatbot que vous allez utiliser dans cette démo.
+                      KbTabKnowledgeBase: Base de connaissances RAG
                       NextButtonTitle: Suivant
                       PageTitle: Smart Workflow — Démo d'intégration fournisseur
                       PrevButtonTitle: Précédent
@@ -221,12 +223,10 @@ Dialogs:
                       ContinueToApprovalButton: Continuer vers l''approbation
                       ContinueToClarificationButton: Continuer vers la clarification
                       InitialMessage: Cliquez sur Analyser pour lancer la validation par IA. J'extrairai les documents, vérifierai la conformité aux politiques, validerai la santé financière et calculerai un score de risque étape par étape.
-                      StepSubtitle: 'Étape 4 sur 6 — Agent : Validation et notation des risques'
+                      StepSubtitle: Étape 4 sur 6 — Validation et notation des risques
                       ViewDeclineButton: Voir le refus
                     SupplierClarification:
                       AdditionalInfoRequired: Informations supplémentaires sur le fournisseur requises — veuillez consulter l'onglet des résultats de l'agent.
-                      AdditionalNotesPlaceholder: Expliquez pourquoi certains documents manquent ou fournissez des informations alternatives pour l'équipe QM...
-                      AdditionalNotesTitle: Notes supplémentaires / Explication
                       AnalysisResultTab: Résultat de l'analyse
                       BannerDescTemplate: L'Agent fournisseur a calculé un score de risque de {0}/100 en raison d'informations manquantes ou insuffisantes. Veuillez fournir les détails demandés afin que l'agent puisse réévaluer et poursuivre le workflow.
                       BannerMetaTemplate: 'Cas : {0}<br />Soumis par : {1}'
@@ -249,25 +249,26 @@ Dialogs:
                       SupplierDetailsTab: Détails du fournisseur
                       WithdrawButton: Retirer la demande
                     SupplierDuplicateCheck:
+                      AgentAnalysisLabel: Analyse de l'agent
+                      ConfirmDialogMessage: Des fournisseurs potentiellement en double existent dans la base de données. Souhaitez-vous tout de même créer un nouvel enregistrement fournisseur ?
+                      ConfirmDialogTitle: Doublons potentiels détectés
                       AgentSectionTitle: Agent fournisseur — Vérification de la base de données terminée
                       AgentSubtitleTemplate: Recherché "{0}" — {1} correspondance(s) potentielle(s) trouvée(s).
-                      BusinessPurposeLabel: 'Objet social :'
-                      Chips: Comment la similarité est-elle calculée ?|Quand utiliser un fournisseur existant ?|Que se passe-t-il si aucune correspondance n’est trouvée ?
-                      ClickCardHint: Cliquez sur une carte pour la sélectionner
-                      CreateNewDesc: Procéder à l’enregistrement complet — nom, adresse, contacts, coordonnées bancaires et documents de conformité.
-                      CreateNewTitle: Créer un nouveau fournisseur
-                      EmailLabel: 'E-mail :'
-                      InitialMessage: J’ai analysé la base de données des fournisseurs à la recherche de correspondances potentielles. Consultez les résultats ci-dessous et choisissez comment procéder.
-                      LegalFormLabel: 'Forme juridique :'
+                      SearchConditionLabel: Condition de recherche
+                      SearchConditionTemplate: 'nom="{0}"  pays="{1}"'
+                      BusinessPurposeLabel: Objet social
+                      Chips: Comment la similarité est-elle calculée ?|Que se passe-t-il si aucune correspondance n’est trouvée ?|Puis-je utiliser un fournisseur existant ?
+                      EmailLabel: E-mail
+                      InitialMessage: J’ai analysé la base de données des fournisseurs à la recherche de correspondances potentielles. Consultez les résultats ci-dessous et confirmez pour procéder à la création d’un nouveau fournisseur.
+                      LegalFormLabel: Forme juridique
                       NoDuplicatesDesc: Aucun fournisseur similaire n’existe dans la base de données. Vous pouvez procéder à l’enregistrement de ce nouveau fournisseur.
                       NoDuplicatesTitle: Aucun doublon trouvé
                       PotentialMatchBadge: Correspondance potentielle
                       PotentialMatchesTitle: Correspondances potentielles ({0})
-                      ProceedTitle: Comment souhaitez-vous procéder ?
-                      StepSubtitle: 'Étape 2 sur 6 — Agent : Vérification des doublons et similarité'
-                      UseExistingDesc: Lier cette demande à un fournisseur déjà enregistré et ignorer le nouvel enregistrement.
-                      UseExistingTitle: Utiliser un fournisseur existant
-                      VatIdLabel: 'N° TVA :'
+                      StepSubtitle: ‘Étape 2 sur 6 — Vérification des doublons et similarité’
+                      VatIdLabel: N° TVA
+                      WarningDesc: '{0} fournisseur(s) potentiellement en double trouvé(s) dans la base de données. Veuillez vérifier avant de confirmer.'
+                      WarningTitle: Correspondances potentielles trouvées
                     SupplierOnboardingApproval:
                       AnalysisResultTab: Résultat de l'analyse
                       ApprovalChainTitle: Chaîne d'approbation
@@ -366,8 +367,6 @@ Dialogs:
                         FinancialStabilityLabel: Stabilité financière
                         PolicyComplianceLabel: Conformité aux politiques
                         PolicyFindingsTitle: Résultats de validation de politique
-                        PolicyRulesDialogHeader: Règles de politique d'intégration des fournisseurs
-                        PolicyRulesDialogIntro: Ces règles sont évaluées par l'IA lors de l'étape de validation des politiques. Chaque règle comporte une déduction maximale en cas de violation — déduction complète pour ÉCHEC, moitié pour AVERTISSEMENT.
                         RiskScoreCalculatedTooltip: Comment le score de risque est-il calculé ?
                         RiskScoreHelpDialogHeader: Comment le score de risque est calculé
                         RiskScoreTitle: Score de risque
@@ -380,7 +379,6 @@ Dialogs:
                         ThresholdRed: En dessous du seuil minimum (< 40)
                         ThresholdYellow: Clarification requise (40-69)
                         ValidationStepsTitle: Étapes de validation
-                        ViewPolicyRulesTooltip: Voir les règles de politique
                       SupplierAiAssistant:
                         AssistantName: Assistant IA fournisseur
                         ConfirmParseRequired: Téléchargez d'abord un fichier .txt ou .md, puis confirmez l'analyse.

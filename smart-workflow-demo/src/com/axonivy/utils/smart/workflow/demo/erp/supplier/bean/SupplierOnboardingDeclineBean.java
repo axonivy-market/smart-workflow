@@ -12,8 +12,6 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProces
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
-
 import ch.ivyteam.ivy.environment.Ivy;
 
 /**
@@ -148,26 +146,6 @@ public class SupplierOnboardingDeclineBean extends ReadOnlySupplierDetailsBean {
   public String getFormattedDuration(AgentProcessingStep step) {
     if (step == null || step.getDurationMs() == null) return "";
     return String.format("%.1fs", step.getDurationMs() / 1000.0);
-  }
-
-  // ── Findings ──────────────────────────────────────────────────────────────
-
-  public String getFindingRowClass(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) return "so-finding-green";
-    return switch (finding.getSeverity().toUpperCase()) {
-      case "FAILURE" -> "so-finding-red";
-      case "WARNING" -> "so-finding-yellow";
-      default        -> "so-finding-green";
-    };
-  }
-
-  public String getFindingIcon(ValidationFinding finding) {
-    if (finding == null || finding.getSeverity() == null) return "ti-circle-check";
-    return switch (finding.getSeverity().toUpperCase()) {
-      case "FAILURE" -> "ti-circle-x";
-      case "WARNING" -> "ti-alert-triangle";
-      default        -> "ti-circle-check";
-    };
   }
 
   // ── Decline audit entry ───────────────────────────────────────────────────

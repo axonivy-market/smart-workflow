@@ -600,45 +600,15 @@
   margin-top: 2px;
 }
 
-/* ── Duplicate Check — Match & option cards ─────────────────────── */
-.so-match-card {
-  border: 2px solid var(--so-border);
-  cursor: pointer;
-  transition: border-color .15s, background .15s;
-}
-.so-match-card--selected {
-  border-color: var(--so-primary);
-  background: #F5F3FF;
-}
-.so-cmd-link {
-  text-decoration: none;
-  display: block;
-  color: inherit;
-}
-.so-match-name {
-  font-size: 14px;
-  font-weight: 600;
-}
+/* ── Duplicate Check — Match cards ──────────────────────────────── */
 .so-match-grid {
-  font-size: 12.5px;
+  font-size: 0.95rem;
   color: var(--so-text);
 }
 .so-alert-icon {
   font-size: 20px;
   flex-shrink: 0;
 }
-.so-option-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
-}
-.so-option-icon--purple { background: #EDE9FE; }
-.so-option-icon--green  { background: #ECFDF5; }
 
 /* ── Required Documents card ────────────────────────────────────── */
 .so-doc-row {
@@ -1210,60 +1180,6 @@
 .so-help-threshold-green  { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
 .so-help-threshold-yellow { background: #FEF9C3; color: #854D0E; border: 1px solid #FDE68A; }
 .so-help-threshold-red    { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
-
-/* ── Policy Rules Dialog ─────────────────────────────────────────────────── */
-.so-policy-rules-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.so-policy-rule-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: #F9FAFB;
-  border: 1px solid #E5E7EB;
-}
-.so-policy-rule-num {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #1D4ED8;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1px;
-}
-.so-policy-rule-body {
-  flex: 1;
-  min-width: 0;
-}
-.so-policy-rule-text {
-  font-size: 12px;
-  color: #374151;
-  line-height: 1.5;
-}
-.so-policy-rule-target {
-  font-size: 10px;
-  color: #9CA3AF;
-  font-family: monospace;
-  margin-top: 2px;
-}
-.so-policy-rule-deduct {
-  flex-shrink: 0;
-  font-size: 12px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 1px;
-  white-space: nowrap;
-}
 
 /* ── Decline dialog ──────────────────────────────────────────────────────── */
 .so-decline-hero {

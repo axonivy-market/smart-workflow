@@ -8,11 +8,5 @@
   }, {
     "name" : "agentResponse",
     "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
-  }, {
-    "name" : "useExistingSupplier",
-    "type" : "Boolean"
-  }, {
-    "name" : "selectedSupplier",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier"
   } ]
 }

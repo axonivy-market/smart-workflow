@@ -9,7 +9,7 @@ import dev.langchain4j.model.output.structured.Description;
 public class ValidationFinding {
 
   @Description("Finding severity: PASSED, WARNING, or FAILURE")
-  private String severity;
+  private FindingSeverity severity;
 
   @Description("Description of the finding")
   private String message;
@@ -46,19 +46,35 @@ public class ValidationFinding {
   public ValidationFinding() {
   }
 
-  public ValidationFinding(String severity, String message, String source, RiskType riskType) {
+  public ValidationFinding(FindingSeverity severity, String message, String source, RiskType riskType) {
     this.severity = severity;
     this.message = message;
     this.source = source;
     this.riskType = riskType;
   }
 
-  public String getSeverity() {
+  public FindingSeverity getSeverity() {
     return severity;
   }
 
-  public void setSeverity(String severity) {
+  public void setSeverity(FindingSeverity severity) {
     this.severity = severity;
+  }
+
+  public String getRowClass() {
+    return severity != null ? severity.rowClass : FindingSeverity.PASSED.rowClass;
+  }
+
+  public String getIcon() {
+    return severity != null ? severity.icon : FindingSeverity.PASSED.icon;
+  }
+
+  public String getBadgeClass() {
+    return severity != null ? severity.badgeClass : FindingSeverity.PASSED.badgeClass;
+  }
+
+  public String getLogClass() {
+    return severity != null ? severity.logClass : FindingSeverity.PASSED.logClass;
   }
 
   public String getMessage() {

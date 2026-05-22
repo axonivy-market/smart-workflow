@@ -21,12 +21,10 @@
         },
         "result" : {
           "params" : [
-            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
-            { "name" : "goBack", "type" : "Boolean", "desc" : "" }
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" }
           ],
           "map" : {
-            "result.request" : "in.request",
-            "result.goBack" : "in.goBack"
+            "result.request" : "in.request"
           }
         },
         "guid" : "19DBB1EEDC05DC01"
@@ -46,17 +44,15 @@
     }, {
       "id" : "f3",
       "type" : "HtmlDialogMethodStart",
-      "name" : "close(OnboardingRequest, Boolean)",
+      "name" : "close(OnboardingRequest)",
       "config" : {
         "signature" : "close",
         "input" : {
           "params" : [
-            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
-            { "name" : "goBack", "type" : "Boolean", "desc" : "" }
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" }
           ],
           "map" : {
-            "out.request" : "param.request",
-            "out.goBack" : "param.goBack"
+            "out.request" : "param.request"
           }
         },
         "guid" : "19DBB1EEDC191841"

@@ -19,11 +19,6 @@
   /* ── Download header ────────────────────────────────────────────── */
   --sd-download-header-bg: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%);
 
-  /* ── Role badges ────────────────────────────────────────────────── */
-  --sd-role-blue-bg:      #dbeafe;   --sd-role-blue-color:   #1d4ed8;
-  --sd-role-indigo-bg:    #e0e7ff;   --sd-role-indigo-color: #4338ca;
-  --sd-role-amber-bg:     #fef3c7;   --sd-role-amber-color:  #b45309;
-
   /* ── Before / After comparison ──────────────────────────────────── */
   --sd-compare-before-bg:           #fff5f5;
   --sd-compare-before-border:       #fecaca;
@@ -44,6 +39,11 @@
   --sd-done-banner-color:  #065f46;
   --sd-done-banner-icon:   #059669;
 
-  /* ── Inline code ────────────────────────────────────────────────── */
-  --sd-code-bg:            #f1f5f9;
+  /* ── RAG Knowledge chunks ───────────────────────────────────────── */
+  --sd-chunk-accent:       #0d9488;
+  --sd-chunk-idx-bg:       #0d9488;
+  --sd-chunk-idx-color:    #ffffff;
+  --sd-chunk-banner-bg:    #f0fdfa;
+  --sd-chunk-banner-border:#99f6e4;
+  --sd-chunk-banner-color: #0f766e;
 }

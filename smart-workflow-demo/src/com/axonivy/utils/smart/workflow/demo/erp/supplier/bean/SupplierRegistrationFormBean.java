@@ -28,7 +28,6 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierCertific
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.parser.OnboardingRequestParser;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierRepository;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
 
 @ManagedBean
@@ -129,24 +128,7 @@ public class SupplierRegistrationFormBean extends ReadOnlySupplierDetailsBean
     flushCertificationsToSupplier();
     persistParsedDocuments();
     request.setStatus(OnboardingStatus.SUPPLIER_DATA);
-    callLogicClose(false);
-  }
-
-  public void saveDraftAndClose() {
-    flushCertificationsToSupplier();
-    persistParsedDocuments();
-    Supplier supplier = request.getSupplier();
-    var repo = SupplierRepository.getInstance();
-    if (supplier.getSupplierId() == null) {
-      repo.create(supplier);
-    } else {
-      repo.update(supplier);
-    }
-    callLogicClose(false);
-  }
-
-  public void back() {
-    callLogicClose(true);
+    callLogicClose();
   }
 
   private void persistParsedDocuments() {
@@ -186,14 +168,14 @@ public class SupplierRegistrationFormBean extends ReadOnlySupplierDetailsBean
     request.getSupplier().setCertifications(result);
   }
 
-  private void callLogicClose(boolean goBack) {
+  private void callLogicClose() {
     FacesContext fc = FacesContext.getCurrentInstance();
     ELContext el = fc.getELContext();
     Application app = fc.getApplication();
     MethodExpression closeMethod = app.getExpressionFactory()
         .createMethodExpression(el, "#{logic.close}", null,
-            new Class<?>[] { OnboardingRequest.class, Boolean.class });
-    closeMethod.invoke(el, new Object[] { request, goBack });
+            new Class<?>[] { OnboardingRequest.class });
+    closeMethod.invoke(el, new Object[] { request });
   }
 
   // ── AssistantUploadSupport — delegates ────────────────────────────────────

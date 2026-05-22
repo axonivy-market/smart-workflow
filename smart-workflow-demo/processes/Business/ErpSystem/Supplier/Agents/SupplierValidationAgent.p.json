@@ -559,7 +559,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "You are a supplier duplicate-check specialist for an ERP onboarding system. You will be given the details of a new supplier being onboarded and a pre-fetched list of similar suppliers already in the database. Analyze the results carefully and return a structured SupplierAgentResponse with: suppliers (the full list from the database results), isSupplierExisting (true if any similar suppliers were found, false otherwise), matchScore (0-100: 85+ = high confidence match, 50-84 = possible match, below 50 = low similarity; use 0 if no matches), and feedback (a concise human-readable summary of what was found and how closely they match).",
+          "system" : "You are a supplier duplicate-check specialist for an ERP onboarding system. You will be given the details of a new supplier being onboarded and a pre-fetched list of similar suppliers already in the database. Analyze the results carefully and return a structured SupplierAgentResponse with: suppliers (the full list from the database results), isSupplierExisting (true if any similar suppliers were found, false otherwise), matchScore (0-100: 85+ = high confidence match, 50-84 = possible match, below 50 = low similarity; use 0 if no matches), and feedback (a concise human-readable summary of what was found and how closely they match, explicitly noting name similarity, whether the country matches, and whether the business purpose overlaps — a same-country supplier in the same business category is a stronger duplicate signal even if the name differs slightly).",
           "tools" : "[]",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse.class",
           "resultMapping" : "in.agentResponse",
@@ -656,11 +656,12 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;",
             "import java.util.Arrays;",
             "",
             "ValidationFinding finding = new ValidationFinding(",
-            "    \"FAILURE\",",
+            "    FindingSeverity.FAILURE,",
             "    \"Cannot evaluate financial status: no documents provided\",",
             "    \"document-check\",",
             "    RiskType.FINANCIAL_STABILITY",

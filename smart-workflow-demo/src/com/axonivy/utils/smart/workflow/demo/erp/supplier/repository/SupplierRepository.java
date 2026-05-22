@@ -1,10 +1,11 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.repository;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +13,6 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentRes
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
 
-import ch.ivyteam.ivy.business.data.store.search.Filter;
 import ch.ivyteam.ivy.business.data.store.search.Query;
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -20,12 +20,7 @@ public class SupplierRepository {
 
   private static final String FIELD_SUPPLIER_ID = "supplierId";
   private static final String FIELD_BUSINESS_NAME = "businessName";
-  private static final String FIELD_PHONE = "phone";
-  private static final String FIELD_EMAIL = "email";
-  private static final String FIELD_WEBSITE = "website";
   private static final String FIELD_BUSINESS_ADDRESS = "businessAddress";
-  private static final String FIELD_VAT_ID = "vatId";
-  private static final String FIELD_BUSINESS_PURPOSE = "businessPurpose";
 
   private static final Set<String> LEGAL_FORM_STOPWORDS = Set.of(
       "gmbh", "ag", "ltd", "llc", "inc", "corp", "plc", "bv", "nv", "sa", "srl",
@@ -163,50 +158,19 @@ public class SupplierRepository {
       }
     }
 
-    if (criteria.getBusinessAddress() != null) {
-      search.score().textField(FIELD_BUSINESS_ADDRESS).query(criteria.getBusinessAddress().toString().replace(" ", "+"))
-          .limit(100);
-    }
-
-    if (StringUtils.isNotBlank(criteria.getBusinessPurposeContains())) {
-      search.score().textField(FIELD_BUSINESS_PURPOSE)
-          .query(criteria.getBusinessPurposeContains().replace(" ", "+")).limit(100);
-    }
-
     return search.execute().getAll();
   }
 
   private Query<Supplier> buildFilteredSearch(SupplierSearchCriteria criteria) {
     var search = Ivy.repo().search(Supplier.class);
 
-    List<Filter<Supplier>> filters = new ArrayList<>();
-
-    if (StringUtils.isNotBlank(criteria.getSupplierId())) {
-      filters.add(search.textField(FIELD_SUPPLIER_ID).isEqualToIgnoringCase(criteria.getSupplierId()));
-    }
-
-    if (StringUtils.isNotBlank(criteria.getPhone())) {
-      filters.add(search.textField(FIELD_PHONE).isEqualToIgnoringCase(criteria.getPhone()));
-    }
-
-    if (StringUtils.isNotBlank(criteria.getEmail())) {
-      filters.add(search.textField(FIELD_EMAIL).isEqualToIgnoringCase(criteria.getEmail()));
-    }
-
-    if (StringUtils.isNotBlank(criteria.getWebsite())) {
-      filters.add(search.textField(FIELD_WEBSITE).isEqualToIgnoringCase(criteria.getWebsite()));
-    }
-
-    if (StringUtils.isNotBlank(criteria.getVatId())) {
-      filters.add(search.textField(FIELD_VAT_ID).isEqualToIgnoringCase(criteria.getVatId()));
-    }
-
-    if (StringUtils.isNotBlank(criteria.getCountry())) {
-      filters.add(search.textField(FIELD_BUSINESS_ADDRESS).containsAllWordPatterns(criteria.getCountry()));
-    }
-
-    for (Filter<Supplier> f : filters) {
-      search.filter(f).or();
+    if (StringUtils.isNotBlank(criteria.getBusinessNameContains())) {
+      String cleanedName = Arrays.stream(criteria.getBusinessNameContains().split("\\s+"))
+          .filter(t -> StringUtils.isNotBlank(t) && !LEGAL_FORM_STOPWORDS.contains(t.toLowerCase(Locale.ROOT)))
+          .collect(Collectors.joining(" "));
+      if (StringUtils.isNotBlank(cleanedName)) {
+        search.filter(search.textField(FIELD_BUSINESS_NAME).containsAllWordPatterns(cleanedName));
+      }
     }
 
     return search;
@@ -234,19 +198,13 @@ public class SupplierRepository {
 
     var search = Ivy.repo().search(Supplier.class);
 
-    List<Filter<Supplier>> filters = new ArrayList<>();
-
-    if (StringUtils.isNotBlank(criteria.getSupplierId())) {
-      filters.add(search.textField(FIELD_SUPPLIER_ID).isEqualToIgnoringCase(criteria.getSupplierId()));
-    }
-
     if (StringUtils.isNotBlank(criteria.getBusinessNameContains())) {
-      filters.add(search.textField(FIELD_BUSINESS_NAME).containsAllWordPatterns(criteria.getBusinessNameContains()));
-    }
-
-    // Apply collected filters
-    for (Filter<Supplier> f : filters) {
-      search.filter(f).or();
+      String cleanedName = Arrays.stream(criteria.getBusinessNameContains().split("\\s+"))
+          .filter(t -> StringUtils.isNotBlank(t) && !LEGAL_FORM_STOPWORDS.contains(t.toLowerCase(Locale.ROOT)))
+          .collect(Collectors.joining(" "));
+      if (StringUtils.isNotBlank(cleanedName)) {
+        search.filter(search.textField(FIELD_BUSINESS_NAME).containsAllWordPatterns(cleanedName)).or();
+      }
     }
 
     return Optional.ofNullable(search.execute().getFirst());

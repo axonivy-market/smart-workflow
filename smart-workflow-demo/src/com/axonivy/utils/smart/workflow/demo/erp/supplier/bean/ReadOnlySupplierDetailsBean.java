@@ -14,11 +14,9 @@ import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocument;
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentType;
 import com.axonivy.utils.smart.workflow.demo.erp.document.RequiredDocumentUploader;
 import com.axonivy.utils.smart.workflow.demo.erp.shared.Address;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierBanking;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierContact;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.Country;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
@@ -101,12 +99,6 @@ public abstract class ReadOnlySupplierDetailsBean
   @Override
   public void setPendingDocumentType(String pendingDocumentType) {
     this.pendingDocumentType = pendingDocumentType;
-  }
-
-  // ── Policy rules (used by SupplierAgentProcessingDetails dialog) ───────────
-
-  public List<SupplierPolicyRule> getPolicyRules() {
-    return ValidationRunner.loadPolicyRules();
   }
 
   // ── Data accessors used by SupplierDetails.xhtml ──────────────────────────

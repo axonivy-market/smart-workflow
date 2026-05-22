@@ -21,13 +21,6 @@
       </h:form>
     </ui:define>
 
-    <ui:define name="footer-left">
-      <p:commandButton id="back"
-        value="#{ivy.cms.co('/Labels/Back')}"
-        styleClass="ui-button-secondary"
-        process="form"
-        actionListener="#{logic.close}" />
-    </ui:define>
     <ui:define name="footer-right">
       <p:commandButton id="continue"
         value="#{supplierAgentProcessingBean.continueButtonLabel}"

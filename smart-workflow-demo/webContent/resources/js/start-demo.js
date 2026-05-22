@@ -11,6 +11,11 @@
   var currentSlide = 0;
   var wrapper = null;
 
+  /* ── Inner navigator state (Slide 1 process panels) ────────────── */
+  var INNER_TOTAL = 7;
+  var currentInner = 0;
+  var innerWrapper = null;
+
   /* ── Slide navigation ──────────────────────────────────────── */
   function goToSlide(index, isBack) {
     if (index < 0 || index >= TOTAL_SLIDES) return;
@@ -45,6 +50,27 @@
     if (btnNext) btnNext.disabled = (i === TOTAL_SLIDES - 1);
   }
 
+  /* ── Inner navigator ───────────────────────────────────────── */
+  function goToInner(index) {
+    if (index < 0 || index >= INNER_TOTAL || !innerWrapper) return;
+    var prev = innerWrapper.querySelector('.sd-inner-panel.sd-inner-active');
+    if (prev) prev.classList.remove('sd-inner-active');
+    var next = innerWrapper.querySelector('.sd-inner-panel[data-panel="' + index + '"]');
+    if (next) next.classList.add('sd-inner-active');
+    currentInner = index;
+    syncInnerUI();
+  }
+
+  function syncInnerUI() {
+    var i = currentInner;
+    document.querySelectorAll('.sd-inner-dot').forEach(function (dot, idx) {
+      dot.classList.toggle('sd-inner-dot-active', idx === i);
+    });
+    document.querySelectorAll('.fd-flow .fd-flow-step[data-panel]').forEach(function (step) {
+      step.classList.toggle('sd-inner-flow-active', parseInt(step.getAttribute('data-panel'), 10) === i);
+    });
+  }
+
   /* ── Public API (called from inline onclick) ───────────────── */
   window.sdGoToSlide = function (index) {
     goToSlide(index, index < currentSlide);
@@ -58,6 +84,8 @@
     if (currentSlide < TOTAL_SLIDES - 1) goToSlide(currentSlide + 1, false);
   };
 
+  window.sdInnerGo = function (index) { goToInner(index); };
+
   /* ── Bootstrap ─────────────────────────────────────────────── */
   function init() {
     wrapper = document.querySelector('.fd-steps-wrapper');
@@ -66,6 +94,14 @@
     // Activate first slide
     var first = wrapper.querySelector('.fd-step-panel[data-step="0"]');
     if (first) first.classList.add('fd-active');
+
+    // Activate first inner panel (Slide 1 process steps)
+    innerWrapper = document.querySelector('.sd-inner-wrapper');
+    if (innerWrapper) {
+      var firstInner = innerWrapper.querySelector('.sd-inner-panel[data-panel="0"]');
+      if (firstInner) firstInner.classList.add('sd-inner-active');
+      syncInnerUI();
+    }
 
     // Disable Start Demo until data generation completes,
     // unless data is already generated (server signals via hidden element)
@@ -247,3 +283,37 @@ var sdGen = (function () {
   };
 
 }());
+
+/* ── Knowledge Base modal ────────────────────────────────────────── */
+
+window.sdOpenKbModal = function () {
+  var overlay = document.getElementById('sd-kb-modal');
+  if (overlay) {
+    overlay.classList.add('is-open');
+    document.addEventListener('keydown', _sdKbEsc);
+  }
+};
+
+window.sdCloseKbModal = function (e) {
+  if (e && e.target !== e.currentTarget) return; // ignore clicks inside modal
+  var overlay = document.getElementById('sd-kb-modal');
+  if (overlay) overlay.classList.remove('is-open');
+  document.removeEventListener('keydown', _sdKbEsc);
+};
+
+function _sdKbEsc(e) {
+  if (e.key === 'Escape') window.sdCloseKbModal();
+}
+
+window.sdKbTab = function (btn, panelId) {
+  var tabsEl = btn.closest('.sd-kb-tabs');
+  tabsEl.querySelectorAll('.sd-kb-tab').forEach(function (t) { t.classList.remove('sd-kb-tab--active'); });
+  btn.classList.add('sd-kb-tab--active');
+  tabsEl.parentElement.querySelectorAll('.sd-kb-panel').forEach(function (p) { p.style.display = 'none'; });
+  var target = document.getElementById(panelId);
+  if (target) target.style.display = '';
+};
+
+window.sdKbChunkToggle = function (header) {
+  header.closest('.sd-kb-chunk').classList.toggle('sd-kb-chunk--open');
+};

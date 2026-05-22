@@ -160,7 +160,7 @@ public class MockDataGenerator {
             new SupplierCertification(LegalDocumentType.ISO_14001, "DE-2021-00782", "2026-05-31", "iso14001_holzmann.pdf", true))));
     generateDocumentsForSupplier(sup01);
 
-    // SUP-02 — Tools & Hardware — *** 80% match with TechVision GmbH ***
+    // SUP-02 — Tools & Hardware — *** ~60% match with TechVision GmbH ***
     // Same name root "TechVision", same country DE, same business purpose
     Supplier sup02 = repo.create(supplier(
         "SUP-2021-0002", "TechVision AG", "AG", "DE345678901", "HRB 112233",
@@ -173,18 +173,31 @@ public class MockDataGenerator {
             new SupplierCertification(LegalDocumentType.ISO_9001, "DE-2020-00412", "2026-03-15", "iso9001_techvision_ag.pdf", true))));
     generateDocumentsForSupplier(sup02);
 
-    // SUP-03 — Tools & Hardware — *** 50% match with TechVision GmbH ***
-    // Partial name match "Vision" + "Tool", same purpose, same country
+    // SUP-03 — Industrial Automation — *** ~50% match with TechVision GmbH ***
+    // Same name root "TechVision", same country DE, related but different business purpose
     Supplier sup03 = repo.create(supplier(
-        "SUP-2022-0003", "VisionTool Systems GmbH", "GmbH", "DE456789012", "HRB 223344",
-        "Tools & Hardware",
+        "SUP-2022-0003", "TechVision Systems GmbH", "GmbH", "DE456789012", "HRB 223344",
+        "Industrial Automation & Machinery",
         new Address("Werkzeugstraße 33", null, "Stuttgart", null, "70173", "DE"),
-        "+49 711 5678901", "contact@visiontool.de", "https://www.visiontool.de",
-        new SupplierContact("Anna", "Weber", "Sales Director", "a.weber@visiontool.de", "+49 711 5678901"),
+        "+49 711 5678901", "contact@techvision-systems.de", "https://www.techvision-systems.de",
+        new SupplierContact("Anna", "Weber", "Sales Director", "a.weber@techvision-systems.de", "+49 711 5678901"),
         new SupplierBanking("DE21200400300002345678", "COBADEFFXXX", "HypoVereinsbank"),
         Arrays.asList(
-            new SupplierCertification(LegalDocumentType.ISO_9001, "DE-2022-00567", "2025-12-31", "iso9001_visiontool.pdf", true))));
+            new SupplierCertification(LegalDocumentType.ISO_9001, "DE-2022-00567", "2025-12-31", "iso9001_techvision_systems.pdf", true))));
     generateDocumentsForSupplier(sup03);
+
+    // SUP-03b — Software & IT — *** ~40% match with TechVision GmbH ***
+    // Same name root "TechVision", same country DE, clearly different business purpose
+    Supplier sup03b = repo.create(supplier(
+        "SUP-2023-0003B", "TechVision International GmbH", "GmbH", "DE567890120", "HRB 334422",
+        "Software & IT Infrastructure",
+        new Address("Digitalstraße 9", null, "Berlin", null, "10179", "DE"),
+        "+49 30 1234567", "info@techvision-intl.de", "https://www.techvision-intl.de",
+        new SupplierContact("Lars", "Hoffmann", "CEO", "l.hoffmann@techvision-intl.de", "+49 30 1234567"),
+        new SupplierBanking("DE75512108001245126200", "BELADEBEXXX", "Deutsche Bank"),
+        Arrays.asList(
+            new SupplierCertification(LegalDocumentType.ISO_27001, "DE-2023-00123", "2026-06-30", "iso27001_techvision_intl.pdf", true))));
+    generateDocumentsForSupplier(sup03b);
 
     // SUP-04 — Electrical & Plumbing (DEPT-002)
     Supplier sup04 = repo.create(supplier(

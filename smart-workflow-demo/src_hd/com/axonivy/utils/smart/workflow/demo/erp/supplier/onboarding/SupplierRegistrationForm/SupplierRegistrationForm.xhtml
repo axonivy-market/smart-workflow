@@ -24,20 +24,7 @@
       </h:form>
     </ui:define>
 
-    <ui:define name="footer-left">
-      <p:commandButton id="back" value="#{ivy.cms.co('/Labels/Back')}" icon="pi pi-arrow-left"
-        actionListener="#{supplierRegistrationFormBean.back}"
-        process="@none"
-        styleClass="ui-button-secondary" />
-    </ui:define>
-
     <ui:define name="footer-right">
-      <p:commandButton id="save-draft" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRegistrationForm/SaveDraftButton')}" icon="pi pi-save"
-        actionListener="#{supplierRegistrationFormBean.saveDraftAndClose}"
-        process="form"
-        styleClass="ui-button-secondary">
-        <f:param name="skipValidation" value="true" />
-      </p:commandButton>
       <p:commandButton id="submit" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRegistrationForm/SubmitButton')}"
         icon="pi pi-arrow-right" iconPos="right"
         actionListener="#{supplierRegistrationFormBean.submitForValidation}"

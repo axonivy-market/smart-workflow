@@ -12,6 +12,7 @@ import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.StepStatus;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRiskScore;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
@@ -202,7 +203,7 @@ public class RiskAssessmentRunner {
   private static boolean hasFailureFindingForKey(List<ValidationFinding> findings, String key) {
     String normalizedKey = key.toUpperCase();
     return findings.stream().anyMatch(f ->
-        "FAILURE".equalsIgnoreCase(f.getSeverity()) && (
+        f.getSeverity() == FindingSeverity.FAILURE && (
             (f.getSource() != null && f.getSource().toUpperCase().contains(normalizedKey)) ||
             (f.getDocumentTypeKey() != null && f.getDocumentTypeKey().toUpperCase().contains(normalizedKey))
         )
