@@ -34,7 +34,7 @@
 
   /* ── Structure ─────────────────────────────────────────────────── */
   --so-step-circle-bg:    #1e293b;
-  --so-btn-secondary-bg:  #1e293b;
+  --so-text-inverse:        white;
   --so-doc-row-bg:        #0f172a;
   --so-surface-subtle:    #1e293b;
   --so-running-card-bg:   #0e2038;
@@ -83,16 +83,6 @@
    All selectors are unscoped because so-* classes appear on any page.
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ── Submitted-doc / approver-row subtle borders ─────────────────── */
-.so-submitted-doc,
-.so-approver-row      { border-bottom-color: #334155; }
-
-/* ── Approver avatar ─────────────────────────────────────────────── */
-.so-approver-avatar {
-  background: #0e2038;
-  color:      #7dd3fc;
-}
-
 /* ── Approval banner (amber themed) ─────────────────────────────── */
 .so-approval-banner {
   background:   #231a08;
@@ -102,21 +92,6 @@
 .so-approval-banner-title  { color: #fcd34d; }
 .so-approval-banner-desc   { color: #fbbf24; }
 .so-approval-banner-meta   { color: #f59e0b; }
-
-/* ── ERP reference box ───────────────────────────────────────────── */
-.so-erp-ref-box {
-  background:   #0e2820;
-  border-color: #1a4d38;
-}
-.so-erp-ref-icon  { color: #34d399; }
-.so-erp-ref-title { color: #6ee7b7; }
-.so-erp-ref-id    { color: #34d399; }
-.so-erp-ref-sub   { color: #6ee7b7; }
-
-/* ── Audit log ───────────────────────────────────────────────────── */
-.so-audit-entry  { border-bottom-color: #334155; }
-.so-audit-action { color: #94a3b8; }
-.so-audit-detail { background: #0f172a; }
 
 /* ── Doc row expand panel ────────────────────────────────────────── */
 .so-doc-row-expand { background: #1e293b; }
@@ -207,6 +182,12 @@
   background:   #0e2038;
   border-color: #1a3a5c;
 }
+.so-info-box--warning {
+  background:   #2d1f00;
+  border-color: #b45309;
+}
+.so-info-box-warning-title { color: #fcd34d; }
+.so-info-box-warning-desc  { color: #fbbf24; }
 
 /* ── Help dialog ─────────────────────────────────────────────────── */
 .so-help-body          { color: #94a3b8; }
@@ -222,8 +203,3 @@
 .so-help-threshold-yellow { background: #231a08; color: #fcd34d; border-color: #4a3a0a; }
 .so-help-threshold-red    { background: #2a1520; color: #fda4af; border-color: #6b2d40; }
 
-/* ── Clarification upload area ───────────────────────────────────── */
-.so-clarification-upload .ui-fileupload-buttonbar {
-  background:   #231a08;
-  border-color: #4a3a0a;
-}

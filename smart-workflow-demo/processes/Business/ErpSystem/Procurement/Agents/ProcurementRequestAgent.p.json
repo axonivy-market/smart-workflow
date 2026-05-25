@@ -1,0 +1,148 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "20A01D42265355E6",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.ProcurementRequestAgentData"
+  },
+  "elements" : [ {
+      "id" : "f10",
+      "type" : "CallSubStart",
+      "name" : "parseProcurementDocument(String,InputStream)",
+      "config" : {
+        "signature" : "parseProcurementDocument",
+        "input" : {
+          "params" : [
+            { "name" : "content", "type" : "String", "desc" : "Document text content to parse (for .txt/.md files)" },
+            { "name" : "inputStream", "type" : "java.io.InputStream", "desc" : "Document binary stream for OCR (for .pdf files)" }
+          ],
+          "map" : {
+            "out.ocrContent" : "param.content",
+            "out.inputStream" : "param.inputStream"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "parsedDraft", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest", "desc" : "Parsed procurement request values extracted from the document" },
+            { "name" : "parseFeedback", "type" : "String", "desc" : "Parse status message for the caller" }
+          ],
+          "map" : {
+            "result.parsedDraft" : "in.parsedDraft",
+            "result.parseFeedback" : "in.parseFeedback"
+          }
+        }
+      },
+      "tags" : [ "tool" ],
+      "visual" : { "at" : { "x" : 96, "y" : 408 }, "description" : "Performs OCR on in.inputStream, then extracts a structured ProcurementRequest." },
+      "connect" : [ { "id" : "c10", "to" : "f11" } ]
+    }, {
+      "id" : "f11",
+      "type" : "Alternative",
+      "name" : "Has document?",
+      "config" : {
+        "conditions" : {
+          "c30" : "in.ocrContent != null && !in.ocrContent.isBlank()",
+          "c40" : "in.inputStream != null"
+        }
+      },
+      "visual" : { "at" : { "x" : 280, "y" : 408 } },
+      "connect" : [
+        { "id" : "c30", "to" : "f12", "label" : { "name" : "Has text content" } },
+        { "id" : "c40", "to" : "f50", "via" : [ { "x" : 280, "y" : 280 } ], "label" : { "name" : "Has PDF/binary" } },
+        { "id" : "c31", "to" : "f15", "label" : { "name" : "No document", "offset" : { "x" : 57, "y" : -82 } } }
+      ]
+    }, {
+      "id" : "f50",
+      "type" : "ProgramInterface",
+      "name" : "OCR: Extract Document Text",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a procurement document OCR specialist. Extract all text content from the uploaded document exactly as it appears, preserving structure, labels, values, and layout.",
+          "tools" : "[]",
+          "resultMapping" : "in.ocrContent",
+          "query" : "Extract all text content from this procurement document: <%=in.inputStream%>"
+        }
+      },
+      "visual" : { "at" : { "x" : 440, "y" : 280 }, "size" : { "width" : 152, "height" : 62 } },
+      "boundaries" : [ {
+          "id" : "f52",
+          "type" : "ErrorBoundaryEvent",
+          "config" : {
+            "errorCode" : "ivy:error:program:exception",
+            "output" : { "code" : [ "ivy.log.error(\"OCR failed: \" + error.getMessage(), error);", "in.inputStream = null;", "in.parsedDraft = null;", "in.parseFeedback = \"OCR failed: \" + error.getMessage();" ] }
+          },
+          "visual" : { "at" : { "x" : 488, "y" : 317 } },
+          "connect" : [ { "id" : "c52", "to" : "f16", "via" : [ { "x" : 488, "y" : 512 }, { "x" : 1232, "y" : 512 } ] } ]
+        } ],
+      "connect" : [ { "id" : "c50", "to" : "f51", "via" : [ { "x" : 656, "y" : 280 } ], "color" : "default" } ]
+    }, {
+      "id" : "f51",
+      "type" : "Script",
+      "name" : "Release Document Stream",
+      "config" : { "output" : { "code" : "in.inputStream = null;" } },
+      "visual" : { "at" : { "x" : 840, "y" : 280 } },
+      "connect" : [ { "id" : "c51", "to" : "f12", "color" : "default" } ]
+    }, {
+      "id" : "f12",
+      "type" : "ProgramInterface",
+      "name" : "Parse Structured Request Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a procurement document extraction specialist. Extract all material procurement request fields from the provided document content.\n\nFields to extract:\n- projectName\n- projectNumberCostCenter\n- constructionSiteDeliveryAddress\n- requiredDeliveryDate (yyyy-MM-dd)\n- priority (NORMAL, HIGH, URGENT, or LOW)\n- requester\n- orderNotes\n- materialItems: list of items, each with:\n  - materialDescription\n  - standardGradeClass\n  - quantity (number)\n  - unit\n  - supplier\n  - unitPriceNet (number)\n  - purpose\n  - comment\n\nReturn a structured ProcurementRequest object. Keep fields null if not present in the document.",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest.class",
+          "resultMapping" : "in.parsedDraft",
+          "query" : "Extract procurement request values from this document:\n\n<TEXT>\n<%= in.ocrContent %>\n</TEXT>"
+        }
+      },
+      "visual" : { "at" : { "x" : 840, "y" : 408 }, "size" : { "width" : 176, "height" : 70 } },
+      "boundaries" : [ {
+          "id" : "f13",
+          "type" : "ErrorBoundaryEvent",
+          "config" : {
+            "errorCode" : "ivy:error:program:exception",
+            "output" : { "code" : [ "ivy.log.error(\"Failed to parse procurement document: \" + error.getMessage(), error);", "in.parsedDraft = null;", "in.parseFeedback = \"Failed to parse document: \" + error.getMessage();" ] }
+          },
+          "visual" : { "at" : { "x" : 888, "y" : 445 } },
+          "connect" : [ { "id" : "c33", "to" : "f16", "via" : [ { "x" : 888, "y" : 512 }, { "x" : 1232, "y" : 512 } ] } ]
+        } ],
+      "connect" : [ { "id" : "c32", "to" : "f14" } ]
+    }, {
+      "id" : "f14",
+      "type" : "Script",
+      "name" : "Set parse feedback",
+      "config" : {
+        "output" : {
+          "code" : [
+            "if (in.parsedDraft == null) {",
+            "  in.parseFeedback = ivy.cms.co(\"/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ParseNoValues\");",
+            "} else {",
+            "  in.parseFeedback = ivy.cms.co(\"/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ParseSuccess\");",
+            "}"
+          ]
+        }
+      },
+      "visual" : { "at" : { "x" : 1064, "y" : 408 }, "size" : { "width" : 120, "height" : 62 } },
+      "connect" : [ { "id" : "c34", "to" : "f16" } ]
+    }, {
+      "id" : "f15",
+      "type" : "Script",
+      "name" : "No document uploaded",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.parsedDraft = null;",
+            "in.parseFeedback = ivy.cms.co(\"/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/NoDocumentUploaded\");"
+          ]
+        }
+      },
+      "visual" : { "at" : { "x" : 280, "y" : 568 }, "size" : { "width" : 188, "height" : 62 } },
+      "connect" : [ { "id" : "c35", "to" : "f16", "via" : [ { "x" : 1232, "y" : 568 } ] } ]
+    }, {
+      "id" : "f16",
+      "type" : "CallSubEnd",
+      "visual" : { "at" : { "x" : 1232, "y" : 408 } }
+    } ]
+}

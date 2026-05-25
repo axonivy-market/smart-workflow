@@ -81,7 +81,7 @@
 
                 <!-- Decline Reasons -->
                 <div class="so-card mb-3">
-                  <div class="so-card-title"><i class="ti ti-alert-circle" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/DeclineReasonsTitle')}</div>
+                  <div class="so-card-title"><i class="ti ti-alert-circle text-2xl" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/DeclineReasonsTitle')}</div>
                   <ui:repeat value="#{supplierOnboardingDeclineBean.declineEntry.declineReasons}" var="reason" varStatus="vs">
                     <div class="so-notification-row">
                       <div class="so-decline-reason-num">#{vs.index + 1}</div>
@@ -92,7 +92,7 @@
 
                 <!-- Notifications Sent -->
                 <div class="so-card">
-                  <div class="so-card-title"><i class="ti ti-mail" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/NotificationsSentTitle')}</div>
+                  <div class="so-card-title"><i class="ti ti-mail text-2xl" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingDecline/NotificationsSentTitle')}</div>
                   <ui:repeat value="#{data.notificationRecords}" var="nr">
                     <div class="so-notification-row">
                       <div class="so-notification-avatar">

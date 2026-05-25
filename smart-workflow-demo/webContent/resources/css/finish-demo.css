@@ -109,24 +109,10 @@
   flex-shrink: 0;
 }
 
-.fd-flow-step-label {
-  color: var(--fd-muted);
-  text-align: center;
-  margin-top: 8px;
-  line-height: 1.3;
-  max-width: 72px;
-  transition: color .2s, font-weight .2s;
-}
-
 /* Active step highlight */
 .fd-step-active .fd-flow-bubble {
   box-shadow: 0 0 0 3px var(--fd-surface), 0 0 0 5px #6366f1;
   transform: scale(1.18);
-}
-
-.fd-step-active .fd-flow-step-label {
-  color: #4f46e5;
-  font-weight: 600;
 }
 
 /* Arrow connector */
@@ -324,35 +310,6 @@
   margin-top: 2px;
 }
 
-/* Tags */
-.fd-cap-tags {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  gap: 7px;
-}
-
-.fd-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: var(--fd-tag-bg);
-  color: var(--fd-tag-color);
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid var(--fd-tag-border);
-}
-
-.fd-tag-form {
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: row-reverse;
-}
-
-.fd-tag i { font-size: 13px; }
-
 /* ── Dot indicators ─────────────────────────────────────────────────── */
 .fd-step-dots {
   display: flex;
@@ -375,15 +332,6 @@
   width: 28px;
   border-radius: 4px;
   background: #6366f1;
-}
-
-/* Progress text */
-.fd-progress-wrap {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 13px;
-  color: var(--fd-muted);
-  font-weight: 500;
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────── */

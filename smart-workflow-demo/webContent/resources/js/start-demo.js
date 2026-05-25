@@ -218,7 +218,7 @@ var sdGen = (function () {
 
     // Reveal the timeline panel immediately (remove server-rendered hidden class)
     var tl = _getTimeline();
-    if (tl) { tl.classList.remove('hidden'); tl.style.display = ''; }
+    if (tl) { tl.classList.remove('hidden'); }
 
     // Disable button while running
     var btn = _getGenBtn();
@@ -309,9 +309,9 @@ window.sdKbTab = function (btn, panelId) {
   var tabsEl = btn.closest('.sd-kb-tabs');
   tabsEl.querySelectorAll('.sd-kb-tab').forEach(function (t) { t.classList.remove('sd-kb-tab--active'); });
   btn.classList.add('sd-kb-tab--active');
-  tabsEl.parentElement.querySelectorAll('.sd-kb-panel').forEach(function (p) { p.style.display = 'none'; });
+  tabsEl.parentElement.querySelectorAll('.sd-kb-panel').forEach(function (p) { p.classList.add('hidden'); });
   var target = document.getElementById(panelId);
-  if (target) target.style.display = '';
+  if (target) target.classList.remove('hidden');
 };
 
 window.sdKbChunkToggle = function (header) {

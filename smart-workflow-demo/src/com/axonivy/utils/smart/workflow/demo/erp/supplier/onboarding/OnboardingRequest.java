@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dev.langchain4j.model.output.structured.Description;

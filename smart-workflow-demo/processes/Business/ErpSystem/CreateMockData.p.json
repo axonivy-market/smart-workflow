@@ -34,8 +34,10 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.mock.MockDataGenerator;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.mock.ProcurementMockDataGenerator;",
             "",
-            "MockDataGenerator.mock();"
+            "MockDataGenerator.mock();",
+            "ProcurementMockDataGenerator.create();"
           ]
         }
       },

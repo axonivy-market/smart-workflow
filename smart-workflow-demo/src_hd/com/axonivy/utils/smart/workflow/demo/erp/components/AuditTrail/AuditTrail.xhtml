@@ -11,7 +11,7 @@
   <!-- fields needs to be inside a h:form tag (which is normaly added by the outer page) -->
 
   <div class="so-card">
-    <div class="so-card-title"><i class="ti ti-list-details" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/AuditTrail/Title')}</div>
+    <div class="so-card-title"><i class="ti ti-list-details text-2xl" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/AuditTrail/Title')}</div>
     <ui:fragment rendered="#{empty cc.attrs.auditTrail}">
       <div class="text-sm text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/AuditTrail/EmptyMessage')}</div>
     </ui:fragment>

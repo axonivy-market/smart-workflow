@@ -3,30 +3,38 @@ package com.axonivy.utils.smart.workflow.demo.erp.assistant;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback;
 
 /**
- * Immutable chat message for the AI assistant conversation history.
- *
- * <p>Records are used instead of an inner class so this type can be shared
- * across any {@link AssistantUploadSupport} implementor without coupling to a
- * specific managed bean.
+ * Chat message for the AI assistant conversation history.
  *
  * @param role      {@code "user"} or {@code "assistant"}
  * @param content   the message text
  * @param timestamp formatted display timestamp (HH:mm dd-MM-yyyy)
+ * @param feedbackList optional per-item feedback (analysis results or alternatives); null for supplier messages
  */
-public record AssistantChatMessage(String role, String content, String timestamp)
-    implements Serializable {
+public class AssistantChatMessage implements Serializable {
 
   private static final long serialVersionUID = 1L;
   private static final DateTimeFormatter FMT =
       DateTimeFormatter.ofPattern("HH:mm  dd-MM-yyyy");
 
-  /**
-   * Convenience constructor that auto-assigns the current timestamp.
-   */
+  private String role;
+  private String content;
+  private String timestamp;
+  private List<AgentFeedback> feedbackList;
+
   public AssistantChatMessage(String role, String content) {
-    this(role, content, LocalDateTime.now().format(FMT));
+    this(role, content, null);
+  }
+
+  public AssistantChatMessage(String role, String content, List<AgentFeedback> feedbackList) {
+    this.role = role;
+    this.content = content;
+    this.timestamp = LocalDateTime.now().format(FMT);
+    this.feedbackList = feedbackList;
   }
 
   public boolean isUser() {
@@ -37,8 +45,8 @@ public record AssistantChatMessage(String role, String content, String timestamp
     return "assistant".equals(role);
   }
 
-  // JSF/EL requires JavaBeans-style getters (records only expose role(), content(), timestamp())
-  public String getRole()      { return role; }
-  public String getContent()   { return content; }
-  public String getTimestamp() { return timestamp; }
+  public String getRole()              { return role; }
+  public String getContent()           { return content; }
+  public String getTimestamp()         { return timestamp; }
+  public List<AgentFeedback> getFeedbackList() { return feedbackList; }
 }

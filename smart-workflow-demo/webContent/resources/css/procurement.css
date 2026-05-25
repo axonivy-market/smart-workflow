@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Procurement Request — shared styles
+   All classes are prefixed with "pr-" to avoid conflicts with
+   Portal / PrimeFaces / Freya theme styles.
+   CSS variables reuse the --so-* names defined in
+   procurement-light.css / procurement-dark.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.container.frame {
+  background-color: var(--surface-a) !important;
+}
+
+
+/* ── Timeline ───────────────────────────────────────────────────── */
+.pr-tl-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.pr-tl-bubble {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 2px solid var(--so-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: .85rem;
+}
+.pr-tl-bubble-pending {
+  background: var(--so-bubble-pending-bg);
+  color: var(--so-bubble-pending-color);
+  border-color: var(--so-bubble-pending-border);
+}
+.pr-tl-bubble-running {
+  background: var(--so-running-card-bg);
+  color: var(--so-running-text);
+  border-color: var(--so-blue-border);
+}
+.pr-tl-bubble-completed {
+  background: var(--so-bubble-completed-bg);
+  color: var(--so-bubble-completed-color);
+  border-color: var(--so-bubble-completed-border);
+}
+.pr-tl-bubble-failed {
+  background: var(--so-bubble-failed-bg);
+  color: var(--so-bubble-failed-color);
+  border-color: var(--so-bubble-failed-border);
+}
+
+/* ── Checklist items ────────────────────────────────────────────── */
+.pr-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--so-border);
+  color: var(--so-text-light);
+}
+.pr-checklist-item:last-child { border-bottom: none; }
+.pr-checklist-item.pending {
+  color: var(--so-text-light);
+}
+.pr-checklist-item.running {
+  color: var(--so-running-text);
+}
+.pr-checklist-item.completed {
+  color: var(--so-green);
+}
+.pr-checklist-item.failed {
+  color: var(--so-red);
+}
+
+
+/* ── Utility ────────────────────────────────────────────────────── */
+@keyframes pr-spin {
+  to { transform: rotate(360deg); }
+}
+.pr-spin {
+  animation: pr-spin 1s linear infinite;
+  display: inline-block;
+}
+
+
+/* ── Start Demo page ────────────────────────────────────────────── */
+.pr-start-page {
+  min-height: 70vh;
+}
+.pr-hero-icon i {
+  font-size: 3rem;
+  color: var(--primary-color);
+}
+.pr-welcome-desc {
+  max-width: 500px;
+}
+.pr-gen-timeline {
+  max-width: 480px;
+}
+
+/* ── DataTable columns ──────────────────────────────────────────── */
+.pr-col-toggle  { width: 42px; }
+
+/* ── Trouble indicator ──────────────────────────────────────────── */
+.pr-trouble-tooltip { cursor: default; }
+.pr-trouble-icon    { color: var(--red-500); }
+
+/* ── Material table row states ──────────────────────────────────── */
+.trouble-row > td { background-color: rgba(239, 68, 68, .07) !important; }
+.changed-row > td { background-color: rgba(34, 197, 94, .10) !important; }

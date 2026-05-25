@@ -56,58 +56,9 @@
   margin-bottom: 4px;
 }
 
-/* ── Process steps grid (Slide 0) ────────────────────────────────── */
-.sd-steps-grid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.sd-step-card {
-  gap: 14px;
-  background: var(--sd-surface-deep);
-  border-radius: 12px;
-  padding: 16px;
-  border: 1px solid var(--sd-border-subtle);
-  transition: box-shadow .2s, border-color .2s;
-}
-
-.sd-step-card:hover {
-  box-shadow: 0 4px 16px rgba(99,102,241,.1);
-  border-color: var(--sd-accent-border);
-}
-
-.sd-step-card--span2 {
-  grid-column: span 2;
-}
-
-.sd-step-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  justify-content: center;
-}
-
-.sd-step-num {
-  text-transform: uppercase;
-  color: var(--sd-muted);
-  letter-spacing: .5px;
-  margin-bottom: 2px;
-}
-
-.sd-step-name {
-  color: var(--sd-title);
-  margin-bottom: 4px;
-}
-
-.sd-step-desc {
-  color: var(--sd-body);
-  line-height: 1.55;
-}
 
 /* ── Footer (Cancel + Start Demo) ────────────────────────────────── */
 .sd-footer {
-  display: flex !important;
-  justify-content: space-between;
   position: sticky;
   bottom: 0;
   background: transparent;
@@ -117,15 +68,8 @@
 
 /* ── Before / After comparison slide (Slide 2) ───────────────────── */
 .sd-compare-stats {
-  justify-content: center;
   gap: 40px;
   margin-bottom: 22px;
-  flex-wrap: wrap;
-}
-
-.sd-stat {
-  flex-direction: column;
-  text-align: center;
 }
 
 .sd-stat-row {
@@ -160,9 +104,7 @@
 }
 
 .sd-compare-col {
-  display: flex;
   gap: 24px;
-  align-items: flex-start;
   border-radius: 16px;
   padding: 20px;
   border: 1px solid;
@@ -178,29 +120,9 @@
   border-color: var(--sd-compare-after-border);
 }
 
-.sd-compare-col-header {
-  gap: 8px;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid;
-}
-
-.sd-compare-before .sd-compare-col-header {
-  color: var(--sd-compare-before-header-color);
-  border-bottom-color: var(--sd-compare-before-border);
-}
-
-.sd-compare-after .sd-compare-col-header {
-  color: var(--sd-compare-after-header-color);
-  border-bottom-color: var(--sd-compare-after-border);
-}
 
 .sd-compare-list {
   list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
   gap: 10px;
 }
 
@@ -241,7 +163,6 @@
 }
 
 .sd-download-header-top {
-  justify-content: space-between;
   gap: 12px;
   margin-bottom: 7px;
 }
@@ -303,7 +224,6 @@
 }
 
 .sd-download-row {
-  justify-content: space-between;
   padding: 9px 20px;
   gap: 12px;
   border-bottom: 1px solid var(--sd-border-subtle);
@@ -374,8 +294,6 @@
 @media (max-width: 640px) {
   .sd-hero-title { font-size: 1.9rem; }
   .sd-slide-body { padding: 20px; }
-  .sd-steps-grid { grid-template-columns: 1fr; }
-  .sd-step-card--span2 { grid-column: span 1; }
   .sd-compare-grid { grid-template-columns: 1fr; }
   .sd-compare-stats { gap: 20px; }
   .sd-footer { flex-wrap: wrap; gap: 12px; }
@@ -437,7 +355,6 @@
   inset: 0;
   background: rgba(0, 0, 0, .5);
   z-index: 9999;
-  justify-content: center;
 }
 
 .sd-kb-modal-overlay.is-open {
@@ -449,13 +366,11 @@
   border-radius: 16px;
   width: 90vw;
   max-height: 85vh;
-  flex-direction: column;
   box-shadow: 0 24px 64px rgba(0, 0, 0, .3);
   overflow: hidden;
 }
 
 .sd-kb-modal-head {
-  justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid var(--sd-border);
 }
@@ -489,13 +404,9 @@
 .sd-kb-modal-body {
   flex: 1;
   min-height: 0;
-  flex-direction: column;
   overflow: hidden;
 }
 
-.sd-kb-modal-body .sd-kb-tabs {
-  flex-shrink: 0;
-}
 
 .sd-kb-modal-body .sd-kb-panel {
   flex: 1;
@@ -596,7 +507,6 @@
 }
 
 .sd-kb-chunk-idx {
-  justify-content: center;
   min-width: 22px;
   height: 22px;
   padding: 0 5px;

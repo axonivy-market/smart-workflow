@@ -28,16 +28,16 @@
                 <p:messages id="last-retry-warning" />
                 <p:outputPanel rendered="#{data.clarificationCycle >= data.maxRetries and data.maxRetries > 0}">
                   <p:growl id="last-retry-growl" sticky="true" showDetail="true" />
-                  <div class="so-info-box so-info-box--warning mb-3" style="background:#fff8e1;border:1px solid #f59e0b;border-radius:8px;padding:12px 16px;display:flex;align-items:flex-start;gap:12px;">
-                    <i class="ti ti-alert-triangle" style="color:#f59e0b;font-size:1.25rem;flex-shrink:0;margin-top:2px;" />
+                  <div class="so-info-box so-info-box--warning mb-3">
+                    <i class="ti ti-alert-triangle" />
                     <div>
-                      <div class="font-semibold text-sm" style="color:#92400e;">
+                      <div class="font-semibold text-sm so-info-box-warning-title">
                         <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/FinalAttemptTitle')}">
                           <f:param value="#{data.clarificationCycle}" />
                           <f:param value="#{data.maxRetries}" />
                         </h:outputFormat>
                       </div>
-                      <div class="text-sm" style="color:#78350f;">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/FinalAttemptDesc')}</div>
+                      <div class="text-sm so-info-box-warning-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/FinalAttemptDesc')}</div>
                     </div>
                   </div>
                 </p:outputPanel>

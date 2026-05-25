@@ -20,7 +20,6 @@ public class SupplierRepository {
 
   private static final String FIELD_SUPPLIER_ID = "supplierId";
   private static final String FIELD_BUSINESS_NAME = "businessName";
-  private static final String FIELD_BUSINESS_ADDRESS = "businessAddress";
 
   private static final Set<String> LEGAL_FORM_STOPWORDS = Set.of(
       "gmbh", "ag", "ltd", "llc", "inc", "corp", "plc", "bv", "nv", "sa", "srl",

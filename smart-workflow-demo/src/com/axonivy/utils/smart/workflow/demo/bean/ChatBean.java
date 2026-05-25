@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import com.axonivy.utils.smart.workflow.demo.service.IvyAdapterService;
+import com.axonivy.utils.smart.workflow.demo.utils.IvyAdapterService;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
