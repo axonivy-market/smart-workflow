@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
-import com.axonivy.utils.smart.workflow.demo.service.IvyAdapterService;
+import com.axonivy.utils.smart.workflow.demo.utils.IvyAdapterService;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -413,14 +413,14 @@ public interface AssistantUploadSupport<T> {
 
       if (!history.isEmpty()) {
         AssistantChatMessage last = history.get(history.size() - 1);
-        latestQuestion = last.content();
+        latestQuestion = last.getContent();
         List<AssistantChatMessage> previousTurns = history.subList(0, history.size() - 1);
         if (!previousTurns.isEmpty()) {
           int fromIndex = Math.max(0, previousTurns.size() - 10);
           List<AssistantChatMessage> recentTurns = previousTurns.subList(fromIndex, previousTurns.size());
           StringBuilder sb = new StringBuilder();
           for (AssistantChatMessage msg : recentTurns) {
-            sb.append(msg.role()).append(": ").append(msg.content()).append("\n");
+            sb.append(msg.getRole()).append(": ").append(msg.getContent()).append("\n");
           }
           formattedHistory = sb.toString().trim();
         }
@@ -460,7 +460,7 @@ public interface AssistantUploadSupport<T> {
     }
     StringBuilder sb = new StringBuilder();
     for (AssistantChatMessage msg : history) {
-      sb.append(msg.role()).append(": ").append(msg.content()).append("\n");
+      sb.append(msg.getRole()).append(": ").append(msg.getContent()).append("\n");
     }
     return sb.toString().trim();
   }

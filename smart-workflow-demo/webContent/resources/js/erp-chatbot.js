@@ -105,7 +105,7 @@ function _assistantStreamLastMessage(clientId) {
  */
 function assistantShowThinking(clientId) {
   var thinking = document.getElementById(clientId + '-thinking');
-  if (thinking) { thinking.classList.remove('rag-hidden'); }
+  if (thinking) { thinking.classList.remove('hidden'); }
 
   _assistantThinkingIndex = 0;
   var thinkingText = document.getElementById(clientId + '-thinking-text');

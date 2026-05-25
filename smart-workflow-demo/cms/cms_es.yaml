@@ -39,85 +39,37 @@ Dialogs:
                       Panel0Detail1: El proveedor completa el perfil de la empresa y la información de contacto
                       Panel0Detail2: Carga los documentos de certificación y financieros requeridos
                       Panel0Detail3: Smart Workflow valida la integridad de la carga antes del procesamiento
-                      Panel0Num: Paso 01 de 07
-                      Panel0Tag1: Portal de proveedores
-                      Panel0Tag2: Carga de documentos
-                      Panel0Tag3: Inicio del flujo de trabajo
                       Panel0Title: Carga de documentos
                       Panel1Desc: La IA lee los PDFs cargados utilizando modelos de visión-lenguaje, identifica campos de datos de proveedores en múltiples documentos y rellena automáticamente todo el formulario de incorporación — sin escritura manual.
                       Panel1Detail1: Estructuras y tablas de PDF analizadas con modelos de visión-lenguaje
                       Panel1Detail2: Más de 15 campos de datos de proveedores identificados y extraídos automáticamente
                       Panel1Detail3: Formulario de incorporación completo rellenado automáticamente con datos validados
-                      Panel1Num: Paso 02 de 07
-                      Panel1Tag1: LLM
-                      Panel1Tag2: Salida estructurada
-                      Panel1Tag3: Multi-documento
-                      Panel1Tag4: Sin entrada manual
                       Panel1Title: Extracción de documentos con IA
                       Panel2Desc: Un asistente de IA basado en RAG está disponible en cada pantalla — respondiendo preguntas sobre reglas de políticas, explicando requisitos de cumplimiento y aclarando umbrales de riesgo en tiempo real.
                       Panel2Detail1: Documentos de política recuperados mediante búsqueda de similitud vectorial
                       Panel2Detail2: Respondidas las preguntas de proveedores y revisores durante todo el proceso
                       Panel2Detail3: Orientación contextual de cumplimiento proporcionada en cada paso
-                      Panel2Num: Paso 03 de 07
-                      Panel2Tag1: RAG
-                      Panel2Tag2: Búsqueda vectorial
-                      Panel2Tag3: Agente de chat
-                      Panel2Tag4: Consciente del contexto
                       Panel2Title: Guía contextual de P&R
                       Panel3Desc: La IA compara todos los documentos enviados con las reglas de política de adquisiciones, identificando certificaciones faltantes, credenciales vencidas y brechas de cumplimiento — con razonamiento completo y trazabilidad total.
                       Panel3Detail1: Todos los documentos validados contra más de 12 reglas de política de adquisiciones
                       Panel3Detail2: Brechas de cumplimiento identificadas y elementos marcados que requieren atención
                       Panel3Detail3: Informe de validación detallado con hallazgos explicables generado
-                      Panel3Num: Paso 04 de 07
-                      Panel3Tag1: Motor de políticas
-                      Panel3Tag2: Referencia cruzada
-                      Panel3Tag3: IA explicable
-                      Panel3Tag4: Trazabilidad
                       Panel3Title: Validación de documentos
                       Panel4Desc: La IA calcula una puntuación de riesgo compuesta en tres dimensiones — estabilidad financiera, cumplimiento de políticas y validez de certificaciones — proporcionando una calificación objetiva y auditable sobre 100.
                       Panel4Detail1: Estados financieros analizados para indicadores de estabilidad y liquidez
                       Panel4Detail2: Historial de cumplimiento, certificaciones y alineación de políticas cruzados
                       Panel4Detail3: Puntuación de riesgo compuesta ponderada con desglose completo producida
-                      Panel4Num: Paso 05 de 07
-                      Panel4Tag1: Análisis financiero
-                      Panel4Tag2: Modelo de riesgo
-                      Panel4Tag3: Puntuación ponderada
-                      Panel4Tag4: Puntuado /100
                       Panel4Title: Cálculo de riesgo
                       Panel5Desc: 'Basándose en el contexto completo — datos extraídos, puntuación de riesgo, hallazgos de validación y política — la IA decidió el camino del proceso de forma autónoma: aprobar, solicitar aclaración o rechazar.'
                       Panel5Detail1: Todas las entradas evaluadas contra reglas de decisión de enrutamiento configurables
                       Panel5Detail2: Ruta de resultado óptima determinada sin triaje humano
                       Panel5Detail3: Rama de flujo de trabajo apropiada activada con rastro de auditoría completo
-                      Panel5Num: Paso 06 de 07
-                      Panel5Tag1: Motor de decisiones
-                      Panel5Tag2: IA agéntica
-                      Panel5Tag3: Sin triaje
-                      Panel5Tag4: Autónomo
                       Panel5Title: Enrutamiento autónomo
                       Panel6Desc: La solicitud de incorporación ha sido completamente procesada y cerrada. Todos los datos extraídos, decisiones de IA, hallazgos de validación y el rastro de auditoría completo están permanentemente registrados y accesibles para revisión de cumplimiento.
                       Panel6Detail1: Todas las decisiones e razonamientos de IA registrados en el registro de auditoría permanente
                       Panel6Detail2: Registro del proveedor actualizado en el sistema con el resultado final
                       Panel6Detail3: Partes interesadas notificadas de la decisión y finalización del proceso
-                      Panel6Num: Paso 07 de 07
-                      Panel6Tag1: Rastro de auditoría
-                      Panel6Tag2: Cumplimiento
-                      Panel6Tag3: Proceso completado
                       Panel6Title: Caso cerrado
-                      ProgressText: Paso {0} de {1}
-                      Step0DotTitle: Carga de documentos
-                      Step0FlowLabel: Carga de<br />documentos
-                      Step1DotTitle: Extracción con IA
-                      Step1FlowLabel: Extracción<br />con IA
-                      Step2DotTitle: Guía P&R
-                      Step2FlowLabel: Guía<br />P&R
-                      Step3DotTitle: Validación de documentos
-                      Step3FlowLabel: Validación de<br />documentos
-                      Step4DotTitle: Puntuación de riesgo
-                      Step4FlowLabel: Puntuación<br />de riesgo
-                      Step5DotTitle: Enrutamiento autónomo
-                      Step5FlowLabel: Enrutamiento<br />autónomo
-                      Step6DotTitle: Caso cerrado
-                      Step6FlowLabel: Caso<br />cerrado
                     StartDemo:
                       AfterItem1: El proveedor carga documentos una vez a través de un formulario estructurado y guiado
                       AfterItem2: La IA visual extrae automáticamente 15+ campos de PDFs en segundos — sin entrada manual
@@ -152,10 +104,6 @@ Dialogs:
                       DocIso9001Name: ISO 9001 — Gestión de calidad
                       DocSelfDeclarationName: Autodeclaración de la empresa
                       DocSelfDeclarationSub: Autodeclaración de cumplimiento y política
-                      Dot0Title: Bienvenida
-                      Dot1Title: El proceso
-                      Dot2Title: Tradicional vs. IA
-                      Dot3Title: Generar datos
                       DownloadAllButton: Descargar todo
                       FileDetailsHide: Ocultar detalles
                       FileDetailsToggle: Detalles de archivos
@@ -464,6 +412,207 @@ Dialogs:
                         Step5: Puntuación de Riesgo
                         Step6Complete: Completado
                         Step6Declined: Rechazado
+                procurement:
+                  WelcomePage:
+                    PageTitle: Demo de solicitud de compras
+                    PrevButton: Anterior
+                    NextButton: Siguiente
+                    CancelButton: Cancelar
+                    ProceedButton: Continuar
+                    StartDemoButton: Iniciar demo
+                    FocusPara: A diferencia de los formularios de compras estándar, esta demo muestra un flujo de trabajo donde una sola carga de PDF reemplaza toda la entrada de datos manual. La IA lee el documento, completa cada campo, verifica cada artículo solicitado con el inventario en tiempo real, señala problemas de stock y propone alternativas listas para usar — todo antes de que haya escrito un solo carácter.
+                    HeroTitle1: "Compras de materiales"
+                    HeroTitle2: "impulsadas por IA"
+                    HeroSubtitle: 'De un solo PDF a una solicitud de compra completamente validada y analizada por IA — en segundos.'
+                    ParseTitle: "Análisis de documentos con IA"
+                    ParseDesc: '¿Tiene una solicitud de compra en PDF? Cárguela en el chat y pida al chatbot que la analice — cada campo del formulario se completa automáticamente en segundos.'
+                    ParseFlowLabel: "Análisis de documentos"
+                    ParseDetail1: 'Cargue su PDF directamente en el panel de chat (arrastrar y soltar o adjuntar)'
+                    ParseDetail2: 'Escriba "Analizar mi documento" para activar la extracción IA'
+                    ParseDetail3: Revise el formulario completado automáticamente y corrija cualquier campo si es necesario
+                    StockTitle: "Análisis de inventario y stock"
+                    StockDesc: 'Una vez completada su solicitud, pida al chatbot que la analice — cada artículo de material se verifica con el inventario en tiempo real y los problemas se señalan antes de enviar.'
+                    StockFlowLabel: "Análisis de stock"
+                    StockDetail1: 'Escriba "Analizar mi solicitud" en el chat en cualquier momento'
+                    StockDetail2: Los artículos problemáticos se resaltan en rojo directamente en la tabla de materiales
+                    StockDetail3: Cada problema viene con una explicación detallada de la IA y una recomendación
+                    AlternativeTitle: "Sugerencias de artículos alternativos"
+                    AlternativeDesc: 'Cuando los artículos se señalan como problemáticos, pida al chatbot que encuentre alternativas — la IA puntúa y clasifica los sustitutos del catálogo y elige la mejor coincidencia para usted.'
+                    AlternativeFlowLabel: Alternativas
+                    AlternativeDetail1: 'Escriba "Buscar alternativas" después de que se señalen artículos problemáticos'
+                    AlternativeDetail2: 'La IA clasifica los candidatos por especificación, disponibilidad, unidad y precio (puntuación 1–5 cada uno)'
+                    AlternativeDetail3: Haga clic en Aplicar en la respuesta del chat para reemplazar el artículo al instante
+                    TranslateTitle: "Traducción multilingüe"
+                    TranslateDesc: '¿Trabaja con un documento en idioma extranjero? Pida al chatbot que traduzca — todo el texto se convierte al instante mientras los códigos de materiales y términos técnicos permanecen intactos.'
+                    TranslateFlowLabel: "Traducción"
+                    TranslateDetail1: 'Escriba "Traducir a [idioma]" en el chat (ej. "Traducir al alemán")'
+                    TranslateDetail2: Los códigos de materiales, abreviaciones de unidades e identificadores nunca se alteran
+                    TranslateDetail3: "Soporta más de 50 idiomas incluyendo japonés, alemán, francés y más"
+                    CompareTitle: Lo que puede hacer el chatbot de IA
+                    CompareSubtitle: "Las cuatro capacidades se activan mediante conversación natural — sin botones adicionales, solo chat"
+                    Stat1Before: 1–3 días
+                    Stat1After: Segundos
+                    Stat1Label: Desde la carga hasta el formulario de solicitud completado
+                    Stat2Before: "Búsqueda manual"
+                    Stat2After: Un mensaje
+                    Stat2Label: Para verificar todos los artículos con el inventario en tiempo real
+                    Stat3Before: Horas
+                    Stat3After: "Instantáneo"
+                    Stat3Label: Para encontrar y clasificar artículos alternativos
+                    TraditionalHeader: Sin chatbot de IA
+                    AiHeader: Chatbot de IA en acción
+                    TraditionalItem1: Escribir manualmente cada descripción de artículo, código y cantidad desde documentos en papel
+                    TraditionalItem2: 'Sin verificación de stock — las escaseces se descubren solo al momento de entrega en obra'
+                    TraditionalItem3: 'Los artículos alternativos requieren horas de investigación manual en el catálogo'
+                    TraditionalItem4: Los documentos en idioma extranjero causan retrasos mientras se contrata a traductores
+                    TraditionalItem5: 'Los errores se descubren solo después del envío, requiriendo costosas correcciones'
+                    AiItem1: '"Analizar mi documento" — la IA lee el PDF y completa todos los campos al instante'
+                    AiItem2: '"Analizar mi solicitud" — cada artículo se verifica con el inventario en tiempo real'
+                    AiItem3: '"Buscar alternativas" — la IA clasifica sustitutos y selecciona la mejor coincidencia'
+                    AiItem4: '"Traducir" — un clic a más de 50 idiomas, términos técnicos preservados'
+                    AiItem5: 'Registro de auditoría estructurado y datos listos para aprobación — todo desde una conversación'
+                    ReadyTitle: "¿Listo para explorar?"
+                    ReadyDesc: 'Genere el catálogo de materiales de muestra y descargue el PDF de solicitud de compra ficticia para usarlo como entrada cuando la demo le pida cargar un documento.'
+                    DownloadTitle: Solicitud de compra de muestra (PDF)
+                    DownloadDesc: 'Use este documento cuando la demo le pida cargar una solicitud de compra. La IA lo analizará y completará todos los campos automáticamente.'
+                    DownloadButton: Descargar PDF
+                    GenerateButton: Generar datos ficticios
+                    DataAlreadyGeneratedBanner: "Catálogo de materiales ya generado. Haga clic en <strong>Iniciar demo</strong> para comenzar."
+                    GenStepTitle: Generar catálogo de materiales
+                    GenStepHint: 'Tipos de materiales, artículos y entradas de stock'
+                    DoneBannerPre: 'Catálogo listo — haga clic en'
+                    DoneBannerPost: "para comenzar!"
+                  StartDemo:
+                    PageTitle: "Solicitud de compras — Iniciar demo"
+                    WelcomeTitle: "Compras de materiales impulsadas por IA"
+                    WelcomeDesc: "Genere datos de materiales de muestra para explorar la experiencia completa de la demo de compras — análisis de documentos IA, análisis de inventario y sugerencias de artículos alternativos."
+                    GenerateButton: Generar datos ficticios
+                    DataAlreadyGeneratedBanner: "Catálogo de materiales ya generado. Haga clic en <strong>Iniciar demo</strong> para comenzar."
+                    Gen1Title: Generar catálogo de materiales
+                    Gen1Hint: 'Tipos de materiales, artículos y entradas de stock'
+                    GenDoneBanner: "Catálogo de materiales generado con éxito."
+                    StartDemoButton: Iniciar demo
+                  CreateRequestDialog:
+                    AssistantName: "Asistente IA de Compras"
+                    PageTitle: "Solicitud de compra de materiales"
+                    ProjectHeaderTitle: "Encabezado del proyecto"
+                    ProjectNameLabel: "Nombre del proyecto"
+                    ProjectNamePlaceholder: 'ej. Nuevo almacén, Múnich-Norte'
+                    ProjectNameRequired: "El nombre del proyecto es obligatorio."
+                    ProjectNumberLabel: "Número de proyecto / Centro de costes"
+                    ProjectNumberPlaceholder: ej. PRJ-2025-042
+                    ProjectNumberRequired: "El número de proyecto / Centro de costes es obligatorio."
+                    DeliveryAddressLabel: "Obra / Dirección de entrega"
+                    DeliveryAddressPlaceholder: "Dirección de entrega de la obra"
+                    DeliveryAddressRequired: "La obra / dirección de entrega es obligatoria."
+                    PriorityLabel: Prioridad
+                    RequesterLabel: Solicitante
+                    OrderNotesLabel: "Notas del pedido"
+                    OrderNotesPlaceholder: "Notas opcionales para compras"
+                    MaterialListTitle: "Lista de materiales"
+                    AddRowButton: "Añadir fila"
+                    EmptyMessage: "Sin artículos de material. Haga clic en 'Añadir fila' para comenzar."
+                    ExpandAriaHeader: Expandir
+                    PosColumn: Pos.
+                    TroubleTip: "Este artículo tiene un problema"
+                    MaterialColumn: Material
+                    QtyUnitColumn: "Cant. / Unidad"
+                    UnitPriceColumn: "Precio unitario (¥)"
+                    TotalNetColumn: "Total neto (¥)"
+                    RemoveRowTitle: "Eliminar fila"
+                    MaterialDescLabel: "Descripción del material"
+                    MaterialDescPlaceholder: ej. Cemento
+                    StandardGradeLabel: "Norma / Grado / Clase"
+                    StandardGradePlaceholder: ej. JIS R 5210
+                    QuantityLabel: Cantidad
+                    UnitLabel: Unidad
+                    UnitSelectPrompt: '– seleccionar –'
+                    SupplierLabel: Proveedor
+                    OptionalPlaceholder: Opcional
+                    UnitPriceNetLabel: "Precio unitario neto (¥)"
+                    PurposeLabel: "Propósito"
+                    PurposePlaceholder: ej. Cimentación
+                    CommentLabel: Comentario
+                    TotalNetLabel: 'Total neto:'
+                    CancelButton: Cancelar
+                    SaveButton: Guardar
+                    SubmitButton: Finalizar demo
+                    GuidanceParseDoc: "¿Puede analizar mi documento de compras?"
+                    GuidanceAnalyze: Analizar mi solicitud
+                    GuidanceAddMaterials: "¿Cómo añado materiales?"
+                    GuidanceAfterSubmit: "¿Qué ocurre después de enviar?"
+                    ParseNoValues: "No se pudieron extraer valores estructurados del documento."
+                    ParseSuccess: "Documento analizado y campos del formulario actualizados."
+                    NoDocumentUploaded: "No se ha cargado ningún documento. Por favor, cargue primero un archivo."
+                  FinishDemo:
+                    HeroTitle: Acaba de experimentar las adquisiciones impulsadas por IA.
+                    HeroSub: "Aquí tiene un resumen de todo lo que la IA gestionó — de forma automática, precisa y completamente trazable."
+                    PageTitle: "Smart Workflow — Resumen de solicitud de compra"
+                    Panel0Title: "Carga de documento y análisis IA"
+                    Panel0Desc: "Cargó un PDF de solicitud de compra — y eso fue todo. La IA identificó la estructura del documento, extrajo cada artículo y mapeó cada campo al campo de formulario correcto automáticamente."
+                    Panel0Detail1: "PDF cargado directamente a través del panel de chat IA (arrastrar y soltar o adjuntar archivo)"
+                    Panel0Detail2: "La IA analizó la estructura del documento y extrajo todos los campos de materiales automáticamente"
+                    Panel0Detail3: "Formulario de compra rellenado previamente sin necesidad de escribir manualmente"
+                    Panel1Title: "Asistente IA de adquisiciones"
+                    Panel1Desc: "Durante todo el proceso, un asistente de IA conversacional le guió — respondiendo preguntas, explicando artículos y ejecutando operaciones como el análisis y la búsqueda de alternativas mediante lenguaje natural."
+                    Panel1Detail1: "Interfaz de lenguaje natural para todas las acciones de adquisición — sin botones adicionales"
+                    Panel1Detail2: "Respuestas contextuales sobre materiales, políticas y requisitos de entrega"
+                    Panel1Detail3: "Operaciones activadas conversacionalmente — analizar, verificar, traducir, reemplazar"
+                    Panel2Title: "Análisis de inventario"
+                    Panel2Desc: "Cada artículo de su solicitud fue verificado automáticamente contra el catálogo de materiales y el inventario en tiempo real. Los artículos con problemas de stock fueron marcados y resaltados en el formulario."
+                    Panel2Detail1: "Todos los artículos verificados contra las entradas de inventario en tiempo real"
+                    Panel2Detail2: "Escasez de stock, artículos no disponibles e incompatibilidades de unidades marcados instantáneamente"
+                    Panel2Detail3: "Cada problema anotado con una explicación de IA y recomendación procesable"
+                    Panel3Title: Sugerencias de alternativas inteligentes
+                    Panel3Desc: "Para cada artículo marcado, la IA buscó en el catálogo, puntuó todos los sustitutos candidatos en especificación, disponibilidad, unidad y precio — y propuso el mejor reemplazo con un clic para aplicar."
+                    Panel3Detail1: "Artículos candidatos puntuados en cuatro dimensiones — especificación, disponibilidad, unidad y precio"
+                    Panel3Detail2: "Mejor alternativa seleccionada y clasificada por IA para cada artículo problemático"
+                    Panel3Detail3: "Aplicación con un clic para reemplazar el artículo marcado en la tabla de adquisición"
+                    Panel4Title: Solicitud enviada
+                    Panel4Desc: "La solicitud de compra se ha enviado correctamente. Todos los artículos, cantidades y datos verificados por IA están registrados en el sistema — listos para que el equipo de compras los procese."
+                    Panel4Detail1: "Todos los artículos, cantidades y detalles de entrega guardados y validados"
+                    Panel4Detail2: "Estado de inventario verificado por IA y selecciones de alternativas registradas"
+                    Panel4Detail3: "Equipo de compras notificado — la solicitud está lista para su procesamiento"
+                  ProcurementApproval:
+                    PageTitle: "Revisar solicitud de compras"
+                    BannerTitleTemplate: 'Revisión: {0}'
+                    BannerDesc: "Esta solicitud de compras está pendiente de su revisión. Por favor, examine la lista de materiales y proporcione su decisión."
+                    BannerMetaTemplate: 'Enviado por: {0}'
+                    TotalAmountLabel: Total (¥)
+                    RequestDetailsTitle: "Detalles de la solicitud"
+                    ProjectNameLabel: "Nombre del proyecto"
+                    ProjectNumberLabel: "Número de proyecto / Centro de costes"
+                    DeliveryAddressLabel: "Dirección de entrega"
+                    MaterialColumn: Material
+                    QtyUnitColumn: "Cant. / Unidad"
+                    TotalNetColumn: "Total neto (¥)"
+                    ApprovalCommentTitle: "Comentario de decisión"
+                    ApprovalCommentPlaceholder: "Proporcione un comentario para documentar su decisión (opcional para aprobación, recomendado para rechazo)..."
+                    ApproveButton: Aprobar
+                    RejectButton: Rechazar
+                  ProcurementCompletion:
+                    PageTitle: "Solicitud de compras aprobada"
+                    BannerTitleTemplate: 'Solicitud aprobada: {0}'
+                    BannerDesc: "La solicitud de compras ha sido aprobada. El equipo de compras procederá con la adquisición de materiales."
+                    BannerMetaTemplate: 'Aprobado para: {0}'
+                    TotalAmountLabel: Total (¥)
+                    ApprovedBadge: Aprobado
+                    ApprovedItemsTitle: "Materiales aprobados"
+                    MaterialColumn: Material
+                    QtyUnitColumn: "Cant. / Unidad"
+                    TotalNetColumn: "Total neto (¥)"
+                  ProcurementDecline:
+                    PageTitle: "Solicitud de compras rechazada"
+                    BannerTitleTemplate: 'Solicitud rechazada: {0}'
+                    BannerDesc: "La solicitud de compras ha sido rechazada por el Gerente de compras."
+                    BannerMetaTemplate: 'Enviado por: {0}'
+                    TotalAmountLabel: Total (¥)
+                    DeclinedBadge: Rechazado
+                    DeclineReasonTitle: "Motivo del rechazo"
+                    RequestSummaryTitle: "Resumen de la solicitud"
+                    MaterialColumn: Material
+                    QtyUnitColumn: "Cant. / Unidad"
+                    TotalNetColumn: "Total neto (¥)"
               rag:
                 RagDemo:
                   Chatbot:

@@ -23,8 +23,6 @@
     method-signature="void listener(javax.faces.event.ActionEvent)" />
 
   <!-- Agent chat attributes -->
-  <!-- Whether agent chat is enabled (true when agentSubProcessSignature is non-null) -->
-  <cc:attribute name="agentEnabled" type="java.lang.Boolean" default="false" />
   <!-- Adds the user message to history; called before getAnswerListener -->
   <cc:attribute name="sendMessageListener" method-signature="void action()" />
   <!-- Calls the agent subprocess and appends the response to history -->
@@ -35,23 +33,45 @@
   <cc:attribute name="userMessage" type="java.lang.String" />
   <!-- AgentGuidance list: questionPattern shown as chips, instruction goes to system prompt -->
   <cc:attribute name="guidanceList" type="java.util.List" />
+  <!-- Additional JSF component IDs to update after the agent answers (space-separated) -->
+  <cc:attribute name="updateAfterAnswer" type="java.lang.String" default="" />
+  <!-- Display name shown in the welcome screen and sticky header -->
+  <cc:attribute name="assistantName" type="java.lang.String"
+    default="#{cc.attrs.assistantName}" />
 </cc:interface>
 
 <cc:implementation>
   <h:outputStylesheet library="css" name="chat-ui.css" />
   <h:outputStylesheet library="css" name="supplier-chatbot.css" />
+  <h:outputStylesheet library="css" name="ai-assistant.css" />
   <h:outputScript library="js" name="erp-chatbot.js" />
+
+  <span id="#{cc.clientId}-i18n-thinking-fallback" class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingText')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-0"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase0')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-1"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase1')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-2"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase2')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-3"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase3')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-4"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase4')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-5"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase5')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-6"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase6')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-7"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase7')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-8"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase8')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-9"  class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase9')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-10" class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase10')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-11" class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase11')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-12" class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase12')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-13" class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase13')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-14" class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase14')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-15" class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase15')}</span>
+  <span id="#{cc.clientId}-i18n-phrase-16" class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ThinkingPhrase16')}</span>
 
   <div id="#{cc.clientId}" class="messenger-container flex flex-column so-ai-chat-wrapper">
 
-    <!-- Messages area — agent-enabled only -->
-    <ui:fragment rendered="#{cc.attrs.agentEnabled}">
-
-      <!-- Sticky header — only when conversation has started -->
+    <!-- Sticky header — only when conversation has started -->
       <ui:fragment rendered="#{not empty cc.attrs.chatHistory}">
       <div class="so-ai-sticky-header">
-        <div class="flex flex-column flex-1" style="min-width:0;">
-          <span class="so-ai-header-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/AssistantName')}</span>
+        <div class="flex flex-column flex-1 min-w-0">
+          <span class="so-ai-header-title">#{cc.attrs.assistantName}</span>
           <span class="so-ai-header-subtitle">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/HeaderSubtitle')}</span>
         </div>
       </div>
@@ -66,7 +86,7 @@
               <div class="rag-welcome-avatar flex align-items-center justify-content-center border-circle mb-3">
                 <i class="ti ti-robot text-white" />
               </div>
-              <div class="so-card-title mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/AssistantName')}</div>
+              <div class="so-card-title mb-2">#{cc.attrs.assistantName}</div>
             </div>
           </ui:fragment>
 
@@ -93,17 +113,54 @@
             <h:panelGroup rendered="#{not msg.user}" layout="block"
               styleClass="assistant-message-row mb-3">
               <div class="assistant-content">
-                <div class="assistant-name font-semibold mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/AssistantName')}</div>
+                <div class="assistant-name font-semibold mb-1">#{cc.attrs.assistantName}</div>
                 <div class="message-content"><h:outputText value="#{msg.content.trim()}" escape="true" /></div>
+
+                <ui:fragment rendered="#{not empty msg.feedbackList}">
+                  <div class="so-ai-feedback-card mt-2">
+                    <div class="so-ai-feedback-card-header">
+                      <span>#{not empty msg.feedbackList and msg.feedbackList[0].type != null
+                              and msg.feedbackList[0].type.name() == 'OPTION'
+                              ? ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/FeedbackAlternatives')
+                              : ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/FeedbackAnalysisResult')}</span>
+                    </div>
+                    <ui:repeat value="#{msg.feedbackList}" var="fb">
+                      <ui:fragment rendered="#{fb.type == null or fb.type.name() != 'OPTION'}">
+                        <div class="so-ai-feedback-item">
+                          <i class="so-ai-feedback-icon ti #{fb.success ? 'ti-circle-check so-ai-feedback-ok' : 'ti-circle-x so-ai-feedback-fail'}" />
+                          <span class="#{fb.success ? 'so-ai-feedback-ok' : 'so-ai-feedback-fail'}">#{fb.message}</span>
+                        </div>
+                      </ui:fragment>
+                      <ui:fragment rendered="#{fb.type != null and fb.type.name() == 'OPTION'}">
+                        <div class="so-ai-feedback-item so-ai-feedback-item-option">
+                          <div class="flex flex-column w-full">
+                            <span class="so-ai-option-text">#{fb.message}</span>
+                            <ui:fragment rendered="#{not empty fb.feedbackOption.description}">
+                              <div class="flex justify-content-end">
+                                <a href="#" class="so-ai-option-toggle"
+                                   onclick="var t=this.parentNode.nextElementSibling;var show=t.style.display==='none';t.style.display=show?'block':'none';this.querySelectorAll('span')[0].style.display=show?'none':'inline';this.querySelectorAll('span')[1].style.display=show?'inline':'none';return false;">
+                                  <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/ShowThinking')}</span>
+                                  <span class="hidden">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/HideThinking')}</span>
+                                </a>
+                              </div>
+                              <span class="so-ai-option-thinking">#{fb.feedbackOption.description}</span>
+                            </ui:fragment>
+                          </div>
+                        </div>
+                      </ui:fragment>
+                    </ui:repeat>
+                  </div>
+                </ui:fragment>
+
                 <div class="message-time text-right mt-1">#{msg.timestamp}</div>
               </div>
             </h:panelGroup>
           </ui:repeat>
 
           <!-- Thinking indicator — shown by JS while the agent is processing -->
-          <div class="assistant-message-row mb-3 thinking-status rag-hidden" id="#{cc.clientId}-thinking">
+          <div class="assistant-message-row mb-3 thinking-status hidden" id="#{cc.clientId}-thinking">
             <div class="assistant-content">
-              <div class="assistant-name font-semibold mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/AssistantName')}</div>
+              <div class="assistant-name font-semibold mb-1">#{cc.attrs.assistantName}</div>
               <div class="flex align-items-center gap-2">
                 <div class="thinking-spinner">
                   <span class="thinking-dot" /><span class="thinking-dot" /><span class="thinking-dot" />
@@ -115,7 +172,6 @@
 
         </h:panelGroup>
       </div>
-    </ui:fragment>
 
     <!-- Upload strip — shown above composer when files are queued or feedback exists -->
     <ui:fragment rendered="#{cc.attrs.uploadEnabled
@@ -165,9 +221,8 @@
       </h:form>
     </ui:fragment>
 
-    <!-- Composer — agent enabled -->
-    <ui:fragment rendered="#{cc.attrs.agentEnabled}">
-      <h:form id="assistant-chat-form">
+    <!-- Composer -->
+    <h:form id="assistant-chat-form">
         <div class="message-input-area surface-border surface-0 border-top-1 p-3">
           <div class="flex align-items-end gap-2">
             <ui:fragment rendered="#{cc.attrs.uploadEnabled}">
@@ -184,7 +239,7 @@
                 sizeLimit="5242880"
                 invalidFileMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidFileMessage')}"
                 invalidSizeMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidSizeMessage')}"
-                style="display:none;" />
+                styleClass="hidden" />
               <p:commandButton id="assistant-upload-trigger"
                 type="button"
                 icon="ti ti-file-upload"
@@ -227,55 +282,13 @@
 
             <p:remoteCommand name="assistantGetAnswer"
               action="#{cc.attrs.getAnswerListener}"
-              update="#{cc.clientId}:chat-content"
+              update="#{cc.clientId}:chat-content #{cc.attrs.updateAfterAnswer}"
               global="false"
               partialSubmit="true"
               oncomplete="assistantAfterAnswer('#{cc.clientId}');" />
           </div>
         </div>
-      </h:form>
-    </ui:fragment>
-
-    <!-- Composer — upload-only (agent disabled) -->
-    <ui:fragment rendered="#{not cc.attrs.agentEnabled}">
-      <div class="message-input-area surface-border surface-0 border-top-1 p-3">
-        <div class="flex align-items-end gap-2">
-          <ui:fragment rendered="#{cc.attrs.uploadEnabled}">
-            <h:form id="assistant-upload-form">
-              <p:fileUpload id="assistantDocUpload"
-                widgetVar="assistantDocUploadWidget"
-                listener="#{cc.attrs.uploadListener}"
-                mode="advanced"
-                auto="true"
-                dragDropSupport="false"
-                process="@this"
-                update="@all"
-                allowTypes="/(\.|\/)(txt|md|pdf)$/"
-                accept=".txt,.md,.pdf"
-                sizeLimit="5242880"
-                invalidFileMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidFileMessage')}"
-                invalidSizeMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidSizeMessage')}"
-                style="display:none;" />
-              <p:commandButton id="assistant-upload-trigger"
-                type="button"
-                icon="ti ti-file-upload"
-                ariaLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/UploadTriggerTitle')}"
-                title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/UploadTriggerTitle')}"
-                styleClass="so-ai-upload-trigger"
-                onclick="PF('assistantDocUploadWidget').show(); return false;" />
-            </h:form>
-          </ui:fragment>
-          <p:inputTextarea id="assistant-question"
-            styleClass="flex-1 message-input"
-            placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InputPlaceholder')}"
-            disabled="true" />
-          <p:commandButton id="assistant-send"
-            icon="si si-arrow-up-1"
-            styleClass="p-button-rounded send-btn"
-            disabled="true" />
-        </div>
-      </div>
-    </ui:fragment>
+    </h:form>
 
   </div>
 </cc:implementation>

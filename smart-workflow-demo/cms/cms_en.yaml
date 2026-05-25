@@ -39,85 +39,37 @@ Dialogs:
                       Panel0Detail1: Supplier completes company profile and contact information
                       Panel0Detail2: Uploads required certification and financial documents
                       Panel0Detail3: Smart Workflow validates upload completeness before processing
-                      Panel0Num: Step 01 of 07
-                      Panel0Tag1: Supplier Portal
-                      Panel0Tag2: Document Upload
-                      Panel0Tag3: Workflow Start
                       Panel0Title: Document Upload
                       Panel1Desc: AI reads uploaded PDFs using vision-language models, identifies supplier data fields across multiple documents, and automatically pre-fills the entire onboarding form — zero manual typing required.
                       Panel1Detail1: Parsed PDF structures and tables using vision-language models
                       Panel1Detail2: Identified and extracted 15+ supplier data fields automatically
                       Panel1Detail3: Auto-populated the complete onboarding form with validated data
-                      Panel1Num: Step 02 of 07
-                      Panel1Tag1: LLM
-                      Panel1Tag2: Structured Output
-                      Panel1Tag3: Multi-doc
-                      Panel1Tag4: Zero Manual Entry
                       Panel1Title: AI Document Extraction
                       Panel2Desc: A RAG-powered AI assistant is available at every screen — answering questions about policy rules, explaining compliance requirements, and clarifying risk thresholds in real time throughout the process.
                       Panel2Detail1: Retrieved policy documents using vector similarity search
                       Panel2Detail2: Answered supplier and reviewer questions throughout the process
                       Panel2Detail3: Provided contextual compliance guidance at each step
-                      Panel2Num: Step 03 of 07
-                      Panel2Tag1: RAG
-                      Panel2Tag2: Vector Search
-                      Panel2Tag3: Chat Agent
-                      Panel2Tag4: Context-aware
                       Panel2Title: Contextual Q&A Guidance
                       Panel3Desc: AI cross-checks all submitted documents against procurement policy rules, identifying missing certifications, expired credentials, and compliance gaps — with complete reasoning and full traceability.
                       Panel3Detail1: Validated all documents against 12+ procurement policy rules
                       Panel3Detail2: Identified compliance gaps and flagged items requiring attention
                       Panel3Detail3: Generated a detailed validation report with explainable findings
-                      Panel3Num: Step 04 of 07
-                      Panel3Tag1: Policy Engine
-                      Panel3Tag2: Cross-reference
-                      Panel3Tag3: Explainable AI
-                      Panel3Tag4: Traceability
                       Panel3Title: Document Validation
                       Panel4Desc: AI computes a composite risk score across three dimensions — financial stability, policy compliance, and certification validity — delivering an objective, auditable rating out of 100.
                       Panel4Detail1: Analysed financial statements for stability and liquidity indicators
                       Panel4Detail2: Cross-referenced compliance history, certifications, and policy alignment
                       Panel4Detail3: Produced a weighted composite risk score with full breakdown
-                      Panel4Num: Step 05 of 07
-                      Panel4Tag1: Financial Analysis
-                      Panel4Tag2: Risk Model
-                      Panel4Tag3: Weighted Scoring
-                      Panel4Tag4: Scored /100
                       Panel4Title: Risk Calculation
                       Panel5Desc: 'Based on the complete context — extracted data, risk score, validation findings, and policy — the AI decided the process path autonomously: approve, request clarification, or decline.'
                       Panel5Detail1: Evaluated all inputs against configurable routing decision rules
                       Panel5Detail2: Determined the optimal outcome path without human triage
                       Panel5Detail3: Triggered the appropriate workflow branch with a full audit trail
-                      Panel5Num: Step 06 of 07
-                      Panel5Tag1: Decision Engine
-                      Panel5Tag2: Agentic AI
-                      Panel5Tag3: Zero Triage
-                      Panel5Tag4: Autonomous
                       Panel5Title: Autonomous Routing
                       Panel6Desc: The onboarding request has been fully processed and closed. All extracted data, AI decisions, validation findings, and the complete audit trail are permanently recorded and accessible for compliance review.
                       Panel6Detail1: All AI decisions and reasoning recorded in the permanent audit log
                       Panel6Detail2: Supplier record updated in the system with the final outcome
                       Panel6Detail3: Stakeholders notified of the decision and process completion
-                      Panel6Num: Step 07 of 07
-                      Panel6Tag1: Audit Trail
-                      Panel6Tag2: Compliance
-                      Panel6Tag3: Process Complete
                       Panel6Title: Case Closed
-                      ProgressText: Step {0} of {1}
-                      Step0DotTitle: Document Upload
-                      Step0FlowLabel: Document<br />Upload
-                      Step1DotTitle: AI Extraction
-                      Step1FlowLabel: AI<br />Extraction
-                      Step2DotTitle: Q&A Guidance
-                      Step2FlowLabel: Q&A<br />Guidance
-                      Step3DotTitle: Document Validation
-                      Step3FlowLabel: Document<br />Validation
-                      Step4DotTitle: Risk Scoring
-                      Step4FlowLabel: Risk<br />Scoring
-                      Step5DotTitle: Autonomous Routing
-                      Step5FlowLabel: Autonomous<br />Routing
-                      Step6DotTitle: Case Closed
-                      Step6FlowLabel: Case<br />Closed
                     StartDemo:
                       AfterItem1: Supplier uploads documents once via a structured, guided form
                       AfterItem2: Vision AI auto-extracts 15+ fields from PDFs in seconds — zero manual entry
@@ -152,10 +104,6 @@ Dialogs:
                       DocIso9001Name: ISO 9001 — Quality Management
                       DocSelfDeclarationName: Company Self-Declaration
                       DocSelfDeclarationSub: Compliance and policy self-declaration
-                      Dot0Title: Welcome
-                      Dot1Title: The Process
-                      Dot2Title: Traditional vs. AI
-                      Dot3Title: Generate Data
                       DownloadAllButton: Download All
                       FileDetailsHide: Hide details
                       FileDetailsToggle: File details
@@ -397,6 +345,27 @@ Dialogs:
                         ParseSuccess: Document parsed and form fields were updated.
                         RemoveButtonTitle: Remove
                         ThinkingText: Thinking...
+                        ThinkingPhrase0: Analyzing your request
+                        ThinkingPhrase1: Processing your input
+                        ThinkingPhrase2: Thinking through your question
+                        ThinkingPhrase3: Reviewing the details
+                        ThinkingPhrase4: Considering your request
+                        ThinkingPhrase5: Working on it
+                        ThinkingPhrase6: Connecting the dots
+                        ThinkingPhrase7: Compiling insights
+                        ThinkingPhrase8: Evaluating your options
+                        ThinkingPhrase9: Formulating an answer
+                        ThinkingPhrase10: Cross-referencing information
+                        ThinkingPhrase11: Checking available data
+                        ThinkingPhrase12: Putting it all together
+                        ThinkingPhrase13: Refining the response
+                        ThinkingPhrase14: Almost there
+                        ThinkingPhrase15: Preparing your answer
+                        ThinkingPhrase16: Generating response
+                        FeedbackAnalysisResult: Analysis Result
+                        FeedbackAlternatives: Alternatives
+                        ShowThinking: Show thinking
+                        HideThinking: Hide thinking
                         UploadTriggerTitle: Upload supplier draft
                       SupplierDetails:
                         AdditionalNotesLabel: Additional Notes
@@ -464,6 +433,207 @@ Dialogs:
                         Step5: Risk Score
                         Step6Complete: Complete
                         Step6Declined: Declined
+                procurement:
+                  WelcomePage:
+                    PageTitle: Procurement Request Demo
+                    PrevButton: Previous
+                    NextButton: Next
+                    CancelButton: Cancel
+                    ProceedButton: Proceed
+                    StartDemoButton: Start Demo
+                    FocusPara: Unlike standard procurement forms, this demo shows a workflow where a single PDF upload replaces all manual data entry. The AI reads the document, fills every field, cross-checks each requested item against live inventory, flags stock issues, and proposes ready-to-use alternatives — all before you have typed a single character.
+                    HeroTitle1: AI-Powered
+                    HeroTitle2: Material Procurement
+                    HeroSubtitle: 'From a single PDF to a fully validated, AI-analyzed procurement request — in seconds.'
+                    ParseTitle: AI Document Parsing
+                    ParseDesc: 'Have a PDF procurement request? Upload it in the chat and ask the chatbot to parse it — every form field is filled automatically in seconds.'
+                    ParseFlowLabel: Document Parsing
+                    ParseDetail1: 'Upload your PDF directly in the chat panel (drag & drop or attach)'
+                    ParseDetail2: 'Type "Parse my document" to trigger the AI extraction'
+                    ParseDetail3: Review the auto-filled form and correct any field if needed
+                    StockTitle: Inventory & Stock Analysis
+                    StockDesc: 'Once your request is filled, ask the chatbot to analyze it — every material item is cross-checked against live inventory and problems are flagged before you submit.'
+                    StockFlowLabel: Stock Analysis
+                    StockDetail1: 'Type "Analyze my request" in the chat at any time'
+                    StockDetail2: Trouble items are highlighted in red directly in the material table
+                    StockDetail3: Each issue comes with a detailed AI explanation and recommendation
+                    AlternativeTitle: Alternative Item Suggestions
+                    AlternativeDesc: 'When items are flagged as problems, ask the chatbot to find alternatives — AI scores and ranks catalog substitutes, then picks the best match for you.'
+                    AlternativeFlowLabel: Alternatives
+                    AlternativeDetail1: 'Type "Find alternatives" after trouble items are flagged'
+                    AlternativeDetail2: 'AI ranks candidates on spec, availability, unit, and price (1–5 score each)'
+                    AlternativeDetail3: Click Apply in the chat response to replace the item instantly
+                    TranslateTitle: Multilingual Translation
+                    TranslateDesc: 'Working with a foreign-language document? Ask the chatbot to translate — all text is converted instantly while material codes and technical terms stay untouched.'
+                    TranslateFlowLabel: Translation
+                    TranslateDetail1: 'Type "Translate to [language]" in the chat (e.g. "Translate to German")'
+                    TranslateDetail2: Material codes, unit abbreviations and identifiers are never altered
+                    TranslateDetail3: Supports 50+ languages including Japanese, German, French and more
+                    CompareTitle: What the AI Chatbot Can Do
+                    CompareSubtitle: All four capabilities are triggered by natural conversation — no extra buttons, just chat
+                    Stat1Before: 1–3 days
+                    Stat1After: Seconds
+                    Stat1Label: From upload to completed request form
+                    Stat2Before: Manual lookup
+                    Stat2After: One prompt
+                    Stat2Label: To check all items against live inventory
+                    Stat3Before: Hours
+                    Stat3After: Instant
+                    Stat3Label: To find and rank alternative items
+                    TraditionalHeader: Without AI Chatbot
+                    AiHeader: AI Chatbot in Action
+                    TraditionalItem1: Manually type every item description, code, and quantity from paper documents
+                    TraditionalItem2: 'No stock check — shortages discovered only at site delivery'
+                    TraditionalItem3: 'Alternative items require hours of manual catalog research'
+                    TraditionalItem4: Foreign-language documents cause delays while translators are engaged
+                    TraditionalItem5: 'Errors found only after submission, requiring costly rework'
+                    AiItem1: '"Parse my document" — AI reads the PDF and fills all fields instantly'
+                    AiItem2: '"Analyze my request" — every item cross-checked against live inventory'
+                    AiItem3: '"Find alternatives" — AI ranks substitutes and selects the best match'
+                    AiItem4: '"Translate" — one-click into 50+ languages, technical terms preserved'
+                    AiItem5: 'Structured audit trail and approval-ready data — all from one conversation'
+                    ReadyTitle: Ready to Explore?
+                    ReadyDesc: 'Generate the sample material catalog and download the mock procurement request PDF to use as input when the demo asks you to upload a document.'
+                    DownloadTitle: Sample Procurement Request (PDF)
+                    DownloadDesc: 'Use this document when the demo asks you to upload a procurement request. The AI will parse it and fill in all fields automatically.'
+                    DownloadButton: Download PDF
+                    GenerateButton: Generate Mock Data
+                    DataAlreadyGeneratedBanner: Material catalog already generated. Click <strong>Start Demo</strong> to begin.
+                    GenStepTitle: Generate Material Catalog
+                    GenStepHint: 'Material types, items & inventory entries'
+                    DoneBannerPre: 'Catalog ready — click'
+                    DoneBannerPost: to begin!
+                  StartDemo:
+                    PageTitle: Procurement Request — Start Demo
+                    WelcomeTitle: AI-Powered Material Procurement
+                    WelcomeDesc: Generate sample material data to explore the full procurement demo experience — AI document parsing, inventory analysis, and alternative item suggestions.
+                    GenerateButton: Generate Mock Data
+                    DataAlreadyGeneratedBanner: Material catalog already generated. Click <strong>Start Demo</strong> to begin.
+                    Gen1Title: Generate Material Catalog
+                    Gen1Hint: 'Material types, items & inventory entries'
+                    GenDoneBanner: Material catalog generated successfully.
+                    StartDemoButton: Start Demo
+                  CreateRequestDialog:
+                    AssistantName: AI Procurement Assistant
+                    PageTitle: Material Procurement Request
+                    ProjectHeaderTitle: Project Header
+                    ProjectNameLabel: Project Name
+                    ProjectNamePlaceholder: 'e.g. New Warehouse, Munich-North'
+                    ProjectNameRequired: Project Name is required.
+                    ProjectNumberLabel: Project Number / Cost Center
+                    ProjectNumberPlaceholder: e.g. PRJ-2025-042
+                    ProjectNumberRequired: Project Number / Cost Center is required.
+                    DeliveryAddressLabel: Construction Site / Delivery Address
+                    DeliveryAddressPlaceholder: Delivery address of the construction site
+                    DeliveryAddressRequired: Construction Site / Delivery Address is required.
+                    PriorityLabel: Priority
+                    RequesterLabel: Requester
+                    OrderNotesLabel: Order Notes
+                    OrderNotesPlaceholder: Optional notes for purchasing
+                    MaterialListTitle: Material List
+                    AddRowButton: Add Row
+                    EmptyMessage: "No material items. Click 'Add Row' to start."
+                    ExpandAriaHeader: Expand
+                    PosColumn: Pos.
+                    TroubleTip: This item has a problem
+                    MaterialColumn: Material
+                    QtyUnitColumn: Qty / Unit
+                    UnitPriceColumn: Unit Price (¥)
+                    TotalNetColumn: Total net (¥)
+                    RemoveRowTitle: Remove row
+                    MaterialDescLabel: Material Description
+                    MaterialDescPlaceholder: e.g. Cement
+                    StandardGradeLabel: Standard / Grade / Class
+                    StandardGradePlaceholder: e.g. JIS R 5210
+                    QuantityLabel: Quantity
+                    UnitLabel: Unit
+                    UnitSelectPrompt: '– select –'
+                    SupplierLabel: Supplier
+                    OptionalPlaceholder: Optional
+                    UnitPriceNetLabel: Unit Price net (¥)
+                    PurposeLabel: Purpose
+                    PurposePlaceholder: e.g. Foundation
+                    CommentLabel: Comment
+                    TotalNetLabel: 'Total net:'
+                    CancelButton: Cancel
+                    SaveButton: Save
+                    SubmitButton: Finish Demo
+                    GuidanceParseDoc: Can you parse my procurement document?
+                    GuidanceAnalyze: Analyze my request
+                    GuidanceAddMaterials: How do I add materials?
+                    GuidanceAfterSubmit: What happens after I submit?
+                    ParseNoValues: No structured values were extracted from the document.
+                    ParseSuccess: Document parsed and form fields were updated.
+                    NoDocumentUploaded: No document was uploaded. Please upload a file first.
+                  FinishDemo:
+                    HeroTitle: You just experienced AI-powered procurement.
+                    HeroSub: Here is a summary of everything the AI handled — automatically, accurately, and fully traceable.
+                    PageTitle: Smart Workflow — Procurement Request Summary
+                    Panel0Title: Document Upload & AI Parsing
+                    Panel0Desc: You uploaded a PDF procurement request — and that was all. The AI identified the document structure, extracted every item, and mapped each field to the correct form input automatically.
+                    Panel0Detail1: PDF uploaded directly via the AI chat panel (drag & drop or file attach)
+                    Panel0Detail2: AI parsed document structure and extracted all material fields automatically
+                    Panel0Detail3: Procurement form pre-filled with zero manual typing required
+                    Panel1Title: AI Procurement Assistant
+                    Panel1Desc: Throughout the process, a conversational AI assistant guided you — answering questions, explaining items, and executing operations like parsing, analysing, and finding alternatives through natural language.
+                    Panel1Detail1: Natural language interface for all procurement actions — no extra buttons
+                    Panel1Detail2: Context-aware answers about materials, policy, and delivery requirements
+                    Panel1Detail3: Operations triggered conversationally — parse, analyse, translate, replace
+                    Panel2Title: Inventory Analysis
+                    Panel2Desc: Every material item in your request was cross-checked against the live material catalog and inventory. Items with stock issues were flagged and highlighted directly in the form.
+                    Panel2Detail1: All items matched against real-time inventory entries in the material catalog
+                    Panel2Detail2: Stock shortages, unavailable items, and unit mismatches flagged instantly
+                    Panel2Detail3: Each issue annotated with an AI explanation and actionable recommendation
+                    Panel3Title: Smart Alternative Suggestions
+                    Panel3Desc: For every flagged item, the AI searched the catalog, scored all candidate substitutes on specification match, availability, unit compatibility, and price — then proposed the best replacement with one click to apply.
+                    Panel3Detail1: Candidate items scored across four dimensions — spec, availability, unit, and price
+                    Panel3Detail2: Best-fit alternative selected and ranked by AI for each problem item
+                    Panel3Detail3: One-click apply replaced the flagged item directly in the procurement table
+                    Panel4Title: Request Submitted
+                    Panel4Desc: The procurement request has been submitted successfully. All material items, quantities, and AI-verified data are captured in the system — ready for the purchasing team to process.
+                    Panel4Detail1: All material items, quantities, and delivery details saved and validated
+                    Panel4Detail2: AI-verified inventory status and alternative selections recorded
+                    Panel4Detail3: Purchasing team notified — request is ready for processing
+                  ProcurementApproval:
+                    PageTitle: Review Procurement Request
+                    BannerTitleTemplate: 'Review: {0}'
+                    BannerDesc: This procurement request is awaiting your review. Please examine the material list and provide your decision.
+                    BannerMetaTemplate: 'Submitted by: {0}'
+                    TotalAmountLabel: Total (¥)
+                    RequestDetailsTitle: Request Details
+                    ProjectNameLabel: Project Name
+                    ProjectNumberLabel: Project Number / Cost Center
+                    DeliveryAddressLabel: Delivery Address
+                    MaterialColumn: Material
+                    QtyUnitColumn: Qty / Unit
+                    TotalNetColumn: Total net (¥)
+                    ApprovalCommentTitle: Decision Comment
+                    ApprovalCommentPlaceholder: Provide a comment to document your decision rationale (optional for approval, recommended for rejection)...
+                    ApproveButton: Approve
+                    RejectButton: Reject
+                  ProcurementCompletion:
+                    PageTitle: Procurement Request Approved
+                    BannerTitleTemplate: 'Request Approved: {0}'
+                    BannerDesc: The procurement request has been approved. The purchasing team will proceed with material acquisition.
+                    BannerMetaTemplate: 'Approved for: {0}'
+                    TotalAmountLabel: Total (¥)
+                    ApprovedBadge: Approved
+                    ApprovedItemsTitle: Approved Materials
+                    MaterialColumn: Material
+                    QtyUnitColumn: Qty / Unit
+                    TotalNetColumn: Total net (¥)
+                  ProcurementDecline:
+                    PageTitle: Procurement Request Declined
+                    BannerTitleTemplate: 'Request Declined: {0}'
+                    BannerDesc: The procurement request has been declined by the Purchasing Manager.
+                    BannerMetaTemplate: 'Submitted by: {0}'
+                    TotalAmountLabel: Total (¥)
+                    DeclinedBadge: Declined
+                    DeclineReasonTitle: Reason for Decline
+                    RequestSummaryTitle: Request Summary
+                    MaterialColumn: Material
+                    QtyUnitColumn: Qty / Unit
+                    TotalNetColumn: Total net (¥)
               rag:
                 RagDemo:
                   Chatbot:
@@ -824,6 +994,69 @@ Features:
 
       Return a PolicyValidationResult with the complete list of findings.
       Leave the processingStep field null — it is set by the calling process.
+KnowledgeBase:
+  procurement:
+    ProcurementRequest: |
+      # Material Procurement Request — Business Process Knowledge Base
+
+      ## Process Overview
+      The Material Procurement Request process allows construction project teams to formally request materials.
+      It follows a structured two-step workflow: the Requester submits the request form, and the Purchasing Manager reviews and approves or rejects it.
+      All requests are tracked by status throughout the lifecycle.
+
+      ## Workflow Steps
+
+      ### Step 1: Fill Procurement Request (Requester)
+      The Requester completes the material procurement request form, providing details such as required materials, quantities, project context, and justification.
+      Upon submission, the request status is set to SUBMITTED and the record is saved in the system.
+      The case is tagged with the procurement request ID for downstream tracking.
+
+      ### Step 2: Review Procurement Request (Purchasing Manager)
+      The Purchasing Manager receives the task to review the submitted request.
+      They examine the request details and provide one of two decisions:
+      - APPROVED: The request is authorized and marked as APPROVED.
+      - REJECTED: The request is denied and marked as REJECTED.
+      The Purchasing Manager may also add an approval comment to document the rationale for the decision.
+
+      ## Request Statuses
+      - SUBMITTED: The request has been filled in and submitted by the Requester, and is awaiting review.
+      - APPROVED: The Purchasing Manager has authorized the procurement request.
+      - REJECTED: The Purchasing Manager has denied the procurement request.
+
+      ---
+
+      ## Common Questions and Answers
+
+      Q: Who can submit a material procurement request?
+      A: Any team member assigned to the Requester role can initiate and submit a material procurement request through the system.
+
+      Q: What information is required when submitting a request?
+      A: The request form requires details about the materials needed, quantities, the associated construction project, and a justification for the procurement.
+
+      Q: Who is responsible for reviewing the request?
+      A: The Purchasing Manager is exclusively responsible for reviewing, approving, or rejecting all procurement requests.
+
+      Q: How will I know if my request has been reviewed?
+      A: The status of your request will be updated to either APPROVED or REJECTED once the Purchasing Manager completes their review. You can track the status in the system at any time.
+
+      Q: Can I modify my request after it has been submitted?
+      A: Once a request is submitted its status is set to SUBMITTED and it cannot be edited. If corrections are needed, contact the Purchasing Manager directly.
+
+      Q: What happens after my request is approved?
+      A: An APPROVED status confirms authorization to proceed with material acquisition. The procurement team will coordinate the fulfillment of the materials.
+
+      Q: What should I do if my request is rejected?
+      A: A rejected request includes comments from the Purchasing Manager explaining the reason for the decision. Review the comments, address the concerns, and submit a new request with the necessary adjustments.
+
+      Q: Can the Purchasing Manager add remarks to the decision?
+      A: Yes. The Purchasing Manager can include an approval comment when reviewing a request to document the justification or provide guidance to the Requester.
+
+      Q: How is a procurement request identified in the system?
+      A: Each procurement request is assigned a unique ID upon creation. This ID is stored as a case custom field (procurementRequestId) and is used to link the request across workflow steps.
+
+      Q: What is the typical flow for a procurement request?
+      A: The process starts when a Requester submits the form (status: SUBMITTED). The case is then assigned to the Purchasing Manager for review. The manager approves or rejects the request (status: APPROVED or REJECTED), completing the workflow.
+
 Labels:
   Actions: Actions
   Active: Active
@@ -837,6 +1070,11 @@ Labels:
   Download: Download
   Finish: Finish
   Optional: Optional
+  Priority:
+    NORMAL: Normal
+    HIGH: High
+    URGENT: Urgent
+    LOW: Low
   Replace: Replace
   Required: Required
   Resolve: Resolve

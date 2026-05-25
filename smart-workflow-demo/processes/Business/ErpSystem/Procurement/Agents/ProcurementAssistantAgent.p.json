@@ -1,0 +1,967 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "20A06501DF1761AB",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.ProcurementAssistantAgentData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "invokeAssistantAgent",
+      "config" : {
+        "signature" : "invokeAssistantAgent",
+        "input" : {
+          "params" : [
+            { "name" : "query", "type" : "String", "desc" : "The user's message or question" },
+            { "name" : "chatHistory", "type" : "java.util.List<String>", "desc" : "Previous conversation messages" },
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest", "desc" : "The current procurement request" }
+          ],
+          "map" : {
+            "out.query" : "param.query",
+            "out.chatHistory" : "param.chatHistory",
+            "out.request" : "param.request"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse", "desc" : "Agent response containing text result and per-item feedback list" },
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest", "desc" : "The updated procurement request (hasTrouble flags, modifications applied)" }
+          ],
+          "map" : {
+            "result.agentResponse" : "in.agentResponse",
+            "result.request" : "in.request"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "e10", "to" : "f30" }
+      ]
+    }, {
+      "id" : "f30",
+      "type" : "Script",
+      "name" : "Set Today + Format Request",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.today = java.time.LocalDate.now().toString();",
+            "in.userLanguage = ivy.session.contentLocale.getDisplayLanguage();",
+            "if (in.chatHistory != null && !in.chatHistory.isEmpty()) {",
+            "  in.formattedHistory = String.join(\"\\n\", in.chatHistory);",
+            "} else {",
+            "  in.formattedHistory = \"\";",
+            "}",
+            "",
+            "if (in.request != null) {",
+            "  java.lang.StringBuilder sb = new java.lang.StringBuilder();",
+            "  sb.append(\"Project: \").append(in.request.getProjectName() != null ? in.request.getProjectName() : \"-\").append(\"\\n\");",
+            "  sb.append(\"Cost Center: \").append(in.request.getProjectNumberCostCenter() != null ? in.request.getProjectNumberCostCenter() : \"-\").append(\"\\n\");",
+            "  sb.append(\"Priority: \").append(in.request.getPriority() != null ? in.request.getPriority() : \"-\").append(\"\\n\");",
+            "  sb.append(\"Requester: \").append(in.request.getRequester() != null ? in.request.getRequester() : \"-\").append(\"\\n\");",
+            "  sb.append(\"Status: \").append(in.request.getStatus() != null ? in.request.getStatus() : \"-\").append(\"\\n\");",
+            "  int itemCount = in.request.getMaterialItems() != null ? in.request.getMaterialItems().size() : 0;",
+            "  sb.append(\"Material Items: \").append(itemCount).append(\"\\n\");",
+            "  if (itemCount > 0) {",
+            "    for (int i = 0; i < itemCount; i++) {",
+            "      com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementItem mi = in.request.getMaterialItems().get(i);",
+            "      sb.append(\"  \").append(i + 1).append(\". \").append(mi.getMaterialDescription())",
+            "        .append(\" – Qty: \").append(mi.getQuantity()).append(\" \").append(mi.getUnit()).append(\"\\n\");",
+            "    }",
+            "  }",
+            "  in.formattedRequest = sb.toString();",
+            "} else {",
+            "  in.formattedRequest = \"No active procurement request.\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "e31", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "ProgramInterface",
+      "name" : "Procurement Assistant Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Today's date: <%= in.today %>.\n<%= in.request == null ? \"\" : \"Current Procurement Request:\\n\\n\" + dev.langchain4j.internal.Json.toJson(in.request) %>\n\n## Tool Routing\n- For any question about procurement policies, procedures, rules, or guidelines: always call the answerProcurementQuestion tool.\n- To check whether the current request can be fulfilled from inventory: call the analyzeRequest tool.\n- When the user wants to resolve trouble items, find alternatives, or fix failed items: check the conversation history first. If findAlternativeItems has NOT been called yet (no alternative suggestions in the history), call findAlternativeItems. If alternatives were already presented in the history, call applyFeedbackReplacements with the current request and the feedbackList from the previous findAlternativeItems response.\n- When the user wants to add, remove, or change items or header fields in the request: call modifyRequest with the current request and a clear description of the change.\n- Never answer procurement policy questions from your own knowledge — always delegate to the appropriate tool.\n\n## After analyzeRequest Returns\n- The `feedbackList` must exactly match the tool output. Do not modify, summarize, reorder, or omit any entries.\n- No failures in feedbackList: keep `result` to max 20 words; do not repeat or summarize feedbackList content.\n- One or more failures in feedbackList: set `result` to ask the user whether they want help finding alternatives.\n\n## After findAlternativeItems Returns (all calls complete)\n- The `feedbackList` must exactly match the tool output. Do not modify, summarize, reorder, or omit any entries. Especially field `rankingAnalysis`\n- Set `result` to briefly present the alternatives and ask the user if they want to apply them (max 30 words), e.g. \"Here are alternative suggestions for the trouble items. Would you like to apply these replacements?\"\n\n## After applyFeedbackReplacements Returns\n- Keep `result` short (max 20 words), e.g. \"Replacements have been applied to your request.\"",
+          "tools" : "[\"answerProcurementQuestion\", \"analyzeRequest\", \"findAlternativeItems\", \"applyFeedbackReplacements\"]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse.class",
+          "resultMapping" : "in.agentResponse",
+          "query" : "Conversation history:\r\n<%= in.formattedHistory %>\r\n\r\n---\r\n\r\nNew user message:\r\n<%= in.query %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 488, "y" : 64 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f75", "to" : "f77" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 1400, "y" : 64 }
+      }
+    }, {
+      "id" : "f20",
+      "type" : "CallSubStart",
+      "name" : "answerProcurementQuestion(String)",
+      "config" : {
+        "signature" : "answerProcurementQuestion",
+        "input" : {
+          "params" : [
+            { "name" : "question", "type" : "String", "desc" : "A general question about procurement procedures, policies, or processes" }
+          ],
+          "map" : {
+            "out.question" : "param.question"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse", "desc" : "Response with the answer text" }
+          ],
+          "map" : {
+            "result.response" : "in.agentResponse"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 320 },
+        "description" : "Use this tool to answer any question about procurement policies, rules, procedures, approval steps, or guidelines. Always call this tool instead of answering directly when the user asks a procurement-related question."
+      },
+      "connect" : [
+        { "id" : "c20", "to" : "f21" }
+      ]
+    }, {
+      "id" : "f21",
+      "type" : "Script",
+      "name" : "Load CMS Knowledge",
+      "config" : {
+        "output" : {
+          "code" : "in.knowledgeContext = ivy.cms.co(\"/KnowledgeBase/procurement/ProcurementRequest\");"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 272, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "c21", "to" : "f22", "color" : "default" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "ProgramInterface",
+      "name" : "Answer Procurement Question Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a helpful procurement assistant.\r\nAnswer the user's question concisely and accurately based only on the following knowledge base.\r\n\r\n---\r\n\r\n<%= in.knowledgeContext %>",
+          "tools" : "[]",
+          "resultMapping" : "in.toolAnswer",
+          "query" : "<%= in.question %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 504, "y" : 320 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f76", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "Script",
+      "name" : "Build Answer Response",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse;",
+            "ProcurementAgentResponse resp = new ProcurementAgentResponse();",
+            "resp.setResult(in.toolAnswer);",
+            "in.agentResponse = resp;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 744, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "c24", "to" : "f23" }
+      ]
+    }, {
+      "id" : "f23",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 960, "y" : 320 }
+      }
+    }, {
+      "id" : "f35",
+      "type" : "CallSubStart",
+      "name" : "analyzeRequest(ProcurementRequest)",
+      "config" : {
+        "signature" : "analyzeRequest",
+        "input" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest", "desc" : "The current procurement request" }
+          ],
+          "map" : {
+            "out.request" : "param.request"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse", "desc" : "Response with feedback list and analysis summary" }
+          ],
+          "map" : {
+            "result.response" : "in.agentResponse"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 80, "y" : 520 },
+        "description" : "Analyzes the current procurement request against the current inventory. Call this when the user wants to review whether the requested items can be fulfilled from stock."
+      },
+      "connect" : [
+        { "id" : "a10", "to" : "f55" }
+      ]
+    }, {
+      "id" : "f55",
+      "type" : "Script",
+      "name" : "Init count",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.count = 0;",
+            "in.agentFeedbackList = new java.util.ArrayList();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 520 }
+      },
+      "connect" : [
+        { "id" : "a11", "to" : "f57" }
+      ]
+    }, {
+      "id" : "f57",
+      "type" : "Alternative",
+      "name" : "Has next?",
+      "config" : {
+        "conditions" : {
+          "a12" : "in.count < in.request.getMaterialItems().size()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 408, "y" : 520 },
+        "labelOffset" : { "x" : 64, "y" : 24 }
+      },
+      "connect" : [
+        { "id" : "a12", "to" : "f59" },
+        { "id" : "a13", "to" : "f69", "label" : {
+            "name" : "Done",
+            "segment" : 0.26,
+            "offset" : { "x" : 49, "y" : -64 }
+          } }
+      ]
+    }, {
+      "id" : "f59",
+      "type" : "Script",
+      "name" : "Load corresponding inventory item",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.materialItem = in.request.getMaterialItems().get(in.count);",
+            "",
+            "// Step 1: find the catalog entry by material description to get its typeId",
+            "List<com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementItem> catalogMatches =",
+            "    com.axonivy.utils.smart.workflow.demo.erp.procurement.repository.ProcurementItemRepository.getInstance()",
+            "        .searchByDescription(in.materialItem.getMaterialDescription());",
+            "",
+            "// Step 2: look up inventory by typeId",
+            "if (!catalogMatches.isEmpty()) {",
+            "    String typeId = catalogMatches.get(0).getMaterialTypeId();",
+            "    in.materialItem.setMaterialTypeId(typeId);",
+            "    in.inventoryItem = com.axonivy.utils.smart.workflow.demo.erp.procurement.repository.InventoryRepository.getInstance()",
+            "        .findByMaterialTypeId(typeId);",
+            "} else {",
+            "    in.inventoryItem = null;",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 568, "y" : 520 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "a14", "to" : "f67" }
+      ]
+    }, {
+      "id" : "f67",
+      "type" : "Alternative",
+      "name" : "Has inventory?",
+      "config" : {
+        "conditions" : {
+          "a15" : "in.inventoryItem != null"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 728, "y" : 520 },
+        "labelOffset" : { "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "a15", "to" : "f61" },
+        { "id" : "a16", "to" : "f68", "label" : {
+            "name" : "Not found"
+          } }
+      ]
+    }, {
+      "id" : "f61",
+      "type" : "ProgramInterface",
+      "name" : [
+        "Evaluate item of the request",
+        "against the inventory item"
+      ],
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a procurement analyst.\r\nGiven a requested material item and its current inventory status, evaluate whether the request can be fulfilled from stock. Provide a concise feedback covering: availability status, quantity comparison, and any risks or recommendations.\r\nDo not populate feedbackOption — it is reserved for OPTION type only.",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback.class",
+          "resultMapping" : "in.agentFeedback",
+          "query" : "Requested Item:\r\n<%= dev.langchain4j.internal.Json.toJson(in.materialItem) %>\r\n\r\nItem in inventory:\r\n<%= dev.langchain4j.internal.Json.toJson(in.inventoryItem) %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 904, "y" : 520 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "a17", "to" : "f63" }
+      ]
+    }, {
+      "id" : "f63",
+      "type" : "Script",
+      "name" : "Collect feedback and increment",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.agentFeedback.setId(in.materialItem.getId());",
+            "in.agentFeedbackList.add(in.agentFeedback);",
+            "in.materialItem.setHasTrouble(!in.agentFeedback.isSuccess());",
+            "in.count = in.count + 1;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1120, "y" : 520 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "a19", "to" : "f57", "via" : [ { "x" : 1232, "y" : 520 }, { "x" : 1232, "y" : 760 }, { "x" : 408, "y" : 760 } ] }
+      ]
+    }, {
+      "id" : "f68",
+      "type" : "Script",
+      "name" : "Set not found feedback",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback;",
+            "AgentFeedback fb = new AgentFeedback();",
+            "fb.setId(in.materialItem.getId());",
+            "fb.setSuccess(false);",
+            "fb.setMessage(\"Material '\" + in.materialItem.getMaterialDescription() + \"' does not exist in inventory.\");",
+            "in.agentFeedback = fb;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 728, "y" : 648 }
+      },
+      "connect" : [
+        { "id" : "a18", "to" : "f63", "via" : [ { "x" : 1120, "y" : 648 } ] }
+      ]
+    }, {
+      "id" : "f69",
+      "type" : "Script",
+      "name" : "Build Summary",
+      "config" : {
+        "output" : {
+          "code" : [
+            "java.lang.StringBuilder sb = new java.lang.StringBuilder();",
+            "for (com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback fb : in.agentFeedbackList) {",
+            "  sb.append(fb.isSuccess() ? \"[OK] \" : \"[!] \").append(fb.getMessage()).append(\"\\n\");",
+            "}",
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse;",
+            "ProcurementAgentResponse resp = new ProcurementAgentResponse();",
+            "resp.setResult(sb.toString());",
+            "resp.setFeedbackList(in.agentFeedbackList);",
+            "in.agentResponse = resp;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 648 },
+        "size" : { "width" : 120, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "a20", "to" : "f54" }
+      ]
+    }, {
+      "id" : "f54",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 80, "y" : 648 }
+      }
+    }, {
+      "id" : "f70",
+      "type" : "CallSubStart",
+      "name" : "findAlternativeItems(ProcurementRequest)",
+      "config" : {
+        "signature" : "findAlternativeItems",
+        "input" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest", "desc" : "The current procurement request containing trouble items to find alternatives for" }
+          ],
+          "map" : {
+            "out.request" : "param.request"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse", "desc" : "Agent response with feedback list of alternatives for each trouble item" }
+          ],
+          "map" : {
+            "result.agentResponse" : "in.agentResponse"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 88, "y" : 824 },
+        "description" : "Finds alternative inventory items for all trouble items in the request. Call this when the user wants to find alternatives or resolve items flagged with hasTrouble."
+      },
+      "connect" : [
+        { "id" : "b70", "to" : "f82" }
+      ]
+    }, {
+      "id" : "f82",
+      "type" : "Script",
+      "name" : "Init alternative loop",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.count = 0;",
+            "in.agentFeedbackList = new java.util.ArrayList();",
+            "in.troubleItems = new java.util.ArrayList();",
+            "for (com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementItem mi : in.request.getMaterialItems()) {",
+            "    if (mi.isHasTrouble()) {",
+            "        in.troubleItems.add(mi);",
+            "    }",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 824 }
+      },
+      "connect" : [
+        { "id" : "b71", "to" : "f83" }
+      ]
+    }, {
+      "id" : "f83",
+      "type" : "Alternative",
+      "name" : "Has next trouble item?",
+      "config" : {
+        "conditions" : {
+          "b72" : "in.count < in.troubleItems.size()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 440, "y" : 824 },
+        "labelOffset" : { "x" : 64, "y" : 24 }
+      },
+      "connect" : [
+        { "id" : "b72", "to" : "f84" },
+        { "id" : "b73", "to" : "f85", "label" : {
+            "name" : "Done",
+            "segment" : 0.26,
+            "offset" : { "x" : 49, "y" : -64 }
+          } }
+      ]
+    }, {
+      "id" : "f84",
+      "type" : "Script",
+      "name" : "Load trouble item and inventory",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.materialItem = in.troubleItems.get(in.count);",
+            "in.inventoryItems = com.axonivy.utils.smart.workflow.demo.erp.procurement.repository.InventoryRepository.getInstance()",
+            "    .findSimilarItems(in.materialItem);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 824 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "b74", "to" : "f86" }
+      ]
+    }, {
+      "id" : "f86",
+      "type" : "ProgramInterface",
+      "name" : "Analyze & Rank Alternatives",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a procurement analyst.\r\nEvaluate all available inventory alternatives for a requested material item and produce a structured ranked analysis.\r\n\r\n## Evaluation Criteria — score each candidate 1–5 on:\r\n1. Specification match — material type, grade, class, technical specs\r\n2. Quantity availability — can inventory stock cover the requested quantity?\r\n3. Unit compatibility — same unit or cleanly convertible\r\n4. Price reasonableness — unit price vs requested item (lower/comparable is better)\r\n\r\n## Reasoning Process\r\n- For each candidate, reason step-by-step through each criterion before assigning a score.\r\n- Compute a total score (max 20) and rank all candidates from best to worst.\r\n- If no alternatives are available, state that clearly.\r\n\r\n## Output Format\r\nReturn ONLY the ranked list in this exact format:\r\n\r\nRANK 1: [Item Name] (ID: <id>) — Total: <X>/20\r\n  Spec: <score>/5 — <reason>\r\n  Qty: <score>/5 — <reason>\r\n  Unit: <score>/5 — <reason>\r\n  Price: <score>/5 — <reason>\r\n  Verdict: <why this is the best substitute>\r\n\r\nRANK 2: ...\r\n(continue for all candidates)",
+          "tools" : "[]",
+          "resultMapping" : "in.rankedAnalysis",
+          "query" : "Requested item:\r\n<%= dev.langchain4j.internal.Json.toJson(in.materialItem) %>\r\n\r\nAvailable alternatives in inventory:\r\n<%= dev.langchain4j.internal.Json.toJson(in.inventoryItems) %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 832, "y" : 824 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "b77", "to" : "f80" }
+      ]
+    }, {
+      "id" : "f80",
+      "type" : "ProgramInterface",
+      "name" : "Find Alternative Items Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a procurement analyst.\r\nYou have been given a requested material item, the list of available inventory alternatives, and a structured ranked analysis.\r\n\r\nUsing the ranked analysis as your primary guide, select the single best alternative (RANK 1 unless it has zero quantity or is clearly unsuitable — in that case fall back to RANK 2).\r\n\r\n## Output Rules (MANDATORY)\r\n- Set feedbackOption.optionId to the id field of the chosen inventory item.\r\n- Set feedbackOption.description with a brief justification referencing the top ranking score and criteria.\r\n- Set message with a concise 1–2 sentence human-readable recommendation.",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback.class",
+          "resultMapping" : "in.agentFeedback",
+          "query" : "Requested item:\r\n<%= dev.langchain4j.internal.Json.toJson(in.materialItem) %>\r\n\r\nAvailable alternatives in inventory:\r\n<%= dev.langchain4j.internal.Json.toJson(in.inventoryItems) %>\r\n\r\nRanked analysis:\r\n<%= in.rankedAnalysis %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1080, "y" : 824 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f80c", "to" : "f81" }
+      ]
+    }, {
+      "id" : "f81",
+      "type" : "Script",
+      "name" : "Collect alternative feedback and increment",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.FeedbackType;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.FeedbackOption;",
+            "in.agentFeedback.setId(in.materialItem.getId());",
+            "in.agentFeedback.setType(FeedbackType.OPTION);",
+            "if (in.agentFeedback.getFeedbackOption() == null) {",
+            "    in.agentFeedback.setFeedbackOption(new FeedbackOption());",
+            "}",
+            "in.agentFeedback.setRankingAnalysis(in.rankedAnalysis);",
+            "if (in.rankedAnalysis != null && !in.rankedAnalysis.isBlank()) {",
+            "    if (in.agentFeedback.getFeedbackOption() == null) {",
+            "        in.agentFeedback.setFeedbackOption(new com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.FeedbackOption());",
+            "    }",
+            "    in.agentFeedback.getFeedbackOption().setDescription(in.rankedAnalysis);",
+            "}",
+            "in.agentFeedbackList.add(in.agentFeedback);",
+            "in.count = in.count + 1;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1328, "y" : 824 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "b75", "to" : "f83", "via" : [ { "x" : 1344, "y" : 920 }, { "x" : 440, "y" : 920 } ] }
+      ]
+    }, {
+      "id" : "f85",
+      "type" : "Script",
+      "name" : "Build alternative response",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse;",
+            "ProcurementAgentResponse resp = new ProcurementAgentResponse();",
+            "resp.setFeedbackList(in.agentFeedbackList);",
+            "resp.setResult(\"Here are alternative suggestions for the trouble items.\");",
+            "in.agentResponse = resp;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 952 }
+      },
+      "connect" : [
+        { "id" : "b76", "to" : "f73" }
+      ]
+    }, {
+      "id" : "f73",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 88, "y" : 952 }
+      }
+    }, {
+      "id" : "f77",
+      "type" : "Script",
+      "name" : "Trim Single Feedback",
+      "config" : {
+        "output" : {
+          "code" : [
+            "if (in.agentResponse != null",
+            "  && in.agentResponse.getFeedbackList() != null",
+            "  && in.agentResponse.getFeedbackList().size() == 1",
+            "  && !com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.FeedbackType.OPTION.equals(in.agentResponse.getFeedbackList().get(0).getType())) {",
+            "    in.agentResponse.setFeedbackList(null);",
+            "  }"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 712, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f78", "to" : "f103", "color" : "default" }
+      ]
+    }, {
+      "id" : "f103",
+      "type" : "Script",
+      "name" : "Prepare Translation Input",
+      "config" : {
+        "output" : {
+          "code" : [
+            "java.lang.StringBuilder sb = new java.lang.StringBuilder();",
+            "if (in.agentResponse != null && in.agentResponse.getResult() != null) {",
+            "    sb.append(in.agentResponse.getResult());",
+            "}",
+            "if (in.agentResponse != null && in.agentResponse.getFeedbackList() != null) {",
+            "    for (com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback fb : in.agentResponse.getFeedbackList()) {",
+            "        sb.append(\"\\n---SEG---\\n\");",
+            "        sb.append(fb.getMessage() != null ? fb.getMessage() : \"\");",
+            "    }",
+            "}",
+            "in.textToTranslate = sb.toString();",
+            "in.translatedResult = in.textToTranslate;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 896, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "c104", "to" : "f104" }
+      ]
+    }, {
+      "id" : "f104",
+      "type" : "Alternative",
+      "name" : "Is English?",
+      "config" : {
+        "conditions" : {
+          "c104a" : "\"english\".equalsIgnoreCase(in.userLanguage)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1032, "y" : 64 },
+        "labelOffset" : { "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "c104a", "to" : "f102", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : -3, "y" : -10 }
+          } },
+        { "id" : "c104b", "to" : "f101", "via" : [ { "x" : 1032, "y" : 176 } ], "label" : {
+            "name" : "no",
+            "segment" : 1.5,
+            "offset" : { "x" : -23, "y" : -58 }
+          } }
+      ]
+    }, {
+      "id" : "f101",
+      "type" : "ProgramInterface",
+      "name" : "Translate Response",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a professional translator.\nRules:\n- Preserve exactly: material names, product names, brand names, supplier names, model numbers, technical specifications, unit abbreviations (bags, pcs, kg, m², etc.), numeric values, and all proper nouns and identifiers.\n- Translate only the surrounding natural-language prose and sentences.\n- The input may contain multiple segments separated by ---SEG--- markers. Translate each segment independently and preserve every ---SEG--- marker exactly as-is in the output.\n- Return only the translated text with no explanations.",
+          "tools" : "[]",
+          "resultMapping" : "in.translatedResult",
+          "query" : "Translate to <%= in.userLanguage %>. Preserve the ---SEG--- separators exactly:\n\n<%= in.textToTranslate %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1208, "y" : 176 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "c102", "to" : "f102" }
+      ]
+    }, {
+      "id" : "f102",
+      "type" : "Script",
+      "name" : "Apply Translation",
+      "config" : {
+        "output" : {
+          "code" : [
+            "if (in.translatedResult != null && !in.translatedResult.isBlank() && in.agentResponse != null) {",
+            "    java.util.List<String> parts = new java.util.ArrayList();",
+            "    String remaining = in.translatedResult;",
+            "    int idx;",
+            "    while ((idx = remaining.indexOf(\"---SEG---\")) >= 0) {",
+            "        parts.add(remaining.substring(0, idx).trim());",
+            "        remaining = remaining.substring(idx + 9);",
+            "    }",
+            "    parts.add(remaining.trim());",
+            "    if (!parts.isEmpty()) {",
+            "        in.agentResponse.setResult(parts.get(0));",
+            "    }",
+            "    java.util.List<com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback> feedbackList = in.agentResponse.getFeedbackList();",
+            "    if (feedbackList != null) {",
+            "        for (int i = 0; i < feedbackList.size(); i++) {",
+            "            int partIdx = i + 1;",
+            "            if (partIdx < parts.size()) {",
+            "                feedbackList.get(i).setMessage(parts.get(partIdx));",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1208, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "c103", "to" : "f1" }
+      ]
+    }, {
+      "id" : "fa0",
+      "type" : "CallSubStart",
+      "name" : "applyFeedbackReplacements(ProcurementRequest, List)",
+      "config" : {
+        "signature" : "applyFeedbackReplacements",
+        "input" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest", "desc" : "The procurement request with trouble items to update" },
+            { "name" : "feedbacks", "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback>", "desc" : "List of feedbacks with selected alternatives from findAlternativeItems" }
+          ],
+          "map" : {
+            "out.request" : "param.request",
+            "out.feedbacks" : "param.feedbacks"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse", "desc" : "Response confirming replacements applied, with updated request" }
+          ],
+          "map" : {
+            "result.agentResponse" : "in.agentResponse",
+            "result.agentResponse.request" : "in.request"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 72, "y" : 1064 },
+        "description" : "Applies the selected alternative inventory items to the trouble items in the request. Call this when the user confirms which alternatives to apply after findAlternativeItems."
+      },
+      "connect" : [
+        { "id" : "fa0c", "to" : "fa1" }
+      ]
+    }, {
+      "id" : "fa1",
+      "type" : "Script",
+      "name" : "Init trouble items and count",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.troubleItems = new java.util.ArrayList();",
+            "for (com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementItem mi : in.request.getMaterialItems()) {",
+            "    if (mi.isHasTrouble()) {",
+            "        in.troubleItems.add(mi);",
+            "    }",
+            "}",
+            "in.count = 0;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 1064 }
+      },
+      "connect" : [
+        { "id" : "fa1c", "to" : "fa2" }
+      ]
+    }, {
+      "id" : "fa2",
+      "type" : "Alternative",
+      "name" : "Has next trouble item?",
+      "config" : {
+        "conditions" : {
+          "fa2t" : "in.count < in.troubleItems.size()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 1064 },
+        "labelOffset" : { "x" : 64, "y" : 24 }
+      },
+      "connect" : [
+        { "id" : "fa2t", "to" : "fa3" },
+        { "id" : "fa2f", "to" : "fa7", "label" : {
+            "name" : "Done",
+            "segment" : 0.26,
+            "offset" : { "x" : 49, "y" : -64 }
+          } }
+      ]
+    }, {
+      "id" : "fa3",
+      "type" : "Script",
+      "name" : "Load item and find matched feedback",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.materialItem = in.troubleItems.get(in.count);",
+            "in.matchedFeedback = null;",
+            "for (com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback fb : in.feedbacks) {",
+            "    if (in.materialItem.getId() != null && in.materialItem.getId().equals(fb.getId())) {",
+            "        in.matchedFeedback = fb;",
+            "        break;",
+            "    }",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 1064 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "fa3c", "to" : "fa4" }
+      ]
+    }, {
+      "id" : "fa4",
+      "type" : "Alternative",
+      "name" : "Has option feedback?",
+      "config" : {
+        "conditions" : {
+          "fa4t" : "in.matchedFeedback != null && com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.FeedbackType.OPTION.equals(in.matchedFeedback.getType()) && in.matchedFeedback.getFeedbackOption() != null && in.matchedFeedback.getFeedbackOption().getOptionId() != null"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 832, "y" : 1064 }
+      },
+      "connect" : [
+        { "id" : "fa4t", "to" : "fa5" },
+        { "id" : "fa4f", "to" : "fa6" }
+      ]
+    }, {
+      "id" : "fa5",
+      "type" : "Script",
+      "name" : "Resolve inventory item and apply replacement",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.repository.InventoryRepository;",
+            "String optionId = in.matchedFeedback.getFeedbackOption().getOptionId();",
+            "in.inventoryItem = InventoryRepository.getInstance().findById(optionId);",
+            "if (in.inventoryItem != null) {",
+            "    com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementItem refItem = in.inventoryItem.getMaterialItem();",
+            "    if (refItem != null) {",
+            "        in.materialItem.setMaterialTypeId(refItem.getMaterialTypeId());",
+            "        in.materialItem.setMaterialDescription(refItem.getMaterialDescription());",
+            "        in.materialItem.setStandardGradeClass(refItem.getStandardGradeClass());",
+            "        in.materialItem.setUnit(in.materialItem.getUnit() != null ? in.materialItem.getUnit() : refItem.getUnit());",
+            "        in.materialItem.setUnitPriceNet(refItem.getUnitPriceNet());",
+            "        in.materialItem.setHasTrouble(false);",
+            "        in.materialItem.setChanged(true);",
+            "        in.materialItem.setAiComment(in.matchedFeedback.getFeedbackOption().getDescription());",
+            "    }",
+            "}",
+            "in.count = in.count + 1;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1040, "y" : 1064 },
+        "size" : { "width" : 192, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "fa5c", "to" : "fa2", "via" : [ { "x" : 1264, "y" : 1064 }, { "x" : 1264, "y" : 1304 }, { "x" : 424, "y" : 1304 } ] }
+      ]
+    }, {
+      "id" : "fa6",
+      "type" : "Script",
+      "name" : "Skip - no matching option feedback",
+      "config" : {
+        "output" : {
+          "code" : "in.count = in.count + 1;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 832, "y" : 1160 }
+      },
+      "connect" : [
+        { "id" : "fa6c", "to" : "fa2", "via" : [ { "x" : 424, "y" : 1160 } ] }
+      ]
+    }, {
+      "id" : "fa7",
+      "type" : "Script",
+      "name" : "Build replacement response",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse;",
+            "ProcurementAgentResponse resp = new ProcurementAgentResponse();",
+            "resp.setResult(\"Replacements have been applied to your request.\");",
+            "resp.setRequest(in.request);",
+            "in.agentResponse = resp;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 264, "y" : 1192 }
+      },
+      "connect" : [
+        { "id" : "fa7c", "to" : "fa8" }
+      ]
+    }, {
+      "id" : "fa8",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 72, "y" : 1192 }
+      }
+    } ],
+  "layout" : {
+    "lanes" : [ {
+        "name" : "Tools of Procurement Assistant Agent",
+        "offset" : 240,
+        "size" : 1104
+      } ]
+  }
+}

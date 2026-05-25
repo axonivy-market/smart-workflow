@@ -34,11 +34,11 @@
 
   <!-- Stepper Bar -->
   <div class="so-stepper-bar">
-    <div class="so-stepper">
+    <div class="flex align-items-center">
 
       <!-- Step 1: Request -->
-      <div class="so-step-item #{currentStep eq 1 ? 'active' : (currentStep gt 1 ? 'done' : '')}">
-        <div class="so-step-circle">
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 1 ? 'active' : (currentStep gt 1 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
           <ui:fragment rendered="#{currentStep gt 1}"><i class="ti ti-check" /></ui:fragment>
           <ui:fragment rendered="#{(currentStep lt 1) or (currentStep eq 1)}">1</ui:fragment>
         </div>
@@ -48,8 +48,8 @@
       <div class="so-step-connector #{currentStep gt 1 ? 'done' : ''}"></div>
 
       <!-- Step 2: DB Check -->
-      <div class="so-step-item #{currentStep eq 2 ? 'active' : (currentStep gt 2 ? 'done' : '')}">
-        <div class="so-step-circle">
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 2 ? 'active' : (currentStep gt 2 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
           <ui:fragment rendered="#{currentStep gt 2}"><i class="ti ti-check" /></ui:fragment>
           <ui:fragment rendered="#{currentStep le 2}">2</ui:fragment>
         </div>
@@ -59,8 +59,8 @@
       <div class="so-step-connector #{currentStep gt 2 ? 'done' : ''}"></div>
 
       <!-- Step 3: Supplier Data -->
-      <div class="so-step-item #{currentStep eq 3 ? 'active' : (currentStep gt 3 ? 'done' : '')}">
-        <div class="so-step-circle">
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 3 ? 'active' : (currentStep gt 3 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
           <ui:fragment rendered="#{currentStep gt 3}"><i class="ti ti-check" /></ui:fragment>
           <ui:fragment rendered="#{currentStep le 3}">3</ui:fragment>
         </div>
@@ -70,8 +70,8 @@
       <div class="so-step-connector #{currentStep gt 3 ? 'done' : ''}"></div>
 
       <!-- Step 4: Validation -->
-      <div class="so-step-item #{currentStep eq 4 ? 'active' : (currentStep gt 4 ? 'done' : '')}">
-        <div class="so-step-circle">
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 4 ? 'active' : (currentStep gt 4 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
           <ui:fragment rendered="#{currentStep gt 4}"><i class="ti ti-check" /></ui:fragment>
           <ui:fragment rendered="#{currentStep le 4}">4</ui:fragment>
         </div>
@@ -81,8 +81,8 @@
       <div class="so-step-connector #{currentStep gt 4 ? 'done' : ''}"></div>
 
       <!-- Step 5: Risk Score -->
-      <div class="so-step-item #{currentStep eq 5 ? 'active' : (currentStep gt 5 ? 'done' : '')}">
-        <div class="so-step-circle">
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 5 ? 'active' : (currentStep gt 5 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
           <ui:fragment rendered="#{currentStep gt 5}"><i class="ti ti-check" /></ui:fragment>
           <ui:fragment rendered="#{currentStep le 5}">5</ui:fragment>
         </div>
@@ -92,8 +92,8 @@
       <div class="so-step-connector #{currentStep gt 5 ? 'done' : ''}"></div>
 
       <!-- Step 6: Complete / Declined -->
-      <div class="so-step-item #{currentStep eq 6 ? 'active' : ''}">
-        <div class="so-step-circle">
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 6 ? 'active' : ''}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
           <ui:fragment rendered="#{currentStep eq 6 and s == 'DECLINED'}"><i class="ti ti-x" /></ui:fragment>
           <ui:fragment rendered="#{currentStep eq 6 and s != 'DECLINED'}"><i class="ti ti-check" /></ui:fragment>
           <ui:fragment rendered="#{currentStep lt 6}">6</ui:fragment>

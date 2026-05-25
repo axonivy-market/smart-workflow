@@ -290,8 +290,3 @@
 .rag-welcome-avatar .si {
   font-size: 1.8rem;
 }
-
-/* Hidden utility */
-.rag-hidden {
-  display: none !important;
-}

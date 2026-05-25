@@ -39,85 +39,37 @@ Dialogs:
                       Panel0Detail1: Lieferant vervollständigt Unternehmensprofil und Kontaktdaten
                       Panel0Detail2: Lädt erforderliche Zertifizierungs- und Finanzdokumente hoch
                       Panel0Detail3: Smart Workflow prüft die Vollständigkeit des Uploads vor der Verarbeitung
-                      Panel0Num: Schritt 01 von 07
-                      Panel0Tag1: Lieferantenportal
-                      Panel0Tag2: Dokument-Upload
-                      Panel0Tag3: Workflow-Start
                       Panel0Title: Dokument-Upload
                       Panel1Desc: Die KI liest hochgeladene PDFs mit Vision-Language-Modellen, identifiziert Lieferantendatenfelder über mehrere Dokumente hinweg und befüllt das gesamte Onboarding-Formular automatisch — ohne manuelle Eingabe.
                       Panel1Detail1: PDF-Strukturen und Tabellen mit Vision-Language-Modellen analysiert
                       Panel1Detail2: Über 15 Lieferantendatenfelder automatisch identifiziert und extrahiert
                       Panel1Detail3: Das vollständige Onboarding-Formular mit validierten Daten automatisch befüllt
-                      Panel1Num: Schritt 02 von 07
-                      Panel1Tag1: LLM
-                      Panel1Tag2: Strukturierte Ausgabe
-                      Panel1Tag3: Multi-Dokument
-                      Panel1Tag4: Keine manuelle Eingabe
                       Panel1Title: KI-Dokumentenextraktion
                       Panel2Desc: Ein RAG-gestützter KI-Assistent steht auf jedem Bildschirm zur Verfügung — beantwortet Fragen zu Richtlinien, erklärt Compliance-Anforderungen und klärt Risikoschwellen in Echtzeit.
                       Panel2Detail1: Richtliniendokumente mittels Vektorähnlichkeitssuche abgerufen
                       Panel2Detail2: Fragen von Lieferanten und Prüfern während des gesamten Prozesses beantwortet
                       Panel2Detail3: Kontextuelle Compliance-Beratung auf jeder Prozessstufe bereitgestellt
-                      Panel2Num: Schritt 03 von 07
-                      Panel2Tag1: RAG
-                      Panel2Tag2: Vektorsuche
-                      Panel2Tag3: Chat-Agent
-                      Panel2Tag4: Kontextbewusst
                       Panel2Title: Kontextuelle F&A-Beratung
                       Panel3Desc: Die KI gleicht alle eingereichten Dokumente mit Beschaffungsrichtlinien ab und identifiziert fehlende Zertifizierungen, abgelaufene Nachweise und Compliance-Lücken — mit vollständiger Nachvollziehbarkeit.
                       Panel3Detail1: Alle Dokumente gegen 12+ Beschaffungsrichtlinien validiert
                       Panel3Detail2: Compliance-Lücken identifiziert und Elemente markiert, die Aufmerksamkeit erfordern
                       Panel3Detail3: Detaillierten Validierungsbericht mit erklärbaren Ergebnissen erstellt
-                      Panel3Num: Schritt 04 von 07
-                      Panel3Tag1: Regelwerk
-                      Panel3Tag2: Quervergleich
-                      Panel3Tag3: Erklärbare KI
-                      Panel3Tag4: Nachvollziehbarkeit
                       Panel3Title: Dokumentvalidierung
                       Panel4Desc: Die KI berechnet einen zusammengesetzten Risiko-Score über drei Dimensionen — finanzielle Stabilität, Richtlinienkonformität und Zertifikatsgültigkeit — und liefert eine objektive, prüfbare Bewertung von 100.
                       Panel4Detail1: Finanzberichte auf Stabilitäts- und Liquiditätsindikatoren analysiert
                       Panel4Detail2: Compliance-Historie, Zertifizierungen und Richtlinienübereinstimmung querverwiesen
                       Panel4Detail3: Gewichteten zusammengesetzten Risiko-Score mit vollständiger Aufschlüsselung erstellt
-                      Panel4Num: Schritt 05 von 07
-                      Panel4Tag1: Finanzanalyse
-                      Panel4Tag2: Risikomodell
-                      Panel4Tag3: Gewichtete Bewertung
-                      Panel4Tag4: Bewertet /100
                       Panel4Title: Risikoberechnung
                       Panel5Desc: 'Basierend auf dem vollständigen Kontext — extrahierte Daten, Risiko-Score, Validierungsergebnisse und Richtlinie — hat die KI den Prozessweg autonom entschieden: genehmigen, Klärung anfordern oder ablehnen.'
                       Panel5Detail1: Alle Eingaben gegen konfigurierbare Routing-Entscheidungsregeln ausgewertet
                       Panel5Detail2: Optimalen Ergebnispfad ohne menschliche Triage bestimmt
                       Panel5Detail3: Entsprechenden Workflow-Zweig mit vollständigem Prüfpfad ausgelöst
-                      Panel5Num: Schritt 06 von 07
-                      Panel5Tag1: Entscheidungsmaschine
-                      Panel5Tag2: Agentische KI
-                      Panel5Tag3: Keine Triage
-                      Panel5Tag4: Autonom
                       Panel5Title: Autonomes Routing
                       Panel6Desc: Der Onboarding-Antrag wurde vollständig bearbeitet und abgeschlossen. Alle extrahierten Daten, KI-Entscheidungen, Validierungsergebnisse und der vollständige Prüfpfad sind dauerhaft gespeichert und für Compliance-Überprüfungen zugänglich.
                       Panel6Detail1: Alle KI-Entscheidungen und Begründungen im permanenten Prüfprotokoll erfasst
                       Panel6Detail2: Lieferantendatensatz im System mit dem endgültigen Ergebnis aktualisiert
                       Panel6Detail3: Stakeholder über die Entscheidung und den Abschluss des Prozesses informiert
-                      Panel6Num: Schritt 07 von 07
-                      Panel6Tag1: Prüfpfad
-                      Panel6Tag2: Compliance
-                      Panel6Tag3: Prozess abgeschlossen
                       Panel6Title: Fall abgeschlossen
-                      ProgressText: Schritt {0} von {1}
-                      Step0DotTitle: Dokument-Upload
-                      Step0FlowLabel: Dokument-<br />Upload
-                      Step1DotTitle: KI-Extraktion
-                      Step1FlowLabel: KI-<br />Extraktion
-                      Step2DotTitle: F&A-Beratung
-                      Step2FlowLabel: F&A-<br />Beratung
-                      Step3DotTitle: Dokumentvalidierung
-                      Step3FlowLabel: Dokument-<br />Validierung
-                      Step4DotTitle: Risikobewertung
-                      Step4FlowLabel: Risiko-<br />Bewertung
-                      Step5DotTitle: Autonomes Routing
-                      Step5FlowLabel: Autonomes<br />Routing
-                      Step6DotTitle: Fall abgeschlossen
-                      Step6FlowLabel: Fall<br />Abgeschlossen
                     StartDemo:
                       AfterItem1: Lieferant lädt Dokumente einmalig über ein strukturiertes, geführtes Formular hoch
                       AfterItem2: Vision-KI extrahiert automatisch 15+ Felder aus PDFs in Sekunden — keine manuelle Eingabe
@@ -152,10 +104,6 @@ Dialogs:
                       DocIso9001Name: ISO 9001 — Qualitätsmanagement
                       DocSelfDeclarationName: Selbsterklärung des Unternehmens
                       DocSelfDeclarationSub: Compliance- und Richtlinien-Selbsterklärung
-                      Dot0Title: Willkommen
-                      Dot1Title: Der Prozess
-                      Dot2Title: Traditionell vs. KI
-                      Dot3Title: Daten generieren
                       DownloadAllButton: Alle herunterladen
                       FileDetailsHide: Details ausblenden
                       FileDetailsToggle: Dateidetails
@@ -464,6 +412,207 @@ Dialogs:
                         Step5: Risiko-Score
                         Step6Complete: Abgeschlossen
                         Step6Declined: Abgelehnt
+                procurement:
+                  WelcomePage:
+                    PageTitle: Beschaffungsanfrage-Demo
+                    PrevButton: Zurück
+                    NextButton: Weiter
+                    CancelButton: Abbrechen
+                    ProceedButton: Weiter
+                    StartDemoButton: Demo starten
+                    FocusPara: Im Gegensatz zu Standard-Beschaffungsformularen zeigt diese Demo einen Workflow, bei dem ein einziger PDF-Upload die gesamte manuelle Dateneingabe ersetzt. Die KI liest das Dokument, füllt jedes Feld aus, gleicht jeden Artikel mit dem Live-Lagerbestand ab, kennzeichnet Lagerprobleme und schlägt einsatzbereite Alternativen vor — alles bevor Sie ein einziges Zeichen eingegeben haben.
+                    HeroTitle1: KI-gestützte
+                    HeroTitle2: Materialbeschaffung
+                    HeroSubtitle: 'Von einer einzigen PDF zu einer vollständig validierten, KI-analysierten Beschaffungsanfrage — in Sekunden.'
+                    ParseTitle: KI-Dokumentenanalyse
+                    ParseDesc: 'Haben Sie eine Beschaffungsanfrage als PDF? Laden Sie sie im Chat hoch und bitten Sie den Chatbot, sie zu analysieren — jedes Formularfeld wird automatisch in Sekunden ausgefüllt.'
+                    ParseFlowLabel: Dokumentenanalyse
+                    ParseDetail1: 'Laden Sie Ihre PDF direkt im Chat-Bereich hoch (Drag & Drop oder Anhang)'
+                    ParseDetail2: 'Geben Sie "Analysiere mein Dokument" ein, um die KI-Extraktion auszulösen'
+                    ParseDetail3: Überprüfen Sie das automatisch ausgefüllte Formular und korrigieren Sie Felder bei Bedarf
+                    StockTitle: "Lagerbestand & Bestandsanalyse"
+                    StockDesc: 'Sobald Ihre Anfrage ausgefüllt ist, bitten Sie den Chatbot, sie zu analysieren — jeder Artikel wird mit dem Live-Lagerbestand abgeglichen und Probleme werden vor der Einreichung markiert.'
+                    StockFlowLabel: Bestandsanalyse
+                    StockDetail1: 'Geben Sie jederzeit "Analysiere meine Anfrage" im Chat ein'
+                    StockDetail2: Problemartikel werden direkt in der Materialtabelle rot hervorgehoben
+                    StockDetail3: Jedes Problem wird mit einer detaillierten KI-Erklärung und Empfehlung versehen
+                    AlternativeTitle: Alternative Artikelvorschläge
+                    AlternativeDesc: 'Wenn Artikel als problematisch markiert sind, bitten Sie den Chatbot, Alternativen zu finden — die KI bewertet und ordnet Katalogsersatz und wählt die beste Übereinstimmung.'
+                    AlternativeFlowLabel: Alternativen
+                    AlternativeDetail1: 'Geben Sie "Alternativen finden" ein, nachdem Problemartikel markiert wurden'
+                    AlternativeDetail2: 'KI bewertet Kandidaten nach Spezifikation, Verfügbarkeit, Einheit und Preis (1–5 Punkte je)'
+                    AlternativeDetail3: Klicken Sie im Chat auf Anwenden, um den Artikel sofort zu ersetzen
+                    TranslateTitle: Mehrsprachige Übersetzung
+                    TranslateDesc: 'Arbeiten Sie mit einem fremdsprachigen Dokument? Bitten Sie den Chatbot zu übersetzen — der gesamte Text wird sofort konvertiert, während Materialcodes und technische Begriffe unverändert bleiben.'
+                    TranslateFlowLabel: Übersetzung
+                    TranslateDetail1: 'Geben Sie "Übersetze auf [Sprache]" im Chat ein (z. B. "Übersetze auf Englisch")'
+                    TranslateDetail2: Materialcodes, Einheitsabkürzungen und Kennzeichner werden nie verändert
+                    TranslateDetail3: Unterstützt 50+ Sprachen einschließlich Japanisch, Deutsch, Französisch und mehr
+                    CompareTitle: Was der KI-Chatbot kann
+                    CompareSubtitle: Alle vier Funktionen werden durch natürliche Konversation ausgelöst — keine zusätzlichen Schaltflächen, nur Chat
+                    Stat1Before: 1–3 Tage
+                    Stat1After: Sekunden
+                    Stat1Label: Von Upload bis ausgefülltem Anfrageformular
+                    Stat2Before: Manuelle Suche
+                    Stat2After: Eine Eingabe
+                    Stat2Label: Um alle Artikel mit dem Live-Lagerbestand abzugleichen
+                    Stat3Before: Stunden
+                    Stat3After: Sofort
+                    Stat3Label: Um alternative Artikel zu finden und zu bewerten
+                    TraditionalHeader: Ohne KI-Chatbot
+                    AiHeader: KI-Chatbot im Einsatz
+                    TraditionalItem1: Jede Artikelbeschreibung, jeden Code und jede Menge manuell aus Papierdokumenten eintippen
+                    TraditionalItem2: 'Keine Bestandsprüfung — Engpässe werden erst bei der Lieferung auf der Baustelle entdeckt'
+                    TraditionalItem3: 'Alternative Artikel erfordern stundenlange manuelle Katalogrecherche'
+                    TraditionalItem4: Fremdsprachige Dokumente verursachen Verzögerungen, während Übersetzer beauftragt werden
+                    TraditionalItem5: 'Fehler werden erst nach der Einreichung entdeckt und erfordern kostspielige Nacharbeiten'
+                    AiItem1: '"Analysiere mein Dokument" — KI liest die PDF und füllt alle Felder sofort aus'
+                    AiItem2: '"Analysiere meine Anfrage" — jeder Artikel wird mit dem Live-Lagerbestand abgeglichen'
+                    AiItem3: '"Alternativen finden" — KI bewertet Ersatzartikel und wählt die beste Übereinstimmung'
+                    AiItem4: '"Übersetze" — ein Klick in 50+ Sprachen, technische Begriffe bleiben erhalten'
+                    AiItem5: 'Strukturierter Audit-Trail und genehmigungsfertige Daten — alles aus einem Gespräch'
+                    ReadyTitle: Bereit zum Erkunden?
+                    ReadyDesc: 'Generieren Sie den Beispiel-Materialkatalog und laden Sie die Muster-Beschaffungsanfrage als PDF herunter, um sie als Eingabe zu verwenden, wenn die Demo Sie auffordert, ein Dokument hochzuladen.'
+                    DownloadTitle: Beispiel-Beschaffungsanfrage (PDF)
+                    DownloadDesc: 'Verwenden Sie dieses Dokument, wenn die Demo Sie auffordert, eine Beschaffungsanfrage hochzuladen. Die KI analysiert es und füllt alle Felder automatisch aus.'
+                    DownloadButton: PDF herunterladen
+                    GenerateButton: Testdaten generieren
+                    DataAlreadyGeneratedBanner: Materialkatalog bereits generiert. Klicken Sie auf <strong>Demo starten</strong>, um zu beginnen.
+                    GenStepTitle: Materialkatalog generieren
+                    GenStepHint: 'Materialtypen, Artikel & Lagereinträge'
+                    DoneBannerPre: 'Katalog bereit — klicken Sie auf'
+                    DoneBannerPost: um zu beginnen!
+                  StartDemo:
+                    PageTitle: Beschaffungsanfrage — Demo starten
+                    WelcomeTitle: KI-gestützte Materialbeschaffung
+                    WelcomeDesc: Generieren Sie Beispielmaterialdaten, um die vollständige Beschaffungs-Demo zu erkunden — KI-Dokumentenanalyse, Bestandsanalyse und Alternativvorschläge.
+                    GenerateButton: Testdaten generieren
+                    DataAlreadyGeneratedBanner: Materialkatalog bereits generiert. Klicken Sie auf <strong>Demo starten</strong>, um zu beginnen.
+                    Gen1Title: Materialkatalog generieren
+                    Gen1Hint: 'Materialtypen, Artikel & Lagereinträge'
+                    GenDoneBanner: Materialkatalog erfolgreich generiert.
+                    StartDemoButton: Demo starten
+                  CreateRequestDialog:
+                    AssistantName: KI-Beschaffungsassistent
+                    PageTitle: Materialbeschaffungsanfrage
+                    ProjectHeaderTitle: Projektheader
+                    ProjectNameLabel: Projektname
+                    ProjectNamePlaceholder: 'z. B. Neues Lager, München-Nord'
+                    ProjectNameRequired: Projektname ist erforderlich.
+                    ProjectNumberLabel: Projektnummer / Kostenstelle
+                    ProjectNumberPlaceholder: z. B. PRJ-2025-042
+                    ProjectNumberRequired: Projektnummer / Kostenstelle ist erforderlich.
+                    DeliveryAddressLabel: Baustelle / Lieferadresse
+                    DeliveryAddressPlaceholder: Lieferadresse der Baustelle
+                    DeliveryAddressRequired: Baustelle / Lieferadresse ist erforderlich.
+                    PriorityLabel: Priorität
+                    RequesterLabel: Antragsteller
+                    OrderNotesLabel: Bestellnotizen
+                    OrderNotesPlaceholder: Optionale Hinweise für den Einkauf
+                    MaterialListTitle: Materialliste
+                    AddRowButton: Zeile hinzufügen
+                    EmptyMessage: "Keine Materialartikel. Klicken Sie auf 'Zeile hinzufügen', um zu beginnen."
+                    ExpandAriaHeader: Erweitern
+                    PosColumn: Pos.
+                    TroubleTip: Dieser Artikel hat ein Problem
+                    MaterialColumn: Material
+                    QtyUnitColumn: Menge / Einheit
+                    UnitPriceColumn: Stückpreis (¥)
+                    TotalNetColumn: Gesamtnetto (¥)
+                    RemoveRowTitle: Zeile entfernen
+                    MaterialDescLabel: Materialbeschreibung
+                    MaterialDescPlaceholder: z. B. Zement
+                    StandardGradeLabel: Norm / Güte / Klasse
+                    StandardGradePlaceholder: z. B. JIS R 5210
+                    QuantityLabel: Menge
+                    UnitLabel: Einheit
+                    UnitSelectPrompt: '– auswählen –'
+                    SupplierLabel: Lieferant
+                    OptionalPlaceholder: Optional
+                    UnitPriceNetLabel: Stückpreis netto (¥)
+                    PurposeLabel: Verwendungszweck
+                    PurposePlaceholder: z. B. Fundament
+                    CommentLabel: Kommentar
+                    TotalNetLabel: 'Gesamtnetto:'
+                    CancelButton: Abbrechen
+                    SaveButton: Speichern
+                    SubmitButton: Demo beenden
+                    GuidanceParseDoc: Können Sie mein Beschaffungsdokument analysieren?
+                    GuidanceAnalyze: Meine Anfrage analysieren
+                    GuidanceAddMaterials: Wie füge ich Materialien hinzu?
+                    GuidanceAfterSubmit: Was passiert nach der Einreichung?
+                    ParseNoValues: Aus dem Dokument konnten keine strukturierten Werte extrahiert werden.
+                    ParseSuccess: Dokument analysiert und Formularfelder wurden aktualisiert.
+                    NoDocumentUploaded: Es wurde kein Dokument hochgeladen. Bitte laden Sie zuerst eine Datei hoch.
+                  FinishDemo:
+                    HeroTitle: Sie haben KI-gestützte Beschaffung gerade selbst erlebt.
+                    HeroSub: Hier ist eine Zusammenfassung von allem, was die KI automatisch, präzise und vollständig nachverfolgbar übernommen hat.
+                    PageTitle: Smart Workflow — Beschaffungsanfrage Zusammenfassung
+                    Panel0Title: Dokumenten-Upload & KI-Analyse
+                    Panel0Desc: Sie haben ein PDF der Beschaffungsanfrage hochgeladen — und das war alles. Die KI erkannte die Dokumentstruktur, extrahierte alle Positionen und ordnete jedes Feld automatisch dem richtigen Formularfeld zu.
+                    Panel0Detail1: PDF direkt im KI-Chat hochgeladen (Drag & Drop oder Dateianhang)
+                    Panel0Detail2: KI analysierte die Dokumentstruktur und extrahierte alle Materialfelder automatisch
+                    Panel0Detail3: Beschaffungsformular wurde ohne manuelles Tippen vorausgefüllt
+                    Panel1Title: KI-Beschaffungsassistent
+                    Panel1Desc: Während des gesamten Prozesses führte ein konversationeller KI-Assistent durch die Aufgaben — beantwortete Fragen, erläuterte Positionen und führte Operationen wie Parsen, Analysieren und Alternativen finden per natürlicher Sprache aus.
+                    Panel1Detail1: Natürlichsprachliche Oberfläche für alle Beschaffungsaktionen — keine zusätzlichen Schaltflächen
+                    Panel1Detail2: Kontextbewusste Antworten zu Materialien, Richtlinien und Lieferanforderungen
+                    Panel1Detail3: Operationen per Sprache ausgelöst — parsen, analysieren, übersetzen, ersetzen
+                    Panel2Title: Lageranalyse
+                    Panel2Desc: Jede Materialposition in Ihrer Anfrage wurde gegen den aktuellen Materialbestand geprüft. Positionen mit Lagerbestandsproblemen wurden markiert und im Formular hervorgehoben.
+                    Panel2Detail1: Alle Positionen in Echtzeit gegen den Materialbestand abgeglichen
+                    Panel2Detail2: Engpässe, nicht verfügbare Artikel und Einheitendiskrepanzen sofort markiert
+                    Panel2Detail3: Jedes Problem mit einer KI-Erklärung und Handlungsempfehlung annotiert
+                    Panel3Title: Smarte Alternativvorschläge
+                    Panel3Desc: Für jede markierte Position durchsuchte die KI den Katalog, bewertete alle Ersatzkandidaten nach Spezifikation, Verfügbarkeit, Einheit und Preis — und schlug den besten Ersatz vor, der mit einem Klick angewendet werden kann.
+                    Panel3Detail1: Kandidaten nach vier Dimensionen bewertet — Spezifikation, Verfügbarkeit, Einheit und Preis
+                    Panel3Detail2: Beste Lösung von der KI für jede Problemposition ausgewählt und eingestuft
+                    Panel3Detail3: Mit einem Klick wurde die markierte Position direkt in der Beschaffungstabelle ersetzt
+                    Panel4Title: Anfrage eingereicht
+                    Panel4Desc: Die Beschaffungsanfrage wurde erfolgreich eingereicht. Alle Materialpositionen, Mengen und KI-verifizierten Daten sind im System erfasst — bereit für die Bearbeitung durch das Einkaufsteam.
+                    Panel4Detail1: Alle Materialpositionen, Mengen und Lieferdetails gespeichert und validiert
+                    Panel4Detail2: KI-verifizierter Lagerbestandsstatus und Alternativauswahlen erfasst
+                    Panel4Detail3: Einkaufsteam benachrichtigt — Anfrage ist bereit zur Bearbeitung
+                  ProcurementApproval:
+                    PageTitle: Beschaffungsanfrage prüfen
+                    BannerTitleTemplate: 'Prüfung: {0}'
+                    BannerDesc: Diese Beschaffungsanfrage wartet auf Ihre Prüfung. Bitte prüfen Sie die Materialliste und treffen Sie Ihre Entscheidung.
+                    BannerMetaTemplate: 'Eingereicht von: {0}'
+                    TotalAmountLabel: Gesamt (¥)
+                    RequestDetailsTitle: Anfragedetails
+                    ProjectNameLabel: Projektname
+                    ProjectNumberLabel: Projektnummer / Kostenstelle
+                    DeliveryAddressLabel: Lieferadresse
+                    MaterialColumn: Material
+                    QtyUnitColumn: Menge / Einheit
+                    TotalNetColumn: Gesamtnetto (¥)
+                    ApprovalCommentTitle: Entscheidungskommentar
+                    ApprovalCommentPlaceholder: Geben Sie einen Kommentar zur Begründung Ihrer Entscheidung ein (optional bei Genehmigung, empfohlen bei Ablehnung)...
+                    ApproveButton: Genehmigen
+                    RejectButton: Ablehnen
+                  ProcurementCompletion:
+                    PageTitle: Beschaffungsanfrage genehmigt
+                    BannerTitleTemplate: 'Anfrage genehmigt: {0}'
+                    BannerDesc: Die Beschaffungsanfrage wurde genehmigt. Das Einkaufsteam wird mit der Materialbeschaffung fortfahren.
+                    BannerMetaTemplate: 'Genehmigt für: {0}'
+                    TotalAmountLabel: Gesamt (¥)
+                    ApprovedBadge: Genehmigt
+                    ApprovedItemsTitle: Genehmigte Materialien
+                    MaterialColumn: Material
+                    QtyUnitColumn: Menge / Einheit
+                    TotalNetColumn: Gesamtnetto (¥)
+                  ProcurementDecline:
+                    PageTitle: Beschaffungsanfrage abgelehnt
+                    BannerTitleTemplate: 'Anfrage abgelehnt: {0}'
+                    BannerDesc: Die Beschaffungsanfrage wurde vom Einkaufsleiter abgelehnt.
+                    BannerMetaTemplate: 'Eingereicht von: {0}'
+                    TotalAmountLabel: Gesamt (¥)
+                    DeclinedBadge: Abgelehnt
+                    DeclineReasonTitle: Ablehnungsgrund
+                    RequestSummaryTitle: Anfrageübersicht
+                    MaterialColumn: Material
+                    QtyUnitColumn: Menge / Einheit
+                    TotalNetColumn: Gesamtnetto (¥)
               rag:
                 RagDemo:
                   Chatbot:

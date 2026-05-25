@@ -1,0 +1,106 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ProcurementAssistantAgentData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "query",
+    "comment" : "The user's current message"
+  }, {
+    "name" : "chatHistory",
+    "type" : "java.util.List<String>",
+    "comment" : "Previous conversation messages",
+    "modifiers" : [ ]
+  }, {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest",
+    "comment" : "The current procurement request being viewed by the user",
+    "modifiers" : [ ]
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.ProcurementAgentResponse",
+    "comment" : "Combined response: agent text + per-item feedback list",
+    "modifiers" : [ ]
+  }, {
+    "name" : "today",
+    "comment" : "Today's date as ISO string"
+  }, {
+    "name" : "formattedHistory",
+    "comment" : "Chat history joined as a single string for the system prompt"
+  }, {
+    "name" : "formattedRequest",
+    "comment" : "Formatted summary of the current request for the system prompt"
+  }, {
+    "name" : "question",
+    "comment" : "The procurement question forwarded to the answerProcurementQuestion tool"
+  }, {
+    "name" : "knowledgeContext",
+    "comment" : "Knowledge base content loaded from CMS"
+  }, {
+    "name" : "toolAnswer",
+    "comment" : "Plain-text answer from the answerProcurementQuestion inner agent"
+  }, {
+    "name" : "inventoryItem",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.InventoryItem",
+    "comment" : "Inventory record for the current material item (analyzeRequest loop)",
+    "modifiers" : [ ]
+  }, {
+    "name" : "count",
+    "type" : "java.lang.Integer",
+    "comment" : "Loop counter for analyzeRequest"
+  }, {
+    "name" : "agentFeedbackList",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback>",
+    "comment" : "Accumulated per-item feedback from analyzeRequest",
+    "modifiers" : [ ]
+  }, {
+    "name" : "materialItem",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementItem",
+    "comment" : "Current material item being evaluated in the analyzeRequest loop",
+    "modifiers" : [ ]
+  }, {
+    "name" : "agentFeedback",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback",
+    "comment" : "Feedback for the current item from the evaluator agent",
+    "modifiers" : [ ]
+  }, {
+    "name" : "inventoryItems",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.procurement.model.InventoryItem>",
+    "comment" : "Inventory items returned by findAlternativeItems tool",
+    "modifiers" : [ ]
+  }, {
+    "name" : "troubleItems",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementItem>",
+    "comment" : "Subset of material items flagged with hasTrouble, collected at the start of the findAlternativeItems loop",
+    "modifiers" : [ ]
+  }, {
+    "name" : "rankedAnalysis",
+    "comment" : "Structured ranked analysis of alternative inventory items produced before the final selection agent"
+  }, {
+    "name" : "command",
+    "comment" : "Modification instruction from the user for the modifyRequest tool"
+  }, {
+    "name" : "modifiedRequest",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest",
+    "comment" : "Updated request produced by the Modify Request Agent",
+    "modifiers" : [ ]
+  }, {
+    "name" : "userLanguage",
+    "comment" : "Display name of the session user's locale language in English (e.g. 'Japanese', 'German')"
+  }, {
+    "name" : "textToTranslate",
+    "comment" : "Combined text for translation: agentResponse.result and all feedback messages joined by ---SEG--- separators"
+  }, {
+    "name" : "translatedResult",
+    "comment" : "Translated combined text returned by the translation agent; split on ---SEG--- to restore individual segments"
+  }, {
+    "name" : "feedbacks",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback>",
+    "comment" : "Input feedbacks list for applyFeedbackReplacements tool (from a previous findAlternativeItems response)",
+    "modifiers" : [ ]
+  }, {
+    "name" : "matchedFeedback",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.agent.feedback.AgentFeedback",
+    "comment" : "Feedback entry matched to the current trouble item in the applyFeedbackReplacements loop",
+    "modifiers" : [ ]
+  } ]
+}
