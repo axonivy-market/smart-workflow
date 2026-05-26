@@ -76,7 +76,7 @@
     <dependency>
       <groupId>com.arize</groupId>
       <artifactId>openinference-semantic-conventions</artifactId>
-      <version>0.1.12</version>
+      <version>0.1.13</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -92,7 +92,7 @@
     <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm</artifactId>
-      <version>9.10</version>
+      <version>9.10.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
