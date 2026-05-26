@@ -1,0 +1,24 @@
+{
+  "id": "chatcmpl-multitask-3",
+  "object": "chat.completion",
+  "created": 1776000003,
+  "model": "gpt-4.1-mini-2025-04-14",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"invoiceNumber\":\"INV-2026-0317-001\",\"customerName\":\"Acme Corporation\",\"invoiceDate\":\"2026-03-17\",\"dueDate\":\"2026-04-16\",\"items\":[{\"description\":\"Office Chair Deluxe (OC-2024)\",\"quantity\":3,\"unitPrice\":299.0,\"total\":897.0},{\"description\":\"Ergonomic Keyboard (EK-500)\",\"quantity\":5,\"unitPrice\":79.0,\"total\":395.0},{\"description\":\"Standing Desk Pro (SD-Pro)\",\"quantity\":2,\"unitPrice\":599.0,\"total\":1198.0}],\"totalAmount\":2490.0}",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 152,
+    "completion_tokens": 142,
+    "total_tokens": 294
+  }
+}

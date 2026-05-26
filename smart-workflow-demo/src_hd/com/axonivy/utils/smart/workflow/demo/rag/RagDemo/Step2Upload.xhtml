@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://primefaces.org/ui">
+
+  <div class="rag-step-content">
+
+    <div class="rag-step-intro mb-5 mt-3">
+      <h3 class="m-0 mb-1 text-2xl">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/Title')}</h3>
+      <p class="m-0 text-gray-500">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/Subtitle')}</p>
+    </div>
+
+    <h:panelGroup id="step2-panel" layout="block" styleClass="grid">
+      <!-- Index name -->
+      <div class="col-12 md:col-5">
+        <div class="rag-config-card border-round-xl p-4 h-full">
+          <div class="flex align-items-center gap-2 mb-3">
+            <i class="si si-database-1 rag-config-icon" />
+            <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/IndexNameLabel')}</span>
+          </div>
+          <p:inputText id="index-name-input"
+            value="#{data.indexName}"
+            styleClass="w-full"
+            required="true"
+            label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/IndexNameLabel')}">
+            <p:ajax listener="#{logic.checkIndexExists}" update="step2-panel" />
+          </p:inputText>
+          <p class="m-0 mt-2 line-height-3 text-color-secondary">
+            #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/IndexNameDesc')}
+          </p>
+          <h:panelGroup rendered="#{data.indexExists}" layout="block"
+            styleClass="rag-index-warning flex align-items-center gap-2 border-round-md p-3 mt-3">
+            <i class="si si-alert-triangle" />
+            <div>
+              <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/IndexExistsWarning')}</span>
+              <p class="m-0 mt-1 text-sm">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/IndexExistsWarningDesc')}</p>
+            </div>
+          </h:panelGroup>
+        </div>
+      </div>
+
+      <!-- File upload -->
+      <div class="col-12 md:col-7">
+        <div class="rag-upload-zone border-round-xl p-4 h-full">
+          <p class="font-semibold m-0 mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/FileUploadContainerTitle')}</p>
+          <p class="m-0 mb-3 text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/FileUploadContainerHint')}</p>
+          <p class="m-0 mb-3 text-color-secondary text-sm">
+            <i class="si si-information-circle mr-1" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/PdfNote')}
+          </p>
+          <p:fileUpload auto="true" multiple="false" accept=".txt,.md,.pdf"
+            listener="#{logic.handleFileUpload}"
+            update="step2-panel rag-footer"
+            allowTypes="/(\.|\/)(txt|md|pdf)$/"
+            label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/ChooseFileLabel')}"
+            styleClass="rag-file-upload" />
+        </div>
+      </div>
+
+      <!-- Staged files -->
+      <div class="col-12">
+        <h:panelGroup id="staged-panel">
+          <h:panelGroup rendered="#{not empty data.stagedFiles}" layout="block">
+            <div class="flex align-items-center gap-2 mb-2">
+              <i class="si si-common-file-stack text-sm rag-primary-icon" />
+              <span class="font-semibold text-color">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/StagedFilesTitle')}</span>
+              <span class="rag-count-badge ml-1">#{data.stagedFiles.size()}</span>
+            </div>
+            <p:dataTable value="#{data.stagedFiles}" var="f" styleClass="w-full">
+              <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/FileNameColumn')}">
+                <i class="si si-common-file-text text-xs rag-primary-icon mr-2" />
+                <h:outputText value="#{f.name}" />
+              </p:column>
+              <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Step2/FileSizeColumn')}" styleClass="rag-col-source">
+                <h:outputText value="#{f.sizeKb} KB" rendered="#{f.sizeKb gt 0}" />
+                <h:outputText value="&lt;1 KB" rendered="#{f.sizeKb eq 0}" />
+              </p:column>
+            </p:dataTable>
+          </h:panelGroup>
+        </h:panelGroup>
+      </div>
+
+
+
+    </h:panelGroup>
+
+  </div>
+
+</ui:composition>

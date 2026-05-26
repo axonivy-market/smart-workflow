@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/config/variables.json
+# Common RAG settings (MaxResults, MinScore, ChunkSize, ChunkOverlap, EmbeddingModel.*)
+# are defined in the smart-workflow module under AI.RAG.*.
+Variables:
+  AI:
+    RAG:
+      OpenSearch:
+        # Base URL of the OpenSearch server.
+        # Example: "http://localhost:19600"
+        Url: ""
+        # API key for the OpenSearch server.
+        # Leave blank when using username/password auth or when security is disabled.
+        #[password]
+        ApiKey: ${decrypt:}
+        # Username for basic authentication. Leave blank when security is disabled.
+        UserName: ""
+        # Password for basic authentication. Leave blank when security is disabled.
+        #[password]
+        Password: ${decrypt:}
+        # Set to 'true' to trust self-signed SSL certificates (e.g. for dev/test environments).
+        # Never use 'true' in production with sensitive data.
+        TrustSelfSignedCertificates: "false"

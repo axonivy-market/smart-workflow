@@ -1,0 +1,47 @@
+{
+  "name": "Axon Ivy",
+  "dockerComposeFile": [
+    "compose.yml"
+  ],
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/smart-workflow",
+  "runServices": [
+    "workspace",
+    "phoenix"
+  ],
+  "forwardPorts": [
+    8080,
+    6006
+  ],
+  "onCreateCommand": "bash .devcontainer/on-create.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "25",
+      "installMaven": "true",
+      "jdkDistro": "tem"
+    },
+    "ghcr.io/axonivy/devcontainer-features/engine:1": {
+      "downloadUrl": "https://dev.axonivy.com/permalink/dev/axonivy-engine-slim.zip",
+      "engineHome": "/usr/lib/axonivy-engine"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "axonivy.vscode-designer-14",
+        "vscjava.vscode-java-pack",
+        "alphabotsec.vscode-eclipse-keybindings",
+        "redhat.vscode-yaml",
+        "mhutchie.git-graph",
+        "huizhou.githd",
+        "catppuccin.catppuccin-vsc-icons"
+      ],
+      "settings": {
+        "axonivy.engine.releaseTrain": "/usr/lib/axonivy-engine",
+        "axonivy.engine.vmArgs": "-Dotel.traces.exporter=otlp -Dotel.exporter.otlp.endpoint=http://phoenix:6006 -Dotel.resource.attributes=openinference.project.name=smart-workflow",
+        "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/",
+        "java.server.launchMode": "Standard"
+      }
+    }
+  }
+}

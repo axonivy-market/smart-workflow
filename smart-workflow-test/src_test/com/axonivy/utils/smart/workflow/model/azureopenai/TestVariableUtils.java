@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 
@@ -15,7 +16,7 @@ import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
 public class TestVariableUtils {
-  private static final String DEPLOYMENTS_PREFIX = "AI.Providers.AzureOpenAI.Deployments";
+  private static final String DEPLOYMENTS_PREFIX = AzureOpenAiConf.DEPLOYMENTS;
   private static final String TEST_DEPLOYMENT_1 = "test-gpt-4-1-mini";
   private static final String TEST_DEPLOYMENT_2 = "test-o4-mini";
 

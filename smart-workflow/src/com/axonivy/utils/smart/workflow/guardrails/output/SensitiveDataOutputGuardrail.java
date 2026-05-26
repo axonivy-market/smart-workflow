@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.guardrails.output;
 
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -9,38 +8,35 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
+import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
 public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrail {
 
   private static final String FAILURE_MESSAGE = "The AI response was blocked because it contains sensitive data such as API keys or private keys";
-
-  private static final List<String> API_KEY_VARIABLE_PATHS = List.of(
-      "Ai.Providers.OpenAI.APIKey",
-      "AI.Providers.AzureOpenAI.APIKey",
-      "AI.Providers.Gemini.APIKey",
-      "AI.Providers.xAI.APIKey",
-      "AI.Providers.Anthropic.APIKey"
-  );
   
-  private static final Pattern SK_KEY_PATTERN = Pattern.compile(
-      "\\bsk-(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]{20,}\\b");
+  private interface Patterns {
+    Pattern SK_KEY = Pattern.compile(
+        "\\bsk-(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]{20,}\\b");
+  
+    Pattern AWS_KEY = Pattern.compile(
+        "\\b(?:AKIA|ASIA)[0-9A-Z]{16}\\b");
+  
+    Pattern GITHUB_TOKEN = Pattern.compile(
+        "\\bgh[posr]_[a-zA-Z0-9]{36}\\b|\\bgithub_pat_[a-zA-Z0-9_]{82}\\b");
+  
+    Pattern GOOGLE_API_KEY = Pattern.compile(
+        "\\bAIza[0-9A-Za-z_-]{35}\\b");
+  
+    Pattern XAI_KEY = Pattern.compile(
+        "\\bxai-[a-zA-Z0-9]{50,}\\b");
+  
+    Pattern PRIVATE_KEY = Pattern.compile(
+        "-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----");
+  }
 
-  private static final Pattern AWS_KEY_PATTERN = Pattern.compile(
-      "\\b(?:AKIA|ASIA)[0-9A-Z]{16}\\b");
-
-  private static final Pattern GITHUB_TOKEN_PATTERN = Pattern.compile(
-      "\\bgh[posr]_[a-zA-Z0-9]{36}\\b|\\bgithub_pat_[a-zA-Z0-9_]{82}\\b");
-
-  private static final Pattern GOOGLE_API_KEY_PATTERN = Pattern.compile(
-      "\\bAIza[0-9A-Za-z_-]{35}\\b");
-
-  private static final Pattern XAI_KEY_PATTERN = Pattern.compile(
-      "\\bxai-[a-zA-Z0-9]{50,}\\b");
-
-  private static final Pattern PRIVATE_KEY_PATTERN = Pattern.compile(
-      "-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----");
+  private Set<String> variables = null;
 
   @Override
   public GuardrailResult evaluate(String message) {
@@ -55,22 +51,27 @@ public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrai
   }
 
   private boolean containsConfiguredApiKey(String message) {
-    return loadConfiguredApiKeys().stream().anyMatch(message::contains);
+    if (variables == null) {
+      variables = loadConfiguredApiKeys();
+    }
+    return variables.stream().anyMatch(message::contains);
   }
 
   private static Set<String> loadConfiguredApiKeys() {
-    return API_KEY_VARIABLE_PATHS.stream()
-        .map(path -> Ivy.var().get(path))
-        .filter(StringUtils::isNotBlank)
-        .collect(Collectors.toSet());
+    var secrets = ChatModelFactory.providers().stream()
+      .flatMap(provider -> provider.secretsVars().stream())
+      .map(varName -> Ivy.var().get(varName))
+      .filter(StringUtils::isNotBlank)
+      .collect(Collectors.toSet());
+    return secrets;
   }
 
   private boolean containsPatternMatch(String message) {
-    return SK_KEY_PATTERN.matcher(message).find()
-        || AWS_KEY_PATTERN.matcher(message).find()
-        || GITHUB_TOKEN_PATTERN.matcher(message).find()
-        || GOOGLE_API_KEY_PATTERN.matcher(message).find()
-        || XAI_KEY_PATTERN.matcher(message).find()
-        || PRIVATE_KEY_PATTERN.matcher(message).find();
+    return Patterns.SK_KEY.matcher(message).find()
+        || Patterns.AWS_KEY.matcher(message).find()
+        || Patterns.GITHUB_TOKEN.matcher(message).find()
+        || Patterns.GOOGLE_API_KEY.matcher(message).find()
+        || Patterns.XAI_KEY.matcher(message).find()
+        || Patterns.PRIVATE_KEY.matcher(message).find();
   }
 }

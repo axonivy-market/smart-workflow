@@ -10,6 +10,7 @@ import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.anthropic.AnthropicChatModelName;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.anthropic.AnthropicChatModel.AnthropicChatModelBuilder;
 
 public class AnthropicServiceConnector {
@@ -38,7 +39,9 @@ public class AnthropicServiceConnector {
 
   private static AnthropicChatModelBuilder initBuilder(String modelName) {
     AnthropicChatModelBuilder builder = initBuilder();
-    builder.modelName(modelName);
+    var request = ChatRequestParameters.builder()
+      .modelName(modelName);
+    builder.defaultRequestParameters(request.build()); 
     return builder;
   }
 

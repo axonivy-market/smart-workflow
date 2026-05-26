@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "EmbeddedChunkView",
+  "namespace" : "Features.RagDemo",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "String"
+  }, {
+    "name" : "source",
+    "type" : "String"
+  }, {
+    "name" : "textPreview",
+    "type" : "String"
+  } ]
+}

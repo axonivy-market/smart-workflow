@@ -9,7 +9,10 @@
       "type" : "RequestStart",
       "name" : "start",
       "config" : {
-        "signature" : "start"
+        "signature" : "start",
+        "request" : {
+          "name" : "Smart Workflow Agent Demo"
+        }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 64 }

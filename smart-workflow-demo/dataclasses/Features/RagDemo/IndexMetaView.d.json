@@ -1,0 +1,21 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "IndexMetaView",
+  "namespace" : "Features.RagDemo",
+  "fields" : [ {
+    "name" : "embeddingProvider",
+    "type" : "String"
+  }, {
+    "name" : "embeddingModel",
+    "type" : "String"
+  }, {
+    "name" : "chunkSize",
+    "type" : "Integer"
+  }, {
+    "name" : "chunkOverlap",
+    "type" : "Integer"
+  }, {
+    "name" : "createdAt",
+    "type" : "String"
+  } ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "WebSearchSummary",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "query",
+    "comment" : "The original search query"
+  }, {
+    "name" : "summary",
+    "comment" : "AI-synthesized overview of the search results"
+  }, {
+    "name" : "results",
+    "type" : "List<com.axonivy.utils.ai.WebSearchResult>",
+    "comment" : "Individual search results found on the web"
+  } ]
+}

@@ -5,5 +5,8 @@
   "fields" : [ {
     "name" : "person",
     "type" : "com.axonivy.utils.smart.workflow.test.Person"
+  }, {
+    "name" : "result",
+    "type" : "Integer"
   } ]
 }

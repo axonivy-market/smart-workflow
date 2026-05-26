@@ -22,10 +22,12 @@ import dev.langchain4j.model.chat.request.ChatRequest;
 
 class RequestRecorder {
   private final String provider;
+  private final String model;
   private final Map<String, Object> attributes = new LinkedHashMap<>();
 
-  public RequestRecorder(String provider) {
+  public RequestRecorder(String provider, String model) {
     this.provider = provider;
+    this.model = model;
   }
 
   Map<String, Object> handleRequest(ChatRequest request, boolean hideInput) {
@@ -40,7 +42,7 @@ class RequestRecorder {
   }
 
   private void basicAttributes(ChatRequest request) {
-    String modelName = Optional.ofNullable(request.modelName()).orElse("unknown");
+    String modelName = Optional.ofNullable(request.modelName()).orElse(model);
 
     attributes.put(SemanticConventions.OPENINFERENCE_SPAN_KIND,
         SemanticConventions.OpenInferenceSpanKind.LLM.getValue());
