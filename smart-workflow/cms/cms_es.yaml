@@ -1,0 +1,28 @@
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        ai:
+          HistoryDashboard:
+            HistoryDashboard:
+              Title: Centro de Gobernanza de IA
+              HistoryTableHeader: Tabla de Historial
+              SummaryCount: '{0} casos - {1} tareas'
+              FilterBy: 'Filtrar por:'
+              FilterCasePlaceholder: Nombre, ID o descripción del caso
+              AllModels: Todos los modelos
+              AllTime: Todo el tiempo
+              Today: Hoy
+              Last7Days: Últimos 7 días
+              Last30Days: Últimos 30 días
+              NoHistoryFound: No se encontraron registros de historial.
+              ColumnCaseTaskAgent: Caso/Tarea/Agente
+              AgentLabel: 'Agente {0}'
+              ColumnLastUpdated: Última actualización
+              ColumnMessages: Mensajes
+              MessagesBadge: '{0} msgs'
+              ColumnTokens: Tokens
+              ColumnModel: Modelo
+              ViewButton: Ver
+              AnalyticsHeader: Análisis de Uso de Tokens
+              ComingSoon: Próximamente

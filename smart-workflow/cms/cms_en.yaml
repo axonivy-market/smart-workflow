@@ -1,0 +1,28 @@
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        ai:
+          HistoryDashboard:
+            HistoryDashboard:
+              Title: AI Governance Center
+              HistoryTableHeader: History Table
+              SummaryCount: '{0} cases - {1} tasks'
+              FilterBy: 'Filter by:'
+              FilterCasePlaceholder: Case name, ID or description
+              AllModels: All models
+              AllTime: All time
+              Today: Today
+              Last7Days: Last 7 days
+              Last30Days: Last 30 days
+              NoHistoryFound: No history records found.
+              ColumnCaseTaskAgent: Case/Task/Agent
+              AgentLabel: 'Agent {0}'
+              ColumnLastUpdated: Last updated
+              ColumnMessages: Messages
+              MessagesBadge: '{0} msgs'
+              ColumnTokens: Tokens
+              ColumnModel: Model
+              ViewButton: View
+              AnalyticsHeader: Token Usage Analytics
+              ComingSoon: Coming soon
