@@ -21,10 +21,6 @@
     "name" : "supportTicket",
     "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
   }, {
-    "name" : "connector",
-    "type" : "com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector",
-    "modifiers" : [ ]
-  }, {
     "name" : "instructions",
     "type" : "List<String>",
     "modifiers" : [ ]
