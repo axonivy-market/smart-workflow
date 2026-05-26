@@ -90,7 +90,13 @@
       "type" : "RequestStart",
       "name" : "joinedForces",
       "config" : {
-        "signature" : "joinedForces"
+        "signature" : "joinedForces",
+        "request" : {
+          "name" : "Human-in-the-Loop Demo"
+        },
+        "case" : {
+          "name" : "Human-in-the-Loop: Ice Cream Advisor"
+        }
       },
       "visual" : {
         "at" : { "x" : 176, "y" : 224 }

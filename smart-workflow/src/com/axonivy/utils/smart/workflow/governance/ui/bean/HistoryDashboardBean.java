@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.governance.ui.bean;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +18,7 @@ import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistory
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.service.CaseService;
 
 @ManagedBean
 @ViewScoped
@@ -41,8 +43,40 @@ public class HistoryDashboardBean implements Serializable {
   }
 
   public void applyFilter() {
-    entries = storage.findAll();
+    entries = storage.findAll().stream()
+        .filter(this::matchesCaseFilter)
+        .filter(this::matchesModelFilter)
+        .filter(this::matchesDateRangeFilter)
+        .toList();
     buildTree();
+  }
+
+  private boolean matchesCaseFilter(AgentConversationEntry e) {
+    if (filterCase == null || filterCase.isBlank()) return true;
+    return CaseService.matchesSearch(e.getCaseUuid(), filterCase.trim());
+  }
+
+  private boolean matchesModelFilter(AgentConversationEntry e) {
+    if (filterModel == null || filterModel.isBlank()) return true;
+    return filterModel.equals(e.getModelName());
+  }
+
+  private boolean matchesDateRangeFilter(AgentConversationEntry e) {
+    if ("ALL".equals(filterDateRange)) return true;
+    if (e.getLastUpdated() == null) return false;
+    LocalDateTime updated;
+    try {
+      updated = LocalDateTime.parse(e.getLastUpdated());
+    } catch (Exception ex) {
+      return false;
+    }
+    LocalDateTime now = LocalDateTime.now();
+    switch (filterDateRange) {
+      case "TODAY":       return !updated.toLocalDate().isBefore(now.toLocalDate());
+      case "LAST_7_DAYS": return updated.isAfter(now.minusDays(7));
+      case "LAST_30_DAYS": return updated.isAfter(now.minusDays(30));
+      default: return true;
+    }
   }
 
   private void buildTree() {

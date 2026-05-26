@@ -60,6 +60,12 @@ public class AgentConversationEntry {
   private static final String DATE_TIME_FORMAT_PATTERN = "dd MMM yyyy HH:mm";
 
   @JsonIgnore
+  public long getCaseId() { return 0L; }
+
+  @JsonIgnore
+  public String getLastUpdatedRaw() { return lastUpdated != null ? lastUpdated : ""; }
+
+  @JsonIgnore
   public String getLastUpdatedText() {
     if (lastUpdated == null) return "—";
     try {
