@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "OpenSearchVectorStoreManagementData",
+  "namespace" : "",
+  "fields" : [ {
+    "name" : "collection",
+    "type" : "String"
+  }, {
+    "name" : "sources",
+    "type" : "java.util.List<String>"
+  }, {
+    "name" : "result",
+    "type" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult"
+  } ]
+}

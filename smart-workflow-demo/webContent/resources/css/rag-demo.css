@@ -1,0 +1,334 @@
+/* ========================================
+   RAG DEMO — 4-step wizard layout
+   ======================================== */
+
+/* ---- Page header ---- */
+
+
+.rag-subtitle {
+  color: var(--text-color-secondary);
+}
+
+/* ---- Generic primary icon color ---- */
+
+.rag-primary-icon {
+  color: var(--ivy-primary-color);
+}
+
+/* ---- Sidebar cards (used in Step 2) ---- */
+
+.rag-card {
+  background: var(--surface-0);
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+.rag-card-header {
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.rag-card-header .si {
+  color: var(--ivy-primary-color);
+}
+
+.rag-card-header span {
+  color: var(--text-color);
+}
+
+/* Index field */
+.rag-index-field .ui-inputtext {
+  width: 100% !important;
+  border-radius: 8px !important;
+  border: 1.5px solid var(--surface-border) !important;
+  font-size: 0.875rem !important;
+  padding: 0.5rem 0.75rem !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.rag-index-field .ui-inputtext:focus {
+  border-color: var(--ivy-primary-color) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ivy-primary-color), transparent 90%) !important;
+  outline: none !important;
+}
+
+/* Staged files list */
+.rag-staged-item {
+  background: var(--surface-50);
+  border: 1px solid var(--surface-border);
+  color: var(--text-color);
+}
+
+.rag-staged-item .si-common-file-empty {
+  color: var(--ivy-primary-color);
+}
+
+.rag-staged-item .staged-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rag-staged-item .staged-size {
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+}
+
+/* Messages overrides */
+.rag-messages .ui-messages {
+  border-radius: 10px !important;
+  font-size: 0.83rem !important;
+}
+
+/* ---- Index metadata panel (used in Step 3) ---- */
+.rag-meta-label {
+  white-space: nowrap;
+}
+
+.rag-meta-value {
+  color: var(--text-color);
+  word-break: break-all;
+}
+
+/* ---- Empty state (used in Step 3) ---- */
+
+.rag-empty-icon {
+  width: 72px;
+  height: 72px;
+  background: var(--ivy-primary-lightest-color);
+}
+
+.rag-empty-icon .si {
+  color: var(--ivy-primary-color);
+}
+
+.rag-empty-title {
+  color: var(--text-color);
+}
+
+.rag-empty-desc {
+  color: var(--text-color-secondary);
+  max-width: 320px;
+}
+
+/* ---- Table column widths (used in Step 3) ---- */
+
+.rag-col-source {
+  width: 180px;
+}
+
+.rag-col-chunk-id {
+  width: 240px;
+}
+
+/* ========================================
+   WIZARD STEP INDICATOR
+   ======================================== */
+
+.rag-wizard-steps {
+  gap: 0;
+  padding: 1rem 0 1.5rem;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.rag-wizard-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 6rem;
+}
+
+.rag-step-circle {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border: 2px solid var(--surface-border);
+  background: var(--surface-0);
+  color: var(--text-color-secondary);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.rag-wizard-step.active .rag-step-circle {
+  background: var(--ivy-primary-color);
+  border-color: transparent;
+  color: #fff;
+}
+
+.rag-wizard-step.completed .rag-step-circle {
+  background: #059669;
+  border-color: transparent;
+  color: #fff;
+}
+
+.rag-step-label {
+  color: var(--text-color-secondary);
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.rag-wizard-step.active .rag-step-label,
+.rag-wizard-step.completed .rag-step-label {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.rag-step-connector {
+  height: 2px;
+  width: 4rem;
+  background: var(--surface-border);
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.rag-step-connector.completed {
+  background: #059669;
+}
+
+/* ========================================
+   WIZARD BODY & STEP CONTENT
+   ======================================== */
+.rag-step-content {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ========================================
+   STEP 1 — CONFIGURATION CARDS
+   ======================================== */
+
+.rag-config-card {
+  border: 1px solid var(--surface-border);
+  height: 100%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: box-shadow 0.2s;
+}
+
+.rag-config-card:hover {
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ivy-primary-color), transparent 88%);
+}
+
+.rag-config-icon {
+  color: var(--ivy-primary-color);
+  font-size: 1rem;
+}
+
+.rag-config-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* ========================================
+   STEP 2 — UPLOAD ZONE
+   ======================================== */
+
+.rag-upload-zone {
+  border: 2px dashed var(--ivy-primary-light-color);
+  background: var(--surface-50);
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.rag-upload-zone:hover {
+  border-color: var(--ivy-primary-color);
+  background: var(--surface-100);
+}
+
+/* ========================================
+   STEP 2 — STAGED FILES PANEL
+   ======================================== */
+
+.rag-staged-panel {
+  background: var(--surface-50);
+  border: 1px solid var(--surface-border);
+}
+
+.rag-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ivy-primary-color);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 99px;
+  padding: 0 0.35rem;
+}
+
+/* ========================================
+   STEP 2 — INDEX EXISTS WARNING
+   ======================================== */
+
+.rag-index-warning {
+  background: #fffbeb;
+  border: 1px solid #fbbf24;
+  color: #92400e;
+}
+
+.rag-index-warning .si {
+  color: #d97706;
+}
+
+/* ========================================
+   STEP 3 — SUCCESS BANNER
+   ======================================== */
+
+.rag-success-banner {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border: 1px solid #6ee7b7;
+  color: #065f46;
+}
+
+.rag-success-banner .si {
+  color: #059669;
+}
+
+/* ========================================
+   STEP 4 — INLINE CHATBOT
+   ======================================== */
+
+.rag-step4-wrapper .rag-chat-container {
+  min-height: 400px;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ========================================
+   DARK MODE OVERRIDES
+   (status/warning colors that can't use
+    a neutral surface variable)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .rag-index-warning {
+    background: color-mix(in srgb, #fbbf24, var(--surface-0) 85%);
+    border-color: #fbbf24;
+    color: var(--text-color);
+  }
+
+  .rag-index-warning .si {
+    color: #fbbf24;
+  }
+
+  .rag-success-banner {
+    background: color-mix(in srgb, #059669, var(--surface-0) 85%);
+    border-color: #059669;
+    color: var(--text-color);
+  }
+
+  .rag-success-banner .si {
+    color: #34d399;
+  }
+}

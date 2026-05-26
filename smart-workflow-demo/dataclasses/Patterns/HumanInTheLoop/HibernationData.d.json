@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "HibernationData",
+  "namespace" : "Patterns.HumanInTheLoop",
+  "fields" : [ {
+    "name" : "iceCream"
+  }, {
+    "name" : "decision",
+    "type" : "com.axonivy.utils.smart.workflow.human.HumanDecision"
+  }, {
+    "name" : "aiMemoryId",
+    "comment" : "name convention: field holding the memory id of an ongoing AI conversation"
+  } ]
+}

@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/config/rest-clients-1.json
+RestClients:
+  openSearch:
+    Name: openSearch
+    Url: ${ivy.var.AI.RAG.OpenSearch.Url}
+    Features:
+      - ch.ivyteam.ivy.rest.client.mapper.JsonFeature
+    Properties:
+      SensitiveData: 'true'
+      Deserialization.FAIL_ON_UNKNOWN_PROPERTIES: 'false'
+      TrustSelfSignedCertificates: ${ivy.var.AI.RAG.OpenSearch.TrustSelfSignedCertificates}

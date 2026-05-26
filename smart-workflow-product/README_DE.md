@@ -398,19 +398,15 @@ If no guardrails are specified, the agent uses the default guardrails from
 Smart Workflow also lets you implement custom guardrails and handle guardrail
 errors. For more details, see the [Guardrails Guideline](../doc/GUARDRAILS.md).
 
-### Definition von Tools mit aufrufbaren Prozessen
+### Defining Tools
 
-Um effektiv zu funktionieren, benötigen KI-Agenten Tools zur Ausführung von
-Aufgaben. Mit Smart Workflow ist die Erstellung eines Tools ganz einfach:
-Definieren Sie einfach einen aufrufbaren Prozess und fügen Sie ihm das Tag „
-`-Tool“` hinzu.
+To function effectively, AI agents require tools to perform tasks. Smart
+Workflow supports two kinds of tools: **Callable Process Tools** (any tagged
+callable sub-process) and **Java Tools** (implement `SmartWorkflowTool` and
+register via SPI).
 
-Um das geeignete Tool auszuwählen, stützen sich KI-Agenten auf die
-Beschreibungen der aufrufbaren Prozesse. Um eine effiziente Tool-Auswahl zu
-gewährleisten, beschreiben Sie den Zweck des Tools klar und deutlich im Feld „
-`-Beschreibung“`.
-
-![Tool-Konfigurationen](img/tool-configurations.png)
+For step-by-step instructions on creating both tool types, see the [Tools
+Guide](../doc/TOOLS.md).
 
 ### Definition des KI-Agenten
 

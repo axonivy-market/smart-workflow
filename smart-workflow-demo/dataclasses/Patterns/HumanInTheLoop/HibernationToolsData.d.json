@@ -1,0 +1,12 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "HibernationToolsData",
+  "namespace" : "Patterns.HumanInTheLoop",
+  "fields" : [ {
+    "name" : "decision",
+    "type" : "com.axonivy.utils.smart.workflow.human.HumanDecision"
+  }, {
+    "name" : "selected",
+    "type" : "List<com.axonivy.utils.smart.workflow.human.Choice>"
+  } ]
+}

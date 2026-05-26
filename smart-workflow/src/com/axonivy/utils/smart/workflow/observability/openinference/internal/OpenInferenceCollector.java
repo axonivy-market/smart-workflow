@@ -12,8 +12,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dev.langchain4j.model.chat.listener.ChatModelRequestContext;
-import dev.langchain4j.model.chat.listener.ChatModelResponseContext;
+import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.response.ChatResponse;
 
 public class OpenInferenceCollector {
 
@@ -25,11 +25,14 @@ public class OpenInferenceCollector {
   private final Map<String, Object> attributes = new LinkedHashMap<>();
 
   private String provider;
+  private String model;
+  
   private boolean hideInput = false;
   private boolean hideOutput = false;
 
-  public OpenInferenceCollector(String provider) {
+  public OpenInferenceCollector(String provider, String model) {
     this.provider = toOpenInferenceProvider(provider);
+    this.model = model;
   }
 
   private static String toOpenInferenceProvider(String provider) {
@@ -57,13 +60,11 @@ public class OpenInferenceCollector {
     return Collections.unmodifiableMap(attributes);
   }
 
-  public void onRequest(ChatModelRequestContext requestContext) {
-    var request = requestContext.chatRequest();
-    attributes.putAll(new RequestRecorder(provider).handleRequest(request, hideInput));
+  public void onRequest(ChatRequest request) {
+    attributes.putAll(new RequestRecorder(provider, model).handleRequest(request, hideInput));
   }
 
-  public void onResponse(ChatModelResponseContext responseContext) {
-    var response = responseContext.chatResponse();
+  public void onResponse(ChatResponse response) {
     attributes.putAll(new ResponseRecorder().handleResponse(response, hideOutput));
   }
 }

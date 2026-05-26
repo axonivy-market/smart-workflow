@@ -1,0 +1,22 @@
+{
+  "id": "chatcmpl-websearch-2",
+  "object": "chat.completion",
+  "created": 1712345679,
+  "model": "gpt-4o-mini",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"query\":\"web search engine\",\"summary\":\"Web search engines are systems designed to search for information on the World Wide Web. Popular examples include Google, Bing, and DuckDuckGo.\",\"results\":[{\"title\":\"DuckDuckGo\",\"url\":\"https://duckduckgo.com\",\"snippet\":\"The Internet privacy company that empowers you to seamlessly take control of your personal information online.\"},{\"title\":\"How Search Engines Work\",\"url\":\"https://example.com/how-search-works\",\"snippet\":\"Search engines crawl, index, and rank web pages to provide relevant results.\"}]}",
+        "refusal": null
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 500,
+    "completion_tokens": 150,
+    "total_tokens": 650
+  }
+}

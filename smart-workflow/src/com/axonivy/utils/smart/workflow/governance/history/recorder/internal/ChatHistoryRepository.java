@@ -8,7 +8,9 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.GuardrailExecution;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
+import com.axonivy.utils.smart.workflow.governance.history.recorder.GuardrailExecutionRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.ToolExecutionRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
@@ -22,7 +24,7 @@ import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageSerializer;
 
-public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionRecorder {
+public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionRecorder, GuardrailExecutionRecorder {
 
   private final String caseUuid;
   private final String taskUuid;
@@ -53,9 +55,11 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
   @Override
   public void record(String toolName, String arguments, String resultText) {
     var entry = findOrCreateEntry();
+    String now = LocalDateTime.now().toString();
     var tools = new ArrayList<>(entry.getToolExecutions());
-    tools.add(new ToolExecution(toolName, arguments, resultText, LocalDateTime.now().toString()));
+    tools.add(new ToolExecution(toolName, arguments, resultText, now));
     entry.setToolExecutions(tools);
+    entry.setLastUpdated(now);
     storage.save(entry);
     currentEntry = entry;
   }
@@ -122,5 +126,18 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
     } catch (JsonProcessingException ex) {
       Ivy.log().warn("Failed to persist token usage metadata", ex);
     }
+  }
+
+  
+  @Override
+  public void recordGuardrail(String guardrailName, String type, String result, String message, String failureMessage, Long durationMs) {
+    var entry = findOrCreateEntry();
+    String now = LocalDateTime.now().toString();
+    var guardrails = new ArrayList<>(entry.getGuardrailExecutions());
+    guardrails.add(new GuardrailExecution(guardrailName, type, result, message, failureMessage, durationMs, now));
+    entry.setGuardrailExecutions(guardrails);
+    entry.setLastUpdated(now);
+    storage.save(entry);
+    currentEntry = entry;
   }
 }

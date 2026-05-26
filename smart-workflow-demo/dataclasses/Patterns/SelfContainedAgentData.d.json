@@ -1,0 +1,24 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SelfContainedAgentData",
+  "namespace" : "Patterns",
+  "fields" : [ {
+    "name" : "invoiceContent",
+    "comment" : "Text content of the invoice — main input for the agent and tools"
+  }, {
+    "name" : "analysisResult",
+    "comment" : "Comprehensive invoice analysis report produced by the agent"
+  }, {
+    "name" : "lineItemsJson",
+    "comment" : "Extracted line items as JSON array — output of extractLineItems, input of validateAmounts"
+  }, {
+    "name" : "headerInfo",
+    "comment" : "Extracted header information as JSON — output of extractHeaderInfo tool"
+  }, {
+    "name" : "validationResult",
+    "comment" : "Amount validation report — output of validateAmounts tool"
+  }, {
+    "name" : "complianceReport",
+    "comment" : "Compliance assessment with score — output of assessCompliance tool"
+  } ]
+}

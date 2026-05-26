@@ -1,0 +1,11 @@
+services:
+  workspace:
+    image: mcr.microsoft.com/devcontainers/base:trixie
+    command: sleep infinity
+    volumes:
+      - ..:/workspaces/smart-workflow:cached
+
+  phoenix:
+    image: arizephoenix/phoenix:nightly
+    ports:
+      - "6006:6006"

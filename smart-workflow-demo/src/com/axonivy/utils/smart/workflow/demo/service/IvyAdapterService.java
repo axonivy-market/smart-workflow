@@ -1,12 +1,11 @@
 package com.axonivy.utils.smart.workflow.demo.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-
-import org.apache.commons.collections4.CollectionUtils;
 
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
@@ -28,7 +27,7 @@ public class IvyAdapterService {
    */
 
   public static Map<String, Object> startSubProcessInSecurityContext(String signature, Map<String, Object> params) {
-    return startSubProcess(signature, params, SearchScope.SECURITY_CONTEXT);
+    return startSubProcess(signature, Optional.ofNullable(params).orElse(Map.of()), SearchScope.SECURITY_CONTEXT);
   }
 
   private static Map<String, Object> startSubProcess(String signature, Map<String, Object> params, SearchScope scope) {
@@ -39,18 +38,21 @@ public class IvyAdapterService {
 
       // Find subprocess
       var subProcessStartList = SubProcessCallStartEvent.find(filter);
-      if (CollectionUtils.isEmpty(subProcessStartList)) {
-        return null;
+      if (subProcessStartList.isEmpty()) {
+        return Map.of();
       }
       var subProcessStart = subProcessStartList.get(0);
 
       // Add param to the subprocess and execute
-      return Optional.ofNullable(params).map(Map::entrySet).isEmpty() ? subProcessStart.call().asMap() : startSubProcessWithParams(subProcessStart, params);
+      if (params.isEmpty()) {
+        return subProcessStart.call().asMap();
+      }
+      return startSubProcessWithParams(subProcessStart, params);
     });
   }
 
   private static Map<String, Object> startSubProcessWithParams(SubProcessCallStartEvent subProcess, Map<String, Object> params) {
-    Map<String, Object> result = null;
+    Map<String, Object> result = new HashMap<>();
     List<Entry<String, Object>> entryList = new ArrayList<>(params.entrySet());
 
     for (Entry<String, Object> entry : entryList) {

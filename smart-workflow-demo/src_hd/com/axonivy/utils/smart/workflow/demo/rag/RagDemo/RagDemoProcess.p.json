@@ -1,0 +1,688 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19D8A5B3564E17B3",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.demo.rag.RagDemo.RagDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "guid" : "19D8A5B356B3F457"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f15" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 736, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "19D8A5B3573B72DB"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    }, {
+      "id" : "fe1",
+      "type" : "HtmlDialogEventStart",
+      "name" : "embed",
+      "config" : {
+        "guid" : "19D8A5B300000001"
+      },
+      "visual" : {
+        "at" : { "x" : 872, "y" : 432 }
+      },
+      "connect" : [
+        { "id" : "fe2", "to" : "fe3" }
+      ]
+    }, {
+      "id" : "fe3",
+      "type" : "SubProcessCall",
+      "name" : "Ingest Documents",
+      "config" : {
+        "processCall" : "OpenSearchVectorStoreManagement:createVectorStore(String,java.util.List<String>)",
+        "call" : {
+          "map" : {
+            "param.collection" : "in.indexName",
+            "param.sources" : "in.sources"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "in.ragResult" : "result.result"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1160, "y" : 432 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "fe4", "to" : "fe5" }
+      ]
+    }, {
+      "id" : "fe5",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1456, "y" : 432 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "chat",
+      "config" : {
+        "signature" : "chat",
+        "guid" : "19D8A5B300000002"
+      },
+      "visual" : {
+        "at" : { "x" : 872, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "fa1" }
+      ]
+    }, {
+      "id" : "fa1",
+      "type" : "Alternative",
+      "name" : "Input blank?",
+      "config" : {
+        "conditions" : {
+          "fa3" : "!org.apache.commons.lang3.StringUtils.isBlank(in.userInput)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 968, "y" : 64 },
+        "labelOffset" : { "x" : 24, "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "fa3", "to" : "f7", "label" : {
+            "name" : "no"
+          } },
+        { "id" : "fa4", "to" : "f10", "via" : [ { "x" : 968, "y" : 128 }, { "x" : 1640, "y" : 128 } ], "label" : {
+            "name" : "yes",
+            "segment" : 1.5
+          } }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "name" : "Init chat",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import java.time.LocalDateTime;",
+            "import java.time.format.DateTimeFormatter;",
+            "import com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage;",
+            "",
+            "ChatMessage msg = new ChatMessage();",
+            "msg.setRole(\"user\");",
+            "msg.setContent(in.userInput);",
+            "msg.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"h:mm a\")));",
+            "in.messages.add(msg);",
+            "in.question = in.userInput;",
+            "in.userInput = \"\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1120, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "ProgramInterface",
+      "name" : "AI Chat",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a RAG (Retrieval-Augmented Generation) assistant.\r\nYou MUST always call the openSearchSearch tool before answering any question.\r\nUse the collection <%=in.indexName%>.\r\nBase your answer strictly on the retrieved documents.\r\nIf no relevant documents are found, clearly state that no relevant information was found in the knowledge base. Do not answer from your own knowledge.",
+          "tools" : "[\"openSearchSearch\"]",
+          "resultType" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult.class",
+          "resultMapping" : "in.ragResult",
+          "query" : "<%=in.question%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1320, "y" : 64 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f9" }
+      ]
+    }, {
+      "id" : "f9",
+      "type" : "Script",
+      "name" : "Handle response",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import java.time.LocalDateTime;",
+            "import java.time.format.DateTimeFormatter;",
+            "import com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage;",
+            "",
+            "String answer;",
+            "if (in.ragResult != null && in.ragResult.getAnswer() != null && !in.ragResult.getAnswer().trim().isEmpty()) {",
+            "  answer = in.ragResult.getAnswer();",
+            "} else {",
+            "  answer = \"I could not find relevant information for your question.\";",
+            "}",
+            "ChatMessage msg = new ChatMessage();",
+            "msg.setRole(\"assistant\");",
+            "msg.setContent(answer);",
+            "msg.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"h:mm a\")));",
+            "in.messages.add(msg);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1528, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f10" }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1640, "y" : 64 }
+      }
+    }, {
+      "id" : "f15",
+      "type" : "Script",
+      "name" : "Init",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.sources        = new java.util.ArrayList();",
+            "in.stagedFiles    = new java.util.ArrayList();",
+            "in.embeddedChunks = new java.util.ArrayList();",
+            "in.messages       = new java.util.ArrayList();",
+            "in.currentStep    = 1;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f15c1", "to" : "f15a", "color" : "default" }
+      ]
+    }, {
+      "id" : "f15a",
+      "type" : "Script",
+      "name" : "Resolve embedding config",
+      "config" : {
+        "output" : {
+          "code" : [
+            "com.axonivy.utils.smart.workflow.model.EmbeddingModelFactory.EmbeddingConfig cfg = com.axonivy.utils.smart.workflow.model.EmbeddingModelFactory.resolvedEmbeddingConfig();",
+            "in.cfgEmbeddingProvider = cfg.providerName();",
+            "in.cfgEmbeddingModel    = cfg.modelName();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 400, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f15c2", "to" : "f15b", "color" : "default" }
+      ]
+    }, {
+      "id" : "f15b",
+      "type" : "Script",
+      "name" : "Resolve RAG config",
+      "config" : {
+        "output" : {
+          "code" : [
+            "String chunkSize = ivy.var.get(\"AI.RAG.ChunkSize\");",
+            "in.cfgChunkSize = chunkSize != null ? chunkSize : \"300\";",
+            "",
+            "String chunkOverlap = ivy.var.get(\"AI.RAG.ChunkOverlap\");",
+            "in.cfgChunkOverlap = chunkOverlap != null ? chunkOverlap : \"20\";",
+            "",
+            "String maxResults = ivy.var.get(\"AI.RAG.MaxResults\");",
+            "in.cfgMaxResults = maxResults != null ? maxResults : \"5\";",
+            "",
+            "String minScore = ivy.var.get(\"AI.RAG.MinScore\");",
+            "in.cfgMinScore = minScore != null ? minScore : \"0.6\";",
+            "",
+            "String openSearchUrl = ivy.var.get(\"AI.RAG.OpenSearch.Url\");",
+            "in.cfgOpenSearchUrl = openSearchUrl != null ? openSearchUrl : \"\";",
+            "",
+            "String apiKey = ivy.var.get(\"AI.RAG.OpenSearch.ApiKey\");",
+            "String userName = ivy.var.get(\"AI.RAG.OpenSearch.UserName\");",
+            "if (org.apache.commons.lang3.StringUtils.isNotBlank(apiKey)) {",
+            "  in.cfgOpenSearchAuthType = \"API Key\";",
+            "} else if (org.apache.commons.lang3.StringUtils.isNotBlank(userName)) {",
+            "  in.cfgOpenSearchAuthType = \"Basic\";",
+            "} else {",
+            "  in.cfgOpenSearchAuthType = \"None\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 592, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f16", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f19",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "handleFileUpload(FileUploadEvent)",
+      "config" : {
+        "signature" : "handleFileUpload",
+        "input" : {
+          "params" : [
+            { "name" : "event", "type" : "org.primefaces.event.FileUploadEvent", "desc" : "" }
+          ],
+          "map" : {
+            "out.uploadEvent" : "param.event"
+          }
+        },
+        "guid" : "19D8A5B300000010"
+      },
+      "visual" : {
+        "at" : { "x" : 872, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "f30", "to" : "f20" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "Script",
+      "name" : "Stage uploaded file",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import Features.RagDemo.UploadedFile;",
+            "",
+            "String fileName = in.uploadEvent.getFile().getFileName();",
+            "",
+            "UploadedFile uploaded = new UploadedFile();",
+            "uploaded.setName(fileName);",
+            "",
+            "if (fileName.toLowerCase().endsWith(\".pdf\")) {",
+            "  uploaded.setBinary(new ch.ivyteam.ivy.scripting.objects.Binary(in.uploadEvent.getFile().getContent()));",
+            "  uploaded.setSizeKb(in.uploadEvent.getFile().getSize() / 1024);",
+            "  in.stagedFiles.add(uploaded);",
+            "} else {",
+            "  String content = new String(in.uploadEvent.getFile().getContent(), java.nio.charset.StandardCharsets.UTF_8);",
+            "  uploaded.setContent(content);",
+            "  uploaded.setSizeKb(content.length() / 1024);",
+            "  in.stagedFiles.add(uploaded);",
+            "  in.sources.add(content);",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1064, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "f31", "to" : "fup_is_pdf", "color" : "default" }
+      ]
+    }, {
+      "id" : "fup_is_pdf",
+      "type" : "Alternative",
+      "name" : "Is uploaded file a PDF?",
+      "config" : {
+        "conditions" : {
+          "fup_c1" : "in.uploadEvent.getFile().getFileName().toLowerCase().endsWith(\".pdf\")"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1256, "y" : 216 }
+      },
+      "connect" : [
+        { "id" : "fup_c1", "to" : "fup_extract", "via" : [ { "x" : 1256, "y" : 312 } ], "label" : {
+            "name" : "yes"
+          } },
+        { "id" : "fup_c2", "to" : "f21", "label" : {
+            "name" : "no"
+          } }
+      ]
+    }, {
+      "id" : "fup_extract",
+      "type" : "ProgramInterface",
+      "name" : "Extract text from PDF",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Extract the complete text content from the PDF document. Return only the plain text.",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult.class",
+          "resultMapping" : "in.ragResult",
+          "query" : "<%=in.stagedFiles.get(in.stagedFiles.size() - 1).getBinary()%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1416, "y" : 312 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "fup_c3", "to" : "fup_store" }
+      ]
+    }, {
+      "id" : "fup_store",
+      "type" : "Script",
+      "name" : "Store extracted PDF text",
+      "config" : {
+        "output" : {
+          "code" : [
+            "String extractedText = in.ragResult != null && in.ragResult.getAnswer() != null ? in.ragResult.getAnswer() : \"\";",
+            "in.sources.add(extractedText);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1616, "y" : 312 }
+      },
+      "connect" : [
+        { "id" : "fup_c4", "to" : "f21", "via" : [ { "x" : 1736, "y" : 312 } ] }
+      ]
+    }, {
+      "id" : "f21",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1736, "y" : 216 }
+      }
+    }, {
+      "id" : "f22",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "loadDocuments()",
+      "config" : {
+        "signature" : "loadDocuments",
+        "guid" : "19D8A5B300000011"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 240 }
+      },
+      "connect" : [
+        { "id" : "f32", "to" : "f23" }
+      ]
+    }, {
+      "id" : "f23",
+      "type" : "Script",
+      "name" : "Load documents from OpenSearch",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;",
+            "import Features.RagDemo.IndexMetaView;",
+            "import Features.RagDemo.EmbeddedChunkView;",
+            "import javax.faces.application.FacesMessage;",
+            "import javax.faces.context.FacesContext;",
+            "import dev.langchain4j.data.segment.TextSegment;",
+            "import dev.langchain4j.store.embedding.EmbeddingMatch;",
+            "import dev.langchain4j.store.embedding.EmbeddingSearchResult;",
+            "",
+            "if (org.apache.commons.lang3.StringUtils.isBlank(in.indexName)) {",
+            "  FacesContext.getCurrentInstance().addMessage(null,",
+            "    new FacesMessage(FacesMessage.SEVERITY_ERROR, \"Index name is required.\", null));",
+            "} else {",
+            "  try {",
+            "    OpenSearchRestClient client = OpenSearchRestClient.fromIvyVars();",
+            "    if (!client.indexExists(in.indexName)) {",
+            "      in.embeddedChunks = new java.util.ArrayList();",
+            "      in.indexMeta = null;",
+            "    } else {",
+            "      EmbeddingSearchResult result = client.listDocuments(in.indexName, 200);",
+            "      java.util.List chunks = new java.util.ArrayList();",
+            "      for (EmbeddingMatch match : result.matches()) {",
+            "        TextSegment segment = match.embedded() as TextSegment;",
+            "        String source = segment.metadata().getString(\"source\");",
+            "        String preview = segment.text();",
+            "        EmbeddedChunkView chunk = new EmbeddedChunkView();",
+            "        chunk.setId(match.embeddingId());",
+            "        chunk.setSource(source != null ? source : \"-\");",
+            "        chunk.setTextPreview(preview);",
+            "        chunks.add(chunk);",
+            "      }",
+            "      in.embeddedChunks = chunks;",
+            "      com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchIndexMeta raw = client.getIndexMeta(in.indexName);",
+            "      IndexMetaView meta = new IndexMetaView();",
+            "      meta.setEmbeddingProvider(raw.embeddingProvider());",
+            "      meta.setEmbeddingModel(raw.embeddingModel());",
+            "      meta.setChunkSize(raw.chunkSize());",
+            "      meta.setChunkOverlap(raw.chunkOverlap());",
+            "      String rawDate = raw.createdAt();",
+            "      if (rawDate != null && !rawDate.isEmpty()) {",
+            "        try {",
+            "          java.time.Instant instant = java.time.Instant.parse(rawDate);",
+            "          rawDate = java.time.format.DateTimeFormatter.ofPattern(\"MMM dd, yyyy HH:mm\")",
+            "            .withZone(java.time.ZoneOffset.UTC).format(instant);",
+            "        } catch (Exception ignored) {}",
+            "      }",
+            "      meta.setCreatedAt(rawDate);",
+            "      in.indexMeta = meta;",
+            "    }",
+            "  } catch (Exception ex) {",
+            "    ivy.log.error(\"Load documents failed\", ex);",
+            "    FacesContext.getCurrentInstance().addMessage(null,",
+            "      new FacesMessage(FacesMessage.SEVERITY_ERROR, \"Could not load documents: \" + ex.getMessage(), null));",
+            "  }",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 241 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f33", "to" : "f24", "color" : "default" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 480, "y" : 240 }
+      }
+    }, {
+      "id" : "f25",
+      "type" : "HtmlDialogEventStart",
+      "name" : "afterEmbed",
+      "config" : {
+        "guid" : "19D8A5B300000012"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 336 }
+      },
+      "connect" : [
+        { "id" : "f34", "to" : "f26" }
+      ]
+    }, {
+      "id" : "f26",
+      "type" : "Script",
+      "name" : "Process embed result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import javax.faces.application.FacesMessage;",
+            "import javax.faces.context.FacesContext;",
+            "",
+            "FacesContext fc = FacesContext.getCurrentInstance();",
+            "boolean success = in.ragResult != null && !in.ragResult.hasError();",
+            "if (in.ragResult == null) {",
+            "  fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,",
+            "    \"Embed process did not return a result. Check server logs.\", null));",
+            "} else if (in.ragResult.hasError()) {",
+            "  fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,",
+            "    \"Embed failed: \" + in.ragResult.getError(), null));",
+            "} else {",
+            "  in.stagedFiles.clear();",
+            "  in.sources.clear();",
+            "  in.currentStep = 3;",
+            "  fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,",
+            "    in.ragResult.getAnswer(), null));",
+            "}",
+            "org.primefaces.PrimeFaces.current().ajax().addCallbackParam(\"embedSuccess\", success);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 336 }
+      },
+      "connect" : [
+        { "id" : "f35", "to" : "f29" }
+      ]
+    }, {
+      "id" : "f29",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 480, "y" : 336 }
+      }
+    }, {
+      "id" : "fg1",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "goToStep(Integer)",
+      "config" : {
+        "signature" : "goToStep",
+        "input" : {
+          "params" : [
+            { "name" : "step", "type" : "Integer", "desc" : "" }
+          ],
+          "map" : {
+            "out.currentStep" : "param.step"
+          }
+        },
+        "guid" : "RAG_WIZARD_GOTOSTEP_02"
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 544 }
+      },
+      "connect" : [
+        { "id" : "fg2", "to" : "fg3" }
+      ]
+    }, {
+      "id" : "fg3",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 472, "y" : 544 }
+      }
+    }, {
+      "id" : "ftc1",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "testConnection()",
+      "config" : {
+        "signature" : "testConnection",
+        "guid" : "RAG_WIZARD_TESTCONN_01"
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 640 }
+      },
+      "connect" : [
+        { "id" : "ftc2", "to" : "ftc3" }
+      ]
+    }, {
+      "id" : "ftc3",
+      "type" : "Script",
+      "name" : "Ping OpenSearch",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;",
+            "import javax.faces.application.FacesMessage;",
+            "import javax.faces.context.FacesContext;",
+            "",
+            "try {",
+            "  OpenSearchRestClient.fromIvyVars().ping();",
+            "  in.connectionOk = true;",
+            "  FacesContext.getCurrentInstance().addMessage(null,",
+            "    new FacesMessage(FacesMessage.SEVERITY_INFO, \"Connected successfully.\", null));",
+            "} catch (Exception ex) {",
+            "  in.connectionOk = false;",
+            "  FacesContext.getCurrentInstance().addMessage(null,",
+            "    new FacesMessage(FacesMessage.SEVERITY_ERROR, \"Cannot connect: \" + ex.getMessage(), null));",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 640 }
+      },
+      "connect" : [
+        { "id" : "ftc4", "to" : "ftc5" }
+      ]
+    }, {
+      "id" : "ftc5",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 472, "y" : 640 }
+      }
+    }, {
+      "id" : "fw4",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "checkIndexExists()",
+      "config" : {
+        "signature" : "checkIndexExists",
+        "guid" : "RAG_WIZARD_CHKIDX_01"
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 448 }
+      },
+      "connect" : [
+        { "id" : "fw5", "to" : "fw6" }
+      ]
+    }, {
+      "id" : "fw6",
+      "type" : "Script",
+      "name" : "Check index exists",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;",
+            "",
+            "if (org.apache.commons.lang3.StringUtils.isBlank(in.indexName)) {",
+            "  in.indexExists = false;",
+            "} else {",
+            "  try {",
+            "    OpenSearchRestClient client = OpenSearchRestClient.fromIvyVars();",
+            "    in.indexExists = client.indexExists(in.indexName);",
+            "  } catch (Exception ex) {",
+            "    ivy.log.warn(\"Could not check index existence: \" + ex.getMessage());",
+            "    in.indexExists = false;",
+            "  }",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 448 }
+      },
+      "connect" : [
+        { "id" : "fw7", "to" : "fw8" }
+      ]
+    }, {
+      "id" : "fw8",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 472, "y" : 448 }
+      }
+    } ]
+}

@@ -530,5 +530,63 @@
       "connect" : [
         { "id" : "f189", "to" : "f184" }
       ]
+    }, {
+      "id" : "f192",
+      "type" : "CallSubStart",
+      "name" : "summarizeProblem(String)",
+      "config" : {
+        "signature" : "summarizeProblem",
+        "input" : {
+          "params" : [
+            { "name" : "problem", "type" : "String", "desc" : "The support problem description to summarize" }
+          ],
+          "map" : {
+            "out.problem" : "param.problem"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "summary", "type" : "String", "desc" : "A concise summary of the support problem" }
+          ],
+          "map" : {
+            "result.summary" : "in.summary"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 80, "y" : 720 },
+        "description" : "Use this tool to summarize a support problem description"
+      },
+      "connect" : [
+        { "id" : "f193", "to" : "f194" }
+      ]
+    }, {
+      "id" : "f194",
+      "type" : "ProgramInterface",
+      "name" : "Summarize Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a support problem summarizer. Given a problem description, produce a concise one-sentence summary.",
+          "tools" : "[]",
+          "resultMapping" : "in.summary",
+          "query" : "Summarize this support problem: <%= in.problem %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 720 }
+      },
+      "connect" : [
+        { "id" : "f195", "to" : "f196", "color" : "default" }
+      ]
+    }, {
+      "id" : "f196",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 720 }
+      }
     } ]
 }

@@ -9,7 +9,10 @@
       "type" : "RequestStart",
       "name" : "AxonIvySupport",
       "config" : {
-        "signature" : "AxonIvySupport"
+        "signature" : "AxonIvySupport",
+        "request" : {
+          "name" : "Axon Ivy Support"
+        }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 64 }
