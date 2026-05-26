@@ -2,24 +2,27 @@ package com.axonivy.utils.smart.workflow.observability;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
-import com.axonivy.utils.smart.workflow.demo.support.mock.SupportToolChat;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
+import com.axonivy.utils.smart.workflow.test.TestToolUserData;
+import com.axonivy.utils.smart.workflow.tools.math.MathToolChat;
+import com.axonivy.utils.smart.workflow.tools.ntools.MultiToolChat;
 
-import AgentDemo.SupportAgentToolsData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
-import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.trace.Attribute;
+import ch.ivyteam.ivy.trace.TraceSpan;
 import ch.ivyteam.ivy.trace.Tracer;
 import ch.ivyteam.ivy.workflow.ITask;
 import ch.ivyteam.test.RestResourceTest;
@@ -27,15 +30,12 @@ import ch.ivyteam.test.RestResourceTest;
 @RestResourceTest
 class TestOpenInferenceSpans {
   
-  private static final BpmProcess AGENT_TOOLS = BpmProcess.name("SupportAgentTools");
   private Tracer tracer;
 
-  @BeforeEach
-  void setup(AppFixture fixture) {
+  private void setupTracing(AppFixture fixture) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("tool"));
     fixture.var(OpenAiConf.API_KEY, "");
-    MockOpenAI.defineChat(new SupportToolChat()::toolTest);
-
+    MockOpenAI.defineChat(new MathToolChat()::toolTest);
     fixture.var(OpenInferenceTracing.Var.ENABLED, "true");
     this.tracer = Tracer.instance();
     if (!this.tracer.isRunning()) {
@@ -43,67 +43,235 @@ class TestOpenInferenceSpans {
     }
   }
 
-  @Test
-  void observesModelInteractions(BpmClient client) {
-    var res = client.start().process(AGENT_TOOLS).execute();
-    var ticketDone = (SupportAgentToolsData) res.data().onElement(BpmElement.pid("19856884121ED111-f1"))
-        .getLast();
-    assertThat(ticketDone.getSupportTicket().getType().name()).isEqualToIgnoringCase("technical");
-
-    var spans =  tracer.slowTraces().all();
-    var children = spans.get(0).rootSpan().children();
-    var names = children.stream().map(t -> t.name()).toList();
-    assertThat(names).contains("AI Assistant");
-    var assistant = children.stream().filter(t -> t.name().equals("AI Assistant")  ).findFirst();
-    var attrs = assistant.get().attributes().stream().collect(Collectors.toMap(Attribute::name, Attribute::value));
-
-    assertIvyAttrs(attrs, res.workflow().executedTask());
-    assertInputAttrs(attrs);
-    assertOutputAttrs(attrs);
+  @AfterEach
+  void clean() throws InterruptedException{
+    Thread.sleep(1_000); // wait for async spans to be flushed (fail on CI without this)
+    this.tracer.slowTraces().clear();
   }
 
-  private void assertIvyAttrs(Map<String,String> attrs, ITask task) {
+  @Test
+  void errorCall(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+    MockOpenAI.defineChat(new MathToolChat()::authError);
+
+    var tools = BpmProcess.name("TestToolUser").elementName("math");
+    var res = client.start().process(tools).executeAndIgnoreBpmError();
+    assertThat(res.bpmError()).isNotNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+    var assistants = findChild(agent, "AI Assistant").toList();
+    assertThat(assistants).hasSize(1);
+    var llmAttrs = mapOf(assistants.get(0).attributes());
+    assertThat(llmAttrs.get("error.message"))
+      .contains("invalid_api_key");
+  }
+
+  @Test
+  void multiToolCall(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+    MockOpenAI.defineChat(new MultiToolChat()::nTools);
+
+    var tools = BpmProcess.name("TestToolUser").elementName("nTools");
+    var res = client.start().process(tools).execute();
+    assertThat(res.bpmError()).isNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+    var toolCalls = findChild(agent, "Tool").toList();
+    assertThat(toolCalls)
+      .as("multi-tool spans are recorded")
+      .hasSize(1);
+    var another = findChild(toolCalls.get(0), "Tool").toList();
+    assertThat(another)
+      .as("records nested tool call spans! actually not expected; but we document the current behavior")
+      .hasSize(1); // should be a parallel span instead. Now we lack APIs to define a parent span
+  }
+
+  @Test
+  void observesModelInteractions(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+
+    var tools = BpmProcess.name("TestToolUser").elementName("math");
+    var res = client.start().process(tools).execute();
+    TestToolUserData data = res.data().last();
+    assertThat(data.getSum()).isEqualTo(2025);
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    assertAgent(agent);
+
+    var assistants = findChild(agent, "AI Assistant").toList();
+    assertThat(assistants).hasSize(2);
+
+    var assistCalc = assistants.get(0);
+    var calcAttrs = mapOf(assistCalc.attributes());
+    assertIvyAttrs(calcAttrs, res.workflow().executedTask());
+    assertToolCallAttrs(calcAttrs);
+
+    var assistDone = assistants.get(1);
+    var doneAttrs = mapOf(assistDone.attributes());
+    assertIvyAttrs(doneAttrs, res.workflow().executedTask());
+    assertToolDoneAttrs(doneAttrs);
+    assertToolResult(doneAttrs);
+
+    var toolRun = findChild(agent, "Tool").findFirst().orElseThrow();
+    assertTool(toolRun);
+  }
+
+  @Test
+  void observesGuardrailSpans(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+
+    var process = BpmProcess.name("TestToolUser").elementName("mathWithGuardrails");
+    var res = client.start().process(process).execute();
+    assertThat(res.bpmError()).isNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+
+    var inputGuardrail = findChild(agent, "InputGuardrailAdapter").findFirst().orElseThrow();
+    var inputAttrs = mapOf(inputGuardrail.attributes());
+    assertThat(inputAttrs)
+        .containsEntry("openinference.span.kind", "GUARDRAIL")
+        .containsEntry("validator_name", "InputGuardrailAdapter")
+        .containsEntry("validator_on_fail", "exception")
+        .containsEntry("guardrail.type", "INPUT")
+        .containsEntry("guardrail.result", "SUCCESS")
+        .containsEntry("input.value", "Whats the sum of 1984 plus 41 ?")
+        .containsEntry("input.mime_type", "text/plain")
+        .containsEntry("output.value", "pass")
+        .containsEntry("output.mime_type", "text/plain");
+
+    var outputGuardrail = findChild(agent, "OutputGuardrailAdapter").findFirst().orElseThrow();
+    var outputAttrs = mapOf(outputGuardrail.attributes());
+    assertThat(outputAttrs)
+        .containsEntry("openinference.span.kind", "GUARDRAIL")
+        .containsEntry("validator_name", "OutputGuardrailAdapter")
+        .containsEntry("validator_on_fail", "exception")
+        .containsEntry("guardrail.type", "OUTPUT")
+        .containsEntry("guardrail.result", "SUCCESS")
+        .containsEntry("output.value", "pass")
+        .containsEntry("output.mime_type", "text/plain");
+  }
+
+  private void assertAgent(TraceSpan agent) {
+    assertThat(mapOf(agent.attributes()))
+      .containsEntry("openinference.span.kind", "AGENT");
+  }
+
+  private void assertTool(TraceSpan toolRun) {
+    assertThat(mapOf(toolRun.attributes()))
+        .containsEntry("openinference.span.kind", "TOOL")
+        .containsEntry("tool.name", "add")
+        .containsEntry("tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+        .containsEntry("tool.parameters", "{\"a\":1984,\"b\":41}")
+        .containsEntry("input.value", "{\"a\":1984,\"b\":41}")
+        .containsEntry("input.mime_type", "application/json")
+        .containsEntry("output.value", "{\"c\":2025}")
+        .containsEntry("output.mime_type", "text/plain");
+  }
+
+  private void assertToolCallAttrs(Map<String, String> attrs) {
+    assertThat(attrs)
+      .as("records tool call request attributes")
+      .containsEntry("openinference.span.kind", "LLM")
+      .containsEntry("llm.system", "langchain4j")
+      .containsEntry("llm.provider", "openai")
+      .containsEntry("llm.model_name", "gpt-4.1-mini")
+      .containsEntry("input.mime_type", "application/json")
+      .containsEntry("input.value", """
+        [{"role":"system","content":"Use the 'add' tool to calculate"},{"role":"user","content":"Whats the sum of 1984 plus 41 ?"}]
+        """.strip())
+      .containsEntry("llm.invocation_parameters", "{}")
+      .containsEntry("llm.input_messages.0.message.content", "SystemMessage { text = \"Use the 'add' tool to calculate\" }")
+      .containsEntry("llm.input_messages.0.message.role", "system")
+      .containsEntry("llm.input_messages.1.message.content", "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
+      .containsEntry("llm.input_messages.1.message.role", "user");
+        
+    assertThat(attrs)
+      .as("records tool schema")
+      .containsEntry("llm.tools.0.tool.json_schema", """
+          {"type":"function","function":{"name":"add","description":"This is a simple calculator: supporting additions of numbers","parameters":{"description":null,"properties":{"a":{"description":"first number"},"b":{"description":"number to be added"}},"required":["a","b"],"additionalProperties":null,"definitions":{}}}}
+          """.trim());
+
+    assertThat(attrs)
+      .as("record tool call response attributes")
+      .containsEntry("llm.output_messages.0.message.content", "null")
+      .containsEntry("llm.output_messages.0.message.role", "assistant")
+      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments", "{\"a\":1984,\"b\":41}")
+      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.name", "add")
+      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+      .containsEntry("llm.response.finish_reasons", "[TOOL_EXECUTION]")
+      .containsEntry("llm.token_count.completion", "18")
+      .containsEntry("llm.token_count.prompt", "102")
+      .containsEntry("llm.token_count.total", "120")
+      .containsEntry("output.mime_type", "text/plain")
+      .containsEntry("output.value", "null");
+  }
+
+  private void assertToolDoneAttrs(Map<String, String> attrs) {
+    assertThat(attrs)
+      .as("records completed tool-run attributes")
+      .containsEntry("input.mime_type", "application/json")
+      .containsEntry("llm.input_messages.0.message.role", "system")
+      .containsEntry("llm.input_messages.0.message.content", 
+      "SystemMessage { text = \"Use the 'add' tool to calculate\" }")
+      .containsEntry("llm.input_messages.1.message.role", "user")
+      .containsEntry("llm.input_messages.1.message.content", 
+      "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
+      .containsEntry("llm.input_messages.2.message.role", "assistant")
+      .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.function.arguments", "{\"a\":1984,\"b\":41}")
+      .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.function.name", "add")
+      .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+      .containsEntry("llm.input_messages.3.message.role", "tool")
+      .containsEntry("llm.input_messages.3.message.tool_call_id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+      .containsEntry("openinference.span.kind", "LLM")
+      .containsEntry("llm.system", "langchain4j")
+      .containsEntry("llm.provider", "openai")
+      .containsEntry("llm.model_name", "gpt-4.1-mini")
+      .containsEntry("llm.invocation_parameters", "{}")
+      .containsEntry("llm.response.finish_reasons", "[STOP]")
+      .containsEntry("llm.token_count.completion", "10")
+      .containsEntry("llm.token_count.prompt", "138")
+      .containsEntry("llm.token_count.total", "148")
+      .containsEntry("output.mime_type", "text/plain")
+      .containsEntry("output.value", "{\"value\":2025}");
+  }
+
+  private static void assertToolResult(Map<String, String> attrs) {
+    assertThat(attrs)
+      .as("records tool invocation arguments and result")
+      .containsEntry("llm.output_messages.0.message.role", "assistant")
+      .containsEntry("llm.output_messages.0.message.content", "{\"value\":2025}")
+      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.name", "add")
+      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments",
+          "{\"a\":1984,\"b\":41}")
+      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU");
+  }
+  
+  private static void assertIvyAttrs(Map<String,String> attrs, ITask task) {
     assertThat(attrs)
       .as("Traces are enriched with Ivy attributes")
       .containsEntry("ivy.case", task.getCase().uuid())
       .containsEntry("ivy.task", task.uuid());
   }
 
-  private void assertInputAttrs(Map<String, String> attrs) {
-    var expectedInputValue = """
-        [{"role":"system","content":"You are a Support Agent"},{"role":"user","content":"I have error 404 in Cockpit"}]
-""".strip();
-
-    assertThat(attrs)
-      .as("Openinference input attributes")
-      .containsEntry("openinference.span.kind", "LLM")
-      .containsEntry("input.mime_type", "application/json")
-      .containsEntry("input.value", expectedInputValue)
-      .containsEntry("llm.system", "langchain4j")
-      .containsEntry("llm.provider", "openai")
-      .containsEntry("llm.model_name", "gpt-4.1-mini")
-      .containsEntry("llm.input_messages.0.message.content", "SystemMessage { text = \"You are a Support Agent\" }")
-      .containsEntry("llm.input_messages.0.message.role", "system")
-      .containsEntry("llm.input_messages.1.message.content", "UserMessage { name = null, contents = [TextContent { text = \"I have error 404 in Cockpit\" }], attributes = {} }")
-      .containsEntry("llm.input_messages.1.message.role", "user")
-      .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}");
+  private Stream<TraceSpan> findChild(TraceSpan span, String name) {
+    var children = span.children();
+    var names = children.stream().map(t -> t.name()).toList();
+    assertThat(names).contains(name);
+    return children.stream().filter(t -> t.name().equals(name));
   }
 
-  private void assertOutputAttrs(Map<String, String> attrs) {
-    var expectedTicketJson = """
-        {"id":"1","type":"TECHNICAL","name":"Support ticket: Error 404 in Cockpit","description":"User reports encountering a 404 error when accessing Cockpit. Needs investigation to identify the cause and resolve the issue.","employeeUsername":"user","firstApprover":"","secondApprover":"","aiApproval":{"decision":"WARNING","reason":"The issue is a technical error that requires further investigation by the technical team."},"firstApproval":{},"secondApproval":{},"requestor":{"username":"user","fullName":"User","position":"JUNIOR","departmentId":"dept1","maxLeaveDays":20,"usedLeaveDays":5,"email":"user@example.com","department":{"id":"dept1","name":"IT","firstLevelManager":"manager1","secondLevelManager":"manager2","firstLevelManagerEmp":{"username":"manager1","fullName":"Manager One","position":"MANAGER","departmentId":"dept1","maxLeaveDays":30,"usedLeaveDays":10,"email":"manager1@example.com","department":{}},"secondLevelManagerEmp":{"username":"manager2","fullName":"Manager Two","position":"MANAGER","departmentId":"dept1","maxLeaveDays":30,"usedLeaveDays":10,"email":"manager2@example.com","department":{}}}}}
-        """
-        .strip();
-
-    assertThat(attrs)
-        .as("Openinference output attributes")
-        .containsEntry("llm.output_messages.0.message.content", expectedTicketJson)
-        .containsEntry("llm.output_messages.0.message.role", "assistant")
-        .containsEntry("llm.response.finish_reasons", "[STOP]")
-        .containsEntry("llm.token_count.completion", "266")
-        .containsEntry("llm.token_count.prompt", "971")
-        .containsEntry("llm.token_count.total", "1237")
-        .containsEntry("output.mime_type", "text/plain")
-        .containsEntry("output.value", expectedTicketJson);
+  private static Map<String, String> mapOf(List<Attribute> attributes) {
+    return attributes.stream().collect(Collectors.toMap(Attribute::name, Attribute::value));
   }
+
 }

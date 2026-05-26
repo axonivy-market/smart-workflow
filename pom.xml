@@ -13,6 +13,7 @@
     <module>models/smart-workflow-gemini</module>
     <module>models/smart-workflow-xai</module>
     <module>models/smart-workflow-anthropic</module>
+    <module>rag/smart-workflow-opensearch-rag</module>
     <module>smart-workflow-demo</module>
     <module>smart-workflow-test</module>
     <module>smart-workflow-product</module>

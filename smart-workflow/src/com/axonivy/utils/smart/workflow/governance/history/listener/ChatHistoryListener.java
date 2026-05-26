@@ -8,18 +8,20 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
+import com.axonivy.utils.smart.workflow.observability.AiListenerProvider;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.observability.api.listener.AiServiceListener;
 
-public class ChatHistoryListener {
+public class ChatHistoryListener implements AiListenerProvider {
 
   public interface Var {
     String HISTORY_ENABLED = "AI.Observability.Ivy.Enabled";
   }
 
-  public List<AiServiceListener<?>> configure() {
+  @Override
+  public List<AiServiceListener<?>> provide() {
     if (!IvyVar.bool(Var.HISTORY_ENABLED)) {
       return List.of();
     }
@@ -33,7 +35,9 @@ public class ChatHistoryListener {
     var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, processName, new IvyRepoHistoryStorage());
     return List.of(
         new AgentResponseListener(repo),
-        new ToolExecutionListener(repo));
+        new ToolExecutionListener(repo),
+        new InputGuardrailListener(repo),
+        new OutputGuardrailListener(repo));
   }
 
 }

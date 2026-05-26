@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
@@ -22,7 +23,7 @@ import dev.langchain4j.model.chat.ChatModel;
 @IvyTest
 public class TestAzureOpenAiLoader {
 
-  private static final String DEPLOYMENTS_PREFIX = "AI.Providers.AzureOpenAI.Deployments";
+  private static final String DEPLOYMENTS_PREFIX = AzureOpenAiConf.DEPLOYMENTS;
   private static final String TEST_DEPLOYMENT_NAME = "test-gpt-4-1-mini";
   private static final String MODEL = "gpt-4.1-mini";
   private static final String API_KEY = "${decrypt:test-key-1}";
@@ -72,5 +73,35 @@ public class TestAzureOpenAiLoader {
 
   private static ChatModelProvider loadModel() {
     return ChatModelFactory.create(AzureOpenAiModelProvider.NAME).get();
+  }
+
+  @Test
+  void secrets_deploymentAware(){
+    assertThat(provider.secretsVars())
+      .contains(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".APIKey");
+  }
+
+  @Test
+  void temperature_gpt4(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-4.1-mini");
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    assertThat(model.defaultRequestParameters().temperature())
+        .isEqualTo(0.0);
+  }
+
+  @Test
+  void temperature_gpt5(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-5");
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    assertThat(model.defaultRequestParameters().temperature())
+        .isEqualTo(1.0);
+  }
+
+  @Test
+  void temperature_gpt5_nano(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-5-nano");
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    assertThat(model.defaultRequestParameters().temperature())
+        .isEqualTo(1.0);
   }
 }

@@ -52,7 +52,7 @@ See the enumeration called `AI.DefaultProvider`.
 
 - [ ] custom variables.yaml in your provider
 - [ ] list your provider in `AI.DefaultProvider` of [variables.yaml](../smart-workflow/config/variables.yaml)
-- [ ] list your model in the Model section of the product [README.md](../smart-workflow-product/REAMDE.md)
+- [ ] list your model in the Model section of the product [README.md](../smart-workflow-product/README.md)
 - [ ] extend the product [build](../smart-workflow-product/pom.xml) to interpolate your variables into README.md
 
 ## File Extraction Support
@@ -93,6 +93,6 @@ to your new model provider.
 
 ## Demo
 
-We expect all providers to work in the same manor, therefore no extra demonstration process needs to be added in the demo project.
+We expect all providers to work in the same manner, therefore no extra demonstration process needs to be added in the demo project.
 
 Do not add dependencies to additional model providers to the `smart-workflow-demo` project.

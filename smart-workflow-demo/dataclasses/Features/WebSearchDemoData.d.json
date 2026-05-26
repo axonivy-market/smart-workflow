@@ -1,0 +1,13 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "WebSearchDemoData",
+  "namespace" : "Features",
+  "fields" : [ {
+    "name" : "query",
+    "comment" : "The search query to execute"
+  }, {
+    "name" : "searchSummary",
+    "type" : "com.axonivy.utils.ai.WebSearchSummary",
+    "comment" : "The summarized web search results returned by the agent"
+  } ]
+}

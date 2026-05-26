@@ -20,5 +20,13 @@
   }, {
     "name" : "currency",
     "comment" : "The currency for unit price. Default value is \"USD\""
+  }, {
+    "name" : "taxRate",
+    "type" : "java.lang.Double",
+    "comment" : "The tax rate applied to this item (e.g. 0.10 for 10%)"
+  }, {
+    "name" : "taxAmount",
+    "type" : "java.lang.Double",
+    "comment" : "The tax amount for this item (total * taxRate)"
   } ]
 }
