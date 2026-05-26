@@ -5,16 +5,13 @@
   "fields" : [ {
     "name" : "invoiceStream",
     "type" : "java.io.InputStream",
-    "comment" : "Invoice PNG loaded from CMS"
+    "comment" : "Invoice PNG loaded from CMS",
+    "modifiers" : [ ]
   }, {
     "name" : "invoiceContent",
     "comment" : "Text content extracted from the invoice image by the extraction agent"
   }, {
     "name" : "analysisResult",
     "comment" : "Summary and analysis produced by the SelfContainedAgent"
-  }, {
-    "name" : "result",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.CaseNode>",
-    "comment" : "Correlated agent execution tree built by AgentHistoryTreeBuilder"
   } ]
 }
