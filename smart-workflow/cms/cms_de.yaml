@@ -1,0 +1,31 @@
+Labels:
+  Common:
+    Actions: Aktionen
+    Back: Zurück
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        ai:
+          HistoryDashboard:
+            HistoryDashboard:
+              Title: KI-Governance-Zentrum
+              HistoryTableHeader: Verlaufstabelle
+              SummaryCount: '{0} Fälle - {1} Aufgaben'
+              FilterBy: 'Filtern nach:'
+              FilterCasePlaceholder: Fallname, ID oder Beschreibung
+              AllModels: Alle Modelle
+              AllTime: Gesamter Zeitraum
+              Today: Heute
+              Last7Days: Letzte 7 Tage
+              Last30Days: Letzte 30 Tage
+              NoHistoryFound: Keine Verlaufsdaten gefunden.
+              ColumnCaseTaskAgent: Fall/Aufgabe/Agent
+              AgentLabel: 'Agent {0}'
+              ColumnLastUpdated: Zuletzt aktualisiert
+              ColumnMessages: Nachrichten
+              MessagesBadge: '{0} Nachr.'
+              ColumnTokens: Token
+              ColumnModel: Modell
+              ViewDetails: Details anzeigen
+              AnalyticsHeader: Token-Nutzungsanalyse

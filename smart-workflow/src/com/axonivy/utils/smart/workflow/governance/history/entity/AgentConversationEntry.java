@@ -1,7 +1,8 @@
 package com.axonivy.utils.smart.workflow.governance.history.entity;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
+import com.axonivy.utils.smart.workflow.utils.DatePatternUtils;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
@@ -61,14 +62,18 @@ public class AgentConversationEntry {
   public String getToolExecutionsJson() { return toolExecutionsJson; }
   public void setToolExecutionsJson(String toolExecutionsJson) { this.toolExecutionsJson = toolExecutionsJson; }
 
-  private static final String DATE_TIME_FORMAT_PATTERN = "dd MMM yyyy HH:mm";
+  @JsonIgnore
+  public long getCaseId() { return 0L; }
+
+  @JsonIgnore
+  public String getLastUpdatedRaw() { return lastUpdated != null ? lastUpdated : ""; }
 
   @JsonIgnore
   public String getLastUpdatedText() {
     if (lastUpdated == null) return "—";
     try {
       return LocalDateTime.parse(lastUpdated)
-          .format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN));
+          .format(DatePatternUtils.dateTimeFormatter());
     } catch (Exception e) {
       return lastUpdated;
     }
