@@ -1,3 +1,7 @@
+Labels:
+  Common:
+    Actions: Acciones
+    Back: Volver
 Dialogs:
   com:
     axonivy:
@@ -23,6 +27,5 @@ Dialogs:
               MessagesBadge: '{0} msgs'
               ColumnTokens: Tokens
               ColumnModel: Modelo
-              ViewButton: Ver
+              ViewDetails: Ver detalles
               AnalyticsHeader: Análisis de Uso de Tokens
-              ComingSoon: Próximamente

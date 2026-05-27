@@ -8,12 +8,12 @@
 }
 
 .history-table .ui-treetable-data tr:hover td {
-  background: var(--blue-50);
+  background: var(--ag-row-hover-bg);
   cursor: pointer;
 }
 
 .history-table .ui-treetable-data tr.ui-state-highlight td {
-  background: var(--blue-100);
+  background: var(--ag-row-highlight-bg);
 }
 
 /* case (parent) rows */
@@ -26,4 +26,19 @@
 .history-table .ui-treetable-data tr.ui-treetable-row-leaf > td {
   background: var(--surface-card);
   border-left: 2px solid var(--primary-100);
+}
+
+/* actions column "..." button — mirrors portal module.css ui-no-rounded-button-process-page */
+.history-table .ui-button.ui-no-rounded-button-process-page {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.history-table .ui-button.ui-no-rounded-button-process-page:focus {
+  box-shadow: 0 0 0 0.2rem var(--ivy-primary-light-color, var(--primary-200));
+}
+
+.history-table .ui-button.ui-no-rounded-button-process-page.icon-more-menu-button {
+  color: var(--widget-header-icon, var(--text-color-secondary));
 }

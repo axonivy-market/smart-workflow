@@ -11,7 +11,7 @@
 
         <div class="mb-4 flex align-items-center gap-3">
           <h:form id="backForm">
-            <p:commandButton id="back-btn" value="Back" icon="pi pi-arrow-left"
+            <p:commandButton id="back-btn" value="#{ivy.cms.co('/Labels/Common/Back')}" icon="pi pi-arrow-left"
                              styleClass="ui-button-secondary"
                              process="@this"
                              actionListener="#{logic.close}" />
