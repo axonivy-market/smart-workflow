@@ -29,7 +29,6 @@ public class HistoryDashboardBean implements Serializable {
   private final HistoryStorage storage = new IvyRepoHistoryStorage();
 
   private String filterCase = "";
-  private String filterTaskUuid = "";
   private String filterModel = "";
   private String filterDateRange = "LAST_30_DAYS";
 
@@ -115,9 +114,6 @@ public class HistoryDashboardBean implements Serializable {
 
   public String getFilterCase() { return filterCase; }
   public void setFilterCase(String v) { this.filterCase = v; }
-
-  public String getFilterTaskUuid() { return filterTaskUuid; }
-  public void setFilterTaskUuid(String v) { this.filterTaskUuid = v; }
 
   public String getFilterModel() { return filterModel; }
   public void setFilterModel(String v) { this.filterModel = v; }

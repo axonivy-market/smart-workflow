@@ -84,8 +84,7 @@
                                 rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}"
                                 styleClass="font-semibold" />
                   <h:outputText value="#{row.taskDisplayName}"
-                                rendered="#{row['class'].simpleName eq 'TaskHistoryGroup'}"
-                                styleClass="text-color-secondary" />
+                                rendered="#{row['class'].simpleName eq 'TaskHistoryGroup'}" />
                   <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/AgentLabel')}"
                                   rendered="#{row['class'].simpleName eq 'AgentConversationEntry'}">
                     <f:param value="#{row.agentId}" />
