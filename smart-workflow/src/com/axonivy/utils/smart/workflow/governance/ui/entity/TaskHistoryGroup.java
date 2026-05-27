@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.service.TaskService;
+import com.axonivy.utils.smart.workflow.governance.service.internal.TaskService;
 
 public class TaskHistoryGroup implements HistoryGroupView {
 

@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.service;
+package com.axonivy.utils.smart.workflow.governance.service.internal;
 
 import org.apache.commons.lang3.StringUtils;
 

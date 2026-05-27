@@ -18,7 +18,7 @@ import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistory
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
-import com.axonivy.utils.smart.workflow.governance.service.CaseService;
+import com.axonivy.utils.smart.workflow.governance.service.internal.CaseService;
 
 @ManagedBean
 @ViewScoped

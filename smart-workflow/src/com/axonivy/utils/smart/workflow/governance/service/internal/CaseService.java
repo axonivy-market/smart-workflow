@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.service;
+package com.axonivy.utils.smart.workflow.governance.service.internal;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,7 +21,7 @@ public class CaseService {
         return String.format(NO_NAME_FORMAT, caseUuid);
       }
       String name = ivyCase.getName();
-      return StringUtils.isNotBlank(name) ? 
+      return StringUtils.isNotBlank(name) ?
         String.format(DISPLAY_NAME_FORMAT, name, ivyCase.getId()) : Long.toString(ivyCase.getId());
     } catch (Exception e) {
       return String.format(NO_NAME_FORMAT, caseUuid);

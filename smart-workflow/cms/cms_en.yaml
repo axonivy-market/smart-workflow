@@ -29,3 +29,30 @@ Dialogs:
               ColumnModel: Model
               ViewDetails: View details
               AnalyticsHeader: Token Usage Analytics
+          component:
+            Analytics:
+              Analytics:
+                SectionTitle: Token Usage Analytics
+                KpiTotalSessions: Total Sessions
+                KpiTotalTokens: Total Tokens
+                KpiAvgResponseTime: Avg Response Time
+                KpiTopModel: Top Model
+                TrendVsPrev: '% vs prev'
+                TrendFaster: faster vs prev
+                TrendSlower: slower vs prev
+                TrendOfAllCalls: '% of all calls'
+                UnitMs: ms
+                ChartTokenTimeline: Token Usage Over Time
+                ChartModelDist: Model Distribution
+                ChartTokenStacked: Input vs Output Tokens per Day
+                ChartTopCases: Top Processes by Token Usage
+                ChartResponseTime: Response Time Distribution
+                DatasetTotalTokens: Total Tokens
+                DatasetInputTokens: Input Tokens
+                DatasetOutputTokens: Output Tokens
+                DatasetSessions: Sessions
+                BucketUnder5s: '< 5 s'
+                Bucket5to10s: '5–10 s'
+                Bucket10to15s: '10–15 s'
+                BucketOver15s: '> 15 s'
+                UnknownProcess: unknown

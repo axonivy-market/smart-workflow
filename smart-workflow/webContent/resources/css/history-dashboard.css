@@ -1,3 +1,7 @@
+.governance-page {
+  max-width: 1200px;
+}
+
 .history-table .badge {
   padding: 2px 8px;
 }
@@ -41,4 +45,16 @@
 
 .history-table .ui-button.ui-no-rounded-button-process-page.icon-more-menu-button {
   color: var(--widget-header-icon, var(--text-color-secondary));
+}
+
+/* chart height utility classes — used as styleClass on p:barChart / p:donutChart */
+.chart-h-240 { height: 240px; }
+.chart-h-220 { height: 220px; }
+
+.kpi-trend--up {
+  color: #28a745;
+}
+
+.kpi-trend--down {
+  color: #dc3545;
 }
