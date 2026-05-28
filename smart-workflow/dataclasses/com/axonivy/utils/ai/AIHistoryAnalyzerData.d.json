@@ -1,0 +1,10 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "AIHistoryAnalyzerData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "prompt"
+  }, {
+    "name" : "aiReport"
+  } ]
+}

@@ -68,479 +68,133 @@ public class HistoryAnalysisService {
     }
   }
 
-  public static String generateReport(String caseId, List<AgentSummary> summaries) {
+  public static List<AgentConversationEntry> getEntries(String caseId) {
+    return STORAGE.findByCaseUuid(caseId);
+  }
+
+  public static String buildAiPrompt(String caseId, List<AgentSummary> summaries,
+      List<AgentConversationEntry> entries) {
     if (summaries == null || summaries.isEmpty()) {
       return "No agent data available for case " + caseId + ".";
     }
 
+    String caseName = resolveCaseName(caseId);
+
     StringBuilder sb = new StringBuilder();
-    int agentCount = summaries.size();
-    int totalTokens = summaries.stream().mapToInt(AgentSummary::getTotalTokens).sum();
-    long totalDurationMs = summaries.stream().mapToLong(AgentSummary::getDurationMs).sum();
-    int totalToolCalls = summaries.stream().mapToInt(AgentSummary::getToolCallCount).sum();
-    int totalMessages = summaries.stream().mapToInt(AgentSummary::getMessageCount).sum();
-    long anomalyAgents = summaries.stream()
-        .filter(s -> s.getAnomalyReport() != null && s.getAnomalyReport().hasIssues()).count();
-    int totalAnomalies = summaries.stream()
-        .filter(s -> s.getAnomalyReport() != null && s.getAnomalyReport().getIssues() != null)
-        .mapToInt(s -> s.getAnomalyReport().getIssues().size()).sum();
-    int totalErrors = summaries.stream()
-        .flatMap(s -> s.getToolSummaries() != null ? s.getToolSummaries().stream() : java.util.stream.Stream.<ToolSummary>empty())
-        .mapToInt(ToolSummary::getErrorCount).sum();
-    int totalNullResults = summaries.stream()
-        .flatMap(s -> s.getToolSummaries() != null ? s.getToolSummaries().stream() : java.util.stream.Stream.<ToolSummary>empty())
-        .mapToInt(ToolSummary::getNullResultCount).sum();
 
-    // Derive process name from first summary that has one
-    String processName = summaries.stream()
-        .map(AgentSummary::getProcessName).filter(p -> p != null && !p.isBlank())
-        .findFirst().orElse(null);
+    // Section 1: Structured metrics report (template report provides baseline context)
+    sb.append("=== STRUCTURED METRICS REPORT ===\n\n");
+    sb.append(new ReportRenderer(caseId, caseName, summaries).render());
+    sb.append("\n\n");
 
-    // Header
-    sb.append("═══════════════════════════════════════════════════════════\n");
-    sb.append("  AI AGENT CASE ANALYSIS REPORT\n");
-    sb.append("═══════════════════════════════════════════════════════════\n");
-    sb.append("  Case ID : ").append(caseId).append("\n");
-    if (processName != null) {
-      sb.append("  Process : ").append(processName).append("\n");
-    }
-    sb.append("  Agents  : ").append(agentCount).append("\n");
-    sb.append("  Duration: ").append(formatDuration(totalDurationMs)).append("\n");
-    sb.append("  Tokens  : ").append(formatNumber(totalTokens)).append("\n");
-    sb.append("═══════════════════════════════════════════════════════════\n\n");
+    // Section 2: Condensed conversation excerpts per agent
+    sb.append("=== RAW CONVERSATION EXCERPTS ===\n\n");
+    sb.append("(System prompt + final AI response per agent, truncated for brevity)\n\n");
 
-    // Executive Summary
-    sb.append("── EXECUTIVE SUMMARY ──────────────────────────────────────\n\n");
-    sb.append("This case involved ").append(agentCount).append(" AI agent")
-        .append(agentCount != 1 ? "s" : "").append(" that collectively processed ")
-        .append(totalMessages).append(" messages, consumed ").append(formatNumber(totalTokens))
-        .append(" tokens, and executed ").append(totalToolCalls).append(" tool call")
-        .append(totalToolCalls != 1 ? "s" : "").append(".\n\n");
-    sb.append("  Total processing time : ").append(formatDuration(totalDurationMs)).append("\n");
-    double avgTokensPerMsg = totalMessages > 0 ? (double) totalTokens / totalMessages : 0;
-    sb.append("  Avg tokens per message: ").append(String.format("%.0f", avgTokensPerMsg)).append("\n");
-    double avgDurationPerAgent = agentCount > 0 ? (double) totalDurationMs / agentCount : 0;
-    sb.append("  Avg duration per agent: ").append(formatDuration((long) avgDurationPerAgent)).append("\n");
-    if (totalToolCalls > 0) {
-      double avgTokensPerTool = (double) totalTokens / totalToolCalls;
-      sb.append("  Avg tokens per tool call: ").append(String.format("%.0f", avgTokensPerTool)).append("\n");
-    }
-    sb.append("\n");
+    if (entries != null) {
+      for (int i = 0; i < entries.size(); i++) {
+        AgentConversationEntry entry = entries.get(i);
+        String agentLabel = (entry.getAgentName() != null && !entry.getAgentName().isBlank())
+            ? entry.getAgentName() : entry.getAgentId();
+        sb.append("--- Agent ").append(i + 1).append(": ").append(agentLabel).append(" ---\n");
 
-    // Health status
-    if (anomalyAgents == 0) {
-      sb.append("  Health: ✓ ALL CLEAN — no anomalies detected across any agent.\n\n");
-    } else {
-      sb.append("  Health: ⚠ ").append(anomalyAgents).append(" agent")
-          .append(anomalyAgents != 1 ? "s" : "").append(" flagged with ")
-          .append(totalAnomalies).append(" anomal").append(totalAnomalies != 1 ? "ies" : "y")
-          .append(" total.\n\n");
-    }
-
-    // Token Usage Overview
-    TokenUsageSummary tokenSummary = summaries.get(0).getTokenUsageSummary();
-    if (tokenSummary != null) {
-      sb.append("── TOKEN USAGE ────────────────────────────────────────────\n\n");
-      sb.append("  ┌─────────────────────┬──────────────┬──────────────┐\n");
-      sb.append("  │                     │    Total     │   Average    │\n");
-      sb.append("  ├─────────────────────┼──────────────┼──────────────┤\n");
-      sb.append(String.format("  │ Input tokens        │ %12s │ %12s │%n",
-          formatNumber(tokenSummary.getTotalInputTokens()),
-          String.format("%.0f", tokenSummary.getAvgInputTokens())));
-      sb.append(String.format("  │ Output tokens       │ %12s │ %12s │%n",
-          formatNumber(tokenSummary.getTotalOutputTokens()),
-          String.format("%.0f", tokenSummary.getAvgOutputTokens())));
-      sb.append(String.format("  │ Total tokens        │ %12s │ %12s │%n",
-          formatNumber(tokenSummary.getTotalTokens()),
-          String.format("%.0f", tokenSummary.getAvgTotalTokens())));
-      sb.append("  └─────────────────────┴──────────────┴──────────────┘\n\n");
-
-      double ratio = tokenSummary.getTotalInputTokens() > 0
-          ? (double) tokenSummary.getTotalOutputTokens() / tokenSummary.getTotalInputTokens() : 0;
-      sb.append("  Output/Input ratio     : ").append(String.format("%.2f", ratio)).append("\n");
-      sb.append("  Max single conversation: ").append(formatNumber(tokenSummary.getMaxSingleConversationTokens())).append(" tokens\n");
-
-      // Cost estimation (based on typical GPT-4 class pricing)
-      double estInputCost = tokenSummary.getTotalInputTokens() / 1_000_000.0 * 10.0;
-      double estOutputCost = tokenSummary.getTotalOutputTokens() / 1_000_000.0 * 30.0;
-      sb.append("\n  Estimated cost (GPT-4 class pricing):\n");
-      sb.append("    Input  (~$10/1M tokens) : $").append(String.format("%.4f", estInputCost)).append("\n");
-      sb.append("    Output (~$30/1M tokens) : $").append(String.format("%.4f", estOutputCost)).append("\n");
-      sb.append("    Combined estimate       : $").append(String.format("%.4f", estInputCost + estOutputCost)).append("\n");
-      sb.append("    Note: Actual cost depends on the specific model and provider.\n");
-
-      if (ratio > 3.0) {
-        sb.append("\n  ⚠ ATTENTION: Output/Input ratio is high (").append(String.format("%.2f", ratio)).append(" > 3.0).\n");
-        sb.append("    This indicates verbose or over-generated responses.\n");
-        sb.append("    Suggestion: Tighten system prompt instructions. Add constraints like\n");
-        sb.append("    'respond concisely' or 'limit response to key facts only'.\n");
-      } else if (ratio < 0.2) {
-        sb.append("\n  ⚠ ATTENTION: Output/Input ratio is low (").append(String.format("%.2f", ratio)).append(" < 0.2).\n");
-        sb.append("    Agents may be producing insufficiently detailed outputs.\n");
-        sb.append("    Suggestion: Review prompts for overly restrictive instructions.\n");
-      }
-      sb.append("\n");
-    }
-
-    // Tool Effectiveness Summary
-    if (totalToolCalls > 0) {
-      sb.append("── TOOL EFFECTIVENESS ─────────────────────────────────────\n\n");
-      int toolSuccesses = totalToolCalls - totalNullResults - totalErrors;
-      int overallSuccessRate = totalToolCalls > 0 ? toolSuccesses * 100 / totalToolCalls : 0;
-      sb.append("  Total tool calls : ").append(totalToolCalls).append("\n");
-      sb.append("  Successful       : ").append(toolSuccesses).append(" (").append(overallSuccessRate).append("%)\n");
-      sb.append("  Null/empty       : ").append(totalNullResults).append("\n");
-      sb.append("  Errors           : ").append(totalErrors).append("\n\n");
-
-      // Aggregate tool table
-      List<ToolSummary> allTools = summaries.stream()
-          .flatMap(s -> s.getToolSummaries() != null ? s.getToolSummaries().stream() : java.util.stream.Stream.<ToolSummary>empty())
-          .collect(Collectors.toList());
-      java.util.Map<String, List<ToolSummary>> byTool = allTools.stream().collect(Collectors.groupingBy(ToolSummary::getToolName));
-      if (!byTool.isEmpty()) {
-        sb.append("  Per-tool breakdown:\n");
-        byTool.forEach((name, toolList) -> {
-          int calls = toolList.stream().mapToInt(ToolSummary::getCallCount).sum();
-          int nulls = toolList.stream().mapToInt(ToolSummary::getNullResultCount).sum();
-          int errs = toolList.stream().mapToInt(ToolSummary::getErrorCount).sum();
-          int succ = calls - nulls - errs;
-          int rate = calls > 0 ? succ * 100 / calls : 0;
-          String grade = rate >= 90 ? "A" : rate >= 70 ? "B" : rate >= 50 ? "C" : "D";
-          sb.append("    ").append(name).append("\n");
-          sb.append("      Calls: ").append(calls)
-              .append("  |  Success: ").append(succ).append(" (").append(rate).append("%)")
-              .append("  |  Grade: ").append(grade).append("\n");
-          if (errs > 0) {
-            sb.append("      → ").append(errs).append(" error(s) detected. Review tool implementation or input data.\n");
+        // Parse messages and extract system + last AI message
+        try {
+          var node = JsonUtils.getObjectMapper().readTree(entry.getMessagesJson());
+          var arr = node.isArray() ? node : node.get("messages");
+          if (arr != null && arr.isArray()) {
+            // System message
+            for (var msg : arr) {
+              String type = msg.has("type") ? msg.get("type").asText() : "";
+              if ("SYSTEM".equalsIgnoreCase(type)) {
+                String text = extractMessageText(msg);
+                if (text != null) {
+                  sb.append("  [SYSTEM] ").append(truncate(text, 400)).append("\n");
+                }
+                break;
+              }
+            }
+            // Last AI message
+            String lastAiText = null;
+            for (var msg : arr) {
+              String type = msg.has("type") ? msg.get("type").asText() : "";
+              if ("AI".equalsIgnoreCase(type)) {
+                String text = extractMessageText(msg);
+                if (text != null && !text.isBlank()) {
+                  lastAiText = text;
+                }
+              }
+            }
+            if (lastAiText != null) {
+              sb.append("  [FINAL AI RESPONSE] ").append(truncate(lastAiText, 600)).append("\n");
+            }
           }
-          if (nulls > 0 && calls > 0 && nulls * 100 / calls > 30) {
-            sb.append("      → High null-result rate (").append(nulls * 100 / calls)
-                .append("%). Check if the tool handles edge cases properly.\n");
-          }
-        });
+        } catch (Exception e) {
+          sb.append("  (conversation data unavailable)\n");
+        }
+
+        // Tool execution results (brief)
+        List<AgentConversationEntry.ToolExecution> tools = entry.getToolExecutions();
+        if (tools != null && !tools.isEmpty()) {
+          sb.append("  [TOOLS] ");
+          tools.forEach(t -> sb.append(t.toolName()).append(" -> ")
+              .append(truncate(t.resultText(), 120)).append(" | "));
+          sb.append("\n");
+        }
+
+        // Guardrail outcomes
+        List<AgentConversationEntry.GuardrailExecution> guardrails = entry.getGuardrailExecutions();
+        if (guardrails != null && !guardrails.isEmpty()) {
+          sb.append("  [GUARDRAILS] ");
+          guardrails.forEach(g -> sb.append(g.guardrailName()).append(":").append(g.result()).append(" "));
+          sb.append("\n");
+        }
         sb.append("\n");
       }
     }
 
-    // Per-Agent Breakdown
-    sb.append("── AGENT BREAKDOWN ────────────────────────────────────────\n\n");
-    for (int i = 0; i < summaries.size(); i++) {
-      AgentSummary s = summaries.get(i);
-      String displayName = (s.getAgentName() != null && !s.getAgentName().isBlank())
-          ? s.getAgentName() : s.getAgentId();
-      sb.append("┌─ Agent #").append(i + 1).append("  ").append(displayName);
-      sb.append(" ─────────────────────────────\n");
-      if (s.getAgentName() != null && !s.getAgentName().isBlank()) {
-        sb.append("│  ID     : ").append(s.getAgentId()).append("\n");
-      }
-      sb.append("│  Model   : ").append(s.getModel() != null ? s.getModel() : "N/A").append("\n");
-      sb.append("│  Finish  : ").append(s.getFinishReason() != null ? s.getFinishReason() : "N/A").append("\n");
-      sb.append("│  Messages: ").append(s.getMessageCount());
-      sb.append("  |  Tool calls: ").append(s.getToolCallCount()).append("\n");
-      sb.append("│  Tokens  : ").append(formatNumber(s.getTotalTokens()));
-      sb.append("  |  Duration: ").append(formatDuration(s.getDurationMs())).append("\n");
-
-      // Efficiency metrics
-      if (s.getMessageCount() > 0) {
-        sb.append("│  Tokens/message: ").append(String.format("%.0f", (double) s.getTotalTokens() / s.getMessageCount())).append("\n");
-      }
-      if (s.getDurationMs() > 0 && s.getTotalTokens() > 0) {
-        double tokensPerSec = s.getTotalTokens() * 1000.0 / s.getDurationMs();
-        sb.append("│  Throughput: ").append(String.format("%.1f", tokensPerSec)).append(" tokens/sec\n");
-      }
-
-      // Token share
-      if (totalTokens > 0) {
-        int pct = s.getTotalTokens() * 100 / totalTokens;
-        sb.append("│  Token share: ").append(pct).append("% of case total");
-        int barLen = pct / 5;
-        sb.append("  [");
-        for (int b = 0; b < 20; b++) sb.append(b < barLen ? "█" : "░");
-        sb.append("]\n");
-      }
-
-      // Duration share
-      if (totalDurationMs > 0) {
-        int dPct = (int) (s.getDurationMs() * 100 / totalDurationMs);
-        sb.append("│  Time share  : ").append(dPct).append("% of case total\n");
-      }
-
-      // Tools
-      if (s.getToolSummaries() != null && !s.getToolSummaries().isEmpty()) {
-        sb.append("│\n│  Tools:\n");
-        for (ToolSummary ts : s.getToolSummaries()) {
-          int successCount = ts.getCallCount() - ts.getNullResultCount() - ts.getErrorCount();
-          int successRate = ts.getCallCount() > 0 ? successCount * 100 / ts.getCallCount() : 0;
-          String indicator = successRate >= 90 ? "✓" : successRate >= 50 ? "~" : "✗";
-          sb.append("│    ").append(indicator).append(" ").append(ts.getToolName())
-              .append(" — ").append(ts.getCallCount()).append(" call(s), ")
-              .append(successRate).append("% success");
-          if (ts.getNullResultCount() > 0) {
-            sb.append(", ").append(ts.getNullResultCount()).append(" null");
-          }
-          if (ts.getErrorCount() > 0) {
-            sb.append(", ").append(ts.getErrorCount()).append(" error(s)");
-          }
-          sb.append("\n");
-        }
-      }
-
-      // Guardrails
-      if (s.getGuardrailSummaries() != null && !s.getGuardrailSummaries().isEmpty()) {
-        sb.append("│\n│  Guardrails:\n");
-        for (GuardrailSummary gs : s.getGuardrailSummaries()) {
-          int total = gs.getPassedCount() + gs.getFailedCount() + gs.getFatalCount();
-          String indicator = gs.getFatalCount() > 0 ? "✗" : gs.getFailedCount() > 0 ? "~" : "✓";
-          sb.append("│    ").append(indicator).append(" ").append(gs.getGuardrailName())
-              .append(" — ").append(gs.getPassedCount()).append(" passed");
-          if (gs.getFailedCount() > 0) {
-            sb.append(", ").append(gs.getFailedCount()).append(" failed");
-          }
-          if (gs.getFatalCount() > 0) {
-            sb.append(", ").append(gs.getFatalCount()).append(" FATAL");
-          }
-          sb.append(" (avg ").append(String.format("%.1f", gs.getAvgDurationMs())).append("ms)");
-          if (total > 1) {
-            sb.append(" [ran ").append(total).append("x]");
-          }
-          sb.append("\n");
-          if (gs.getFatalCount() > 0) {
-            sb.append("│      → FATAL guardrail violations require immediate investigation.\n");
-            sb.append("│        Review the agent's prompt and input data for policy violations.\n");
-          }
-          if (gs.getAvgDurationMs() > 500) {
-            sb.append("│      → Guardrail avg duration >500ms. Consider optimizing the check.\n");
-          }
-        }
-      }
-
-      // Anomalies
-      if (s.getAnomalyReport() != null && s.getAnomalyReport().hasIssues()) {
-        sb.append("│\n│  ⚠ Anomalies (").append(s.getAnomalyReport().getIssues().size()).append("):\n");
-        for (String issue : s.getAnomalyReport().getIssues()) {
-          sb.append("│    ✗ ").append(issue).append("\n");
-        }
-      } else {
-        sb.append("│\n│  ✓ No anomalies detected\n");
-      }
-
-      // Per-agent grade
-      String grade = gradeAgent(s, totalTokens, totalDurationMs);
-      sb.append("│\n│  Overall grade: ").append(grade).append("\n");
-      sb.append("└──────────────────────────────────────────────────────\n\n");
-    }
-
-    // Observations
-    sb.append("── OBSERVATIONS ───────────────────────────────────────────\n\n");
-
-    // Duration analysis
-    AgentSummary slowest = summaries.stream()
-        .max((a, b) -> Long.compare(a.getDurationMs(), b.getDurationMs())).orElse(null);
-    if (slowest != null && totalDurationMs > 0) {
-      int slowestPct = (int) (slowest.getDurationMs() * 100 / totalDurationMs);
-      String slowName = (slowest.getAgentName() != null && !slowest.getAgentName().isBlank())
-          ? slowest.getAgentName() : slowest.getAgentId();
-      sb.append("• Slowest agent: #").append(summaries.indexOf(slowest) + 1)
-          .append(" [").append(slowName).append("]")
-          .append(" (").append(formatDuration(slowest.getDurationMs()))
-          .append(", ").append(slowestPct).append("% of total case time)\n");
-      if (slowestPct > 70) {
-        sb.append("  → This agent dominates processing time. Consider if its task can be\n");
-        sb.append("    decomposed into smaller sub-tasks or optimized with fewer messages.\n");
-      }
-    }
-
-    // Token hog
-    AgentSummary tokenHog = summaries.stream()
-        .max((a, b) -> Integer.compare(a.getTotalTokens(), b.getTotalTokens())).orElse(null);
-    if (tokenHog != null && totalTokens > 0) {
-      int hogPct = tokenHog.getTotalTokens() * 100 / totalTokens;
-      String hogName = (tokenHog.getAgentName() != null && !tokenHog.getAgentName().isBlank())
-          ? tokenHog.getAgentName() : tokenHog.getAgentId();
-      sb.append("• Highest token consumer: #").append(summaries.indexOf(tokenHog) + 1)
-          .append(" [").append(hogName).append("]")
-          .append(" (").append(formatNumber(tokenHog.getTotalTokens()))
-          .append(" tokens, ").append(hogPct).append("%)\n");
-      if (hogPct > 60) {
-        sb.append("  → This agent uses >60% of all tokens. Review if the prompt is too broad\n");
-        sb.append("    or if the conversation can be condensed with summarization techniques.\n");
-      }
-    }
-
-    // Model diversity
-    long distinctModels = summaries.stream()
-        .map(AgentSummary::getModel).filter(m -> m != null).distinct().count();
-    sb.append("• Models used: ").append(distinctModels).append(" distinct model")
-        .append(distinctModels != 1 ? "s" : "");
-    if (distinctModels > 1) {
-      sb.append(" — ");
-      String modelList = summaries.stream()
-          .map(AgentSummary::getModel).filter(m -> m != null).distinct()
-          .collect(Collectors.joining(", "));
-      sb.append(modelList);
-    }
-    sb.append("\n");
-    if (distinctModels > 1) {
-      sb.append("  → Multiple models are in use. Ensure each agent uses the most cost-effective\n");
-      sb.append("    model for its complexity level. Simple tasks may work with lighter models.\n");
-    }
-
-    // Finish reason check
-    long lengthCount = summaries.stream()
-        .filter(s -> "LENGTH".equalsIgnoreCase(s.getFinishReason())).count();
-    if (lengthCount > 0) {
-      sb.append("• ⚠ ").append(lengthCount).append(" agent(s) finished with LENGTH — output was truncated.\n");
-      sb.append("  → Increase max_tokens or reduce prompt complexity so the model can\n");
-      sb.append("    complete its response without hitting the token limit.\n");
-    }
-
-    long nonStopCount = summaries.stream()
-        .filter(s -> s.getFinishReason() != null && !"STOP".equalsIgnoreCase(s.getFinishReason())
-            && !"LENGTH".equalsIgnoreCase(s.getFinishReason())).count();
-    if (nonStopCount > 0) {
-      sb.append("• ⚠ ").append(nonStopCount)
-          .append(" agent(s) finished with a non-standard reason.\n");
-      sb.append("  → Investigate for API errors, content filtering, or unexpected terminations.\n");
-    }
-
-    // Tool error rate analysis
-    if (totalToolCalls > 0 && totalErrors > 0) {
-      int errorRate = totalErrors * 100 / totalToolCalls;
-      sb.append("• Tool error rate: ").append(errorRate).append("% (")
-          .append(totalErrors).append("/").append(totalToolCalls).append(")\n");
-      if (errorRate > 20) {
-        sb.append("  → High tool error rate. Investigate tool implementations, input validation,\n");
-        sb.append("    and whether the agent is calling tools with incorrect arguments.\n");
-      }
-    }
-
-    // High message count agents
-    summaries.stream()
-        .filter(s -> s.getMessageCount() > 20)
-        .forEach(s -> {
-          String name = (s.getAgentName() != null && !s.getAgentName().isBlank())
-              ? s.getAgentName() : s.getAgentId();
-          sb.append("• Agent [").append(name).append("] has ")
-              .append(s.getMessageCount()).append(" messages — long conversation.\n");
-          sb.append("  → Consider adding conversation summarization to reduce context window usage.\n");
-        });
-
-    sb.append("\n");
-
-    // Recommendations
-    sb.append("── RECOMMENDATIONS ────────────────────────────────────────\n\n");
-    int recNum = 1;
-
-    if (anomalyAgents > 0) {
-      sb.append(recNum++).append(". RESOLVE ANOMALIES: ").append(anomalyAgents)
-          .append(" agent(s) have flagged issues. Review the anomaly details above\n");
-      sb.append("   and address root causes before deploying to production.\n\n");
-    }
-
-    if (totalTokens > 50_000) {
-      sb.append(recNum++).append(". OPTIMIZE TOKEN USAGE: Total tokens (").append(formatNumber(totalTokens))
-          .append(") are high.\n");
-      sb.append("   Consider: shorter system prompts, conversation summarization,\n");
-      sb.append("   or switching verbose agents to more concise models.\n\n");
-    }
-
-    if (totalDurationMs > 60_000) {
-      sb.append(recNum++).append(". IMPROVE LATENCY: Total case duration (").append(formatDuration(totalDurationMs))
-          .append(") exceeds 1 minute.\n");
-      sb.append("   Consider: parallel agent execution, caching frequent tool results,\n");
-      sb.append("   or pre-computing common lookups.\n\n");
-    }
-
-    if (totalErrors > 0) {
-      sb.append(recNum++).append(". FIX TOOL ERRORS: ").append(totalErrors)
-          .append(" tool error(s) detected across the case.\n");
-      sb.append("   Investigate error responses and add input validation or retry logic.\n\n");
-    }
-
-    if (totalNullResults > 0 && totalToolCalls > 0 && totalNullResults * 100 / totalToolCalls > 20) {
-      sb.append(recNum++).append(". REDUCE NULL RESULTS: ").append(totalNullResults).append("/")
-          .append(totalToolCalls).append(" tool calls returned null/empty.\n");
-      sb.append("   Ensure tools return meaningful fallback messages instead of null,\n");
-      sb.append("   and verify the agent is calling tools with valid parameters.\n\n");
-    }
-
-    if (lengthCount > 0) {
-      sb.append(recNum++).append(". PREVENT TRUNCATION: ").append(lengthCount)
-          .append(" agent(s) hit the token limit.\n");
-      sb.append("   Increase max_tokens configuration or simplify expected outputs.\n\n");
-    }
-
-    if (distinctModels == 1 && agentCount > 2 && totalTokens > 10_000) {
-      sb.append(recNum++).append(". CONSIDER MODEL MIX: All ").append(agentCount)
-          .append(" agents use the same model.\n");
-      sb.append("   Simpler agents (e.g., routing, classification) may perform equally\n");
-      sb.append("   well with a lighter, faster, cheaper model.\n\n");
-    }
-
-    if (recNum == 1) {
-      sb.append("No critical recommendations. The case executed within healthy parameters.\n");
-      sb.append("Continue monitoring for patterns across multiple cases.\n\n");
-    }
-
-    // All clean?
-    if (anomalyAgents == 0 && lengthCount == 0 && totalErrors == 0) {
-      sb.append("✓ Overall: Case completed cleanly with no anomalies, truncations, or tool errors.\n");
-    }
-
-    sb.append("\n═══════════════════════════════════════════════════════════\n");
-    sb.append("  END OF REPORT\n");
-    sb.append("═══════════════════════════════════════════════════════════\n");
-
+    sb.append("=== END OF DATA ===\n");
     return sb.toString();
   }
 
-  private static String gradeAgent(AgentSummary s, int totalTokens, long totalDurationMs) {
-    int score = 100;
-    // Penalize anomalies
-    if (s.getAnomalyReport() != null && s.getAnomalyReport().hasIssues()) {
-      score -= s.getAnomalyReport().getIssues().size() * 15;
+  private static String extractMessageText(com.fasterxml.jackson.databind.JsonNode msg) {
+    if (msg.has("text")) {
+      return msg.get("text").asText();
     }
-    // Penalize LENGTH finish
-    if ("LENGTH".equalsIgnoreCase(s.getFinishReason())) {
-      score -= 20;
+    var contents = msg.get("contents");
+    if (contents != null && contents.isArray()) {
+      StringBuilder t = new StringBuilder();
+      for (var c : contents) {
+        if (c.has("text") && "TEXT".equalsIgnoreCase(c.has("type") ? c.get("type").asText() : "")) {
+          t.append(c.get("text").asText());
+        }
+      }
+      return t.length() > 0 ? t.toString() : null;
     }
-    // Penalize tool errors
-    if (s.getToolSummaries() != null) {
-      int errs = s.getToolSummaries().stream().mapToInt(ToolSummary::getErrorCount).sum();
-      score -= errs * 10;
-    }
-    // Penalize fatal guardrails
-    if (s.getGuardrailSummaries() != null) {
-      int fatals = s.getGuardrailSummaries().stream().mapToInt(GuardrailSummary::getFatalCount).sum();
-      score -= fatals * 25;
-    }
-    // Penalize if agent uses >50% of case tokens
-    if (totalTokens > 0 && s.getTotalTokens() * 100 / totalTokens > 50) {
-      score -= 10;
-    }
-    // Penalize slow agents (>50% of case time)
-    if (totalDurationMs > 0 && s.getDurationMs() * 100 / totalDurationMs > 50) {
-      score -= 5;
-    }
-    score = Math.max(0, Math.min(100, score));
-    if (score >= 90) return "A (" + score + "/100) — Excellent";
-    if (score >= 75) return "B (" + score + "/100) — Good";
-    if (score >= 60) return "C (" + score + "/100) — Fair, needs attention";
-    if (score >= 40) return "D (" + score + "/100) — Poor, investigate issues";
-    return "F (" + score + "/100) — Critical, requires immediate action";
+    return null;
   }
 
-  private static String formatNumber(int n) {
-    return String.format("%,d", n);
+  private static String truncate(String text, int maxLen) {
+    if (text == null) return "";
+    text = text.replaceAll("\\s+", " ").trim();
+    return text.length() <= maxLen ? text : text.substring(0, maxLen) + "...";
   }
 
-  private static String formatDuration(long ms) {
-    if (ms < 1000) return ms + "ms";
-    double secs = ms / 1000.0;
-    if (secs < 60) return String.format("%.1fs", secs);
-    long mins = ms / 60000;
-    long remainSecs = (ms % 60000) / 1000;
-    return mins + "m " + remainSecs + "s";
+  public static String generateReport(String caseId, List<AgentSummary> summaries) {
+    if (summaries == null || summaries.isEmpty()) {
+      return "No agent data available for case " + caseId + ".";
+    }
+    String caseName = resolveCaseName(caseId);
+    return new ReportRenderer(caseId, caseName, summaries).render();
+  }
+
+  private static String resolveCaseName(String caseId) {
+    try {
+      var ivyCase = Ivy.wf().findCase(Long.parseLong(caseId));
+      return ivyCase != null ? ivyCase.getName() : null;
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   private static AgentSummary summarize(AgentConversationEntry entry, List<ToolSummary> allToolSummaries,
