@@ -11,7 +11,7 @@
       "config" : {
         "signature" : "governanceDashboard",
         "request" : {
-          "name" : "AI Governance Dashboard"
+          "name" : "AI Governance Center"
         }
       },
       "visual" : {

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.service.TaskService;
+import com.axonivy.utils.smart.workflow.governance.service.internal.TaskService;
 import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
 
 public class TaskTreeNode {

@@ -4,91 +4,129 @@
   xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
   <ui:composition template="/layouts/frame-10-full-width.xhtml">
-    <ui:define name="title">History Command Center</ui:define>
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/Title')}</ui:define>
     <ui:define name="content">
 
-      <h:outputStylesheet library="css" name="history-dashboard.css" />
+      <h:outputStylesheet library="css" name="ai-governance.css" />
+      <h:outputStylesheet library="css" name="ai-governance-light.css" />
+      <h:outputStylesheet library="css" name="ai-governance-dark.css" />
       <h:outputScript library="js" name="history-dashboard.js" />
 
-      <div class="content-area mx-auto p-4">
+      <div class="governance-page mx-auto">
 
         <div class="mb-4">
-          <h2 class="text-2xl font-bold text-900 mt-0 mb-1">AI Governance Center</h2>
-          <p class="text-sm text-color-secondary m-0">Browse and filter AI agent conversation history.</p>
+          <h2 class="text-2xl font-bold text-900 mt-0 mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/Title')}</h2>
         </div>
 
         <h:form id="main-form">
 
           <!-- Section 1: History Table -->
-          <div class="surface-card border-round overflow-hidden mb-4 border-1 surface-border">
+          <div class="card mb-4">
 
             <h:panelGroup id="history-table-section" layout="block">
 
-              <div class="p-3 surface-ground flex align-items-center font-semibold">
-                <span><i class="tif tif-clipboard mr-1"></i>History Table (#{historyDashboardBean.caseCount} cases, #{historyDashboardBean.entryCount} tasks)</span>
+              <div class="flex justify-content-between align-items-center font-semibold py-3 px-4">
+                <span class="text-xl">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/HistoryTableHeader')}</span>
+                <span class="font-normal text-color-secondary">
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/SummaryCount')}">
+                    <f:param value="#{historyDashboardBean.caseCount}" />
+                    <f:param value="#{historyDashboardBean.entryCount}" />
+                  </h:outputFormat>
+                </span>
               </div>
 
-              <div class="p-3 flex flex-wrap gap-2 align-items-center border-bottom-1 surface-border">
-                <p:inputText value="#{historyDashboardBean.filterCase}"
-                             placeholder="Case name, ID or description"
-                             styleClass="filter-case-input" />
-                <p:selectOneMenu value="#{historyDashboardBean.filterModel}"
-                                 styleClass="filter-model-select">
-                  <f:selectItem itemValue="" itemLabel="All Models" />
-                  <f:selectItem itemValue="gpt-4o-mini" itemLabel="gpt-4o-mini" />
-                  <f:selectItem itemValue="gpt-4o" itemLabel="gpt-4o" />
-                  <f:selectItem itemValue="gemini-2.0" itemLabel="gemini-2.0" />
-                </p:selectOneMenu>
-                <p:selectOneMenu value="#{historyDashboardBean.filterDateRange}"
-                                 styleClass="filter-date-select">
-                  <f:selectItem itemValue="ALL" itemLabel="All time" />
-                  <f:selectItem itemValue="TODAY" itemLabel="Today" />
-                  <f:selectItem itemValue="LAST_7_DAYS" itemLabel="Last 7 days" />
-                  <f:selectItem itemValue="LAST_30_DAYS" itemLabel="Last 30 days" />
-                </p:selectOneMenu>
-                <p:commandButton value="Search"
-                                 action="#{historyDashboardBean.applyFilter}"
-                                 update="history-table-section"
-                                 icon="tif tif-search" />
+              <div class="filter-bar border-bottom-1 surface-border py-3 px-4">
+                <div class="grid align-items-center">
+                  <div class="col-fixed">
+                    <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/FilterBy')}</span>
+                  </div>
+                  <div class="col">
+                    <p:inputText value="#{historyDashboardBean.filterCase}"
+                                 placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/FilterCasePlaceholder')}"
+                                 styleClass="w-full"
+                                 onkeydown="if(event.keyCode===13){document.getElementById('main-form:filter-search-btn').click();return false;}" />
+                    <p:commandButton id="filter-search-btn"
+                                     action="#{historyDashboardBean.applyFilter}"
+                                     update="history-table-section"
+                                     styleClass="hidden" />
+                  </div>
+                  <div class="col-3">
+                    <p:selectOneMenu value="#{historyDashboardBean.filterModel}" styleClass="w-full">
+                      <f:selectItem itemValue="" itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/AllModels')}" />
+                      <f:selectItem itemValue="gpt-4o-mini" itemLabel="gpt-4o-mini" />
+                      <f:selectItem itemValue="gpt-4o" itemLabel="gpt-4o" />
+                      <f:selectItem itemValue="gemini-2.0" itemLabel="gemini-2.0" />
+                      <p:ajax listener="#{historyDashboardBean.applyFilter}"
+                              update="history-table-section" />
+                    </p:selectOneMenu>
+                  </div>
+                  <div class="col-2">
+                    <p:selectOneMenu value="#{historyDashboardBean.filterDateRange}" styleClass="w-full">
+                      <f:selectItem itemValue="ALL" itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/AllTime')}" />
+                      <f:selectItem itemValue="TODAY" itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/Today')}" />
+                      <f:selectItem itemValue="LAST_7_DAYS" itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/Last7Days')}" />
+                      <f:selectItem itemValue="LAST_30_DAYS" itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/Last30Days')}" />
+                      <p:ajax listener="#{historyDashboardBean.applyFilter}"
+                              update="history-table-section" />
+                    </p:selectOneMenu>
+                  </div>
+                </div>
               </div>
 
               <p:treeTable id="history-table"
                            value="#{historyDashboardBean.historyTree}" var="row"
                            styleClass="history-table"
-                           emptyMessage="No history records found.">
+                           emptyMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/NoHistoryFound')}"
+                           sortField="caseId" sortOrder="DESCENDING" sortMode="single">
 
-                <p:column headerText="Case / Task / Agent">
-                  <h:outputText value="#{row.caseDisplayName}"
+                <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/ColumnCaseTaskAgent')}" sortBy="#{row.caseId}" width="30%">
+                  <h:outputText id="case-name" value="#{row.caseDisplayName}"
                                 rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}"
                                 styleClass="font-semibold" />
-                  <h:outputText value="#{row.taskDisplayName}"
+                  <p:tooltip for="case-name" value="#{row.caseDisplayName}" trackMouse="true"
+                             rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}" />
+                  <h:outputText id="task-name" value="#{row.taskDisplayName}"
                                 rendered="#{row['class'].simpleName eq 'TaskHistoryGroup'}"
-                                styleClass="text-color-secondary" />
-                  <h:outputText value="Agent #{row.agentDisplayLabel}"
+                                styleClass="task-name" />
+                  <p:tooltip for="task-name" value="#{row.taskDisplayName}" trackMouse="true"
+                             rendered="#{row['class'].simpleName eq 'TaskHistoryGroup'}" />
+                  <h:outputText id="agent-name" value="#{row.agentDisplayLabel}"
                                 rendered="#{row['class'].simpleName eq 'AgentConversationEntry'}"
-                                styleClass="text-color-secondary text-sm" />
+                                styleClass="agent-name" />
+                  <p:tooltip for="agent-name" value="#{row.agentDisplayLabel}" trackMouse="true" rendered="#{row['class'].simpleName eq 'AgentConversationEntry'}" />
                 </p:column>
 
-                <p:column headerText="Last Updated" width="13%">
+                <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/ColumnLastUpdated')}" sortBy="#{row.lastUpdatedRaw}" width="10%">
                   <h:outputText value="#{row.lastUpdatedText}" />
                 </p:column>
 
-                <p:column headerText="Messages" width="10%">
-                  <span class="bg-blue-100 text-blue-700 border-round-3xl inline-block font-semibold px-2 text-sm">#{row.messageCount} msgs</span>
+                <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/ColumnMessages')}" sortBy="#{row.messageCount}" width="10%">
+                  <span class="badge bg-blue-100 text-blue-700 border-round-3xl inline-block">
+                    <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/MessagesBadge')}">
+                      <f:param value="#{row.messageCount}" />
+                    </h:outputFormat>
+                  </span>
                 </p:column>
 
-                <p:column headerText="Tokens" width="6%">
-                  <span class="bg-green-100 text-green-700 border-round-3xl inline-block font-semibold px-2 text-sm">#{row.totalTokens}</span>
+                <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/ColumnTokens')}" sortBy="#{row.totalTokens}" width="10%">
+                  <span class="badge bg-green-100 text-green-700 border-round-3xl inline-block">#{row.totalTokens}</span>
                 </p:column>
 
-                <p:column headerText="Model" width="15%">
-                  <span class="text-sm surface-ground border-round-sm px-2">#{row.modelName}</span>
+                <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/ColumnModel')}" sortBy="#{row.modelName}" width="20%">
+                  <span class="model-chip surface-ground border-round-sm max-w-full overflow-hidden text-overflow-ellipsis white-space-nowrap inline-block vertical-align-middle">#{row.modelName}</span>
                 </p:column>
 
-                <p:column headerText="" styleClass="col-action" width="8%">
-                  <p:commandButton value="View" icon="tif tif-eye" process="@this"
-                                   rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}"
-                                   actionListener="#{logic.showConversations(row.caseUuid)}" />
+                <p:column headerText="#{ivy.cms.co('/Labels/Common/Actions')}" styleClass="text-center" width="7%">
+                  <h:panelGroup rendered="#{row['class'].simpleName eq 'CaseHistoryGroup'}">
+                    <p:commandButton id="row-action-btn" icon="ti ti-dots"
+                                     styleClass="rounded-button icon-more-menu-button ui-no-rounded-button-process-page" type="button" />
+                    <p:menu id="row-action-menu" overlay="true" trigger="row-action-btn"
+                            my="right top" at="right bottom" styleClass="w-auto">
+                      <p:menuitem icon="ti ti-eye" process="@this"
+                                  value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/ViewDetails')}"
+                                  actionListener="#{logic.showConversations(row.caseUuid)}" />
+                    </p:menu>
+                  </h:panelGroup>
                 </p:column>
 
               </p:treeTable>
@@ -97,9 +135,7 @@
           </div>
 
           <!-- Section 2: Token Usage Analytics -->
-          <div class="section-card surface-card border-round overflow-hidden">
-            <ic:com.axonivy.utils.ai.component.Analytics id="analytics" />
-          </div>
+          <ic:com.axonivy.utils.ai.component.Analytics id="analytics" />
 
         </h:form>
       </div>

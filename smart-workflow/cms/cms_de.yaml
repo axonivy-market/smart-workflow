@@ -1,0 +1,115 @@
+Labels:
+  Common:
+    Actions: Aktionen
+    Back: Zurück
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        ai:
+          HistoryDashboard:
+            HistoryDashboard:
+              Title: KI-Governance-Zentrum
+              HistoryTableHeader: Verlaufstabelle
+              SummaryCount: '{0} Fälle - {1} Aufgaben'
+              FilterBy: 'Filtern nach:'
+              FilterCasePlaceholder: Fallname, ID oder Beschreibung
+              AllModels: Alle Modelle
+              AllTime: Gesamter Zeitraum
+              Today: Heute
+              Last7Days: Letzte 7 Tage
+              Last30Days: Letzte 30 Tage
+              NoHistoryFound: Keine Verlaufsdaten gefunden.
+              ColumnCaseTaskAgent: Fall/Aufgabe/Agent
+              AgentLabel: 'Agent {0}'
+              ColumnLastUpdated: Zuletzt aktualisiert
+              ColumnMessages: Nachrichten
+              MessagesBadge: '{0} Nachr.'
+              ColumnTokens: Token
+              ColumnModel: Modell
+              ViewDetails: Details anzeigen
+              AnalyticsHeader: Token-Nutzungsanalyse
+          Conversations:
+            Conversations:
+              Title: Gespräche
+              EmptyStateTitle: Kein Verlauf gefunden
+              EmptyStateMessage: Kein Gesprächsverlauf für diesen Fall gefunden.
+              CaseLabel: 'Fall:'
+              ExportButton: Exportieren
+              DetailsButton: Details
+              CaseInformation: Fall-Informationen
+              SidebarCaseDetails: Falldetails
+              SidebarProcessViewer: Prozessanzeige
+              SidebarClose: Schließen
+              NavHeader: Agenten nach Aufgabe
+              KpiTask: Aufgabe
+              KpiTotalMessages: Nachrichten gesamt
+              KpiTotalTokens: Token gesamt
+              KpiAverageDuration: Ø Dauer
+              TaskLabel: 'Aufgabe {0}'
+              TaskAgentTokens: '{0} Agenten · {1} Token'
+              AgentLabel: 'Agent {0}'
+              TokenCount: '{0} Tokens'
+              PrettyToggle: Lesbar
+              TabSystemPrompt: Systemprompt
+              NoSystemPrompt: Kein Systemprompt konfiguriert
+              TabInput: Eingabe
+              NoInputMessages: Keine Eingabenachrichten
+              TabResponse: Antwort
+              NoResponse: Keine Antwort
+              TabTools: 'Tool-Aufrufe ({0})'
+              ToolInputParameters: Eingabeparameter
+              NoParameters: Keine Parameter
+              ToolResult: Ergebnis
+              ToolStatusOk: OK
+              NoOutput: Keine Ausgabe
+              TabMetadata: Metadaten
+              MetaStartTime: Startzeit
+              MetaModel: Modell
+              MetaInputTokens: Eingabe-Token
+              MetaOutputTokens: Ausgabe-Token
+              MetaTotalTokens: Token gesamt
+              MetaDuration: Dauer
+              CaseId: Fall-ID
+              CaseState: Status
+              CaseCategory: Fallkategorie
+              NotAvailable: N/V
+              SectionRoleUser: Rollen- und Benutzerinformationen
+              CaseCreator: Ersteller
+              SectionTimeInfo: Zeitinformationen
+              CaseCreated: Erstellt
+              CaseFinished: Abgeschlossen
+              CaseProcessingTime: Bearbeitungszeit
+              SectionDescription: Beschreibung
+              NoDescription: Keine Beschreibung
+              CaseUnavailable: Falldetails sind nicht verfügbar.
+              ProcessFlowTitle: Prozessablauf
+              ProcessViewerUnavailableTitle: Entschuldigung
+              ProcessViewerUnavailableMsg: Der Prozessbetrachter ist für diesen Fall nicht verfügbar.
+          component:
+            Analytics:
+              Analytics:
+                SectionTitle: Token-Nutzungsanalyse
+                KpiTotalSessions: Sitzungen gesamt
+                KpiTotalTokens: Token gesamt
+                KpiAvgResponseTime: Ø Antwortzeit
+                KpiTopModel: Top-Modell
+                TrendVsPrev: '% vs. Vorperiode'
+                TrendFaster: schneller als Vorperiode
+                TrendSlower: langsamer als Vorperiode
+                TrendOfAllCalls: '% aller Aufrufe'
+                UnitMs: ms
+                ChartTokenTimeline: Token-Nutzung im Zeitverlauf
+                ChartModelDist: Modellverteilung
+                ChartTokenStacked: Eingabe- vs. Ausgabe-Token pro Tag
+                ChartTopCases: Top-Prozesse nach Token-Verbrauch
+                ChartResponseTime: Antwortzeit-Verteilung
+                DatasetTotalTokens: Token gesamt
+                DatasetInputTokens: Eingabe-Token
+                DatasetOutputTokens: Ausgabe-Token
+                DatasetSessions: Sitzungen
+                BucketUnder5s: '< 5 s'
+                Bucket5to10s: '5–10 s'
+                Bucket10to15s: '10–15 s'
+                BucketOver15s: '> 15 s'
+                UnknownProcess: unbekannt

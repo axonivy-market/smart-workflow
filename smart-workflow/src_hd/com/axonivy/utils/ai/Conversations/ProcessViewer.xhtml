@@ -9,14 +9,14 @@
 <h:panelGroup rendered="#{conversationsBean.processViewerUrl != null}" layout="block">
     <iframe src="#{conversationsBean.processViewerUrl}"
             class="cv-process-viewer-frame w-full block"
-            title="Process Flow">
+            title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ProcessFlowTitle')}">
     </iframe>
     </h:panelGroup>
     <h:panelGroup rendered="#{conversationsBean.processViewerUrl == null}" layout="block"
                 styleClass="cv-process-unavailable p-6 text-center text-color-secondary">
     <i class="tif tif-mood-smile text-4xl block mb-2" />
-    <div class="font-semibold mb-1">Oops... sorry</div>
-    <div class="text-sm">Process viewer is not available for this case.</div>
+    <div class="font-semibold mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ProcessViewerUnavailableTitle')}</div>
+    <div class="text-sm">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ProcessViewerUnavailableMsg')}</div>
 </h:panelGroup>
 </h:body>
 </html>

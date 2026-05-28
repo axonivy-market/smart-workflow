@@ -1,9 +1,11 @@
 package com.axonivy.utils.smart.workflow.governance.ui.entity;
 
+import java.util.Comparator;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.service.CaseService;
+import ch.ivyteam.ivy.workflow.ICase;
+import com.axonivy.utils.smart.workflow.governance.service.internal.CaseService;
 
 public class CaseHistoryGroup implements HistoryGroupView {
 
@@ -27,6 +29,20 @@ public class CaseHistoryGroup implements HistoryGroupView {
       caseDisplayName = CaseService.getDisplayName(caseUuid);
     }
     return caseDisplayName;
+  }
+
+  public String getLastUpdatedRaw() {
+    return tasks.stream()
+        .filter(e -> e.getLastUpdated() != null)
+        .map(AgentConversationEntry::getLastUpdated)
+        .max(Comparator.naturalOrder())
+        .orElse("");
+  }
+
+  @Override
+  public long getCaseId() {
+    ICase ivyCase = CaseService.findCase(caseUuid);
+    return ivyCase != null ? ivyCase.getId() : -1L;
   }
 
   @Override public String getLastUpdatedText() { return stats.getLastUpdatedText(); }

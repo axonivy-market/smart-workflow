@@ -12,12 +12,18 @@ import javax.faces.bean.ViewScoped;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
-import com.axonivy.utils.smart.workflow.governance.service.CaseService;
+import com.axonivy.utils.smart.workflow.governance.service.internal.CaseService;
+import com.axonivy.utils.smart.workflow.governance.ui.model.AgentTreeNode;
 import com.axonivy.utils.smart.workflow.governance.ui.model.CaseTreeNode;
 import com.axonivy.utils.smart.workflow.governance.ui.model.TaskTreeNode;
 import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
 import com.axonivy.utils.smart.workflow.governance.utils.MessageViewModelParser;
 import com.axonivy.utils.smart.workflow.governance.utils.MessageViewModelParser.MessageViewModel;
+
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultSubMenu;
+import org.primefaces.model.menu.MenuModel;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.viewer.api.ProcessViewer;
@@ -39,7 +45,6 @@ public class ConversationsBean implements Serializable {
 
   private CaseTreeNode caseNode;
   private ICase ivyCase;
-  private String selectedTaskUuid;
 
   public void preRender(String caseUuid) {
     storage = new IvyRepoHistoryStorage();
@@ -52,24 +57,7 @@ public class ConversationsBean implements Serializable {
     List<AgentConversationEntry> entries = storage.findByCaseUuid(caseUuid);
     List<CaseTreeNode> tree = CaseTreeNode.buildTree(entries);
     caseNode = tree.isEmpty() ? null : tree.get(0);
-    if (caseNode != null && !caseNode.getTasks().isEmpty()) {
-      selectedTaskUuid = caseNode.getTasks().get(0).getTaskUuid();
-    }
     ivyCase = CaseService.findCase(caseUuid);
-  }
-
-  public void selectTask(String taskUuid) {
-    this.selectedTaskUuid = taskUuid;
-  }
-
-  public TaskTreeNode getSelectedTaskNode() {
-    if (caseNode == null || selectedTaskUuid == null) {
-      return null;
-    }
-    return caseNode.getTasks().stream()
-        .filter(task -> selectedTaskUuid.equals(task.getTaskUuid()))
-        .findFirst()
-        .orElse(null);
   }
 
   public String getCaseState() {
@@ -111,10 +99,6 @@ public class ConversationsBean implements Serializable {
                                 : String.format(HOURS_FORMAT, hours, plural);
   }
 
-  public List<MessageViewModel> parseMessages(AgentConversationEntry entry) {
-    return messageParser.parse(entry);
-  }
-
   public List<MessageViewModel> getSystemMessages(AgentConversationEntry entry) {
     return messageParser.getSystemMessages(entry);
   }
@@ -138,14 +122,6 @@ public class ConversationsBean implements Serializable {
         .orElse(0);
   }
 
-  public long getInputTokens(AgentConversationEntry entry) {
-    return ChatHistoryJsonParser.getInputTokens(entry);
-  }
-
-  public long getOutputTokens(AgentConversationEntry entry) {
-    return ChatHistoryJsonParser.getOutputTokens(entry);
-  }
-
   public ICase getIvyCase() {
     return ivyCase;
   }
@@ -166,15 +142,38 @@ public class ConversationsBean implements Serializable {
     }
   }
 
+  public MenuModel getNavMenuModel() {
+    DefaultMenuModel model = new DefaultMenuModel();
+    if (caseNode == null) {
+      return model;
+    }
+    List<TaskTreeNode> tasks = caseNode.getTasks();
+    for (int t = 0; t < tasks.size(); t++) {
+      TaskTreeNode task = tasks.get(t);
+      DefaultSubMenu submenu = DefaultSubMenu.builder()
+          .label((t + 1) + ". " + task.getDisplayName())
+          .expanded(true)
+          .build();
+      List<AgentTreeNode> agents = task.getAgents();
+      for (int a = 0; a < agents.size(); a++) {
+        AgentTreeNode agent = agents.get(a);
+        String agentId = "cv-agent-" + t + "-" + a;
+        String onclick = "CvNav.select('" + agentId + "', this); return false;";
+        String label = Ivy.cms().co(
+            "/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/AgentLabel",
+            java.util.Arrays.asList(agent.getDisplayName()));
+        DefaultMenuItem item = DefaultMenuItem.builder()
+            .value(label)
+            .onclick(onclick)
+            .build();
+        submenu.getElements().add(item);
+      }
+      model.getElements().add(submenu);
+    }
+    return model;
+  }
+
   public CaseTreeNode getCaseNode() {
     return caseNode;
-  }
-
-  public String getSelectedTaskUuid() {
-    return selectedTaskUuid;
-  }
-
-  public void setSelectedTaskUuid(String selectedTaskUuid) {
-    this.selectedTaskUuid = selectedTaskUuid;
   }
 }

@@ -7,7 +7,6 @@ import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversat
 
 public interface HistoryGroupView {
 
-  String DATE_TIME_FORMAT_PATTERN = "dd MMM yyyy HH:mm"; // TODO make this user locale specific
   String NO_DATE = "—";
 
   String getLastUpdatedText();
@@ -17,6 +16,8 @@ public interface HistoryGroupView {
   int getTotalTokens();
 
   String getModelName();
+
+  default long getCaseId() { return 0L; }
 
   static HistoryGroupView of(List<AgentConversationEntry> entries) {
     return new HistoryEntryStats(entries);

@@ -6,22 +6,30 @@
   xmlns:p="http://primefaces.org/ui"
   xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
-<div class="cv-case-summary flex border-bottom-2 surface-border">
-    <div class="cv-cs-card cv-cs-card--tasks flex-1 py-3 px-5">
-        <div class="cv-cs-val text-2xl font-bold text-900">#{conversationsBean.caseNode.taskCount}</div>
-        <div class="text-color-secondary mt-1">Tasks</div>
+<div class="grid">
+    <div class="col-3">
+        <div class="surface-ground border-round p-4">
+            <div class="text-2xl font-bold text-900">#{conversationsBean.caseNode.taskCount}</div>
+            <div class="text-color-secondary mt-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/KpiTask')}</div>
+        </div>
     </div>
-    <div class="cv-cs-card cv-cs-card--messages flex-1 py-3 px-5">
-        <div class="cv-cs-val text-2xl font-bold text-900">#{conversationsBean.caseNode.totalMessages}</div>
-        <div class="text-color-secondary mt-1">Total Messages</div>
+    <div class="col-3">
+        <div class="surface-ground border-round p-4">
+            <div class="text-2xl font-bold text-900">#{conversationsBean.caseNode.totalMessages}</div>
+            <div class="text-color-secondary mt-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/KpiTotalMessages')}</div>
+        </div>
     </div>
-    <div class="cv-cs-card cv-cs-card--tokens flex-1 py-3 px-5">
-        <div class="cv-cs-val text-2xl font-bold text-900">#{conversationsBean.caseNode.totalTokens}</div>
-        <div class="text-color-secondary mt-1">Total Tokens</div>
+    <div class="col-3">
+        <div class="surface-ground border-round p-4">
+            <div class="text-2xl font-bold text-900">#{conversationsBean.caseNode.totalTokens}</div>
+            <div class="text-color-secondary mt-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/KpiTotalTokens')}</div>
+        </div>
     </div>
-    <div class="cv-cs-card cv-cs-card--duration flex-1 py-3 px-5">
-        <div class="cv-cs-val text-2xl font-bold text-900">#{conversationsBean.caseAvgDurationMs} ms</div>
-        <div class="text-color-secondary mt-1">Avg Duration</div>
+    <div class="col-3">
+        <div class="surface-ground border-round p-4">
+            <div class="text-2xl font-bold text-900">#{conversationsBean.caseAvgDurationMs} ms</div>
+            <div class="text-color-secondary mt-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/KpiAverageDuration')}</div>
+        </div>
     </div>
 </div>
 </h:body>

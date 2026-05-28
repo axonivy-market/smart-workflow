@@ -1,59 +1,35 @@
-var ConversationViewer = (function () {
-
-  /** Scroll the conversation panel to the bottom after an AJAX update. */
-  function scrollToBottom(panelSelector) {
-    var el = document.querySelector(panelSelector);
-    if (el) el.scrollTop = el.scrollHeight;
-  }
-
-  return { scrollToBottom: scrollToBottom };
-})();
-
-/* ── CvAgent ──────────────────────────────────────────────────────────────────
-   Collapsible agent panels (Phoenix-style tracing rows).
-   ─────────────────────────────────────────────────────────────────────────── */
-
 var CvAgent = (function () {
   function toggle(headerEl) {
     var block = headerEl.closest('.cv-agent-block');
-    if (block) block.classList.toggle('cv-agent-open');
+    if (!block) return;
+    block.classList.toggle('cv-agent-open');
+    var body = block.querySelector('.cv-agent-body');
+    if (body) body.classList.toggle('pb-3');
   }
   return { toggle: toggle };
 })();
 
 
-
-/* ── CvMarkdown ───────────────────────────────────────────────────────────────
-   Renders markdown in .cv-tab-msg-text elements and highlights code blocks.
-   Runs once on DOMContentLoaded (page content is server-rendered, no AJAX lazy load).
-   ─────────────────────────────────────────────────────────────────────────── */
-
 var CvMarkdown = (function () {
 
-  // Returns true when obj is a plain JSON object whose every top-level value is a string.
-  // Used to detect tool outputs like {"validationResult": "...markdown text..."}.
   function isAllStringObject(obj) {
     if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) return false;
     var keys = Object.keys(obj);
     return keys.length > 0 && keys.every(function (k) { return typeof obj[k] === 'string'; });
   }
 
-  // Renders a flat {key: stringValue} object as markdown text.
-  // Single key  → renders the value directly.
-  // Multiple keys → renders each as **key**\n\nvalue, separated by hr.
   function flatStringToMarkdown(obj) {
     var keys = Object.keys(obj);
     if (keys.length === 1) return obj[keys[0]];
     return keys.map(function (k) { return '**' + k + '**\n\n' + obj[k]; }).join('\n\n---\n\n');
   }
 
-  // Walk a parsed JSON value recursively; expand any string that is itself valid JSON.
   function deepParse(value) {
     if (typeof value === 'string') {
       try {
         var inner = JSON.parse(value);
         if (inner !== null && typeof inner === 'object') return deepParse(inner);
-      } catch (e) { /* not JSON, keep as-is */ }
+      } catch (e) {}
       return value;
     }
     if (Array.isArray(value)) {
@@ -79,8 +55,6 @@ var CvMarkdown = (function () {
       var trimmed = raw.trim();
       var source = raw;
 
-      // Auto-format bare JSON: flat {key:string} objects render as markdown text;
-      // everything else is wrapped in a fenced JSON code block.
       if ((trimmed.startsWith('{') || trimmed.startsWith('[')) && !trimmed.startsWith('```')) {
         try {
           var parsed = JSON.parse(trimmed);
@@ -90,18 +64,12 @@ var CvMarkdown = (function () {
           } else {
             source = '```json\n' + JSON.stringify(deep, null, 2) + '\n```';
           }
-        } catch (e) { /* not valid JSON, render as-is */ }
+        } catch (e) {}
       }
 
-      el.innerHTML = marked.parse(source);
+      el.innerHTML = DOMPurify.sanitize(marked.parse(source));
       el.setAttribute('data-md', '1');
     });
-
-    if (typeof hljs !== 'undefined') {
-      document.querySelectorAll('.cv-tab-msg-text pre code').forEach(function (block) {
-        hljs.highlightElement(block);
-      });
-    }
   }
 
   document.addEventListener('DOMContentLoaded', renderAll);
@@ -110,87 +78,156 @@ var CvMarkdown = (function () {
 })();
 
 
-/* ── CvTools ──────────────────────────────────────────────────────────────────
-   Left-nav tab switcher for the Tools tab panel.
-   Activates the nav item and shows the matching content panel by index.
-   ─────────────────────────────────────────────────────────────────────────── */
-
-var CvTools = (function () {
-
-  function select(navItem) {
-    var tabview = navItem.closest('.cv-tools-tabview');
-    if (!tabview) return;
-
-    var navItems = tabview.querySelectorAll('.cv-tools-nav-item');
-    var panels   = tabview.querySelectorAll('.cv-tool-panel');
-    var idx      = Array.prototype.indexOf.call(navItems, navItem);
-
-    navItems.forEach(function (el) { el.classList.remove('cv-tools-nav-item--active'); });
-    panels.forEach(function (el)   { el.classList.remove('cv-tool-panel--active'); });
-
-    navItem.classList.add('cv-tools-nav-item--active');
-    if (panels[idx]) panels[idx].classList.add('cv-tool-panel--active');
+var CvSysPrompt = (function () {
+  function toggle(headerEl) {
+    var block = headerEl.closest('.cv-agent-block');
+    if (block) block.classList.toggle('cv-sysPrompt-open');
   }
-
-  function initAll() {
-    document.querySelectorAll('.cv-tools-tabview').forEach(function (tv) {
-      var first = tv.querySelector('.cv-tools-nav-item');
-      if (first) select(first);
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', initAll);
-
-  return { select: select };
-})();
-
-
-/* ── CvArgs ───────────────────────────────────────────────────────────────────
-   Horizontal tab switcher for the Arguments tab strip inside each tool panel.
-   ─────────────────────────────────────────────────────────────────────────── */
-
-/* ── CvRaw ────────────────────────────────────────────────────────────────────
-   Pretty / Raw toggle for agent tabviews.
-   Adds/removes 'cv-raw-mode' on the .cv-agent-tabview wrapper;
-   CSS then shows .cv-tab-raw-text and hides .cv-tab-msg-text (and vice versa).
-   ─────────────────────────────────────────────────────────────────────────── */
-
-var CvRaw = (function () {
-
-  // input is the underlying checkbox element (passed as 'this' from p:toggleSwitch onchange).
-  // PrimeFaces manages its own visual state; we just sync the tabview class.
-  function toggle(input) {
-    var isPretty = input.checked;
-    var tabview  = input.closest('.cv-agent-tabview');
-    if (tabview) tabview.classList.toggle('cv-raw-mode', !isPretty);
-  }
-
   return { toggle: toggle };
 })();
 
 
-var CvArgs = (function () {
+var CvRaw = (function () {
+  function toggle(input) {
+    var isPretty = input.checked;
+    var block = input.closest('.cv-agent-block');
+    var tabview = block ? block.querySelector('.cv-agent-tabview') : null;
+    if (tabview) tabview.classList.toggle('cv-raw-mode', !isPretty);
+  }
+  return { toggle: toggle };
+})();
 
-  function select(tab) {
-    var tabview = tab.closest('.cv-args-tabview');
-    if (!tabview) return;
-    var tabs   = tabview.querySelectorAll('.cv-args-tab');
-    var panels = tabview.querySelectorAll('.cv-args-panel');
-    var idx    = Array.prototype.indexOf.call(tabs, tab);
-    tabs.forEach(function (el)   { el.classList.remove('cv-args-tab--active'); });
-    panels.forEach(function (el) { el.classList.remove('cv-args-panel--active'); });
-    tab.classList.add('cv-args-tab--active');
-    if (panels[idx]) panels[idx].classList.add('cv-args-panel--active');
+
+var CvNav = (function () {
+
+  function select(agentId, linkEl) {
+    document.querySelectorAll('.cv-detail-area [data-cv-agent]').forEach(function (el) {
+      el.style.display = 'none';
+    });
+    var target = document.querySelector('[data-cv-agent="' + agentId + '"]');
+    if (target) target.style.display = '';
+
+    document.querySelectorAll('.cv-nav-panel-menu .ui-menuitem').forEach(function (el) {
+      el.classList.remove('cv-nav-active');
+    });
+    if (linkEl) {
+      var item = linkEl.closest('.ui-menuitem');
+      if (item) item.classList.add('cv-nav-active');
+    }
   }
 
-  function initAll() {
-    document.querySelectorAll('.cv-args-tabview').forEach(function (tv) {
-      var first = tv.querySelector('.cv-args-tab');
-      if (first) select(first);
+  function init() {
+    var firstBlock = document.querySelector('.cv-detail-area [data-cv-agent]');
+    if (firstBlock) firstBlock.style.display = '';
+    var firstItem = document.querySelector('.cv-nav-panel-menu .ui-menuitem');
+    if (firstItem) firstItem.classList.add('cv-nav-active');
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+  return { select: select };
+})();
+
+
+var CvToolCard = (function () {
+  function toggle(headerEl) {
+    var card = headerEl.closest('.tool-timeline-card');
+    if (!card) return;
+    card.classList.toggle('open');
+    ['border-bottom-1', 'surface-border', 'surface-50'].forEach(function (cls) {
+      headerEl.classList.toggle(cls);
+    });
+  }
+  return { toggle: toggle };
+})();
+
+
+var CvToolInput = (function () {
+  function toggle(toggleEl) {
+    var section = toggleEl.closest('.tool-timeline-input');
+    if (section) section.classList.toggle('open');
+  }
+  return { toggle: toggle };
+})();
+
+
+var CvToolModal = (function () {
+
+  function open(title, text) {
+    var titleEl = document.getElementById('tool-timeline-modal-title');
+    var bodyEl  = document.getElementById('tool-timeline-modal-body');
+    if (!titleEl || !bodyEl) return;
+
+    titleEl.textContent = title;
+
+    var isMarkdown = /^#{1,3} /m.test(text) || /\|[-| ]+\|/.test(text);
+    if (typeof marked !== 'undefined' && isMarkdown) {
+      marked.setOptions({ breaks: true, gfm: true });
+      bodyEl.innerHTML = DOMPurify.sanitize(marked.parse(text));
+    } else {
+      bodyEl.innerHTML = '<pre style="white-space:pre-wrap;word-break:break-word;margin:0">' + escHtml(text) + '</pre>';
+    }
+
+    PF('cvToolModal').show();
+  }
+
+  function close() {
+    PF('cvToolModal').hide();
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  return { open: open, close: close };
+})();
+
+
+var CvToolTimeline = (function () {
+
+  var THRESHOLD = 200;
+
+  function initValueCells() {
+    document.querySelectorAll('.tool-timeline-val-cell').forEach(function (cell) {
+      var rawPre   = cell.querySelector('.cv-tab-raw-text');
+      var prettyEl = cell.querySelector('.cv-tab-msg-text');
+      if (!rawPre || !prettyEl) return;
+
+      var rawText = rawPre.textContent.trim();
+      if (rawText.length <= THRESHOLD) return;
+
+      var row = cell.closest('.tool-timeline-kv-row');
+      var keyCell = row ? row.querySelector('.tool-timeline-kv-key') : null;
+      var label = keyCell ? keyCell.textContent.trim() : 'Value';
+
+      var preview = document.createElement('div');
+      preview.className = 'flex align-items-center gap-2 flex-wrap';
+
+      var previewText = document.createElement('span');
+      previewText.className = 'text-color-secondary font-italic overflow-hidden white-space-nowrap text-overflow-ellipsis flex-1';
+      previewText.textContent = rawText.substring(0, 100).trim() + '\u2026';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tool-timeline-expand-btn inline-flex align-items-center justify-content-center w-2rem h-2rem border-circle bg-transparent text-color-secondary cursor-pointer text-base p-0 flex-shrink-0';
+      btn.title = 'View full';
+      btn.innerHTML = '<i class="ti ti-arrows-maximize"></i>';
+
+      (function (capturedLabel, capturedText) {
+        btn.addEventListener('click', function () {
+          CvToolModal.open(capturedLabel, capturedText);
+        });
+      })(label, rawText);
+
+      preview.appendChild(previewText);
+      preview.appendChild(btn);
+      prettyEl.parentNode.replaceChild(preview, prettyEl);
     });
   }
 
-  document.addEventListener('DOMContentLoaded', initAll);
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(initValueCells, 0);
+  });
 
-  return { select: select };
+  return {};
 })();

@@ -1,0 +1,115 @@
+Labels:
+  Common:
+    Actions: Actions
+    Back: Back
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        ai:
+          HistoryDashboard:
+            HistoryDashboard:
+              Title: AI Governance Center
+              HistoryTableHeader: History Table
+              SummaryCount: '{0} cases - {1} tasks'
+              FilterBy: 'Filter by:'
+              FilterCasePlaceholder: Case name, ID or description
+              AllModels: All models
+              AllTime: All time
+              Today: Today
+              Last7Days: Last 7 days
+              Last30Days: Last 30 days
+              NoHistoryFound: No history records found.
+              ColumnCaseTaskAgent: Case/Task/Agent
+              AgentLabel: 'Agent {0}'
+              ColumnLastUpdated: Last updated
+              ColumnMessages: Messages
+              MessagesBadge: '{0} msgs'
+              ColumnTokens: Tokens
+              ColumnModel: Model
+              ViewDetails: View details
+              AnalyticsHeader: Token Usage Analytics
+          Conversations:
+            Conversations:
+              Title: Conversations
+              EmptyStateTitle: No History Found
+              EmptyStateMessage: No conversation history found for this case.
+              CaseLabel: 'Case:'
+              ExportButton: Export
+              DetailsButton: Details
+              CaseInformation: Case Information
+              SidebarCaseDetails: Case Details
+              SidebarProcessViewer: Process Viewer
+              SidebarClose: Close
+              NavHeader: Agents by Task
+              KpiTask: Task
+              KpiTotalMessages: Total Messages
+              KpiTotalTokens: Total Tokens
+              KpiAverageDuration: Average Duration
+              TaskLabel: 'Task {0}'
+              TaskAgentTokens: '{0} agents · {1} tokens'
+              AgentLabel: 'Agent {0}'
+              TokenCount: '{0} tokens'
+              PrettyToggle: Pretty
+              TabSystemPrompt: System Prompt
+              NoSystemPrompt: No system prompt configured
+              TabInput: Input
+              NoInputMessages: No input messages
+              TabResponse: Response
+              NoResponse: No response
+              TabTools: 'Tool Calls ({0})'
+              ToolInputParameters: Input parameters
+              NoParameters: No parameters
+              ToolResult: Result
+              ToolStatusOk: OK
+              NoOutput: No output
+              TabMetadata: Metadata
+              MetaStartTime: Start time
+              MetaModel: Model
+              MetaInputTokens: Input tokens
+              MetaOutputTokens: Output tokens
+              MetaTotalTokens: Total tokens
+              MetaDuration: Duration
+              CaseId: Case Id
+              CaseState: State
+              CaseCategory: Case Category
+              NotAvailable: N/A
+              SectionRoleUser: Role and User Information
+              CaseCreator: Creator
+              SectionTimeInfo: Time Information
+              CaseCreated: Created
+              CaseFinished: Finished
+              CaseProcessingTime: Processing Time
+              SectionDescription: Description
+              NoDescription: No description
+              CaseUnavailable: Case details are not available.
+              ProcessFlowTitle: Process Flow
+              ProcessViewerUnavailableTitle: 'Oops... sorry'
+              ProcessViewerUnavailableMsg: Process viewer is not available for this case.
+          component:
+            Analytics:
+              Analytics:
+                SectionTitle: Token Usage Analytics
+                KpiTotalSessions: Total Sessions
+                KpiTotalTokens: Total Tokens
+                KpiAvgResponseTime: Avg Response Time
+                KpiTopModel: Top Model
+                TrendVsPrev: '% vs prev'
+                TrendFaster: faster vs prev
+                TrendSlower: slower vs prev
+                TrendOfAllCalls: '% of all calls'
+                UnitMs: ms
+                ChartTokenTimeline: Token Usage Over Time
+                ChartModelDist: Model Distribution
+                ChartTokenStacked: Input vs Output Tokens per Day
+                ChartTopCases: Top Processes by Token Usage
+                ChartResponseTime: Response Time Distribution
+                DatasetTotalTokens: Total Tokens
+                DatasetInputTokens: Input Tokens
+                DatasetOutputTokens: Output Tokens
+                DatasetSessions: Sessions
+                BucketUnder5s: '< 5 s'
+                Bucket5to10s: '5–10 s'
+                Bucket10to15s: '10–15 s'
+                BucketOver15s: '> 15 s'
+                UnknownProcess: unknown

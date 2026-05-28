@@ -1,28 +1,24 @@
 package com.axonivy.utils.smart.workflow.governance.ui.bean;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
-import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.CaseHistoryGroup;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.TaskHistoryGroup;
-import com.axonivy.utils.smart.workflow.governance.ui.enums.DateRangeFilter;
-import com.axonivy.utils.smart.workflow.governance.ui.enums.HistoryNodeType;
-import com.axonivy.utils.smart.workflow.governance.ui.model.AgentTreeNode;
-import com.axonivy.utils.smart.workflow.governance.ui.model.CaseTreeNode;
-import com.axonivy.utils.smart.workflow.governance.ui.model.TaskTreeNode;
-import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;
+import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
+import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.service.internal.CaseService;
 
 @ManagedBean
 @ViewScoped
@@ -30,12 +26,11 @@ public class HistoryDashboardBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private HistoryStorage storage;
+  private final HistoryStorage storage = new IvyRepoHistoryStorage();
 
   private String filterCase = "";
-  private String filterTaskUuid = "";
   private String filterModel = "";
-  private DateRangeFilter filterDateRange = DateRangeFilter.LAST_30_DAYS;
+  private String filterDateRange = "LAST_30_DAYS";
 
   private List<AgentConversationEntry> entries = List.of();
   private TreeNode<Object> historyTree;
@@ -43,67 +38,68 @@ public class HistoryDashboardBean implements Serializable {
 
   @PostConstruct
   public void init() {
-    storage = new IvyRepoHistoryStorage();
     applyFilter();
   }
 
   public void applyFilter() {
-    List<AgentConversationEntry> all = storage.findAll();
-    entries = applyFilters(all);
+    entries = storage.findAll().stream()
+        .filter(this::matchesCaseFilter)
+        .filter(this::matchesModelFilter)
+        .filter(this::matchesDateRangeFilter)
+        .toList();
     buildTree();
   }
 
-  private List<AgentConversationEntry> applyFilters(List<AgentConversationEntry> all) {
-    LocalDate dateFrom = filterDateRange.toDateFrom();
-    return all.stream()
-        .filter(entry -> filterCase.isBlank() || entry.getCaseUuid().contains(filterCase))
-        .filter(entry -> filterTaskUuid.isBlank() || entry.getTaskUuid().contains(filterTaskUuid))
-        .filter(entry -> filterModel.isBlank() || filterModel.equals(ChatHistoryJsonParser.getModelName(entry)))
-        .filter(entry -> dateFrom == null || isOnOrAfter(entry.getLastUpdated(), dateFrom))
-        .toList();
+  private boolean matchesCaseFilter(AgentConversationEntry e) {
+    if (filterCase == null || filterCase.isBlank()) return true;
+    return CaseService.matchesSearch(e.getCaseUuid(), filterCase.trim());
   }
 
-  private boolean isOnOrAfter(String lastUpdated, LocalDate dateFrom) {
-    if (lastUpdated == null) {
+  private boolean matchesModelFilter(AgentConversationEntry e) {
+    if (filterModel == null || filterModel.isBlank()) return true;
+    return filterModel.equals(e.getModelName());
+  }
+
+  private boolean matchesDateRangeFilter(AgentConversationEntry e) {
+    if ("ALL".equals(filterDateRange)) return true;
+    if (e.getLastUpdated() == null) return false;
+    LocalDateTime updated;
+    try {
+      updated = LocalDateTime.parse(e.getLastUpdated());
+    } catch (Exception ex) {
       return false;
     }
-    try {
-      return !LocalDateTime.parse(lastUpdated).toLocalDate().isBefore(dateFrom);
-    } catch (Exception e) {
-      return true;
+    LocalDateTime now = LocalDateTime.now();
+    switch (filterDateRange) {
+      case "TODAY":       return !updated.toLocalDate().isBefore(now.toLocalDate());
+      case "LAST_7_DAYS": return updated.isAfter(now.minusDays(7));
+      case "LAST_30_DAYS": return updated.isAfter(now.minusDays(30));
+      default: return true;
     }
   }
 
   private void buildTree() {
-    historyTree = HistoryNodeType.ROOT.createNode(null, null);
-    CaseTreeNode.buildTree(entries).forEach(caseNode -> buildCaseNode(caseNode, historyTree));
-  }
+    historyTree = new DefaultTreeNode<>("root", null, null);
+    AgentHistoryTreeBuilder.buildTree(entries).forEach(caseNode -> {
+      List<AgentConversationEntry> caseEntries = caseNode.tasks().stream()
+          .flatMap(t -> t.agents().stream())
+          .map(AgentNode::chat)
+          .toList();
+      CaseHistoryGroup caseGroup = new CaseHistoryGroup(caseNode.caseUuid(), caseEntries);
+      TreeNode<Object> caseTreeNode = new DefaultTreeNode<>("case", caseGroup, historyTree);
+      caseTreeNode.setExpanded(false);
 
-  private void buildCaseNode(CaseTreeNode caseNode, TreeNode<Object> parent) {
-    List<AgentConversationEntry> caseEntries = caseNode.getTasks().stream()
-        .flatMap(task -> task.getAgents().stream())
-        .map(AgentTreeNode::getEntry)
-        .toList();
-    CaseHistoryGroup caseGroup = new CaseHistoryGroup(caseNode.getCaseUuid(), caseEntries);
-    TreeNode<Object> caseTreeNode = HistoryNodeType.CASE.createNode(caseGroup, parent);
-    caseNode.getTasks().forEach(taskNode -> buildTaskNode(taskNode, caseTreeNode));
-  }
+      caseNode.tasks().forEach(taskNode -> {
+        List<AgentConversationEntry> taskEntries = taskNode.agents().stream()
+            .map(AgentNode::chat).toList();
+        TaskHistoryGroup taskGroup = new TaskHistoryGroup(taskNode.taskUuid(), taskEntries);
+        TreeNode<Object> taskTreeNode = new DefaultTreeNode<>("task", taskGroup, caseTreeNode);
+        taskTreeNode.setExpanded(false);
 
-  private void buildTaskNode(TaskTreeNode taskNode, TreeNode<Object> parent) {
-    List<AgentConversationEntry> taskEntries = taskNode.getAgents().stream()
-        .map(AgentTreeNode::getEntry)
-        .toList();
-    TaskHistoryGroup taskGroup = new TaskHistoryGroup(taskNode.getTaskUuid(), taskEntries);
-    TreeNode<Object> taskTreeNode = HistoryNodeType.TASK.createNode(taskGroup, parent);
-    List<AgentTreeNode> agentNodes = taskNode.getAgents();
-    IntStream.range(0, agentNodes.size())
-        .forEach(i -> buildAgentNode(agentNodes.get(i), i + 1, taskTreeNode));
-  }
-
-  private void buildAgentNode(AgentTreeNode agentNode, int sequence, TreeNode<Object> parent) {
-    AgentConversationEntry conversation = agentNode.getEntry();
-    conversation.setSequenceInTask(sequence);
-    HistoryNodeType.AGENT.createNode(conversation, parent);
+        taskNode.agents().forEach(agentNode ->
+            new DefaultTreeNode<>("agent", agentNode.chat(), taskTreeNode));
+      });
+    });
   }
 
   public int getEntryCount() {
@@ -114,52 +110,22 @@ public class HistoryDashboardBean implements Serializable {
     return historyTree == null ? 0 : historyTree.getChildCount();
   }
 
-  public String getFilterCase() {
-    return filterCase;
-  }
+  // Getters and setters
 
-  public void setFilterCase(String filterCase) {
-    this.filterCase = filterCase;
-  }
+  public String getFilterCase() { return filterCase; }
+  public void setFilterCase(String v) { this.filterCase = v; }
 
-  public String getFilterTaskUuid() {
-    return filterTaskUuid;
-  }
+  public String getFilterModel() { return filterModel; }
+  public void setFilterModel(String v) { this.filterModel = v; }
 
-  public void setFilterTaskUuid(String filterTaskUuid) {
-    this.filterTaskUuid = filterTaskUuid;
-  }
+  public String getFilterDateRange() { return filterDateRange; }
+  public void setFilterDateRange(String v) { this.filterDateRange = v; }
 
-  public String getFilterModel() {
-    return filterModel;
-  }
+  public List<AgentConversationEntry> getEntries() { return entries; }
 
-  public void setFilterModel(String filterModel) {
-    this.filterModel = filterModel;
-  }
+  public TreeNode<Object> getHistoryTree() { return historyTree; }
 
-  public DateRangeFilter getFilterDateRange() {
-    return filterDateRange;
-  }
-
-  public void setFilterDateRange(DateRangeFilter filterDateRange) {
-    this.filterDateRange = filterDateRange;
-  }
-
-  public List<AgentConversationEntry> getEntries() {
-    return entries;
-  }
-
-  public TreeNode<Object> getHistoryTree() {
-    return historyTree;
-  }
-
-  public AgentConversationEntry getSelectedEntry() {
-    return selectedEntry;
-  }
-
-  public void setSelectedEntry(AgentConversationEntry selectedEntry) {
-    this.selectedEntry = selectedEntry;
-  }
+  public AgentConversationEntry getSelectedEntry() { return selectedEntry; }
+  public void setSelectedEntry(AgentConversationEntry v) { this.selectedEntry = v; }
 
 }

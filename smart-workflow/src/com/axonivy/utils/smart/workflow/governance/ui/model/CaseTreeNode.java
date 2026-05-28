@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.service.CaseService;
+import com.axonivy.utils.smart.workflow.governance.service.internal.CaseService;
 
 public class CaseTreeNode {
 

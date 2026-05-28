@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.history.listener;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,7 +34,9 @@ public class ChatHistoryListener implements AiListenerProvider {
     }
     String caseUuid = Ivy.wfCase().uuid();
     String taskUuid = Ivy.wfTask().uuid();
-    String agentId = UUID.randomUUID().toString();
+    String agentId = StringUtils.isBlank(agentName)
+        ? UUID.randomUUID().toString()
+        : UUID.nameUUIDFromBytes(agentName.getBytes(StandardCharsets.UTF_8)).toString();
     String processName = Optional.ofNullable(Ivy.wfCase())
         .map(c -> c.getProcessStart())
         .map(ps -> StringUtils.defaultIfBlank(ps.getName(), ps.getRequestPath()))
