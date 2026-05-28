@@ -5,6 +5,8 @@ import java.util.List;
 public class AgentSummary {
 
   private String agentId;
+  private String agentName;
+  private String processName;
   private int messageCount;
   private int toolCallCount;
   private int totalTokens;
@@ -18,11 +20,14 @@ public class AgentSummary {
 
   public AgentSummary() {}
 
-  public AgentSummary(String agentId, int messageCount, int toolCallCount, int totalTokens,
+  public AgentSummary(String agentId, String agentName, String processName,
+      int messageCount, int toolCallCount, int totalTokens,
       long durationMs, String finishReason, String model, List<ToolSummary> toolSummaries,
       List<GuardrailSummary> guardrailSummaries, TokenUsageSummary tokenUsageSummary,
       AnomalyReport anomalyReport) {
     this.agentId = agentId;
+    this.agentName = agentName;
+    this.processName = processName;
     this.messageCount = messageCount;
     this.toolCallCount = toolCallCount;
     this.totalTokens = totalTokens;
@@ -37,6 +42,12 @@ public class AgentSummary {
 
   public String getAgentId() { return agentId; }
   public void setAgentId(String agentId) { this.agentId = agentId; }
+
+  public String getAgentName() { return agentName; }
+  public void setAgentName(String agentName) { this.agentName = agentName; }
+
+  public String getProcessName() { return processName; }
+  public void setProcessName(String processName) { this.processName = processName; }
 
   public int getMessageCount() { return messageCount; }
   public void setMessageCount(int messageCount) { this.messageCount = messageCount; }
