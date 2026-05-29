@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.history.service;
+package com.axonivy.utils.smart.workflow.governance.history.analytic.report;
 
 import java.util.List;
 import java.util.Map;
@@ -9,13 +9,192 @@ import com.axonivy.utils.smart.workflow.governance.history.entity.summary.Guardr
 import com.axonivy.utils.smart.workflow.governance.history.entity.summary.TokenUsageSummary;
 import com.axonivy.utils.smart.workflow.governance.history.entity.summary.ToolSummary;
 
-class ReportRenderer {
+class AnalyticReportBuilder {
+
+  private static final String HEADER_TOP = """
+      ═══════════════════════════════════════════════════════════
+        AI AGENT CASE ANALYSIS REPORT
+      ═══════════════════════════════════════════════════════════
+        Case    : %s
+        UUID    : %s
+      """;
+
+  private static final String HEADER_BOTTOM = """
+        Agents  : %d
+        Duration: %s
+        Tokens  : %s
+      ═══════════════════════════════════════════════════════════
+
+      """;
+
+  private static final String EXECUTIVE_SUMMARY = """
+      ── EXECUTIVE SUMMARY ──────────────────────────────────────
+
+      This case involved %d AI agent%s that collectively processed \
+      %d messages, consumed %s tokens, and executed %d tool call%s.
+
+        Total processing time : %s
+        Avg tokens per message: %.0f
+        Avg duration per agent: %s
+      """;
+
+  private static final String TOKEN_USAGE_TABLE = """
+      ── TOKEN USAGE ────────────────────────────────────────────
+
+        ┌─────────────────────┬──────────────┬──────────────┐
+        │                     │    Total     │   Average    │
+        ├─────────────────────┼──────────────┼──────────────┤
+        │ Input tokens        │ %12s │ %12s │
+        │ Output tokens       │ %12s │ %12s │
+        │ Total tokens        │ %12s │ %12s │
+        └─────────────────────┴──────────────┴──────────────┘
+
+        Output/Input ratio     : %.2f
+        Max single conversation: %s tokens
+
+        Estimated cost (GPT-4 class pricing):
+          Input  (~$10/1M tokens) : $%.4f
+          Output (~$30/1M tokens) : $%.4f
+          Combined estimate       : $%.4f
+          Note: Actual cost depends on the specific model and provider.
+      """;
+
+  private static final String TOKEN_RATIO_HIGH = """
+
+          ⚠ ATTENTION: Output/Input ratio is high (%.2f > 3.0).
+          This indicates verbose or over-generated responses.
+          Suggestion: Tighten system prompt instructions. Add constraints like
+          'respond concisely' or 'limit response to key facts only'.
+        """;
+
+  private static final String TOKEN_RATIO_LOW = """
+
+          ⚠ ATTENTION: Output/Input ratio is low (%.2f < 0.2).
+          Agents may be producing insufficiently detailed outputs.
+          Suggestion: Review prompts for overly restrictive instructions.
+        """;
+
+  private static final String TOOL_EFFECTIVENESS_HEADER = """
+      ── TOOL EFFECTIVENESS ─────────────────────────────────────
+
+        Total tool calls : %d
+        Successful       : %d (%d%%)
+        Null/empty       : %d
+        Errors           : %d
+
+      """;
+
+  private static final String TOOL_PER_TOOL = """
+              %s
+                Calls: %d  |  Success: %d (%d%%)  |  Grade: %s
+          """;
+
+  private static final String AGENT_METRICS = """
+      │  Model   : %s
+      │  Finish  : %s
+      │  Messages: %d  |  Tool calls: %d
+      │  Tokens  : %s  |  Duration: %s
+      """;
+
+  private static final String GUARDRAIL_FATAL_NOTE = """
+      │      → FATAL guardrail violations require immediate investigation.
+      │        Review the agent's prompt and input data for policy violations.
+      """;
+
+  private static final String OBSERVATION_SLOWEST_NOTE = """
+            → This agent dominates processing time. Consider if its task can be
+              decomposed into smaller sub-tasks or optimized with fewer messages.
+          """;
+
+  private static final String OBSERVATION_TOKEN_HOG_NOTE = """
+            → This agent uses >60%% of all tokens. Review if the prompt is too broad
+              or if the conversation can be condensed with summarization techniques.
+          """;
+
+  private static final String OBSERVATION_MULTI_MODEL = """
+          → Multiple models are in use. Ensure each agent uses the most cost-effective
+            model for its complexity level. Simple tasks may work with lighter models.
+        """;
+
+  private static final String OBSERVATION_LENGTH = """
+        • ⚠ %d agent(s) finished with LENGTH — output was truncated.
+          → Increase max_tokens or reduce prompt complexity so the model can
+            complete its response without hitting the token limit.
+        """;
+
+  private static final String OBSERVATION_NON_STOP = """
+        • ⚠ %d agent(s) finished with a non-standard reason.
+          → Investigate for API errors, content filtering, or unexpected terminations.
+        """;
+
+  private static final String OBSERVATION_HIGH_TOOL_ERROR = """
+            → High tool error rate. Investigate tool implementations, input validation,
+              and whether the agent is calling tools with incorrect arguments.
+          """;
+
+  private static final String REC_ANOMALIES = """
+      %d. RESOLVE ANOMALIES: %d agent(s) have flagged issues. Review the anomaly details above
+         and address root causes before deploying to production.
+
+      """;
+
+  private static final String REC_TOKEN_USAGE = """
+      %d. OPTIMIZE TOKEN USAGE: Total tokens (%s) are high.
+         Consider: shorter system prompts, conversation summarization,
+         or switching verbose agents to more concise models.
+
+      """;
+
+  private static final String REC_LATENCY = """
+      %d. IMPROVE LATENCY: Total case duration (%s) exceeds 1 minute.
+         Consider: parallel agent execution, caching frequent tool results,
+         or pre-computing common lookups.
+
+      """;
+
+  private static final String REC_TOOL_ERRORS = """
+      %d. FIX TOOL ERRORS: %d tool error(s) detected across the case.
+         Investigate error responses and add input validation or retry logic.
+
+      """;
+
+  private static final String REC_NULL_RESULTS = """
+      %d. REDUCE NULL RESULTS: %d/%d tool calls returned null/empty.
+         Ensure tools return meaningful fallback messages instead of null,
+         and verify the agent is calling tools with valid parameters.
+
+      """;
+
+  private static final String REC_TRUNCATION = """
+      %d. PREVENT TRUNCATION: %d agent(s) hit the token limit.
+         Increase max_tokens configuration or simplify expected outputs.
+
+      """;
+
+  private static final String REC_MODEL_MIX = """
+      %d. CONSIDER MODEL MIX: All %d agents use the same model.
+         Simpler agents (e.g., routing, classification) may perform equally
+         well with a lighter, faster, cheaper model.
+
+      """;
+
+  private static final String REC_NO_ISSUES = """
+      No critical recommendations. The case executed within healthy parameters.
+      Continue monitoring for patterns across multiple cases.
+
+      """;
+
+  private static final String FOOTER = """
+
+      ═══════════════════════════════════════════════════════════
+        END OF REPORT
+      ═══════════════════════════════════════════════════════════
+      """;
 
   private final String caseId;
   private final String caseName;
   private final List<AgentSummary> summaries;
 
-  // Pre-computed aggregates
   private final int agentCount;
   private final int totalTokens;
   private final long totalDurationMs;
@@ -29,7 +208,7 @@ class ReportRenderer {
   private final long lengthCount;
   private final long distinctModels;
 
-  ReportRenderer(String caseId, String caseName, List<AgentSummary> summaries) {
+  AnalyticReportBuilder(String caseId, String caseName, List<AgentSummary> summaries) {
     this.caseId = caseId;
     this.caseName = caseName;
     this.summaries = summaries;
@@ -73,23 +252,11 @@ class ReportRenderer {
 
   private String renderHeader() {
     var sb = new StringBuilder();
-    sb.append("""
-        ═══════════════════════════════════════════════════════════
-          AI AGENT CASE ANALYSIS REPORT
-        ═══════════════════════════════════════════════════════════
-          Case    : %s
-          UUID    : %s
-        """.formatted(caseName != null ? caseName : caseId, caseId));
+    sb.append(HEADER_TOP.formatted(caseName != null ? caseName : caseId, caseId));
     if (processName != null) {
       sb.append("  Process : ").append(processName).append("\n");
     }
-    sb.append("""
-          Agents  : %d
-          Duration: %s
-          Tokens  : %s
-        ═══════════════════════════════════════════════════════════
-
-        """.formatted(agentCount, formatDuration(totalDurationMs), formatNumber(totalTokens)));
+    sb.append(HEADER_BOTTOM.formatted(agentCount, formatDuration(totalDurationMs), formatNumber(totalTokens)));
     return sb.toString();
   }
 
@@ -100,16 +267,7 @@ class ReportRenderer {
     double avgTokensPerMsg = totalMessages > 0 ? (double) totalTokens / totalMessages : 0;
     double avgDurationPerAgent = agentCount > 0 ? (double) totalDurationMs / agentCount : 0;
 
-    sb.append("""
-        ── EXECUTIVE SUMMARY ──────────────────────────────────────
-
-        This case involved %d AI agent%s that collectively processed \
-        %d messages, consumed %s tokens, and executed %d tool call%s.
-
-          Total processing time : %s
-          Avg tokens per message: %.0f
-          Avg duration per agent: %s
-        """.formatted(agentCount, agentPlural, totalMessages, formatNumber(totalTokens),
+    sb.append(EXECUTIVE_SUMMARY.formatted(agentCount, agentPlural, totalMessages, formatNumber(totalTokens),
         totalToolCalls, toolPlural, formatDuration(totalDurationMs),
         avgTokensPerMsg, formatDuration((long) avgDurationPerAgent)));
 
@@ -142,26 +300,7 @@ class ReportRenderer {
     double estOutputCost = ts.getTotalOutputTokens() / 1_000_000.0 * 30.0;
 
     var sb = new StringBuilder();
-    sb.append("""
-        ── TOKEN USAGE ────────────────────────────────────────────
-
-          ┌─────────────────────┬──────────────┬──────────────┐
-          │                     │    Total     │   Average    │
-          ├─────────────────────┼──────────────┼──────────────┤
-          │ Input tokens        │ %12s │ %12s │
-          │ Output tokens       │ %12s │ %12s │
-          │ Total tokens        │ %12s │ %12s │
-          └─────────────────────┴──────────────┴──────────────┘
-
-          Output/Input ratio     : %.2f
-          Max single conversation: %s tokens
-
-          Estimated cost (GPT-4 class pricing):
-            Input  (~$10/1M tokens) : $%.4f
-            Output (~$30/1M tokens) : $%.4f
-            Combined estimate       : $%.4f
-            Note: Actual cost depends on the specific model and provider.
-        """.formatted(
+    sb.append(TOKEN_USAGE_TABLE.formatted(
         formatNumber(ts.getTotalInputTokens()), "%.0f".formatted(ts.getAvgInputTokens()),
         formatNumber(ts.getTotalOutputTokens()), "%.0f".formatted(ts.getAvgOutputTokens()),
         formatNumber(ts.getTotalTokens()), "%.0f".formatted(ts.getAvgTotalTokens()),
@@ -169,20 +308,9 @@ class ReportRenderer {
         estInputCost, estOutputCost, estInputCost + estOutputCost));
 
     if (ratio > 3.0) {
-      sb.append("""
-
-            ⚠ ATTENTION: Output/Input ratio is high (%.2f > 3.0).
-            This indicates verbose or over-generated responses.
-            Suggestion: Tighten system prompt instructions. Add constraints like
-            'respond concisely' or 'limit response to key facts only'.
-          """.formatted(ratio));
+      sb.append(TOKEN_RATIO_HIGH.formatted(ratio));
     } else if (ratio < 0.2) {
-      sb.append("""
-
-            ⚠ ATTENTION: Output/Input ratio is low (%.2f < 0.2).
-            Agents may be producing insufficiently detailed outputs.
-            Suggestion: Review prompts for overly restrictive instructions.
-          """.formatted(ratio));
+      sb.append(TOKEN_RATIO_LOW.formatted(ratio));
     }
     sb.append("\n");
     return sb.toString();
@@ -197,15 +325,8 @@ class ReportRenderer {
     int overallSuccessRate = toolSuccesses * 100 / totalToolCalls;
 
     var sb = new StringBuilder();
-    sb.append("""
-        ── TOOL EFFECTIVENESS ─────────────────────────────────────
-
-          Total tool calls : %d
-          Successful       : %d (%d%%)
-          Null/empty       : %d
-          Errors           : %d
-
-        """.formatted(totalToolCalls, toolSuccesses, overallSuccessRate, totalNullResults, totalErrors));
+    sb.append(TOOL_EFFECTIVENESS_HEADER.formatted(
+        totalToolCalls, toolSuccesses, overallSuccessRate, totalNullResults, totalErrors));
 
     List<ToolSummary> allTools = summaries.stream()
         .flatMap(s -> s.getToolSummaries() != null ? s.getToolSummaries().stream() : java.util.stream.Stream.<ToolSummary>empty())
@@ -221,10 +342,7 @@ class ReportRenderer {
         int succ = calls - nulls - errs;
         int rate = calls > 0 ? succ * 100 / calls : 0;
         String grade = rate >= 90 ? "A" : rate >= 70 ? "B" : rate >= 50 ? "C" : "D";
-        sb.append("""
-                %s
-                  Calls: %d  |  Success: %d (%d%%)  |  Grade: %s
-            """.formatted(name, calls, succ, rate, grade));
+        sb.append(TOOL_PER_TOOL.formatted(name, calls, succ, rate, grade));
         if (errs > 0) {
           sb.append("      → %d error(s) detected. Review tool implementation or input data.\n".formatted(errs));
         }
@@ -241,7 +359,6 @@ class ReportRenderer {
   private String renderAgentBreakdown() {
     var sb = new StringBuilder();
     sb.append("── AGENT BREAKDOWN ────────────────────────────────────────\n\n");
-
     for (int i = 0; i < summaries.size(); i++) {
       sb.append(renderSingleAgent(i, summaries.get(i)));
     }
@@ -257,18 +374,12 @@ class ReportRenderer {
     if (s.getAgentName() != null && !s.getAgentName().isBlank()) {
       sb.append("│  ID     : %s\n".formatted(s.getAgentId()));
     }
-    sb.append("""
-        │  Model   : %s
-        │  Finish  : %s
-        │  Messages: %d  |  Tool calls: %d
-        │  Tokens  : %s  |  Duration: %s
-        """.formatted(
+    sb.append(AGENT_METRICS.formatted(
         s.getModel() != null ? s.getModel() : "N/A",
         s.getFinishReason() != null ? s.getFinishReason() : "N/A",
         s.getMessageCount(), s.getToolCallCount(),
         formatNumber(s.getTotalTokens()), formatDuration(s.getDurationMs())));
 
-    // Efficiency metrics
     if (s.getMessageCount() > 0) {
       sb.append("│  Tokens/message: %.0f\n".formatted((double) s.getTotalTokens() / s.getMessageCount()));
     }
@@ -276,36 +387,27 @@ class ReportRenderer {
       double tokensPerSec = s.getTotalTokens() * 1000.0 / s.getDurationMs();
       sb.append("│  Throughput: %.1f tokens/sec\n".formatted(tokensPerSec));
     }
-
-    // Token share
     if (totalTokens > 0) {
       int pct = s.getTotalTokens() * 100 / totalTokens;
       sb.append("│  Token share: %d%% of case total  [%s]\n".formatted(pct, progressBar(pct)));
     }
-
-    // Duration share
     if (totalDurationMs > 0) {
       int dPct = (int) (s.getDurationMs() * 100 / totalDurationMs);
       sb.append("│  Time share  : %d%% of case total\n".formatted(dPct));
     }
 
-    // Tools
     if (s.getToolSummaries() != null && !s.getToolSummaries().isEmpty()) {
       sb.append("│\n│  Tools:\n");
       for (ToolSummary ts : s.getToolSummaries()) {
         sb.append(renderToolLine(ts));
       }
     }
-
-    // Guardrails
     if (s.getGuardrailSummaries() != null && !s.getGuardrailSummaries().isEmpty()) {
       sb.append("│\n│  Guardrails:\n");
       for (GuardrailSummary gs : s.getGuardrailSummaries()) {
         sb.append(renderGuardrailLine(gs));
       }
     }
-
-    // Anomalies
     if (s.getAnomalyReport() != null && s.getAnomalyReport().hasIssues()) {
       sb.append("│\n│  ⚠ Anomalies (%d):\n".formatted(s.getAnomalyReport().getIssues().size()));
       for (String issue : s.getAnomalyReport().getIssues()) {
@@ -315,7 +417,6 @@ class ReportRenderer {
       sb.append("│\n│  ✓ No anomalies detected\n");
     }
 
-    // Grade
     String grade = gradeAgent(s, totalTokens, totalDurationMs);
     sb.append("│\n│  Overall grade: %s\n".formatted(grade));
     sb.append("└──────────────────────────────────────────────────────\n\n");
@@ -355,10 +456,7 @@ class ReportRenderer {
     }
     sb.append("\n");
     if (gs.getFatalCount() > 0) {
-      sb.append("""
-          │      → FATAL guardrail violations require immediate investigation.
-          │        Review the agent's prompt and input data for policy violations.
-          """);
+      sb.append(GUARDRAIL_FATAL_NOTE);
     }
     if (gs.getAvgDurationMs() > 500) {
       sb.append("│      → Guardrail avg duration >500ms. Consider optimizing the check.\n");
@@ -370,39 +468,30 @@ class ReportRenderer {
     var sb = new StringBuilder();
     sb.append("── OBSERVATIONS ───────────────────────────────────────────\n\n");
 
-    // Slowest agent
     AgentSummary slowest = summaries.stream()
         .max((a, b) -> Long.compare(a.getDurationMs(), b.getDurationMs())).orElse(null);
     if (slowest != null && totalDurationMs > 0) {
       int slowestPct = (int) (slowest.getDurationMs() * 100 / totalDurationMs);
-      String slowName = displayName(slowest);
       sb.append("• Slowest agent: #%d [%s] (%s, %d%% of total case time)\n"
-          .formatted(summaries.indexOf(slowest) + 1, slowName, formatDuration(slowest.getDurationMs()), slowestPct));
+          .formatted(summaries.indexOf(slowest) + 1, displayName(slowest),
+              formatDuration(slowest.getDurationMs()), slowestPct));
       if (slowestPct > 70) {
-        sb.append("""
-              → This agent dominates processing time. Consider if its task can be
-                decomposed into smaller sub-tasks or optimized with fewer messages.
-            """);
+        sb.append(OBSERVATION_SLOWEST_NOTE);
       }
     }
 
-    // Token hog
     AgentSummary tokenHog = summaries.stream()
         .max((a, b) -> Integer.compare(a.getTotalTokens(), b.getTotalTokens())).orElse(null);
     if (tokenHog != null && totalTokens > 0) {
       int hogPct = tokenHog.getTotalTokens() * 100 / totalTokens;
-      String hogName = displayName(tokenHog);
       sb.append("• Highest token consumer: #%d [%s] (%s tokens, %d%%)\n"
-          .formatted(summaries.indexOf(tokenHog) + 1, hogName, formatNumber(tokenHog.getTotalTokens()), hogPct));
+          .formatted(summaries.indexOf(tokenHog) + 1, displayName(tokenHog),
+              formatNumber(tokenHog.getTotalTokens()), hogPct));
       if (hogPct > 60) {
-        sb.append("""
-              → This agent uses >60%% of all tokens. Review if the prompt is too broad
-                or if the conversation can be condensed with summarization techniques.
-            """);
+        sb.append(OBSERVATION_TOKEN_HOG_NOTE);
       }
     }
 
-    // Model diversity
     sb.append("• Models used: %d distinct model%s".formatted(distinctModels, distinctModels != 1 ? "s" : ""));
     if (distinctModels > 1) {
       String modelList = summaries.stream()
@@ -412,44 +501,28 @@ class ReportRenderer {
     }
     sb.append("\n");
     if (distinctModels > 1) {
-      sb.append("""
-            → Multiple models are in use. Ensure each agent uses the most cost-effective
-              model for its complexity level. Simple tasks may work with lighter models.
-          """);
+      sb.append(OBSERVATION_MULTI_MODEL);
     }
 
-    // Finish reason checks
     if (lengthCount > 0) {
-      sb.append("""
-          • ⚠ %d agent(s) finished with LENGTH — output was truncated.
-            → Increase max_tokens or reduce prompt complexity so the model can
-              complete its response without hitting the token limit.
-          """.formatted(lengthCount));
+      sb.append(OBSERVATION_LENGTH.formatted(lengthCount));
     }
 
     long nonStopCount = summaries.stream()
         .filter(s -> s.getFinishReason() != null && !"STOP".equalsIgnoreCase(s.getFinishReason())
             && !"LENGTH".equalsIgnoreCase(s.getFinishReason())).count();
     if (nonStopCount > 0) {
-      sb.append("""
-          • ⚠ %d agent(s) finished with a non-standard reason.
-            → Investigate for API errors, content filtering, or unexpected terminations.
-          """.formatted(nonStopCount));
+      sb.append(OBSERVATION_NON_STOP.formatted(nonStopCount));
     }
 
-    // Tool error rate
     if (totalToolCalls > 0 && totalErrors > 0) {
       int errorRate = totalErrors * 100 / totalToolCalls;
       sb.append("• Tool error rate: %d%% (%d/%d)\n".formatted(errorRate, totalErrors, totalToolCalls));
       if (errorRate > 20) {
-        sb.append("""
-              → High tool error rate. Investigate tool implementations, input validation,
-                and whether the agent is calling tools with incorrect arguments.
-            """);
+        sb.append(OBSERVATION_HIGH_TOOL_ERROR);
       }
     }
 
-    // High message count agents
     summaries.stream()
         .filter(s -> s.getMessageCount() > 20)
         .forEach(s -> {
@@ -467,64 +540,28 @@ class ReportRenderer {
     int recNum = 1;
 
     if (anomalyAgents > 0) {
-      sb.append("""
-          %d. RESOLVE ANOMALIES: %d agent(s) have flagged issues. Review the anomaly details above
-             and address root causes before deploying to production.
-
-          """.formatted(recNum++, anomalyAgents));
+      sb.append(REC_ANOMALIES.formatted(recNum++, anomalyAgents));
     }
     if (totalTokens > 50_000) {
-      sb.append("""
-          %d. OPTIMIZE TOKEN USAGE: Total tokens (%s) are high.
-             Consider: shorter system prompts, conversation summarization,
-             or switching verbose agents to more concise models.
-
-          """.formatted(recNum++, formatNumber(totalTokens)));
+      sb.append(REC_TOKEN_USAGE.formatted(recNum++, formatNumber(totalTokens)));
     }
     if (totalDurationMs > 60_000) {
-      sb.append("""
-          %d. IMPROVE LATENCY: Total case duration (%s) exceeds 1 minute.
-             Consider: parallel agent execution, caching frequent tool results,
-             or pre-computing common lookups.
-
-          """.formatted(recNum++, formatDuration(totalDurationMs)));
+      sb.append(REC_LATENCY.formatted(recNum++, formatDuration(totalDurationMs)));
     }
     if (totalErrors > 0) {
-      sb.append("""
-          %d. FIX TOOL ERRORS: %d tool error(s) detected across the case.
-             Investigate error responses and add input validation or retry logic.
-
-          """.formatted(recNum++, totalErrors));
+      sb.append(REC_TOOL_ERRORS.formatted(recNum++, totalErrors));
     }
     if (totalNullResults > 0 && totalToolCalls > 0 && totalNullResults * 100 / totalToolCalls > 20) {
-      sb.append("""
-          %d. REDUCE NULL RESULTS: %d/%d tool calls returned null/empty.
-             Ensure tools return meaningful fallback messages instead of null,
-             and verify the agent is calling tools with valid parameters.
-
-          """.formatted(recNum++, totalNullResults, totalToolCalls));
+      sb.append(REC_NULL_RESULTS.formatted(recNum++, totalNullResults, totalToolCalls));
     }
     if (lengthCount > 0) {
-      sb.append("""
-          %d. PREVENT TRUNCATION: %d agent(s) hit the token limit.
-             Increase max_tokens configuration or simplify expected outputs.
-
-          """.formatted(recNum++, lengthCount));
+      sb.append(REC_TRUNCATION.formatted(recNum++, lengthCount));
     }
     if (distinctModels == 1 && agentCount > 2 && totalTokens > 10_000) {
-      sb.append("""
-          %d. CONSIDER MODEL MIX: All %d agents use the same model.
-             Simpler agents (e.g., routing, classification) may perform equally
-             well with a lighter, faster, cheaper model.
-
-          """.formatted(recNum++, agentCount));
+      sb.append(REC_MODEL_MIX.formatted(recNum++, agentCount));
     }
     if (recNum == 1) {
-      sb.append("""
-          No critical recommendations. The case executed within healthy parameters.
-          Continue monitoring for patterns across multiple cases.
-
-          """);
+      sb.append(REC_NO_ISSUES);
     }
     if (anomalyAgents == 0 && lengthCount == 0 && totalErrors == 0) {
       sb.append("✓ Overall: Case completed cleanly with no anomalies, truncations, or tool errors.\n");
@@ -533,15 +570,8 @@ class ReportRenderer {
   }
 
   private String renderFooter() {
-    return """
-
-        ═══════════════════════════════════════════════════════════
-          END OF REPORT
-        ═══════════════════════════════════════════════════════════
-        """;
+    return FOOTER;
   }
-
-  // --- Utility methods ---
 
   private static String displayName(AgentSummary s) {
     return (s.getAgentName() != null && !s.getAgentName().isBlank()) ? s.getAgentName() : s.getAgentId();

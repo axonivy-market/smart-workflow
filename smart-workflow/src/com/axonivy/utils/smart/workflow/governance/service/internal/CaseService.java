@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.governance.service.internal;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.security.exec.Sudo;
 import ch.ivyteam.ivy.workflow.ICase;
 
 public class CaseService {
@@ -16,10 +17,11 @@ public class CaseService {
       return String.format(NO_NAME_FORMAT, caseUuid);
     }
     try {
-      ICase ivyCase = Ivy.wf().findCase(caseUuid);
+      ICase ivyCase = Sudo.get(() -> Ivy.wf().findCase(caseUuid));
       if (ivyCase == null) {
         return String.format(NO_NAME_FORMAT, caseUuid);
       }
+      Ivy.log().error(String.format("Found case with uuid: %s and id: %s and name: %s", caseUuid, ivyCase.getId(), ivyCase.getName()));
       String name = ivyCase.getName();
       return StringUtils.isNotBlank(name) ?
         String.format(DISPLAY_NAME_FORMAT, name, ivyCase.getId()) : Long.toString(ivyCase.getId());
@@ -30,7 +32,7 @@ public class CaseService {
 
   public static ICase findCase(String caseUuid) {
     try {
-      return Ivy.wf().findCase(caseUuid);
+      return Sudo.get(() -> Ivy.wf().findCase(caseUuid));
     } catch (Exception e) {
       return null;
     }
@@ -41,7 +43,7 @@ public class CaseService {
       return true;
     }
     try {
-      ICase ivyCase = Ivy.wf().findCase(caseUuid);
+      ICase ivyCase = Sudo.get(() -> Ivy.wf().findCase(caseUuid));
       if (ivyCase == null) {
         return false;
       }

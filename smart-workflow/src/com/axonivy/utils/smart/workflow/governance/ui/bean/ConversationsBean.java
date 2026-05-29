@@ -3,12 +3,19 @@ package com.axonivy.utils.smart.workflow.governance.ui.bean;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+
+import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
+import ch.ivyteam.ivy.security.exec.Sudo;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.CaseHistoryAnalyzer;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
@@ -45,6 +52,8 @@ public class ConversationsBean implements Serializable {
 
   private CaseTreeNode caseNode;
   private ICase ivyCase;
+  private String aiReport;
+  private boolean aiAnalyzing;
 
   public void preRender(String caseUuid) {
     storage = new IvyRepoHistoryStorage();
@@ -175,5 +184,52 @@ public class ConversationsBean implements Serializable {
 
   public CaseTreeNode getCaseNode() {
     return caseNode;
+  }
+
+  public void generateAiReport() {
+    if (caseNode == null) {
+      return;
+    }
+    aiAnalyzing = true;
+    try {
+      String caseUuid = caseNode.getCaseUuid();
+      var summaries = CaseHistoryAnalyzer.analyze(caseUuid);
+      var entries = CaseHistoryAnalyzer.getEntries(caseUuid);
+      String prompt = CaseHistoryAnalyzer.buildAiPrompt(caseUuid, summaries, entries);
+      Map<String, Object> result = Sudo.get(() -> {
+        var filter = SubProcessSearchFilter.create()
+            .setSearchScope(SearchScope.SECURITY_CONTEXT)
+            .setSignature("analyzeAgentHistoryByCase(String, String)")
+            .toFilter();
+        var startList = SubProcessCallStartEvent.find(filter);
+        if (startList.isEmpty()) {
+          return Map.of();
+        }
+        return startList.get(0).withParam("caseUuid", caseUuid).withParam("prompt", prompt).call().asMap();
+      });
+      aiReport = (String) result.get("aiReport");
+    } catch (Exception e) {
+      Ivy.log().error("Failed to generate AI report for case {0}: {1}", caseNode.getCaseUuid(), e.getMessage());
+      aiReport = null;
+    } finally {
+      aiAnalyzing = false;
+    }
+  }
+
+  public String getAiReport() {
+    return aiReport;
+  }
+
+  public boolean isAiAnalyzing() {
+    return aiAnalyzing;
+  }
+
+  public boolean isInternalSmartWorkflow() {
+    if (ivyCase == null) {
+      return false;
+    }
+    return ivyCase.customFields().stringField("internalSmartWorkflow").get()
+        .filter("true"::equals)
+        .isPresent();
   }
 }

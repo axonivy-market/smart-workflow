@@ -37,6 +37,15 @@ Dialogs:
               CaseLabel: 'Cas :'
               ExportButton: Exporter
               DetailsButton: Détails
+              AnalyzeButton: Analyser
+              MenuExport: Exporter
+              MenuGenerateReport: Générer le Rapport
+              MenuRegenerateReport: Regénérer le Rapport
+              MenuShowReport: Afficher le Rapport
+              AnalyzingMessage: Analyse en cours...
+              AnalyzingDialogTitle: Analyse IA en Cours
+              AnalyzingDialogMessage: "Utilisation de l'IA pour analyser les données du cas. Cela peut prendre un moment..."
+              AnalyzeReportTitle: Rapport de Gouvernance IA
               CaseInformation: Informations du Cas
               SidebarCaseDetails: Détails du Cas
               SidebarProcessViewer: Visionneuse de Processus

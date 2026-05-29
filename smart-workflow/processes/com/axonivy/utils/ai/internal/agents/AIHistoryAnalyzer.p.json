@@ -3,19 +3,21 @@
   "id" : "19E6DA610B1196AB",
   "kind" : "CALLABLE_SUB",
   "config" : {
-    "data" : "com.axonivy.utils.ai.AIHistoryAnalyzerData"
+    "data" : "com.axonivy.utils.ai.internal.agents.AIHistoryAnalyzerData"
   },
   "elements" : [ {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "call(String)",
+      "name" : "analyzeAgentHistoryByCase(String, String)",
       "config" : {
-        "signature" : "call",
+        "signature" : "analyzeAgentHistoryByCase",
         "input" : {
           "params" : [
+            { "name" : "caseUuid", "type" : "String", "desc" : "" },
             { "name" : "prompt", "type" : "String", "desc" : "" }
           ],
           "map" : {
+            "out.caseUuid" : "param.caseUuid",
             "out.prompt" : "param.prompt"
           }
         },
@@ -32,17 +34,42 @@
         "at" : { "x" : 96, "y" : 64 }
       },
       "connect" : [
-        { "id" : "f2", "to" : "f3" }
+        { "id" : "f2", "to" : "f5" }
       ]
     }, {
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 480, "y" : 64 }
+        "at" : { "x" : 768, "y" : 64 }
       }
+    }, {
+      "id" : "f5",
+      "type" : "Script",
+      "name" : "Set Case Name",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import ch.ivyteam.ivy.workflow.ICase;",
+            "import com.axonivy.utils.smart.workflow.governance.service.internal.CaseService;",
+            "ICase analyzedCase = CaseService.findCase(in.caseUuid);",
+            "if (analyzedCase != null) {",
+            "  ivy.task.setName(\"Generate Agent History Report for case \" + analyzedCase.getName() + \" (#\" + analyzedCase.getId() + \")\");",
+            "  ivy.case.setName(\"Generate Agent History Report for case \" + analyzedCase.getName() + \" (#\" + analyzedCase.getId() + \")\");",
+            "}"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f3" }
+      ]
     }, {
       "id" : "f3",
       "type" : "ProgramInterface",
+      "name" : "Generate agent history report by case",
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
@@ -54,10 +81,29 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 288, "y" : 64 }
+        "at" : { "x" : 492, "y" : 65 },
+        "size" : { "width" : 136, "height" : 62 }
       },
       "connect" : [
-        { "id" : "f4", "to" : "f1" }
+        { "id" : "f4", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Script",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.error(\"Task name: \" + ivy.task.getName());",
+            "ivy.log.error(\"Case name: \" + ivy.case.getName());",
+            "ivy.log.error(\"Case uuid: \" + ivy.case.uuid());"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 664, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f1", "color" : "default" }
       ]
     } ]
 }

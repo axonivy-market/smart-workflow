@@ -37,6 +37,15 @@ Dialogs:
               CaseLabel: 'Fall:'
               ExportButton: Exportieren
               DetailsButton: Details
+              AnalyzeButton: Analysieren
+              MenuExport: Exportieren
+              MenuGenerateReport: Bericht erstellen
+              MenuRegenerateReport: Bericht neu erstellen
+              MenuShowReport: Bericht anzeigen
+              AnalyzingMessage: Wird analysiert...
+              AnalyzingDialogTitle: KI-Analyse läuft
+              AnalyzingDialogMessage: 'Die KI analysiert die Falldaten. Dies kann einen Moment dauern...'
+              AnalyzeReportTitle: KI-Governance-Bericht
               CaseInformation: Fall-Informationen
               SidebarCaseDetails: Falldetails
               SidebarProcessViewer: Prozessanzeige

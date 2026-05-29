@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.history.service;
+package com.axonivy.utils.smart.workflow.governance.history.analytic.report;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,9 +23,35 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
-public class HistoryAnalysisService {
+public class CaseHistoryAnalyzer {
 
   private static final IvyRepoHistoryStorage STORAGE = new IvyRepoHistoryStorage();
+
+  private static final String NO_DATA_MSG                = "No agent data available for case %s.";
+
+  private static final String SECTION_METRICS            = "=== STRUCTURED METRICS REPORT ===\n\n";
+  private static final String SECTION_EXCERPTS_HEADER    = """
+      === RAW CONVERSATION EXCERPTS ===
+
+      (System prompt + final AI response per agent, truncated for brevity)
+
+      """;
+  private static final String SECTION_END                = "=== END OF DATA ===\n";
+
+  private static final String AGENT_HEADER               = "--- Agent %d: %s ---\n";
+  private static final String MSG_SYSTEM                 = "  [SYSTEM] %s\n";
+  private static final String MSG_AI_RESPONSE            = "  [FINAL AI RESPONSE] %s\n";
+  private static final String MSG_DATA_UNAVAILABLE       = "  (conversation data unavailable)\n";
+  private static final String MSG_TOOLS_PREFIX           = "  [TOOLS] ";
+  private static final String MSG_GUARDRAILS_PREFIX      = "  [GUARDRAILS] ";
+
+  private static final String ANOMALY_DURATION           = "Duration exceeded 30s (%dms)";
+  private static final String ANOMALY_TOKENS             = "Tokens exceeded 10,000 per conversation (%d)";
+  private static final String ANOMALY_TOOL_CALLS         = "More than 10 tool calls (%d) \u2014 possible loop";
+  private static final String ANOMALY_FATAL_GUARDRAIL    = "FATAL guardrail result on '%s' (%d time(s))";
+  private static final String ANOMALY_LENGTH             = "Finish reason is LENGTH \u2014 output was truncated";
+  private static final String ANOMALY_NULL_RESULT        = "Tool '%s' returned null/empty in %d/%d calls (>50%%)";
+  private static final String ANOMALY_STUCK_LOOP         = "Tool '%s' called %d times with identical arguments \u2014 possible stuck loop";
 
   public static List<AgentSummary> analyze(String caseId) {
     List<AgentConversationEntry> entries = STORAGE.findByCaseUuid(caseId);
@@ -75,46 +101,38 @@ public class HistoryAnalysisService {
   public static String buildAiPrompt(String caseId, List<AgentSummary> summaries,
       List<AgentConversationEntry> entries) {
     if (summaries == null || summaries.isEmpty()) {
-      return "No agent data available for case " + caseId + ".";
+      return NO_DATA_MSG.formatted(caseId);
     }
 
     String caseName = resolveCaseName(caseId);
-
     StringBuilder sb = new StringBuilder();
 
-    // Section 1: Structured metrics report (template report provides baseline context)
-    sb.append("=== STRUCTURED METRICS REPORT ===\n\n");
-    sb.append(new ReportRenderer(caseId, caseName, summaries).render());
+    sb.append(SECTION_METRICS);
+    sb.append(new AnalyticReportBuilder(caseId, caseName, summaries).render());
     sb.append("\n\n");
-
-    // Section 2: Condensed conversation excerpts per agent
-    sb.append("=== RAW CONVERSATION EXCERPTS ===\n\n");
-    sb.append("(System prompt + final AI response per agent, truncated for brevity)\n\n");
+    sb.append(SECTION_EXCERPTS_HEADER);
 
     if (entries != null) {
       for (int i = 0; i < entries.size(); i++) {
         AgentConversationEntry entry = entries.get(i);
         String agentLabel = (entry.getAgentName() != null && !entry.getAgentName().isBlank())
             ? entry.getAgentName() : entry.getAgentId();
-        sb.append("--- Agent ").append(i + 1).append(": ").append(agentLabel).append(" ---\n");
+        sb.append(AGENT_HEADER.formatted(i + 1, agentLabel));
 
-        // Parse messages and extract system + last AI message
         try {
           var node = JsonUtils.getObjectMapper().readTree(entry.getMessagesJson());
           var arr = node.isArray() ? node : node.get("messages");
           if (arr != null && arr.isArray()) {
-            // System message
             for (var msg : arr) {
               String type = msg.has("type") ? msg.get("type").asText() : "";
               if ("SYSTEM".equalsIgnoreCase(type)) {
                 String text = extractMessageText(msg);
                 if (text != null) {
-                  sb.append("  [SYSTEM] ").append(truncate(text, 400)).append("\n");
+                  sb.append(MSG_SYSTEM.formatted(truncate(text, 400)));
                 }
                 break;
               }
             }
-            // Last AI message
             String lastAiText = null;
             for (var msg : arr) {
               String type = msg.has("type") ? msg.get("type").asText() : "";
@@ -126,26 +144,24 @@ public class HistoryAnalysisService {
               }
             }
             if (lastAiText != null) {
-              sb.append("  [FINAL AI RESPONSE] ").append(truncate(lastAiText, 600)).append("\n");
+              sb.append(MSG_AI_RESPONSE.formatted(truncate(lastAiText, 600)));
             }
           }
         } catch (Exception e) {
-          sb.append("  (conversation data unavailable)\n");
+          sb.append(MSG_DATA_UNAVAILABLE);
         }
 
-        // Tool execution results (brief)
         List<AgentConversationEntry.ToolExecution> tools = entry.getToolExecutions();
         if (tools != null && !tools.isEmpty()) {
-          sb.append("  [TOOLS] ");
+          sb.append(MSG_TOOLS_PREFIX);
           tools.forEach(t -> sb.append(t.toolName()).append(" -> ")
               .append(truncate(t.resultText(), 120)).append(" | "));
           sb.append("\n");
         }
 
-        // Guardrail outcomes
         List<AgentConversationEntry.GuardrailExecution> guardrails = entry.getGuardrailExecutions();
         if (guardrails != null && !guardrails.isEmpty()) {
-          sb.append("  [GUARDRAILS] ");
+          sb.append(MSG_GUARDRAILS_PREFIX);
           guardrails.forEach(g -> sb.append(g.guardrailName()).append(":").append(g.result()).append(" "));
           sb.append("\n");
         }
@@ -153,7 +169,7 @@ public class HistoryAnalysisService {
       }
     }
 
-    sb.append("=== END OF DATA ===\n");
+    sb.append(SECTION_END);
     return sb.toString();
   }
 
@@ -182,10 +198,10 @@ public class HistoryAnalysisService {
 
   public static String generateReport(String caseId, List<AgentSummary> summaries) {
     if (summaries == null || summaries.isEmpty()) {
-      return "No agent data available for case " + caseId + ".";
+      return NO_DATA_MSG.formatted(caseId);
     }
     String caseName = resolveCaseName(caseId);
-    return new ReportRenderer(caseId, caseName, summaries).render();
+    return new AnalyticReportBuilder(caseId, caseName, summaries).render();
   }
 
   private static String resolveCaseName(String caseId) {
@@ -234,28 +250,27 @@ public class HistoryAnalysisService {
     List<String> issues = new ArrayList<>();
 
     if (durationMs > 30_000) {
-      issues.add("Duration exceeded 30s (" + durationMs + "ms)");
+      issues.add(ANOMALY_DURATION.formatted(durationMs));
     }
     if (totalTokens > 10_000) {
-      issues.add("Tokens exceeded 10,000 per conversation (" + totalTokens + ")");
+      issues.add(ANOMALY_TOKENS.formatted(totalTokens));
     }
     int toolCallCount = tools != null ? tools.size() : 0;
     if (toolCallCount > 10) {
-      issues.add("More than 10 tool calls (" + toolCallCount + ") — possible loop");
+      issues.add(ANOMALY_TOOL_CALLS.formatted(toolCallCount));
     }
     if (guardrailSummaries != null) {
       guardrailSummaries.stream()
           .filter(gs -> gs.getFatalCount() > 0)
-          .forEach(gs -> issues.add("FATAL guardrail result on '" + gs.getGuardrailName() + "' (" + gs.getFatalCount() + " time(s))"));
+          .forEach(gs -> issues.add(ANOMALY_FATAL_GUARDRAIL.formatted(gs.getGuardrailName(), gs.getFatalCount())));
     }
     if ("LENGTH".equalsIgnoreCase(finishReason)) {
-      issues.add("Finish reason is LENGTH — output was truncated");
+      issues.add(ANOMALY_LENGTH);
     }
     if (toolSummaries != null) {
       toolSummaries.stream()
           .filter(ts -> ts.getCallCount() > 0 && (double) ts.getNullResultCount() / ts.getCallCount() > 0.5)
-          .forEach(ts -> issues.add("Tool '" + ts.getToolName() + "' returned null/empty in "
-              + ts.getNullResultCount() + "/" + ts.getCallCount() + " calls (>50%)"));
+          .forEach(ts -> issues.add(ANOMALY_NULL_RESULT.formatted(ts.getToolName(), ts.getNullResultCount(), ts.getCallCount())));
     }
     if (tools != null) {
       tools.stream()
@@ -265,8 +280,7 @@ public class HistoryAnalysisService {
           .filter(e -> e.getValue() > 5)
           .forEach(e -> {
             String[] parts = e.getKey().split("::", 2);
-            issues.add("Tool '" + parts[0] + "' called " + e.getValue()
-                + " times with identical arguments — possible stuck loop");
+            issues.add(ANOMALY_STUCK_LOOP.formatted(parts[0], e.getValue()));
           });
     }
     return new AnomalyReport(issues);

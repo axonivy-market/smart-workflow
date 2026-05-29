@@ -517,3 +517,30 @@ body.dark .tool-timeline-result:not(.tool-timeline-result--empty) {
 body.dark .tool-timeline-result--empty {
   background: var(--surface-50);
 }
+
+/* AI Analyzing dialog — animated progress bar */
+.cv-analyze-progress {
+  height: 4px;
+  background: var(--surface-200);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.cv-analyze-progress-fill {
+  height: 100%;
+  width: 45%;
+  background: var(--primary-color);
+  border-radius: 2px;
+  animation: cv-progress-slide 1.6s ease-in-out infinite;
+}
+
+@keyframes cv-progress-slide {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
+
+.cv-ai-report-content {
+  height: 70vh;
+}
