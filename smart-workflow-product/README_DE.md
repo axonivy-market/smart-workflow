@@ -513,6 +513,31 @@ Example Configuration:
 
 </details>
 
+#### Ollama Models
+
+<details>
+
+<summary>Ollama setup instructions</summary>
+Ollama lets you run open-source models (Llama, Gemma, Qwen, Mistral, ...) locally or on your own infrastructure. Import the `smart-workflow-ollama` project, install [Ollama](https://ollama.com/), and pull the model you want to use (e.g. `ollama pull llama3.2`).
+
+Configure the `BaseUrl` of your Ollama server (defaults to `http://localhost:11434`) and the `DefaultModel`. No API key is required.
+
+> **Note:** Structured output support depends on the underlying model. Recent models (Llama 3.1+, Gemma 3, Qwen 3, Mistral Nemo, ...) can return JSON-schema-constrained responses on Ollama 0.3.0+. Older or smaller models may return free-form text and break structured extraction.
+
+> **Note on embeddings:** Pull a dedicated embedding model such as `nomic-embed-text` or `mxbai-embed-large` and set it as `DefaultEmbeddingModel` to use the RAG features with Ollama.
+
+```yaml
+@variables.ollama@
+```
+
+Example Configuration:
+
+```yaml
+@variables.ollama.example@
+```
+
+</details>
+
 ### File Extraction
 
 Axon Ivy Smart Workflow supports extracting content from PDF and image files

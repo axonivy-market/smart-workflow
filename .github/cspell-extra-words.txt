@@ -2,3 +2,4 @@ smartworkflow, Agentic, multimodal, langchain,
 azureopenai, openinference, arizephoenix, javaagent, 
 Dotel, DOPEN,
 stackoverflow, duckduckgo, opensearch
+Pii, Ollama, testcontainers, llava, nomic, mxbai, gemma, qwen, mistral, nemo

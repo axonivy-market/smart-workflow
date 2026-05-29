@@ -106,7 +106,13 @@ public class OpenAiServiceConnector {
         .anyMatch(name -> name.equals(modelName));
 
     if (!isKnown) {
-      Ivy.log().warn("The compatibility of model '" + modelName + "' is unknown.");
+      String baseUrl = Ivy.var().get(OpenAiConf.BASE_URL);
+      if (StringUtils.isNotBlank(baseUrl)) {
+        Ivy.log().info("Model '" + modelName
+            + "' is not in the OpenAI model list. Continue with custom endpoint '" + baseUrl + "'.");
+      } else {
+        Ivy.log().warn("The compatibility of model '" + modelName + "' is unknown.");
+      }
     }
   }
 }
