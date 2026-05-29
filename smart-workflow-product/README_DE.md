@@ -1,138 +1,94 @@
 # Smart Workflow
 
-Smart Workflow integriert KI-Agenten-Funktionen in deine Axon Ivy-Prozesse. Du kannst KI-Agenten direkt aus deinen Prozessen aufrufen, strukturierte, verwertbare Ergebnisse erhalten und Benutzerinteraktionen automatisieren.
+Smart Workflow integriert KI-Agenten in Axon Ivy-Prozesse und ermöglicht dir, Routineaufgaben und Integrationen intelligent zu automatisieren.
 
-![Agenten-Nachrichten-Konfigurationen](img/agent-message-configurations.png)
+![Agent message configurations](img/agent-message-configurations.png)
 
-## Wichtigste Funktionen
+Verwende vorgefertigte Demo-Workflows und Connectoren, um Sprachmodelle und Tools direkt in deine Geschäftsprozesse zu integrieren.
 
-- Rufe KI-Agenten aus deinen Axon Ivy-Prozessen auf und erhalte strukturierte Ergebnisse, die in Datentypen gemappt werden können, um automatische Datenextraktion und nachgelagerte Verarbeitung zu ermöglichen.
-- Fertige Demo-Workflows (Shopping, Support, RAG, Agent-Demos), die gängige Integrationsszenarien zeigen und die Evaluierung beschleunigen.
-- Integrierte RAG-Unterstützung und Vector-Store-Integration für kontextsensitives Retrieval-augmented Generation.
-- Anbieterunabhängige Konfiguration für OpenAI, Azure OpenAI, Gemini, xAI und Anthropic über `config/variables.yaml`.
-- Beobachtbarkeit und Guardrails für sicheren KI-Einsatz: konfigurierbares Logging, Schutzregeln und benutzerdefinierte Felder zur Nachvollziehbarkeit.
-- Marketplace-Installationen und Maven-Artefakte für einfache Bereitstellung und Integration.
+**Wichtigste Funktionen**
+
+- Rufe KI-Agenten aus deinen Prozessen auf, um Entscheidungen zu automatisieren und strukturierte Ergebnisse zu erhalten.
+- Verbinde mehrere KI-Anbieter und Tools mit eingebauten Adaptern für flexible Integration.
+- Probiere Demo-Workflows für typische Szenarien wie Ticket-Erstellung und Rechnungsextraktion aus.
+- Erhalte strukturierte Ergebnisse, die sich für nachgelagerte Automatisierung und Reporting eignen.
+- Konfiguriere Connectoren und Laufzeitverhalten über Repository-Variablen für einfache Bereitstellung.
+- Beinhaltet wiederverwendbare Datentypen und UI-Komponenten, um Integration und Tests zu beschleunigen.
 
 ## Demo
 
-Schau dir die Demo-Implementierungen im Modul `smart-workflow-demo` an; sie enthalten nutzerorientierte Beispiele und Integrationen.
+Erkunde die Demo-Implementierungen im Modul `smart-workflow-demo`, um praktische Beispiele und lauffähige Szenarien zu sehen.
 
-### Demo-Workflows
+### Demo Workflows
 
-#### Smart Workflow Demo (smart-workflow-demo)
+#### Features (smart-workflow-demo/processes/Features)
 
-##### Smart Workflow Agent Demo
+##### File Extraction Demo (CMS)
 
-1. Starte die "Smart Workflow Agent Demo" über das Demo-Menü oder das Dashboard.
-2. Ein vorausgefülltes Eingabefeld erscheint, mit dem du die zu analysierende Abfrage (z. B. Rechnungsdaten) prüfen oder anpassen kannst.
-3. Klicke die Demo-Aktion an, um den KI-Agenten aufzurufen; der Agent analysiert die Eingabe und liefert ein strukturiertes Ergebnis zurück.
-4. Prüfe das aufbereitete Ergebnis (z. B. das erzeugte Invoice-Objekt) in der UI und bestätige es.
-5. Optional: Exportiere oder speichere das strukturierte Ergebnis.
+1. Starte die File Extraction Demo über das Demo-Menü.
+2. Lade ein Rechnungsbild aus dem CMS hoch oder wähle eine lokale Datei aus.
+3. Der Agent analysiert das Dokument und extrahiert Rechnungsdaten.
+4. Prüfe die extrahierten Rechnungen in den Logs oder der Oberfläche.
 
-##### Create new product (smart-workflow-demo)
+##### File Extraction Demo (Binary)
 
-1. Öffne die Shopping-Demo und wähle "Create new product".
-2. Ein Produkt-Erstellungsdialog öffnet sich mit Feldern für die Produktmetadaten.
-3. Fülle die erforderlichen Felder aus und sende das Formular, um das Produkt zu erstellen.
-4. Prüfe den erstellten Produkteintrag in der Shopping-Store-Liste.
+1. Starte die File Extraction (Binary) Demo über das Demo-Menü.
+2. Lade ein PDF mit Rechnungen hoch.
+3. Der Agent verarbeitet die Binärdaten und extrahiert Rechnungsinformationen.
+4. Prüfe die Ergebnisse und exportiere die Daten bei Bedarf.
 
-##### Shopping Store (smart-workflow-demo)
+#### AgentDemo (smart-workflow-demo/processes/AgentDemo)
 
-1. Öffne die Shopping-Demo und wähle "Shopping Store".
-2. Durchsuche verfügbare Artikel und lege sie über den interaktiven Dialog in den Warenkorb.
-3. Führe den Checkout durch, um Bestell- und Bestandsaktualisierungen zu simulieren.
+##### Support Agent with Tools Demo
+
+1. Starte die Support Agent with Tools Demo über das Demo-Menü.
+2. Gib eine Support-Anfrage ein oder wähle ein Beispiel aus.
+3. Der Agent führt konfigurierte Tools aus und liefert ein Support-Ticket-Ergebnis.
+4. Prüfe die Support-Ticket-Details und leite gegebenenfalls Maßnahmen ein.
 
 ## Einrichtung
 
 - **Rollen:** Rollen-Konfiguration nicht dokumentiert
-- **OpenAPI:** Keine öffentlich zugänglichen OpenAPI-Spezifikationen von dieser Erweiterung bereitgestellt.
+- **OpenAPI:** No information was delivered for this section.
+
 
 ### Variablen
 
-```yaml
-Variables:
-  AI:
-    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic]
-    DefaultProvider: ""
-    # Guardrails designed to ensure that AI operate safely ethical, and legal
-    Guardrails:
-      # Default input guardrails. Separated by comma. Available: PromptInjectionInputGuardrail, PiiMaskingGuardrail
-      DefaultInput: ""
-      # Default output guardrails. Separated by comma. Available: SensitiveDataOutputGuardrail, PiiMaskingGuardrail
-      DefaultOutput: ""
-    Tool:
-      WebSearch:
-        # Name of the search engine to use. Must match the name() of a registered SmartWebSearchEngine. Example: "duckduckgo"
-        Engine: "duckduckgo"
-        # Maximum number of search results returned per query.
-        MaxResults: ""
-        # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"
-        # If empty, all domains are allowed.
-        WhitelistDomains: ""
-    RAG:
-      # Default number of document segments returned per query.
-      MaxResults: "5"
-      # Cosine similarity threshold (0.0 - 1.0). Segments below this score are excluded.
-      MinScore: "0.6"
-      # Number of tokens per document chunk when splitting.
-      ChunkSize: "300"
-      # Number of overlapping tokens between consecutive chunks.
-      ChunkOverlap: "20"
-      EmbeddingModel:
-        # Provider used to generate embeddings. Only providers that support embedding are valid.
-        # When blank, falls back to AI.DefaultProvider.
-        Provider: ""
-        # Embedding model name. When blank, defaults to the provider's DefaultEmbeddingModel variable.
-        # Example: "text-embedding-3-small" (OpenAI), "gemini-embedding-001" (Gemini)
-        Name: ""
-        # Optional separate API key for embedding calls (billed separately from chat).
-        # When blank, the provider's own API key variable is used.
-        #[password]
-        ApiKey: ${decrypt:}
-    Observability:
-      CustomFields:
-        # Enable marking of workflow custom fields to track AI usage provenance.
-        Enabled: "true"
-      Ivy:
-        # Enable chat history recording for governance audit.
-        Enabled: ""
-      Openinference:
-        # Enable logging of AI interactions for observability and debugging purposes.
-        Enabled: ""
-        HideInputMessages: ""
-        HideOutputMessages: ""
 ```
-
-- Für diesen Abschnitt wurden keine Informationen geliefert.
+@variables.yaml@
+```
 
 ## Komponenten
 
-### Connector-Prozesse
+### Aufrufbare Teilprozesse
 
 #### SmartWorkflowAgent.p.json
 
-- **invokeAgent(String query, String systemMessage, List<String> tools, Class resultType) -> resultObject: Object**
-    - Eingaben:
-        - `query` (String) - Die Nutzeranfrage/Nachricht, die an den KI-Agenten gesendet wird
-        - `systemMessage` (String) - Systemnachricht zur Definition des Agentenverhaltens
-        - `tools` (List<String>) - Liste der Tool-Namen; leer lassen, um alle Tools zu verwenden
-        - `resultType` (Class) - Erwartete Ergebnis-Typklasse für strukturierte Ausgabe; für String-Ergebnis null lassen
-    - Ergebnis:
-        - `resultObject` (Object) - Das Antwortobjekt des KI-Agenten
+- **invokeAgent -> resultObject: Object**
 
-### Formular-Komponenten
+- Eingabe:
+  - `query` (String) - Die Benutzereingabe / Anfrage an den KI-Agenten
+  - `systemMessage` (String) - Systemnachricht zur Definition des Agentenverhaltens
+  - `tools` (List<String>) - Liste von Tool-Namen, die dem Agenten zur Verfügung stehen. Leer = alle Tools
+  - `resultType` (Class) - Erwarteter Ergebnistyp für strukturierte Ausgaben. `null` = String-Ergebnis
+- Ergebnis:
+  - `resultObject` (Object) - Antwort/Ergebnis des KI-Agenten
 
-#### SmartWorkflowAgentData — Datenklasse für KI-Agenten-Aufrufe
-- **Namespace:** Portal
-- **Komponententyp:** Datenklasse
+### Dialog-Komponenten
+
+#### SupportAgentData — Datenstruktur für Support-Agent
+
+- **Namespace:** AgentDemo
+- **Komponententyp:** Data Class
 - **Felder:**
-   - `query` (String) — Die Nutzeranfrage/Nachricht, die an den KI-Agenten gesendet wird
-   - `systemMessage` (String) — Systemnachricht zur Definition des Agentenverhaltens
-   - `tools` (List<String>) — Liste der Tool-Namen; leer lassen, um alle Tools zu verwenden
-   - `resultType` (Class) — Erwartete Ergebnis-Typklasse für strukturierte Ausgabe; für String-Ergebnis null lassen
-   - `resultObject` (Object) — Das Antwortobjekt des KI-Agenten
-- **Verwendung:** `SmartWorkflowAgent.p.json` (invokeAgent CallSubStart)
-- **Zweck:** Stellt Parameter und Ergebnisabbildung für den Aufruf des Smart Workflow Agent aus Portal-Prozessen bereit
+  - `taskInfo` (com.axonivy.utils.smart.workflow.demo.dto.TaskInfo) — Task-Informationen
+  - `query` (String) — Roh-Query-Text
+  - `targetObject` (com.axonivy.utils.smart.workflow.demo.dto.SupportTicket) — Support-Ticket-Objekt
+  - `customInstructions` (List<String>) — Benutzerdefinierte Anweisungen für den Agenten
+
+### Webdienste
+
+- Keine Informationen gefunden.
 
 ### Maven-Artefakte
 
@@ -142,7 +98,6 @@ Variables:
 <dependency>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow</artifactId>
-  <version>@version@</version>
   <type>iar</type>
 </dependency>
 ```
@@ -153,7 +108,6 @@ Variables:
 <dependency>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-demo</artifactId>
-  <version>@version@</version>
   <type>iar</type>
 </dependency>
 ```
@@ -164,7 +118,6 @@ Variables:
 <dependency>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-openai</artifactId>
-  <version>@version@</version>
   <type>iar</type>
 </dependency>
 ```
@@ -175,7 +128,6 @@ Variables:
 <dependency>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-azure-openai</artifactId>
-  <version>@version@</version>
   <type>iar</type>
 </dependency>
 ```
@@ -186,7 +138,6 @@ Variables:
 <dependency>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-gemini</artifactId>
-  <version>@version@</version>
   <type>iar</type>
 </dependency>
 ```
@@ -197,7 +148,6 @@ Variables:
 <dependency>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-xai</artifactId>
-  <version>@version@</version>
   <type>iar</type>
 </dependency>
 ```
@@ -208,7 +158,6 @@ Variables:
 <dependency>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-anthropic</artifactId>
-  <version>@version@</version>
   <type>iar</type>
 </dependency>
 ```
