@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.ollama.OllamaContainer;
@@ -24,11 +24,10 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.test.log.LoggerAccess;
-import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest
 @Testcontainers
+@EnabledIf("providerSelected")
 public class OllamaModelE2E {
 
   private static final String MODEL_NAME = StringUtils.defaultIfBlank(
@@ -39,9 +38,6 @@ public class OllamaModelE2E {
   @Container
   private static final OllamaContainer ollama = new OllamaContainer(
       DockerImageName.parse("ollama/ollama:latest"));
-
-  @RegisterExtension
-  LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
   @BeforeAll
   static void pullModel() throws IOException, InterruptedException {
@@ -65,5 +61,9 @@ public class OllamaModelE2E {
     TestToolUserData data = res.data().last();
     assertThat(data.getPerson().getFirstName())
         .isEqualTo("James");
+  }
+
+  static boolean providerSelected() {
+    return TestUtils.isProviderEnabled(OllamaModelProvider.NAME);
   }
 }

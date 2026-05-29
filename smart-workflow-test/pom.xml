@@ -90,7 +90,7 @@
       <version>${project.version}</version>
       <type>iar</type>
     </dependency>
-       <dependency>
+    <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>ollama</artifactId>
       <version>1.21.4</version>
