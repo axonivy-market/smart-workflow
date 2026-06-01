@@ -1,15 +1,3 @@
-var CvAgent = (function () {
-  function toggle(headerEl) {
-    var block = headerEl.closest('.cv-agent-block');
-    if (!block) return;
-    block.classList.toggle('cv-agent-open');
-    var body = block.querySelector('.cv-agent-body');
-    if (body) body.classList.toggle('pb-3');
-  }
-  return { toggle: toggle };
-})();
-
-
 var CvMarkdown = (function () {
 
   function isAllStringObject(obj) {
@@ -145,6 +133,15 @@ var CvToolCard = (function () {
 var CvToolInput = (function () {
   function toggle(toggleEl) {
     var section = toggleEl.closest('.tool-timeline-input');
+    if (section) section.classList.toggle('open');
+  }
+  return { toggle: toggle };
+})();
+
+
+var CvToolResult = (function () {
+  function toggle(toggleEl) {
+    var section = toggleEl.closest('.tool-timeline-result-section');
     if (section) section.classList.toggle('open');
   }
   return { toggle: toggle };

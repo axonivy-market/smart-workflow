@@ -151,26 +151,6 @@
   min-height: 52px;
 }
 
-.cv-agent-open > .cv-agent-header {
-  border-bottom-color: var(--surface-border);
-}
-
-.cv-agent-chevron {
-  transition: transform 0.22s ease;
-}
-
-.cv-agent-open > .cv-agent-header .cv-agent-chevron {
-  transform: rotate(90deg);
-}
-
-.cv-agent-body {
-  max-height: 0;
-  transition: max-height 0.25s ease;
-}
-
-.cv-agent-open > .cv-agent-body {
-  max-height: 9999px;
-}
 
 .cv-agent-model-chip {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
@@ -186,12 +166,38 @@
 }
 
 .cv-sys-prompt-body {
-  max-height: 0;
-  transition: max-height 0.25s ease;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease-in-out;
 }
 
 .cv-agent-block.cv-sysPrompt-open .cv-sys-prompt-body {
-  max-height: 9999px;
+  grid-template-rows: 1fr;
+}
+
+.cv-sys-prompt-body > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.cv-tabview-container {
+  position: relative;
+}
+
+.cv-pretty-toggle-bar {
+  position: absolute;
+  right: 8px;
+  top: 0;
+  z-index: 2;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: all;
+}
+
+.cv-tabview-container .cv-agent-tabview .ui-tabview-nav {
+  padding-right: 160px;
 }
 
 .cv-agent-tabview .ui-tabview-nav {
@@ -331,6 +337,16 @@ body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(2).ui-state-active a {
 body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active a {
   color: var(--orange-400);
 }
+.cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active {
+  border-bottom-color: var(--purple-400, #c084fc);
+}
+.cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active a {
+  color: var(--purple-600, #9333ea);
+  background: transparent;
+}
+body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active a {
+  color: var(--purple-400);
+}
 
 
 /* ── Tool Call Timeline ────────────────────────────────────────────────────── */
@@ -377,10 +393,12 @@ body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active a {
 
 /* Card body */
 .tool-timeline-card-body {
-  display: none;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease-in-out;
 }
 .tool-timeline-card.open .tool-timeline-card-body {
-  display: block;
+  grid-template-rows: 1fr;
 }
 
 /* Status badge */
@@ -402,50 +420,63 @@ body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active a {
   border: 1px solid var(--surface-200);
 }
 
-/* Result section */
-.tool-timeline-result {
-  background: var(--green-50, #f0fdf4);
-  border-bottom: 1px solid var(--surface-border);
-}
+/* Result section (legacy rules kept for safety) */
 .tool-timeline-result--empty {
   background: var(--surface-50);
 }
 
-.tool-timeline-result-label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-  color: var(--green-700, #15803d);
-}
-.tool-timeline-result--empty .tool-timeline-result-label {
-  color: var(--text-color-secondary);
-}
-
-/* Input toggle */
-.tool-timeline-input-toggle {
+/* Input / Result section toggles */
+.tool-timeline-input-toggle,
+.tool-timeline-result-toggle {
   min-height: 32px;
   border-top: 1px solid var(--surface-border);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
 }
-.tool-timeline-input-toggle:hover {
+.tool-timeline-input-toggle:hover,
+.tool-timeline-result-toggle:hover {
   background: var(--surface-100);
 }
-.tool-timeline-input-chevron {
+
+.tool-timeline-input.open .tool-timeline-input-toggle,
+.tool-timeline-result-section.open .tool-timeline-result-toggle {
+  background: var(--surface-50);
+}
+
+.tool-timeline-input-chevron,
+.tool-timeline-result-chevron {
   transition: transform 0.18s ease;
 }
-.tool-timeline-input.open .tool-timeline-input-chevron {
+.tool-timeline-input.open .tool-timeline-input-chevron,
+.tool-timeline-result-section.open .tool-timeline-result-chevron {
   transform: rotate(90deg);
 }
 
-/* Input body */
-.tool-timeline-input-body {
-  display: none;
+/* Input / Result body shared */
+.tool-timeline-input-body,
+.tool-timeline-result-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease-in-out;
 }
-.tool-timeline-input.open .tool-timeline-input-body {
-  display: block;
+.tool-timeline-input.open .tool-timeline-input-body,
+.tool-timeline-result-section.open .tool-timeline-result-body {
+  grid-template-rows: 1fr;
+}
+
+.tool-section-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.tool-section-content {
+  padding: 0.5rem 1rem;
+}
+
+/* Result body background */
+.tool-timeline-result-body {
+  background: var(--green-50, #f0fdf4);
+}
+.tool-timeline-result-body.tool-timeline-result--empty {
+  background: var(--surface-50);
 }
 
 /* Key-value table */
@@ -499,7 +530,6 @@ body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active a {
   word-break: break-word;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   line-height: 1.6;
-  background: var(--surface-50);
   padding: 12px;
   border-radius: 4px;
   margin: 8px 0;
@@ -510,10 +540,106 @@ body.dark .tool-timeline::before {
   background: var(--surface-200);
 }
 
-body.dark .tool-timeline-result:not(.tool-timeline-result--empty) {
+body.dark .tool-timeline-result-body:not(.tool-timeline-result--empty) {
   background: var(--surface-50);
   border-left: 3px solid var(--green-500);
 }
-body.dark .tool-timeline-result--empty {
+body.dark .tool-timeline-result-body.tool-timeline-result--empty {
   background: var(--surface-50);
+}
+
+/* ── Report Ready Notification ───────────────────────────────────────────── */
+
+.cv-report-notification {
+  background: var(--blue-50, #eff6ff);
+  color: var(--blue-700, #1d4ed8);
+  border: 1px solid var(--blue-200, #bfdbfe);
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.cv-report-notification:hover {
+  background: var(--blue-100, #dbeafe);
+}
+
+body.dark .cv-report-notification {
+  background: transparent;
+  color: var(--blue-300);
+  border-color: var(--blue-700);
+}
+
+body.dark .cv-report-notification:hover {
+  background: var(--surface-100);
+}
+
+
+/* ── Guardrail List ────────────────────────────────────────────────────────── */
+
+.guardrail-item-header {
+  min-height: 40px;
+}
+
+.guardrail-field-label {
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.guardrail-badge {
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 99px;
+  letter-spacing: 0.2px;
+}
+
+.guardrail-badge--pass {
+  background: var(--green-100);
+  color: var(--green-700);
+  border: 1px solid var(--green-200, #bbf7d0);
+}
+
+.guardrail-badge--fail {
+  background: var(--red-100);
+  color: var(--red-700);
+  border: 1px solid var(--red-200, #fecaca);
+}
+
+body.dark .guardrail-badge--pass {
+  background: transparent;
+  color: var(--green-400);
+  border-color: var(--green-700);
+}
+
+body.dark .guardrail-badge--fail {
+  background: transparent;
+  color: var(--red-400);
+  border-color: var(--red-700);
+}
+
+/* AI Analyzing dialog — animated progress bar */
+.cv-analyze-progress {
+  height: 4px;
+  background: var(--surface-200);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.cv-analyze-progress-fill {
+  height: 100%;
+  width: 45%;
+  background: var(--primary-color);
+  border-radius: 2px;
+  animation: cv-progress-slide 1.6s ease-in-out infinite;
+}
+
+@keyframes cv-progress-slide {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
+
+.cv-ai-report-content {
+  height: 70vh;
 }

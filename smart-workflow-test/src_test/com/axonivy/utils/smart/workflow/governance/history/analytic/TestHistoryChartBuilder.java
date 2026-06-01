@@ -1,10 +1,9 @@
 package com.axonivy.utils.smart.workflow.governance.history.analytic;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.primefaces.model.charts.bar.BarChartDataSet;
 
@@ -156,7 +155,7 @@ public class TestHistoryChartBuilder {
     var model = chartBuilder.buildTopCases(entries);
 
     assertThat((List<?>) model.getData().getLabels()).hasSize(5);
-    assertThat((List<?>) model.getData().getLabels()).doesNotContain("P6");
+    assertThat((List<?>) model.getData().getLabels()).noneMatch("P6"::equals);
   }
 
   @Test

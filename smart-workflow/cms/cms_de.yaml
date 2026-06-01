@@ -37,6 +37,16 @@ Dialogs:
               CaseLabel: 'Fall:'
               ExportButton: Exportieren
               DetailsButton: Details
+              AnalyzeButton: Analysieren
+              MenuExport: Exportieren
+              ReportReadyNotification: 'KI-Bericht ist bereit. Hier klicken zum Öffnen.'
+              MenuGenerateReport: Bericht erstellen
+              MenuRegenerateReport: Bericht neu erstellen
+              MenuShowReport: Bericht anzeigen
+              AnalyzingMessage: Wird analysiert...
+              AnalyzingDialogTitle: KI-Analyse läuft
+              AnalyzingDialogMessage: 'Die KI analysiert die Falldaten. Dies kann einen Moment dauern...'
+              AnalyzeReportTitle: KI-Governance-Bericht
               CaseInformation: Fall-Informationen
               SidebarCaseDetails: Falldetails
               SidebarProcessViewer: Prozessanzeige
@@ -50,7 +60,7 @@ Dialogs:
               TaskAgentTokens: '{0} Agenten · {1} Token'
               AgentLabel: 'Agent {0}'
               TokenCount: '{0} Tokens'
-              PrettyToggle: Lesbar
+              PrettyToggle: Formatierte Ausgabe
               TabSystemPrompt: Systemprompt
               NoSystemPrompt: Kein Systemprompt konfiguriert
               TabInput: Eingabe
@@ -58,6 +68,13 @@ Dialogs:
               TabResponse: Antwort
               NoResponse: Keine Antwort
               TabTools: 'Tool-Aufrufe ({0})'
+              TabGuardrails: 'Guardrails ({0})'
+              GuardrailStatusPass: Bestanden
+              GuardrailStatusFail: Fehlgeschlagen
+              GuardrailViolation: Verletzung
+              GuardrailMessage: Nachricht
+              GuardrailDuration: '{0} ms'
+              ToolPrefix: 'Tool: {0}'
               ToolInputParameters: Eingabeparameter
               NoParameters: Keine Parameter
               ToolResult: Ergebnis

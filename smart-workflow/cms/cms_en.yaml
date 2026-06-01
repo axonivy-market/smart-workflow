@@ -37,6 +37,16 @@ Dialogs:
               CaseLabel: 'Case:'
               ExportButton: Export
               DetailsButton: Details
+              AnalyzeButton: Analyze
+              MenuExport: Export
+              ReportReadyNotification: 'AI report is ready. Click here to open.'
+              MenuGenerateReport: Generate Report
+              MenuRegenerateReport: Re-generate Report
+              MenuShowReport: Show Report
+              AnalyzingMessage: Analyzing...
+              AnalyzingDialogTitle: AI Analysis in Progress
+              AnalyzingDialogMessage: 'Using AI to analyze the case data. This may take a moment...'
+              AnalyzeReportTitle: AI Governance Report
               CaseInformation: Case Information
               SidebarCaseDetails: Case Details
               SidebarProcessViewer: Process Viewer
@@ -50,7 +60,7 @@ Dialogs:
               TaskAgentTokens: '{0} agents · {1} tokens'
               AgentLabel: 'Agent {0}'
               TokenCount: '{0} tokens'
-              PrettyToggle: Pretty
+              PrettyToggle: Pretty print
               TabSystemPrompt: System Prompt
               NoSystemPrompt: No system prompt configured
               TabInput: Input
@@ -58,6 +68,13 @@ Dialogs:
               TabResponse: Response
               NoResponse: No response
               TabTools: 'Tool Calls ({0})'
+              TabGuardrails: 'Guardrails ({0})'
+              GuardrailStatusPass: Pass
+              GuardrailStatusFail: Fail
+              GuardrailViolation: Violation
+              GuardrailMessage: Message
+              GuardrailDuration: '{0} ms'
+              ToolPrefix: 'Tool: {0}'
               ToolInputParameters: Input parameters
               NoParameters: No parameters
               ToolResult: Result

@@ -29,6 +29,16 @@
 
             <ui:include src="CaseDetailsDialog.xhtml" />
 
+            <p:outputPanel id="cv-report-notification" layout="block">
+              <h:panelGroup rendered="#{not empty conversationsBean.aiReport}" layout="block"
+                            styleClass="cv-report-notification flex align-items-center gap-2 mx-3 mt-3 px-3 py-2 border-round-lg cursor-pointer"
+                            onclick="PF('aiReportDialog').show()">
+                <i class="tif tif-check-circle flex-shrink-0" />
+                <span class="flex-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ReportReadyNotification')}</span>
+                <i class="tif tif-arrow-right flex-shrink-0" />
+              </h:panelGroup>
+            </p:outputPanel>
+
             <div class="flex-shrink-0 px-3 py-3">
               <ui:include src="Summary.xhtml" />
             </div>

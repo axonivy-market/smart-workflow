@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.GuardrailExecution;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 import com.axonivy.utils.smart.workflow.governance.utils.ChatHistoryJsonParser;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
@@ -14,12 +15,15 @@ public class AgentTreeNode {
 
   private final AgentConversationEntry entry;
   private final int toolCount;
+  private final int guardrailCount;
   private transient boolean isPretty = true;
 
   public AgentTreeNode(AgentConversationEntry entry) {
     this.entry = entry;
     List<ToolExecution> tools = entry.getToolExecutions();
     this.toolCount = tools != null ? tools.size() : 0;
+    List<GuardrailExecution> guardrails = entry.getGuardrailExecutions();
+    this.guardrailCount = guardrails != null ? guardrails.size() : 0;
   }
 
   public AgentConversationEntry getEntry() { return entry; }
@@ -37,6 +41,7 @@ public class AgentTreeNode {
   public int getTotalTokens() { return ChatHistoryJsonParser.getTotalTokens(entry); }
   public String getModelName() { return ChatHistoryJsonParser.getModelName(entry); }
   public int getToolCount() { return toolCount; }
+  public int getGuardrailCount() { return guardrailCount; }
   public boolean getIsPretty()                 { return isPretty; }
   public void    setIsPretty(boolean isPretty) { this.isPretty = isPretty; }
   public long getAvgDurationMs() { return ChatHistoryJsonParser.getAvgDurationMs(entry); }
@@ -55,6 +60,12 @@ public class AgentTreeNode {
     return executions.stream().map(ToolView::new).toList();
   }
 
+  public List<GuardrailView> getGuardrails() {
+    List<GuardrailExecution> executions = entry.getGuardrailExecutions();
+    if (executions == null) return List.of();
+    return executions.stream().map(GuardrailView::new).toList();
+  }
+
   /** Key-value pair for a single tool argument, used by the per-argument tab view. */
   public static class ArgumentEntry {
     private final String key;
@@ -62,6 +73,22 @@ public class AgentTreeNode {
     public ArgumentEntry(String key, String value) { this.key = key; this.value = value; }
     public String getKey()   { return key; }
     public String getValue() { return value; }
+  }
+
+  /** JSF-friendly wrapper around {@link GuardrailExecution} record. */
+  public static class GuardrailView {
+    private final GuardrailExecution exec;
+    public GuardrailView(GuardrailExecution exec) { this.exec = exec; }
+    public String getGuardrailName()  { return exec.guardrailName(); }
+    public String getType()           { return exec.type(); }
+    public String getResult()         { return exec.result(); }
+    public String getMessage()        { return exec.message(); }
+    public String getFailureMessage() { return exec.failureMessage(); }
+    public Long   getDurationMs()     { return exec.durationMs(); }
+    public String getExecutedAt()     { return exec.executedAt(); }
+    public boolean isPassed() {
+      return "PASSED".equalsIgnoreCase(exec.result()) || "SUCCESS".equalsIgnoreCase(exec.result());
+    }
   }
 
   /** JSF-friendly wrapper around {@link ToolExecution} record (records lack getX() accessors). */
