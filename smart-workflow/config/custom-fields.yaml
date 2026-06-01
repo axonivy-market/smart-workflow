@@ -5,9 +5,17 @@ CustomFields:
       Label: AI-assisted
       Description: Indicates that this task was processed using smart workflow AI assistance.
       Type: STRING
+    internalSmartWorkflow:
+      Label: Internal Smart Workflow
+      Description: Internal process of Smart Workflow
+      Type: STRING 
 
   Cases:
     aiAssisted:
       Label: AI-assisted
       Description: Indicates that this case was processed using smart workflow AI assistance.
       Type: STRING
+    internalSmartWorkflow:
+      Label: Internal Smart Workflow
+      Description: Internal process of Smart Workflow
+      Type: STRING 

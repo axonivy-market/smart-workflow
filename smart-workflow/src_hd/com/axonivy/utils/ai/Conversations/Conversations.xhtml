@@ -20,7 +20,7 @@
           <!-- Empty placeholder -->
           <h:panelGroup rendered="#{conversationsBean.caseNode == null}" layout="block"
                         styleClass="cv-empty-state flex flex-column align-items-center justify-content-center text-color-secondary">
-            <i class="tif tif-messages text-5xl block mb-3" />
+            <i class="ti ti-message-2 text-5xl block mb-3" />
             <div class="font-semibold mb-2 text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/EmptyStateTitle')}</div>
             <div class="text-sm text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/EmptyStateMessage')}</div>
           </h:panelGroup>
@@ -43,6 +43,10 @@
               <ui:include src="Summary.xhtml" />
             </div>
 
+            <div class="flex-shrink-0 px-3 pb-3">
+              <ui:include src="AiReport.xhtml" />
+            </div>
+
             <div class="cv-split-layout min-h-0 flex flex-1 overflow-hidden p-3 pt-0">
 
               <div class="cv-nav-panel surface-0 flex flex-column overflow-hidden flex-shrink-0">
@@ -58,10 +62,25 @@
 
             </div>
           </h:panelGroup>
+          <!-- AI analyzing progress dialog -->
+          <p:dialog id="ai-analyzing-dialog"
+                    widgetVar="aiAnalyzingDialog"
+                    modal="true" closable="false"
+                    resizable="false" draggable="false"
+                    width="420"
+                    header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/AnalyzingDialogTitle')}">
+            <div class="flex flex-column align-items-center text-center gap-3 py-2 px-2">
+              <span class="text-color-secondary text-sm">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/AnalyzingDialogMessage')}</span>
+              <div class="cv-analyze-progress w-full">
+                <div class="cv-analyze-progress-fill"></div>
+              </div>
+            </div>
+          </p:dialog>
+
           <!-- Tool call full-value dialog (single instance, shared across all tool calls) -->
           <p:dialog id="tool-timeline-dialog" widgetVar="cvToolModal"
                     modal="true" appendTo="@(body)" width="740"
-                    closeOnEscape="true" contentStyle="padding:0">
+                    closeOnEscape="true">
             <f:facet name="header">
               <span id="tool-timeline-modal-title"></span>
             </f:facet>

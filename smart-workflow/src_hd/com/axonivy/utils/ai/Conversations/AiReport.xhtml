@@ -1,0 +1,18 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui">
+<h:body>
+<p:outputPanel id="ai-report-panel" layout="block">
+
+  <p:dialog id="ai-report-dialog" widgetVar="aiReportDialog"
+            modal="true" appendTo="@(body)" width="860" height="80%"
+            closeOnEscape="true"
+            header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/AnalyzeReportTitle')}">
+    <div class="cv-tab-msg-text text-color py-4 px-5 overflow-y-auto cv-ai-report-content">#{conversationsBean.aiReport}</div>
+  </p:dialog>
+
+</p:outputPanel>
+</h:body>
+</html>
