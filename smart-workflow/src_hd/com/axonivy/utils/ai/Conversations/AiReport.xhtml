@@ -10,7 +10,15 @@
             modal="true" appendTo="@(body)" width="860" height="80%"
             closeOnEscape="true"
             header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/AnalyzeReportTitle')}">
-    <div class="cv-tab-msg-text text-color py-4 px-5 overflow-y-auto cv-ai-report-content">#{conversationsBean.aiReport}</div>
+    <div class="py-4 px-5 overflow-y-auto cv-ai-report-content">
+      <h:panelGroup rendered="#{not empty conversationsBean.statisticReport}" layout="block">
+        <div class="cv-tab-msg-text">#{conversationsBean.statisticReport}</div>
+      </h:panelGroup>
+      <h:panelGroup rendered="#{not empty conversationsBean.aiReport}" layout="block">
+        <hr class="my-3" />
+        <div class="cv-tab-msg-text">#{conversationsBean.aiReport}</div>
+      </h:panelGroup>
+    </div>
   </p:dialog>
 
 </p:outputPanel>

@@ -63,6 +63,7 @@ public class ConversationsBean implements Serializable {
   private CaseTreeNode caseNode;
   private ICase ivyCase;
   private String aiReport;
+  private String statisticReport;
   private boolean aiAnalyzing;
 
   public void preRender(String caseUuid) {
@@ -204,6 +205,7 @@ public class ConversationsBean implements Serializable {
     try {
       String caseUuid = caseNode.getCaseUuid();
       var summaries = CaseHistoryAnalyzer.analyze(caseUuid);
+      statisticReport = CaseHistoryAnalyzer.generateReport(caseUuid, summaries);
       var entries = CaseHistoryAnalyzer.getEntries(caseUuid);
       String prompt = CaseHistoryAnalyzer.buildAiPrompt(caseUuid, summaries, entries);
       Map<String, Object> result = Sudo.get(() -> {
@@ -228,6 +230,10 @@ public class ConversationsBean implements Serializable {
 
   public String getAiReport() {
     return aiReport;
+  }
+
+  public String getStatisticReport() {
+    return statisticReport;
   }
 
   public boolean isAiAnalyzing() {
