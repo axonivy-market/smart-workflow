@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.governance.history.analytic.report;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversat
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 import com.axonivy.utils.smart.workflow.governance.history.entity.summary.AgentSummary;
 import com.axonivy.utils.smart.workflow.governance.history.entity.summary.AnomalyReport;
+import com.axonivy.utils.smart.workflow.governance.history.entity.summary.CaseAnalysisResult;
 import com.axonivy.utils.smart.workflow.governance.history.entity.summary.GuardrailSummary;
 import com.axonivy.utils.smart.workflow.governance.history.entity.summary.TokenUsageSummary;
 import com.axonivy.utils.smart.workflow.governance.history.entity.summary.ToolSummary;
@@ -22,6 +24,10 @@ import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
+import ch.ivyteam.ivy.security.exec.Sudo;
 
 public class CaseHistoryAnalyzer {
 
@@ -53,16 +59,35 @@ public class CaseHistoryAnalyzer {
   private static final String ANOMALY_NULL_RESULT        = "Tool '%s' returned null/empty in %d/%d calls (>50%%)";
   private static final String ANOMALY_STUCK_LOOP         = "Tool '%s' called %d times with identical arguments \u2014 possible stuck loop";
 
-  public static List<AgentSummary> analyze(String caseId) {
-    List<AgentConversationEntry> entries = STORAGE.findByCaseUuid(caseId);
+  private static final String AI_EVALUATION_HEADER = """
+      # AI Evaluation
+      """;
+
+  public static CaseAnalysisResult analyze(String caseUuid) {
+    List<AgentConversationEntry> entries = STORAGE.findByCaseUuid(caseUuid);
     List<ToolSummary> allToolSummaries = buildToolSummaries(entries);
     List<GuardrailSummary> allGuardrailSummaries = buildGuardrailSummaries(entries);
     TokenUsageSummary tokenUsageSummary = buildTokenUsageSummary(entries);
     List<AgentSummary> summaries = entries.stream()
-        .map(e -> summarize(e, allToolSummaries, allGuardrailSummaries, tokenUsageSummary))
-        .toList();
-    Ivy.log().info("Summaries for caseId {0}: {1}", caseId, summaries);
-    return summaries;
+      .map(e -> summarize(e, allToolSummaries, allGuardrailSummaries, tokenUsageSummary))
+      .toList();
+
+    String prompt = CaseHistoryAnalyzer.buildAiPrompt(caseUuid, summaries, entries);
+    Map<String, Object> result = Sudo.get(() -> {
+      var filter = SubProcessSearchFilter.create()
+      .setSearchScope(SearchScope.SECURITY_CONTEXT)
+      .setSignature("analyzeAgentHistoryByCase(String, String)")
+      .toFilter();
+      var startList = SubProcessCallStartEvent.find(filter);
+      if (!startList.isEmpty()) {
+        return startList.get(0).withParam("caseUuid", caseUuid).withParam("prompt", prompt).call().asMap();
+      }
+      return Map.of();
+    });
+    String aiReport = (String) result.get("aiReport");
+
+    Ivy.log().info("Summaries for caseUuid {0}: {1}", caseUuid, summaries);
+    return new CaseAnalysisResult(summaries, aiReport);
   }
 
   public static int countAgents(List<AgentSummary> summaries) {
@@ -196,12 +221,16 @@ public class CaseHistoryAnalyzer {
     return text.length() <= maxLen ? text : text.substring(0, maxLen) + "...";
   }
 
-  public static String generateReport(String caseId, List<AgentSummary> summaries) {
-    if (summaries == null || summaries.isEmpty()) {
+  public static String generateReport(String caseId, CaseAnalysisResult result) {
+    if (result == null || result.summaries() == null || result.summaries().isEmpty()) {
       return NO_DATA_MSG.formatted(caseId);
     }
     String caseName = resolveCaseName(caseId);
-    return new AnalyticReportBuilder(caseId, caseName, summaries).render();
+    String report = new AnalyticReportBuilder(caseId, caseName, result.summaries()).render();
+    if (result.aiReport() != null && !result.aiReport().isBlank()) {
+      report = report + AI_EVALUATION_HEADER + result.aiReport();
+    }
+    return report;
   }
 
   private static String resolveCaseName(String caseId) {
