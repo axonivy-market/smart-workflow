@@ -53,9 +53,7 @@
                   <div class="col-3">
                     <p:selectOneMenu value="#{historyDashboardBean.filterModel}" styleClass="w-full">
                       <f:selectItem itemValue="" itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/HistoryDashboard/HistoryDashboard/AllModels')}" />
-                      <f:selectItem itemValue="gpt-4o-mini" itemLabel="gpt-4o-mini" />
-                      <f:selectItem itemValue="gpt-4o" itemLabel="gpt-4o" />
-                      <f:selectItem itemValue="gemini-2.0" itemLabel="gemini-2.0" />
+                      <f:selectItems value="#{historyDashboardBean.availableModelItems}" />
                       <p:ajax listener="#{historyDashboardBean.applyFilter}"
                               update="history-table-section" />
                     </p:selectOneMenu>
