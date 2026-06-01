@@ -2,6 +2,7 @@ package com.axonivy.utils.smart.workflow.governance.ui.bean;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +20,10 @@ import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistory
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.service.internal.CaseService;
+import javax.faces.model.SelectItem;
+import javax.faces.model.SelectItemGroup;
+import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 
 @ManagedBean
 @ViewScoped
@@ -57,7 +62,8 @@ public class HistoryDashboardBean implements Serializable {
 
   private boolean matchesModelFilter(AgentConversationEntry e) {
     if (filterModel == null || filterModel.isBlank()) return true;
-    return filterModel.equals(e.getModelName());
+    String storedModel = e.getModelName();
+    return storedModel != null && (storedModel.contains(filterModel) || filterModel.contains(storedModel));
   }
 
   private boolean matchesDateRangeFilter(AgentConversationEntry e) {
@@ -111,6 +117,23 @@ public class HistoryDashboardBean implements Serializable {
   }
 
   // Getters and setters
+
+  public List<SelectItem> getAvailableModelItems() {
+    return ChatModelFactory.providers().stream()
+        .collect(java.util.stream.Collectors.toMap(
+            ChatModelProvider::name, p -> p, (a, b) -> a))
+        .values().stream()
+        .filter(provider -> !provider.models().isEmpty())
+        .sorted(Comparator.comparing(ChatModelProvider::name))
+        .map(provider -> {
+          SelectItemGroup group = new SelectItemGroup(provider.name());
+          group.setSelectItems(provider.models().stream()
+              .map(m -> new SelectItem(m, m))
+              .toArray(SelectItem[]::new));
+          return (SelectItem) group;
+        })
+        .toList();
+  }
 
   public String getFilterCase() { return filterCase; }
   public void setFilterCase(String v) { this.filterCase = v; }
