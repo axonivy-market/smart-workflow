@@ -8,30 +8,25 @@
 <h:body>
 
 <ui:repeat var="agent" value="#{task.agents}" varStatus="agentStatus">
-  <div class="cv-agent-block cv-agent-open overflow-hidden surface-0 border-1 border-solid surface-border border-round-xl"
+  <div class="cv-agent-block overflow-hidden surface-0 border-1 border-solid surface-border border-round-xl"
        data-cv-agent="cv-agent-#{taskStatus.index}-#{agentStatus.index}"
        style="display:none">
 
-    <!-- Agent header (clickable toggle) -->
-    <div class="cv-agent-header flex align-items-center gap-3 py-2 px-3 cursor-pointer select-none surface-ground border-bottom-1 border-solid border-transparent" onclick="CvAgent.toggle(this)">
-      <i class="cv-agent-chevron tif tif-chevron-right flex-shrink-0 text-color-secondary" />
+    <!-- Agent header -->
+    <div class="cv-agent-header flex align-items-center gap-3 py-2 px-3 select-none surface-ground border-bottom-1 surface-border">
       <span class="flex-1 min-w-0 text-overflow-ellipsis overflow-hidden white-space-nowrap">
         <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/AgentLabel')}">
           <f:param value="#{agent.displayName}" />
         </h:outputFormat>
       </span>
-      <div class="flex align-items-center gap-2 flex-shrink-0" onclick="event.stopPropagation()">
-        <div class="cv-raw-toggle flex align-items-center gap-2">
-          <span class="cv-raw-label text-color-secondary select-none">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/PrettyToggle')}</span>
-          <p:toggleSwitch value="#{agent.isPretty}" onchange="CvRaw.toggle(this)" />
-        </div>
+      <div class="flex align-items-center gap-2 flex-shrink-0">
         <span class="cv-agent-model-chip surface-100 border-1 border-solid surface-border border-round-sm text-color-secondary white-space-nowrap">#{agent.modelName}</span>
         <span class="cv-agent-token-badge text-color-secondary white-space-nowrap"><h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TokenCount')}"><f:param value="#{agent.totalTokens}" /></h:outputFormat></span>
       </div>
     </div>
 
-    <!-- Agent body (collapsible) -->
-    <div class="cv-agent-body p-0 overflow-hidden pb-3">
+    <!-- Agent body -->
+    <div class="cv-agent-body p-0 pb-3">
 
       <!-- System Prompt: inline collapsible, collapsed by default -->
       <h:panelGroup rendered="#{not empty conversationsBean.getSystemMessages(agent.entry)}" layout="block">
@@ -41,16 +36,23 @@
           <span class="text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabSystemPrompt')}</span>
         </div>
         <div class="cv-sys-prompt-body overflow-hidden">
-          <div class="cv-tab-content--system p-3">
-            <ui:repeat var="msg" value="#{conversationsBean.getSystemMessages(agent.entry)}">
-              <div class="cv-tab-msg-text text-color">#{msg.text}</div>
-              <pre class="cv-tab-raw-text">#{msg.text}</pre>
-            </ui:repeat>
+          <div class="cv-tab-content--system">
+            <div class="tool-section-content">
+              <ui:repeat var="msg" value="#{conversationsBean.getSystemMessages(agent.entry)}">
+                <div class="cv-tab-msg-text text-color">#{msg.text}</div>
+                <pre class="cv-tab-raw-text">#{msg.text}</pre>
+              </ui:repeat>
+            </div>
           </div>
         </div>
       </h:panelGroup>
 
       <!-- Main tabs: Input | Response | Tool Calls -->
+      <div class="cv-tabview-container" onclick="event.stopPropagation()">
+        <div class="cv-pretty-toggle-bar">
+          <span class="cv-raw-label text-color-secondary select-none">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/PrettyToggle')}</span>
+          <p:toggleSwitch value="#{agent.isPretty}" onchange="CvRaw.toggle(this)" />
+        </div>
       <p:tabView styleClass="cv-agent-tabview border-none bg-transparent border-noround p-0" activeIndex="1">
 
         <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabInput')}"
@@ -95,61 +97,82 @@
                   <div class="tool-timeline-card-header flex align-items-center gap-2 px-3 cursor-pointer select-none"
                        onclick="CvToolCard.toggle(this)">
                     <i class="tool-timeline-card-chevron tif tif-chevron-right text-color-secondary flex-shrink-0" />
-                    <span class="flex-1">#{tool.toolName}</span>
+                    <span class="flex-1">
+                      <h:outputFormat styleClass="tool-name-prefix text-color-secondary font-semibold"
+                                      value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolPrefix')}">
+                        <f:param value="#{tool.toolName}" />
+                      </h:outputFormat>
+                    </span>
                     <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolStatusOk')}"
                                   rendered="#{not empty tool.resultText}"
                                   styleClass="tool-timeline-badge tool-timeline-badge--success" />
-                    <h:outputText value="&#8212;" rendered="#{empty tool.resultText}"
-                                  styleClass="tool-timeline-badge tool-timeline-badge--muted" />
+                    <ui:fragment rendered="#{empty tool.resultText}">
+                      <i class="ti ti-minus tool-timeline-badge tool-timeline-badge--muted" />
+                    </ui:fragment>
                   </div>
 
                   <div class="tool-timeline-card-body">
-
-                    <!-- Result shown first -->
-                    <div class="tool-timeline-result px-3 py-2 #{empty tool.resultText ? 'tool-timeline-result--empty' : ''}">
-                      <div class="tool-timeline-result-label font-bold text-xs mb-2">
-                        <i class="tif tif-check-circle" />
-                        #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolResult')}
-                      </div>
-                      <h:panelGroup rendered="#{empty tool.resultText}" layout="block"
-                                    styleClass="text-color-secondary font-italic text-sm">
-                        #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoOutput')}
-                      </h:panelGroup>
-                      <h:panelGroup rendered="#{not empty tool.resultText}" layout="block">
-                        <div class="cv-tab-msg-text text-color">#{tool.resultText}</div>
-                        <pre class="cv-tab-raw-text">#{tool.resultText}</pre>
-                      </h:panelGroup>
-                    </div>
+                    <div class="tool-section-inner">
 
                     <!-- Input parameters (collapsed by default) -->
                     <div class="tool-timeline-input">
-                      <div class="tool-timeline-input-toggle flex align-items-center gap-2 px-3 cursor-pointer select-none surface-50"
+                      <div class="tool-timeline-input-toggle flex align-items-center gap-2 px-3 pl-2 cursor-pointer select-none"
                            onclick="CvToolInput.toggle(this)">
-                        <i class="tool-timeline-input-chevron tif tif-chevron-right text-xs text-color-secondary flex-shrink-0" />
-                        <span class="text-xs font-bold text-color-secondary">
+                        <i class="tool-timeline-input-chevron tif tif-chevron-right text-color-secondary flex-shrink-0" />
+                        <span class="text-color-secondary">
                           #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolInputParameters')}
                         </span>
                       </div>
-                      <div class="tool-timeline-input-body px-3 pb-3">
-                        <h:panelGroup rendered="#{empty tool.argumentEntries}" layout="block"
-                                      styleClass="text-center text-color-secondary font-italic py-3 text-sm">
-                          #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoParameters')}
-                        </h:panelGroup>
-                        <h:panelGroup rendered="#{not empty tool.argumentEntries}" layout="block"
-                                      styleClass="flex flex-column mt-2">
-                          <ui:repeat var="arg" value="#{tool.argumentEntries}">
-                            <div class="tool-timeline-kv-row flex gap-2 py-1 px-2 align-items-baseline">
-                              <div class="tool-timeline-kv-key text-color-secondary white-space-nowrap flex-shrink-0 pr-1">#{arg.key}</div>
-                              <div class="tool-timeline-val-cell flex-1 min-w-0">
-                                <div class="cv-tab-msg-text text-color">#{arg.value}</div>
-                                <pre class="cv-tab-raw-text">#{arg.value}</pre>
-                              </div>
-                            </div>
-                          </ui:repeat>
-                        </h:panelGroup>
+                      <div class="tool-timeline-input-body">
+                        <div class="tool-section-inner">
+                          <div class="tool-section-content">
+                            <h:panelGroup rendered="#{empty tool.argumentEntries}" layout="block"
+                                          styleClass="text-center text-color-secondary py-3">
+                              #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoParameters')}
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{not empty tool.argumentEntries}" layout="block"
+                                          styleClass="flex flex-column mt-2">
+                              <ui:repeat var="arg" value="#{tool.argumentEntries}">
+                                <div class="tool-timeline-kv-row flex gap-2 py-1 px-2 align-items-baseline">
+                                  <div class="tool-timeline-kv-key text-color-secondary white-space-nowrap flex-shrink-0 pr-1">#{arg.key}</div>
+                                  <div class="tool-timeline-val-cell flex-1 min-w-0">
+                                    <div class="cv-tab-msg-text text-color">#{arg.value}</div>
+                                    <pre class="cv-tab-raw-text">#{arg.value}</pre>
+                                  </div>
+                                </div>
+                              </ui:repeat>
+                            </h:panelGroup>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
+                    <!-- Result (collapsible, expanded by default) -->
+                    <div class="tool-timeline-result-section open">
+                      <div class="tool-timeline-result-toggle flex align-items-center gap-2 px-3 pl-2 cursor-pointer select-none"
+                           onclick="CvToolResult.toggle(this)">
+                        <i class="tool-timeline-result-chevron tif tif-chevron-right text-color-secondary flex-shrink-0" />
+                        <span class="text-color-secondary">
+                          #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolResult')}
+                        </span>
+                      </div>
+                      <div class="tool-timeline-result-body #{empty tool.resultText ? 'tool-timeline-result--empty' : ''}">
+                        <div class="tool-section-inner">
+                          <div class="tool-section-content">
+                            <h:panelGroup rendered="#{empty tool.resultText}" layout="block"
+                                          styleClass="text-color-secondary">
+                              #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoOutput')}
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{not empty tool.resultText}" layout="block">
+                              <div class="cv-tab-msg-text text-color">#{tool.resultText}</div>
+                              <pre class="cv-tab-raw-text">#{tool.resultText}</pre>
+                            </h:panelGroup>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    </div><!-- /tool-section-inner -->
                   </div>
                 </div>
               </div>
@@ -157,7 +180,57 @@
           </div>
         </p:tab>
 
+        <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabGuardrails', [agent.guardrailCount])}"
+               rendered="#{agent.guardrailCount gt 0}"
+               contentStyleClass="cv-tab-content--guardrails p-3 surface-0">
+          <div class="guardrail-list">
+            <ui:repeat var="gr" value="#{agent.guardrails}" varStatus="grs">
+              <div class="guardrail-item border-1 border-solid surface-border border-round-lg overflow-hidden #{grs.index gt 0 ? 'mt-2' : ''}">
+
+                <div class="guardrail-item-header flex align-items-center gap-2 px-3 py-2 surface-ground border-bottom-1 surface-border">
+                  <span class="flex-1 font-semibold">#{gr.guardrailName}</span>
+                  <span class="guardrail-type-chip text-xs text-color-secondary surface-100 border-1 border-solid surface-border border-round px-2 py-1">#{gr.type}</span>
+                  <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/GuardrailStatusPass')}"
+                                rendered="#{gr.passed}"
+                                styleClass="guardrail-badge guardrail-badge--pass" />
+                  <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/GuardrailStatusFail')}"
+                                rendered="#{not gr.passed}"
+                                styleClass="guardrail-badge guardrail-badge--fail" />
+                </div>
+
+                <h:panelGroup layout="block"
+                              rendered="#{not empty gr.failureMessage or not empty gr.message}"
+                              styleClass="px-3 pt-2 pb-1">
+                  <h:panelGroup rendered="#{not empty gr.failureMessage}" layout="block" styleClass="mb-2">
+                    <div class="guardrail-field-label text-xs font-bold text-color-secondary mb-1">
+                      <i class="tif tif-alert-circle mr-1" />
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/GuardrailViolation')}
+                    </div>
+                    <div class="cv-tab-msg-text text-color">#{gr.failureMessage}</div>
+                  </h:panelGroup>
+                  <h:panelGroup rendered="#{not empty gr.message}" layout="block">
+                    <div class="guardrail-field-label text-xs font-bold text-color-secondary mb-1">
+                      #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/GuardrailMessage')}
+                    </div>
+                    <div class="cv-tab-msg-text text-color">#{gr.message}</div>
+                  </h:panelGroup>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{gr.durationMs != null}" layout="block"
+                              styleClass="px-3 py-2 text-xs text-color-secondary">
+                  <i class="tif tif-clock mr-1" />
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/GuardrailDuration')}">
+                    <f:param value="#{gr.durationMs}" />
+                  </h:outputFormat>
+                </h:panelGroup>
+
+              </div>
+            </ui:repeat>
+          </div>
+        </p:tab>
+
       </p:tabView>
+      </div><!-- /cv-tabview-container -->
     </div>
   </div>
 </ui:repeat>

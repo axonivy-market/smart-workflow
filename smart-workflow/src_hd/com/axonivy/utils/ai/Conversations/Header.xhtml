@@ -12,27 +12,60 @@
         <span class="text-2xl font-bold">#{conversationsBean.caseNode.displayName}</span>
     </h:panelGroup>
     <h:panelGroup rendered="#{conversationsBean.caseNode == null}" layout="block">
-        <div class="text-sm font-bold"><i class="tif tif-message-circle" /> #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/Title')}</div>
+        <div class="text-sm font-bold"><i class="ti ti-message-2" /> #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/Title')}</div>
         <div class="text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/CaseLabel')} #{data.caseUuid}</div>
     </h:panelGroup>
     </div>
 
-    <div class="flex gap-2 align-items-center">
-    <p:commandButton id="back-btn" value="#{ivy.cms.co('/Labels/Common/Back')}" icon="tif tif-arrow-left-circle"
+    <p:outputPanel id="cv-header-actions" layout="block" styleClass="flex gap-2 align-items-center">
+    <p:commandButton id="back-btn" value="#{ivy.cms.co('/Labels/Common/Back')}" icon="ti ti-arrow-left"
                         styleClass="p-button-secondary p-button-sm"
                         process="@this"
                         actionListener="#{logic.close}" />
 
-    <p:commandButton id="btn-export" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ExportButton')}" icon="tif tif-download"
-                        styleClass="p-button-outlined p-button-sm"
-                        type="button"
-                        disabled="true" />
+    <p:menuButton id="btn-actions"
+                  value="#{ivy.cms.co('/Labels/Common/Actions')}"
+                  styleClass="p-button-sm"
+                  rendered="#{conversationsBean.caseNode != null}">
 
-    <p:commandButton id="btn-sidebar" type="button" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/DetailsButton')}" icon="tif tif-info-circle"
-                     styleClass="p-button-outlined p-button-sm"
-                     rendered="#{conversationsBean.caseNode != null}"
-                     onclick="PF('cvDetailsDialog').show()" />
-    </div>
+      <p:menuitem value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/CaseInformation')}"
+                  icon="ti ti-info-circle"
+                  onclick="PF('cvDetailsDialog').show(); return false;" />
+
+      <p:menuitem value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MenuExport')}"
+                  icon="ti ti-download"
+                  rendered="#{not conversationsBean.internalSmartWorkflow}"
+                  action="#{conversationsBean.export}"
+                  ajax="false" />
+
+      <p:menuitem value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MenuGenerateReport')}"
+                  icon="ti ti-report-analytics"
+                  rendered="#{empty conversationsBean.aiReport and not conversationsBean.internalSmartWorkflow}"
+                  disabled="#{conversationsBean.aiAnalyzing}"
+                  action="#{conversationsBean.generateAiReport()}"
+                  process="@form"
+                  global="false"
+                  update=":conv-form:ai-report-panel :conv-form:cv-header-actions :conv-form:cv-report-notification"
+                  onstart="PF('aiAnalyzingDialog').show()"
+                  oncomplete="PF('aiAnalyzingDialog').hide(); CvMarkdown.renderAll()" />
+
+      <p:menuitem value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MenuRegenerateReport')}"
+                  icon="ti ti-refresh"
+                  rendered="#{not empty conversationsBean.aiReport and not conversationsBean.internalSmartWorkflow}"
+                  disabled="#{conversationsBean.aiAnalyzing}"
+                  action="#{conversationsBean.generateAiReport()}"
+                  process="@form"
+                  global="false"
+                  update=":conv-form:ai-report-panel :conv-form:cv-header-actions :conv-form:cv-report-notification"
+                  onstart="PF('aiAnalyzingDialog').show()"
+                  oncomplete="PF('aiAnalyzingDialog').hide(); CvMarkdown.renderAll()" />
+
+      <p:menuitem value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MenuShowReport')}"
+                  icon="ti ti-file-report"
+                  rendered="#{not empty conversationsBean.aiReport and not conversationsBean.internalSmartWorkflow}"
+                  onclick="PF('aiReportDialog').show(); return false;" />
+    </p:menuButton>
+    </p:outputPanel>
 </div>
 </h:body>
 </html>

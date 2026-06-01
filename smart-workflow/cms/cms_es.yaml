@@ -37,6 +37,16 @@ Dialogs:
               CaseLabel: 'Caso:'
               ExportButton: Exportar
               DetailsButton: Detalles
+              AnalyzeButton: Analizar
+              MenuExport: Exportar
+              ReportReadyNotification: 'El informe de IA está listo. Haga clic aquí para abrirlo.'
+              MenuGenerateReport: Generar Informe
+              MenuRegenerateReport: Regenerar Informe
+              MenuShowReport: Mostrar Informe
+              AnalyzingMessage: Analizando...
+              AnalyzingDialogTitle: Análisis de IA en Progreso
+              AnalyzingDialogMessage: 'Usando IA para analizar los datos del caso. Esto puede tardar un momento...'
+              AnalyzeReportTitle: Informe de Gobernanza IA
               CaseInformation: Información del Caso
               SidebarCaseDetails: Detalles del Caso
               SidebarProcessViewer: Visor de Proceso
@@ -50,7 +60,7 @@ Dialogs:
               TaskAgentTokens: '{0} agentes · {1} tokens'
               AgentLabel: 'Agente {0}'
               TokenCount: '{0} tokens'
-              PrettyToggle: Formateado
+              PrettyToggle: Impresión formateada
               TabSystemPrompt: Prompt del Sistema
               NoSystemPrompt: No hay prompt del sistema configurado
               TabInput: Entrada
@@ -58,6 +68,13 @@ Dialogs:
               TabResponse: Respuesta
               NoResponse: Sin respuesta
               TabTools: 'Llamadas de herramienta ({0})'
+              TabGuardrails: 'Guardrails ({0})'
+              GuardrailStatusPass: Aprobado
+              GuardrailStatusFail: Fallido
+              GuardrailViolation: Violación
+              GuardrailMessage: Mensaje
+              GuardrailDuration: '{0} ms'
+              ToolPrefix: 'Herramienta: {0}'
               ToolInputParameters: Parámetros de entrada
               NoParameters: Sin parámetros
               ToolResult: Resultado

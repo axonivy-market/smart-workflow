@@ -12,19 +12,25 @@
         "signature" : "promptInjectionGuardrailDemo",
         "request" : {
           "name" : "Prompt Injection Guardrail Demo"
+        },
+        "task" : {
+          "name" : "Prompt Injection Input Guardrail Demo"
+        },
+        "case" : {
+          "name" : "Prompt Injection Input Guardrail Demo"
         }
       },
       "visual" : {
         "at" : { "x" : 344, "y" : 232 }
       },
       "connect" : [
-        { "id" : "f1", "to" : "f3" }
+        { "id" : "f1", "to" : "f80" }
       ]
     }, {
       "id" : "f2",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 784, "y" : 232 }
+        "at" : { "x" : 1024, "y" : 232 }
       }
     }, {
       "id" : "f3",
@@ -41,7 +47,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 560, "y" : 232 },
+        "at" : { "x" : 784, "y" : 232 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "boundaries" : [ {
@@ -58,7 +64,7 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 616, "y" : 273 },
+            "at" : { "x" : 840, "y" : 273 },
             "labelOffset" : { "x" : -71, "y" : 25 },
             "icon" : "res:/webContent/icons/shield.png"
           },
@@ -87,10 +93,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 616, "y" : 376 }
+        "at" : { "x" : 840, "y" : 368 }
       },
       "connect" : [
-        { "id" : "f9", "to" : "f2", "via" : [ { "x" : 784, "y" : 376 } ] }
+        { "id" : "f9", "to" : "f2", "via" : [ { "x" : 1024, "y" : 368 } ] }
       ]
     }, {
       "id" : "f20",
@@ -100,19 +106,25 @@
         "signature" : "sensitiveDataOutputGuardrailDemo",
         "request" : {
           "name" : "Sensitive Data Output Guardrail Demo"
+        },
+        "task" : {
+          "name" : "Sensitive Data Output Guardrail Demo"
+        },
+        "case" : {
+          "name" : "Sensitive Data Output Guardrail Demo"
         }
       },
       "visual" : {
         "at" : { "x" : 344, "y" : 552 }
       },
       "connect" : [
-        { "id" : "f21", "to" : "f23" }
+        { "id" : "f21", "to" : "f81" }
       ]
     }, {
       "id" : "f22",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 784, "y" : 552 }
+        "at" : { "x" : 1032, "y" : 552 }
       }
     }, {
       "id" : "f23",
@@ -130,7 +142,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 560, "y" : 552 },
+        "at" : { "x" : 784, "y" : 552 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "boundaries" : [ {
@@ -147,7 +159,7 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 616, "y" : 593 },
+            "at" : { "x" : 840, "y" : 593 },
             "labelOffset" : { "x" : -71, "y" : 25 },
             "icon" : "res:/webContent/icons/shield.png"
           },
@@ -168,29 +180,35 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 616, "y" : 696 }
+        "at" : { "x" : 840, "y" : 688 }
       },
       "connect" : [
-        { "id" : "f29", "to" : "f22", "via" : [ { "x" : 784, "y" : 696 } ] }
+        { "id" : "f29", "to" : "f22", "via" : [ { "x" : 1032, "y" : 688 } ] }
       ]
     }, {
       "id" : "f40",
       "type" : "RequestStart",
       "name" : "PII Masking Guardrail Demo",
       "config" : {
-        "signature" : "piiMaskingGuardrailDemo"
+        "signature" : "piiMaskingGuardrailDemo",
+        "task" : {
+          "name" : "PII Masking Guardrail Demo"
+        },
+        "case" : {
+          "name" : "PII Masking Guardrail Demo"
+        }
       },
       "visual" : {
         "at" : { "x" : 320, "y" : 944 }
       },
       "connect" : [
-        { "id" : "f41", "to" : "f43" }
+        { "id" : "f41", "to" : "f82" }
       ]
     }, {
       "id" : "f42",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 792, "y" : 944 }
+        "at" : { "x" : 936, "y" : 944 }
       }
     }, {
       "id" : "f43",
@@ -209,7 +227,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 560, "y" : 944 },
+        "at" : { "x" : 704, "y" : 944 },
         "size" : { "width" : 160, "height" : 62 },
         "description" : [
           "The following fake credentials and PII data are used for testing purposes only.",
@@ -235,19 +253,25 @@
         "signature" : "customGuardrailBlocked",
         "request" : {
           "name" : "Custom Guardrail Demo - Blocked"
+        },
+        "task" : {
+          "name" : "Custom Guardrail Demo (Blocked)"
+        },
+        "case" : {
+          "name" : "Custom Guardrail Demo (Blocked)"
         }
       },
       "visual" : {
         "at" : { "x" : 320, "y" : 1168 }
       },
       "connect" : [
-        { "id" : "f51", "to" : "f53" }
+        { "id" : "f51", "to" : "f83" }
       ]
     }, {
       "id" : "f52",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 896, "y" : 1160 }
+        "at" : { "x" : 1040, "y" : 1168 }
       }
     }, {
       "id" : "f53",
@@ -264,7 +288,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 560, "y" : 1168 },
+        "at" : { "x" : 720, "y" : 1168 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "boundaries" : [ {
@@ -281,8 +305,8 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 616, "y" : 1209 },
-            "labelOffset" : { "x" : -80, "y" : 25 },
+            "at" : { "x" : 776, "y" : 1209 },
+            "labelOffset" : { "x" : 129, "y" : 33 },
             "icon" : "res:/webContent/icons/shield.png"
           },
           "connect" : [
@@ -305,10 +329,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 712, "y" : 1272 }
+        "at" : { "x" : 776, "y" : 1296 }
       },
       "connect" : [
-        { "id" : "f56", "to" : "f52" }
+        { "id" : "f56", "to" : "f52", "via" : [ { "x" : 1040, "y" : 1296 } ] }
       ]
     }, {
       "id" : "f59",
@@ -323,7 +347,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 720, "y" : 1160 }
+        "at" : { "x" : 928, "y" : 1168 }
       },
       "connect" : [
         { "id" : "f60", "to" : "f52" }
@@ -336,19 +360,25 @@
         "signature" : "customGuardrailAllowed",
         "request" : {
           "name" : "Custom Guardrail Demo - Allowed"
+        },
+        "task" : {
+          "name" : "Custom Guardrail Demo (Allowed)"
+        },
+        "case" : {
+          "name" : "Custom Guardrail Demo (Allowed)"
         }
       },
       "visual" : {
-        "at" : { "x" : 328, "y" : 1368 }
+        "at" : { "x" : 328, "y" : 1392 }
       },
       "connect" : [
-        { "id" : "f62", "to" : "f63" }
+        { "id" : "f62", "to" : "f84" }
       ]
     }, {
       "id" : "f64",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 864, "y" : 1368 }
+        "at" : { "x" : 1040, "y" : 1392 }
       }
     }, {
       "id" : "f63",
@@ -365,7 +395,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 528, "y" : 1368 },
+        "at" : { "x" : 736, "y" : 1392 },
         "size" : { "width" : 160, "height" : 62 }
       },
       "boundaries" : [ {
@@ -382,7 +412,7 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 584, "y" : 1409 },
+            "at" : { "x" : 792, "y" : 1433 },
             "labelOffset" : { "x" : -60, "y" : 25 },
             "icon" : "res:/webContent/icons/shield.png"
           },
@@ -406,10 +436,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 704, "y" : 1496 }
+        "at" : { "x" : 792, "y" : 1504 }
       },
       "connect" : [
-        { "id" : "f70", "to" : "f64" }
+        { "id" : "f70", "to" : "f64", "via" : [ { "x" : 1040, "y" : 1504 } ] }
       ]
     }, {
       "id" : "f69",
@@ -424,7 +454,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 712, "y" : 1368 }
+        "at" : { "x" : 936, "y" : 1392 }
       },
       "connect" : [
         { "id" : "f71", "to" : "f64" }
@@ -437,5 +467,130 @@
         "at" : { "x" : 568, "y" : 1056 },
         "size" : { "width" : 480, "height" : 78 }
       }
+    }, {
+      "id" : "f80",
+      "type" : "TaskSwitchEvent",
+      "name" : "Prompt Injection Input Guardrail Demo",
+      "config" : {
+        "task" : {
+          "name" : "Prompt Injection Input Guardrail Demo",
+          "skipTasklist" : true,
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        },
+        "case" : {
+          "name" : "Prompt Injection Input Guardrail Demo",
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 584, "y" : 232 }
+      },
+      "connect" : [
+        { "id" : "f85", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f81",
+      "type" : "TaskSwitchEvent",
+      "name" : "Sensitive Data Output Guardrail Demo",
+      "config" : {
+        "task" : {
+          "name" : "Sensitive Data Output Guardrail Demo",
+          "skipTasklist" : true,
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        },
+        "case" : {
+          "name" : "Sensitive Data Output Guardrail Demo",
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 552 }
+      },
+      "connect" : [
+        { "id" : "f86", "to" : "f23" }
+      ]
+    }, {
+      "id" : "f82",
+      "type" : "TaskSwitchEvent",
+      "name" : "PII Masking Guardrail Demo",
+      "config" : {
+        "task" : {
+          "name" : "PII Masking Guardrail Demo",
+          "skipTasklist" : true,
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        },
+        "case" : {
+          "name" : "PII Masking Guardrail Demo",
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 944 }
+      },
+      "connect" : [
+        { "id" : "f87", "to" : "f43" }
+      ]
+    }, {
+      "id" : "f83",
+      "type" : "TaskSwitchEvent",
+      "name" : "Custom Guardrail Demo (Blocked)",
+      "config" : {
+        "task" : {
+          "name" : "Custom Guardrail Demo (Blocked)",
+          "skipTasklist" : true,
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        },
+        "case" : {
+          "name" : "Custom Guardrail Demo (Blocked)",
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1168 }
+      },
+      "connect" : [
+        { "id" : "f88", "to" : "f53" }
+      ]
+    }, {
+      "id" : "f84",
+      "type" : "TaskSwitchEvent",
+      "name" : "Custom Guardrail Demo (Allowed)",
+      "config" : {
+        "task" : {
+          "name" : "Custom Guardrail Demo (Allowed)",
+          "skipTasklist" : true,
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        },
+        "case" : {
+          "name" : "Custom Guardrail Demo (Allowed)",
+          "customFields" : [
+            { "name" : "HIDE", "type" : "STRING", "value" : "\"true\"" }
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 544, "y" : 1392 }
+      },
+      "connect" : [
+        { "id" : "f89", "to" : "f63" }
+      ]
     } ]
 }
