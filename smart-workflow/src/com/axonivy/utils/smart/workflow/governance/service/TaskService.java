@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.governance.service;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.security.exec.Sudo;
 import ch.ivyteam.ivy.workflow.ITask;
 
 public class TaskService {
@@ -12,20 +13,22 @@ public class TaskService {
 
   private TaskService() {}
 
-  public static String getDisplayName(String taskUuid) {
-    if (StringUtils.isBlank(taskUuid)) {
-      return String.format(NO_NAME_FORMAT, taskUuid);
-    }
+  public static ITask findTask(String taskUuid) {
     try {
-      ITask task = Ivy.wf().findTask(taskUuid);
-      if (task == null) {
-        return String.format(NO_NAME_FORMAT, taskUuid);
-      }
-      String name = task.getName();
-      return StringUtils.isNotBlank(name) ?
-        String.format(DISPLAY_NAME_FORMAT, name, task.getId()) : Long.toString(task.getId());
+      return Sudo.get(() -> Ivy.wf().findTask(taskUuid));
     } catch (Exception e) {
+      return null;
+    }
+  }
+
+  public static String getDisplayName(String taskUuid) {
+    ITask task = findTask(taskUuid);
+    if (task == null) {
       return String.format(NO_NAME_FORMAT, taskUuid);
     }
+    String name = task.getName();
+    return StringUtils.isNotBlank(name)
+        ? String.format(DISPLAY_NAME_FORMAT, name, task.getId())
+        : String.format(NO_NAME_FORMAT, task.getId());
   }
 }
