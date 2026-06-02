@@ -287,10 +287,17 @@
 .cv-tab-msg-text {
   white-space: normal;
   word-break: break-word;
+  font-size: 1rem;
 }
 .cv-tab-msg-text p            { margin: 0 0 0.6em; }
 .cv-tab-msg-text p:last-child { margin-bottom: 0; }
 .cv-tab-msg-text pre          { margin: 0.6em 0; overflow-x: auto; }
+.governance-page .cv-tab-msg-text h1 { font-size: 1.5rem;  font-weight: 700; margin: 0.8em 0 0.4em; }
+.governance-page .cv-tab-msg-text h2 { font-size: 1.25rem; font-weight: 700; margin: 0.8em 0 0.4em; }
+.governance-page .cv-tab-msg-text h3 { font-size: 1.1rem;  font-weight: 600; margin: 0.7em 0 0.35em; }
+.governance-page .cv-tab-msg-text h4 { font-size: 1rem;    font-weight: 600; margin: 0.6em 0 0.3em; }
+.governance-page .cv-tab-msg-text h5,
+.governance-page .cv-tab-msg-text h6 { font-size: 0.9rem;  font-weight: 600; margin: 0.6em 0 0.3em; }
 
 .cv-tab-msg-turn--sep {
   border-top: 1px dashed var(--surface-border);
