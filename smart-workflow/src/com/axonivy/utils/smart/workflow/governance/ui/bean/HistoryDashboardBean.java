@@ -137,7 +137,7 @@ public class HistoryDashboardBean implements Serializable {
   public List<SelectItem> getAvailableModelItems() {
     return ChatModelFactory.providers().stream()
         .collect(Collectors.toMap(
-            ChatModelProvider::name, provider -> provider, (existing, duplicate) -> existing))
+            ChatModelProvider::name, provider -> provider, (first, second) -> first))
         .values().stream()
         .filter(provider -> !provider.models().isEmpty())
         .sorted(Comparator.comparing(ChatModelProvider::name))
