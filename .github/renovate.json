@@ -12,6 +12,24 @@
         "org.assertj:*"
       ],
       "automerge": true
+    },
+    {
+      "matchManagers": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "/^dev\\.langchain4j:.*/"
+      ],
+      "groupName": "langchain4j"
+    },
+    {
+      "matchManagers": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "dev.langchain4j:langchain4j-community-web-search-engine-duckduckgo"
+      ],
+      "ignoreUnstable": false
     }
   ]
 }

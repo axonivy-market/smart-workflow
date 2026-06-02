@@ -64,12 +64,15 @@ See the enumeration called `AI.DefaultProvider`.
 | **Gemini** | All models (`gemini-1.5-*`, `gemini-2.0-*`, `gemini-2.5-*`) | ✓ | ✓ |
 | **xAI** | All `grok-4-1-*` models | ✓ | — |
 | **Anthropic** | All models (`claude-opus-*`, `claude-sonnet-*`, `claude-haiku-*`) | ✓ | ✓ |
+| **Ollama** | Vision-capable models only (`llava`, `llama3.2-vision`, `gemma3`, ...) | ✓ | — |
 
 **Note for Azure OpenAI**: file extraction capability depends on the underlying model of your deployment, not the deployment name itself. Make sure your deployment uses a vision-capable model.
 
 **Note for xAI**: PDF files are not natively supported by the xAI API. To process PDFs with Grok models, convert them to images first before passing them to Axon Ivy Smart Workflow.
 
 **Note for Anthropic**: Images and PDFs can be sent via URL or base64-encoded data, both supporting text extraction and visual understanding (charts, diagrams, layouts).
+
+**Note for Ollama**: Image support requires a vision-capable model to be pulled (e.g. `ollama pull llava`); text-only models will reject image input. PDFs are not natively supported — convert them to images first.
 
 When contributing a new provider, document its multimodal support in this table.
 

@@ -9,6 +9,7 @@
   <modules>
     <module>smart-workflow</module>
     <module>models/smart-workflow-openai</module>
+    <module>models/smart-workflow-ollama</module>
     <module>models/smart-workflow-azure-openai</module>
     <module>models/smart-workflow-gemini</module>
     <module>models/smart-workflow-xai</module>

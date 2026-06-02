@@ -4,6 +4,11 @@ on:
   schedule:
     - cron:  '0 1 * * 0' # 1 AM on Sunday
   workflow_dispatch:
+    inputs:
+      providers:
+        description: 'Comma-separated provider names to run E2E for. Empty = all. E.g. "OpenAI,Ollama"'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -13,7 +18,7 @@ jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v6
     with:
-      mvnArgs: -P e2e.test
+      mvnArgs: -P e2e.test -Dproviders=${{ inputs.providers }}
       javaVersion: 25
       cspellExtraWords: .github/cspell-extra-words.txt
     secrets:
