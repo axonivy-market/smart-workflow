@@ -8,3 +8,6 @@ Variables:
     Observability:
       Openinference:
         Enabled: true
+    RAG:
+      OpenSearch:
+        Url: http://opensearch:9200

@@ -2,7 +2,7 @@
 
 Our Smart-Workflow development environment is accessible via a Dev Container.
 The container removes the complexity of setting up your workspace and
-provides sidecar services like [RAG](../RAG.md) or [Tracing](../observe/OBSERVE.md) via third-party tools.
+provides sidecar services like [RAG](../RAG.md) (OpenSearch) or [Tracing](../observe/OBSERVE.md) via third-party tools.
 
 Therefore, the Dev Container is perfect for:
 - new users that want to explore the full capabilities of Smart-Workflow
@@ -51,3 +51,18 @@ You can run it right in the browser, hosted by GitHub.
 To avoid unexpected costs, stop your codespace as soon as your session is finished. 
 In GitHub, open the **Codespaces** page and choose **Stop codespace** for inactive environments instead of leaving them running in the background.
 
+### Sidecar services
+
+The Dev Container starts these services automatically:
+
+| Service | Image | Port | Purpose |
+|---|---|---|---|
+| `workspace` | `mcr.microsoft.com/devcontainers/base:trixie` | – | Your VS Code workspace with Java, Maven, and the Axon Ivy engine. |
+| `phoenix` | `arizephoenix/phoenix:nightly` | `6006` | OpenInference tracing UI — see [Tracing](../observe/OBSERVE.md). |
+| `opensearch` | `opensearchproject/opensearch:2.11.0` | `9200` | Vector store for [RAG](../RAG.md). Started with security disabled and `discovery.type=single-node` for local development only. |
+
+
+> **Note:** OpenSearch memory is capped at 512 MB
+> (`OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m`) to keep the dev container
+> lightweight. Raise this value in `.devcontainer/compose.yml` if you ingest
+> large datasets.
