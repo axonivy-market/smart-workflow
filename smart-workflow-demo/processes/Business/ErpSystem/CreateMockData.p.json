@@ -1,0 +1,51 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19DC2E5A063D2270",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.CreateMockDataData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "createMockErpData",
+      "config" : {
+        "signature" : "createMockErpData",
+        "request" : {
+          "name" : "Create ERP Mock Data"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 368, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Create Mock data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.mock.MockDataGenerator;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.procurement.mock.ProcurementMockDataGenerator;",
+            "",
+            "MockDataGenerator.mock();",
+            "ProcurementMockDataGenerator.create();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}

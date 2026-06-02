@@ -61,7 +61,7 @@ function showThinking() {
   }, 50);
 
   if (thinkingStatus) {
-    thinkingStatus.classList.remove('rag-hidden');
+    thinkingStatus.classList.remove('hidden');
   }
 
   thinkingPhaseIndex = 0;
@@ -122,7 +122,7 @@ function escapeHtml(text) {
 function onChatComplete() {
   const thinkingStatus = document.getElementById('thinking-indicator');
   if (thinkingStatus) {
-    thinkingStatus.classList.add('rag-hidden');
+    thinkingStatus.classList.add('hidden');
   }
 
   if (thinkingInterval) {

@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierSharedToolsData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "criteria",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria",
+    "comment" : "Search criteria — businessNameContains, country, businessPurposeContains"
+  }, {
+    "name" : "toolResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
+    "comment" : "Search result with matched suppliers, isSupplierExisting, matchScore and feedback"
+  } ]
+}

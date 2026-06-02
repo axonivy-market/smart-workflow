@@ -1,0 +1,318 @@
+body.body-hd {
+  background-color: white !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   AI Assistant — chat wrapper, chip, upload strip, and header styles.
+   Chat bubble styles are handled by chat-ui.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Messenger wrapper ──────────────────────────────────────────── */
+.so-ai-chat-wrapper {
+  background: white;
+  border: 1px solid var(--so-border, var(--surface-border));
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--so-shadow, 0 2px 8px rgba(0,0,0,0.08));
+}
+
+/* Override rag-welcome-state min/max heights for compact context */
+.so-ai-chat-wrapper .rag-welcome-state {
+  min-height: unset;
+  max-height: none;
+  padding: 0.75rem 0;
+}
+
+.so-ai-chat-wrapper .rag-welcome-avatar .ti {
+  font-size: 2rem;
+}
+
+/* Prevent p:inputTextarea autoResize from collapsing on update="@all" re-renders */
+.so-ai-chat-wrapper .message-input {
+  min-height: 46px;
+}
+
+/* ── Suggestion chips ───────────────────────────────────────────── */
+.so-ai-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.so-ai-chip {
+  background: var(--surface-0);
+  border: 1.5px solid color-mix(in srgb, var(--ivy-primary-color), transparent 60%);
+  border-radius: 18px;
+  padding: 8px 14px;
+  color: var(--text-color);
+  cursor: pointer;
+  user-select: none;
+  transition: background .18s, border-color .18s, color .18s, transform .12s;
+  line-height: 1.4;
+}
+
+.so-ai-chip:hover {
+  background: color-mix(in srgb, var(--ivy-primary-color), transparent 88%);
+  border-color: var(--ivy-primary-color);
+  color: var(--ivy-primary-color);
+  transform: translateY(-1px);
+}
+
+.so-ai-chip:active {
+  background: color-mix(in srgb, var(--ivy-primary-color), transparent 78%);
+  border-color: var(--ivy-primary-color);
+  color: var(--ivy-primary-color);
+  transform: translateY(0);
+}
+
+.so-ai-chip.disabled-chip {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+/* ── Upload trigger button ──────────────────────────────────────── */
+.so-ai-upload-form {
+  display: flex;
+  margin: 0;
+}
+
+.so-ai-upload-form .ui-fileupload-buttonbar,
+.so-ai-upload-form .ui-fileupload-content {
+  display: none;
+}
+
+.so-ai-upload-trigger.ui-button {
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: var(--surface-100) !important;
+  border: 1px solid var(--surface-border) !important;
+  color: var(--text-color-secondary) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+}
+
+.so-ai-upload-trigger.ui-button .ui-button-text {
+  display: none;
+}
+
+.so-ai-upload-trigger.ui-button .ui-button-icon-left {
+  position: static;
+  margin: 0;
+  font-size: 1.5rem;
+  margin-top: -0.75rem !important;
+  margin-left: -0.75rem !important;
+}
+
+.so-ai-upload-trigger.ui-button:not(.ui-state-disabled):hover {
+  background: var(--surface-200) !important;
+  border-color: var(--surface-border) !important;
+  color: var(--text-color) !important;
+}
+
+/* ── Upload strip (queued files + confirm) ──────────────────────── */
+.so-ai-upload-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--surface-50);
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  padding: 8px 10px;
+  margin: 8px 12px 0;
+}
+
+.so-ai-upload-file {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--text-color-secondary);
+}
+
+.so-ai-upload-file-icon {
+  color: var(--ivy-primary-color);
+  flex-shrink: 0;
+}
+
+.so-ai-upload-file span,
+.so-ai-upload-file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.so-ai-remove-file-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0;
+  color: var(--text-color-secondary);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+
+.so-ai-remove-file-btn:hover {
+  color: var(--red-500);
+}
+
+.so-ai-confirm-btn.ui-button {
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  background: var(--ivy-primary-color) !important;
+  border-color: var(--ivy-primary-color) !important;
+  color: white !important;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--ivy-primary-color), transparent 70%) !important;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.so-ai-confirm-btn.ui-button .ui-button-text {
+  display: none;
+}
+
+.so-ai-confirm-btn.ui-button .ui-button-icon-left {
+  position: static;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.so-ai-confirm-btn.ui-button:not(.ui-state-disabled):hover {
+  filter: brightness(0.9);
+}
+
+.so-ai-upload-feedback {
+  line-height: 1.45;
+  color: var(--ivy-primary-color);
+  background: color-mix(in srgb, var(--ivy-primary-color), transparent 92%);
+  border: 1px solid color-mix(in srgb, var(--ivy-primary-color), transparent 70%);
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+
+/* ── Inventory Analysis feedback card ──────────────────────────── */
+.so-ai-feedback-card {
+  background: var(--surface-0);
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  padding: 14px 16px;
+  margin-top: 12px;
+}
+
+.so-ai-feedback-card-header {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: var(--ivy-primary-color);
+}
+
+.so-ai-feedback-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--surface-100);
+  line-height: 1.5;
+}
+
+.so-ai-feedback-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.so-ai-feedback-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.so-ai-feedback-ok  { color: #15803d; }
+.so-ai-feedback-fail { color: #b91c1c; }
+
+/* OPTION-type feedback items — neutral, no success/fail colors */
+.so-ai-feedback-item-option {
+  color: var(--text-color);
+}
+
+.so-ai-option-text {
+  padding-bottom: 0.25rem;
+}
+
+.so-ai-option-toggle {
+  font-size: 0.78rem;
+  color: var(--text-color-secondary);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity .15s;
+  margin-bottom: 0.5rem;
+}
+
+.so-ai-option-toggle:hover {
+  opacity: 1;
+  color: var(--ivy-primary-color);
+  text-decoration: underline;
+}
+
+.so-ai-option-thinking {
+  display: none;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--surface-100);
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+  line-height: 1.45;
+}
+
+/* hide the card until JS reveals it */
+.so-ai-feedback-hidden {
+  display: none;
+}
+
+.so-ai-feedback-visible {
+  display: block;
+  animation: soFeedbackReveal 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes soFeedbackReveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Sticky chat header ──────────────────────────────────────────── */
+.so-ai-sticky-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface-0);
+  border-bottom: 1px solid var(--so-border, var(--surface-border));
+  flex-shrink: 0;
+}
+
+.so-ai-header-title {
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.so-ai-header-subtitle {
+  color: var(--text-color-secondary);
+  font-size: 0.8rem;
+}

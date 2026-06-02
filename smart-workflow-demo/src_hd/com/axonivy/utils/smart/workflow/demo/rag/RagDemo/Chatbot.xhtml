@@ -8,7 +8,7 @@
   <h:outputScript library="js" name="chat.js" />
 
   <h:panelGroup id="chat-panel" layout="block">
-    <p:ajaxStatus onstart="return false;" styleClass="rag-hidden">
+    <p:ajaxStatus onstart="return false;" styleClass="hidden">
       <f:facet name="start"><span></span></f:facet>
       <f:facet name="complete"><span></span></f:facet>
     </p:ajaxStatus>
@@ -59,7 +59,7 @@
           </ui:repeat>
 
           <!-- Thinking Indicator -->
-          <div class="assistant-message-row mb-4 thinking-status rag-hidden" id="thinking-indicator">
+          <div class="assistant-message-row mb-4 thinking-status hidden" id="thinking-indicator">
             <div class="assistant-content">
               <div class="assistant-name text-sm font-semibold text-gray-700 mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/Chatbot/AssistantName')}</div>
               <div class="flex align-items-center gap-2">

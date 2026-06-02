@@ -1,0 +1,319 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/PageTitle')}</ui:define>
+    <ui:define name="content">
+
+      <f:event listener="#{procurementRequestBean.preRender(data.request, data.requesterName)}" type="preRenderComponent" />
+
+      <h:outputStylesheet library="css" name="supplier-onboarding.css" />
+      <h:outputStylesheet library="css" name="supplier-onboarding-#{ivyFreyaTheme.mode}.css" />
+      <h:outputStylesheet library="css" name="procurement.css" />
+      <h:outputStylesheet library="css" name="procurement-#{ivyFreyaTheme.mode}.css" />
+
+      <div class="so-body-columns flex align-items-stretch overflow-hidden">
+
+        <!-- ── Left: form column ─────────────────────────────────── -->
+        <div class="flex flex-column flex-auto min-w-0 overflow-hidden">
+
+          <p:messages id="form-messages" styleClass="mx-3 mt-2" />
+
+          <h:form id="main-form" styleClass="flex-auto overflow-y-auto p-5">
+
+            <!-- Project Header -->
+            <div class="so-card">
+              <div class="flex justify-content-between align-items-center border-bottom-1 surface-border mb-3">
+                <span class="so-card-title mb-0">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ProjectHeaderTitle')}</span>
+              </div>
+              <div class="formgrid grid">
+
+                <div class="field ui-fluid col-12 md:col-6">
+                  <p:outputLabel for="project-name" styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ProjectNameLabel')}</p:outputLabel>
+                  <p:inputText id="project-name"
+                    value="#{procurementRequestBean.request.projectName}"
+                    placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ProjectNamePlaceholder')}"
+                    styleClass="w-full"
+                    required="true"
+                    requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ProjectNameRequired')}" />
+                </div>
+
+                <div class="field ui-fluid col-12 md:col-6">
+                  <p:outputLabel for="project-number" styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ProjectNumberLabel')}</p:outputLabel>
+                  <p:inputText id="project-number"
+                    value="#{procurementRequestBean.request.projectNumberCostCenter}"
+                    placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ProjectNumberPlaceholder')}"
+                    styleClass="w-full"
+                    required="true"
+                    requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ProjectNumberRequired')}" />
+                </div>
+
+                <div class="field ui-fluid col-12">
+                  <p:outputLabel for="delivery-address" styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/DeliveryAddressLabel')}</p:outputLabel>
+                  <p:inputTextarea id="delivery-address"
+                    value="#{procurementRequestBean.request.constructionSiteDeliveryAddress}"
+                    placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/DeliveryAddressPlaceholder')}"
+                    rows="3"
+                    styleClass="w-full"
+                    required="true"
+                    requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/DeliveryAddressRequired')}" />
+                </div>
+
+                <div class="field ui-fluid col-12 md:col-4">
+                  <p:outputLabel for="priority" styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/PriorityLabel')}</p:outputLabel>
+                  <p:selectOneMenu id="priority"
+                    value="#{procurementRequestBean.request.priority}"
+                    styleClass="w-full">
+                    <f:selectItems value="#{procurementRequestBean.priorityValues}"
+                      var="p" itemLabel="#{p.displayName}" itemValue="#{p}" />
+                  </p:selectOneMenu>
+                </div>
+
+                <div class="field ui-fluid col-12 md:col-4">
+                  <p:outputLabel for="requester" styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/RequesterLabel')}</p:outputLabel>
+                  <p:inputText id="requester"
+                    value="#{procurementRequestBean.request.requester}"
+                    readonly="true"
+                    styleClass="w-full" />
+                </div>
+
+                <div class="field ui-fluid col-12">
+                  <p:outputLabel for="order-notes" styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/OrderNotesLabel')}</p:outputLabel>
+                  <p:inputTextarea id="order-notes"
+                    value="#{procurementRequestBean.request.orderNotes}"
+                    placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/OrderNotesPlaceholder')}"
+                    rows="3"
+                    styleClass="w-full" />
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Material List -->
+            <div class="so-card">
+              <div class="flex align-items-center justify-content-between mb-3">
+                <span class="so-card-title mb-0">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/MaterialListTitle')}</span>
+                <p:commandButton id="add-row"
+                  value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/AddRowButton')}"
+                  icon="pi pi-plus"
+                  styleClass="p-button-outlined p-button-sm"
+                  actionListener="#{procurementRequestBean.addRow}"
+                  update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}"
+                  process="@this" />
+              </div>
+
+              <h:panelGroup layout="block" id="material-panel">
+                <p:dataTable id="material-table"
+                  value="#{procurementRequestBean.request.materialItems}"
+                  var="item"
+                  rowIndexVar="rowIdx"
+                  rowKey="#{item.id}"
+                  rowStyleClass="#{item.hasTrouble ? 'trouble-row' : item.changed ? 'changed-row' : ''}"
+                  emptyMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/EmptyMessage')}"
+                  styleClass="w-full">
+
+                  <p:column styleClass="text-center pr-col-toggle" width="20"
+                    ariaHeaderText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/ExpandAriaHeader')}">
+                    <p:rowToggler />
+                  </p:column>
+
+                  <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/PosColumn')}" styleClass="text-center" width="30">
+                    <h:panelGroup layout="inline" rendered="#{item.hasTrouble}" styleClass="pr-trouble-tooltip">
+                      <i class="pi pi-exclamation-triangle pr-trouble-icon" />
+                      <p:tooltip value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/TroubleTip')}" position="top" />
+                    </h:panelGroup>
+                    <h:outputText value="#{item.position}" rendered="#{!item.hasTrouble}" />
+                  </p:column>
+
+                  <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/MaterialColumn')}">
+                    <h:outputText value="#{empty item.materialDescription ? '—' : item.materialDescription}" />
+                  </p:column>
+
+                  <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/QtyUnitColumn')}" styleClass="text-right" width="90">
+                    <h:outputText value="#{item.quantity}">
+                      <f:convertNumber minFractionDigits="0" maxFractionDigits="2" />
+                    </h:outputText>
+                    <h:outputText value=" #{item.unit}" rendered="#{not empty item.unit}" />
+                  </p:column>
+
+                  <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/UnitPriceColumn')}" styleClass="text-right" width="90">
+                    <h:outputText value="#{item.unitPriceNet}">
+                      <f:convertNumber minFractionDigits="0" maxFractionDigits="0" />
+                    </h:outputText>
+                  </p:column>
+
+                  <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/TotalNetColumn')}" styleClass="text-right" width="90">
+                    <h:outputText value="#{item.totalPriceNet}">
+                      <f:convertNumber minFractionDigits="0" maxFractionDigits="0" />
+                    </h:outputText>
+                  </p:column>
+
+                  <p:column styleClass="text-center" width="40">
+                    <p:commandButton icon="pi pi-times"
+                      styleClass="p-button-rounded p-button-text p-button-danger p-button-sm"
+                      actionListener="#{procurementRequestBean.removeRow(rowIdx)}"
+                      update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}"
+                      process="@this"
+                      title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/RemoveRowTitle')}" />
+                  </p:column>
+
+                  <p:rowExpansion>
+                    <div class="p-3 surface-50 border-round">
+                      <div class="grid">
+
+                        <div class="field ui-fluid col-12 md:col-6">
+                          <p:outputLabel styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/MaterialDescLabel')}</p:outputLabel>
+                          <p:inputText value="#{item.materialDescription}"
+                            placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/MaterialDescPlaceholder')}"
+                            styleClass="w-full">
+                            <p:ajax update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}" />
+                          </p:inputText>
+                        </div>
+
+                        <div class="field ui-fluid col-12 md:col-6">
+                          <p:outputLabel styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/StandardGradeLabel')}</p:outputLabel>
+                          <p:inputText value="#{item.standardGradeClass}"
+                            placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/StandardGradePlaceholder')}"
+                            styleClass="w-full">
+                            <p:ajax event="change" listener="#{procurementRequestBean.recalculate}"
+                              update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}" />
+                          </p:inputText>
+                        </div>
+
+                        <div class="field ui-fluid col-6 md:col-3">
+                          <p:outputLabel styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/QuantityLabel')}</p:outputLabel>
+                          <p:inputText value="#{item.quantity}" styleClass="w-full text-right">
+                            <p:ajax event="change" listener="#{procurementRequestBean.recalculate}"
+                              update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}" />
+                          </p:inputText>
+                        </div>
+
+                        <div class="field ui-fluid col-6 md:col-3">
+                          <p:outputLabel styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/UnitLabel')}</p:outputLabel>
+                          <p:selectOneMenu value="#{item.unit}" styleClass="w-full">
+                            <f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/UnitSelectPrompt')}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{procurementRequestBean.unitOptions}" />
+                            <p:ajax event="change" listener="#{procurementRequestBean.recalculate}"
+                              update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}" />
+                          </p:selectOneMenu>
+                        </div>
+
+                        <div class="field ui-fluid col-12 md:col-6">
+                          <p:outputLabel styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/SupplierLabel')}</p:outputLabel>
+                          <p:inputText value="#{item.supplier}"
+                            placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/OptionalPlaceholder')}"
+                            styleClass="w-full">
+                            <p:ajax event="change" listener="#{procurementRequestBean.recalculate}"
+                              update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}" />
+                          </p:inputText>
+                        </div>
+
+                        <div class="field ui-fluid col-12 md:col-6">
+                          <p:outputLabel styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/UnitPriceNetLabel')}</p:outputLabel>
+                          <p:inputText value="#{item.unitPriceNet}" styleClass="w-full text-right">
+                            <p:ajax event="change" listener="#{procurementRequestBean.recalculate}"
+                              update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}" />
+                          </p:inputText>
+                        </div>
+
+                        <div class="field ui-fluid col-12 md:col-6">
+                          <p:outputLabel styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/PurposeLabel')}</p:outputLabel>
+                          <p:inputText value="#{item.purpose}"
+                            placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/PurposePlaceholder')}"
+                            styleClass="w-full">
+                            <p:ajax event="change" listener="#{procurementRequestBean.recalculate}"
+                              update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}" />
+                          </p:inputText>
+                        </div>
+
+                        <div class="field ui-fluid col-12 md:col-6">
+                          <p:outputLabel styleClass="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/CommentLabel')}</p:outputLabel>
+                          <p:inputText value="#{item.comment}"
+                            placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/OptionalPlaceholder')}"
+                            styleClass="w-full">
+                            <p:ajax event="change" listener="#{procurementRequestBean.recalculate}"
+                              update="#{p:resolveFirstComponentWithId('material-panel', view).clientId} #{p:resolveFirstComponentWithId('totals-panel', view).clientId}" />
+                          </p:inputText>
+                        </div>
+
+                      </div>
+                    </div>
+                  </p:rowExpansion>
+
+                </p:dataTable>
+              </h:panelGroup>
+
+              <p:outputPanel id="totals-panel">
+                <div class="flex justify-content-end align-items-center gap-4 mt-3 pr-2">
+                  <span class="text-500">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/TotalNetLabel')}
+                    <strong class="text-xl text-primary">
+                      <h:outputText value="#{procurementRequestBean.request.totalNetAmount}">
+                        <f:convertNumber minFractionDigits="0" maxFractionDigits="0" />
+                      </h:outputText> ¥
+                    </strong>
+                  </span>
+                </div>
+              </p:outputPanel>
+
+            </div>
+
+          </h:form>
+
+          <!-- Sticky footer -->
+          <div class="so-page-footer">
+            <div class="so-page-footer-left">
+              <p:commandLink id="cancel"
+                value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/CancelButton')}"
+                actionListener="#{logic.cancel}"
+                process="@none"
+                styleClass="p-button p-button-outlined p-button-secondary" />
+            </div>
+            <div class="so-page-footer-right">
+              <p:commandButton id="submit"
+                value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/SubmitButton')}"
+                icon="ti ti-confetti"
+                process="main-form"
+                update="main-form form-messages"
+                oncomplete="if(!args.validationFailed) submitToProcess();"
+                actionListener="#{procurementRequestBean.recalculate}" />
+              <p:remoteCommand name="submitToProcess" actionListener="#{logic.close}" process="@this">
+                <f:setPropertyActionListener target="#{data.request}" value="#{procurementRequestBean.request}" />
+              </p:remoteCommand>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── Resize handle ─────────────────────────────────────── -->
+        <div class="so-resize-handle relative z-5" id="so-resize-handle"></div>
+
+        <!-- ── Right: AI assistant panel ────────────────────────── -->
+        <div class="so-ai-col flex-none flex flex-column overflow-hidden" id="so-ai-col">
+          <div class="flex-1 overflow-hidden h-full">
+          <ic:com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.components.SupplierAiAssistant
+            assistantName="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/procurement/CreateRequestDialog/AssistantName')}"
+            sendMessageListener="#{procurementRequestBean.sendAgentMessage}"
+            getAnswerListener="#{procurementRequestBean.getAgentAnswer}"
+            chatHistory="#{procurementRequestBean.agentChatHistory}"
+            userMessage="#{procurementRequestBean.agentUserMessage}"
+            guidanceList="#{procurementRequestBean.agentGuidance}"
+            updateAfterAnswer="main-form:material-panel main-form:totals-panel"
+            uploadEnabled="true"
+            uploadListener="#{procurementRequestBean.addUploadedDocument}"
+            confirmParseListener="#{procurementRequestBean.confirmAssistantDocumentParse}"
+            uploadedFileName="#{procurementRequestBean.assistantUploadedFileName}"
+            awaitingConfirmation="#{procurementRequestBean.assistantAwaitingConfirmation}"
+            parseFeedback="#{procurementRequestBean.assistantParseFeedback}"
+            uploadedDocuments="#{procurementRequestBean.uploadedDocuments}"
+            removeDocumentListener="#{procurementRequestBean.removeUploadedDocument}" />
+          </div>
+        </div>
+
+      </div>
+
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+</html>

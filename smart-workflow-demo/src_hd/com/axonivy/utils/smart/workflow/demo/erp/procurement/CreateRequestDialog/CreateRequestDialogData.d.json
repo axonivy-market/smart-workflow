@@ -1,0 +1,18 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "CreateRequestDialogData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.CreateRequestDialog",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest",
+    "comment" : "The request being created"
+  }, {
+    "name" : "requesterName",
+    "type" : "String",
+    "comment" : "Pre-filled from the session user"
+  }, {
+    "name" : "submitted",
+    "type" : "Boolean",
+    "comment" : "True if the user submitted the form, false if cancelled"
+  } ]
+}

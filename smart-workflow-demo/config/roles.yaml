@@ -5,3 +5,8 @@ Roles:
   - Id: PortalSupport
   - Id: CoreSupport
   - Id: MarketSupport
+  - Id: Procurement
+  - Id: DepartmentManager
+  - Id: ProcurementDirector
+  - Id: QualityManager
+    Name: Quality Manager (QM/ISM)

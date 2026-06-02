@@ -1,0 +1,243 @@
+[
+  {
+    "supplierId" : "SGN-2025-101",
+    "businessName" : "Saigon Apparel Manufacturing Co., Ltd.",
+    "legalForm" : "Ltd.",
+    "vatId" : "VN-MST-0312345678",
+    "commercialRegisterNo" : "0312345678",
+    "businessPurpose" : "Manufacturing / Apparel",
+    "businessAddress" : {
+      "street1" : "Lot B7, Tan Tao Industrial Park",
+      "street2" : "",
+      "city" : "Ho Chi Minh City",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Vietnam"
+    },
+    "phone" : "+84 28 3899 8888",
+    "email" : "sales@saigonapparel.vn",
+    "website" : "https://www.saigonapparel.vn",
+    "primaryContact" : {
+      "firstName" : "Nguyen",
+      "lastName" : "Thi Lan",
+      "jobTitle" : "Export Manager",
+      "email" : "lan.nguyen@saigonapparel.vn",
+      "phone" : "+84 90 123 4567"
+    },
+    "banking" : {
+      "iban" : "VN86 0100 0000 0123 4567 890",
+      "bic" : "BIDVVNVX",
+      "bankName" : "BIDV Bank"
+    },
+    "certifications" : [
+      {
+        "type" : "ISO_9001",
+        "certNumber" : "ISO-VN-2022-00101",
+        "expiryDate" : "2025-11-30",
+        "documentReference" : "iso9001_sgn_2025.pdf",
+        "uploaded" : true
+      }
+    ]
+  }, {
+    "supplierId" : "LTU-2025-001",
+    "businessName" : "Liberty Threads USA, Inc.",
+    "legalForm" : "Inc.",
+    "vatId" : "US-EIN-83-1234567",
+    "commercialRegisterNo" : "C3456789",
+    "businessPurpose" : "Manufacturing / Apparel",
+    "businessAddress" : {
+      "street1" : "2500 Freedom Blvd",
+      "street2" : "",
+      "city" : "San Francisco",
+      "state" : "CA",
+      "zipCode" : "94110",
+      "country" : "USA"
+    },
+    "phone" : "+1 (415) 555-7890",
+    "email" : "sales@libertythreadsusa.example",
+    "website" : "https://www.libertythreadsusa.example",
+    "primaryContact" : {
+      "firstName" : "James",
+      "lastName" : "Carter",
+      "jobTitle" : "Sales Director",
+      "email" : "j.carter@libertythreadsusa.example",
+      "phone" : "+1 (415) 555-0011"
+    },
+    "banking" : {
+      "iban" : "US64SVBK0000000012345678",
+      "bic" : "SVBKUS6S",
+      "bankName" : "Silicon Valley Bank"
+    },
+    "certifications" : [
+      {
+        "type" : "ISO_9001",
+        "certNumber" : "ISO-US-2023-00042",
+        "expiryDate" : "2026-03-15",
+        "documentReference" : "iso9001_ltu_2026.pdf",
+        "uploaded" : true
+      },
+      {
+        "type" : "GDPR_DPA",
+        "certNumber" : "",
+        "expiryDate" : "",
+        "documentReference" : "dpa_ltu_2025.pdf",
+        "uploaded" : true
+      }
+    ]
+  }, {
+    "supplierId" : "HN-2025-301",
+    "businessName" : "Hanoi Garment Export JSC",
+    "legalForm" : "JSC",
+    "vatId" : "VN-MST-0109876543",
+    "commercialRegisterNo" : "0109876543",
+    "businessPurpose" : "Manufacturing / Apparel",
+    "businessAddress" : {
+      "street1" : "Lot C1, Thang Long Industrial Park",
+      "street2" : "",
+      "city" : "Hanoi",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Vietnam"
+    },
+    "phone" : "+84 24 3777 7777",
+    "email" : "export@hanoigarment.vn",
+    "website" : "https://www.hanoigarment.vn",
+    "primaryContact" : {
+      "firstName" : "Tran",
+      "lastName" : "Van Minh",
+      "jobTitle" : "Export Director",
+      "email" : "minh.tran@hanoigarment.vn",
+      "phone" : "+84 91 234 5678"
+    },
+    "banking" : {
+      "iban" : "VN86 0200 0000 0987 6543 210",
+      "bic" : "VBARDVNX",
+      "bankName" : "Agribank Vietnam"
+    },
+    "certifications" : []
+  }, {
+    "supplierId" : "TW-2025-717",
+    "businessName" : "Kaohsiung Apparel Industries Ltd.",
+    "legalForm" : "Ltd.",
+    "vatId" : "TW-GUI-12345678",
+    "commercialRegisterNo" : "KH-2019-00717",
+    "businessPurpose" : "Manufacturing / Apparel",
+    "businessAddress" : {
+      "street1" : "No. 120, Chenggong 1st Road",
+      "street2" : "",
+      "city" : "Kaohsiung City",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Taiwan"
+    },
+    "phone" : "+886 7 331 2255",
+    "email" : "export@kaohsiungapparel.tw",
+    "website" : "https://www.kaohsiungapparel.tw",
+    "primaryContact" : {
+      "firstName" : "Wei",
+      "lastName" : "Chen",
+      "jobTitle" : "International Sales Manager",
+      "email" : "wei.chen@kaohsiungapparel.tw",
+      "phone" : "+886 912 345 678"
+    },
+    "banking" : {
+      "iban" : "TW59 0082 0000 0012 3456 789",
+      "bic" : "HNBKTWTP",
+      "bankName" : "Hua Nan Bank"
+    },
+    "certifications" : [
+      {
+        "type" : "ISO_9001",
+        "certNumber" : "ISO-TW-2021-00717",
+        "expiryDate" : "2027-06-30",
+        "documentReference" : "iso9001_tw_717.pdf",
+        "uploaded" : true
+      },
+      {
+        "type" : "ISO_14001",
+        "certNumber" : "ISO14-TW-2022-00717",
+        "expiryDate" : "2025-06-30",
+        "documentReference" : "iso14001_tw_717.pdf",
+        "uploaded" : true
+      }
+    ]
+  }, {
+    "supplierId" : "TW-2025-827",
+    "businessName" : "Kaohsiung Precision Textiles Co., Ltd.",
+    "legalForm" : "Co., Ltd.",
+    "vatId" : "TW-GUI-87654321",
+    "commercialRegisterNo" : "KH-2018-00827",
+    "businessPurpose" : "Manufacturing / Textiles",
+    "businessAddress" : {
+      "street1" : "No. 78, Huaxing Street",
+      "street2" : "",
+      "city" : "Kaohsiung City",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Taiwan"
+    },
+    "phone" : "+88673456789",
+    "email" : "contact@kaohsiungtextiles.tw",
+    "website" : "https://www.kaohsiungtextiles.tw",
+    "primaryContact" : {
+      "firstName" : "Li",
+      "lastName" : "Huang",
+      "jobTitle" : "Procurement Liaison",
+      "email" : "li.huang@kaohsiungtextiles.tw",
+      "phone" : "+886 923 456 789"
+    },
+    "banking" : {
+      "iban" : "TW59 0082 0000 0087 6543 210",
+      "bic" : "HNBKTWTP",
+      "bankName" : "Hua Nan Bank"
+    },
+    "certifications" : [
+      {
+        "type" : "ISO_9001",
+        "certNumber" : "ISO-TW-2020-00827",
+        "expiryDate" : "2026-01-15",
+        "documentReference" : "iso9001_tw_827.pdf",
+        "uploaded" : true
+      }
+    ]
+  }, {
+    "supplierId" : "TW-2025-616",
+    "businessName" : "Taichung Tailoring Works Ltd.",
+    "legalForm" : "Ltd.",
+    "vatId" : "TW-GUI-55566677",
+    "commercialRegisterNo" : "TC-2017-00616",
+    "businessPurpose" : "Manufacturing / Apparel",
+    "businessAddress" : {
+      "street1" : "No. 55, Zhonggang Road",
+      "street2" : "",
+      "city" : "Taichung City",
+      "state" : "",
+      "zipCode" : "",
+      "country" : "Taiwan"
+    },
+    "phone" : "+886 4 2323 8899",
+    "email" : "contact@taichungtailor.tw",
+    "website" : "https://www.taichungtailor.tw",
+    "primaryContact" : {
+      "firstName" : "Ming",
+      "lastName" : "Wu",
+      "jobTitle" : "Sales Manager",
+      "email" : "ming.wu@taichungtailor.tw",
+      "phone" : "+886 934 567 890"
+    },
+    "banking" : {
+      "iban" : "TW59 0082 0000 0055 5666 770",
+      "bic" : "HNBKTWTP",
+      "bankName" : "Hua Nan Bank"
+    },
+    "certifications" : [
+      {
+        "type" : "ISO_9001",
+        "certNumber" : "ISO-TW-2019-00616",
+        "expiryDate" : "2025-08-31",
+        "documentReference" : "iso9001_tw_616.pdf",
+        "uploaded" : true
+      }
+    ]
+  }
+]

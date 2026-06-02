@@ -1,0 +1,196 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierValidationAgentData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest",
+    "comment" : "The supplier onboarding request (contains supplier, documents, expected volume)",
+    "modifiers" : [ ]
+  }, {
+    "name" : "supplierId",
+    "comment" : "ID of the supplier — mapped from extractDocuments tool param"
+  }, {
+    "name" : "documentContext",
+    "comment" : "Assembled document metadata for AI extraction, then extraction summary for policy validation"
+  }, {
+    "name" : "processingStep",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep",
+    "comment" : "Current AgentProcessingStep being built during tool execution",
+    "modifiers" : [ ]
+  }, {
+    "name" : "supplierContext",
+    "comment" : "JSON of the supplier object, built internally from in.request.getSupplier()"
+  }, {
+    "name" : "policyRules",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule>",
+    "comment" : "Policy rules loaded for the per-rule validation loop",
+    "modifiers" : [ ]
+  }, {
+    "name" : "ruleIndex",
+    "type" : "Integer",
+    "comment" : "Current index in the policy rule loop",
+    "modifiers" : [ ]
+  }, {
+    "name" : "ruleContext",
+    "comment" : "Built context for the current rule (matching doc content + supplier context)"
+  }, {
+    "name" : "ruleDocumentFound",
+    "type" : "Boolean",
+    "comment" : "True if the current rule's required document is present in the extraction result (or the rule has no document type)",
+    "modifiers" : [ ]
+  }, {
+    "name" : "ruleSystemPrompt",
+    "comment" : "Per-rule system prompt for the AI call"
+  }, {
+    "name" : "ruleFindings",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.PolicyValidationResult",
+    "comment" : "Scratch: AI findings for the current rule iteration",
+    "modifiers" : [ ]
+  }, {
+    "name" : "accumulatedFindings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding>",
+    "comment" : "Running list of findings accumulated across all rule iterations",
+    "modifiers" : [ ]
+  }, {
+    "name" : "existingFindings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding>",
+    "comment" : "Existing findings from prior run (from onboardingRequest.policyValidationFindings), null on first run",
+    "modifiers" : [ ]
+  }, {
+    "name" : "filteredExistingFindings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding>",
+    "comment" : "Subset of existingFindings kept for re-use: all findings except resolved MISSING_DOC ones",
+    "modifiers" : [ ]
+  }, {
+    "name" : "ruleAlreadyEvaluated",
+    "type" : "Boolean",
+    "comment" : "True when the current rule already has a finding in filteredExistingFindings; AI call is skipped",
+    "modifiers" : [ ]
+  }, {
+    "name" : "onboardingRequest",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest",
+    "comment" : "Full OnboardingRequest passed into validateAgainstPolicy; used to read/write policyValidationFindings",
+    "modifiers" : [ ]
+  }, {
+    "name" : "policySystemPrompt",
+    "comment" : "Composed system prompt for policy validation (rules injected into CMS template)"
+  }, {
+    "name" : "policyRuleEvaluations",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule>",
+    "comment" : "Per-rule evaluation list with isPassed and risk score context for the current supplier",
+    "modifiers" : [ ]
+  }, {
+    "name" : "policyComplianceScore",
+    "type" : "Integer",
+    "comment" : "Deterministic policy compliance score computed from rule violations",
+    "modifiers" : [ ]
+  }, {
+    "name" : "policyValidationResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.PolicyValidationResult",
+    "comment" : "Output of validateAgainstPolicy tool: findings plus AgentProcessingStep",
+    "modifiers" : [ ]
+  }, {
+    "name" : "extractionResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtractionResult",
+    "comment" : "Full extraction result from extractDocuments — stored for policy validation context and returned as callable output",
+    "modifiers" : [ ]
+  }, {
+    "name" : "extractionSummary",
+    "comment" : "Plain-text summary of extracted documents returned to the LLM from extractDocuments"
+  }, {
+    "name" : "findingsSummary",
+    "comment" : "Plain-text summary of policy findings returned to the LLM from validateAgainstPolicy"
+  }, {
+    "name" : "validationSummary",
+    "comment" : "Overall validation summary text produced by the outer LLM agent"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError",
+    "comment" : "Caught BpmError from ErrorBoundaryEvent",
+    "modifiers" : [ ]
+  }, {
+    "name" : "supplier",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier",
+    "modifiers" : [ ]
+  }, {
+    "name" : "crossReferenceResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.CrossReferenceResult",
+    "comment" : "Output: cross-reference check findings plus AgentProcessingStep (set as side effect by tool)",
+    "modifiers" : [ ]
+  }, {
+    "name" : "annualVolumeEur",
+    "type" : "Integer",
+    "comment" : "Expected annual procurement volume in EUR",
+    "modifiers" : [ ]
+  }, {
+    "name" : "riskScoreResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.RiskScoreResult",
+    "comment" : "Output: 4-component risk score, routing decision, and AgentProcessingStep",
+    "modifiers" : [ ]
+  }, {
+    "name" : "riskScoringSystemPrompt",
+    "comment" : "Composed system prompt for AI risk scoring (policy rules injected)",
+    "modifiers" : [ ]
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
+    "comment" : "Agent response with matched suppliers, isSupplierExisting, matchScore and feedback",
+    "modifiers" : [ ]
+  }, {
+    "name" : "criteria",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria",
+    "comment" : "Search criteria shared by findDuplicateSuppliers and findExactSupplier tools",
+    "modifiers" : [ ]
+  }, {
+    "name" : "toolResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
+    "comment" : "Tool result for findDuplicateSuppliers",
+    "modifiers" : [ ]
+  }, {
+    "name" : "documents",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocument>",
+    "comment" : "Full list of legal documents loaded once before the per-document extraction loop",
+    "modifiers" : [ ]
+  }, {
+    "name" : "requiredDocuments",
+    "type" : "java.util.List<String>",
+    "comment" : "Labels of required documents from both CertificationType and LegalDocumentType, used in policy validation prompt",
+    "modifiers" : [ ]
+  }, {
+    "name" : "documentPresenceFindings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding>",
+    "comment" : "Pre-created ValidationFindings from Java presence check (PASSED/FAILURE per required doc type), merged into policyValidationResult after AI run",
+    "modifiers" : [ ]
+  }, {
+    "name" : "documentIndex",
+    "type" : "Integer",
+    "comment" : "Current loop index for the per-document extraction loop (0-based)",
+    "modifiers" : [ ]
+  }, {
+    "name" : "singleExtraction",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtractionResult",
+    "comment" : "Scratch field: AI extraction result for the current single document in the loop",
+    "modifiers" : [ ]
+  }, {
+    "name" : "result",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
+    "comment" : "Tool result for findExactSupplier",
+    "modifiers" : [ ]
+  }, {
+    "name" : "formattedQuery"
+  }, {
+    "name" : "financialValidationResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.PolicyValidationResult",
+    "comment" : "Output of validateFinancialPolicy tool: financial rule findings plus AgentProcessingStep",
+    "modifiers" : [ ]
+  }, {
+    "name" : "financialStabilityScore",
+    "type" : "Integer",
+    "comment" : "Deterministic financial stability score computed from financial rule violations",
+    "modifiers" : [ ]
+  }, {
+    "name" : "isProceeded",
+    "type" : "Boolean"
+  } ]
+}

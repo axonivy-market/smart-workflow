@@ -1,0 +1,139 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <f:metadata>
+    <f:event type="preRenderView" listener="#{supplierOnboardingApprovalBean.init(data.request)}" />
+  </f:metadata>
+  <ui:composition template="/layouts/template/SupplierOnboardingTemplate.xhtml">
+
+    <ui:param name="status"          value="APPROVAL_PENDING" />
+    <ui:param name="stepSubtitle"    value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/StepSubtitle')}" />
+    <ui:param name="initialMessage"  value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/InitialMessage')}" />
+
+    <ui:define name="form-content">
+      <h:form id="form">
+
+        <p:tabView styleClass="so-approval-tabs mb-3">
+
+          <!-- ── Tab 1: Approval ──────────────────────────────────────────── -->
+          <p:tab>
+            <f:facet name="title">
+              <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/ApprovalTab')}</span>
+            </f:facet>
+
+            <p:messages id="form-messages" />
+
+            <div class="so-approval-banner mb-3">
+              <div class="so-approval-banner-icon"><i class="ti ti-alert-triangle" /></div>
+              <div class="so-approval-banner-main">
+                <div class="so-approval-banner-title">
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/BannerTitleTemplate')}">
+                    <f:param value="#{data.request.supplier.businessName}" />
+                  </h:outputFormat>
+                </div>
+                <div class="so-approval-banner-desc">
+                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/BannerDesc')}
+                </div>
+                <div class="so-approval-banner-meta">
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/BannerMetaTemplate')}">
+                    <f:param value="#{data.request.requestedBy}" />
+                  </h:outputFormat>
+                </div>
+              </div>
+              <div class="so-approval-banner-score">
+                <div class="so-approval-banner-score-num">#{data.request.riskScore.aggregate}</div>
+                <div class="so-approval-banner-score-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/RiskScoreLabel')}</div>
+                <span class="so-badge #{data.request.riskScore.level eq 'GREEN' ? 'so-badge-green' : (data.request.riskScore.level eq 'RED' ? 'so-badge-red' : 'so-badge-yellow')}">
+                  #{data.request.riskScore.level}
+                </span>
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="col-12 xl:col-8">
+                <div class="so-card">
+                  <div class="so-card-title"><i class="ti ti-message-circle text-2xl" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/ApprovalCommentTitle')}</div>
+                  <p:inputTextarea id="approvalComment"
+                    value="#{data.approvalComment}"
+                    rows="4"
+                    autoResize="false"
+                    styleClass="w-full"
+                    placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/ApprovalCommentPlaceholder')}" />
+                </div>
+              </div>
+
+              <div class="col-12 xl:col-4">
+                <div class="so-card mb-3">
+                  <div class="so-card-title"><i class="ti ti-users text-2xl" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/ApprovalChainTitle')}</div>
+                  <div class="so-notification-row">
+                    <div class="so-notification-avatar">SV</div>
+                    <div class="so-notification-info">
+                      <div class="so-notification-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/SupervisorName')}</div>
+                      <div class="so-notification-role">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/ProcurementDirectorRole')}</div>
+                    </div>
+                    <span class="so-badge #{data.approvalStage eq 'SUPERVISOR' ? 'so-badge-yellow' : 'so-badge-green'}">
+                      #{data.approvalStage eq 'SUPERVISOR' ? ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/StatusPending') : ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/StatusApproved')}
+                    </span>
+                  </div>
+                  <div class="so-notification-row">
+                    <div class="so-notification-avatar">QM</div>
+                    <div class="so-notification-info">
+                      <div class="so-notification-name">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/QmIsmManagerName')}</div>
+                      <div class="so-notification-role">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/QmIsmManagerRole')}</div>
+                    </div>
+                    <span class="so-badge #{data.approvalStage eq 'QM_ISM' ? 'so-badge-yellow' : 'so-badge-gray'}">
+                      #{data.approvalStage eq 'QM_ISM' ? ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/StatusPending') : ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/StatusWaiting')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Full audit trail -->
+            <ic:com.axonivy.utils.smart.workflow.demo.erp.components.AuditTrail
+              auditTrail="#{data.request.auditTrail}" />
+
+          </p:tab>
+
+          <!-- ── Tab 2: Supplier Details ──────────────────────────────────── -->
+          <p:tab>
+            <f:facet name="title">
+              <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/SupplierDetailsTab')}</span>
+            </f:facet>
+
+            <ic:com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.components.SupplierDetails
+              bean="#{supplierOnboardingApprovalBean}"
+              readOnly="true" />
+          </p:tab>
+
+          <!-- ── Tab 3: Analysis Result ───────────────────────────────────── -->
+          <p:tab>
+            <f:facet name="title">
+              <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingApproval/AnalysisResultTab')}</span>
+            </f:facet>
+
+            <ic:com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.components.SupplierAgentProcessingDetails
+              bean="#{supplierOnboardingApprovalBean}"
+              agentResponse="#{data.agentResponse}"
+              readOnly="true" />
+          </p:tab>
+
+        </p:tabView>
+
+      </h:form>
+    </ui:define>
+
+    <ui:define name="footer-right">
+      <p:commandButton id="approve"
+        value="#{ivy.cms.co('/Labels/Approve')}"
+        form="form"
+        process="form"
+        update="form"
+        actionListener="#{supplierOnboardingApprovalBean.close}" />
+    </ui:define>
+  </ui:composition>
+</h:body>
+
+</html>

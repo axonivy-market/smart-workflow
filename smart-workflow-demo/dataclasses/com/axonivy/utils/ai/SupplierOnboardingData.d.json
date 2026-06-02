@@ -1,0 +1,54 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierOnboardingData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest"
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
+  }, {
+    "name" : "routingDecision"
+  }, {
+    "name" : "summary"
+  }, {
+    "name" : "lastAuditEntry",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry"
+  }, {
+    "name" : "continueWithSuggestedSupplier",
+    "type" : "Boolean"
+  }, {
+    "name" : "simulatedDuplicateFound",
+    "type" : "Boolean"
+  }, {
+    "name" : "clarificationRetryCount",
+    "type" : "java.lang.Integer"
+  }, {
+    "name" : "maxClarificationRetries",
+    "type" : "java.lang.Integer"
+  }, {
+    "name" : "goBack",
+    "type" : "Boolean"
+  }, {
+    "name" : "notificationRecords",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.NotificationRecord>"
+  }, {
+    "name" : "clarificationCycleDisplay",
+    "type" : "java.lang.Integer"
+  }, {
+    "name" : "lastClarificationNotes"
+  }, {
+    "name" : "escalateToQmIsm",
+    "type" : "Boolean"
+  }, {
+    "name" : "withdrawRequest",
+    "type" : "Boolean"
+  }, {
+    "name" : "qmIsmAdditionalNotes"
+  }, {
+    "name" : "clarificationFindingsText"
+  }, {
+    "name" : "sessionUsername"
+  } ]
+}

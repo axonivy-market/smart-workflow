@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ProcurementManagementData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.procurement.model.ProcurementRequest",
+    "modifiers" : [ ],
+    "comment" : "The active procurement request being processed"
+  }, {
+    "name" : "submitted",
+    "type" : "Boolean",
+    "modifiers" : [ ],
+    "comment" : "True if the user submitted the form, false if cancelled"
+  } ]
+}

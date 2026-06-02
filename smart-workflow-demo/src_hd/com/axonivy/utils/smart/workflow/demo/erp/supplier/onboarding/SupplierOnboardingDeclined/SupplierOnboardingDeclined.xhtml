@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui">
+<h:body>
+  <ui:composition template="/layouts/template/SupplierOnboardingTemplate.xhtml">
+
+    <ui:param name="status" value="DECLINED" />
+
+    <ui:define name="form-content">
+      <h:form id="form">
+
+        <div class="so-alert so-alert-red mb-3">
+          <span class="so-alert-icon"><i class="ti ti-circle-x" /></span>
+          <div>
+            <div class="font-semibold">Onboarding Declined</div>
+            <div>This supplier onboarding request has been declined.</div>
+          </div>
+        </div>
+
+      </h:form>
+    </ui:define>
+
+    <ui:define name="footer-right">
+      <p:commandButton id="close"
+        value="#{ivy.cms.co('/Labels/Close')}"
+        styleClass="ui-button-secondary"
+        actionListener="#{logic.close}" />
+    </ui:define>
+
+  </ui:composition>
+</h:body>
+</html>

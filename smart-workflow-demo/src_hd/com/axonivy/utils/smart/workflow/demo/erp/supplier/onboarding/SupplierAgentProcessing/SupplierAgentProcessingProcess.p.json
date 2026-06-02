@@ -1,0 +1,126 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19DBB20690455F5A",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierAgentProcessing.SupplierAgentProcessingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start(OnboardingRequest)",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" }
+          ],
+          "map" : {
+            "out.request" : "param.request"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
+            { "name" : "routingDecision", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.agentResponse" : "in.agentResponse",
+            "result.routingDecision" : "in.routingDecision"
+          }
+        },
+        "guid" : "19DBB20690585137"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "c01", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "Script",
+      "name" : "Init Agent Response",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
+            "import java.util.ArrayList;",
+            "",
+            "SupplierAgentResponse response = new SupplierAgentResponse();",
+            "response.setValidationFindings(new ArrayList<ValidationFinding>());",
+            "",
+            "ArrayList<AgentProcessingStep> steps = new ArrayList<AgentProcessingStep>();",
+            "",
+            "AgentProcessingStep step0 = new AgentProcessingStep();",
+            "step0.setName(\"Document Extraction\");",
+            "steps.add(step0);",
+            "",
+            "AgentProcessingStep step1 = new AgentProcessingStep();",
+            "step1.setName(\"Policy Validation\");",
+            "steps.add(step1);",
+            "",
+            "AgentProcessingStep step2 = new AgentProcessingStep();",
+            "step2.setName(\"Cross-Reference Checks\");",
+            "steps.add(step2);",
+            "",
+            "AgentProcessingStep step3 = new AgentProcessingStep();",
+            "step3.setName(\"Risk Score Calculation\");",
+            "steps.add(step3);",
+            "",
+            "response.setProcessingSteps(steps);",
+            "in.agentResponse = response;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "c02", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 64 }
+      }
+    }, {
+      "id" : "f52",
+      "type" : "Script",
+      "name" : "Sync Routing Decision",
+      "config" : {
+        "output" : {
+          "code" : "in.routingDecision = in.agentResponse != null ? in.agentResponse.getRoutingDecision() : null;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "c52", "to" : "f51" }
+      ]
+    }, {
+      "id" : "f51",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 160 }
+      }
+    }, {
+      "id" : "f53",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "close()",
+      "config" : {
+        "signature" : "close",
+        "guid" : "19DE4542402F4300"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f54", "to" : "f52" }
+      ]
+    } ]
+}

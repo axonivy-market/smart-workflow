@@ -1,0 +1,94 @@
+SUPPLIER ONBOARDING POLICY — Knowledge Base
+Version 2.1 | Effective: 2025-01-01
+============================================================
+
+RULE 1: ISO 9001 CERTIFICATION — MANDATORY FOR HIGH-VOLUME SUPPLIERS
+Applies to: All supplier categories
+Threshold: Expected annual procurement volume > EUR 50,000
+Requirement: Valid ISO 9001 Quality Management System certificate required.
+Check: Certificate must be present in uploaded documents and must not be expired.
+Severity if missing: FAILURE
+Severity if expiring within 6 months: WARNING
+Source: Supplier Quality Policy QP-001
+
+------------------------------------------------------------
+
+RULE 2: ISO 14001 CERTIFICATION — RECOMMENDED FOR MANUFACTURING SUPPLIERS
+Applies to: Manufacturing, industrial, production, and chemical suppliers
+Requirement: ISO 14001 Environmental Management System certificate recommended.
+Check: If supplier business purpose mentions manufacturing/production/industrial and no ISO 14001 found.
+Severity if missing (manufacturing): WARNING
+Source: Environmental Compliance Policy EC-002
+
+------------------------------------------------------------
+
+RULE 3: EU/EEA SUPPLIER PREFERENCE — REGIONAL COMPLIANCE
+Applies to: EU-based departments (DE, FR, NL, BE, AT, CH, PL, IT, ES)
+Requirement: EU/EEA-based suppliers are preferred for EU departments to ensure GDPR compliance and supply chain resilience.
+Check: If department is EU-based and supplier country is outside EU/EEA.
+Severity: WARNING (non-blocking but must be documented)
+Source: Procurement Directive PR-003
+
+------------------------------------------------------------
+
+RULE 4: GDPR DATA PROCESSING AGREEMENT — MANDATORY FOR DATA HANDLERS
+Applies to: Suppliers handling personal data of employees, customers, or business partners
+Trigger: Supplier business purpose mentions IT services, cloud, HR software, payroll, CRM, data analytics, consulting, marketing, recruitment.
+Requirement: Signed GDPR Data Processing Agreement (DPA) must be on file.
+Check: DPA document must appear in the uploaded documents.
+Severity if missing: FAILURE
+Source: Data Protection Policy DP-004, GDPR Article 28
+
+------------------------------------------------------------
+
+RULE 5: CERTIFICATE EXPIRY — VALIDITY WINDOW
+Applies to: All uploaded certificates (ISO, compliance, safety)
+Requirement: All certificates must have a remaining validity of at least 6 months from the onboarding request date.
+Check: Expiry date of each certificate extracted from documents must be > 6 months from today.
+Severity if expiring within 6 months: WARNING
+Severity if already expired: FAILURE
+Source: Certification Management Policy CM-005
+
+------------------------------------------------------------
+
+RULE 6: COMMERCIAL REGISTER DOCUMENT — MANDATORY
+Applies to: All new suppliers (companies)
+Requirement: Official commercial register extract (Handelsregister, KvK, Companies House, or equivalent) required to verify company legal identity and standing.
+Check: Document of type COMPANY_REGISTRATION must be present in uploaded documents.
+Severity if missing: FAILURE
+Source: Supplier Verification Policy SV-006
+
+------------------------------------------------------------
+
+RULE 7: SUPPLIER SELF-DECLARATION — MANDATORY
+Applies to: All new suppliers
+Requirement: Signed supplier self-declaration covering: no involvement in sanctions-listed activities, compliance with anti-bribery laws, acceptance of Code of Conduct.
+Check: Self-declaration document must appear in uploaded documents.
+Severity if missing: WARNING (blocks final approval until submitted)
+Source: Compliance Policy CP-007, UN Global Compact
+
+------------------------------------------------------------
+
+RULE 8: SANCTIONS AND BLACKLIST — ZERO TOLERANCE
+Applies to: All suppliers
+Requirement: Supplier must not appear on any sanctions list: EU Consolidated Sanctions List, UN Security Council Sanctions List, OFAC SDN List, HM Treasury UK Sanctions.
+Check: Run supplier name, VAT ID, and company registration number against known sanctions databases.
+Severity if hit found: FAILURE (immediate rejection)
+Source: Sanctions Compliance Policy SC-008
+
+------------------------------------------------------------
+
+RULE 9: MINIMUM FINANCIAL STABILITY THRESHOLD
+Applies to: Suppliers with expected annual volume > EUR 100,000
+Requirement: Supplier must demonstrate basic financial stability (no insolvency proceedings, positive equity in last 2 years).
+Severity if evidence missing for high-volume: WARNING
+Source: Financial Risk Policy FR-009
+
+------------------------------------------------------------
+
+RULE 10: PAYMENT TERMS ALIGNMENT
+Applies to: All suppliers
+Standard terms: Net 30 days (default); Net 60 allowed for SMEs on request.
+Check: Non-standard payment terms require procurement manager approval.
+Severity if non-standard and not pre-approved: WARNING
+Source: Finance Policy FP-010

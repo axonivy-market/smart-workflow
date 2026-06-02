@@ -1,2 +1,8 @@
 # yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/config/users.json
-Users: []
+Users:
+  - Name: john.doe
+    FullName: John Doe
+    Password: demo123
+    Mail: john.doe@buildrightco.com
+    Roles:
+      - Procurement
