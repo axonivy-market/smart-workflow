@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -136,11 +137,10 @@ public class HistoryDashboardBean implements Serializable {
 
   public List<SelectItem> getAvailableModelItems() {
     return ChatModelFactory.providers().stream()
-        .collect(Collectors.toMap(
-            ChatModelProvider::name, provider -> provider, (first, second) -> first))
-        .values().stream()
+        .collect(Collectors.toCollection(
+            () -> new TreeSet<>(Comparator.comparing(ChatModelProvider::name))))
+        .stream()
         .filter(provider -> !provider.models().isEmpty())
-        .sorted(Comparator.comparing(ChatModelProvider::name))
         .map(provider -> {
           SelectItemGroup group = new SelectItemGroup(provider.name());
           group.setSelectItems(provider.models().stream()
