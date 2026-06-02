@@ -49,7 +49,14 @@
 
 /* ── Two-column body wrapper (form + resizable AI panel) ─────────── */
 .so-body-columns {
+  display: flex;
   height: 84vh;
+}
+
+.so-form-column {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
 }
 
 /* ── Resize handle between form and AI panel ─────────────────────── */
@@ -70,7 +77,9 @@
 
 /* ── AI Assistant panel (fixed right column) ─────────────────────── */
 .so-ai-col {
+  flex: 0 0 350px;
   width: 350px;
+  overflow-y: auto;
 }
 
 .so-ai-col .so-ai-chat-wrapper {
