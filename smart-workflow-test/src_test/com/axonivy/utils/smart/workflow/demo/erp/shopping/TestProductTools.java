@@ -19,6 +19,6 @@ class TestProductTools {
   void findProduct(BpmClient client) {
     var res = client.start().process(TEST_PROCESS.elementName("testFindProduct")).execute();
     DemoTestProcessData data = res.data().last();
-    assertThat(data.getProductToolResult()).isEqualTo("Product with SKU null  is not existing in the system");
+    assertThat(data.getProductToolResult()).isEqualTo("Product with SKU   is not existing in the system");
   }
 }
