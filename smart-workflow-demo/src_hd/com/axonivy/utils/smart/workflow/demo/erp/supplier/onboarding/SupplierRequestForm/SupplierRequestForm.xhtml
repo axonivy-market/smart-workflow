@@ -1,0 +1,136 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <f:metadata>
+    <f:event type="preRenderView" listener="#{supplierRequestBean.init(data.request)}" />
+  </f:metadata>
+  <ui:composition template="/layouts/template/SupplierOnboardingTemplate.xhtml">
+
+    <ui:param name="status"         value="REQUEST" />
+    <ui:param name="stepSubtitle"   value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/StepSubtitle')}" />
+
+    <ui:define name="form-content">
+      <h:form id="form" styleClass="p-fluid">
+
+        <!-- Request Details -->
+        <div class="so-card">
+          <div class="flex justify-content-between align-items-center border-bottom-1 surface-border mb-3">
+            <span class="so-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/RequestDetailsTitle')}</span>
+          </div>
+          <div class="formgrid grid">
+            <div class="field ui-fluid col-12 md:col-6">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/RequestedByLabel')}</label>
+              <p:inputText id="requested-by" value="#{supplierRequestBean.displayRequester}" disabled="true" />
+              <h:inputHidden value="#{supplierRequestBean.request.requestedBy}" />
+            </div>
+            <div class="field ui-fluid col-12 md:col-6">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/DepartmentLabel')}</label>
+              <p:selectOneMenu id="department" value="#{supplierRequestBean.request.department}"
+                required="#{param['skipValidation'] != 'true'}" label="Department / Cost Center">
+                <f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/DepartmentPlaceholder')}" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{supplierRequestBean.departments}" var="dept"
+                  itemLabel="#{dept.name}" itemValue="#{dept.id}" />
+              </p:selectOneMenu>
+            </div>
+          </div>
+        </div>
+
+        <!-- Supplier Information -->
+        <div class="so-card">
+          <div class="border-bottom-1 surface-border mb-3">
+            <span class="so-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/SupplierInfoTitle')}</span>
+          </div>
+          <div class="formgrid grid">
+            <div class="field ui-fluid col-12">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/SupplierNameLabel')}</label>
+              <p:inputText id="business-name" value="#{supplierRequestBean.supplier.businessName}"
+                required="#{param['skipValidation'] != 'true'}" label="Supplier Name"
+                placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/SupplierNamePlaceholder')}" />
+            </div>
+            <div class="field ui-fluid col-12 md:col-5">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/SupplierCountryLabel')}</label>
+              <p:selectOneMenu id="country" value="#{supplierRequestBean.supplier.businessAddress.country}"
+                required="#{param['skipValidation'] != 'true'}" label="Supplier Country">
+                <f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/SelectCountryPlaceholder')}" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{supplierRequestBean.countries}" var="c"
+                  itemLabel="#{c.displayName} (#{c.code})" itemValue="#{c.code}" />
+              </p:selectOneMenu>
+            </div>
+            <div class="field ui-fluid col-12 md:col-7">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/SupplierWebsiteLabel')}</label>
+              <p:inputText id="website" value="#{supplierRequestBean.supplier.website}"
+                placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/SupplierWebsitePlaceholder')}" />
+            </div>
+            <div class="field ui-fluid col-12">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/BusinessPurposeLabel')}</label>
+              <p:inputText id="business-purpose" value="#{supplierRequestBean.supplier.businessPurpose}"
+                required="#{param['skipValidation'] != 'true'}" label="Business Purpose"
+                placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/BusinessPurposePlaceholder')}" />
+            </div>
+            <div class="field ui-fluid col-12">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/ProductsServicesLabel')}</label>
+              <p:inputTextarea id="products-services" value="#{supplierRequestBean.request.productsServicesNeeded}"
+                required="#{param['skipValidation'] != 'true'}" label="Products / Services Needed"
+                rows="3" placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/ProductsServicesPlaceholder')}" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Procurement Context -->
+        <div class="so-card">
+          <div class="border-bottom-1 surface-border mb-3">
+            <span class="so-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/ProcurementContextTitle')}</span>
+          </div>
+          <div class="formgrid grid">
+            <div class="field ui-fluid col-12 md:col-5">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/ExpectedAnnualVolumeLabel')}</label>
+              <p:inputNumber id="annual-volume" value="#{supplierRequestBean.request.expectedAnnualVolume}"
+                required="#{param['skipValidation'] != 'true'}" label="Expected Annual Volume" symbol="€" />
+            </div>
+            <div class="field ui-fluid col-12 md:col-4">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/UrgencyLabel')}</label>
+              <p:selectOneMenu id="urgency" value="#{supplierRequestBean.request.urgency}"
+                required="#{param['skipValidation'] != 'true'}" label="Urgency">
+                <f:selectItems value="#{supplierRequestBean.urgencies}" var="u"
+                  itemLabel="#{u.label}" itemValue="#{u.name()}" />
+              </p:selectOneMenu>
+            </div>
+            <div class="field ui-fluid col-12 md:col-3">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/NeededByLabel')}</label>
+              <p:datePicker id="needed-by" value="#{supplierRequestBean.request.neededByDate}"
+                pattern="yyyy-MM-dd" showIcon="true" />
+            </div>
+            <div class="field ui-fluid col-12">
+              <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/AdditionalNotesLabel')}</label>
+              <p:inputTextarea id="additional-notes" value="#{supplierRequestBean.request.additionalNotes}"
+                rows="3" placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/AdditionalNotesPlaceholder')}" />
+            </div>
+          </div>
+        </div>
+
+      </h:form>
+    </ui:define>
+
+    <ui:define name="footer-left">
+      <p:commandButton id="cancel" value="#{ivy.cms.co('/Labels/Cancel')}"
+        actionListener="#{supplierRequestBean.cancelAndClose}" process="@none"
+        styleClass="ui-button-secondary" />
+    </ui:define>
+
+    <ui:define name="footer-right">
+      <p:commandButton id="save-draft" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/SaveDraftButton')}" icon="pi pi-save"
+        actionListener="#{supplierRequestBean.saveDraftAndClose}"
+        process="form" styleClass="ui-button-secondary">
+        <f:param name="skipValidation" value="true" />
+      </p:commandButton>
+      <p:commandButton id="check-supplier" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierRequestForm/CheckSupplierButton')}"
+        actionListener="#{supplierRequestBean.submitAndClose}" process="@(form)"
+        update="@(form) form-messages" icon="pi pi-arrow-right" iconPos="right"
+        styleClass="ui-button-primary" />
+    </ui:define>
+
+  </ui:composition>
+</h:body>
+</html>

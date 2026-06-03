@@ -9,6 +9,704 @@ Dialogs:
                 AxonIvySupport: Axon Ivy Support
                 InputPlaceholder: Type your question... (Shift+Enter to send)
                 Send: Send
+              erp:
+                components:
+                  AuditTrail:
+                    EmptyMessage: No audit entries captured yet.
+                    ExpandCollapseTooltip: Click to expand / collapse
+                    Title: Full Audit Trail
+                  LegalDocuments:
+                    AdditionalDocumentSubtitle: Additional document
+                    AnnualReportLabel: Last Annual Report
+                    AnnualReportSubtitle: Most recent fiscal year financial report
+                    BrowseFilesLink: or browse files
+                    CommercialRegisterLabel: Company Registration Extract
+                    CommercialRegisterSubtitle: Official commercial register document
+                    DragAndDropHint: Drag and drop additional files here
+                    SelfDeclarationLabel: Self-Declaration
+                    SelfDeclarationSubtitle: Confirm compliance with procurement policy
+                  ProblemExplanation:
+                    ExplanationLabel: Your Explanation
+                    ExplanationPlaceholder: Describe the situation and your resolution plan...
+                    InfoHint: Please provide a brief explanation to help the approver understand the context and how you plan to resolve this issue.
+                    SaveButton: Mark as Resolved
+                supplier:
+                  onboarding:
+                    FinishDemo:
+                      HeroSub: We hope you had a great experience with <strong>Smart Workflow</strong>.<br/>Here is a summary of everything the AI handled for you — autonomously, accurately, and fully auditable.
+                      PageTitle: Smart Workflow — AI Process Summary
+                      Panel0Desc: The onboarding process begins when a supplier submits their application through the Smart Workflow portal. All required supporting documents — business registration, tax certificates, and financial statements — are uploaded at this stage.
+                      Panel0Detail1: Supplier completes company profile and contact information
+                      Panel0Detail2: Uploads required certification and financial documents
+                      Panel0Detail3: Smart Workflow validates upload completeness before processing
+                      Panel0Title: Document Upload
+                      Panel1Desc: AI reads uploaded PDFs using vision-language models, identifies supplier data fields across multiple documents, and automatically pre-fills the entire onboarding form — zero manual typing required.
+                      Panel1Detail1: Parsed PDF structures and tables using vision-language models
+                      Panel1Detail2: Identified and extracted 15+ supplier data fields automatically
+                      Panel1Detail3: Auto-populated the complete onboarding form with validated data
+                      Panel1Title: AI Document Extraction
+                      Panel2Desc: A RAG-powered AI assistant is available at every screen — answering questions about policy rules, explaining compliance requirements, and clarifying risk thresholds in real time throughout the process.
+                      Panel2Detail1: Retrieved policy documents using vector similarity search
+                      Panel2Detail2: Answered supplier and reviewer questions throughout the process
+                      Panel2Detail3: Provided contextual compliance guidance at each step
+                      Panel2Title: Contextual Q&A Guidance
+                      Panel3Desc: AI cross-checks all submitted documents against procurement policy rules, identifying missing certifications, expired credentials, and compliance gaps — with complete reasoning and full traceability.
+                      Panel3Detail1: Validated all documents against 12+ procurement policy rules
+                      Panel3Detail2: Identified compliance gaps and flagged items requiring attention
+                      Panel3Detail3: Generated a detailed validation report with explainable findings
+                      Panel3Title: Document Validation
+                      Panel4Desc: AI computes a composite risk score across three dimensions — financial stability, policy compliance, and certification validity — delivering an objective, auditable rating out of 100.
+                      Panel4Detail1: Analysed financial statements for stability and liquidity indicators
+                      Panel4Detail2: Cross-referenced compliance history, certifications, and policy alignment
+                      Panel4Detail3: Produced a weighted composite risk score with full breakdown
+                      Panel4Title: Risk Calculation
+                      Panel5Desc: 'Based on the complete context — extracted data, risk score, validation findings, and policy — the AI decided the process path autonomously: approve, request clarification, or decline.'
+                      Panel5Detail1: Evaluated all inputs against configurable routing decision rules
+                      Panel5Detail2: Determined the optimal outcome path without human triage
+                      Panel5Detail3: Triggered the appropriate workflow branch with a full audit trail
+                      Panel5Title: Autonomous Routing
+                      Panel6Desc: The onboarding request has been fully processed and closed. All extracted data, AI decisions, validation findings, and the complete audit trail are permanently recorded and accessible for compliance review.
+                      Panel6Detail1: All AI decisions and reasoning recorded in the permanent audit log
+                      Panel6Detail2: Supplier record updated in the system with the final outcome
+                      Panel6Detail3: Stakeholders notified of the decision and process completion
+                      Panel6Title: Case Closed
+                    StartDemo:
+                      AfterItem1: Supplier uploads documents once via a structured, guided form
+                      AfterItem2: Vision AI auto-extracts 15+ fields from PDFs in seconds — zero manual entry
+                      AfterItem3: 12+ procurement policy rules checked instantly with full AI reasoning
+                      AfterItem4: 'Autonomous routing: approve, request clarification, or decline — no triage needed'
+                      AfterItem5: Composite risk score across financial stability, compliance, and certification data
+                      AfterItem6: Every decision, extracted datum, and AI rationale permanently recorded
+                      AiPoweredHeader: AI-Powered Smart Workflow
+                      BeforeItem1: Supplier sends documents by email — procurement hunts through attachments
+                      BeforeItem2: Staff manually reads PDFs and types data into spreadsheets or ERP forms
+                      BeforeItem3: Compliance checks are ad-hoc, inconsistent, and done days after submission
+                      BeforeItem4: Approval routing decided in committee meetings — delays measured in weeks
+                      BeforeItem5: Risk evaluation relies on personal judgement, with no scoring standard
+                      BeforeItem6: Decisions live in email threads — no structured audit trail for compliance
+                      BeforeYouStartDesc: The demo asks you to upload documents about a company so the AI can extract information, assess risks, and score the supplier. We have prepared these documents for you — just download them and use them when prompted during the demo. Then click <strong>Generate
+                        Data</strong> below to set up the demo environment.
+                      BeforeYouStartTitle: Before You Start
+                      DataAlreadyGeneratedBanner: Demo data is already set up — enjoy the demo!
+                      DocAnnualReportName: Annual Report
+                      DocAnnualReportSub: Most recent fiscal year financial report
+                      DocBankingStatementName: Banking Statement
+                      DocBankingStatementSub: Recent bank account statement
+                      DocCommercialRegName: Company Registration Extract
+                      DocCommercialRegSub: Official commercial register document
+                      DocCompanyInfoName: Supplier Onboarding Offer Letter
+                      DocCompanyInfoSub: Official offer letter with scope of supply, commercial terms, and banking details
+                      DocGdprName: GDPR Data Processing Agreement
+                      DocGroupCertifications: Certifications
+                      DocGroupLegal: Legal Documents
+                      DocIso14001Name: ISO 14001 — Environmental Management
+                      DocIso27001Name: ISO 27001 — Information Security
+                      DocIso9001Name: ISO 9001 — Quality Management
+                      DocSelfDeclarationName: Company Self-Declaration
+                      DocSelfDeclarationSub: Compliance and policy self-declaration
+                      DownloadAllButton: Download All
+                      FileDetailsHide: Hide details
+                      FileDetailsToggle: File details
+                      Gen1Hint: Ingest policy documents into vector store
+                      Gen1RunningSubtitle: Ingesting policy documents into vector store…
+                      Gen1Title: Build RAG Knowledge Base
+                      Gen2Hint: 6 certification & regulatory rules
+                      Gen2RunningSubtitle: Creating certification & regulatory rules…
+                      Gen2Title: Create Certification & Regulatory Policies
+                      Gen3Hint: 6 financial risk rules & demo suppliers
+                      Gen3RunningSubtitle: Creating financial risk rules & demo suppliers…
+                      Gen3Title: Create Financial Policies
+                      GenDoneBanner: Demo data ready — click <strong>Start Demo</strong> to begin!
+                      GenProcessingSubtitle: Processing…
+                      GenRetryButton: Retry
+                      GenerateDataButton: Generate Data
+                      KbChunksDesc: Below are the knowledge base entries used to provide knowledge for the chatbot you are going to use in this demo.
+                      KbTabKnowledgeBase: RAG Knowledge base
+                      NextButtonTitle: Next
+                      PageTitle: Smart Workflow — Supplier Onboarding Demo
+                      PrevButtonTitle: Previous
+                      ReadySub: Generate sample suppliers, procurement policy rules, and the RAG knowledge base to explore the full demo experience.
+                      ReadyTitle: Are You Ready?
+                      Slide1Sub: 7 steps from document upload to case closed — fully powered by AI
+                      Slide1Title: The Onboarding Process
+                      Slide2Sub: Why the old way breaks down — and how AI transforms every step
+                      Slide2Title: Traditional Onboarding vs. AI-Powered Workflow
+                      StartDemoButton: Start Demo
+                      StatErrorAfter: Near-zero errors
+                      StatErrorBefore: ~30% error rate
+                      StatErrorLabel: Data entry accuracy
+                      StatStepsAfter: Fully automated
+                      StatStepsBefore: 30+ manual steps
+                      StatStepsLabel: Process steps
+                      StatTimeAfter: Minutes
+                      StatTimeBefore: 3–6 weeks
+                      StatTimeLabel: Time to onboard
+                      Step01Desc: Supplier submits application with company profile and all required supporting documents.
+                      Step01Name: Document Upload
+                      Step01Num: Step 01
+                      Step02Desc: Vision-language model reads PDFs and auto-fills 15+ fields. Zero manual entry required.
+                      Step02Name: AI Extraction
+                      Step02Num: Step 02
+                      Step03Desc: RAG-powered AI assistant answers compliance questions at every screen in real time.
+                      Step03Name: Q&A Guidance
+                      Step03Num: Step 03
+                      Step04Desc: AI cross-checks 12+ procurement policy rules and flags compliance gaps with full reasoning.
+                      Step04Name: Document Validation
+                      Step04Num: Step 04
+                      Step05Desc: Composite risk score across financial stability, compliance, and certification validity.
+                      Step05Name: Risk Scoring
+                      Step05Num: Step 05
+                      Step06Desc: AI decides the outcome — approve, request clarification, or decline — without human triage.
+                      Step06Name: Autonomous Routing
+                      Step06Num: Step 06
+                      Step07Desc: All decisions, extracted data, and AI reasoning are permanently recorded for compliance review.
+                      Step07Name: Case Closed
+                      Step07Num: Step 07
+                      TraditionalHeader: Traditional Process
+                      WelcomeDesc: Experience an AI-driven supplier onboarding process that automates document extraction, compliance validation, risk scoring, and autonomous routing — with full auditability.
+                      WelcomeProductName: Axon Ivy Smart Workflow
+                      WelcomeTo: Welcome to
+                    SupplierAgentProcessing:
+                      ContinueButton: Continue
+                      ContinueToApprovalButton: Continue to Approval
+                      ContinueToClarificationButton: Continue to Clarification
+                      InitialMessage: Click Analyze to run AI-powered validation. I'll extract documents, check policy compliance, validate financial health, and calculate a risk score step by step.
+                      StepSubtitle: Step 4 of 6 — Validation & Risk Scoring
+                      ViewDeclineButton: View Decline
+                    SupplierClarification:
+                      AdditionalInfoRequired: Additional supplier information required — please check the agent findings tab for details.
+                      AnalysisResultTab: Analysis Result
+                      BannerDescTemplate: The Supplier Agent calculated a risk score of {0}/100 due to missing or insufficient information. Please provide the requested details so the agent can re-evaluate and continue the workflow.
+                      BannerMetaTemplate: 'Case: {0} <br />Submitted by: {1}'
+                      BannerTitle: 'Clarification Required: {0}'
+                      CertValidityLabel: Cert. Validity
+                      ClarificationTab: Clarification
+                      DocumentAcceptedTypes: PDF · TXT · MD · DOC · DOCX accepted
+                      EscalateButton: Request QM/ISM Assistance
+                      FinalAttemptDesc: This is the last opportunity to provide the missing information. If re-evaluation still fails after this submission, the request will be automatically declined.
+                      FinalAttemptTitle: Final clarification attempt (cycle {0} of {1})
+                      FinancialStabilityLabel: Financial Stability
+                      InitialMessage: Please provide the missing documents and information so the agent can re-evaluate your request.
+                      ItemsTitle: Items Requiring Clarification
+                      PolicyComplianceLabel: Policy Compliance
+                      RiskScoreBadge: YELLOW
+                      RiskScoreLabel: Risk Score
+                      ShowDetailsLink: show details
+                      StepSubtitle: 'Step 5b of 6 — Clarification Required: Additional Information Needed'
+                      SubmitButton: Submit & Re-evaluate
+                      SupplierDetailsTab: Supplier Details
+                      WithdrawButton: Withdraw Request
+                    SupplierDuplicateCheck:
+                      AgentAnalysisLabel: Agent Analysis
+                      ConfirmDialogMessage: There are potential duplicate suppliers in the database. Do you still want to proceed with creating a new supplier record?
+                      ConfirmDialogTitle: Potential Duplicates Found
+                      AgentSectionTitle: Supplier Agent — Database Check Complete
+                      AgentSubtitleTemplate: Searched for "{0}" — {1} potential match(es) found.
+                      SearchConditionLabel: Search Condition
+                      SearchConditionTemplate: 'name="{0}"  country="{1}"'
+                      BusinessPurposeLabel: Business Purpose
+                      Chips: How is similarity calculated?|What if no matches are found?|Can I use an existing supplier?
+                      EmailLabel: Email
+                      InitialMessage: I’ve scanned the supplier database for potential matches. Review the results below and confirm to proceed with creating a new supplier.
+                      LegalFormLabel: Legal Form
+                      NoDuplicatesDesc: No similar suppliers exist in the database. You can proceed to register this as a new supplier.
+                      NoDuplicatesTitle: No duplicates found
+                      PotentialMatchBadge: Potential match
+                      PotentialMatchesTitle: Potential Matches ({0})
+                      StepSubtitle: ‘Step 2 of 6 — Duplicate & Similarity Check’
+                      VatIdLabel: VAT ID
+                      WarningDesc: '{0} potential matching supplier(s) found in the database. Please review before confirming.'
+                      WarningTitle: Potential Matches Found
+                    SupplierOnboardingApproval:
+                      AnalysisResultTab: Analysis Result
+                      ApprovalChainTitle: Approval Chain
+                      ApprovalCommentPlaceholder: 'Optional: Add a comment for the approval record and audit trail...'
+                      ApprovalCommentTitle: Approval Comment
+                      ApprovalTab: Approval
+                      BannerDesc: The Supplier Agent has completed validation and risk scoring. Your approval is required before the supplier can be added to ERP.
+                      BannerMetaTemplate: 'Submitted by: {0}'
+                      BannerTitleTemplate: 'Approval Required: {0}'
+                      InitialMessage: Review the agent findings, confirm the supplier profile, and approve the onboarding request to continue to ERP posting.
+                      ProcurementDirectorRole: Procurement Director
+                      QmIsmManagerName: QM/ISM Manager
+                      QmIsmManagerRole: Quality and ISM
+                      RiskScoreLabel: Risk Score
+                      StatusApproved: Approved
+                      StatusPending: Pending
+                      StatusWaiting: Waiting
+                      StepSubtitle: 'Step 5a of 6 - Human Task: Supervisor and QM/ISM Approval'
+                      SupervisorName: Supervisor
+                      SupplierDetailsTab: Supplier Details
+                    SupplierOnboardingCompletion:
+                      AnalysisResultTab: Analysis Result
+                      AuditEmptyState: No audit entries captured yet.
+                      AuditTimelineTitle: Audit Timeline
+                      BannerDescTemplate: The Supplier Agent calculated a risk score of <b>{0}/100 (Green)</b> which meets the minimum threshold. The request has been approved and the supplier is now onboarded.
+                      BannerMetaTemplate: 'Case: {0}<br />Completed: {1}'
+                      BannerTitleTemplate: 'Supplier Successfully Onboarded: {0}'
+                      CertValidityLabel: Cert. Validity
+                      CompletionSummaryTab: Completion Summary
+                      FinancialStabilityLabel: Financial Stability
+                      InitialMessage: Supplier onboarding is complete. Review the full audit timeline below.
+                      PolicyComplianceLabel: Policy Compliance
+                      RiskScoreBadge: GREEN
+                      RiskScoreLabel: Risk Score
+                      ShowDetailsLink: show details
+                      StepSubtitle: Step 6 of 6 — End Summary
+                      SupplierDetailsTab: Supplier Details
+                    SupplierOnboardingDecline:
+                      AnalysisResultTab: Analysis Result
+                      BannerDescTemplate: The Supplier Agent calculated a risk score of <b>{0}/100 (Red)</b> which is below the minimum threshold. The request cannot proceed and no ERP record has been created.
+                      BannerMetaTemplate: 'Case: {0}<br />Declined: {1}'
+                      BannerTitleTemplate: 'Supplier Request Declined: {0}'
+                      CertValidityLabel: Cert. Validity
+                      DeclineReasonsTitle: Decline Reasons
+                      DeclineSummaryTab: Decline Summary
+                      FinancialStabilityLabel: Financial Stability
+                      NotificationsSentTitle: Notifications Sent
+                      PolicyComplianceLabel: Policy Compliance
+                      RiskScoreBadge: RED
+                      RiskScoreLabel: Risk Score
+                      SentBadge: Sent
+                      ShowDetailsLink: show details
+                      StepSubtitle: 'Step 5c of 6 — Request Declined: Risk Score Below Threshold'
+                      SupplierDetailsTab: Supplier Details
+                    SupplierRegistrationForm:
+                      Chips: \uD83D\uDCCB What certifications are mandatory?|\uD83C\uDFE0 Is IBAN required?|\uD83D\uDD0D What is a VAT ID?
+                      InitialMessage: I'll help you complete the supplier registration. Fill in the company details, contact, banking info, and certifications. Required fields are marked with *.
+                      SaveDraftButton: Save Draft
+                      StepSubtitle: Step 3 of 6 \u2014 New Supplier Registration
+                      SubmitButton: Submit for Agent Validation
+                    SupplierRequestForm:
+                      AdditionalNotesLabel: Additional Notes
+                      AdditionalNotesPlaceholder: Any additional context for the procurement or QM team...
+                      BusinessPurposeLabel: Business Purpose *
+                      BusinessPurposePlaceholder: e.g. Logistics / Transport
+                      CheckSupplierButton: Check Supplier Database
+                      Chips: \uD83D\uDCA1 What info do I need for a new supplier?|\uD83D\uDD0D How does the DB check work?|\uD83D\uDCCB What is a valid business purpose?
+                      DepartmentLabel: Department / Cost Center *
+                      DepartmentPlaceholder: -- Select Department --
+                      ExpectedAnnualVolumeLabel: Expected Annual Volume (EUR)
+                      InitialMessage: Hi! I can help you fill out the supplier request. I'll check your internal supplier database as soon as you submit — what supplier are you looking to onboard?
+                      NeededByLabel: Needed By
+                      ProcurementContextTitle: Procurement Context
+                      ProductsServicesLabel: Products / Services Needed *
+                      ProductsServicesPlaceholder: Describe the specific products or services required from this supplier...
+                      RequestDetailsTitle: Request Details
+                      RequestedByLabel: Requested By
+                      SaveDraftButton: Save Draft
+                      SelectCountryPlaceholder: -- Select Country --
+                      StepSubtitle: Step 1 of 6 \u2014 Initial Request & Questionnaire
+                      SupplierCountryLabel: Supplier Country *
+                      SupplierInfoTitle: Supplier Information
+                      SupplierNameLabel: Supplier Name *
+                      SupplierNamePlaceholder: e.g. Acme GmbH, M\u00fcller Logistik AG
+                      SupplierWebsiteLabel: Supplier Website
+                      SupplierWebsitePlaceholder: https://www.supplier.com
+                      UrgencyLabel: Urgency *
+                    components:
+                      SupplierAgentProcessingDetails:
+                        AgentDecisionTitle: Agent Decision
+                        AnalyzeButton: Analyze
+                        AnalyzeDescription: Run AI-powered extraction, policy validation, financial validation, and risk scoring.
+                        AnalyzeTitle: AI Supplier Validation
+                        CertificationValidityLabel: Certification Validity
+                        ExpandCollapseTooltip: Click to expand / collapse
+                        FinancialStabilityLabel: Financial Stability
+                        PolicyComplianceLabel: Policy Compliance
+                        PolicyFindingsTitle: Policy Validation Findings
+                        RiskScoreCalculatedTooltip: How is the risk score calculated?
+                        RiskScoreHelpDialogHeader: How the Risk Score is Calculated
+                        RiskScoreTitle: Risk Score
+                        StepDocumentExtraction: Document Extraction
+                        StepFinancialValidation: Financial Validation
+                        StepPolicyValidation: Policy Validation
+                        StepRiskScoreCalculation: Risk Score Calculation
+                        ThresholdAboveMin: Above minimum threshold (\u2265 40)
+                        ThresholdGreen: Above approval threshold \u2265 70
+                        ThresholdRed: Below minimum threshold (< 40)
+                        ThresholdYellow: Clarification required (40-69)
+                        ValidationStepsTitle: Validation Steps
+                      SupplierAiAssistant:
+                        AssistantName: Supplier AI Assistant
+                        ConfirmParseRequired: Upload a .txt or .md file first, then confirm parsing.
+                        ConfirmParseTitle: Confirm Parse
+                        FileEmptyMessage: The uploaded file is empty.
+                        FileUploadedReadyMessage: File uploaded. Click Confirm Parse to apply values to the form.
+                        FilesQueuedTemplate: '{0} file(s) queued'
+                        FilesReadyTemplate: '{0} file(s) ready. Click Confirm Parse to apply.'
+                        HeaderSubtitle: AI-powered procurement guidance
+                        InputPlaceholder: Ask something...
+                        InvalidFileMessage: Only .txt and .md files are supported.
+                        InvalidSizeMessage: Max file size is 5 MB.
+                        NoFileUploadedMessage: No file was uploaded. Please choose a .txt or .md file.
+                        NoValuesExtracted: No structured values were extracted from the document.
+                        ParseFailedTemplate: 'Failed to parse document: {0}'
+                        ParseSuccess: Document parsed and form fields were updated.
+                        RemoveButtonTitle: Remove
+                        ThinkingText: Thinking...
+                        ThinkingPhrase0: Analyzing your request
+                        ThinkingPhrase1: Processing your input
+                        ThinkingPhrase2: Thinking through your question
+                        ThinkingPhrase3: Reviewing the details
+                        ThinkingPhrase4: Considering your request
+                        ThinkingPhrase5: Working on it
+                        ThinkingPhrase6: Connecting the dots
+                        ThinkingPhrase7: Compiling insights
+                        ThinkingPhrase8: Evaluating your options
+                        ThinkingPhrase9: Formulating an answer
+                        ThinkingPhrase10: Cross-referencing information
+                        ThinkingPhrase11: Checking available data
+                        ThinkingPhrase12: Putting it all together
+                        ThinkingPhrase13: Refining the response
+                        ThinkingPhrase14: Almost there
+                        ThinkingPhrase15: Preparing your answer
+                        ThinkingPhrase16: Generating response
+                        FeedbackAnalysisResult: Analysis Result
+                        FeedbackAlternatives: Alternatives
+                        ShowThinking: Show thinking
+                        HideThinking: Hide thinking
+                        UploadTriggerTitle: Upload supplier draft
+                      SupplierDetails:
+                        AdditionalNotesLabel: Additional Notes
+                        AdditionalNotesPlaceholder: Any additional context for the procurement or QM team
+                        AnnualVolumeLabel: Expected Annual Volume (EUR)
+                        AnnualVolumePlaceholder: e.g. 50000
+                        BankNameLabel: Bank Name
+                        BankNamePlaceholder: e.g. Commerzbank AG
+                        BankingPaymentTitle: Banking & Payment
+                        BicLabel: BIC / SWIFT
+                        BicPlaceholder: e.g. COBADEFFXXX
+                        BusinessPurposeLabel: Business Purpose
+                        BusinessPurposePlaceholder: e.g. Logistics / Transport
+                        CertificationsCardSubtitle: Upload your certificates
+                        CertificationsCardTitle: Certifications & Compliance
+                        CityLabel: City
+                        CityPlaceholder: e.g. München
+                        CommercialRegNoLabel: Commercial Register No.
+                        CommercialRegNoPlaceholder: e.g. HRB 123456
+                        CompanyDetailsTitle: Company Details
+                        CompanyNameLabel: Legal Company Name
+                        CompanyNamePlaceholder: e.g. Acme GmbH
+                        ContactEmailLabel: Email
+                        ContactEmailPlaceholder: contact@supplier.com
+                        ContactFirstNameLabel: First Name
+                        ContactFirstNamePlaceholder: First name
+                        ContactJobTitleLabel: Job Title
+                        ContactJobTitlePlaceholder: e.g. Sales Manager
+                        ContactLastNameLabel: Last Name
+                        ContactLastNamePlaceholder: Last name
+                        ContactPhoneLabel: Phone
+                        ContactPhonePlaceholder: +49 89 123456
+                        CountryLabel: Country
+                        CountrySelectDefault: -- Select Country --
+                        DepartmentLabel: Department / Cost Center
+                        DepartmentPlaceholder: e.g. DEPT-001
+                        IbanLabel: IBAN
+                        IbanPlaceholder: e.g. DE39 3704 0044 0532 0130 00
+                        LegalFormLabel: Legal Form
+                        LegalFormSelectDefault: -- Select --
+                        NeededByDateLabel: Needed By Date
+                        PrimaryContactTitle: Primary Contact
+                        ProcurementContextTitle: Procurement Context
+                        ProductsServicesLabel: Products / Services Needed
+                        ProductsServicesPlaceholder: Describe what products or services are needed from this supplier
+                        RequestedByLabel: Requested By
+                        RequestedByPlaceholder: e.g. john.doe
+                        RequiredDocsCardSubtitle: Upload compliance documents
+                        RequiredDocsCardTitle: Required Documents
+                        StreetLabel: Street & Number
+                        StreetPlaceholder: e.g. Industriestraße 42
+                        UrgencyLabel: Urgency
+                        VatIdLabel: VAT ID
+                        VatIdPlaceholder: e.g. DE123456789
+                        WebsiteLabel: Website
+                        WebsitePlaceholder: https://www.supplier.com
+                        ZipCodeLabel: ZIP Code
+                        ZipCodePlaceholder: e.g. 80339
+                      SupplierOnboardingSteps:
+                        BannerTitle: Supplier Onboarding
+                        Step1: Request
+                        Step2: DB Check
+                        Step3: Supplier Data
+                        Step4: Validation
+                        Step5: Risk Score
+                        Step6Complete: Complete
+                        Step6Declined: Declined
+                procurement:
+                  WelcomePage:
+                    PageTitle: Procurement Request Demo
+                    PrevButton: Previous
+                    NextButton: Next
+                    CancelButton: Cancel
+                    ProceedButton: Proceed
+                    StartDemoButton: Start Demo
+                    FocusPara: Unlike standard procurement forms, this demo shows a workflow where a single PDF upload replaces all manual data entry. The AI reads the document, fills every field, cross-checks each requested item against live inventory, flags stock issues, and proposes ready-to-use alternatives — all before you have typed a single character.
+                    HeroTitle1: AI-Powered
+                    HeroTitle2: Material Procurement
+                    HeroSubtitle: 'From a single PDF to a fully validated, AI-analyzed procurement request — in seconds.'
+                    ParseTitle: AI Document Parsing
+                    ParseDesc: 'Have a PDF procurement request? Upload it in the chat and ask the chatbot to parse it — every form field is filled automatically in seconds.'
+                    ParseFlowLabel: Document Parsing
+                    ParseDetail1: 'Upload your PDF directly in the chat panel (drag & drop or attach)'
+                    ParseDetail2: 'Type "Parse my document" to trigger the AI extraction'
+                    ParseDetail3: Review the auto-filled form and correct any field if needed
+                    StockTitle: Inventory & Stock Analysis
+                    StockDesc: 'Once your request is filled, ask the chatbot to analyze it — every material item is cross-checked against live inventory and problems are flagged before you submit.'
+                    StockFlowLabel: Stock Analysis
+                    StockDetail1: 'Type "Analyze my request" in the chat at any time'
+                    StockDetail2: Trouble items are highlighted in red directly in the material table
+                    StockDetail3: Each issue comes with a detailed AI explanation and recommendation
+                    AlternativeTitle: Alternative Item Suggestions
+                    AlternativeDesc: 'When items are flagged as problems, ask the chatbot to find alternatives — AI scores and ranks catalog substitutes, then picks the best match for you.'
+                    AlternativeFlowLabel: Alternatives
+                    AlternativeDetail1: 'Type "Find alternatives" after trouble items are flagged'
+                    AlternativeDetail2: 'AI ranks candidates on spec, availability, unit, and price (1–5 score each)'
+                    AlternativeDetail3: Click Apply in the chat response to replace the item instantly
+                    TranslateTitle: Multilingual Translation
+                    TranslateDesc: 'Working with a foreign-language document? Ask the chatbot to translate — all text is converted instantly while material codes and technical terms stay untouched.'
+                    TranslateFlowLabel: Translation
+                    TranslateDetail1: 'Type "Translate to [language]" in the chat (e.g. "Translate to German")'
+                    TranslateDetail2: Material codes, unit abbreviations and identifiers are never altered
+                    TranslateDetail3: Supports 50+ languages including Japanese, German, French and more
+                    CompareTitle: What the AI Chatbot Can Do
+                    CompareSubtitle: All four capabilities are triggered by natural conversation — no extra buttons, just chat
+                    Stat1Before: 1–3 days
+                    Stat1After: Seconds
+                    Stat1Label: From upload to completed request form
+                    Stat2Before: Manual lookup
+                    Stat2After: One prompt
+                    Stat2Label: To check all items against live inventory
+                    Stat3Before: Hours
+                    Stat3After: Instant
+                    Stat3Label: To find and rank alternative items
+                    TraditionalHeader: Without AI Chatbot
+                    AiHeader: AI Chatbot in Action
+                    TraditionalItem1: Manually type every item description, code, and quantity from paper documents
+                    TraditionalItem2: 'No stock check — shortages discovered only at site delivery'
+                    TraditionalItem3: 'Alternative items require hours of manual catalog research'
+                    TraditionalItem4: Foreign-language documents cause delays while translators are engaged
+                    TraditionalItem5: 'Errors found only after submission, requiring costly rework'
+                    AiItem1: '"Parse my document" — AI reads the PDF and fills all fields instantly'
+                    AiItem2: '"Analyze my request" — every item cross-checked against live inventory'
+                    AiItem3: '"Find alternatives" — AI ranks substitutes and selects the best match'
+                    AiItem4: '"Translate" — one-click into 50+ languages, technical terms preserved'
+                    AiItem5: 'Structured audit trail and approval-ready data — all from one conversation'
+                    ReadyTitle: Ready to Explore?
+                    ReadyDesc: 'Generate the sample material catalog and download the mock procurement request PDF to use as input when the demo asks you to upload a document.'
+                    DownloadTitle: Sample Procurement Request (PDF)
+                    DownloadDesc: 'Use this document when the demo asks you to upload a procurement request. The AI will parse it and fill in all fields automatically.'
+                    DownloadButton: Download PDF
+                    GenerateButton: Generate Mock Data
+                    DataAlreadyGeneratedBanner: Material catalog already generated. Click <strong>Start Demo</strong> to begin.
+                    GenStepTitle: Generate Material Catalog
+                    GenStepHint: 'Material types, items & inventory entries'
+                    DoneBannerPre: 'Catalog ready — click'
+                    DoneBannerPost: to begin!
+                  StartDemo:
+                    PageTitle: Procurement Request — Start Demo
+                    WelcomeTitle: AI-Powered Material Procurement
+                    WelcomeDesc: Generate sample material data to explore the full procurement demo experience — AI document parsing, inventory analysis, and alternative item suggestions.
+                    GenerateButton: Generate Mock Data
+                    DataAlreadyGeneratedBanner: Material catalog already generated. Click <strong>Start Demo</strong> to begin.
+                    Gen1Title: Generate Material Catalog
+                    Gen1Hint: 'Material types, items & inventory entries'
+                    GenDoneBanner: Material catalog generated successfully.
+                    StartDemoButton: Start Demo
+                  CreateRequestDialog:
+                    AssistantName: AI Procurement Assistant
+                    PageTitle: Material Procurement Request
+                    ProjectHeaderTitle: Project Header
+                    ProjectNameLabel: Project Name
+                    ProjectNamePlaceholder: 'e.g. New Warehouse, Munich-North'
+                    ProjectNameRequired: Project Name is required.
+                    ProjectNumberLabel: Project Number / Cost Center
+                    ProjectNumberPlaceholder: e.g. PRJ-2025-042
+                    ProjectNumberRequired: Project Number / Cost Center is required.
+                    DeliveryAddressLabel: Construction Site / Delivery Address
+                    DeliveryAddressPlaceholder: Delivery address of the construction site
+                    DeliveryAddressRequired: Construction Site / Delivery Address is required.
+                    PriorityLabel: Priority
+                    RequesterLabel: Requester
+                    OrderNotesLabel: Order Notes
+                    OrderNotesPlaceholder: Optional notes for purchasing
+                    MaterialListTitle: Material List
+                    AddRowButton: Add Row
+                    EmptyMessage: "No material items. Click 'Add Row' to start."
+                    ExpandAriaHeader: Expand
+                    PosColumn: Pos.
+                    TroubleTip: This item has a problem
+                    MaterialColumn: Material
+                    QtyUnitColumn: Qty / Unit
+                    UnitPriceColumn: Unit Price (¥)
+                    TotalNetColumn: Total net (¥)
+                    RemoveRowTitle: Remove row
+                    MaterialDescLabel: Material Description
+                    MaterialDescPlaceholder: e.g. Cement
+                    StandardGradeLabel: Standard / Grade / Class
+                    StandardGradePlaceholder: e.g. JIS R 5210
+                    QuantityLabel: Quantity
+                    UnitLabel: Unit
+                    UnitSelectPrompt: '– select –'
+                    SupplierLabel: Supplier
+                    OptionalPlaceholder: Optional
+                    UnitPriceNetLabel: Unit Price net (¥)
+                    PurposeLabel: Purpose
+                    PurposePlaceholder: e.g. Foundation
+                    CommentLabel: Comment
+                    TotalNetLabel: 'Total net:'
+                    CancelButton: Cancel
+                    SaveButton: Save
+                    SubmitButton: Finish Demo
+                    GuidanceParseDoc: Can you parse my procurement document?
+                    GuidanceAnalyze: Analyze my request
+                    GuidanceAddMaterials: How do I add materials?
+                    GuidanceAfterSubmit: What happens after I submit?
+                    ParseNoValues: No structured values were extracted from the document.
+                    ParseSuccess: Document parsed and form fields were updated.
+                    NoDocumentUploaded: No document was uploaded. Please upload a file first.
+                  FinishDemo:
+                    HeroTitle: You just experienced AI-powered procurement.
+                    HeroSub: Here is a summary of everything the AI handled — automatically, accurately, and fully traceable.
+                    PageTitle: Smart Workflow — Procurement Request Summary
+                    Panel0Title: Document Upload & AI Parsing
+                    Panel0Desc: You uploaded a PDF procurement request — and that was all. The AI identified the document structure, extracted every item, and mapped each field to the correct form input automatically.
+                    Panel0Detail1: PDF uploaded directly via the AI chat panel (drag & drop or file attach)
+                    Panel0Detail2: AI parsed document structure and extracted all material fields automatically
+                    Panel0Detail3: Procurement form pre-filled with zero manual typing required
+                    Panel1Title: AI Procurement Assistant
+                    Panel1Desc: Throughout the process, a conversational AI assistant guided you — answering questions, explaining items, and executing operations like parsing, analysing, and finding alternatives through natural language.
+                    Panel1Detail1: Natural language interface for all procurement actions — no extra buttons
+                    Panel1Detail2: Context-aware answers about materials, policy, and delivery requirements
+                    Panel1Detail3: Operations triggered conversationally — parse, analyse, translate, replace
+                    Panel2Title: Inventory Analysis
+                    Panel2Desc: Every material item in your request was cross-checked against the live material catalog and inventory. Items with stock issues were flagged and highlighted directly in the form.
+                    Panel2Detail1: All items matched against real-time inventory entries in the material catalog
+                    Panel2Detail2: Stock shortages, unavailable items, and unit mismatches flagged instantly
+                    Panel2Detail3: Each issue annotated with an AI explanation and actionable recommendation
+                    Panel3Title: Smart Alternative Suggestions
+                    Panel3Desc: For every flagged item, the AI searched the catalog, scored all candidate substitutes on specification match, availability, unit compatibility, and price — then proposed the best replacement with one click to apply.
+                    Panel3Detail1: Candidate items scored across four dimensions — spec, availability, unit, and price
+                    Panel3Detail2: Best-fit alternative selected and ranked by AI for each problem item
+                    Panel3Detail3: One-click apply replaced the flagged item directly in the procurement table
+                    Panel4Title: Request Submitted
+                    Panel4Desc: The procurement request has been submitted successfully. All material items, quantities, and AI-verified data are captured in the system — ready for the purchasing team to process.
+                    Panel4Detail1: All material items, quantities, and delivery details saved and validated
+                    Panel4Detail2: AI-verified inventory status and alternative selections recorded
+                    Panel4Detail3: Purchasing team notified — request is ready for processing
+                  ProcurementApproval:
+                    PageTitle: Review Procurement Request
+                    BannerTitleTemplate: 'Review: {0}'
+                    BannerDesc: This procurement request is awaiting your review. Please examine the material list and provide your decision.
+                    BannerMetaTemplate: 'Submitted by: {0}'
+                    TotalAmountLabel: Total (¥)
+                    RequestDetailsTitle: Request Details
+                    ProjectNameLabel: Project Name
+                    ProjectNumberLabel: Project Number / Cost Center
+                    DeliveryAddressLabel: Delivery Address
+                    MaterialColumn: Material
+                    QtyUnitColumn: Qty / Unit
+                    TotalNetColumn: Total net (¥)
+                    ApprovalCommentTitle: Decision Comment
+                    ApprovalCommentPlaceholder: Provide a comment to document your decision rationale (optional for approval, recommended for rejection)...
+                    ApproveButton: Approve
+                    RejectButton: Reject
+                  ProcurementCompletion:
+                    PageTitle: Procurement Request Approved
+                    BannerTitleTemplate: 'Request Approved: {0}'
+                    BannerDesc: The procurement request has been approved. The purchasing team will proceed with material acquisition.
+                    BannerMetaTemplate: 'Approved for: {0}'
+                    TotalAmountLabel: Total (¥)
+                    ApprovedBadge: Approved
+                    ApprovedItemsTitle: Approved Materials
+                    MaterialColumn: Material
+                    QtyUnitColumn: Qty / Unit
+                    TotalNetColumn: Total net (¥)
+                  ProcurementDecline:
+                    PageTitle: Procurement Request Declined
+                    BannerTitleTemplate: 'Request Declined: {0}'
+                    BannerDesc: The procurement request has been declined by the Purchasing Manager.
+                    BannerMetaTemplate: 'Submitted by: {0}'
+                    TotalAmountLabel: Total (¥)
+                    DeclinedBadge: Declined
+                    DeclineReasonTitle: Reason for Decline
+                    RequestSummaryTitle: Request Summary
+                    MaterialColumn: Material
+                    QtyUnitColumn: Qty / Unit
+                    TotalNetColumn: Total net (¥)
+              rag:
+                RagDemo:
+                  Chatbot:
+                    AssistantName: AI Assistant
+                    InputPlaceholder: Ask about your documents...
+                    ThinkingText: Searching documents...
+                    WelcomeDesc: I can help you find information from your indexed documents.
+                    WelcomeTitle: Hello, I'm your AI Assistant
+                  ChooseFileLabel: Choose file (.pdf / .md / .txt)
+                  ChunkIdColumn: Chunk ID
+                  ChunkSizeLabel: Chunk Size
+                  CreatedLabel: Created
+                  EmbedButton: Embed
+                  EmbeddedChunksCount: Embedded Chunks ({0})
+                  IndexNameDesc: A unique name to identify this knowledge base in the vector store.
+                  IndexNameLabel: Vector store name
+                  ModelLabel: Model
+                  NoDocumentsDesc: Upload <strong>.txt</strong> or <strong>.md</strong> files and click <strong>Embed</strong> to index them.
+                  NoDocumentsTitle: No documents yet
+                  OverlapLabel: Overlap
+                  PageTitle: RAG Demo
+                  ProviderLabel: Provider
+                  SourceColumn: Source
+                  Step1:
+                    AuthTypeDesc: Authentication method configured for this OpenSearch instance.
+                    AuthTypeLabel: Authentication
+                    ChunkOverlapDesc: Overlapping tokens between consecutive chunks to preserve context at boundaries.
+                    ChunkOverlapLabel: Chunk Overlap
+                    ChunkOverlapUnit: tokens
+                    ChunkSizeDesc: Maximum tokens per document chunk when splitting source text.
+                    ChunkSizeLabel: Chunk Size
+                    ChunkSizeUnit: tokens
+                    ContinueButton: Continue
+                    MaxResultsDesc: Maximum matching chunks returned per search query.
+                    MaxResultsLabel: Max Results
+                    MinScoreDesc: Cosine similarity threshold. Chunks below this score are excluded.
+                    MinScoreLabel: Min Score
+                    ModelDesc: Model used for embedding. When blank, the provider default is used.
+                    ModelLabel: Embedding Model
+                    ProviderDesc: AI provider used to generate vector embeddings. Falls back to AI.DefaultProvider when blank.
+                    ProviderLabel: Embedding Provider
+                    Subtitle: Read-only settings loaded from Ivy variables. To change them, update the variables in the Ivy configuration.
+                    TestConnectionButton: Test Connection
+                    Title: RAG Configuration
+                    UrlDesc: Base URL of the OpenSearch server.
+                    UrlLabel: Server URL
+                    VectorStoreTitle: Vector Store
+                  Step2:
+                    EmbedButton: Embed
+                    FileNameColumn: File Name
+                    FileSizeColumn: Size
+                    FileUploadContainerHint: Supports .pdf, .md and .txt — one file at a time
+                    FileUploadContainerTitle: Drag & drop files here
+                    IndexExistsWarning: Index Already Exists
+                    IndexExistsWarningDesc: An index with this name already exists. Please choose a different index name.
+                    PdfNote: PDF files may take longer to process — AI is used to extract their content.
+                    StagedFilesTitle: Staged for embedding
+                    Subtitle: Enter a vector store name, upload one file (.pdf, .md or .txt), then embed it into the vector store.
+                    Title: Upload & Embed Documents
+                  Step3:
+                    ChatButton: Start Chatting
+                    ReloadButton: Reload
+                    Title: Embedding Results
+                  Subtitle: A guided walkthrough of Retrieval-Augmented Generation with Smart Workflow
+                  Title: Smart Workflow RAG
+                  TokensUnit: tokens
+                  UploadLabel: Upload
+                  Wizard:
+                    BackToUploadButton: Back to Results
+                    Step1Label: Configuration
+                    Step2Label: Upload & Embed
+                    Step3Label: Results
+                    Step4Label: Chat
               shopping:
                 product:
                   ProductCreation:
@@ -106,79 +804,10 @@ Dialogs:
                     Total: Total
                     ViewDetails: View Details
                     YourCartIsEmpty: Your cart is empty
-              rag:
-                RagDemo:
-                  PageTitle: RAG Demo
-                  Title: Smart Workflow RAG
-                  Subtitle: A guided walkthrough of Retrieval-Augmented Generation with Smart Workflow
-                  IndexNameLabel: Vector store name
-                  IndexNameDesc: "A unique name to identify this knowledge base in the vector store."
-                  ChooseFileLabel: 'Choose file (.pdf / .md / .txt)'
-                  UploadLabel: Upload
-                  EmbedButton: Embed
-                  EmbeddedChunksCount: 'Embedded Chunks ({0})'
-                  ProviderLabel: Provider
-                  ModelLabel: Model
-                  CreatedLabel: Created
-                  ChunkSizeLabel: Chunk Size
-                  OverlapLabel: Overlap
-                  TokensUnit: tokens
-                  NoDocumentsTitle: No documents yet
-                  NoDocumentsDesc: 'Upload <strong>.txt</strong> or <strong>.md</strong> files and click <strong>Embed</strong> to index them.'
-                  SourceColumn: Source
-                  ChunkIdColumn: Chunk ID
-                  Wizard:
-                    Step1Label: Configuration
-                    Step2Label: "Upload & Embed"
-                    Step3Label: Results
-                    Step4Label: Chat
-                    BackToUploadButton: Back to Results
-                  Step1:
-                    VectorStoreTitle: Vector Store
-                    UrlLabel: Server URL
-                    UrlDesc: Base URL of the OpenSearch server.
-                    AuthTypeLabel: Authentication
-                    AuthTypeDesc: Authentication method configured for this OpenSearch instance.
-                    TestConnectionButton: Test Connection
-                    Title: RAG Configuration
-                    Subtitle: "Read-only settings loaded from Ivy variables. To change them, update the variables in the Ivy configuration."
-                    ContinueButton: Continue
-                    ProviderLabel: Embedding Provider
-                    ProviderDesc: "AI provider used to generate vector embeddings. Falls back to AI.DefaultProvider when blank."
-                    ModelLabel: Embedding Model
-                    ModelDesc: "Model used for embedding. When blank, the provider default is used."
-                    ChunkSizeLabel: Chunk Size
-                    ChunkSizeDesc: "Maximum tokens per document chunk when splitting source text."
-                    ChunkSizeUnit: tokens
-                    ChunkOverlapLabel: Chunk Overlap
-                    ChunkOverlapDesc: "Overlapping tokens between consecutive chunks to preserve context at boundaries."
-                    ChunkOverlapUnit: tokens
-                    MaxResultsLabel: Max Results
-                    MaxResultsDesc: "Maximum matching chunks returned per search query."
-                    MinScoreLabel: Min Score
-                    MinScoreDesc: "Cosine similarity threshold. Chunks below this score are excluded."
-                  Step2:
-                    Title: "Upload & Embed Documents"
-                    Subtitle: "Enter a vector store name, upload one file (.pdf, .md or .txt), then embed it into the vector store."
-                    EmbedButton: Embed
-                    IndexExistsWarning: Index Already Exists
-                    IndexExistsWarningDesc: "An index with this name already exists. Please choose a different index name."
-                    FileUploadContainerTitle: Drag & drop files here
-                    FileUploadContainerHint: "Supports .pdf, .md and .txt — one file at a time"
-                    PdfNote: "PDF files may take longer to process — AI is used to extract their content."
-                    StagedFilesTitle: Staged for embedding
-                    FileNameColumn: File Name
-                    FileSizeColumn: Size
-                  Step3:
-                    Title: Embedding Results
-                    ChatButton: Start Chatting
-                    ReloadButton: Reload
-                  Chatbot:
-                    WelcomeTitle: "Hello, I'm your AI Assistant"
-                    WelcomeDesc: I can help you find information from your indexed documents.
-                    InputPlaceholder: Ask about your documents...
-                    AssistantName: AI Assistant
-                    ThinkingText: Searching documents...
+Enum:
+  RiskKind:
+    AI_VALIDATION: 'Required document present: {0}'
+    MISSING_DOC: 'Required document missing: {0}'
 Features:
   FileExtractionDemo:
     ExtractFromImagePrompt: Extract Invoice from image
@@ -231,13 +860,224 @@ Features:
          - answer: your verdict (BLOCK or APPROVE) with a detailed justification listing every policy violation
          - matches: the policy sections you retrieved, each with content, score (0.0-1.0), and metadata
       Be direct and decisive. Do not hedge or defer to other departments.
+  SupplierOnboarding:
+    PolicyRules: |
+      Supplier Onboarding Policy — BuildRight Supply Co.
+
+      ── SHARED SIGNAL LISTS ─────────────────────────────────────────────────
+      When a rule says "scan for MANUFACTURING SIGNALS", look across ALL available
+      context (business purpose, product/service categories, company description,
+      commercial register objects, extracted document contents) for:
+        manufacturing, industrial, production, fabrication, assembly, processing plant,
+        factory, machining, casting, welding, chemical processing.
+
+      When a rule says "scan for IT/DATA SIGNALS", look across ALL available context for:
+        IT, software, SaaS, platform, digital, cloud, data center, data processing,
+        HR systems, payroll systems, CRM, ERP, analytics, marketing technology,
+        recruitment technology, managed services, system integration, cybersecurity,
+        or any service that involves operating digital systems, networks, or data
+        infrastructure, or that involves access to client personal data.
+      ────────────────────────────────────────────────────────────────────────
+
+      SECTION A — LEGAL & REGISTRATION
+
+      RULE 1 — COMMERCIAL REGISTER DOCUMENT
+        Applies to: all new suppliers.
+        FAILURE:  no commercial register document is present in the extracted documents.
+        WARNING:  N/A
+        PASSED:   a commercial register document is present.
+
+      RULE 2 — SUPPLIER SELF-DECLARATION
+        Applies to: all new suppliers.
+        FAILURE:  N/A
+        WARNING:  no self-declaration document is present.
+        PASSED:   a self-declaration document is present.
+
+      SECTION B — CERTIFICATIONS
+      For every certification rule, also apply the following expiry checks to the
+      certificate when it IS present (use today's date for comparison):
+        FAILURE if the certificate's valid-until date is already in the past (expired).
+        WARNING if the certificate expires within the next 6 months.
+
+      RULE 3 — ISO 9001 QUALITY MANAGEMENT
+        Applies to: suppliers with expected annual volume > EUR 50,000.
+        FAILURE:  annual volume > EUR 50,000 AND ISO 9001 certificate is absent
+                  OR the present certificate is expired.
+        WARNING:  the certificate expires within 6 months.
+        PASSED:   annual volume <= EUR 50,000 (rule not applicable, state this clearly)
+                  OR a valid ISO 9001 certificate is present and not expiring soon.
+
+      RULE 4 — ISO 14001 ENVIRONMENTAL MANAGEMENT
+        Applies to: suppliers where MANUFACTURING SIGNALS are found.
+        FAILURE:  MANUFACTURING SIGNALS found AND ISO 14001 certificate is absent
+                  OR the present certificate is expired.
+        WARNING:  the certificate expires within 6 months.
+        PASSED:   no MANUFACTURING SIGNALS found (rule not applicable, state this clearly)
+                  OR a valid ISO 14001 certificate is present and not expiring soon.
+
+      RULE 5 — ISO 27001 INFORMATION SECURITY
+        Applies to: suppliers where IT/DATA SIGNALS are found.
+        FAILURE:  IT/DATA SIGNALS found AND ISO 27001 certificate is absent
+                  OR the present certificate is expired.
+        WARNING:  signals are ambiguous or unclear (state what clarification is needed)
+                  OR the certificate expires within 6 months.
+        PASSED:   no IT/DATA SIGNALS found (rule not applicable, state this clearly)
+                  OR a valid ISO 27001 certificate is present and not expiring soon.
+
+      RULE 6 — GDPR DATA PROCESSING AGREEMENT
+        Applies to: suppliers where IT/DATA SIGNALS are found.
+        FAILURE:  IT/DATA SIGNALS found AND GDPR DPA document is absent.
+        WARNING:  signals are ambiguous or unclear (state what clarification is needed).
+        PASSED:   no IT/DATA SIGNALS found (rule not applicable, state this clearly)
+                  OR a GDPR DPA document is present.
+
+      SECTION C — GEOGRAPHIC
+
+      RULE 7 — EU/EEA ORIGIN PREFERENCE
+        Applies to: all suppliers.
+        EU/EEA country list: DE, FR, NL, BE, AT, CH, PL, IT, ES, PT, SE, DK, FI, NO.
+        FAILURE:  N/A
+        WARNING:  supplier country is outside the EU/EEA list above.
+        PASSED:   supplier country is in the EU/EEA list.
+
+      SECTION D — FINANCIAL HEALTH
+
+      RULE 8 — ANNUAL REPORT & FINANCIAL SOUNDNESS
+        Applies to: all suppliers (report is strongly recommended but not mandatory).
+        If no annual report is present:
+          WARNING:  annual report is absent — financial health cannot be assessed.
+          Skip sub-checks below.
+        If an annual report IS present, evaluate all figures strictly and precisely
+        (do not round or approximate — use exact numbers from the document):
+          FAILURE:  net loss reported for 2 or more consecutive years.
+          FAILURE:  total equity is negative (balance-sheet insolvency risk).
+          FAILURE:  auditor issued a going-concern qualification or doubt note.
+          WARNING:  debt-to-equity ratio exceeds 3.0.
+          WARNING:  revenue declined more than 20% year-on-year.
+          WARNING:  operating cash flow is negative while net income is positive
+                    (quality-of-earnings concern).
+          PASSED:   report is present and none of the above conditions are triggered.
+    PolicyValidationSystemPrompt: |
+      You are a supplier policy compliance expert for BuildRight Supply Co.
+      Evaluate the supplied supplier data strictly against the policy rules below.
+
+      POLICY RULES:
+      {POLICY_RULES}
+
+      INSTRUCTIONS:
+      For each rule, create one ValidationFinding with:
+        - severity: "PASSED", "WARNING", or "FAILURE"
+        - message: a clear, specific explanation of what was checked and the outcome
+          (include relevant values such as country, volume, cert expiry date, financial figures)
+        - source: "built-in policy rule"
+
+      Check all 8 rules across all 4 sections. For every rule:
+      - If the rule's "Applies to" condition does not match this supplier, emit PASSED
+        with a short note explaining why the rule is not applicable. Never skip a rule silently.
+      - If the rule APPLIES and the requirement IS MET (e.g., the required document is present
+        in the extracted documents, or the required condition is satisfied), emit PASSED with
+        a short note confirming compliance. Do NOT emit FAILURE or WARNING when the requirement is met.
+      - If the rule applies and the requirement is NOT met, emit FAILURE.
+      - If a rule has multiple sub-checks (e.g. Rule 8), emit one finding per triggered
+        sub-check, each with its own severity. Emit a single PASSED finding only when
+        none of the sub-checks are triggered.
+
+      DOCUMENT TYPE KEY — MANDATORY for every FAILURE or WARNING finding about a missing
+      or required document/certificate. Always populate documentTypeKey:
+        - Missing certificate (ISO 9001, ISO 14001, ISO 27001, GDPR DPA, etc.):
+          use CERTIFICATION:<ENUM_NAME>, e.g. CERTIFICATION:ISO_9001, CERTIFICATION:GDPR_DPA
+        - Missing commercial register: DOCUMENT:COMMERCIAL_REGISTER
+        - Missing self-declaration: DOCUMENT:SELF_DECLARATION
+        - Missing annual report: DOCUMENT:ANNUAL_REPORT
+        - Missing bank statement: DOCUMENT:BANK_STATEMENT
+        Leave null only for non-document findings (duplicate checks, general data issues).
+
+      Return a PolicyValidationResult with the complete list of findings.
+      Leave the processingStep field null — it is set by the calling process.
+KnowledgeBase:
+  procurement:
+    ProcurementRequest: |
+      # Material Procurement Request — Business Process Knowledge Base
+
+      ## Process Overview
+      The Material Procurement Request process allows construction project teams to formally request materials.
+      It follows a structured two-step workflow: the Requester submits the request form, and the Purchasing Manager reviews and approves or rejects it.
+      All requests are tracked by status throughout the lifecycle.
+
+      ## Workflow Steps
+
+      ### Step 1: Fill Procurement Request (Requester)
+      The Requester completes the material procurement request form, providing details such as required materials, quantities, project context, and justification.
+      Upon submission, the request status is set to SUBMITTED and the record is saved in the system.
+      The case is tagged with the procurement request ID for downstream tracking.
+
+      ### Step 2: Review Procurement Request (Purchasing Manager)
+      The Purchasing Manager receives the task to review the submitted request.
+      They examine the request details and provide one of two decisions:
+      - APPROVED: The request is authorized and marked as APPROVED.
+      - REJECTED: The request is denied and marked as REJECTED.
+      The Purchasing Manager may also add an approval comment to document the rationale for the decision.
+
+      ## Request Statuses
+      - SUBMITTED: The request has been filled in and submitted by the Requester, and is awaiting review.
+      - APPROVED: The Purchasing Manager has authorized the procurement request.
+      - REJECTED: The Purchasing Manager has denied the procurement request.
+
+      ---
+
+      ## Common Questions and Answers
+
+      Q: Who can submit a material procurement request?
+      A: Any team member assigned to the Requester role can initiate and submit a material procurement request through the system.
+
+      Q: What information is required when submitting a request?
+      A: The request form requires details about the materials needed, quantities, the associated construction project, and a justification for the procurement.
+
+      Q: Who is responsible for reviewing the request?
+      A: The Purchasing Manager is exclusively responsible for reviewing, approving, or rejecting all procurement requests.
+
+      Q: How will I know if my request has been reviewed?
+      A: The status of your request will be updated to either APPROVED or REJECTED once the Purchasing Manager completes their review. You can track the status in the system at any time.
+
+      Q: Can I modify my request after it has been submitted?
+      A: Once a request is submitted its status is set to SUBMITTED and it cannot be edited. If corrections are needed, contact the Purchasing Manager directly.
+
+      Q: What happens after my request is approved?
+      A: An APPROVED status confirms authorization to proceed with material acquisition. The procurement team will coordinate the fulfillment of the materials.
+
+      Q: What should I do if my request is rejected?
+      A: A rejected request includes comments from the Purchasing Manager explaining the reason for the decision. Review the comments, address the concerns, and submit a new request with the necessary adjustments.
+
+      Q: Can the Purchasing Manager add remarks to the decision?
+      A: Yes. The Purchasing Manager can include an approval comment when reviewing a request to document the justification or provide guidance to the Requester.
+
+      Q: How is a procurement request identified in the system?
+      A: Each procurement request is assigned a unique ID upon creation. This ID is stored as a case custom field (procurementRequestId) and is used to link the request across workflow steps.
+
+      Q: What is the typical flow for a procurement request?
+      A: The process starts when a Requester submits the form (status: SUBMITTED). The case is then assigned to the Purchasing Manager for review. The manager approves or rejects the request (status: APPROVED or REJECTED), completing the workflow.
+
 Labels:
   Actions: Actions
   Active: Active
+  Approve: Approve
+  Back: Back
   BasicInformation: Basic Information
   Cancel: Cancel
   Close: Close
+  Confirm: Confirm
   Description: Description
+  Download: Download
   Finish: Finish
+  Optional: Optional
+  Priority:
+    NORMAL: Normal
+    HIGH: High
+    URGENT: Urgent
+    LOW: Low
+  Replace: Replace
+  Required: Required
   Resolve: Resolve
   Status: Status
+  Upload: Upload
+  View: View

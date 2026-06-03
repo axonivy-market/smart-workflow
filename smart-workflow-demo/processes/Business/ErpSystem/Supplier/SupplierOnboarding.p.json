@@ -1,0 +1,154 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19DB8AF613F649E4",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.SupplierOnboardingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "supplierOnboarding",
+      "config" : {
+        "signature" : "supplierOnboarding",
+        "request" : {
+          "name" : "Supplier Onboarding",
+          "description" : "Request a new supplier onboarding process"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f100", "to" : "f209" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1160, "y" : 208 }
+      }
+    }, {
+      "id" : "f155",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1160, "y" : 352 }
+      }
+    }, {
+      "id" : "f209",
+      "type" : "Script",
+      "name" : "Init request",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;",
+            "",
+            "if (in.request == null) { in.request = new OnboardingRequest(); }",
+            "if (in.request.getSupplier() == null) { in.request.setSupplier(new Supplier()); }",
+            "in.sessionUsername = ivy.session.getSessionUser().fullName;",
+            "in.request.setCaseUuid(ivy.case.uuid().toString());",
+            "if (in.request.getStatus() == null) { in.request.setStatus(OnboardingStatus.REQUEST); }"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f200", "to" : "f210" }
+      ]
+    }, {
+      "id" : "f210",
+      "type" : "Script",
+      "name" : "Generate mock data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.mock.MockDataGenerator;",
+            "",
+            "MockDataGenerator.ensureDepartments();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 368, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f211", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "DialogCall",
+      "name" : "Supplier request form",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRequestForm:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.request" : "result.request"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f102", "to" : "f150" }
+      ]
+    }, {
+      "id" : "f150",
+      "type" : "Alternative",
+      "name" : "Check status",
+      "config" : {
+        "conditions" : {
+          "f152" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus.REQUEST.equals(in.request.status)",
+          "f156" : "in.request.status == null"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 728, "y" : 208 },
+        "labelOffset" : { "x" : -40, "y" : 24 }
+      },
+      "connect" : [
+        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 728, "y" : 352 } ], "label" : {
+            "name" : "Save Draft",
+            "segment" : 1.12,
+            "offset" : { "x" : -23, "y" : -21 }
+          } },
+        { "id" : "f156", "to" : "f155", "label" : {
+            "name" : "Cancel",
+            "offset" : { "x" : -31, "y" : -2 }
+          } },
+        { "id" : "f153", "to" : "f1", "label" : {
+            "name" : "Submit",
+            "offset" : { "x" : -3, "y" : -18 }
+          } }
+      ]
+    }, {
+      "id" : "f151",
+      "type" : "TaskSwitchEvent",
+      "name" : "Continue supplier request",
+      "config" : {
+        "task" : {
+          "name" : "Continue supplier request - <%= in1.request.supplier != null ? in1.request.supplier.businessName : '' %>",
+          "description" : "Continue filling out the supplier request form",
+          "responsible" : {
+            "type" : "USER_FROM_ATTRIBUTE",
+            "script" : "in1.sessionUsername"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 352 }
+      },
+      "connect" : [
+        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 560, "y" : 336 } ] }
+      ]
+    } ]
+}

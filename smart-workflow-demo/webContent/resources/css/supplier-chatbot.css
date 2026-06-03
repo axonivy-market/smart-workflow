@@ -1,0 +1,73 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Supplier AI Assistant — upload strip + chip styles only.
+   Sidebar card and chat-bubble styles are handled by chat-ui.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Messenger wrapper ──────────────────────────────────────────── */
+.so-ai-chat-wrapper {
+  background: var(--surface-0);
+  border: 1px solid var(--so-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--so-shadow);
+  height: 100%;
+}
+
+/* ── Suggestion chips ───────────────────────────────────────────── */
+.so-ai-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+.so-ai-chip {
+  background: var(--surface-0);
+  border: 1.5px solid color-mix(in srgb, var(--ivy-primary-color), transparent 60%);
+  border-radius: 18px;
+  padding: 8px 14px;
+  color: var(--text-color);
+  cursor: pointer;
+  user-select: none;
+  transition: background .18s, border-color .18s, color .18s, transform .12s;
+  line-height: 1.4;
+}
+.so-ai-chip:hover {
+  background: color-mix(in srgb, var(--ivy-primary-color), transparent 88%);
+  border-color: var(--ivy-primary-color);
+  color: var(--ivy-primary-color);
+  transform: translateY(-1px);
+}
+
+/* ── Sticky chat header ──────────────────────────────────────────── */
+.so-ai-sticky-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface-0);
+  border-bottom: 1px solid var(--so-border, var(--surface-border));
+  flex-shrink: 0;
+}
+
+.so-ai-header-avatar {
+  width: 34px;
+  height: 34px;
+  background: var(--ivy-primary-color);
+}
+
+.so-ai-header-avatar .ti {
+  color: white;
+  font-size: 1rem;
+}
+
+.so-ai-header-title {
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.so-ai-header-subtitle {
+  color: var(--text-color-secondary);
+}

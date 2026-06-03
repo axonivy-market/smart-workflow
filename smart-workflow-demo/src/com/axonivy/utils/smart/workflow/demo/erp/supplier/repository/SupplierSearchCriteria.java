@@ -27,6 +27,15 @@ public class SupplierSearchCriteria {
   @Description("Website URL filter (exact match). Leave null if not filtering by website.")
   private String website;
 
+  @Description("VAT ID filter (exact match). Leave null if not filtering by VAT ID.")
+  private String vatId;
+
+  @Description("Business purpose or category filter (partial match). Leave null if not filtering by purpose.")
+  private String businessPurposeContains;
+
+  @Description("Country filter (exact match). Leave null if not filtering by country.")
+  private String country;
+
   public SupplierSearchCriteria() {
   }
 
@@ -78,9 +87,35 @@ public class SupplierSearchCriteria {
     this.website = website;
   }
 
+  public String getVatId() {
+    return vatId;
+  }
+
+  public void setVatId(String vatId) {
+    this.vatId = vatId;
+  }
+
+  public String getBusinessPurposeContains() {
+    return businessPurposeContains;
+  }
+
+  public void setBusinessPurposeContains(String businessPurposeContains) {
+    this.businessPurposeContains = businessPurposeContains;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
+  }
+
   public boolean hasAnyFilter() {
     return StringUtils.isNotBlank(supplierId) || StringUtils.isNotBlank(businessNameContains) || businessAddress != null
-        || StringUtils.isNotBlank(phone) || StringUtils.isNotBlank(email) || StringUtils.isNotBlank(website);
+        || StringUtils.isNotBlank(phone) || StringUtils.isNotBlank(email) || StringUtils.isNotBlank(website)
+        || StringUtils.isNotBlank(vatId) || StringUtils.isNotBlank(businessPurposeContains)
+        || StringUtils.isNotBlank(country);
   }
 
   @Override

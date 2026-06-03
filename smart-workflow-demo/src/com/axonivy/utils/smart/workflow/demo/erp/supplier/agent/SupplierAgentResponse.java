@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.axonivy.utils.smart.workflow.demo.erp.shared.Status;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRiskScore;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria;
 
 import dev.langchain4j.model.output.structured.Description;
@@ -15,6 +18,21 @@ public class SupplierAgentResponse {
 
   @Description("Feedback after run an action")
   private String feedback;
+
+  @Description("Risk score assessment result from the agent")
+  private SupplierRiskScore riskScore;
+
+  @Description("List of validation findings from document extraction and policy checks")
+  private List<ValidationFinding> validationFindings;
+
+  @Description("Similarity match score in percent (0-100) for duplicate check results")
+  private Integer matchScore;
+
+  @Description("Routing decision based on risk score: APPROVAL, CLARIFICATION, or DECLINE")
+  private String routingDecision;
+
+  @Description("Processing steps with timing and log lines from agent tool execution")
+  private List<AgentProcessingStep> processingSteps;
 
   @Description("The supplier related to the action")
   private Supplier supplier;
@@ -74,5 +92,45 @@ public class SupplierAgentResponse {
 
   public void setSuppliers(List<Supplier> suppliers) {
     this.suppliers = suppliers;
+  }
+
+  public SupplierRiskScore getRiskScore() {
+    return riskScore;
+  }
+
+  public void setRiskScore(SupplierRiskScore riskScore) {
+    this.riskScore = riskScore;
+  }
+
+  public List<ValidationFinding> getValidationFindings() {
+    return validationFindings;
+  }
+
+  public void setValidationFindings(List<ValidationFinding> validationFindings) {
+    this.validationFindings = validationFindings;
+  }
+
+  public Integer getMatchScore() {
+    return matchScore;
+  }
+
+  public void setMatchScore(Integer matchScore) {
+    this.matchScore = matchScore;
+  }
+
+  public String getRoutingDecision() {
+    return routingDecision;
+  }
+
+  public void setRoutingDecision(String routingDecision) {
+    this.routingDecision = routingDecision;
+  }
+
+  public List<AgentProcessingStep> getProcessingSteps() {
+    return processingSteps;
+  }
+
+  public void setProcessingSteps(List<AgentProcessingStep> processingSteps) {
+    this.processingSteps = processingSteps;
   }
 }

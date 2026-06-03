@@ -1,0 +1,83 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Supplier Onboarding — dark-mode variables + hardcoded-colour overrides.
+   Loaded dynamically via supplier-onboarding-#{ivyFreyaTheme.mode}.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Core palette ──────────────────────────────────────────────── */
+  --so-primary:        #818CF8;
+  --so-primary-dark:   #6366F1;
+  --so-primary-light:  #A5B4FC;
+  --so-bg:             #0f172a;
+  --so-card:           #1e293b;
+  --so-text:           #e2e8f0;
+  --so-text-muted:     #94a3b8;
+  --so-text-light:     #64748b;
+  --so-green:          #34d399;
+  --so-green-dark:     #10b981;
+  --so-green-bg:       #0e2820;
+  --so-green-border:   #1a4d38;
+  --so-yellow:         #fbbf24;
+  --so-yellow-bg:      #231a08;
+  --so-yellow-border:  #4a3a0a;
+  --so-red:            #fb7185;
+  --so-red-bg:         #2a1520;
+  --so-red-border:     #6b2d40;
+  --so-blue-bg:        #0e2038;
+  --so-blue-border:    #1a3a5c;
+  --so-border:         #334155;
+  --so-border-dark:    #475569;
+  --so-shadow:         0 1px 3px rgba(0,0,0,.35), 0 1px 2px -1px rgba(0,0,0,.3);
+  --so-shadow-md:      0 4px 6px -1px rgba(0,0,0,.35), 0 2px 4px -2px rgba(0,0,0,.3);
+
+  /* ── Structure ─────────────────────────────────────────────────── */
+  --so-step-circle-bg:    #1e293b;
+  --so-text-inverse:        white;
+  --so-doc-row-bg:        #0f172a;
+  --so-surface-subtle:    #1e293b;
+  --so-running-card-bg:   #0e2038;
+  --so-running-text:      #7dd3fc;
+
+  /* ── Badges ────────────────────────────────────────────────────── */
+  --so-badge-green-bg:    #0e2820;
+  --so-badge-green-text:  #6ee7b7;
+  --so-badge-yellow-bg:   #231a08;
+  --so-badge-yellow-text: #fcd34d;
+  --so-badge-red-bg:      #2a1520;
+  --so-badge-red-text:    #fda4af;
+  --so-badge-gray-bg:     #334155;
+  --so-badge-gray-text:   #94a3b8;
+  --so-badge-blue-bg:     #0e2038;
+  --so-badge-blue-text:   #7dd3fc;
+  --so-badge-purple-bg:   #1a1040;
+  --so-badge-purple-text: #c084fc;
+
+  /* ── Alert text ────────────────────────────────────────────────── */
+  --so-alert-green-text:  #6ee7b7;
+  --so-alert-yellow-text: #fcd34d;
+  --so-alert-red-text:    #fda4af;
+  --so-alert-blue-text:   #7dd3fc;
+
+  /* ── Timeline bubbles ──────────────────────────────────────────── */
+  --so-bubble-completed-bg:     #0e2820;
+  --so-bubble-completed-color:  #4ade80;
+  --so-bubble-completed-border: #1a4d38;
+  --so-bubble-failed-bg:        #2a1520;
+  --so-bubble-failed-color:     #fb7185;
+  --so-bubble-failed-border:    #6b2d40;
+  --so-bubble-pending-bg:       #1e293b;
+  --so-bubble-pending-color:    #64748b;
+  --so-bubble-pending-border:   #334155;
+  --so-bubble-agent-bg:         #1a1040;
+  --so-bubble-agent-color:      #c084fc;
+  --so-bubble-agent-border:     #3d2a6b;
+  --so-bubble-user-bg:          #0e2038;
+  --so-bubble-user-color:       #7dd3fc;
+  --so-bubble-user-border:      #1a3a5c;
+}
+
+/* ── Notification avatar ─────────────────────────────────────────── */
+.so-notification-avatar {
+  background: #334155;
+  color:      #94a3b8;
+}

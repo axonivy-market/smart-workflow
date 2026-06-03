@@ -9,6 +9,683 @@ Dialogs:
                 AxonIvySupport: Axon Ivy Support
                 InputPlaceholder: Tippe deine Frage... (Umschalt+Eingabetaste zum Senden)
                 Send: Senden
+              erp:
+                components:
+                  AuditTrail:
+                    EmptyMessage: Noch keine Prüfeinträge erfasst.
+                    ExpandCollapseTooltip: Zum Erweitern / Reduzieren klicken
+                    Title: Vollständiges Prüfprotokoll
+                  LegalDocuments:
+                    AdditionalDocumentSubtitle: Zusätzliches Dokument
+                    AnnualReportLabel: Letzter Jahresabschluss
+                    AnnualReportSubtitle: Aktuellster Jahresabschlussbericht
+                    BrowseFilesLink: oder Dateien durchsuchen
+                    CommercialRegisterLabel: Handelsregisterauszug
+                    CommercialRegisterSubtitle: Offizielles Handelsregisterdokument
+                    DragAndDropHint: Weitere Dateien hier ablegen
+                    SelfDeclarationLabel: Selbsterklärung
+                    SelfDeclarationSubtitle: Bestätigung der Einhaltung der Beschaffungsrichtlinie
+                  ProblemExplanation:
+                    ExplanationLabel: Ihre Erklärung
+                    ExplanationPlaceholder: Beschreiben Sie die Situation und Ihren Lösungsplan...
+                    InfoHint: Bitte geben Sie eine kurze Erklärung an, damit der Genehmiger den Kontext und Ihren Lösungsplan verstehen kann.
+                    SaveButton: Als gelöst markieren
+                supplier:
+                  onboarding:
+                    FinishDemo:
+                      HeroSub: Wir hoffen, dass Sie eine tolle Erfahrung mit <strong>Smart Workflow</strong> gemacht haben.<br/>Hier ist eine Zusammenfassung von allem, was die KI für Sie erledigt hat — autonom, präzise und vollständig nachvollziehbar.
+                      PageTitle: Smart Workflow — KI-Prozesszusammenfassung
+                      Panel0Desc: Der Onboarding-Prozess beginnt, wenn ein Lieferant seinen Antrag über das Smart Workflow-Portal einreicht. Alle erforderlichen Unterlagen — Gewerbeanmeldung, Steuerbescheinigungen und Finanzberichte — werden in dieser Phase hochgeladen.
+                      Panel0Detail1: Lieferant vervollständigt Unternehmensprofil und Kontaktdaten
+                      Panel0Detail2: Lädt erforderliche Zertifizierungs- und Finanzdokumente hoch
+                      Panel0Detail3: Smart Workflow prüft die Vollständigkeit des Uploads vor der Verarbeitung
+                      Panel0Title: Dokument-Upload
+                      Panel1Desc: Die KI liest hochgeladene PDFs mit Vision-Language-Modellen, identifiziert Lieferantendatenfelder über mehrere Dokumente hinweg und befüllt das gesamte Onboarding-Formular automatisch — ohne manuelle Eingabe.
+                      Panel1Detail1: PDF-Strukturen und Tabellen mit Vision-Language-Modellen analysiert
+                      Panel1Detail2: Über 15 Lieferantendatenfelder automatisch identifiziert und extrahiert
+                      Panel1Detail3: Das vollständige Onboarding-Formular mit validierten Daten automatisch befüllt
+                      Panel1Title: KI-Dokumentenextraktion
+                      Panel2Desc: Ein RAG-gestützter KI-Assistent steht auf jedem Bildschirm zur Verfügung — beantwortet Fragen zu Richtlinien, erklärt Compliance-Anforderungen und klärt Risikoschwellen in Echtzeit.
+                      Panel2Detail1: Richtliniendokumente mittels Vektorähnlichkeitssuche abgerufen
+                      Panel2Detail2: Fragen von Lieferanten und Prüfern während des gesamten Prozesses beantwortet
+                      Panel2Detail3: Kontextuelle Compliance-Beratung auf jeder Prozessstufe bereitgestellt
+                      Panel2Title: Kontextuelle F&A-Beratung
+                      Panel3Desc: Die KI gleicht alle eingereichten Dokumente mit Beschaffungsrichtlinien ab und identifiziert fehlende Zertifizierungen, abgelaufene Nachweise und Compliance-Lücken — mit vollständiger Nachvollziehbarkeit.
+                      Panel3Detail1: Alle Dokumente gegen 12+ Beschaffungsrichtlinien validiert
+                      Panel3Detail2: Compliance-Lücken identifiziert und Elemente markiert, die Aufmerksamkeit erfordern
+                      Panel3Detail3: Detaillierten Validierungsbericht mit erklärbaren Ergebnissen erstellt
+                      Panel3Title: Dokumentvalidierung
+                      Panel4Desc: Die KI berechnet einen zusammengesetzten Risiko-Score über drei Dimensionen — finanzielle Stabilität, Richtlinienkonformität und Zertifikatsgültigkeit — und liefert eine objektive, prüfbare Bewertung von 100.
+                      Panel4Detail1: Finanzberichte auf Stabilitäts- und Liquiditätsindikatoren analysiert
+                      Panel4Detail2: Compliance-Historie, Zertifizierungen und Richtlinienübereinstimmung querverwiesen
+                      Panel4Detail3: Gewichteten zusammengesetzten Risiko-Score mit vollständiger Aufschlüsselung erstellt
+                      Panel4Title: Risikoberechnung
+                      Panel5Desc: 'Basierend auf dem vollständigen Kontext — extrahierte Daten, Risiko-Score, Validierungsergebnisse und Richtlinie — hat die KI den Prozessweg autonom entschieden: genehmigen, Klärung anfordern oder ablehnen.'
+                      Panel5Detail1: Alle Eingaben gegen konfigurierbare Routing-Entscheidungsregeln ausgewertet
+                      Panel5Detail2: Optimalen Ergebnispfad ohne menschliche Triage bestimmt
+                      Panel5Detail3: Entsprechenden Workflow-Zweig mit vollständigem Prüfpfad ausgelöst
+                      Panel5Title: Autonomes Routing
+                      Panel6Desc: Der Onboarding-Antrag wurde vollständig bearbeitet und abgeschlossen. Alle extrahierten Daten, KI-Entscheidungen, Validierungsergebnisse und der vollständige Prüfpfad sind dauerhaft gespeichert und für Compliance-Überprüfungen zugänglich.
+                      Panel6Detail1: Alle KI-Entscheidungen und Begründungen im permanenten Prüfprotokoll erfasst
+                      Panel6Detail2: Lieferantendatensatz im System mit dem endgültigen Ergebnis aktualisiert
+                      Panel6Detail3: Stakeholder über die Entscheidung und den Abschluss des Prozesses informiert
+                      Panel6Title: Fall abgeschlossen
+                    StartDemo:
+                      AfterItem1: Lieferant lädt Dokumente einmalig über ein strukturiertes, geführtes Formular hoch
+                      AfterItem2: Vision-KI extrahiert automatisch 15+ Felder aus PDFs in Sekunden — keine manuelle Eingabe
+                      AfterItem3: 12+ Beschaffungsrichtlinien werden sofort mit vollständiger KI-Begründung geprüft
+                      AfterItem4: 'Autonomes Routing: genehmigen, Klärung anfordern oder ablehnen — kein Triage erforderlich'
+                      AfterItem5: Zusammengesetzter Risikowert aus finanzieller Stabilität, Compliance und Zertifikatsdaten
+                      AfterItem6: Jede Entscheidung, jedes extrahierte Datum und jede KI-Begründung dauerhaft gespeichert
+                      AiPoweredHeader: KI-gestützter Smart Workflow
+                      BeforeItem1: Lieferant sendet Dokumente per E-Mail — Beschaffung sucht in Anhängen
+                      BeforeItem2: Mitarbeiter lesen PDFs manuell und übertragen Daten in Tabellen oder ERP-Formulare
+                      BeforeItem3: Compliance-Prüfungen sind ad-hoc, inkonsistent und erfolgen Tage nach der Einreichung
+                      BeforeItem4: Genehmigungsrouting wird in Komiteesitzungen entschieden — Verzögerungen von Wochen
+                      BeforeItem5: Risikobewertung basiert auf persönlichem Urteil ohne einheitlichen Standard
+                      BeforeItem6: Entscheidungen verbleiben in E-Mail-Threads — kein strukturierter Prüfpfad für Compliance
+                      BeforeYouStartDesc: Die Demo fordert Sie auf, Dokumente über ein Unternehmen hochzuladen, damit die KI Informationen extrahieren, Risiken bewerten und den Lieferanten bewerten kann. Wir haben diese Dokumente für Sie vorbereitet — laden Sie sie einfach herunter und verwenden Sie sie,
+                        wenn Sie während der Demo dazu aufgefordert werden. Klicken Sie dann unten auf <strong>Daten generieren</strong>, um die Demo-Umgebung einzurichten.
+                      BeforeYouStartTitle: Vor dem Start
+                      DataAlreadyGeneratedBanner: Demo-Daten sind bereits vorhanden — viel Spaß mit der Demo!
+                      DocAnnualReportName: Jahresbericht
+                      DocAnnualReportSub: Finanzberichte des letzten Geschäftsjahres
+                      DocBankingStatementName: Kontoauszug
+                      DocBankingStatementSub: Aktueller Bankkontoauszug
+                      DocCommercialRegName: Handelsregisterauszug
+                      DocCommercialRegSub: Offizielles Handelsregisterdokument
+                      DocCompanyInfoName: Lieferanten-Angebotschreiben
+                      DocCompanyInfoSub: Offizielles Angebotsschreiben mit Lieferumfang, Konditionen und Bankdaten
+                      DocGdprName: DSGVO-Datenverarbeitungsvertrag
+                      DocGroupCertifications: Zertifikate
+                      DocGroupLegal: Rechtsdokumente
+                      DocIso14001Name: ISO 14001 — Umweltmanagement
+                      DocIso27001Name: ISO 27001 — Informationssicherheit
+                      DocIso9001Name: ISO 9001 — Qualitätsmanagement
+                      DocSelfDeclarationName: Selbsterklärung des Unternehmens
+                      DocSelfDeclarationSub: Compliance- und Richtlinien-Selbsterklärung
+                      DownloadAllButton: Alle herunterladen
+                      FileDetailsHide: Details ausblenden
+                      FileDetailsToggle: Dateidetails
+                      Gen1Hint: Richtliniendokumente in Vektorspeicher einpflegen
+                      Gen1RunningSubtitle: Richtliniendokumente werden in den Vektorspeicher geladen…
+                      Gen1Title: RAG-Wissensdatenbank aufbauen
+                      Gen2Hint: 6 Zertifizierungs- & Regulierungsregeln
+                      Gen2RunningSubtitle: Zertifizierungs- & Regulierungsregeln werden erstellt…
+                      Gen2Title: Zertifizierungs- & Regulierungsrichtlinien erstellen
+                      Gen3Hint: 6 finanzielle Risikoregeln & Demo-Lieferanten
+                      Gen3RunningSubtitle: Finanzielle Risikoregeln & Demo-Lieferanten werden erstellt…
+                      Gen3Title: Finanzielle Richtlinien erstellen
+                      GenDoneBanner: Demo-Daten bereit — klicken Sie auf <strong>Demo starten</strong>, um zu beginnen!
+                      GenProcessingSubtitle: Verarbeitung…
+                      GenRetryButton: Wiederholen
+                      GenerateDataButton: Daten generieren
+                      KbChunksDesc: Unten sind die Wissensdatenbankeinträge, die dem Chatbot in dieser Demo als Wissensbasis dienen.
+                      KbTabKnowledgeBase: RAG-Wissensdatenbank
+                      NextButtonTitle: Weiter
+                      PageTitle: Smart Workflow — Lieferanten-Onboarding Demo
+                      PrevButtonTitle: Zurück
+                      ReadySub: Generieren Sie Beispiellieferanten, Beschaffungsrichtlinien und die RAG-Wissensdatenbank für die vollständige Demo-Erfahrung.
+                      ReadyTitle: Sind Sie bereit?
+                      Slide1Sub: 7 Schritte vom Dokumenten-Upload bis zum Abschluss — vollständig KI-gesteuert
+                      Slide1Title: Der Onboarding-Prozess
+                      Slide2Sub: Warum der alte Weg scheitert — und wie KI jeden Schritt verändert
+                      Slide2Title: Traditionelles Onboarding vs. KI-gestützter Workflow
+                      StartDemoButton: Demo starten
+                      StatErrorAfter: Nahezu fehlerfrei
+                      StatErrorBefore: ~30% Fehlerquote
+                      StatErrorLabel: Dateneingabegenauigkeit
+                      StatStepsAfter: Vollautomatisch
+                      StatStepsBefore: 30+ manuelle Schritte
+                      StatStepsLabel: Prozessschritte
+                      StatTimeAfter: Minuten
+                      StatTimeBefore: 3–6 Wochen
+                      StatTimeLabel: Zeit bis zum Onboarding
+                      Step01Desc: Der Lieferant reicht seine Bewerbung mit Unternehmensprofil und allen erforderlichen Nachweisdokumenten ein.
+                      Step01Name: Dokumenten-Upload
+                      Step01Num: Schritt 01
+                      Step02Desc: Das Sprachmodell liest PDFs und füllt automatisch 15+ Felder aus. Keine manuelle Dateneingabe erforderlich.
+                      Step02Name: KI-Extraktion
+                      Step02Num: Schritt 02
+                      Step03Desc: Ein RAG-gestützter KI-Assistent beantwortet Compliance-Fragen auf jedem Bildschirm in Echtzeit.
+                      Step03Name: Q&A-Unterstützung
+                      Step03Num: Schritt 03
+                      Step04Desc: Die KI prüft 12+ Beschaffungsrichtlinien und kennzeichnet Compliance-Lücken mit vollständiger Begründung.
+                      Step04Name: Dokumentenvalidierung
+                      Step04Num: Schritt 04
+                      Step05Desc: Zusammengesetzter Risikowert aus finanzieller Stabilität, Compliance und Zertifikatsgültigkeit.
+                      Step05Name: Risikobewertung
+                      Step05Num: Schritt 05
+                      Step06Desc: Die KI entscheidet das Ergebnis — genehmigen, Klärung anfordern oder ablehnen — ohne manuelles Triage.
+                      Step06Name: Autonomes Routing
+                      Step06Num: Schritt 06
+                      Step07Desc: Alle Entscheidungen, extrahierten Daten und KI-Begründungen werden dauerhaft für die Compliance-Überprüfung gespeichert.
+                      Step07Name: Fall abgeschlossen
+                      Step07Num: Schritt 07
+                      TraditionalHeader: Traditioneller Prozess
+                      WelcomeDesc: Erleben Sie einen KI-gesteuerten Lieferanten-Onboarding-Prozess, der die Dokumentenextraktion, Compliance-Validierung, Risikobewertung und autonomes Routing vollständig automatisiert — mit lückenloser Nachvollziehbarkeit.
+                      WelcomeProductName: Axon Ivy Smart Workflow
+                      WelcomeTo: Willkommen bei
+                    SupplierAgentProcessing:
+                      ContinueButton: Weiter
+                      ContinueToApprovalButton: Weiter zur Genehmigung
+                      ContinueToClarificationButton: Weiter zur Klärung
+                      InitialMessage: Klicken Sie auf Analysieren, um die KI-gestützte Validierung zu starten. Ich extrahiere Dokumente, prüfe die Richtlinienkonformität, validiere die finanzielle Gesundheit und berechne Schritt für Schritt einen Risiko-Score.
+                      StepSubtitle: Schritt 4 von 6 — Validierung & Risikobewertung
+                      ViewDeclineButton: Ablehnung anzeigen
+                    SupplierClarification:
+                      AdditionalInfoRequired: Zusätzliche Lieferanteninformationen erforderlich — bitte überprüfen Sie den Tab mit den Agentenergebnissen.
+                      AnalysisResultTab: Analyseergebnis
+                      BannerDescTemplate: Der Lieferanten-Agent hat einen Risiko-Score von {0}/100 berechnet, da Informationen fehlen oder unzureichend sind. Bitte stellen Sie die angeforderten Details bereit, damit der Agent die Anfrage neu bewerten kann.
+                      BannerMetaTemplate: 'Fall: {0}Eingereicht von: {1}'
+                      BannerTitle: 'Klärung erforderlich: {0}'
+                      CertValidityLabel: Zertifikatsgültigkeit
+                      ClarificationTab: Klärung
+                      DocumentAcceptedTypes: PDF · TXT · MD · DOC · DOCX akzeptiert
+                      EscalateButton: QM/ISM-Unterstützung anfordern
+                      FinalAttemptDesc: Dies ist die letzte Möglichkeit, die fehlenden Informationen bereitzustellen. Wenn die Neubewertung nach dieser Einreichung weiterhin fehlschlägt, wird die Anfrage automatisch abgelehnt.
+                      FinalAttemptTitle: Letzter Klärungsversuch (Zyklus {0} von {1})
+                      FinancialStabilityLabel: Finanzielle Stabilität
+                      InitialMessage: Bitte stellen Sie die fehlenden Dokumente und Informationen bereit, damit der Agent Ihre Anfrage neu bewerten kann.
+                      ItemsTitle: Klärungsbedürftige Punkte
+                      PolicyComplianceLabel: Richtlinienkonformität
+                      RiskScoreBadge: GELB
+                      RiskScoreLabel: Risiko-Score
+                      ShowDetailsLink: Details anzeigen
+                      StepSubtitle: 'Schritt 5b von 6 — Klärung erforderlich: Zusätzliche Informationen benötigt'
+                      SubmitButton: Einreichen & Neu bewerten
+                      SupplierDetailsTab: Lieferantendetails
+                      WithdrawButton: Anfrage zurückziehen
+                    SupplierDuplicateCheck:
+                      AgentAnalysisLabel: Agentenanalyse
+                      ConfirmDialogMessage: In der Datenbank sind mögliche Duplikate vorhanden. Möchten Sie dennoch einen neuen Lieferantendatensatz anlegen?
+                      ConfirmDialogTitle: Mögliche Duplikate gefunden
+                      AgentSectionTitle: Lieferanten-Agent — Datenbankprüfung abgeschlossen
+                      AgentSubtitleTemplate: Gesucht nach "{0}" — {1} potenzielleübereinstimmung(en) gefunden.
+                      SearchConditionLabel: Suchbedingung
+                      SearchConditionTemplate: 'Name="{0}"  Land="{1}"'
+                      BusinessPurposeLabel: 'Geschäftszweck:'
+                      Chips: Wie wird Ähnlichkeit berechnet?|Was passiert, wenn keine Übereinstimmungen gefunden werden?|Kann ich einen vorhandenen Lieferanten verwenden?
+                      EmailLabel: E-Mail
+                      InitialMessage: Ich habe die Lieferantendatenbank nach möglichen Übereinstimmungen durchsucht. Überprüfen Sie die Ergebnisse unten und bestätigen Sie, um mit der Erstellung eines neuen Lieferanten fortzufahren.
+                      LegalFormLabel: 'Rechtsform:'
+                      NoDuplicatesDesc: Es sind keine ähnlichen Lieferanten in der Datenbank vorhanden. Sie können mit der Registrierung dieses neuen Lieferanten fortfahren.
+                      NoDuplicatesTitle: Keine Duplikate gefunden
+                      PotentialMatchBadge: Mögliche Übereinstimmung
+                      PotentialMatchesTitle: Mögliche Übereinstimmungen ({0})
+                      StepSubtitle: Schritt 2 von 6 — Duplikat- & Ähnlichkeitsprüfung
+                      VatIdLabel: USt-ID
+                      WarningDesc: '{0} mögliche übereinstimmende Lieferant(en) in der Datenbank gefunden. Bitte überprüfen Sie vor der Bestätigung.'
+                      WarningTitle: Mögliche Übereinstimmungen gefunden
+                    SupplierOnboardingApproval:
+                      AnalysisResultTab: Analyseergebnis
+                      ApprovalChainTitle: Genehmigungskette
+                      ApprovalCommentPlaceholder: 'Optional: Fügen Sie einen Kommentar für den Genehmigungsdatensatz und das Audit-Protokoll hinzu...'
+                      ApprovalCommentTitle: Genehmigungskommentar
+                      ApprovalTab: Genehmigung
+                      BannerDesc: Der Lieferantenagent hat die Validierung und Risikobewertung abgeschlossen. Ihre Genehmigung ist erforderlich, bevor der Lieferant zum ERP hinzugefügt werden kann.
+                      BannerMetaTemplate: 'Eingereicht von: {0}'
+                      BannerTitleTemplate: 'Genehmigung erforderlich: {0}'
+                      InitialMessage: Überprüfen Sie die Agentenergebnisse, bestätigen Sie das Lieferantenprofil und genehmigen Sie den Onboarding-Antrag, um mit der ERP-Buchung fortzufahren.
+                      ProcurementDirectorRole: Einkaufsleiter
+                      QmIsmManagerName: QM/ISM-Manager
+                      QmIsmManagerRole: Qualität und ISM
+                      RiskScoreLabel: Risikobewertung
+                      StatusApproved: Genehmigt
+                      StatusPending: Ausstehend
+                      StatusWaiting: Wartend
+                      StepSubtitle: 'Schritt 5a von 6 - Menschliche Aufgabe: Genehmigung durch Vorgesetzten und QM/ISM'
+                      SupervisorName: Vorgesetzter
+                      SupplierDetailsTab: Lieferantendetails
+                    SupplierOnboardingCompletion:
+                      AnalysisResultTab: Analyseergebnis
+                      AuditEmptyState: Noch keine Audit-Einträge erfasst.
+                      AuditTimelineTitle: Audit-Zeitlinie
+                      BannerDescTemplate: Der Lieferantenagent hat eine Risikobewertung von <b>{0}/100 (Grün)</b> berechnet, die den Mindestschwellenwert erfüllt. Der Antrag wurde genehmigt und der Lieferant ist nun ongeboardet.
+                      BannerMetaTemplate: 'Vorgang: {0} · Abgeschlossen: {1}'
+                      BannerTitleTemplate: 'Lieferant erfolgreich ongeboardet: {0}'
+                      CertValidityLabel: Zert.-Gültigkeit
+                      CompletionSummaryTab: Abschlusszusammenfassung
+                      FinancialStabilityLabel: Finanzielle Stabilität
+                      InitialMessage: Das Lieferanten-Onboarding ist abgeschlossen. Überprüfen Sie die vollständige Audit-Zeitlinie unten.
+                      PolicyComplianceLabel: Richtlinienkonformität
+                      RiskScoreBadge: GRÜN
+                      RiskScoreLabel: Risikobewertung
+                      ShowDetailsLink: Details anzeigen
+                      StepSubtitle: Schritt 6 von 6 — Abschlusszusammenfassung
+                      SupplierDetailsTab: Lieferantendetails
+                    SupplierOnboardingDecline:
+                      AnalysisResultTab: Analyseergebnis
+                      BannerDescTemplate: Der Lieferantenagent hat eine Risikobewertung von <b>{0}/100 (Rot)</b> berechnet, die unter dem Mindestschwellenwert liegt. Der Antrag kann nicht fortgesetzt werden und es wurde kein ERP-Datensatz erstellt.
+                      BannerMetaTemplate: 'Vorgang: {0}<br />Abgelehnt: {1}'
+                      BannerTitleTemplate: 'Lieferantenanfrage abgelehnt: {0}'
+                      CertValidityLabel: Zert.-Gültigkeit
+                      DeclineReasonsTitle: Ablehnungsgründe
+                      DeclineSummaryTab: Ablehnungszusammenfassung
+                      FinancialStabilityLabel: Finanzielle Stabilität
+                      NotificationsSentTitle: Gesendete Benachrichtigungen
+                      PolicyComplianceLabel: Richtlinienkonformität
+                      RiskScoreBadge: ROT
+                      RiskScoreLabel: Risikobewertung
+                      SentBadge: Gesendet
+                      ShowDetailsLink: Details anzeigen
+                      StepSubtitle: 'Schritt 5c von 6 — Anfrage abgelehnt: Risikobewertung unter Schwellenwert'
+                      SupplierDetailsTab: Lieferantendetails
+                    SupplierRegistrationForm:
+                      Chips: 📋 Welche Zertifizierungen sind Pflicht?|🏠 Ist IBAN erforderlich?|🔍 Was ist eine USt-ID?
+                      InitialMessage: Ich helfe Ihnen, die Lieferantenregistrierung abzuschließen. Füllen Sie Unternehmensdaten, Kontakt, Bankverbindung und Zertifizierungen aus. Pflichtfelder sind mit * markiert.
+                      SaveDraftButton: Entwurf speichern
+                      StepSubtitle: Schritt 3 von 6 — Neue Lieferantenregistrierung
+                      SubmitButton: Zur Agentenvalidierung einreichen
+                    SupplierRequestForm:
+                      AdditionalNotesLabel: Zusätzliche Hinweise
+                      AdditionalNotesPlaceholder: Zusätzlicher Kontext für das Beschaffungs- oder QM-Team...
+                      BusinessPurposeLabel: Geschäftszweck *
+                      BusinessPurposePlaceholder: z. B. Logistik / Transport
+                      CheckSupplierButton: Lieferantendatenbank prüfen
+                      Chips: 💡 Welche Infos brauche ich für einen neuen Lieferanten?|🔍 Wie funktioniert die Datenbankprüfung?|📋 Was ist ein gültiger Geschäftszweck?
+                      DepartmentLabel: Abteilung / Kostenstelle *
+                      DepartmentPlaceholder: -- Abteilung wählen --
+                      ExpectedAnnualVolumeLabel: Erwartetes Jahresvolumen (€)
+                      InitialMessage: Hallo! Ich helfe Ihnen beim Ausfüllen der Lieferantenanfrage. Ich prüfe Ihre interne Lieferantendatenbank, sobald Sie absenden — welchen Lieferanten möchten Sie einbinden?
+                      NeededByLabel: Benötigt bis
+                      ProcurementContextTitle: Beschaffungskontext
+                      ProductsServicesLabel: Benötigte Produkte / Dienstleistungen *
+                      ProductsServicesPlaceholder: Beschreiben Sie die vom Lieferanten benötigten Produkte oder Dienstleistungen...
+                      RequestDetailsTitle: Anfragedetails
+                      RequestedByLabel: Angefordert von
+                      SaveDraftButton: Entwurf speichern
+                      SelectCountryPlaceholder: -- Land wählen --
+                      StepSubtitle: Schritt 1 von 6 — Erstanfrage & Fragebogen
+                      SupplierCountryLabel: Lieferantenland *
+                      SupplierInfoTitle: Lieferanteninformationen
+                      SupplierNameLabel: Lieferantenname *
+                      SupplierNamePlaceholder: z. B. Acme GmbH, Müller Logistik AG
+                      SupplierWebsiteLabel: Lieferanten-Website
+                      SupplierWebsitePlaceholder: https://www.lieferant.de
+                      UrgencyLabel: Dringlichkeit *
+                    components:
+                      SupplierAgentProcessingDetails:
+                        AgentDecisionTitle: Agenten-Entscheidung
+                        AnalyzeButton: Analysieren
+                        AnalyzeDescription: KI-gestützte Extraktion, Richtlinienvalidierung, Finanzvalidierung und Risikobewertung ausführen.
+                        AnalyzeTitle: KI-Lieferantenvalidierung
+                        CertificationValidityLabel: Zertifikatsgültigkeit
+                        ExpandCollapseTooltip: Zum Erweitern / Reduzieren klicken
+                        FinancialStabilityLabel: Finanzielle Stabilität
+                        PolicyComplianceLabel: Richtlinienkonformität
+                        PolicyFindingsTitle: Ergebnisse der Richtlinienvalidierung
+                        RiskScoreCalculatedTooltip: Wie wird der Risiko-Score berechnet?
+                        RiskScoreHelpDialogHeader: Wie der Risiko-Score berechnet wird
+                        RiskScoreTitle: Risiko-Score
+                        StepDocumentExtraction: Dokumentenextraktion
+                        StepFinancialValidation: Finanzvalidierung
+                        StepPolicyValidation: Richtlinienvalidierung
+                        StepRiskScoreCalculation: Risikoberechnung
+                        ThresholdAboveMin: Über dem Mindestschwellenwert (≥ 40)
+                        ThresholdGreen: Über dem Genehmigungsschwellenwert ≥ 70
+                        ThresholdRed: Unter dem Mindestschwellenwert (< 40)
+                        ThresholdYellow: Klärung erforderlich (40-69)
+                        ValidationStepsTitle: Validierungsschritte
+                      SupplierAiAssistant:
+                        AssistantName: Lieferanten-KI-Assistent
+                        ConfirmParseRequired: Laden Sie zuerst eine .txt- oder .md-Datei hoch und bestätigen Sie dann das Parsen.
+                        ConfirmParseTitle: Parsen bestätigen
+                        FileEmptyMessage: Die hochgeladene Datei ist leer.
+                        FileUploadedReadyMessage: Datei hochgeladen. Klicken Sie auf "Parse bestätigen", um die Formularfelder zu füllen.
+                        FilesQueuedTemplate: '{0} Datei(en) in der Warteschlange'
+                        FilesReadyTemplate: '{0} Datei(en) bereit. Klicken Sie auf "Parse bestätigen".'
+                        HeaderSubtitle: KI-gestützte Beschaffungsberatung
+                        InputPlaceholder: Fragen Sie etwas...
+                        InvalidFileMessage: Nur .txt- und .md-Dateien werden unterstützt.
+                        InvalidSizeMessage: Maximale Dateigröße beträgt 5 MB.
+                        NoFileUploadedMessage: Es wurde keine Datei hochgeladen. Bitte wählen Sie eine .txt- oder .md-Datei.
+                        NoValuesExtracted: Es konnten keine strukturierten Werte aus dem Dokument extrahiert werden.
+                        ParseFailedTemplate: 'Dokument konnte nicht analysiert werden: {0}'
+                        ParseSuccess: Dokument wurde analysiert und Formularfelder wurden aktualisiert.
+                        RemoveButtonTitle: Entfernen
+                        ThinkingText: Wird bearbeitet...
+                        UploadTriggerTitle: Lieferantenentwurf hochladen
+                      SupplierDetails:
+                        AdditionalNotesLabel: Zusätzliche Hinweise
+                        AdditionalNotesPlaceholder: Zusätzlicher Kontext für das Beschaffungs- oder QM-Team
+                        AnnualVolumeLabel: Erwartetes Jahresvolumen (€)
+                        AnnualVolumePlaceholder: z.B. 50000
+                        BankNameLabel: Bankname
+                        BankNamePlaceholder: z.B. Commerzbank AG
+                        BankingPaymentTitle: Banking & Zahlung
+                        BicLabel: BIC / SWIFT
+                        BicPlaceholder: z.B. COBADEFFXXX
+                        BusinessPurposeLabel: Geschäftszweck
+                        BusinessPurposePlaceholder: z.B. Logistik / Transport
+                        CertificationsCardSubtitle: Zertifikate hochladen
+                        CertificationsCardTitle: Zertifizierungen & Compliance
+                        CityLabel: Stadt
+                        CityPlaceholder: z.B. München
+                        CommercialRegNoLabel: Handelsregisternummer
+                        CommercialRegNoPlaceholder: z.B. HRB 123456
+                        CompanyDetailsTitle: Unternehmensdetails
+                        CompanyNameLabel: Rechtlicher Unternehmensname
+                        CompanyNamePlaceholder: z.B. Acme GmbH
+                        ContactEmailLabel: E-Mail
+                        ContactEmailPlaceholder: kontakt@lieferant.com
+                        ContactFirstNameLabel: Vorname
+                        ContactFirstNamePlaceholder: Vorname
+                        ContactJobTitleLabel: Berufsbezeichnung
+                        ContactJobTitlePlaceholder: z.B. Vertriebsleiter
+                        ContactLastNameLabel: Nachname
+                        ContactLastNamePlaceholder: Nachname
+                        ContactPhoneLabel: Telefon
+                        ContactPhonePlaceholder: +49 89 123456
+                        CountryLabel: Land
+                        CountrySelectDefault: -- Land auswählen --
+                        DepartmentLabel: Abteilung / Kostenstelle
+                        DepartmentPlaceholder: z.B. ABTL-001
+                        IbanLabel: IBAN
+                        IbanPlaceholder: z.B. DE39 3704 0044 0532 0130 00
+                        LegalFormLabel: Rechtsform
+                        LegalFormSelectDefault: -- Auswählen --
+                        NeededByDateLabel: Benötigt bis
+                        PrimaryContactTitle: Hauptansprechpartner
+                        ProcurementContextTitle: Beschaffungskontext
+                        ProductsServicesLabel: Benötigte Produkte / Dienstleistungen
+                        ProductsServicesPlaceholder: Beschreiben Sie die benötigten Produkte oder Dienstleistungen
+                        RequestedByLabel: Angefordert von
+                        RequestedByPlaceholder: z.B. max.mustermann
+                        RequiredDocsCardSubtitle: Compliance-Dokumente hochladen
+                        RequiredDocsCardTitle: Erforderliche Dokumente
+                        StreetLabel: Straße & Hausnummer
+                        StreetPlaceholder: z.B. Industriestraße 42
+                        UrgencyLabel: Dringlichkeit
+                        VatIdLabel: Umsatzsteuer-ID
+                        VatIdPlaceholder: z.B. DE123456789
+                        WebsiteLabel: Webseite
+                        WebsitePlaceholder: https://www.lieferant.de
+                        ZipCodeLabel: Postleitzahl
+                        ZipCodePlaceholder: z.B. 80339
+                      SupplierOnboardingSteps:
+                        BannerTitle: Lieferanten-Onboarding
+                        Step1: Anfrage
+                        Step2: DB-Prüfung
+                        Step3: Lieferantendaten
+                        Step4: Validierung
+                        Step5: Risiko-Score
+                        Step6Complete: Abgeschlossen
+                        Step6Declined: Abgelehnt
+                procurement:
+                  WelcomePage:
+                    PageTitle: Beschaffungsanfrage-Demo
+                    PrevButton: Zurück
+                    NextButton: Weiter
+                    CancelButton: Abbrechen
+                    ProceedButton: Weiter
+                    StartDemoButton: Demo starten
+                    FocusPara: Im Gegensatz zu Standard-Beschaffungsformularen zeigt diese Demo einen Workflow, bei dem ein einziger PDF-Upload die gesamte manuelle Dateneingabe ersetzt. Die KI liest das Dokument, füllt jedes Feld aus, gleicht jeden Artikel mit dem Live-Lagerbestand ab, kennzeichnet Lagerprobleme und schlägt einsatzbereite Alternativen vor — alles bevor Sie ein einziges Zeichen eingegeben haben.
+                    HeroTitle1: KI-gestützte
+                    HeroTitle2: Materialbeschaffung
+                    HeroSubtitle: 'Von einer einzigen PDF zu einer vollständig validierten, KI-analysierten Beschaffungsanfrage — in Sekunden.'
+                    ParseTitle: KI-Dokumentenanalyse
+                    ParseDesc: 'Haben Sie eine Beschaffungsanfrage als PDF? Laden Sie sie im Chat hoch und bitten Sie den Chatbot, sie zu analysieren — jedes Formularfeld wird automatisch in Sekunden ausgefüllt.'
+                    ParseFlowLabel: Dokumentenanalyse
+                    ParseDetail1: 'Laden Sie Ihre PDF direkt im Chat-Bereich hoch (Drag & Drop oder Anhang)'
+                    ParseDetail2: 'Geben Sie "Analysiere mein Dokument" ein, um die KI-Extraktion auszulösen'
+                    ParseDetail3: Überprüfen Sie das automatisch ausgefüllte Formular und korrigieren Sie Felder bei Bedarf
+                    StockTitle: "Lagerbestand & Bestandsanalyse"
+                    StockDesc: 'Sobald Ihre Anfrage ausgefüllt ist, bitten Sie den Chatbot, sie zu analysieren — jeder Artikel wird mit dem Live-Lagerbestand abgeglichen und Probleme werden vor der Einreichung markiert.'
+                    StockFlowLabel: Bestandsanalyse
+                    StockDetail1: 'Geben Sie jederzeit "Analysiere meine Anfrage" im Chat ein'
+                    StockDetail2: Problemartikel werden direkt in der Materialtabelle rot hervorgehoben
+                    StockDetail3: Jedes Problem wird mit einer detaillierten KI-Erklärung und Empfehlung versehen
+                    AlternativeTitle: Alternative Artikelvorschläge
+                    AlternativeDesc: 'Wenn Artikel als problematisch markiert sind, bitten Sie den Chatbot, Alternativen zu finden — die KI bewertet und ordnet Katalogsersatz und wählt die beste Übereinstimmung.'
+                    AlternativeFlowLabel: Alternativen
+                    AlternativeDetail1: 'Geben Sie "Alternativen finden" ein, nachdem Problemartikel markiert wurden'
+                    AlternativeDetail2: 'KI bewertet Kandidaten nach Spezifikation, Verfügbarkeit, Einheit und Preis (1–5 Punkte je)'
+                    AlternativeDetail3: Klicken Sie im Chat auf Anwenden, um den Artikel sofort zu ersetzen
+                    TranslateTitle: Mehrsprachige Übersetzung
+                    TranslateDesc: 'Arbeiten Sie mit einem fremdsprachigen Dokument? Bitten Sie den Chatbot zu übersetzen — der gesamte Text wird sofort konvertiert, während Materialcodes und technische Begriffe unverändert bleiben.'
+                    TranslateFlowLabel: Übersetzung
+                    TranslateDetail1: 'Geben Sie "Übersetze auf [Sprache]" im Chat ein (z. B. "Übersetze auf Englisch")'
+                    TranslateDetail2: Materialcodes, Einheitsabkürzungen und Kennzeichner werden nie verändert
+                    TranslateDetail3: Unterstützt 50+ Sprachen einschließlich Japanisch, Deutsch, Französisch und mehr
+                    CompareTitle: Was der KI-Chatbot kann
+                    CompareSubtitle: Alle vier Funktionen werden durch natürliche Konversation ausgelöst — keine zusätzlichen Schaltflächen, nur Chat
+                    Stat1Before: 1–3 Tage
+                    Stat1After: Sekunden
+                    Stat1Label: Von Upload bis ausgefülltem Anfrageformular
+                    Stat2Before: Manuelle Suche
+                    Stat2After: Eine Eingabe
+                    Stat2Label: Um alle Artikel mit dem Live-Lagerbestand abzugleichen
+                    Stat3Before: Stunden
+                    Stat3After: Sofort
+                    Stat3Label: Um alternative Artikel zu finden und zu bewerten
+                    TraditionalHeader: Ohne KI-Chatbot
+                    AiHeader: KI-Chatbot im Einsatz
+                    TraditionalItem1: Jede Artikelbeschreibung, jeden Code und jede Menge manuell aus Papierdokumenten eintippen
+                    TraditionalItem2: 'Keine Bestandsprüfung — Engpässe werden erst bei der Lieferung auf der Baustelle entdeckt'
+                    TraditionalItem3: 'Alternative Artikel erfordern stundenlange manuelle Katalogrecherche'
+                    TraditionalItem4: Fremdsprachige Dokumente verursachen Verzögerungen, während Übersetzer beauftragt werden
+                    TraditionalItem5: 'Fehler werden erst nach der Einreichung entdeckt und erfordern kostspielige Nacharbeiten'
+                    AiItem1: '"Analysiere mein Dokument" — KI liest die PDF und füllt alle Felder sofort aus'
+                    AiItem2: '"Analysiere meine Anfrage" — jeder Artikel wird mit dem Live-Lagerbestand abgeglichen'
+                    AiItem3: '"Alternativen finden" — KI bewertet Ersatzartikel und wählt die beste Übereinstimmung'
+                    AiItem4: '"Übersetze" — ein Klick in 50+ Sprachen, technische Begriffe bleiben erhalten'
+                    AiItem5: 'Strukturierter Audit-Trail und genehmigungsfertige Daten — alles aus einem Gespräch'
+                    ReadyTitle: Bereit zum Erkunden?
+                    ReadyDesc: 'Generieren Sie den Beispiel-Materialkatalog und laden Sie die Muster-Beschaffungsanfrage als PDF herunter, um sie als Eingabe zu verwenden, wenn die Demo Sie auffordert, ein Dokument hochzuladen.'
+                    DownloadTitle: Beispiel-Beschaffungsanfrage (PDF)
+                    DownloadDesc: 'Verwenden Sie dieses Dokument, wenn die Demo Sie auffordert, eine Beschaffungsanfrage hochzuladen. Die KI analysiert es und füllt alle Felder automatisch aus.'
+                    DownloadButton: PDF herunterladen
+                    GenerateButton: Testdaten generieren
+                    DataAlreadyGeneratedBanner: Materialkatalog bereits generiert. Klicken Sie auf <strong>Demo starten</strong>, um zu beginnen.
+                    GenStepTitle: Materialkatalog generieren
+                    GenStepHint: 'Materialtypen, Artikel & Lagereinträge'
+                    DoneBannerPre: 'Katalog bereit — klicken Sie auf'
+                    DoneBannerPost: um zu beginnen!
+                  StartDemo:
+                    PageTitle: Beschaffungsanfrage — Demo starten
+                    WelcomeTitle: KI-gestützte Materialbeschaffung
+                    WelcomeDesc: Generieren Sie Beispielmaterialdaten, um die vollständige Beschaffungs-Demo zu erkunden — KI-Dokumentenanalyse, Bestandsanalyse und Alternativvorschläge.
+                    GenerateButton: Testdaten generieren
+                    DataAlreadyGeneratedBanner: Materialkatalog bereits generiert. Klicken Sie auf <strong>Demo starten</strong>, um zu beginnen.
+                    Gen1Title: Materialkatalog generieren
+                    Gen1Hint: 'Materialtypen, Artikel & Lagereinträge'
+                    GenDoneBanner: Materialkatalog erfolgreich generiert.
+                    StartDemoButton: Demo starten
+                  CreateRequestDialog:
+                    AssistantName: KI-Beschaffungsassistent
+                    PageTitle: Materialbeschaffungsanfrage
+                    ProjectHeaderTitle: Projektheader
+                    ProjectNameLabel: Projektname
+                    ProjectNamePlaceholder: 'z. B. Neues Lager, München-Nord'
+                    ProjectNameRequired: Projektname ist erforderlich.
+                    ProjectNumberLabel: Projektnummer / Kostenstelle
+                    ProjectNumberPlaceholder: z. B. PRJ-2025-042
+                    ProjectNumberRequired: Projektnummer / Kostenstelle ist erforderlich.
+                    DeliveryAddressLabel: Baustelle / Lieferadresse
+                    DeliveryAddressPlaceholder: Lieferadresse der Baustelle
+                    DeliveryAddressRequired: Baustelle / Lieferadresse ist erforderlich.
+                    PriorityLabel: Priorität
+                    RequesterLabel: Antragsteller
+                    OrderNotesLabel: Bestellnotizen
+                    OrderNotesPlaceholder: Optionale Hinweise für den Einkauf
+                    MaterialListTitle: Materialliste
+                    AddRowButton: Zeile hinzufügen
+                    EmptyMessage: "Keine Materialartikel. Klicken Sie auf 'Zeile hinzufügen', um zu beginnen."
+                    ExpandAriaHeader: Erweitern
+                    PosColumn: Pos.
+                    TroubleTip: Dieser Artikel hat ein Problem
+                    MaterialColumn: Material
+                    QtyUnitColumn: Menge / Einheit
+                    UnitPriceColumn: Stückpreis (¥)
+                    TotalNetColumn: Gesamtnetto (¥)
+                    RemoveRowTitle: Zeile entfernen
+                    MaterialDescLabel: Materialbeschreibung
+                    MaterialDescPlaceholder: z. B. Zement
+                    StandardGradeLabel: Norm / Güte / Klasse
+                    StandardGradePlaceholder: z. B. JIS R 5210
+                    QuantityLabel: Menge
+                    UnitLabel: Einheit
+                    UnitSelectPrompt: '– auswählen –'
+                    SupplierLabel: Lieferant
+                    OptionalPlaceholder: Optional
+                    UnitPriceNetLabel: Stückpreis netto (¥)
+                    PurposeLabel: Verwendungszweck
+                    PurposePlaceholder: z. B. Fundament
+                    CommentLabel: Kommentar
+                    TotalNetLabel: 'Gesamtnetto:'
+                    CancelButton: Abbrechen
+                    SaveButton: Speichern
+                    SubmitButton: Demo beenden
+                    GuidanceParseDoc: Können Sie mein Beschaffungsdokument analysieren?
+                    GuidanceAnalyze: Meine Anfrage analysieren
+                    GuidanceAddMaterials: Wie füge ich Materialien hinzu?
+                    GuidanceAfterSubmit: Was passiert nach der Einreichung?
+                    ParseNoValues: Aus dem Dokument konnten keine strukturierten Werte extrahiert werden.
+                    ParseSuccess: Dokument analysiert und Formularfelder wurden aktualisiert.
+                    NoDocumentUploaded: Es wurde kein Dokument hochgeladen. Bitte laden Sie zuerst eine Datei hoch.
+                  FinishDemo:
+                    HeroTitle: Sie haben KI-gestützte Beschaffung gerade selbst erlebt.
+                    HeroSub: Hier ist eine Zusammenfassung von allem, was die KI automatisch, präzise und vollständig nachverfolgbar übernommen hat.
+                    PageTitle: Smart Workflow — Beschaffungsanfrage Zusammenfassung
+                    Panel0Title: Dokumenten-Upload & KI-Analyse
+                    Panel0Desc: Sie haben ein PDF der Beschaffungsanfrage hochgeladen — und das war alles. Die KI erkannte die Dokumentstruktur, extrahierte alle Positionen und ordnete jedes Feld automatisch dem richtigen Formularfeld zu.
+                    Panel0Detail1: PDF direkt im KI-Chat hochgeladen (Drag & Drop oder Dateianhang)
+                    Panel0Detail2: KI analysierte die Dokumentstruktur und extrahierte alle Materialfelder automatisch
+                    Panel0Detail3: Beschaffungsformular wurde ohne manuelles Tippen vorausgefüllt
+                    Panel1Title: KI-Beschaffungsassistent
+                    Panel1Desc: Während des gesamten Prozesses führte ein konversationeller KI-Assistent durch die Aufgaben — beantwortete Fragen, erläuterte Positionen und führte Operationen wie Parsen, Analysieren und Alternativen finden per natürlicher Sprache aus.
+                    Panel1Detail1: Natürlichsprachliche Oberfläche für alle Beschaffungsaktionen — keine zusätzlichen Schaltflächen
+                    Panel1Detail2: Kontextbewusste Antworten zu Materialien, Richtlinien und Lieferanforderungen
+                    Panel1Detail3: Operationen per Sprache ausgelöst — parsen, analysieren, übersetzen, ersetzen
+                    Panel2Title: Lageranalyse
+                    Panel2Desc: Jede Materialposition in Ihrer Anfrage wurde gegen den aktuellen Materialbestand geprüft. Positionen mit Lagerbestandsproblemen wurden markiert und im Formular hervorgehoben.
+                    Panel2Detail1: Alle Positionen in Echtzeit gegen den Materialbestand abgeglichen
+                    Panel2Detail2: Engpässe, nicht verfügbare Artikel und Einheitendiskrepanzen sofort markiert
+                    Panel2Detail3: Jedes Problem mit einer KI-Erklärung und Handlungsempfehlung annotiert
+                    Panel3Title: Smarte Alternativvorschläge
+                    Panel3Desc: Für jede markierte Position durchsuchte die KI den Katalog, bewertete alle Ersatzkandidaten nach Spezifikation, Verfügbarkeit, Einheit und Preis — und schlug den besten Ersatz vor, der mit einem Klick angewendet werden kann.
+                    Panel3Detail1: Kandidaten nach vier Dimensionen bewertet — Spezifikation, Verfügbarkeit, Einheit und Preis
+                    Panel3Detail2: Beste Lösung von der KI für jede Problemposition ausgewählt und eingestuft
+                    Panel3Detail3: Mit einem Klick wurde die markierte Position direkt in der Beschaffungstabelle ersetzt
+                    Panel4Title: Anfrage eingereicht
+                    Panel4Desc: Die Beschaffungsanfrage wurde erfolgreich eingereicht. Alle Materialpositionen, Mengen und KI-verifizierten Daten sind im System erfasst — bereit für die Bearbeitung durch das Einkaufsteam.
+                    Panel4Detail1: Alle Materialpositionen, Mengen und Lieferdetails gespeichert und validiert
+                    Panel4Detail2: KI-verifizierter Lagerbestandsstatus und Alternativauswahlen erfasst
+                    Panel4Detail3: Einkaufsteam benachrichtigt — Anfrage ist bereit zur Bearbeitung
+                  ProcurementApproval:
+                    PageTitle: Beschaffungsanfrage prüfen
+                    BannerTitleTemplate: 'Prüfung: {0}'
+                    BannerDesc: Diese Beschaffungsanfrage wartet auf Ihre Prüfung. Bitte prüfen Sie die Materialliste und treffen Sie Ihre Entscheidung.
+                    BannerMetaTemplate: 'Eingereicht von: {0}'
+                    TotalAmountLabel: Gesamt (¥)
+                    RequestDetailsTitle: Anfragedetails
+                    ProjectNameLabel: Projektname
+                    ProjectNumberLabel: Projektnummer / Kostenstelle
+                    DeliveryAddressLabel: Lieferadresse
+                    MaterialColumn: Material
+                    QtyUnitColumn: Menge / Einheit
+                    TotalNetColumn: Gesamtnetto (¥)
+                    ApprovalCommentTitle: Entscheidungskommentar
+                    ApprovalCommentPlaceholder: Geben Sie einen Kommentar zur Begründung Ihrer Entscheidung ein (optional bei Genehmigung, empfohlen bei Ablehnung)...
+                    ApproveButton: Genehmigen
+                    RejectButton: Ablehnen
+                  ProcurementCompletion:
+                    PageTitle: Beschaffungsanfrage genehmigt
+                    BannerTitleTemplate: 'Anfrage genehmigt: {0}'
+                    BannerDesc: Die Beschaffungsanfrage wurde genehmigt. Das Einkaufsteam wird mit der Materialbeschaffung fortfahren.
+                    BannerMetaTemplate: 'Genehmigt für: {0}'
+                    TotalAmountLabel: Gesamt (¥)
+                    ApprovedBadge: Genehmigt
+                    ApprovedItemsTitle: Genehmigte Materialien
+                    MaterialColumn: Material
+                    QtyUnitColumn: Menge / Einheit
+                    TotalNetColumn: Gesamtnetto (¥)
+                  ProcurementDecline:
+                    PageTitle: Beschaffungsanfrage abgelehnt
+                    BannerTitleTemplate: 'Anfrage abgelehnt: {0}'
+                    BannerDesc: Die Beschaffungsanfrage wurde vom Einkaufsleiter abgelehnt.
+                    BannerMetaTemplate: 'Eingereicht von: {0}'
+                    TotalAmountLabel: Gesamt (¥)
+                    DeclinedBadge: Abgelehnt
+                    DeclineReasonTitle: Ablehnungsgrund
+                    RequestSummaryTitle: Anfrageübersicht
+                    MaterialColumn: Material
+                    QtyUnitColumn: Menge / Einheit
+                    TotalNetColumn: Gesamtnetto (¥)
+              rag:
+                RagDemo:
+                  Chatbot:
+                    AssistantName: KI-Assistent
+                    InputPlaceholder: Fragen Sie zu Ihren Dokumenten...
+                    ThinkingText: Dokumente werden durchsucht...
+                    WelcomeDesc: Ich helfe Ihnen, Informationen aus Ihren indizierten Dokumenten zu finden.
+                    WelcomeTitle: Hallo, ich bin Ihr KI-Assistent
+                  ChooseFileLabel: Datei auswählen (.pdf / .md / .txt)
+                  ChunkIdColumn: Abschnitts-ID
+                  ChunkSizeLabel: Abschnittsgröße
+                  CreatedLabel: Erstellt
+                  EmbedButton: Einbetten
+                  EmbeddedChunksCount: Eingebettete Abschnitte ({0})
+                  IndexNameDesc: Ein eindeutiger Name zur Identifizierung dieser Wissensdatenbank im Vektorspeicher.
+                  IndexNameLabel: Name des Vektorspeichers
+                  ModelLabel: Modell
+                  NoDocumentsDesc: Laden Sie <strong>.txt</strong>- oder <strong>.md</strong>-Dateien hoch und klicken Sie auf <strong>Einbetten</strong>, um sie zu indexieren.
+                  NoDocumentsTitle: Noch keine Dokumente
+                  OverlapLabel: Überlappung
+                  PageTitle: RAG Demo
+                  ProviderLabel: Anbieter
+                  SourceColumn: Quelle
+                  Step1:
+                    AuthTypeDesc: Für diese OpenSearch-Instanz konfigurierte Authentifizierungsmethode.
+                    AuthTypeLabel: Authentifizierung
+                    ChunkOverlapDesc: Überlappende Tokens zwischen aufeinanderfolgenden Abschnitten zur Kontexterhaltung an Grenzen.
+                    ChunkOverlapLabel: Abschnittsüberlappung
+                    ChunkOverlapUnit: Tokens
+                    ChunkSizeDesc: Maximale Tokens pro Dokumentenabschnitt beim Aufteilen von Quelltext.
+                    ChunkSizeLabel: Abschnittsgröße
+                    ChunkSizeUnit: Tokens
+                    ContinueButton: Weiter
+                    MaxResultsDesc: Maximale Anzahl übereinstimmender Abschnitte pro Suchanfrage.
+                    MaxResultsLabel: Max. Ergebnisse
+                    MinScoreDesc: Kosinus-Ähnlichkeitsschwelle. Abschnitte unterhalb dieses Wertes werden ausgeschlossen.
+                    MinScoreLabel: Min. Bewertung
+                    ModelDesc: Modell für die Einbettung. Wenn leer, wird der Anbieterstandard verwendet.
+                    ModelLabel: Einbettungsmodell
+                    ProviderDesc: KI-Anbieter zur Generierung von Vektor-Einbettungen. Fällt auf AI.DefaultProvider zurück, wenn leer.
+                    ProviderLabel: Einbettungsanbieter
+                    Subtitle: Schreibgeschützte Einstellungen aus Ivy-Variablen. Um sie zu ändern, aktualisieren Sie die Variablen in der Ivy-Konfiguration.
+                    TestConnectionButton: Verbindung testen
+                    Title: RAG-Konfiguration
+                    UrlDesc: Basis-URL des OpenSearch-Servers.
+                    UrlLabel: Server-URL
+                    VectorStoreTitle: Vektorspeicher
+                  Step2:
+                    EmbedButton: Einbetten
+                    FileNameColumn: Dateiname
+                    FileSizeColumn: Größe
+                    FileUploadContainerHint: Unterstützt .pdf, .md und .txt — eine Datei gleichzeitig
+                    FileUploadContainerTitle: Dateien hier ablegen
+                    IndexExistsWarning: Index bereits vorhanden
+                    IndexExistsWarningDesc: Ein Index mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Indexnamen.
+                    PdfNote: PDF-Dateien können länger dauern — KI wird verwendet, um ihren Inhalt zu extrahieren.
+                    StagedFilesTitle: Bereit zum Einbetten
+                    Subtitle: Geben Sie einen Vektorspeichernamen ein, laden Sie eine Datei (.pdf, .md oder .txt) hoch und betten Sie sie in den Vektorspeicher ein.
+                    Title: Dokumente hochladen & einbetten
+                  Step3:
+                    ChatButton: Chat starten
+                    ReloadButton: Neu laden
+                    Title: Einbettungsergebnisse
+                  Subtitle: Eine geführte Einführung in Retrieval-Augmented Generation mit Smart Workflow
+                  Title: Smart Workflow RAG
+                  TokensUnit: Token
+                  UploadLabel: Hochladen
+                  Wizard:
+                    BackToUploadButton: Zurück zu den Ergebnissen
+                    Step1Label: Konfiguration
+                    Step2Label: Hochladen & Einbetten
+                    Step3Label: Ergebnisse
+                    Step4Label: Chat
               shopping:
                 product:
                   ProductCreation:
@@ -106,89 +783,112 @@ Dialogs:
                     Total: Gesamt
                     ViewDetails: Details anzeigen
                     YourCartIsEmpty: Dein Warenkorb ist leer
-              rag:
-                RagDemo:
-                  PageTitle: RAG Demo
-                  Title: Smart Workflow RAG
-                  Subtitle: Eine geführte Einführung in Retrieval-Augmented Generation mit Smart Workflow
-                  IndexNameLabel: Name des Vektorspeichers
-                  IndexNameDesc: "Ein eindeutiger Name zur Identifizierung dieser Wissensdatenbank im Vektorspeicher."
-                  ChooseFileLabel: 'Datei auswählen (.pdf / .md / .txt)'
-                  UploadLabel: Hochladen
-                  EmbedButton: Einbetten
-                  EmbeddedChunksCount: 'Eingebettete Abschnitte ({0})'
-                  ProviderLabel: Anbieter
-                  ModelLabel: Modell
-                  CreatedLabel: Erstellt
-                  ChunkSizeLabel: Abschnittsgröße
-                  OverlapLabel: Überlappung
-                  TokensUnit: Token
-                  NoDocumentsTitle: Noch keine Dokumente
-                  NoDocumentsDesc: 'Laden Sie <strong>.txt</strong>- oder <strong>.md</strong>-Dateien hoch und klicken Sie auf <strong>Einbetten</strong>, um sie zu indexieren.'
-                  SourceColumn: Quelle
-                  ChunkIdColumn: Abschnitts-ID
-                  Wizard:
-                    Step1Label: Konfiguration
-                    Step2Label: "Hochladen & Einbetten"
-                    Step3Label: Ergebnisse
-                    Step4Label: Chat
-                    BackToUploadButton: "Zurück zu den Ergebnissen"
-                  Step1:
-                    VectorStoreTitle: Vektorspeicher
-                    UrlLabel: Server-URL
-                    UrlDesc: Basis-URL des OpenSearch-Servers.
-                    AuthTypeLabel: Authentifizierung
-                    AuthTypeDesc: "Für diese OpenSearch-Instanz konfigurierte Authentifizierungsmethode."
-                    TestConnectionButton: Verbindung testen
-                    Title: RAG-Konfiguration
-                    Subtitle: "Schreibgeschützte Einstellungen aus Ivy-Variablen. Um sie zu ändern, aktualisieren Sie die Variablen in der Ivy-Konfiguration."
-                    ContinueButton: Weiter
-                    ProviderLabel: Einbettungsanbieter
-                    ProviderDesc: "KI-Anbieter zur Generierung von Vektor-Einbettungen. Fällt auf AI.DefaultProvider zurück, wenn leer."
-                    ModelLabel: Einbettungsmodell
-                    ModelDesc: "Modell für die Einbettung. Wenn leer, wird der Anbieterstandard verwendet."
-                    ChunkSizeLabel: Abschnittsgröße
-                    ChunkSizeDesc: "Maximale Tokens pro Dokumentenabschnitt beim Aufteilen von Quelltext."
-                    ChunkSizeUnit: Tokens
-                    ChunkOverlapLabel: Abschnittsüberlappung
-                    ChunkOverlapDesc: "Überlappende Tokens zwischen aufeinanderfolgenden Abschnitten zur Kontexterhaltung an Grenzen."
-                    ChunkOverlapUnit: Tokens
-                    MaxResultsLabel: "Max. Ergebnisse"
-                    MaxResultsDesc: "Maximale Anzahl übereinstimmender Abschnitte pro Suchanfrage."
-                    MinScoreLabel: "Min. Bewertung"
-                    MinScoreDesc: "Kosinus-Ähnlichkeitsschwelle. Abschnitte unterhalb dieses Wertes werden ausgeschlossen."
-                  Step2:
-                    Title: "Dokumente hochladen & einbetten"
-                    Subtitle: "Geben Sie einen Vektorspeichernamen ein, laden Sie eine Datei (.pdf, .md oder .txt) hoch und betten Sie sie in den Vektorspeicher ein."
-                    EmbedButton: Einbetten
-                    IndexExistsWarning: Index bereits vorhanden
-                    IndexExistsWarningDesc: "Ein Index mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Indexnamen."
-                    FileUploadContainerTitle: Dateien hier ablegen
-                    FileUploadContainerHint: "Unterstützt .pdf, .md und .txt — eine Datei gleichzeitig"
-                    PdfNote: "PDF-Dateien können länger dauern — KI wird verwendet, um ihren Inhalt zu extrahieren."
-                    StagedFilesTitle: Bereit zum Einbetten
-                    FileNameColumn: Dateiname
-                    FileSizeColumn: Größe
-                  Step3:
-                    Title: Einbettungsergebnisse
-                    ChatButton: Chat starten
-                    ReloadButton: Neu laden
-                  Chatbot:
-                    WelcomeTitle: "Hallo, ich bin Ihr KI-Assistent"
-                    WelcomeDesc: Ich helfe Ihnen, Informationen aus Ihren indizierten Dokumenten zu finden.
-                    InputPlaceholder: Fragen Sie zu Ihren Dokumenten...
-                    AssistantName: KI-Assistent
-                    ThinkingText: Dokumente werden durchsucht...
+Enum:
+  RiskKind:
+    AI_VALIDATION: 'Erforderliches Dokument vorhanden: {0}'
+    MISSING_DOC: 'Erforderliches Dokument fehlt: {0}'
 Features:
   FileExtractionDemo:
     ExtractFromImagePrompt: Extract Invoice from image
+  SupplierOnboarding:
+    PolicyRules: |
+      Lieferanten-Onboarding-Richtlinie — BuildRight Supply Co.
+
+      REGEL 1 — ISO 9001 ERFORDERLICH bei einem Jahresvolumen > 50.000 EUR.
+      FEHLER wenn Zertifikat fehlt. WARNUNG wenn es innerhalb von 6 Monaten abläuft.
+
+      REGEL 2 — ISO 14001 ERFORDERLICH für Hersteller-, Industrie- oder Produktionslieferanten.
+      FEHLER wenn Zertifikat für einen Fertigungs-/Industrie-/Produktionslieferanten fehlt.
+      WARNUNG wenn innerhalb von 6 Monaten ablaufend.
+
+      REGEL 3 — EU/EWR-LIEFERANT BEVORZUGT für EU-Abteilungen.
+      Länder: DE, FR, NL, BE, AT, CH, PL, IT, ES, PT, SE, DK, FI, NO.
+      WARNUNG wenn das Lieferantenland außerhalb der EU/EWR liegt.
+
+      REGEL 4 — DSGVO-DPA ERFORDERLICH wenn der Lieferant personenbezogene Daten verarbeitet.
+      ALLE verfügbaren Kontextfelder prüfen — Geschäftszweck, Produktkategorien, Unternehmensbeschreibung,
+      Handelsregisterzweck und extrahierte Dokumentinhalte — auf folgende Signale:
+      IT, Software, SaaS, Plattform, Digital, Cloud, Rechenzentrum, Datenverarbeitung, HR-Systeme,
+      Gehaltsabrechnung, CRM, ERP, Analytik, Marketing-Technologie, Recruiting-Technologie,
+      Managed Services, Systemintegration oder Dienste mit Zugriff auf personenbezogene Daten.
+      FEHLER wenn DSGVO-DPA fehlt und ein solches Signal gefunden wird.
+      WARNUNG (kein FEHLER) wenn Signale mehrdeutig sind — Klärungsbedarf vermerken.
+      BESTANDEN nur wenn eindeutig bestätigt werden kann, dass kein Kontakt mit personenbezogenen Daten besteht.
+
+      REGEL 5 — ZERTIFIKATSABLAUF: Alle Zertifikate müssen ab heute noch mindestens 6 Monate gültig sein.
+      WARNUNG wenn innerhalb von 6 Monaten ablaufend. FEHLER wenn bereits abgelaufen.
+
+      REGEL 6 — HANDELSREGISTERAUSZUG ERFORDERLICH für alle neuen Lieferanten.
+      FEHLER wenn kein Handelsregisterdokument vorhanden.
+
+      REGEL 7 — LIEFERANTENSELBSTAUSKUNFT EMPFOHLEN für alle neuen Lieferanten.
+      WARNUNG wenn die Selbstauskunft fehlt.
+
+      REGEL 8 — ISO 27001 ERFORDERLICH für IT- und Datenverarbeitungslieferanten.
+      ALLE verfügbaren Kontextfelder prüfen — Geschäftszweck, Produktkategorien, Unternehmensbeschreibung,
+      Handelsregisterzweck und extrahierte Dokumentinhalte — auf folgende Signale:
+      Software, SaaS, Plattform, Digital, IT-Dienste, Cloud, Rechenzentrum, Datenverarbeitung,
+      Cybersicherheit, HR-Systeme, Gehaltsabrechnung, CRM, ERP, Analytik, Marketing-Technologie,
+      Recruiting-Technologie, Managed Services, Systemintegration oder Lieferung/Betrieb digitaler
+      Systeme, Netzwerke oder Dateninfrastruktur.
+      FEHLER wenn ISO 27001 fehlt und ein solches Signal gefunden wird.
+      WARNUNG (kein FEHLER) wenn Signale mehrdeutig sind — Klärungsbedarf vermerken.
+      BESTANDEN nur wenn eindeutig bestätigt werden kann, dass keine IT- oder datenbezogenen Tätigkeiten vorliegen.
+
+      REGEL 9 — JAHRESABSCHLUSS: der letzte Jahresabschluss ist optional, aber dringend empfohlen.
+      WARNUNG wenn der Jahresbericht fehlt.
+      Wenn der Jahresbericht VORHANDEN ist, alle Finanzkennzahlen strikt und sorgfältig analysieren:
+        - Umsatzentwicklung: FEHLER bei Nettoverlust in 2 oder mehr aufeinanderfolgenden Jahren.
+        - Eigenkapital: FEHLER wenn das Gesamteigenkapital negativ ist (Risiko der bilanziellen Überschuldung).
+        - Verschuldungsgrad: WARNUNG wenn das Verhältnis 3,0 übersteigt.
+        - Umsatzrückgang: WARNUNG wenn der Umsatz um mehr als 20 % gegenüber dem Vorjahr gesunken ist.
+        - Fortführung: FEHLER wenn der Prüfer einen Hinweis auf Zweifel an der Unternehmensfortführung erteilt hat.
+        - Cashflow: WARNUNG wenn der operative Cashflow negativ ist, während der Nettogewinn positiv ist.
+      Werte nicht runden oder schätzen — die genauen Zahlen aus dem Dokument verwenden.
+    PolicyValidationSystemPrompt: |
+      Sie sind ein Experte für Lieferanten-Compliance bei BuildRight Supply Co.
+      Bewerten Sie die bereitgestellten Lieferantendaten streng nach den unten aufgeführten Richtlinienregeln.
+
+      RICHTLINIENREGELN:
+      {POLICY_RULES}
+
+      ANWEISUNGEN:
+      Erstellen Sie für jede anwendbare Regel einen ValidationFinding-Eintrag mit:
+        - severity: "PASSED", "WARNING" oder "FAILURE"
+        - message: eine klare Erklärung, was geprüft wurde und das Ergebnis
+        - source: "built-in policy rule"
+
+      Prüfen Sie immer alle Regeln. Für jede Regel gilt:
+      - Gilt die Regel NICHT für diesen Lieferanten: PASSED mit Begründung ausgeben.
+      - Gilt die Regel UND die Anforderung IST ERFÜLLT (z.B. das erforderliche Dokument ist in den extrahierten Dokumenten vorhanden): PASSED mit Bestätigung ausgeben. Keinen FAILURE oder WARNING ausgeben, wenn die Anforderung erfüllt ist.
+      - Gilt die Regel und die Anforderung ist NICHT erfüllt: FAILURE ausgeben.
+
+      DOKUMENTTYP-SCHLÜSSEL — Pflichtfeld für jeden FAILURE- oder WARNING-Befund über ein fehlendes Dokument.
+      Immer documentTypeKey setzen:
+        - Fehlende Zertifikate: CERTIFICATION:<ENUM_NAME>, z.B. CERTIFICATION:ISO_9001, CERTIFICATION:GDPR_DPA
+        - Fehlender Handelsregisterauszug: DOCUMENT:COMMERCIAL_REGISTER
+        - Fehlende Selbsterklärung: DOCUMENT:SELF_DECLARATION
+        - Fehlender Geschäftsbericht: DOCUMENT:ANNUAL_REPORT
+        Nur null setzen für Nicht-Dokument-Befunde (Duplikate, allgemeine Datenprobleme).
+
+      Geben Sie ein PolicyValidationResult mit der vollständigen Liste der Befunde zurück.
+      Lassen Sie das Feld processingStep null — es wird vom aufrufenden Prozess gesetzt.
 Labels:
   Actions: Aktionen
   Active: Aktiv
+  Approve: Genehmigen
+  Back: Zurück
   BasicInformation: Grundinformationen
   Cancel: Abbrechen
   Close: Schließen
+  Confirm: Bestätigen
   Description: Beschreibung
+  Download: Herunterladen
   Finish: Fertig
+  Optional: Optional
+  Replace: Ersetzen
+  Required: Erforderlich
   Resolve: Beheben
   Status: Status
+  Upload: Hochladen
+  View: Anzeigen
