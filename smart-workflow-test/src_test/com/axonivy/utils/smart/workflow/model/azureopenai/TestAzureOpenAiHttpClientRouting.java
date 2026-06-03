@@ -33,7 +33,7 @@ public class TestAzureOpenAiHttpClientRouting {
 
   @Test
   void request_routesThroughIvyRestClient() throws Exception {
-    MockOpenAI.defineChat(req -> Response.ok().entity("{\"ok\":true}").build());
+    MockOpenAI.defineChat(_ -> Response.ok().entity("{\"ok\":true}").build());
 
     HttpResponse response = send("{\"hello\":\"world\"}");
 
@@ -45,7 +45,7 @@ public class TestAzureOpenAiHttpClientRouting {
   void errorStatus_isReturnedNotThrown() throws Exception {
     // Azure's pipeline (retry policy + exception mapper) inspects the status code,
     // so the bridge must surface non-2xx responses instead of throwing.
-    MockOpenAI.defineChat(req -> Response.status(429).entity("{\"error\":\"rate limited\"}").build());
+    MockOpenAI.defineChat(_ -> Response.status(429).entity("{\"error\":\"rate limited\"}").build());
 
     HttpResponse response = send("{\"hello\":\"world\"}");
 
