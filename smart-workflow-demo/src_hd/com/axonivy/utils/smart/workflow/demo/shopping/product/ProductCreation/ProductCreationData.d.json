@@ -1,25 +1,25 @@
 {
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "ProductCreationData",
-  "namespace" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductCreation",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.ProductCreation",
   "fields" : [ {
     "name" : "productInfo"
   }, {
     "name" : "product",
-    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.Product"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.Product"
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse"
   }, {
     "name" : "uploadEvent",
     "type" : "org.primefaces.event.FileUploadEvent"
   }, {
     "name" : "similarSuppliers",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier>",
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier>",
     "modifiers" : [ ]
   }, {
     "name" : "similarProductCategories",
-    "type" : "List<com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory>",
+    "type" : "List<com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory>",
     "modifiers" : [ ]
   }, {
     "name" : "isSupplierCreated",
@@ -40,10 +40,10 @@
     "type" : "Boolean"
   }, {
     "name" : "selectedSupplier",
-    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.supplier.Supplier"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier"
   }, {
     "name" : "selectedCategory",
-    "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory"
   }, {
     "name" : "originalFileName"
   }, {

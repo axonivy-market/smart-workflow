@@ -13,7 +13,7 @@
         "signature" : "callProductCategoryAgent",
         "input" : {
           "params" : [
-            { "name" : "category", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategory", "desc" : "All information about supplier" },
+            { "name" : "category", "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory", "desc" : "All information about supplier" },
             { "name" : "instructions", "type" : "String", "desc" : "" }
           ],
           "map" : {
@@ -23,7 +23,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -45,7 +45,7 @@
         "userConfig" : {
           "model" : "\"gpt-4.1\"",
           "system" : "You are an AI Agent in charge of create/update product operation for an invetory of a company.\r\nWith the given product category information, you need to perform these steps:\r\n\r\nInstructions:\r\n<%= in.instructions %>",
-          "resultType" : "com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryAgentResponse.class",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryAgentResponse.class",
           "tools" : "[\"findProductCategory\",\"createProductCategory\",\"findSimilarProductCategories\"]",
           "resultMapping" : "in.response",
           "query" : "This is supplier information\r\n---\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.category) %>"
