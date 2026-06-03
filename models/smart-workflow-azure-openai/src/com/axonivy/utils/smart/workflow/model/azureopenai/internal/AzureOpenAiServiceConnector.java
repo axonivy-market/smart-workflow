@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.client.SmartAzureHttpClientProvider;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -26,9 +27,10 @@ public class AzureOpenAiServiceConnector {
   }
 
   private static AzureOpenAiChatModel.Builder initBuilder(String deploymentName) {
-    String endpoint = Ivy.var().get(AzureOpenAiConf.ENDPOINT);
+    String endpoint = StringUtils.stripEnd(Ivy.var().get(AzureOpenAiConf.ENDPOINT), "/");
     var builder = AzureOpenAiChatModel.builder()
       .endpoint(endpoint)
+      .httpClientProvider(new SmartAzureHttpClientProvider())
       .logRequestsAndResponses(true);
 
     // TODO as pure test variable

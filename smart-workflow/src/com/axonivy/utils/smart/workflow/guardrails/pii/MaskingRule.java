@@ -10,7 +10,7 @@ public interface MaskingRule {
 
   static MaskingRule of(String typeName, String pattern) {
     Pattern compiled = Pattern.compile(pattern);
-    return (text, replacements) -> apply(text, typeName, compiled, replacements, v -> true);
+    return (text, replacements) -> apply(text, typeName, compiled, replacements, _ -> true);
   }
 
   static MaskingRule of(String typeName, String pattern, Predicate<String> isValid) {
