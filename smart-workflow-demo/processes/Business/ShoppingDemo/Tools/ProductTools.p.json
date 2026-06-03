@@ -50,7 +50,7 @@
             "",
             "in.response.product = ProductRepository.getInstance().findBySku(in.productSearchCriteria.sku);",
             "in.response.isProductExisting = (in.response.product != null && StringUtils.isNotBlank(in.response.product.productId));",
-            "in.response.feedback = String.format(\"Product with SKU %s \", in.product.sku);",
+            "in.response.feedback = String.format(\"Product with SKU %s \", in.productSearchCriteria.sku);",
             "in.response.feedback += !in.response.isProductExisting ? \" is not existing in the system\" :  \"is existing in the system\";",
             "",
             "if (!in.response.isProductExisting) {",
