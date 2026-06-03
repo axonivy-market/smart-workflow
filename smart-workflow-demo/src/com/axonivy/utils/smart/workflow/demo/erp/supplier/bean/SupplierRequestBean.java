@@ -17,10 +17,10 @@ import com.axonivy.utils.smart.workflow.demo.erp.department.repository.Departmen
 import com.axonivy.utils.smart.workflow.demo.erp.shared.Address;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.Country;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.Urgency;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.Country;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.Urgency;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierRepository;
 

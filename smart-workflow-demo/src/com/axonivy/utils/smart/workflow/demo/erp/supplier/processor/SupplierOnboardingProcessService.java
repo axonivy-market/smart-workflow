@@ -4,10 +4,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditEntryType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AuditActorType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AuditEntryType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.OnboardingRequestSummaryBuilder;
 
 public class SupplierOnboardingProcessService {
 
@@ -20,7 +21,7 @@ public class SupplierOnboardingProcessService {
     entry.setActorType(AuditActorType.USER);
     entry.setEntryType(AuditEntryType.REQUEST_SUBMITTED);
     entry.setAction("Supplier onboarding request submitted");
-    entry.setRequestSummaryLines(req != null ? req.buildSummaryLines() : List.of());
+    entry.setRequestSummaryLines(req != null ? OnboardingRequestSummaryBuilder.build(req) : List.of());
     return entry;
   }
 

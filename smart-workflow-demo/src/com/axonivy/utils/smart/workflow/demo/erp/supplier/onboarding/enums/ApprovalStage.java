@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding;
+package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums;
 
 import dev.langchain4j.model.output.structured.Description;
 

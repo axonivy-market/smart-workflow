@@ -1,5 +1,8 @@
-package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding;
+package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums;
 
+import dev.langchain4j.model.output.structured.Description;
+
+@Description("Type of audit trail entry — drives which fields and rendering apply")
 public enum AuditEntryType {
   REQUEST_SUBMITTED,
   DUPLICATE_CHECK,

@@ -1,12 +1,10 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dev.langchain4j.model.output.structured.Description;
@@ -202,40 +200,5 @@ public class OnboardingRequest {
 
   public void setAuditTrail(List<AuditTrailEntry> auditTrail) {
     this.auditTrail = auditTrail;
-  }
-
-  /**
-   * Builds a structured list of label-value summary lines from this request's fields.
-   * Used to populate a REQUEST-type {@link AuditTrailEntry} at submission time.
-   */
-  public List<RequestSummaryLine> buildSummaryLines() {
-    List<RequestSummaryLine> lines = new ArrayList<>();
-    if (requestedBy != null && !requestedBy.isBlank())
-      lines.add(new RequestSummaryLine("Requested by", requestedBy));
-    if (department != null && !department.isBlank())
-      lines.add(new RequestSummaryLine("Department", department));
-    if (supplier != null && supplier.getBusinessName() != null && !supplier.getBusinessName().isBlank()) {
-      String supplierVal = supplier.getBusinessName();
-      if (supplier.getVatId() != null && !supplier.getVatId().isBlank())
-        supplierVal += " · VAT " + supplier.getVatId();
-      lines.add(new RequestSummaryLine("Supplier", supplierVal));
-    }
-    if (supplier != null && supplier.getBusinessAddress() != null) {
-      var addr = supplier.getBusinessAddress();
-      String loc = Stream.of(addr.getCity(), addr.getCountry())
-          .filter(s -> s != null && !s.isBlank()).collect(Collectors.joining(", "));
-      if (!loc.isBlank()) lines.add(new RequestSummaryLine("Location", loc));
-    }
-    if (productsServicesNeeded != null && !productsServicesNeeded.isBlank())
-      lines.add(new RequestSummaryLine("Products / services", productsServicesNeeded));
-    if (expectedAnnualVolume != null)
-      lines.add(new RequestSummaryLine("Annual volume", String.format("EUR %.0f", expectedAnnualVolume)));
-    if (urgency != null && !urgency.isBlank())
-      lines.add(new RequestSummaryLine("Urgency", urgency));
-    if (neededByDate != null)
-      lines.add(new RequestSummaryLine("Needed by", neededByDate.toString()));
-    if (additionalNotes != null && !additionalNotes.isBlank())
-      lines.add(new RequestSummaryLine("Notes", additionalNotes));
-    return lines;
   }
 }

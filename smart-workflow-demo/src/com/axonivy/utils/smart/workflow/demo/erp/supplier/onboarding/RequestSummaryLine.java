@@ -1,9 +1,5 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding;
 
-/**
- * A label-value pair stored inside an {@link AuditTrailEntry} for REQUEST-type entries.
- * Represents one field of the submitted {@link OnboardingRequest} at submission time.
- */
 public class RequestSummaryLine {
 
   private String label;

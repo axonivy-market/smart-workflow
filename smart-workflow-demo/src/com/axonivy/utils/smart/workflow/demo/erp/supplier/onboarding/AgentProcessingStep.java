@@ -11,7 +11,6 @@ public class AgentProcessingStep implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  /** Stable technical identifier (e.g. "POLICY_VALIDATION") — not translated, used for UI conditionals. */
   private String stepKey;
 
   @Description("Step title, e.g. 'Document Extraction'")
@@ -93,10 +92,6 @@ public class AgentProcessingStep implements Serializable {
     this.logLines = logLines;
   }
 
-  // -------------------------------------------------------------------------
-  // Inner enums
-  // -------------------------------------------------------------------------
-
   public enum StepStatus {
     PENDING("Pending"),
     RUNNING("Running"),
@@ -129,10 +124,6 @@ public class AgentProcessingStep implements Serializable {
       return description;
     }
   }
-
-  // -------------------------------------------------------------------------
-  // Inner class
-  // -------------------------------------------------------------------------
 
   public static class LogLine implements Serializable {
 

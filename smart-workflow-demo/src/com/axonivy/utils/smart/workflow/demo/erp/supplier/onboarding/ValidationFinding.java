@@ -2,6 +2,9 @@ package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding;
 
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskKind;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.ClarificationProblemTypeBuilder;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ClarificationProblemType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;
 
 import dev.langchain4j.model.output.structured.Description;
 
@@ -61,20 +64,24 @@ public class ValidationFinding {
     this.severity = severity;
   }
 
+  private FindingSeverity effectiveSeverity() {
+    return severity != null ? severity : FindingSeverity.PASSED;
+  }
+
   public String getRowClass() {
-    return severity != null ? severity.rowClass : FindingSeverity.PASSED.rowClass;
+    return effectiveSeverity().rowClass;
   }
 
   public String getIcon() {
-    return severity != null ? severity.icon : FindingSeverity.PASSED.icon;
+    return effectiveSeverity().icon;
   }
 
   public String getBadgeClass() {
-    return severity != null ? severity.badgeClass : FindingSeverity.PASSED.badgeClass;
+    return effectiveSeverity().badgeClass;
   }
 
   public String getLogClass() {
-    return severity != null ? severity.logClass : FindingSeverity.PASSED.logClass;
+    return effectiveSeverity().logClass;
   }
 
   public String getMessage() {
@@ -150,12 +157,6 @@ public class ValidationFinding {
   }
 
   public ClarificationProblemType getProblemType() {
-    if (documentTypeKey != null && !documentTypeKey.isBlank()) return ClarificationProblemType.DOCUMENT;
-    if (riskKind == RiskKind.MISSING_DOC) return ClarificationProblemType.DOCUMENT;
-    String src = source != null ? source.toLowerCase() : "";
-    if (src.contains("duplicate") || src.contains("erp")) return ClarificationProblemType.DUPLICATE;
-    String msg = message != null ? message.toLowerCase() : "";
-    if (msg.contains("duplicate")) return ClarificationProblemType.DUPLICATE;
-    return ClarificationProblemType.OTHER;
+    return ClarificationProblemTypeBuilder.resolve(documentTypeKey, riskKind, source, message);
   }
 }

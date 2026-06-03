@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding;
+package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums;
 
 public enum Urgency {
   NORMAL, HIGH, CRITICAL;

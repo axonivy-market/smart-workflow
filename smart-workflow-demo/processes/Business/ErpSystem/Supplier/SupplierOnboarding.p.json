@@ -25,13 +25,13 @@
       "id" : "f1",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 1160, "y" : 208 }
+        "at" : { "x" : 1224, "y" : 208 }
       }
     }, {
       "id" : "f155",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 1160, "y" : 352 }
+        "at" : { "x" : 1224, "y" : 352 }
       }
     }, {
       "id" : "f209",
@@ -41,7 +41,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;",
             "",
             "if (in.request == null) { in.request = new OnboardingRequest(); }",
@@ -53,7 +53,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 280, "y" : 208 }
+        "at" : { "x" : 264, "y" : 208 }
       },
       "connect" : [
         { "id" : "f200", "to" : "f210" }
@@ -72,7 +72,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 368, "y" : 208 }
+        "at" : { "x" : 432, "y" : 208 }
       },
       "connect" : [
         { "id" : "f211", "to" : "f4" }
@@ -96,7 +96,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 560, "y" : 208 }
+        "at" : { "x" : 624, "y" : 208 }
       },
       "connect" : [
         { "id" : "f102", "to" : "f150" }
@@ -107,16 +107,16 @@
       "name" : "Check status",
       "config" : {
         "conditions" : {
-          "f152" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus.REQUEST.equals(in.request.status)",
+          "f152" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus.REQUEST.equals(in.request.status)",
           "f156" : "in.request.status == null"
         }
       },
       "visual" : {
-        "at" : { "x" : 728, "y" : 208 },
+        "at" : { "x" : 792, "y" : 208 },
         "labelOffset" : { "x" : -40, "y" : 24 }
       },
       "connect" : [
-        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 728, "y" : 352 } ], "label" : {
+        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 792, "y" : 352 } ], "label" : {
             "name" : "Save Draft",
             "segment" : 1.12,
             "offset" : { "x" : -23, "y" : -21 }
@@ -145,10 +145,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 560, "y" : 352 }
+        "at" : { "x" : 624, "y" : 352 }
       },
       "connect" : [
-        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 560, "y" : 336 } ] }
+        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 624, "y" : 336 } ] }
       ]
     } ]
 }
