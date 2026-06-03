@@ -30,7 +30,6 @@ public class SupplierSearchCriteria {
   public SupplierSearchCriteria() {
   }
 
-  // Getters and setters
   public String getSupplierId() {
     return supplierId;
   }
@@ -79,9 +78,6 @@ public class SupplierSearchCriteria {
     this.website = website;
   }
 
-  /**
-   * Checks if this search criteria has any filters set.
-   */
   public boolean hasAnyFilter() {
     return StringUtils.isNotBlank(supplierId) || StringUtils.isNotBlank(businessNameContains) || businessAddress != null
         || StringUtils.isNotBlank(phone) || StringUtils.isNotBlank(email) || StringUtils.isNotBlank(website);

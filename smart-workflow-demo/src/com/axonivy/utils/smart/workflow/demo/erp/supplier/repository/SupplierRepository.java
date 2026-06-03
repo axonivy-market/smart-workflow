@@ -29,13 +29,6 @@ public class SupplierRepository {
     return instance;
   }
 
-  /**
-   * Creates or saves a new supplier.
-   *
-   * @param supplier the supplier to save
-   * @return the persisted supplier
-   * @throws IllegalArgumentException if supplier is null
-   */
   public Supplier create(Supplier supplier) {
     if (supplier == null) {
       throw new IllegalArgumentException("Supplier cannot be null");
@@ -49,21 +42,10 @@ public class SupplierRepository {
     return supplier;
   }
 
-  /**
-   * Retrieves all suppliers.
-   *
-   * @return list of all suppliers
-   */
   public List<Supplier> findAll() {
     return Ivy.repo().search(Supplier.class).execute().getAll();
   }
 
-  /**
-   * Updates an existing supplier.
-   *
-   * @param supplier the supplier to update
-   * @return the updated supplier
-   */
   public Supplier update(Supplier supplier) {
     if (supplier == null) {
       return null;
@@ -85,11 +67,6 @@ public class SupplierRepository {
     return findById(supplier.getSupplierId());
   }
 
-  /**
-   * Deletes a supplier.
-   *
-   * @param supplier the supplier to delete, ignored if not exist
-   */
   public void delete(Supplier supplier) {
     if (supplier == null) {
       return;
@@ -100,21 +77,11 @@ public class SupplierRepository {
     }
   }
 
-  /**
-   * Finds supplier by ID.
-   *
-   * @param id supplier identifier
-   * @return supplier or null if not found
-   */
   public Supplier findById(String id) {
     return Ivy.repo().search(Supplier.class).textField(FIELD_SUPPLIER_ID).isEqualToIgnoringCase(id).execute()
         .getFirst();
   }
 
-  /**
-   * Searches suppliers based on the provided criteria. Returns all suppliers if
-   * criteria is null or has no filters.
-   */
   public List<Supplier> findByCriteria(SupplierSearchCriteria criteria) {
     if (criteria == null || !criteria.hasAnyFilter()) {
       return Ivy.repo().search(Supplier.class).execute().getAll();
@@ -140,12 +107,10 @@ public class SupplierRepository {
       filters.add(search.textField(FIELD_WEBSITE).isEqualToIgnoringCase(criteria.getWebsite()));
     }
 
-    // Apply collected filters
     for (Filter<Supplier> f : filters) {
       search.filter(f).or();
     }
 
-    // Ranking results using score
     if (StringUtils.isNotBlank(criteria.getBusinessNameContains())) {
       search.score().textField(FIELD_BUSINESS_NAME).query(criteria.getBusinessNameContains().replace(" ", "+"))
           .limit(100);
@@ -176,7 +141,6 @@ public class SupplierRepository {
       filters.add(search.textField(FIELD_BUSINESS_NAME).containsAllWordPatterns(criteria.getBusinessNameContains()));
     }
 
-    // Apply collected filters
     for (Filter<Supplier> f : filters) {
       search.filter(f).or();
     }

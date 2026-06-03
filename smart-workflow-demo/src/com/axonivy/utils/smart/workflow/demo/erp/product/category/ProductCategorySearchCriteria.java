@@ -19,7 +19,6 @@ public class ProductCategorySearchCriteria {
   public ProductCategorySearchCriteria() {
   }
 
-  // Getters and setters
   public String getCategoryId() {
     return categoryId;
   }
@@ -44,9 +43,6 @@ public class ProductCategorySearchCriteria {
     this.descriptionContains = descriptionContains;
   }
 
-  /**
-   * Checks if this search criteria has any filters set.
-   */
   public boolean hasAnyFilter() {
     return StringUtils.isNotBlank(categoryId) || StringUtils.isNotBlank(nameContains)
         || StringUtils.isNotBlank(descriptionContains);

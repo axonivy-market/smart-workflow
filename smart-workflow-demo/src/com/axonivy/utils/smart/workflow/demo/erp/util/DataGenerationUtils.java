@@ -25,14 +25,10 @@ public final class DataGenerationUtils {
   
   private static final String DATA_PATH = "/com/axonivy/utils/smart/workflow/demo/erp/util/data/";
   
-  /**
-   * Creates all test data by loading from JSON files and saving to Axon Ivy Repository
-   */
   public static void createData() {
     try {
       Ivy.log().info("Starting data generation...");
       
-      // Load data in dependency order
       createSuppliers();
       createCategories();
       createBrands();
@@ -47,9 +43,6 @@ public final class DataGenerationUtils {
     }
   }
   
-  /**
-   * Creates suppliers from supplier.json
-   */
   private static void createSuppliers() {
     try {
       Ivy.log().info("Creating suppliers...");
@@ -69,9 +62,6 @@ public final class DataGenerationUtils {
     }
   }
   
-  /**
-   * Creates product categories from category.json
-   */
   private static void createCategories() {
     try {
       Ivy.log().info("Creating product categories...");
@@ -91,9 +81,6 @@ public final class DataGenerationUtils {
     }
   }
   
-  /**
-   * Creates brands from brand.json
-   */
   private static void createBrands() {
     try {
       Ivy.log().info("Creating brands...");
@@ -113,9 +100,6 @@ public final class DataGenerationUtils {
     }
   }
   
-  /**
-   * Creates product images from product-image.json
-   */
   private static void createProductImages() {
     try {
       Ivy.log().info("Creating product images...");
@@ -135,9 +119,6 @@ public final class DataGenerationUtils {
     }
   }
   
-  /**
-   * Creates products from product.json
-   */
   private static void createProducts() {
     try {
       Ivy.log().info("Creating products...");
@@ -157,12 +138,6 @@ public final class DataGenerationUtils {
     }
   }
   
-  /**
-   * Loads JSON content from a file in the data folder
-   * @param filename the JSON file name (e.g., "supplier.json")
-   * @return the JSON content as a string
-   * @throws IOException if the file cannot be read
-   */
   private static String loadJsonFile(String filename) throws IOException {
     String resourcePath = DATA_PATH + filename;
     

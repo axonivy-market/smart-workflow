@@ -27,7 +27,6 @@ public class BrandSearchCriteria {
   public BrandSearchCriteria() {
   }
 
-  // Getters and setters
   public String getBrandId() {
     return brandId;
   }
@@ -68,9 +67,6 @@ public class BrandSearchCriteria {
     this.supplier = supplier;
   }
 
-  /**
-   * Checks if this search criteria has any filters set.
-   */
   public boolean hasAnyFilter() {
     return StringUtils.isNotBlank(brandId) || StringUtils.isNotBlank(nameContains)
         || StringUtils.isNotBlank(descriptionContains) || StringUtils.isNotBlank(website) || supplier != null;

@@ -43,7 +43,7 @@ public final class ImageUtils {
     }
 
     if (StringUtils.isBlank(mimeType)) {
-      mimeType = "image/jpeg"; // default
+      mimeType = "image/jpeg";
     }
 
     return String.format("data:%s;base64,%s", mimeType, base64String);
@@ -60,7 +60,6 @@ public final class ImageUtils {
     }
 
     try {
-      // Use JPG as the default MIME type and filename
       String mimeType = "image/jpeg";
       String fileName = "image.jpg";
 

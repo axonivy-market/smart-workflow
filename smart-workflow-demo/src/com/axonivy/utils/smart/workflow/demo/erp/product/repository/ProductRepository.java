@@ -41,13 +41,6 @@ public class ProductRepository {
     return instance;
   }
 
-  /**
-   * Creates or saves a new product.
-   *
-   * @param product the product to save
-   * @return the persisted product
-   * @throws IllegalArgumentException if product is null
-   */
   public Product create(Product product) {
     if (product == null) {
       throw new IllegalArgumentException("Product cannot be null");
@@ -85,21 +78,10 @@ public class ProductRepository {
     Ivy.repo().save(product);
   }
 
-  /**
-   * Retrieves all products.
-   *
-   * @return list of all products
-   */
   public List<Product> findAll() {
     return loadRelatedDataForList(Ivy.repo().search(Product.class).execute().getAll());
   }
 
-  /**
-   * Updates an existing product.
-   *
-   * @param product the product to update
-   * @return the updated product
-   */
   public Product update(Product product) {
     if (product == null) {
       return null;
@@ -127,11 +109,6 @@ public class ProductRepository {
     return findById(product.getProductId());
   }
 
-  /**
-   * Deletes a product.
-   *
-   * @param product the product to delete, ignored if not exist
-   */
   public void delete(Product product) {
     if (product == null) {
       return;
@@ -142,21 +119,11 @@ public class ProductRepository {
     }
   }
 
-  /**
-   * Finds product by ID.
-   *
-   * @param id product identifier
-   * @return product or null if not found
-   */
   public Product findById(String id) {
     return loadRelatedData(
         Ivy.repo().search(Product.class).textField(FIELD_PRODUCT_ID).isEqualToIgnoringCase(id).execute().getFirst());
   }
 
-  /**
-   * Searches products based on the provided criteria. Returns all products if
-   * criteria is null or has no filters.
-   */
   public List<Product> findByCriteria(ProductSearchCriteria criteria) {
     if (criteria == null || !criteria.hasAnyFilter()) {
       return loadRelatedDataForList(findAll());
@@ -183,22 +150,18 @@ public class ProductRepository {
     }
 
     if (criteria.getCategory() != null) {
-      // Search by category object - assuming it has a searchable representation
       filters.add(search.textField(FIELD_CATEGORY).containsAllWordPatterns(criteria.getCategory().toString()));
     }
 
     if (StringUtils.isNotBlank(criteria.getCategoryId())) {
-      // Search by category ID within the category field
       filters.add(search.textField(FIELD_CATEGORY + ".categoryId").isEqualToIgnoringCase(criteria.getCategoryId()));
     }
 
     if (criteria.getBrand() != null) {
-      // Search by brand object - assuming it has a searchable representation
       filters.add(search.textField(FIELD_BRAND).containsAllWordPatterns(criteria.getBrand().toString()));
     }
 
     if (StringUtils.isNotBlank(criteria.getBrandId())) {
-      // Search by brand ID within the brand field
       filters.add(search.textField(FIELD_BRAND + ".brandId").isEqualToIgnoringCase(criteria.getBrandId()));
     }
 
@@ -210,12 +173,10 @@ public class ProductRepository {
       filters.add(search.numberField(FIELD_UNIT_PRICE).isGreaterOrEqualTo(criteria.getMinUnitPrice()));
     }
 
-    // For active status, we can search for the string representation
     if (criteria.getActive() != null) {
       filters.add(search.textField(FIELD_ACTIVE).isEqualToIgnoringCase(criteria.getActive().toString()));
     }
 
-    // Apply collected filters
     for (Filter<Product> f : filters) {
       search.filter(f).and();
     }
@@ -244,12 +205,6 @@ public class ProductRepository {
     return loadRelatedData(foundProducts.get(0));
   }
 
-  /**
-   * Finds products by category ID.
-   *
-   * @param categoryId the category identifier
-   * @return list of products in the specified category
-   */
   public List<Product> findByCategoryId(String categoryId) {
     if (StringUtils.isBlank(categoryId)) {
       return new ArrayList<>();
@@ -258,12 +213,6 @@ public class ProductRepository {
         .isEqualToIgnoringCase(categoryId).execute().getAll());
   }
 
-  /**
-   * Finds products by brand ID.
-   *
-   * @param brandId the brand identifier
-   * @return list of products from the specified brand
-   */
   public List<Product> findByBrandId(String brandId) {
     if (StringUtils.isBlank(brandId)) {
       return new ArrayList<>();
@@ -272,12 +221,6 @@ public class ProductRepository {
         .isEqualToIgnoringCase(brandId).execute().getAll());
   }
 
-  /**
-   * Finds product by SKU
-   *
-   * @param sku the product SKU
-   * @return matched product by SKU
-   */
   public Product findBySku(String sku) {
     if (StringUtils.isBlank(sku)) {
       return null;
@@ -286,11 +229,6 @@ public class ProductRepository {
         Ivy.repo().search(Product.class).textField(FIELD_SKU).isEqualToIgnoringCase(sku).execute().getFirst());
   }
 
-  /**
-   * Finds active products only.
-   *
-   * @return list of active products
-   */
   public List<Product> findActiveProducts() {
     return loadRelatedDataForList(
         Ivy.repo().search(Product.class).textField(FIELD_ACTIVE).isEqualToIgnoringCase("true").execute().getAll());

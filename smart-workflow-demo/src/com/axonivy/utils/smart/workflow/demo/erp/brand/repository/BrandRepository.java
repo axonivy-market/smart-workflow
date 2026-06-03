@@ -28,13 +28,6 @@ public class BrandRepository {
     return instance;
   }
 
-  /**
-   * Creates or saves a new brand.
-   *
-   * @param brand the brand to save
-   * @return the persisted brand
-   * @throws IllegalArgumentException if brand is null
-   */
   public Brand create(Brand brand) {
     if (brand == null) {
       throw new IllegalArgumentException("Brand cannot be null");
@@ -48,21 +41,10 @@ public class BrandRepository {
     return brand;
   }
 
-  /**
-   * Retrieves all brands.
-   *
-   * @return list of all brands
-   */
   public List<Brand> findAll() {
     return Ivy.repo().search(Brand.class).execute().getAll();
   }
 
-  /**
-   * Updates an existing brand.
-   *
-   * @param brand the brand to update
-   * @return the updated brand
-   */
   public Brand update(Brand brand) {
     if (brand == null) {
       return null;
@@ -83,11 +65,6 @@ public class BrandRepository {
     return findById(brand.getBrandId());
   }
 
-  /**
-   * Deletes a brand.
-   *
-   * @param brand the brand to delete, ignored if not exist
-   */
   public void delete(Brand brand) {
     if (brand == null) {
       return;
@@ -98,12 +75,6 @@ public class BrandRepository {
     }
   }
 
-  /**
-   * Finds brand by ID.
-   *
-   * @param id brand identifier
-   * @return brand or null if not found
-   */
   public Brand findById(String id) {
     return Ivy.repo().search(Brand.class).textField(FIELD_BRAND_ID).isEqualToIgnoringCase(id).execute().getFirst();
   }
@@ -120,10 +91,6 @@ public class BrandRepository {
     return result;
   }
 
-  /**
-   * Searches brands based on the provided criteria. Returns all brands if
-   * criteria is null or has no filters.
-   */
   public List<Brand> findByCriteria(BrandSearchCriteria criteria) {
     if (criteria == null || !criteria.hasAnyFilter()) {
       return mapScore(Ivy.repo().search(Brand.class).execute().getAllWithScore());
@@ -141,12 +108,10 @@ public class BrandRepository {
       filters.add(search.textField(FIELD_WEBSITE).isEqualToIgnoringCase(criteria.getWebsite()));
     }
 
-    // Apply collected filters
     for (Filter<Brand> f : filters) {
       search.filter(f).or();
     }
 
-    // Ranking results using score
     if (StringUtils.isNotBlank(criteria.getNameContains())) {
       search.score().textField(FIELD_NAME).query(criteria.getNameContains().replace(" ", "+")).limit(100);
     }
@@ -175,7 +140,6 @@ public class BrandRepository {
       filters.add(search.textField(FIELD_NAME).containsAllWordPatterns(criteria.getNameContains()));
     }
 
-    // Apply collected filters
     for (Filter<Brand> f : filters) {
       search.filter(f).or();
     }

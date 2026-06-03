@@ -49,7 +49,6 @@ public class ProductSearchCriteria {
   public ProductSearchCriteria() {
   }
 
-  // Getters and setters
   public String getProductId() {
     return productId;
   }
@@ -146,9 +145,6 @@ public class ProductSearchCriteria {
     this.sku = sku;
   }
 
-  /**
-   * Checks if this search criteria has any filters set.
-   */
   public boolean hasAnyFilter() {
     return StringUtils.isNotBlank(productId) || StringUtils.isNotBlank(nameContains) 
         || StringUtils.isNotBlank(descriptionContains) || category != null 
