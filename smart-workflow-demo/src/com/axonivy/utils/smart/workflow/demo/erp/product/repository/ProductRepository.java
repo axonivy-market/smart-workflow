@@ -30,6 +30,10 @@ public class ProductRepository {
   private static ProductRepository instance;
 
   private final BusinessDataStore store;
+  private final SupplierRepository supplierRepository;
+  private final ProductCategoryRepository productCategoryRepository;
+  private final BrandRepository brandRepository;
+  private final ProductImageRepository productImageRepository;
 
   public ProductRepository() {
     this(IvyBusinessDataStore.getInstance());
@@ -37,6 +41,10 @@ public class ProductRepository {
 
   public ProductRepository(BusinessDataStore store) {
     this.store = store;
+    this.supplierRepository = new SupplierRepository(store);
+    this.productCategoryRepository = new ProductCategoryRepository(store);
+    this.brandRepository = new BrandRepository(store);
+    this.productImageRepository = new ProductImageRepository(store);
   }
 
   public static ProductRepository getInstance() {
@@ -207,19 +215,19 @@ public class ProductRepository {
     }
 
     if (StringUtils.isNotBlank(product.getSupplierId())) {
-      product.setSupplier(SupplierRepository.getInstance().findById(product.getSupplierId()));
+      product.setSupplier(supplierRepository.findById(product.getSupplierId()));
     }
 
     if (StringUtils.isNotBlank(product.getCategoryId())) {
-      product.setCategory(ProductCategoryRepository.getInstance().findById(product.getCategoryId()));
+      product.setCategory(productCategoryRepository.findById(product.getCategoryId()));
     }
 
     if (StringUtils.isNotBlank(product.getBrandId())) {
-      product.setBrand(BrandRepository.getInstance().findById(product.getBrandId()));
+      product.setBrand(brandRepository.findById(product.getBrandId()));
     }
 
     if (StringUtils.isNotBlank(product.getImageId())) {
-      product.setImage(ProductImageRepository.getInstance().findById(product.getImageId()));
+      product.setImage(productImageRepository.findById(product.getImageId()));
     }
 
     return product;

@@ -54,9 +54,10 @@
             "import com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandRepository;",
             "import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryRepository;",
             "import org.apache.commons.collections4.CollectionUtils;",
+            "import org.apache.commons.lang3.StringUtils;",
             "",
             "in.response.brand  = BrandRepository.getInstance().findExactBrand(in.searchCriteria);",
-            "in.response.isBrandExisting = in.response.brand != null;",
+            "in.response.isBrandExisting = in.response.brand != null && StringUtils.isNotBlank(in.response.brand.brandId);",
             "in.response.feedback = in.response.isBrandExisting ? \"Brand is found\" : \"Brand not found\";",
             "in.response.brandSearchCriteria = in.searchCriteria;"
           ]
