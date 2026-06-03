@@ -5,10 +5,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.demo.erp.shared.BusinessDataStore;
+import com.axonivy.utils.smart.workflow.demo.erp.shared.IvyBusinessDataStore;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
-
-import ch.ivyteam.ivy.business.data.store.search.Filter;
-import ch.ivyteam.ivy.environment.Ivy;
 
 public class ProductCategoryRepository {
 
@@ -17,6 +16,16 @@ public class ProductCategoryRepository {
   private static final String FIELD_DESCRIPTION = "description";
 
   private static ProductCategoryRepository instance;
+
+  private final BusinessDataStore store;
+
+  public ProductCategoryRepository() {
+    this(IvyBusinessDataStore.getInstance());
+  }
+
+  public ProductCategoryRepository(BusinessDataStore store) {
+    this.store = store;
+  }
 
   public static ProductCategoryRepository getInstance() {
     if (instance == null) {
@@ -34,12 +43,12 @@ public class ProductCategoryRepository {
       category.setCategoryId(IdGenerationUtils.generateRandomId());
     }
 
-    Ivy.repo().save(category);
+    store.save(category);
     return category;
   }
 
   public List<ProductCategory> findAll() {
-    return Ivy.repo().search(ProductCategory.class).execute().getAll();
+    return store.findAll(ProductCategory.class);
   }
 
   public ProductCategory update(ProductCategory category) {
@@ -48,15 +57,14 @@ public class ProductCategoryRepository {
     }
 
     ProductCategory existing = findById(category.getCategoryId());
-
-    try {
-      existing.setName(category.getName());
-      existing.setDescription(category.getDescription());
-
-      Ivy.repo().save(existing);
-    } catch (Exception e) {
-      Ivy.log().error(e);
+    if (existing == null) {
+      return null;
     }
+
+    existing.setName(category.getName());
+    existing.setDescription(category.getDescription());
+
+    store.save(existing);
     return findById(category.getCategoryId());
   }
 
@@ -66,50 +74,39 @@ public class ProductCategoryRepository {
     }
     ProductCategory categoryInRepo = findById(category.getCategoryId());
     if (categoryInRepo != null) {
-      Ivy.repo().delete(categoryInRepo);
+      store.delete(categoryInRepo);
     }
   }
 
   public ProductCategory findById(String id) {
-    return Ivy.repo().search(ProductCategory.class).textField(FIELD_CATEGORY_ID).isEqualToIgnoringCase(id).execute()
-        .getFirst();
+    return store.findFirstByField(ProductCategory.class, FIELD_CATEGORY_ID, id);
   }
 
   public List<ProductCategory> findByCriteria(ProductCategorySearchCriteria criteria) {
     if (criteria == null || !criteria.hasAnyFilter()) {
-      return Ivy.repo().search(ProductCategory.class).execute().getAll();
+      return store.findAll(ProductCategory.class);
     }
-
-    var search = Ivy.repo().search(ProductCategory.class);
-
-    List<Filter<ProductCategory>> filters = new ArrayList<>();
 
     if (StringUtils.isNotBlank(criteria.getCategoryId())) {
-      filters.add(search.textField(FIELD_CATEGORY_ID).isEqualToIgnoringCase(criteria.getCategoryId()));
-    }
-
-    for (Filter<ProductCategory> f : filters) {
-      search.filter(f).or();
+      return store.findByField(ProductCategory.class, FIELD_CATEGORY_ID, criteria.getCategoryId());
     }
 
     if (StringUtils.isNotBlank(criteria.getNameContains())) {
-      search.score().textField(FIELD_NAME).query(prepareInputForScoreSearch(criteria.getNameContains())).limit(100);
+      return store.findByFieldContaining(ProductCategory.class, FIELD_NAME, criteria.getNameContains());
     }
 
     if (StringUtils.isNotBlank(criteria.getDescriptionContains())) {
-      search.score().textField(FIELD_DESCRIPTION).query(prepareInputForScoreSearch(criteria.getDescriptionContains()))
-          .limit(100);
+      return store.findByFieldContaining(ProductCategory.class, FIELD_DESCRIPTION, criteria.getDescriptionContains());
     }
 
-    return search.execute().getAll();
+    return store.findAll(ProductCategory.class);
   }
 
   public List<ProductCategory> findByNameContaining(String name) {
     if (StringUtils.isBlank(name)) {
       return new ArrayList<>();
     }
-    return Ivy.repo().search(ProductCategory.class).textField(FIELD_NAME).containsAllWordPatterns(name).execute()
-        .getAll();
+    return store.findByFieldContaining(ProductCategory.class, FIELD_NAME, name);
   }
 
   public ProductCategory findExactProductCategory(ProductCategorySearchCriteria criteria) {
@@ -117,26 +114,16 @@ public class ProductCategoryRepository {
       return null;
     }
 
-    var search = Ivy.repo().search(ProductCategory.class);
-
-    List<Filter<ProductCategory>> filters = new ArrayList<>();
-
     if (StringUtils.isNotBlank(criteria.getCategoryId())) {
-      filters.add(search.textField(FIELD_CATEGORY_ID).isEqualToIgnoringCase(criteria.getCategoryId()));
+      return store.findFirstByField(ProductCategory.class, FIELD_CATEGORY_ID, criteria.getCategoryId());
     }
 
     if (StringUtils.isNotBlank(criteria.getNameContains())) {
-      filters.add(search.textField(FIELD_NAME).containsAllWordPatterns(criteria.getNameContains()));
+      List<ProductCategory> results = store.findByFieldContaining(ProductCategory.class, FIELD_NAME,
+          criteria.getNameContains());
+      return results.isEmpty() ? null : results.get(0);
     }
 
-    for (Filter<ProductCategory> f : filters) {
-      search.filter(f).or();
-    }
-
-    return search.execute().getFirst();
-  }
-
-  private String prepareInputForScoreSearch(String input) {
-    return input.replaceAll(" ", "|").replaceAll("-", "|");
+    return null;
   }
 }

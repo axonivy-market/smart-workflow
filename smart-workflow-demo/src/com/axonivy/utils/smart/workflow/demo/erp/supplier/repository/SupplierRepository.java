@@ -1,15 +1,13 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.demo.erp.shared.BusinessDataStore;
+import com.axonivy.utils.smart.workflow.demo.erp.shared.IvyBusinessDataStore;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
-
-import ch.ivyteam.ivy.business.data.store.search.Filter;
-import ch.ivyteam.ivy.environment.Ivy;
 
 public class SupplierRepository {
 
@@ -18,9 +16,18 @@ public class SupplierRepository {
   private static final String FIELD_PHONE = "phone";
   private static final String FIELD_EMAIL = "email";
   private static final String FIELD_WEBSITE = "website";
-  private static final String FIELD_BUSINESS_ADDRESS = "businessAddress";
 
   private static SupplierRepository instance;
+
+  private final BusinessDataStore store;
+
+  public SupplierRepository() {
+    this(IvyBusinessDataStore.getInstance());
+  }
+
+  public SupplierRepository(BusinessDataStore store) {
+    this.store = store;
+  }
 
   public static SupplierRepository getInstance() {
     if (instance == null) {
@@ -38,12 +45,12 @@ public class SupplierRepository {
       supplier.setSupplierId(IdGenerationUtils.generateRandomId());
     }
 
-    Ivy.repo().save(supplier);
+    store.save(supplier);
     return supplier;
   }
 
   public List<Supplier> findAll() {
-    return Ivy.repo().search(Supplier.class).execute().getAll();
+    return store.findAll(Supplier.class);
   }
 
   public Supplier update(Supplier supplier) {
@@ -52,18 +59,17 @@ public class SupplierRepository {
     }
 
     Supplier existing = findById(supplier.getSupplierId());
-
-    try {
-      existing.setBusinessName(supplier.getBusinessName());
-      existing.setBusinessAddress(supplier.getBusinessAddress());
-      existing.setPhone(supplier.getPhone());
-      existing.setEmail(supplier.getEmail());
-      existing.setWebsite(supplier.getWebsite());
-
-      Ivy.repo().save(existing);
-    } catch (Exception e) {
-      Ivy.log().error(e);
+    if (existing == null) {
+      return null;
     }
+
+    existing.setBusinessName(supplier.getBusinessName());
+    existing.setBusinessAddress(supplier.getBusinessAddress());
+    existing.setPhone(supplier.getPhone());
+    existing.setEmail(supplier.getEmail());
+    existing.setWebsite(supplier.getWebsite());
+
+    store.save(existing);
     return findById(supplier.getSupplierId());
   }
 
@@ -73,55 +79,40 @@ public class SupplierRepository {
     }
     Supplier supplierInRepo = findById(supplier.getSupplierId());
     if (supplierInRepo != null) {
-      Ivy.repo().delete(supplierInRepo);
+      store.delete(supplierInRepo);
     }
   }
 
   public Supplier findById(String id) {
-    return Ivy.repo().search(Supplier.class).textField(FIELD_SUPPLIER_ID).isEqualToIgnoringCase(id).execute()
-        .getFirst();
+    return store.findFirstByField(Supplier.class, FIELD_SUPPLIER_ID, id);
   }
 
   public List<Supplier> findByCriteria(SupplierSearchCriteria criteria) {
     if (criteria == null || !criteria.hasAnyFilter()) {
-      return Ivy.repo().search(Supplier.class).execute().getAll();
+      return store.findAll(Supplier.class);
     }
 
-    var search = Ivy.repo().search(Supplier.class);
-
-    List<Filter<Supplier>> filters = new ArrayList<>();
-
     if (StringUtils.isNotBlank(criteria.getSupplierId())) {
-      filters.add(search.textField(FIELD_SUPPLIER_ID).isEqualToIgnoringCase(criteria.getSupplierId()));
+      return store.findByField(Supplier.class, FIELD_SUPPLIER_ID, criteria.getSupplierId());
     }
 
     if (StringUtils.isNotBlank(criteria.getPhone())) {
-      filters.add(search.textField(FIELD_PHONE).isEqualToIgnoringCase(criteria.getPhone()));
+      return store.findByField(Supplier.class, FIELD_PHONE, criteria.getPhone());
     }
 
     if (StringUtils.isNotBlank(criteria.getEmail())) {
-      filters.add(search.textField(FIELD_EMAIL).isEqualToIgnoringCase(criteria.getEmail()));
+      return store.findByField(Supplier.class, FIELD_EMAIL, criteria.getEmail());
     }
 
     if (StringUtils.isNotBlank(criteria.getWebsite())) {
-      filters.add(search.textField(FIELD_WEBSITE).isEqualToIgnoringCase(criteria.getWebsite()));
-    }
-
-    for (Filter<Supplier> f : filters) {
-      search.filter(f).or();
+      return store.findByField(Supplier.class, FIELD_WEBSITE, criteria.getWebsite());
     }
 
     if (StringUtils.isNotBlank(criteria.getBusinessNameContains())) {
-      search.score().textField(FIELD_BUSINESS_NAME).query(criteria.getBusinessNameContains().replace(" ", "+"))
-          .limit(100);
+      return store.findByFieldContaining(Supplier.class, FIELD_BUSINESS_NAME, criteria.getBusinessNameContains());
     }
 
-    if (criteria.getBusinessAddress() != null) {
-      search.score().textField(FIELD_BUSINESS_ADDRESS).query(criteria.getBusinessAddress().toString().replace(" ", "+"))
-          .limit(100);
-    }
-
-    return search.execute().getAll();
+    return store.findAll(Supplier.class);
   }
 
   public Supplier findExactSupplier(SupplierSearchCriteria criteria) {
@@ -129,22 +120,16 @@ public class SupplierRepository {
       return null;
     }
 
-    var search = Ivy.repo().search(Supplier.class);
-
-    List<Filter<Supplier>> filters = new ArrayList<>();
-
     if (StringUtils.isNotBlank(criteria.getSupplierId())) {
-      filters.add(search.textField(FIELD_SUPPLIER_ID).isEqualToIgnoringCase(criteria.getSupplierId()));
+      return store.findFirstByField(Supplier.class, FIELD_SUPPLIER_ID, criteria.getSupplierId());
     }
 
     if (StringUtils.isNotBlank(criteria.getBusinessNameContains())) {
-      filters.add(search.textField(FIELD_BUSINESS_NAME).containsAllWordPatterns(criteria.getBusinessNameContains()));
+      List<Supplier> results = store.findByFieldContaining(Supplier.class, FIELD_BUSINESS_NAME,
+          criteria.getBusinessNameContains());
+      return results.isEmpty() ? null : results.get(0);
     }
 
-    for (Filter<Supplier> f : filters) {
-      search.filter(f).or();
-    }
-
-    return search.execute().getFirst();
+    return null;
   }
 }

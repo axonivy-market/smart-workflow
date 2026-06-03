@@ -19,13 +19,11 @@ public final class UploadedFileUtils {
     String fileExtension = detectFileExtension(fileName);
 
     try {
-      switch (fileExtension) {
-      case MD_EXTENSION:
-        return handleMdFile(uploadedFile);
-      default:
-        return "";
-      }
-    } catch (Exception e) {
+        return switch (fileExtension) {
+            case MD_EXTENSION -> handleMdFile(uploadedFile);
+            default -> "";
+        };
+    } catch (IOException e) {
       System.err.println("Error processing uploaded file: " + e.getMessage());
       return "";
     }

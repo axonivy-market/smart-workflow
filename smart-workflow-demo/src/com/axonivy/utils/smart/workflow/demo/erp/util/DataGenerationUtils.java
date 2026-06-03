@@ -9,12 +9,12 @@ import org.apache.commons.io.IOUtils;
 
 import com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand;
 import com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandRepository;
-import com.axonivy.utils.smart.workflow.demo.erp.product.model.Product;
-import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductRepository;
-import com.axonivy.utils.smart.workflow.demo.erp.product.model.ProductImage;
-import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductImageRepository;
 import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory;
 import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryRepository;
+import com.axonivy.utils.smart.workflow.demo.erp.product.model.Product;
+import com.axonivy.utils.smart.workflow.demo.erp.product.model.ProductImage;
+import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductImageRepository;
+import com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductRepository;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierRepository;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
@@ -44,109 +44,50 @@ public final class DataGenerationUtils {
   }
   
   private static void createSuppliers() {
-    try {
-      Ivy.log().info("Creating suppliers...");
-      String jsonContent = loadJsonFile("supplier.json");
-      List<Supplier> suppliers = JsonUtils.jsonValueToEntities(jsonContent, Supplier.class);
-      
-      SupplierRepository repository = SupplierRepository.getInstance();
-      for (Supplier supplier : suppliers) {
-        repository.create(supplier);
-        Ivy.log().debug("Created supplier: " + supplier.getBusinessName() + " (ID: " + supplier.getSupplierId() + ")");
-      }
-      
-      Ivy.log().info("Created " + suppliers.size() + " suppliers");
-    } catch (Exception e) {
-      Ivy.log().error("Failed to create suppliers: " + e.getMessage(), e);
-      throw new RuntimeException("Failed to create suppliers", e);
-    }
+    List<Supplier> suppliers = loadEntities("supplier.json", Supplier.class);
+    SupplierRepository repository = SupplierRepository.getInstance();
+    suppliers.forEach(repository::create);
+    Ivy.log().info("Created " + suppliers.size() + " suppliers");
   }
-  
+
   private static void createCategories() {
-    try {
-      Ivy.log().info("Creating product categories...");
-      String jsonContent = loadJsonFile("category.json");
-      List<ProductCategory> categories = JsonUtils.jsonValueToEntities(jsonContent, ProductCategory.class);
-      
-      ProductCategoryRepository repository = ProductCategoryRepository.getInstance();
-      for (ProductCategory category : categories) {
-        repository.create(category);
-        Ivy.log().debug("Created category: " + category.getName() + " (ID: " + category.getCategoryId() + ")");
-      }
-      
-      Ivy.log().info("Created " + categories.size() + " product categories");
-    } catch (Exception e) {
-      Ivy.log().error("Failed to create categories: " + e.getMessage(), e);
-      throw new RuntimeException("Failed to create categories", e);
-    }
+    List<ProductCategory> categories = loadEntities("category.json", ProductCategory.class);
+    ProductCategoryRepository repository = ProductCategoryRepository.getInstance();
+    categories.forEach(repository::create);
+    Ivy.log().info("Created " + categories.size() + " product categories");
   }
-  
+
   private static void createBrands() {
-    try {
-      Ivy.log().info("Creating brands...");
-      String jsonContent = loadJsonFile("brand.json");
-      List<Brand> brands = JsonUtils.jsonValueToEntities(jsonContent, Brand.class);
-      
-      BrandRepository repository = BrandRepository.getInstance();
-      for (Brand brand : brands) {
-        repository.create(brand);
-        Ivy.log().debug("Created brand: " + brand.getName() + " (ID: " + brand.getBrandId() + ")");
-      }
-      
-      Ivy.log().info("Created " + brands.size() + " brands");
-    } catch (Exception e) {
-      Ivy.log().error("Failed to create brands: " + e.getMessage(), e);
-      throw new RuntimeException("Failed to create brands", e);
-    }
+    List<Brand> brands = loadEntities("brand.json", Brand.class);
+    BrandRepository repository = BrandRepository.getInstance();
+    brands.forEach(repository::create);
+    Ivy.log().info("Created " + brands.size() + " brands");
   }
-  
+
   private static void createProductImages() {
-    try {
-      Ivy.log().info("Creating product images...");
-      String jsonContent = loadJsonFile("product-image.json");
-      List<ProductImage> images = JsonUtils.jsonValueToEntities(jsonContent, ProductImage.class);
-      
-      ProductImageRepository repository = ProductImageRepository.getInstance();
-      for (ProductImage image : images) {
-        repository.create(image);
-        Ivy.log().debug("Created product image with ID: " + image.getImageId());
-      }
-      
-      Ivy.log().info("Created " + images.size() + " product images");
-    } catch (Exception e) {
-      Ivy.log().error("Failed to create product images: " + e.getMessage(), e);
-      throw new RuntimeException("Failed to create product images", e);
-    }
+    List<ProductImage> images = loadEntities("product-image.json", ProductImage.class);
+    ProductImageRepository repository = ProductImageRepository.getInstance();
+    images.forEach(repository::create);
+    Ivy.log().info("Created " + images.size() + " product images");
   }
-  
+
   private static void createProducts() {
-    try {
-      Ivy.log().info("Creating products...");
-      String jsonContent = loadJsonFile("product.json");
-      List<Product> products = JsonUtils.jsonValueToEntities(jsonContent, Product.class);
-      
-      ProductRepository repository = ProductRepository.getInstance();
-      for (Product product : products) {
-        repository.createFromFile(product);
-        Ivy.log().debug("Created product: " + product.getName() + " (ID: " + product.getProductId() + ")");
-      }
-      
-      Ivy.log().info("Created " + products.size() + " products");
-    } catch (Exception e) {
-      Ivy.log().error("Failed to create products: " + e.getMessage(), e);
-      throw new RuntimeException("Failed to create products", e);
-    }
+    List<Product> products = loadEntities("product.json", Product.class);
+    ProductRepository repository = ProductRepository.getInstance();
+    products.forEach(repository::createFromFile);
+    Ivy.log().info("Created " + products.size() + " products");
   }
-  
-  private static String loadJsonFile(String filename) throws IOException {
+
+  private static <T> List<T> loadEntities(String filename, Class<T> type) {
     String resourcePath = DATA_PATH + filename;
-    
     try (InputStream inputStream = DataGenerationUtils.class.getResourceAsStream(resourcePath)) {
       if (inputStream == null) {
         throw new IOException("Resource not found: " + resourcePath);
       }
-      
-      return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+      String jsonContent = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+      return JsonUtils.jsonValueToEntities(jsonContent, type);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to load " + filename, e);
     }
   }
 }

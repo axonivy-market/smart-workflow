@@ -19,9 +19,9 @@ import ch.ivyteam.ivy.environment.Ivy;
 public class ChatBean {
 
   public static class ChatMessage {
-    private String role;
-    private String content;
-    private String timestamp;
+    private final String role;
+    private final String content;
+    private final String timestamp;
 
     public ChatMessage(String role, String content) {
       this.role = role;
@@ -50,7 +50,7 @@ public class ChatBean {
   }
 
   private String userMessage;
-  private List<ChatMessage> chatHistory = new ArrayList<>();
+  private final List<ChatMessage> chatHistory = new ArrayList<>();
 
   public String getUserMessage() {
     return userMessage;

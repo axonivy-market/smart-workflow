@@ -31,7 +31,7 @@
       "type" : "DialogCall",
       "name" : "Product creation",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.ProductCreation:start()"
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductCreation:start()"
       },
       "visual" : {
         "at" : { "x" : 232, "y" : 64 }

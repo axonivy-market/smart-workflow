@@ -5,13 +5,23 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.demo.erp.product.model.ProductImage;
+import com.axonivy.utils.smart.workflow.demo.erp.shared.BusinessDataStore;
+import com.axonivy.utils.smart.workflow.demo.erp.shared.IvyBusinessDataStore;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
-
-import ch.ivyteam.ivy.environment.Ivy;
 
 public class ProductImageRepository {
 
   private static ProductImageRepository instance;
+
+  private final BusinessDataStore store;
+
+  public ProductImageRepository() {
+    this(IvyBusinessDataStore.getInstance());
+  }
+
+  public ProductImageRepository(BusinessDataStore store) {
+    this.store = store;
+  }
 
   public static ProductImageRepository getInstance() {
     if (instance == null) {
@@ -29,11 +39,11 @@ public class ProductImageRepository {
       image.setImageId(IdGenerationUtils.generateRandomId());
     }
 
-    Ivy.repo().save(image);
+    store.save(image);
     return image.getImageId();
   }
 
   public ProductImage findById(String id) {
-    return Ivy.repo().search(ProductImage.class).textField("imageId").isEqualToIgnoringCase(id).execute().getFirst();
+    return store.findFirstByField(ProductImage.class, "imageId", id);
   }
 }
