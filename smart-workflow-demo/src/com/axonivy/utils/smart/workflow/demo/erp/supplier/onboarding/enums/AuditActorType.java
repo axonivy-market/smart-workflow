@@ -1,8 +1,6 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums;
 
-import dev.langchain4j.model.output.structured.Description;
 
-@Description("Actor category for audit timeline entries")
 public enum AuditActorType {
   USER  ("so-tl-bubble-user",    "ti-user",     "so-badge-blue",   "User"),
   AGENT ("so-tl-bubble-agent",   "ti-robot",    "so-badge-purple", "Agent"),

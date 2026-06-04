@@ -1,8 +1,6 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums;
 
-import dev.langchain4j.model.output.structured.Description;
 
-@Description("Risk level classification based on aggregate risk score")
 public enum RiskLevel {
 
   GREEN(80, "Low Risk — Approval route"),

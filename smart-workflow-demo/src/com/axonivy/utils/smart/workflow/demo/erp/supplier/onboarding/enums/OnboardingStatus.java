@@ -1,8 +1,6 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums;
 
-import dev.langchain4j.model.output.structured.Description;
 
-@Description("Current status of the supplier onboarding workflow")
 public enum OnboardingStatus {
 
   REQUEST("Initial Request"),

@@ -46,9 +46,8 @@ public class OnboardingRequestSummaryBuilder {
         line(SummaryLabels.LABEL_PRODUCTS_SERVICES, request.getProductsServicesNeeded()),
         request.getExpectedAnnualVolume() == null
             ? Stream.<RequestSummaryLine>empty()
-            : Stream.of(new RequestSummaryLine(
-                SummaryLabels.LABEL_ANNUAL_VOLUME,
-                String.format(SummaryLabels.FORMAT_ANNUAL_VOLUME, request.getExpectedAnnualVolume()))),
+            : line(SummaryLabels.LABEL_ANNUAL_VOLUME,
+                String.format(SummaryLabels.FORMAT_ANNUAL_VOLUME, request.getExpectedAnnualVolume())),
         line(SummaryLabels.LABEL_URGENCY, request.getUrgency()),
         line(SummaryLabels.LABEL_NEEDED_BY, request.getNeededByDate()),
         line(SummaryLabels.LABEL_NOTES, request.getAdditionalNotes()))
@@ -62,7 +61,10 @@ public class OnboardingRequestSummaryBuilder {
     String value = Stream.of(supplier.getBusinessName(), supplier.getVatId())
         .filter(OnboardingRequestSummaryBuilder::hasValue)
         .collect(Collectors.joining(SummaryLabels.VAT_SEPARATOR));
-    return Stream.of(new RequestSummaryLine(SummaryLabels.LABEL_SUPPLIER, value));
+    var supplierLine = new RequestSummaryLine();
+    supplierLine.setLabel(SummaryLabels.LABEL_SUPPLIER);
+    supplierLine.setValue(value);
+    return Stream.of(supplierLine);
   }
 
   private static Stream<RequestSummaryLine> locationLine(Supplier supplier) {
@@ -80,15 +82,19 @@ public class OnboardingRequestSummaryBuilder {
   }
 
   private static Stream<RequestSummaryLine> line(String label, String value) {
-    return hasValue(value)
-        ? Stream.of(new RequestSummaryLine(label, value))
-        : Stream.empty();
+    if (!hasValue(value)) return Stream.empty();
+    var l = new RequestSummaryLine();
+    l.setLabel(label);
+    l.setValue(value);
+    return Stream.of(l);
   }
 
   private static Stream<RequestSummaryLine> line(String label, Object value) {
-    return value != null
-        ? Stream.of(new RequestSummaryLine(label, value.toString()))
-        : Stream.empty();
+    if (value == null) return Stream.empty();
+    var l = new RequestSummaryLine();
+    l.setLabel(label);
+    l.setValue(value.toString());
+    return Stream.of(l);
   }
 
   private static boolean hasValue(String value) {

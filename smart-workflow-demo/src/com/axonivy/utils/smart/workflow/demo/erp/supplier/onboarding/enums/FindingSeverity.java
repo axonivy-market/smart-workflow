@@ -1,8 +1,6 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums;
 
-import dev.langchain4j.model.output.structured.Description;
 
-@Description("Severity level of a validation finding")
 public enum FindingSeverity {
   PASSED ("so-finding-green",  "ti-circle-check",   "so-badge-green",  "so-log-line-ok",      0),
   WARNING("so-finding-yellow", "ti-alert-triangle",  "so-badge-yellow", "so-log-line-warning", 1),
