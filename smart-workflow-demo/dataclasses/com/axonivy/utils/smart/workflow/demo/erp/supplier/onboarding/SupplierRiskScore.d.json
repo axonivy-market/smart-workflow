@@ -1,0 +1,26 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierRiskScore",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding",
+  "fields" : [ {
+    "name" : "financialStability",
+    "type" : "java.lang.Integer",
+    "comment" : "Financial stability score 0-100"
+  }, {
+    "name" : "policyCompliance",
+    "type" : "java.lang.Integer",
+    "comment" : "Policy compliance score 0-100"
+  }, {
+    "name" : "certValidity",
+    "type" : "java.lang.Integer",
+    "comment" : "Certificate validity score 0-100"
+  }, {
+    "name" : "aggregate",
+    "type" : "java.lang.Integer",
+    "comment" : "Aggregate risk score 0-100"
+  }, {
+    "name" : "level",
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.RiskLevel",
+    "comment" : "Risk level based on aggregate score"
+  } ]
+}
