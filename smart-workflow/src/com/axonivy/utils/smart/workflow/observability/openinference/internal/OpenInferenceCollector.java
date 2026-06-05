@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.arize.semconv.trace.SemanticConventions;
@@ -12,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.langchain4j.data.message.TextContent;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 
@@ -58,6 +61,18 @@ public class OpenInferenceCollector {
 
   public Map<String, Object> getAttributes() {
     return Collections.unmodifiableMap(attributes);
+  }
+
+  public static String textOf(UserMessage msg) {
+    return msg.contents().stream()
+        .map(c -> c instanceof TextContent tc ? tc.text() : "[" + contentLabel(c) + "]")
+        .collect(Collectors.joining(" "));
+  }
+
+  private static String contentLabel(Object content) {
+    return content.getClass().getSimpleName()
+        .replaceAll("(?i)(File)?Content$", "")
+        .toLowerCase();
   }
 
   public void onRequest(ChatRequest request) {

@@ -14,9 +14,15 @@ import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
+import com.axonivy.utils.smart.workflow.observability.openinference.internal.OpenInferenceCollector;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.tools.math.MathToolChat;
 import com.axonivy.utils.smart.workflow.tools.ntools.MultiToolChat;
+
+import dev.langchain4j.data.message.ImageContent;
+import dev.langchain4j.data.message.PdfFileContent;
+import dev.langchain4j.data.message.TextContent;
+import dev.langchain4j.data.message.UserMessage;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
@@ -45,8 +51,28 @@ class TestOpenInferenceSpans {
 
   @AfterEach
   void clean() throws InterruptedException{
+    if (this.tracer == null) {
+      return;
+    }
     Thread.sleep(1_000); // wait for async spans to be flushed (fail on CI without this)
     this.tracer.slowTraces().clear();
+  }
+
+  @Test
+  void textOf_extractsTextFromMultimodalMessage() {
+    var textOnly = UserMessage.from(TextContent.from("hello"));
+    assertThat(OpenInferenceCollector.textOf(textOnly)).isEqualTo("hello");
+
+    var imageOnly = UserMessage.from(ImageContent.from("http://example.com/img.png", "image/png"));
+    assertThat(OpenInferenceCollector.textOf(imageOnly)).isEqualTo("[image]");
+
+    var pdfOnly = UserMessage.from(PdfFileContent.from("http://example.com/doc.pdf", "application/pdf"));
+    assertThat(OpenInferenceCollector.textOf(pdfOnly)).isEqualTo("[pdf]");
+
+    var mixed = UserMessage.from(
+        TextContent.from("describe this:"),
+        ImageContent.from("http://example.com/img.png", "image/png"));
+    assertThat(OpenInferenceCollector.textOf(mixed)).isEqualTo("describe this: [image]");
   }
 
   @Test
@@ -203,7 +229,7 @@ class TestOpenInferenceSpans {
 
     assertThat(attrs)
       .as("record tool call response attributes")
-      .containsEntry("llm.output_messages.0.message.content", "null")
+      .containsEntry("llm.output_messages.0.message.content", "[tool calls: add]")
       .containsEntry("llm.output_messages.0.message.role", "assistant")
       .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments", "{\"a\":1984,\"b\":41}")
       .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.name", "add")
@@ -213,7 +239,7 @@ class TestOpenInferenceSpans {
       .containsEntry("llm.token_count.prompt", "102")
       .containsEntry("llm.token_count.total", "120")
       .containsEntry("output.mime_type", "text/plain")
-      .containsEntry("output.value", "null");
+      .containsEntry("output.value", "[tool calls: add]");
   }
 
   private void assertToolDoneAttrs(Map<String, String> attrs) {
