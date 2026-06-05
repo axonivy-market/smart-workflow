@@ -14,9 +14,19 @@ import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.observability.openinference.OpenInferenceTracing;
+import com.axonivy.utils.smart.workflow.observability.openinference.internal.OpenInferenceCollector;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.tools.math.MathToolChat;
 import com.axonivy.utils.smart.workflow.tools.ntools.MultiToolChat;
+
+import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.AudioContent;
+import dev.langchain4j.data.message.ImageContent;
+import dev.langchain4j.data.message.PdfFileContent;
+import dev.langchain4j.data.message.TextContent;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.message.VideoContent;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
@@ -45,8 +55,46 @@ class TestOpenInferenceSpans {
 
   @AfterEach
   void clean() throws InterruptedException{
+    if (this.tracer == null) {
+      return;
+    }
     Thread.sleep(1_000); // wait for async spans to be flushed (fail on CI without this)
     this.tracer.slowTraces().clear();
+  }
+
+  @Test
+  void textOf_extractsTextFromMultimodalMessage() {
+    var textOnly = UserMessage.from(TextContent.from("hello"));
+    assertThat(OpenInferenceCollector.textOf(textOnly)).isEqualTo("hello");
+
+    var imageOnly = UserMessage.from(ImageContent.from("http://example.com/img.png", "image/png"));
+    assertThat(OpenInferenceCollector.textOf(imageOnly)).isEqualTo("[image]");
+
+    var pdfOnly = UserMessage.from(PdfFileContent.from("http://example.com/doc.pdf", "application/pdf"));
+    assertThat(OpenInferenceCollector.textOf(pdfOnly)).isEqualTo("[pdf]");
+
+    var audioOnly = UserMessage.from(AudioContent.from("http://example.com/clip.mp3", "audio/mp3"));
+    assertThat(OpenInferenceCollector.textOf(audioOnly)).isEqualTo("[audio]");
+
+    var videoOnly = UserMessage.from(VideoContent.from("http://example.com/clip.mp4", "video/mp4"));
+    assertThat(OpenInferenceCollector.textOf(videoOnly)).isEqualTo("[video]");
+
+    var mixed = UserMessage.from(
+        TextContent.from("describe this:"),
+        ImageContent.from("http://example.com/img.png", "image/png"));
+    assertThat(OpenInferenceCollector.textOf(mixed)).isEqualTo("describe this: [image]");
+  }
+
+  @Test
+  void resolveContent_showsToolCallNamesInsteadOfNull() {
+    var toolCallOnly = AiMessage.from(
+        ToolExecutionRequest.builder().id("1").name("extractHeaderInfo").arguments("{}").build(),
+        ToolExecutionRequest.builder().id("2").name("extractLineItems").arguments("{}").build());
+    assertThat(OpenInferenceCollector.resolveContent(toolCallOnly))
+        .isEqualTo("[tool calls: extractHeaderInfo, extractLineItems]");
+
+    var textResponse = AiMessage.from("Here is the result.");
+    assertThat(OpenInferenceCollector.resolveContent(textResponse)).isEqualTo("Here is the result.");
   }
 
   @Test
@@ -203,7 +251,7 @@ class TestOpenInferenceSpans {
 
     assertThat(attrs)
       .as("record tool call response attributes")
-      .containsEntry("llm.output_messages.0.message.content", "null")
+      .containsEntry("llm.output_messages.0.message.content", "[tool calls: add]")
       .containsEntry("llm.output_messages.0.message.role", "assistant")
       .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments", "{\"a\":1984,\"b\":41}")
       .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.name", "add")
@@ -213,7 +261,7 @@ class TestOpenInferenceSpans {
       .containsEntry("llm.token_count.prompt", "102")
       .containsEntry("llm.token_count.total", "120")
       .containsEntry("output.mime_type", "text/plain")
-      .containsEntry("output.value", "null");
+      .containsEntry("output.value", "[tool calls: add]");
   }
 
   private void assertToolDoneAttrs(Map<String, String> attrs) {
