@@ -3,11 +3,9 @@ package com.axonivy.utils.smart.workflow.observability.openinference.internal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.arize.semconv.trace.SemanticConventions;
 
-import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.model.chat.response.ChatResponse;
 
@@ -46,21 +44,9 @@ class ResponseRecorder {
     AiMessage aiMessage = response.aiMessage();
     String prefix = String.format("%s.%d.", SemanticConventions.LLM_OUTPUT_MESSAGES, 0);
     attributes.put(prefix + SemanticConventions.MESSAGE_ROLE, "assistant");
-    attributes.put(prefix + SemanticConventions.MESSAGE_CONTENT, resolveContent(aiMessage));
+    attributes.put(prefix + SemanticConventions.MESSAGE_CONTENT, OpenInferenceCollector.resolveContent(aiMessage));
     attributes.putAll(ToolRecorder.toolRequest(prefix, aiMessage.toolExecutionRequests()));
-    attributes.put(SemanticConventions.OUTPUT_VALUE, resolveContent(aiMessage));
+    attributes.put(SemanticConventions.OUTPUT_VALUE, OpenInferenceCollector.resolveContent(aiMessage));
     attributes.put(SemanticConventions.OUTPUT_MIME_TYPE, "text/plain");
-  }
-
-  private static String resolveContent(AiMessage aiMessage) {
-    if (aiMessage.text() != null) {
-      return aiMessage.text();
-    }
-    if (aiMessage.hasToolExecutionRequests()) {
-      return aiMessage.toolExecutionRequests().stream()
-          .map(ToolExecutionRequest::name)
-          .collect(Collectors.joining(", ", "[tool calls: ", "]"));
-    }
-    return null;
   }
 }

@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.request.ChatRequest;
@@ -73,6 +75,18 @@ public class OpenInferenceCollector {
     return content.getClass().getSimpleName()
         .replaceAll("(?i)(File)?Content$", "")
         .toLowerCase();
+  }
+
+  public static String resolveContent(AiMessage aiMessage) {
+    if (aiMessage.text() != null) {
+      return aiMessage.text();
+    }
+    if (aiMessage.hasToolExecutionRequests()) {
+      return aiMessage.toolExecutionRequests().stream()
+          .map(ToolExecutionRequest::name)
+          .collect(Collectors.joining(", ", "[tool calls: ", "]"));
+    }
+    return null;
   }
 
   public void onRequest(ChatRequest request) {

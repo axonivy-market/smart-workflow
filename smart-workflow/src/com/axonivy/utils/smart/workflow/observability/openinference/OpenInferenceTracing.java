@@ -193,7 +193,7 @@ public class OpenInferenceTracing implements AiListenerProvider {
       String outputMessage = options.hideOutput ? null : Optional.ofNullable(event.request())
           .map(r -> r.responseFromLLM())
           .map(r -> r.aiMessage())
-          .map(AiMessage::text)
+          .map(OpenInferenceCollector::resolveContent)
           .orElse(null);
       String guardrailName = event.guardrailClass().getSimpleName();
       traceGuardrail(event, "OUTPUT", outputMessage, guardrailName);
