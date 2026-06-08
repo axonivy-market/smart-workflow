@@ -3,20 +3,23 @@ package com.axonivy.utils.smart.workflow.demo.erp.supplier.processor;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.axonivy.utils.smart.workflow.demo.erp.shared.Address;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditEntryType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ClarificationProblemType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.NotificationRecord;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ResolvedClarificationItem;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.ClarificationProblemTypeBuilder;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.OnboardingRequestSummaryBuilder;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AuditActorType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AuditEntryType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ClarificationProblemType;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus;
 
 public class SupplierOnboardingProcessService {
 
@@ -45,7 +48,7 @@ public class SupplierOnboardingProcessService {
     entry.setActorType(AuditActorType.USER);
     entry.setEntryType(AuditEntryType.REQUEST_SUBMITTED);
     entry.setAction("Supplier onboarding request submitted");
-    entry.setRequestSummaryLines(req != null ? req.buildSummaryLines() : List.of());
+    entry.setRequestSummaryLines(req != null ? OnboardingRequestSummaryBuilder.build(req) : new ArrayList<>());
     return entry;
   }
 
@@ -83,10 +86,16 @@ public class SupplierOnboardingProcessService {
     List<ValidationFinding> findings = req != null ? req.getPolicyValidationFindings() : null;
     if (findings != null) {
       for (ValidationFinding f : findings) {
-        if (f.isResolved()) {
-          String resolutionType = f.getProblemType() == ClarificationProblemType.DOCUMENT
+        if (Boolean.TRUE.equals(f.getResolved())) {
+          String resolutionType = ClarificationProblemTypeBuilder.resolve(
+                  f.getDocumentTypeKey(), f.getRiskKind(), f.getSource(), f.getMessage())
+              == ClarificationProblemType.DOCUMENT
               ? "Document uploaded" : "Explanation provided";
-          resolved.add(new ResolvedClarificationItem(f.getMessage(), resolutionType, f.getUserExplanation()));
+          ResolvedClarificationItem rci = new ResolvedClarificationItem();
+          rci.setProblem(f.getMessage());
+          rci.setResolutionType(resolutionType);
+          rci.setUserExplanation(f.getUserExplanation());
+          resolved.add(rci);
         }
       }
     }
@@ -131,7 +140,8 @@ public class SupplierOnboardingProcessService {
       summary = sb.toString();
     }
 
-    int agg = (resp != null && resp.getRiskScore() != null) ? resp.getRiskScore().getAggregate() : 0;
+    int agg = (resp != null && resp.getRiskScore() != null)
+        ? Optional.ofNullable(resp.getRiskScore().getAggregate()).orElse(0) : 0;
     String lvl = (resp != null && resp.getRiskScore() != null && resp.getRiskScore().getLevel() != null)
         ? resp.getRiskScore().getLevel().name() : "RED";
 
@@ -225,7 +235,7 @@ public class SupplierOnboardingProcessService {
     entry.setActorType(AuditActorType.USER);
     entry.setEntryType(AuditEntryType.REGISTRATION_CAPTURED);
     entry.setAction("Supplier registration details captured \u2014 " + supplierName(req));
-    entry.setRequestSummaryLines(req != null ? req.buildSummaryLines() : List.of());
+    entry.setRequestSummaryLines(req != null ? OnboardingRequestSummaryBuilder.build(req) : new ArrayList<>());
     return entry;
   }
 
@@ -234,7 +244,7 @@ public class SupplierOnboardingProcessService {
 
     String now = Instant.now().toString();
     int agg = (resp != null && resp.getRiskScore() != null)
-        ? resp.getRiskScore().getAggregate() : 0;
+        ? Optional.ofNullable(resp.getRiskScore().getAggregate()).orElse(0) : 0;
     String lvl = (resp != null && resp.getRiskScore() != null
         && resp.getRiskScore().getLevel() != null)
         ? resp.getRiskScore().getLevel().name() : "UNKNOWN";

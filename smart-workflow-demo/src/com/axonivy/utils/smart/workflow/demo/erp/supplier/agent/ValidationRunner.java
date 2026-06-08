@@ -19,11 +19,13 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RuleType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.StepStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.LogLineBuilder;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.ValidationFindingBuilder;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AgentStepStatus;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierPolicyRuleRepository;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -50,7 +52,7 @@ public class ValidationRunner {
    */
   public static List<LegalDocument> loadDocuments(String supplierId) {
     List<LegalDocument> docs = LegalDocumentRepository.getInstance().findByObjectId(supplierId);
-    return docs != null ? docs : java.util.Collections.emptyList();
+    return docs != null ? docs : new ArrayList<>();
   }
 
   /**
@@ -127,7 +129,7 @@ public class ValidationRunner {
       }
       boolean present = docs != null && docs.stream().anyMatch(d -> docType.equals(d.getDocumentType()));
       RiskKind messageKind = present ? RiskKind.AI_VALIDATION : RiskKind.MISSING_DOC;
-      ValidationFinding f = new ValidationFinding(
+      ValidationFinding f = ValidationFindingBuilder.of(
           present ? FindingSeverity.PASSED : FindingSeverity.FAILURE,
           Ivy.cms().co(messageKind.getCmsUri(), Arrays.asList(docType.getLabel())),
           docType.name(), RiskType.CERTIFICATION_VALIDITY);
@@ -191,7 +193,7 @@ public class ValidationRunner {
   public static AgentProcessingStep startExtractionStep() {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName("Document Extraction");
-    step.setStatus(StepStatus.RUNNING);
+    step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
     return step;
   }
@@ -202,7 +204,7 @@ public class ValidationRunner {
    */
   public static void finalizeExtractionStep(AgentProcessingStep step,
       DocumentExtractionResult result) {
-    step.setStatus(StepStatus.COMPLETED);
+    step.setStatus(AgentStepStatus.COMPLETED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
       step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
@@ -224,13 +226,18 @@ public class ValidationRunner {
     String header = (doc.getFileName() != null && !doc.getFileName().isEmpty())
         ? doc.getFileName() + " [" + (doc.getDocumentType() != null ? doc.getDocumentType().getLabel() : LegalDocumentType.OTHER.getLabel()) + "]"
         : (doc.getDocumentType() != null ? doc.getDocumentType().getLabel() : LegalDocumentType.OTHER.getLabel());
-    step.getLogLines().add(new AgentProcessingStep.LogLine(LogLineSeverity.OK, header));
+
+    if (step.getLogLines() == null) {
+      step.setLogLines(new ArrayList<>());
+    }
+    step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.OK, header));
+
     // Line 2: extracted fields (prefer extractedFieldsSummary, fall back to note)
     String detail = (doc.getExtractedFieldsSummary() != null && !doc.getExtractedFieldsSummary().isEmpty())
         ? doc.getExtractedFieldsSummary()
         : (doc.getNote() != null && !doc.getNote().isEmpty() ? doc.getNote() : null);
     if (detail != null) {
-      step.getLogLines().add(new AgentProcessingStep.LogLine(LogLineSeverity.OK, detail, true));
+      step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.OK, detail, true));
     }
   }
 
@@ -241,14 +248,17 @@ public class ValidationRunner {
   public static String failExtractionStep(AgentProcessingStep step,
       DocumentExtractionResult result, Throwable error) {
     step.setName("Document Extraction");
-    step.setStatus(StepStatus.FAILED);
+    step.setStatus(AgentStepStatus.FAILED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
       step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
     }
+    if (step.getLogLines() == null) {
+      step.setLogLines(new ArrayList<>());
+    }
     String msg = error != null ? error.getMessage() : "Unknown extraction error";
     LOG.log(Level.SEVERE, "Document extraction failed: " + msg, error);
-    step.getLogLines().add(new AgentProcessingStep.LogLine(LogLineSeverity.ERROR,
+    step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.ERROR,
         "Extraction failed: " + msg));
     result.setProcessingStep(step);
     return "Document extraction failed: " + msg;
@@ -322,7 +332,7 @@ public class ValidationRunner {
   public static AgentProcessingStep startPolicyStep() {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName("Policy Validation");
-    step.setStatus(StepStatus.RUNNING);
+    step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
     return step;
   }
@@ -333,10 +343,13 @@ public class ValidationRunner {
    */
   public static String finalizePolicyStep(AgentProcessingStep step,
       PolicyValidationResult result) {
-    step.setStatus(StepStatus.COMPLETED);
+    step.setStatus(AgentStepStatus.COMPLETED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
       step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+    }
+    if (step.getLogLines() == null) {
+      step.setLogLines(new ArrayList<>());
     }
 
     if (result == null) {
@@ -352,7 +365,7 @@ public class ValidationRunner {
         }
         LogLineSeverity logSev = sev == FindingSeverity.FAILURE ? LogLineSeverity.ERROR
             : sev == FindingSeverity.WARNING ? LogLineSeverity.WARNING : LogLineSeverity.OK;
-        step.getLogLines().add(new AgentProcessingStep.LogLine(logSev, finding.getMessage()));
+        step.getLogLines().add(LogLineBuilder.of(logSev, finding.getMessage()));
         summary.append("[").append(sev).append("] ")
                .append(finding.getMessage()).append("\n");
       }
@@ -362,7 +375,7 @@ public class ValidationRunner {
       String summaryMsg = count > 0
           ? "All " + count + " policy rules passed."
           : "All policy checks passed.";
-      step.getLogLines().add(new AgentProcessingStep.LogLine(LogLineSeverity.OK, summaryMsg));
+      step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.OK, summaryMsg));
     }
     result.setProcessingStep(step);
     return summary.length() > 0 ? summary.toString() : "All policy checks passed.";
@@ -375,7 +388,7 @@ public class ValidationRunner {
   public static AgentProcessingStep startFinancialStep() {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName("Financial Validation");
-    step.setStatus(StepStatus.RUNNING);
+    step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
     return step;
   }
@@ -386,10 +399,13 @@ public class ValidationRunner {
    */
   public static String finalizeFinancialStep(AgentProcessingStep step,
       PolicyValidationResult result) {
-    step.setStatus(StepStatus.COMPLETED);
+    step.setStatus(AgentStepStatus.COMPLETED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
       step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+    }
+    if (step.getLogLines() == null) {
+      step.setLogLines(new ArrayList<>());
     }
 
     if (result == null) {
@@ -406,11 +422,11 @@ public class ValidationRunner {
           summary.append("[").append(sev).append("] ")
                  .append(finding.getMessage()).append("\n");
         }
-        step.getLogLines().add(new AgentProcessingStep.LogLine(logSev, finding.getMessage()));
+        step.getLogLines().add(LogLineBuilder.of(logSev, finding.getMessage()));
       }
     }
     if (step.getLogLines().isEmpty()) {
-      step.getLogLines().add(new AgentProcessingStep.LogLine(LogLineSeverity.OK, "All financial checks passed."));
+      step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.OK, "All financial checks passed."));
     }
     result.setProcessingStep(step);
     return summary.length() > 0 ? summary.toString() : "All financial checks passed.";
@@ -426,11 +442,11 @@ public class ValidationRunner {
       return 100;
     }
 
-    boolean hasExplicitScores = result.getFindings().stream().anyMatch(f -> f.getScore() > 0);
+    boolean hasExplicitScores = result.getFindings().stream().anyMatch(f -> f.getScore() != null && f.getScore() > 0);
     if (hasExplicitScores) {
       Map<String, Integer> maxScoreBySource = new HashMap<>();
       for (ValidationFinding f : result.getFindings()) {
-        if (f.getScore() > 0 && f.getSource() != null) {
+        if (f.getScore() != null && f.getScore() > 0 && f.getSource() != null) {
           String key = normalizeKey(f.getSource());
           maxScoreBySource.merge(key, f.getScore(), Math::max);
         }
@@ -501,11 +517,11 @@ public class ValidationRunner {
     // When findings carry explicit scores (populated by the AI via buildSingleRuleSystemPrompt),
     // sum the maximum deduction per source to avoid double-counting multiple findings for the
     // same rule, then subtract from 100.
-    boolean hasExplicitScores = result.getFindings().stream().anyMatch(f -> f.getScore() > 0);
+    boolean hasExplicitScores = result.getFindings().stream().anyMatch(f -> f.getScore() != null && f.getScore() > 0);
     if (hasExplicitScores) {
       Map<String, Integer> maxScoreBySource = new HashMap<>();
       for (ValidationFinding f : result.getFindings()) {
-        if (f.getScore() > 0 && f.getSource() != null) {
+        if (f.getScore() != null && f.getScore() > 0 && f.getSource() != null) {
           String key = normalizeKey(f.getSource());
           maxScoreBySource.merge(key, f.getScore(), Math::max);
         }
@@ -699,7 +715,7 @@ public class ValidationRunner {
     }
     List<ValidationFinding> kept = new ArrayList<>();
     for (ValidationFinding f : existingFindings) {
-      if (f.isResolved() && RiskKind.MISSING_DOC.equals(f.getRiskKind())) {
+      if (Boolean.TRUE.equals(f.getResolved()) && RiskKind.MISSING_DOC.equals(f.getRiskKind())) {
         continue;
       }
       kept.add(f);
@@ -795,6 +811,36 @@ public class ValidationRunner {
     return result;
   }
 
+  public static PolicyValidationResult finalizePolicyValidation(
+      List<ValidationFinding> accumulatedFindings,
+      List<ValidationFinding> presenceFindings,
+      AgentProcessingStep processingStep,
+      OnboardingRequest onboardingRequest) {
+    PolicyValidationResult result = wrapFindings(accumulatedFindings);
+    mergePresenceFindings(result, presenceFindings);
+    finalizePolicyStep(processingStep, result);
+    result.setRuleEvaluations(evaluatePolicyRules(result));
+    result.setComplianceScore(computePolicyComplianceScore(result));
+    if (onboardingRequest != null) {
+      onboardingRequest.setPolicyValidationFindings(result.getFindings());
+    }
+    return result;
+  }
+
+  /**
+   * Convenience wrapper that performs the full financial finalization sequence:
+   * wraps findings, finalizes the step, and computes the financial stability
+   * score. Returns the fully-populated {@link PolicyValidationResult}.
+   */
+  public static PolicyValidationResult finalizeFinancialValidation(
+      List<ValidationFinding> accumulatedFindings,
+      AgentProcessingStep processingStep) {
+    PolicyValidationResult result = wrapFindings(accumulatedFindings);
+    finalizeFinancialStep(processingStep, result);
+    result.setComplianceScore(computeFinancialStabilityScore(result));
+    return result;
+  }
+
   /**
    * Marks the policy step FAILED, attaches it to the result, and returns a
    * plain-text error summary.
@@ -802,16 +848,19 @@ public class ValidationRunner {
   public static String failPolicyStep(AgentProcessingStep step,
       PolicyValidationResult result, Throwable error) {
     step.setName("Policy Validation");
-    step.setStatus(StepStatus.FAILED);
+    step.setStatus(AgentStepStatus.FAILED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
       step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
     }
+    if (step.getLogLines() == null) {
+      step.setLogLines(new ArrayList<>());
+    }
     String msg = error != null ? error.getMessage() : "Unknown policy validation error";
     LOG.log(Level.SEVERE, "Policy validation failed: " + msg, error);
-    step.getLogLines().add(new AgentProcessingStep.LogLine(LogLineSeverity.ERROR,
+    step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.ERROR,
         "Policy validation failed: " + msg));
-    ValidationFinding errorFinding = new ValidationFinding(
+    ValidationFinding errorFinding = ValidationFindingBuilder.of(
         FindingSeverity.FAILURE, "Policy validation could not complete: " + msg, "system", RiskType.POLICY_COMPLIANCE);
     errorFinding.setRiskKind(RiskKind.AI_VALIDATION);
     result.getFindings().add(errorFinding);

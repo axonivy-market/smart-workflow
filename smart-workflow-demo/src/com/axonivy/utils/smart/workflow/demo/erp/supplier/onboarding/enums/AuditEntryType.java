@@ -1,0 +1,16 @@
+package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums;
+
+
+public enum AuditEntryType {
+  REQUEST_SUBMITTED,
+  DUPLICATE_CHECK,
+  DUPLICATE_DECISION,
+  REGISTRATION_CAPTURED,
+  AI_ANALYSIS,
+  CLARIFICATION_REQUIRED,
+  CLARIFICATION_SUBMITTED,
+  QM_ASSISTANCE,
+  APPROVAL,
+  DECLINE,
+  COMPLETION
+}

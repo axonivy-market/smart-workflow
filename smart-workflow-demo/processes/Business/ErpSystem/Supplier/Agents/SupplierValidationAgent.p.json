@@ -403,14 +403,10 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
             "",
-            "in.policyValidationResult = ValidationRunner.wrapFindings(in.accumulatedFindings);",
-            "ValidationRunner.mergePresenceFindings(in.policyValidationResult, in.documentPresenceFindings);",
-            "ValidationRunner.finalizePolicyStep(in.processingStep, in.policyValidationResult);",
-            "in.policyRuleEvaluations = ValidationRunner.evaluatePolicyRules(in.policyValidationResult);",
-            "in.policyComplianceScore = ValidationRunner.computePolicyComplianceScore(in.policyValidationResult);",
-            "if (in.onboardingRequest != null) {",
-            "  in.onboardingRequest.setPolicyValidationFindings(in.policyValidationResult.getFindings());",
-            "}"
+            "in.policyValidationResult = ValidationRunner.finalizePolicyValidation(",
+            "    in.accumulatedFindings, in.documentPresenceFindings, in.processingStep, in.onboardingRequest);",
+            "in.policyRuleEvaluations = in.policyValidationResult.getRuleEvaluations();",
+            "in.policyComplianceScore = in.policyValidationResult.getComplianceScore();"
           ]
         }
       },
@@ -477,9 +473,9 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.RiskAssessmentRunner;",
-            "in.processingStep = RiskAssessmentRunner.initRiskStep();",
-            "in.riskScoreResult = RiskAssessmentRunner.computeRiskScore(in.annualVolumeEur, in.policyValidationResult, in.financialValidationResult);",
-            "RiskAssessmentRunner.finalizeRiskStep(in.processingStep, in.riskScoreResult);"
+            "",
+            "in.riskScoreResult = RiskAssessmentRunner.computeAndFinalizeRiskScore(",
+            "    in.annualVolumeEur, in.policyValidationResult, in.financialValidationResult);"
           ]
         }
       },
@@ -656,16 +652,15 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;",
             "import java.util.Arrays;",
             "",
-            "ValidationFinding finding = new ValidationFinding(",
-            "    FindingSeverity.FAILURE,",
-            "    \"Cannot evaluate financial status: no documents provided\",",
-            "    \"document-check\",",
-            "    RiskType.FINANCIAL_STABILITY",
-            ");",
+            "ValidationFinding finding = new ValidationFinding();",
+            "finding.setSeverity(FindingSeverity.FAILURE);",
+            "finding.setMessage(\"Cannot evaluate financial status: no documents provided\");",
+            "finding.setSource(\"document-check\");",
+            "finding.setRiskType(RiskType.FINANCIAL_STABILITY);",
             "finding.setScore(100);",
             "",
             "in.processingStep = ValidationRunner.startFinancialStep();",
@@ -841,9 +836,9 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
             "",
-            "in.financialValidationResult = ValidationRunner.wrapFindings(in.accumulatedFindings);",
-            "ValidationRunner.finalizeFinancialStep(in.processingStep, in.financialValidationResult);",
-            "in.financialStabilityScore = ValidationRunner.computeFinancialStabilityScore(in.financialValidationResult);"
+            "in.financialValidationResult = ValidationRunner.finalizeFinancialValidation(",
+            "    in.accumulatedFindings, in.processingStep);",
+            "in.financialStabilityScore = in.financialValidationResult.getComplianceScore();"
           ]
         }
       },

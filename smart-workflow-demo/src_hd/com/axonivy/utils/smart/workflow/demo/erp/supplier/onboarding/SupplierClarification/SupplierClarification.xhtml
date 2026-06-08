@@ -113,10 +113,10 @@
                         <!-- LEFT: number badge + icon + message -->
                         <div class="flex align-items-center gap-2 flex-1 min-w-0">
                           <div class="so-clarification-item-num">#{vs.index + 1}</div>
-                          <i class="#{item.problemType.name() eq 'DOCUMENT' ? 'ti ti-file-certificate' : item.problemType.name() eq 'DUPLICATE' ? 'ti ti-copy' : 'ti ti-alert-circle'} so-text-muted flex-shrink-0" />
+                          <i class="#{validationFindingHelper.problemType(item).name() eq 'DOCUMENT' ? 'ti ti-file-certificate' : validationFindingHelper.problemType(item).name() eq 'DUPLICATE' ? 'ti ti-copy' : 'ti ti-alert-circle'} so-text-muted flex-shrink-0" />
                           <div class="min-w-0">
                             <div class="font-semibold">#{item.message}</div>
-                            <ui:fragment rendered="#{item.problemType.name() eq 'DOCUMENT' and not item.resolved}">
+                            <ui:fragment rendered="#{validationFindingHelper.problemType(item).name() eq 'DOCUMENT' and not item.resolved}">
                             <div class="text-sm so-text-muted">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/DocumentAcceptedTypes')}</div>
                             </ui:fragment>
                           </div>
@@ -138,7 +138,7 @@
                       <!-- Expand panel — shown below when open -->
                       <p:outputPanel rendered="#{supplierClarificationBean.isItemExpanded(vs.index)}"
                         styleClass="so-doc-row-expand">
-                        <ui:fragment rendered="#{item.problemType.name() eq 'DOCUMENT' and item.documentTypeKey ne null}">
+                        <ui:fragment rendered="#{validationFindingHelper.problemType(item).name() eq 'DOCUMENT' and item.documentTypeKey ne null}">
                           <ic:com.axonivy.utils.smart.workflow.demo.erp.components.SingleLegalDocument
                             documentTypeKey="#{item.documentTypeKey}"
                             bean="#{supplierClarificationBean}"

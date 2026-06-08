@@ -45,7 +45,7 @@
   <p:messages id="step-messages" globalOnly="true" showDetail="true"
     styleClass="so-step-error-messages" closable="false" />
   <h:panelGroup id="agent-decision-panel" layout="block">
-    <ui:fragment rendered="#{not cc.attrs.readOnly and cc.attrs.bean.analysisComplete and not empty cc.attrs.agentResponse.routingDecision}">
+    <ui:fragment rendered="#{(not cc.attrs.readOnly and cc.attrs.bean.analysisComplete) and not empty cc.attrs.agentResponse.routingDecision}">
       <div class="so-clarification-banner so-agent-decision-box #{cc.attrs.bean.decisionBoxCssClass} mb-3 align-items-center">
         <div class="so-clarification-banner-icon">
           <i class="ti ti-robot text-4xl" />
@@ -80,7 +80,7 @@
   </ui:fragment>
 
   <h:panelGroup id="risk-score-panel" layout="block">
-    <ui:fragment rendered="#{not cc.attrs.readOnly and cc.attrs.bean.analysisComplete and cc.attrs.agentResponse.riskScore != null}">
+    <ui:fragment rendered="#{(not cc.attrs.readOnly and cc.attrs.bean.analysisComplete) and cc.attrs.agentResponse.riskScore != null}">
       <div class="so-card mb-3">
         <div class="so-card-title mb-3">
           <i class="ti ti-chart-bar" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/RiskScoreTitle')}
@@ -171,8 +171,8 @@
             <i class="ti ti-shield-check mr-2" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/PolicyFindingsTitle')}
           </div>
           <ui:repeat value="#{cc.attrs.bean.policyValidationFindings}" var="finding">
-            <div class="so-finding-row #{finding.rowClass}">
-              <i class="ti #{finding.icon}" />
+            <div class="so-finding-row #{finding.severity.rowClass}">
+              <i class="ti #{finding.severity.icon}" />
               <span><h:outputText value="#{finding.message}" /></span>
             </div>
           </ui:repeat>

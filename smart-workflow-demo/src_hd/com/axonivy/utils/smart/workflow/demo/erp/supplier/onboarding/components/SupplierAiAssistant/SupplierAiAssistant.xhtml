@@ -119,7 +119,7 @@
                 <ui:fragment rendered="#{not empty msg.feedbackList}">
                   <div class="so-ai-feedback-card mt-2">
                     <div class="so-ai-feedback-card-header">
-                      <span>#{not empty msg.feedbackList and msg.feedbackList[0].type != null
+                      <span>#{(not empty msg.feedbackList and msg.feedbackList[0].type != null)
                               and msg.feedbackList[0].type.name() == 'OPTION'
                               ? ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/FeedbackAlternatives')
                               : ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/FeedbackAnalysisResult')}</span>
@@ -175,8 +175,8 @@
 
     <!-- Upload strip — shown above composer when files are queued or feedback exists -->
     <ui:fragment rendered="#{cc.attrs.uploadEnabled
-        and (not empty cc.attrs.uploadedDocuments
-             or not empty cc.attrs.uploadedFileName
+        and ((not empty cc.attrs.uploadedDocuments
+             or not empty cc.attrs.uploadedFileName)
              or not empty cc.attrs.parseFeedback)}">
       <h:form id="assistant-confirm-form">
         <div class="so-ai-upload-meta">

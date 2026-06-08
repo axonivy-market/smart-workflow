@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,6 +24,12 @@ public class PolicyValidationResult implements Serializable {
   @JsonIgnore
   private AgentProcessingStep processingStep;
 
+  @JsonIgnore
+  private List<SupplierPolicyRule> ruleEvaluations;
+
+  @JsonIgnore
+  private int complianceScore;
+
   public PolicyValidationResult() {
     this.findings = new ArrayList<>();
   }
@@ -41,6 +48,22 @@ public class PolicyValidationResult implements Serializable {
 
   public void setProcessingStep(AgentProcessingStep processingStep) {
     this.processingStep = processingStep;
+  }
+
+  public List<SupplierPolicyRule> getRuleEvaluations() {
+    return ruleEvaluations;
+  }
+
+  public void setRuleEvaluations(List<SupplierPolicyRule> ruleEvaluations) {
+    this.ruleEvaluations = ruleEvaluations;
+  }
+
+  public int getComplianceScore() {
+    return complianceScore;
+  }
+
+  public void setComplianceScore(int complianceScore) {
+    this.complianceScore = complianceScore;
   }
 
   public DocumentExtractionResult getDocumentExtractionResult() {

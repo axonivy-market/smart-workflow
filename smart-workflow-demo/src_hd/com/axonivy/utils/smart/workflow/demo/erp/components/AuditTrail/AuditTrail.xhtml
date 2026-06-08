@@ -20,8 +20,8 @@
         <ui:repeat value="#{cc.attrs.auditTrail}" var="entry">
           <div class="so-tl-item">
             <div class="so-tl-left">
-              <div class="so-tl-bubble #{entry.bubbleClass}">
-                <i class="ti #{entry.icon}" />
+              <div class="so-tl-bubble #{auditTrailHelper.bubbleClass(entry)}">
+                <i class="ti #{auditTrailHelper.icon(entry)}" />
               </div>
               <div class="so-tl-line" />
             </div>
@@ -32,10 +32,10 @@
                 <span class="so-tl-card-title flex align-items-center gap-2">
                   #{entry.action}
                   <ui:fragment rendered="#{not empty entry.decision}">
-                    <span class="so-badge text-xs #{entry.decisionBadgeClass}">#{entry.decision}</span>
+                    <span class="so-badge text-xs #{entry.decision.badgeClass}">#{entry.decision}</span>
                   </ui:fragment>
                 </span>
-                <span class="so-tl-card-time">#{entry.formattedTimestamp}</span>
+                <span class="so-tl-card-time">#{auditTrailHelper.formatTimestamp(entry.timestamp)}</span>
                 <i class="ti ti-chevron-down so-tl-chevron" />
               </div>
               <div class="so-tl-lines">
@@ -43,7 +43,7 @@
                 <div class="so-tl-line-item so-log-line-ok">
                   <i class="ti ti-user" />
                   <span>#{entry.actor}</span>
-                  <span class="so-badge text-xs #{entry.actorTypeBadgeClass}">#{entry.actorRoleLabel}</span>
+                  <span class="so-badge text-xs #{auditTrailHelper.actorTypeBadgeClass(entry)}">#{auditTrailHelper.actorRoleLabel(entry)}</span>
                 </div>
 
                 <!-- REQUEST item type: structured summary lines from the submitted form -->
@@ -114,12 +114,12 @@
                       <span class="font-semibold">Validation Findings</span>
                     </div>
                     <ui:repeat value="#{entry.findings}" var="f">
-                      <div class="so-tl-line-item #{f.logClass}">
-                        <i class="ti #{f.icon} align-self-start" />
+                      <div class="so-tl-line-item #{f.severity.logClass}">
+                        <i class="ti #{f.severity.icon} align-self-start" />
                         <div class="flex flex-column gap-1 min-w-0">
                           <span class="text-sm">#{f.message}</span>
                           <div class="flex align-items-center gap-2">
-                            <span class="so-badge text-xs #{f.badgeClass}">#{f.severity}</span>
+                            <span class="so-badge text-xs #{f.severity.badgeClass}">#{f.severity}</span>
                             <span class="so-text-muted text-xs">#{f.source}</span>
                           </div>
                         </div>

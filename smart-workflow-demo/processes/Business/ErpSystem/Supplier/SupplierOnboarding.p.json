@@ -57,8 +57,8 @@
       "name" : "Check status",
       "config" : {
         "conditions" : {
-          "f152" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus.REQUEST.equals(in.request.status)",
-          "f153" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus.DB_CHECK.equals(in.request.status)"
+          "f152" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus.REQUEST.equals(in.request.status)",
+          "f153" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus.DB_CHECK.equals(in.request.status)"
         }
       },
       "visual" : {
@@ -225,7 +225,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
             "import java.util.ArrayList;",
             "",
@@ -346,12 +346,12 @@
       "type" : "DialogCall",
       "name" : "Supervisor approval dialog",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ApprovalStage)",
         "call" : {
           "map" : {
             "param.request" : "in.request",
             "param.agentResponse" : "in.agentResponse",
-            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage.SUPERVISOR"
+            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ApprovalStage.SUPERVISOR"
           }
         },
         "output" : {
@@ -411,12 +411,12 @@
       "type" : "DialogCall",
       "name" : "QM/ISM approval dialog",
       "config" : {
-        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage)",
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierOnboardingApproval:start(com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse,com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ApprovalStage)",
         "call" : {
           "map" : {
             "param.request" : "in.request",
             "param.agentResponse" : "in.agentResponse",
-            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage.QM_ISM"
+            "param.approvalStage" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ApprovalStage.QM_ISM"
           }
         },
         "output" : {
@@ -690,10 +690,10 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.RiskLevel;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.ClarificationRetryResult;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
             "import java.util.ArrayList;",
@@ -716,7 +716,7 @@
             "boolean allResolved = findings != null && !findings.isEmpty();",
             "if (allResolved) {",
             "  for (ValidationFinding f : findings) {",
-            "    if (f.getSeverity() != FindingSeverity.PASSED && !f.isResolved()) { allResolved = false; break; }",
+            "    if (f.getSeverity() != FindingSeverity.PASSED && (f.getResolved() == null || !f.getResolved())) { allResolved = false; break; }",
             "  }",
             "}",
             "if (allResolved) {",
@@ -776,7 +776,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingStatus;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService.DeclineOrchestrationResult;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;",
             "import java.util.ArrayList;",
@@ -981,7 +981,7 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailEntry;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditActorType;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AuditActorType;",
             "import java.util.ArrayList;",
             "",
             "int cycle = (in.clarificationRetryCount != null ? in.clarificationRetryCount : 0) + 1;",
@@ -1032,9 +1032,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.RiskLevel;",
             "",
             "// If all clarification findings are resolved, override risk score to 100 and route to APPROVAL",
             "java.util.List<ValidationFinding> findings = in.request != null ? in.request.getPolicyValidationFindings() : null;",
@@ -1042,7 +1042,7 @@
             "",
             "if (allResolved) {",
             "  for (ValidationFinding f : findings) {",
-            "    if (f.getSeverity() != FindingSeverity.PASSED && !f.isResolved()) { allResolved = false; break; }",
+            "    if (f.getSeverity() != FindingSeverity.PASSED && (f.getResolved() == null || !f.getResolved())) { allResolved = false; break; }",
             "  }",
             "}",
             "if (allResolved) {",

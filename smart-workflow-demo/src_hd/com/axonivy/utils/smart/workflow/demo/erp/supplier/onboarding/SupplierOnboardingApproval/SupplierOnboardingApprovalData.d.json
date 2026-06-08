@@ -10,10 +10,10 @@
     "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
   }, {
     "name" : "approvalStage",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ApprovalStage"
   }, {
     "name" : "approvalDecision",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalDecision"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ApprovalDecision"
   }, {
     "name" : "approvalComment",
     "type" : "String"

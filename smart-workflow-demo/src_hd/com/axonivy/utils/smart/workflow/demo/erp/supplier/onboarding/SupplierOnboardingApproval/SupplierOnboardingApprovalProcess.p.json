@@ -15,7 +15,7 @@
           "params" : [
             { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest", "desc" : "" },
             { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse", "desc" : "" },
-            { "name" : "approvalStage", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ApprovalStage", "desc" : "" }
+            { "name" : "approvalStage", "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ApprovalStage", "desc" : "" }
           ],
           "map" : {
             "out.request" : "param.request",

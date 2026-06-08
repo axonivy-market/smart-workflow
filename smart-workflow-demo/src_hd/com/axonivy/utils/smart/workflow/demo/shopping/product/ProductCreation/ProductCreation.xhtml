@@ -204,7 +204,7 @@
         <h:form id="result-form">
         <!-- Blocking message when dependencies don't exist -->
         <h:panelGroup id="dependencies-missing" layout="block" styleClass="mt-4 p-4 border-round-lg surface-border bg-red-50 border-left-3 border-red-500" 
-                      rendered="#{data.response ne null and ((data.response.isSupplierExisting eq false) or (data.response.isCategoryExisting eq false) or (data.response.isBrandExisting eq false))}">
+                      rendered="#{data.response ne null and ((data.response.isSupplierExisting eq false) or ((data.response.isCategoryExisting eq false) or (data.response.isBrandExisting eq false)))}">
           <div class="flex flex-column gap-4">
             <div class="flex align-items-center gap-2">
               <i class="pi pi-exclamation-triangle text-red-600 text-xl"></i>

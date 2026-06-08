@@ -1,0 +1,12 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ResolvedClarificationItem",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding",
+  "fields" : [ {
+    "name" : "problem"
+  }, {
+    "name" : "resolutionType"
+  }, {
+    "name" : "userExplanation"
+  } ]
+}

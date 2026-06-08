@@ -12,9 +12,9 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierBanking;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierCertification;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierContact;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.Country;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.Country;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.Urgency;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.Urgency;
 
 public class OnboardingRequestParser {
 

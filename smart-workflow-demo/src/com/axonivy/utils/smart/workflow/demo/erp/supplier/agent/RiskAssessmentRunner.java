@@ -10,10 +10,13 @@ import java.util.stream.Collectors;
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocument;
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.LogLineSeverity;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep.StepStatus;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.FindingSeverity;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.RiskLevel;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.LogLine;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.LogLineBuilder;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.SupplierRiskScoreBuilder;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AgentStepStatus;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.LogLineSeverity;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.RiskLevel;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRiskScore;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 
@@ -28,7 +31,7 @@ public class RiskAssessmentRunner {
   public static AgentProcessingStep initRiskStep() {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName("Risk Score Calculation");
-    step.setStatus(StepStatus.RUNNING);
+    step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
     return step;
   }
@@ -145,6 +148,21 @@ public class RiskAssessmentRunner {
     }
   }
 
+  /**
+   * Convenience wrapper: initializes the processing step, computes the risk
+   * score deterministically, finalizes the step, and returns the fully-populated
+   * {@link RiskScoreResult} (with processingStep attached).
+   */
+  public static RiskScoreResult computeAndFinalizeRiskScore(
+      Integer annualVolumeEur,
+      PolicyValidationResult policyResult,
+      PolicyValidationResult financialResult) {
+    AgentProcessingStep step = initRiskStep();
+    RiskScoreResult result = computeRiskScore(annualVolumeEur, policyResult, financialResult);
+    finalizeRiskStep(step, result);
+    return result;
+  }
+
   // ── Deterministic risk scoring (no AI) ──────────────────────────────────────
 
   /**
@@ -189,7 +207,7 @@ public class RiskAssessmentRunner {
     certValidity -= computeCertExpiryDeduction(policyFindings);
     certValidity = Math.max(0, Math.min(100, certValidity));
 
-    SupplierRiskScore score = new SupplierRiskScore(financial, policyCompliance, certValidity);
+    SupplierRiskScore score = SupplierRiskScoreBuilder.of(financial, policyCompliance, certValidity);
     RiskScoreResult result = new RiskScoreResult();
     result.setRiskScore(score);
     switch (score.getLevel()) {
@@ -244,25 +262,28 @@ public class RiskAssessmentRunner {
    * then attaches it to the result. Called after the AI agent returns.
    */
   public static void finalizeRiskStep(AgentProcessingStep step, RiskScoreResult riskScoreResult) {
-    step.setStatus(StepStatus.COMPLETED);
+    step.setStatus(AgentStepStatus.COMPLETED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
       step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+    }
+    if (step.getLogLines() == null) {
+      step.setLogLines(new java.util.ArrayList<>());
     }
     if (riskScoreResult == null || riskScoreResult.getRiskScore() == null) {
       return;
     }
     SupplierRiskScore score = riskScoreResult.getRiskScore();
 
-    step.getLogLines().add(new AgentProcessingStep.LogLine(
+    step.getLogLines().add(LogLineBuilder.of(
         LogLineSeverity.OK, "Financial stability score: " + score.getFinancialStability() + "/100"));
 
     LogLineSeverity policySev = score.getPolicyCompliance() < 100 ? LogLineSeverity.WARNING : LogLineSeverity.OK;
-    step.getLogLines().add(new AgentProcessingStep.LogLine(
+    step.getLogLines().add(LogLineBuilder.of(
         policySev, "Compliance score: " + score.getPolicyCompliance() + "/100"));
 
     LogLineSeverity certSev = score.getCertValidity() < 100 ? LogLineSeverity.WARNING : LogLineSeverity.OK;
-    step.getLogLines().add(new AgentProcessingStep.LogLine(
+    step.getLogLines().add(LogLineBuilder.of(
         certSev, "Cert validity score: " + score.getCertValidity() + "/100"));
 
     LogLineSeverity aggSev = LogLineSeverity.OK;
@@ -271,9 +292,9 @@ public class RiskAssessmentRunner {
     } else if (score.getLevel() == RiskLevel.YELLOW) {
       aggSev = LogLineSeverity.WARNING;
     }
-    step.getLogLines().add(new AgentProcessingStep.LogLine(
+    step.getLogLines().add(LogLineBuilder.of(
         aggSev, "Aggregate risk score: " + score.getAggregate() + "/100 \u2014 " + score.getLevel().name()));
-    step.getLogLines().add(new AgentProcessingStep.LogLine(
+    step.getLogLines().add(LogLineBuilder.of(
         aggSev, "Routing decision: -> " + riskScoreResult.getRoutingDecision() + " path"));
 
     riskScoreResult.setProcessingStep(step);
@@ -288,18 +309,21 @@ public class RiskAssessmentRunner {
   public static RiskScoreResult buildErrorResult(AgentProcessingStep step, Throwable error) {
     AgentProcessingStep resolvedStep = step != null ? step : new AgentProcessingStep();
     resolvedStep.setName("Risk Score Calculation");
-    resolvedStep.setStatus(StepStatus.FAILED);
+    resolvedStep.setStatus(AgentStepStatus.FAILED);
     resolvedStep.setCompletedAt(Instant.now());
     if (resolvedStep.getStartedAt() != null) {
       resolvedStep.setDurationMs(
           resolvedStep.getCompletedAt().toEpochMilli() - resolvedStep.getStartedAt().toEpochMilli());
     }
+    if (resolvedStep.getLogLines() == null) {
+      resolvedStep.setLogLines(new java.util.ArrayList<>());
+    }
     String errorMsg = error != null ? error.getMessage() : "Unknown risk scoring error";
-    resolvedStep.getLogLines().add(new AgentProcessingStep.LogLine(
+    resolvedStep.getLogLines().add(LogLineBuilder.of(
         LogLineSeverity.ERROR, "AI risk scoring failed: " + errorMsg));
 
     RiskScoreResult result = new RiskScoreResult();
-    result.setRiskScore(new SupplierRiskScore(0, 0, 0));
+    result.setRiskScore(SupplierRiskScoreBuilder.of(0, 0, 0));
     result.setRoutingDecision("DECLINE");
     result.setProcessingStep(resolvedStep);
     return result;
