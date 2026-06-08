@@ -14,6 +14,10 @@ public abstract class AbstractGuardrailAdapter<D extends SmartWorkflowGuardrail>
     return delegate;
   }
 
+  public String name() {
+    return delegate != null ? delegate.getClass().getSimpleName() : getClass().getSimpleName();
+  }
+
   @Override
   public int hashCode() {
     return delegate != null ? delegate.getClass().getName().hashCode() : 0;

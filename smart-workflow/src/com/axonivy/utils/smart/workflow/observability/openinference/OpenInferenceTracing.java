@@ -181,7 +181,7 @@ public class OpenInferenceTracing implements AiListenerProvider {
           .map(r -> r.userMessage())
           .map(OpenInferenceCollector::textOf)
           .orElse(null);
-      String guardrailName = event.guardrailClass().getSimpleName();
+      String guardrailName = event.guardrailName();
       traceGuardrail(event, "INPUT", inputMessage, guardrailName);
     }
   }
@@ -195,7 +195,7 @@ public class OpenInferenceTracing implements AiListenerProvider {
           .map(r -> r.aiMessage())
           .map(OpenInferenceCollector::resolveContent)
           .orElse(null);
-      String guardrailName = event.guardrailClass().getSimpleName();
+      String guardrailName = event.guardrailName();
       traceGuardrail(event, "OUTPUT", outputMessage, guardrailName);
     }
   }
