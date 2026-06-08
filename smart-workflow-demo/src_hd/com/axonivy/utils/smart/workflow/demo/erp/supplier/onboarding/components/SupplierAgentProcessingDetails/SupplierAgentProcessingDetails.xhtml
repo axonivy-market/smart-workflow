@@ -171,8 +171,8 @@
             <i class="ti ti-shield-check mr-2" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/PolicyFindingsTitle')}
           </div>
           <ui:repeat value="#{cc.attrs.bean.policyValidationFindings}" var="finding">
-            <div class="so-finding-row #{finding.severity.rowClass}">
-              <i class="ti #{finding.severity.icon}" />
+            <div class="so-finding-row #{auditTrailHelper.findingRowClass(finding)}">
+              <i class="ti #{auditTrailHelper.findingIcon(finding)}" />
               <span><h:outputText value="#{finding.message}" /></span>
             </div>
           </ui:repeat>
