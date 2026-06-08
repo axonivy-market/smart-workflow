@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory.AiConf;
@@ -20,6 +21,7 @@ import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest
+@EnabledIf("providerSelected")
 public class AzureOpenAiModelE2E {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
@@ -46,5 +48,9 @@ public class AzureOpenAiModelE2E {
         .execute();
     TestToolUserData data = res.data().last();
     assertThat(data.getPerson().getFirstName()).isEqualTo("James");
+  }
+
+  static boolean providerSelected() {
+    return TestUtils.isProviderEnabled(AzureOpenAiModelProvider.NAME);
   }
 }

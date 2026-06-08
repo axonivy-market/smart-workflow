@@ -4,8 +4,27 @@ services:
     command: sleep infinity
     volumes:
       - ..:/workspaces/smart-workflow:cached
+    depends_on:
+      opensearch:
+        condition: service_healthy
 
   phoenix:
     image: arizephoenix/phoenix:nightly
     ports:
       - "6006:6006"
+
+  opensearch:
+    image: opensearchproject/opensearch:2.19.5
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "127.0.0.1:9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s

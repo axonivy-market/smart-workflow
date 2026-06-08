@@ -27,6 +27,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <version>1.4.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
       <version>2.0.5</version>
@@ -53,6 +59,12 @@
           <artifactId>jspecify</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.axonivy.utils.ai</groupId>
+      <artifactId>smart-workflow-ollama</artifactId>
+      <version>${project.version}</version>
+      <type>iar</type>
     </dependency>
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
@@ -83,6 +95,12 @@
       <artifactId>smart-workflow-opensearch-rag</artifactId>
       <version>${project.version}</version>
       <type>iar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>ollama</artifactId>
+      <version>1.21.4</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <repositories>

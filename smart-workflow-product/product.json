@@ -21,6 +21,13 @@
           },
           {
             "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-ollama",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": false
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-azure-openai",
             "version": "${version}",
             "type": "iar",
@@ -43,6 +50,13 @@
           {
             "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-anthropic",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": false
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-opensearch-rag",
             "version": "${version}",
             "type": "iar",
             "importInWorkspace": false

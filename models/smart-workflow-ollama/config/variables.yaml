@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/config/variables.json
+Variables:
+  AI:
+    Providers:
+      Ollama:
+        BaseUrl: ""
+        # The default model, if not explicitly specified on the calling Agent.
+        # Any model available in your Ollama instance can be used. E.g. llama3.2, gemma3:27b, qwen3:30b
+        DefaultModel: ""
+        # The default embedding model, if not explicitly specified.
+        # E.g. nomic-embed-text, mxbai-embed-large
+        DefaultEmbeddingModel: ""
+        # Maximum time to wait for a single chat/embedding response, in seconds.
+        # Local Ollama on CPU can need minutes for large models or cold starts; tune to your hardware.
+        TimeoutSeconds: "300"
