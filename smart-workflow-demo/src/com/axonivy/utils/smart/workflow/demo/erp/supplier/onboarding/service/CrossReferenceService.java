@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.demo.erp.supplier.agent;
+package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -8,11 +8,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.CrossReferenceResult;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskKind;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.LogLineBuilder;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.ValidationFindingBuilder;
@@ -23,17 +24,20 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierRep
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria;
 
 /**
- * Runs cross-reference compliance checks for supplier onboarding and assembles
- * the result with a timed {@link AgentProcessingStep}.
+ * Stateless helpers for the cross-reference compliance check step of supplier
+ * onboarding.
  *
  * <p>Checks performed: company register format validation, VAT ID format
  * validation, and ERP duplicate detection.
  * All external API calls are simulated for the demo; each check method is an
  * extension point for real integrations.</p>
+ *
+ * <p>All methods are stateless and static so that IvyScript in process Script
+ * nodes can call them with a single import line.</p>
  */
-public class CrossReferenceRunner {
+public class CrossReferenceService {
 
-  private static final Logger LOG = Logger.getLogger(CrossReferenceRunner.class.getName());
+  private static final Logger LOG = Logger.getLogger(CrossReferenceService.class.getName());
 
   // VAT ID format patterns keyed by ISO 3166-1 alpha-2 country code
   private static final Map<String, String> VAT_PATTERNS = new HashMap<>();
@@ -51,81 +55,83 @@ public class CrossReferenceRunner {
     VAT_PATTERNS.put("GB", "GB[0-9]{9}");
   }
 
-  private CrossReferenceRunner() {
+  private CrossReferenceService() {
   }
 
-  // ── Process entry points ───────────────────────────────────────────────────
+  // ── Step lifecycle ─────────────────────────────────────────────────────────
 
   /**
-   * Runs all cross-reference checks for the given onboarding request and
-   * returns a {@link CrossReferenceResult} with findings and a timed
-   * {@link AgentProcessingStep}.
+   * Creates and returns a new {@link AgentProcessingStep} for cross-reference
+   * validation, already in RUNNING state.
    */
-  public static CrossReferenceResult run(OnboardingRequest request) {
+  public static AgentProcessingStep startCrossReferenceStep() {
     AgentProcessingStep step = new AgentProcessingStep();
-    step.setName("Cross-Reference Checks");
+    step.setName(ValidationUtils.stepName("StepCrossReferenceChecks"));
     step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
+    return step;
+  }
 
-    String supplierId = request.getSupplier().getSupplierId();
-    String vatId = request.getSupplier().getVatId();
-    String commercialRegisterNo = request.getSupplier().getCommercialRegisterNo();
-    String businessName = request.getSupplier().getBusinessName();
-    String country = request.getSupplier().getBusinessAddress() != null
-        ? request.getSupplier().getBusinessAddress().getCountry() : null;
-
-    CrossReferenceResult result = new CrossReferenceResult();
-    try {
-      result.setFindings(runAllChecks(
-          supplierId, vatId, commercialRegisterNo, businessName, country,
-          request.getMatchedSuppliers()));
-      step.setStatus(AgentStepStatus.COMPLETED);
-    } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Cross-reference check error: " + e.getMessage(), e);
-      ValidationFinding errorFinding = ValidationFindingBuilder.of(
-          FindingSeverity.FAILURE, "Cross-reference check failed: " + e.getMessage(), "system", RiskType.POLICY_COMPLIANCE);
-      errorFinding.setRiskKind(RiskKind.AI_VALIDATION);
-      result.getFindings().add(errorFinding);
-      step.setStatus(AgentStepStatus.FAILED);
-      step.getLogLines().add(LogLineBuilder.of(
-          LogLineSeverity.ERROR, "Cross-reference check failed: " + e.getMessage()));
-    }
-
+  /**
+   * Marks the step COMPLETED, records timing, adds one log line per finding,
+   * and attaches the step to the result.
+   */
+  public static void finalizeCrossReferenceStep(AgentProcessingStep step,
+      CrossReferenceResult result) {
+    step.setStatus(AgentStepStatus.COMPLETED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
       step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
     }
-
-    for (ValidationFinding finding : result.getFindings()) {
-      finding.setRiskKind(RiskKind.AI_VALIDATION);
-      FindingSeverity sev = finding.getSeverity();
-      LogLineSeverity logSev = sev == FindingSeverity.FAILURE ? LogLineSeverity.ERROR
-          : sev == FindingSeverity.WARNING ? LogLineSeverity.WARNING : LogLineSeverity.OK;
-      step.getLogLines().add(LogLineBuilder.of(logSev, finding.getMessage()));
+    if (step.getLogLines() == null) {
+      step.setLogLines(new ArrayList<>());
     }
-
-
-    result.setProcessingStep(step);
-    return result;
+    if (result != null && result.getFindings() != null) {
+      for (ValidationFinding finding : result.getFindings()) {
+        finding.setRiskKind(RiskKind.AI_VALIDATION);
+        FindingSeverity sev = finding.getSeverity();
+        LogLineSeverity logSev = sev == FindingSeverity.FAILURE ? LogLineSeverity.ERROR
+            : sev == FindingSeverity.WARNING ? LogLineSeverity.WARNING : LogLineSeverity.OK;
+        step.getLogLines().add(LogLineBuilder.of(logSev, finding.getMessage()));
+      }
+    }
+    if (result != null) {
+      result.setProcessingStep(step);
+    }
   }
 
-  /** Builds the tool-result summary string returned to the LLM agent. */
-  public static String buildFindingsSummary(CrossReferenceResult result) {
-    StringBuilder summary = new StringBuilder("Cross-reference check completed. Findings:\n");
-    for (ValidationFinding finding : result.getFindings()) {
-      summary.append("- [").append(finding.getSeverity()).append("] ")
-             .append(finding.getMessage()).append("\n");
+  /**
+   * Marks the step FAILED, logs the error, adds an error finding to the result,
+   * and attaches the step.
+   */
+  public static void failCrossReferenceStep(AgentProcessingStep step,
+      CrossReferenceResult result, Throwable error) {
+    String msg = error != null ? error.getMessage() : "Unknown cross-reference error";
+    LOG.log(Level.SEVERE, "Cross-reference check error: " + msg, error);
+    step.setStatus(AgentStepStatus.FAILED);
+    step.setCompletedAt(Instant.now());
+    if (step.getStartedAt() != null) {
+      step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
     }
-    if (result.getFindings().isEmpty()) {
-      summary.append("No issues found.");
+    if (step.getLogLines() == null) {
+      step.setLogLines(new ArrayList<>());
     }
-    return summary.toString();
+    step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.ERROR,
+        "Cross-reference check failed: " + msg));
+    if (result != null) {
+      ValidationFinding errorFinding = ValidationFindingBuilder.of(
+          FindingSeverity.FAILURE, "Cross-reference check failed: " + msg,
+          "system", RiskType.POLICY_COMPLIANCE);
+      errorFinding.setRiskKind(RiskKind.AI_VALIDATION);
+      result.getFindings().add(errorFinding);
+      result.setProcessingStep(step);
+    }
   }
 
   // ── Check orchestration ────────────────────────────────────────────────────
 
   /**
-   * Runs all four checks using pre-populated matched suppliers from Step 1,
+   * Runs all checks using pre-populated matched suppliers from Step 1,
    * avoiding a second DB query.
    */
   public static List<ValidationFinding> runAllChecks(String supplierId, String vatId,
@@ -138,7 +144,7 @@ public class CrossReferenceRunner {
     return findings;
   }
 
-  /** Runs all three checks with a fresh ERP duplicate query. */
+  /** Runs all checks with a fresh ERP duplicate query. */
   public static List<ValidationFinding> runAllChecks(String supplierId, String vatId,
       String commercialRegisterNo, String businessName, String country) {
     List<ValidationFinding> findings = new ArrayList<>();
@@ -146,6 +152,21 @@ public class CrossReferenceRunner {
     findings.add(validateVatId(vatId, country));
     findings.add(checkErpDuplicate(businessName, country, supplierId));
     return findings;
+  }
+
+  // ── Result formatting ──────────────────────────────────────────────────────
+
+  /** Builds the plain-text findings summary returned to the process or LLM. */
+  public static String buildFindingsSummary(CrossReferenceResult result) {
+    StringBuilder summary = new StringBuilder("Cross-reference check completed. Findings:\n");
+    for (ValidationFinding finding : result.getFindings()) {
+      summary.append("- [").append(finding.getSeverity()).append("] ")
+             .append(finding.getMessage()).append("\n");
+    }
+    if (result.getFindings().isEmpty()) {
+      summary.append("No issues found.");
+    }
+    return summary.toString();
   }
 
   // ── Individual checks (extension points for real integrations) ────────────

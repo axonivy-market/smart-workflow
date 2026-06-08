@@ -318,6 +318,7 @@ Dialogs:
                         RiskScoreCalculatedTooltip: How is the risk score calculated?
                         RiskScoreHelpDialogHeader: How the Risk Score is Calculated
                         RiskScoreTitle: Risk Score
+                        StepCrossReferenceChecks: Cross-Reference Checks
                         StepDocumentExtraction: Document Extraction
                         StepFinancialValidation: Financial Validation
                         StepPolicyValidation: Policy Validation

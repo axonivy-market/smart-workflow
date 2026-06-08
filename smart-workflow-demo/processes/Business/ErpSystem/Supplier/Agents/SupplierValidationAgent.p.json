@@ -45,13 +45,13 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.DocumentExtractionService;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtractionResult;",
             "",
-            "in.documents = ValidationRunner.loadDocuments(in.supplierId);",
+            "in.documents = DocumentExtractionService.loadDocuments(in.supplierId);",
             "in.extractionResult = new DocumentExtractionResult();",
             "in.documentIndex = 0;",
-            "in.processingStep = ValidationRunner.startExtractionStep();"
+            "in.processingStep = DocumentExtractionService.startExtractionStep();"
           ]
         }
       },
@@ -85,9 +85,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.DocumentExtractionService;",
             "",
-            "in.documentContext = ValidationRunner.buildSingleDocumentContext(in.documents.get(in.documentIndex));"
+            "in.documentContext = DocumentExtractionService.buildSingleDocumentContext(in.documents.get(in.documentIndex));"
           ]
         }
       },
@@ -125,9 +125,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.DocumentExtractionService;",
             "",
-            "ValidationRunner.mergeExtractionResult(in.extractionResult, in.singleExtraction, in.documents.get(in.documentIndex));",
+            "DocumentExtractionService.mergeExtractionResult(in.extractionResult, in.singleExtraction, in.documents.get(in.documentIndex));",
             "in.documentIndex = in.documentIndex + 1;"
           ]
         }
@@ -145,9 +145,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.DocumentExtractionService;",
             "",
-            "ValidationRunner.finalizeExtractionStep(in.processingStep, in.extractionResult);"
+            "DocumentExtractionService.finalizeExtractionStep(in.processingStep, in.extractionResult);"
           ]
         }
       },
@@ -207,9 +207,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
             "",
-            "in.processingStep = ValidationRunner.startPolicyStep();",
+            "in.processingStep = PolicyValidationService.startPolicyStep();",
             "in.supplierContext = dev.langchain4j.internal.Json.toJson(in.supplier);"
           ]
         }
@@ -227,15 +227,15 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
             "import java.util.ArrayList;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
             "",
-            "in.policyRules = ValidationRunner.loadPolicyRules();",
+            "in.policyRules = PolicyValidationService.loadPolicyRules();",
             "in.ruleIndex = 0;",
             "in.existingFindings = (in.onboardingRequest != null) ? in.onboardingRequest.getPolicyValidationFindings() : null;",
-            "in.filteredExistingFindings = ValidationRunner.filterExistingFindings(in.existingFindings);",
-            "in.accumulatedFindings = ValidationRunner.initAccumulatedFromExisting(in.filteredExistingFindings);",
+            "in.filteredExistingFindings = PolicyValidationService.filterExistingFindings(in.existingFindings);",
+            "in.accumulatedFindings = PolicyValidationService.initAccumulatedFromExisting(in.filteredExistingFindings);",
             "in.isProceeded = false;"
           ]
         }
@@ -270,15 +270,15 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
             "",
-            "in.ruleAlreadyEvaluated = ValidationRunner.isRuleAlreadyEvaluated(",
+            "in.ruleAlreadyEvaluated = PolicyValidationService.isRuleAlreadyEvaluated(",
             "    in.policyRules.get(in.ruleIndex), in.filteredExistingFindings);",
-            "in.ruleDocumentFound = ValidationRunner.hasRuleDocument(",
+            "in.ruleDocumentFound = PolicyValidationService.hasRuleDocument(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult);",
-            "in.ruleContext = ValidationRunner.buildRuleDocContext(",
+            "in.ruleContext = PolicyValidationService.buildRuleDocContext(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult, in.supplierContext);",
-            "in.ruleSystemPrompt = ValidationRunner.buildSingleRuleSystemPrompt(",
+            "in.ruleSystemPrompt = PolicyValidationService.buildSingleRuleSystemPrompt(",
             "    in.policyRules.get(in.ruleIndex));"
           ]
         }
@@ -379,9 +379,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
             "",
-            "ValidationRunner.mergeRuleFindings(in.accumulatedFindings, in.ruleFindings);",
+            "PolicyValidationService.mergeRuleFindings(in.accumulatedFindings, in.ruleFindings);",
             "in.ruleIndex = in.ruleIndex + 1;",
             "",
             "in.ruleFindings.getFindings().clear();"
@@ -401,9 +401,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
             "",
-            "in.policyValidationResult = ValidationRunner.finalizePolicyValidation(",
+            "in.policyValidationResult = PolicyValidationService.finalizePolicyValidation(",
             "    in.accumulatedFindings, in.documentPresenceFindings, in.processingStep, in.onboardingRequest);",
             "in.policyRuleEvaluations = in.policyValidationResult.getRuleEvaluations();",
             "in.policyComplianceScore = in.policyValidationResult.getComplianceScore();"
@@ -457,7 +457,7 @@
         "description" : "Computes a 3-component risk score (financialStability, policyCompliance, certValidity). Call AFTER validateAgainstPolicy and validateFinancialPolicy."
       },
       "connect" : [
-        { "id" : "ra10", "to" : "ra2" }
+        { "id" : "ra10", "to" : "ra_init" }
       ]
     }, {
       "id" : "ra1",
@@ -466,15 +466,34 @@
         "at" : { "x" : 872, "y" : 1440 }
       }
     }, {
+      "id" : "ra_init",
+      "type" : "Script",
+      "name" : "Start Risk Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.RiskAssessmentService;",
+            "",
+            "in.processingStep = RiskAssessmentService.startRiskStep();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 1440 }
+      },
+      "connect" : [
+        { "id" : "ra_init0", "to" : "ra2" }
+      ]
+    }, {
       "id" : "ra2",
       "type" : "Script",
       "name" : "Compute Risk Score",
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.RiskAssessmentRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.RiskAssessmentService;",
             "",
-            "in.riskScoreResult = RiskAssessmentRunner.computeAndFinalizeRiskScore(",
+            "in.riskScoreResult = RiskAssessmentService.computeRiskScore(",
             "    in.annualVolumeEur, in.policyValidationResult, in.financialValidationResult);"
           ]
         }
@@ -483,7 +502,26 @@
         "at" : { "x" : 392, "y" : 1440 }
       },
       "connect" : [
-        { "id" : "ra11", "to" : "ra1" }
+        { "id" : "ra11", "to" : "ra_fin" }
+      ]
+    }, {
+      "id" : "ra_fin",
+      "type" : "Script",
+      "name" : "Finalize Risk Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.RiskAssessmentService;",
+            "",
+            "RiskAssessmentService.finalizeRiskStep(in.processingStep, in.riskScoreResult);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 632, "y" : 1440 }
+      },
+      "connect" : [
+        { "id" : "ra_fin0", "to" : "ra1" }
       ]
     }, {
       "id" : "dc0",
@@ -595,10 +633,11 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.DocumentExtractionService;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
             "",
-            "in.documents = ValidationRunner.loadDocuments(in.supplier.getSupplierId());",
-            "in.documentPresenceFindings = ValidationRunner.checkRequiredDocuments(in.documents);"
+            "in.documents = DocumentExtractionService.loadDocuments(in.supplier.getSupplierId());",
+            "in.documentPresenceFindings = PolicyValidationService.checkRequiredDocuments(in.documents);"
           ]
         }
       },
@@ -650,7 +689,8 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.FinancialValidationService;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskType;",
@@ -663,9 +703,9 @@
             "finding.setRiskType(RiskType.FINANCIAL_STABILITY);",
             "finding.setScore(100);",
             "",
-            "in.processingStep = ValidationRunner.startFinancialStep();",
-            "in.financialValidationResult = ValidationRunner.wrapFindings(Arrays.asList(finding));",
-            "ValidationRunner.finalizeFinancialStep(in.processingStep, in.financialValidationResult);",
+            "in.processingStep = FinancialValidationService.startFinancialStep();",
+            "in.financialValidationResult = PolicyValidationService.wrapFindings(Arrays.asList(finding));",
+            "FinancialValidationService.finalizeFinancialStep(in.processingStep, in.financialValidationResult);",
             "in.financialStabilityScore = 0;"
           ]
         }
@@ -683,9 +723,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.FinancialValidationService;",
             "",
-            "in.processingStep = ValidationRunner.startFinancialStep();",
+            "in.processingStep = FinancialValidationService.startFinancialStep();",
             "in.supplierContext = dev.langchain4j.internal.Json.toJson(in.supplier);"
           ]
         }
@@ -703,11 +743,11 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.FinancialValidationService;",
             "import java.util.ArrayList;",
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;",
             "",
-            "in.policyRules = ValidationRunner.loadFinancialRules();",
+            "in.policyRules = FinancialValidationService.loadFinancialRules();",
             "in.ruleIndex = 0;",
             "in.accumulatedFindings = new ArrayList<ValidationFinding>();",
             "in.isProceeded = false;"
@@ -750,13 +790,13 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
             "",
-            "in.ruleDocumentFound = ValidationRunner.hasRuleDocument(",
+            "in.ruleDocumentFound = PolicyValidationService.hasRuleDocument(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult);",
-            "in.ruleContext = ValidationRunner.buildRuleDocContext(",
+            "in.ruleContext = PolicyValidationService.buildRuleDocContext(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult, in.supplierContext);",
-            "in.ruleSystemPrompt = ValidationRunner.buildSingleRuleSystemPrompt(",
+            "in.ruleSystemPrompt = PolicyValidationService.buildSingleRuleSystemPrompt(",
             "    in.policyRules.get(in.ruleIndex));"
           ]
         }
@@ -812,9 +852,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.FinancialValidationService;",
             "",
-            "ValidationRunner.mergeFinancialRuleFindings(in.accumulatedFindings, in.ruleFindings);",
+            "FinancialValidationService.mergeFinancialRuleFindings(in.accumulatedFindings, in.ruleFindings);",
             "in.ruleIndex = in.ruleIndex + 1;",
             "",
             "in.ruleFindings.getFindings().clear();"
@@ -834,9 +874,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.ValidationRunner;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.FinancialValidationService;",
             "",
-            "in.financialValidationResult = ValidationRunner.finalizeFinancialValidation(",
+            "in.financialValidationResult = FinancialValidationService.finalizeFinancialValidation(",
             "    in.accumulatedFindings, in.processingStep);",
             "in.financialStabilityScore = in.financialValidationResult.getComplianceScore();"
           ]
