@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.listener.OutputGuardrailListener;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
+import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.guardrail.ChatExecutor;
@@ -45,7 +47,7 @@ public class TestOutputGuardrailListener {
 
     assertThat(captured).hasSize(1);
     var entry = captured.get(0);
-    assertThat(entry.name()).isEqualTo("OutputGuardrailAdapter");
+    assertThat(entry.name()).isEqualTo("TestOutputGuardrail");
     assertThat(entry.type()).isEqualTo("OUTPUT");
     assertThat(entry.result()).isEqualTo("SUCCESS");
     assertThat(entry.message()).isEqualTo("The weather is sunny today.");
@@ -82,6 +84,14 @@ public class TestOutputGuardrailListener {
   }
 
   private static final OutputGuardrail GUARDRAIL_HELPER = new OutputGuardrail() {};
+  private static final OutputGuardrailAdapter OUTPUT_ADAPTER = new OutputGuardrailAdapter(new TestOutputGuardrail());
+
+  private static class TestOutputGuardrail implements SmartWorkflowOutputGuardrail {
+    @Override
+    public GuardrailResult evaluate(String message) {
+      return GuardrailResult.allow();
+    }
+  }
   private static final ChatExecutor NOOP_CHAT_EXECUTOR = new ChatExecutor() {
     @Override
     public dev.langchain4j.model.chat.response.ChatResponse execute() { return null; }
@@ -109,7 +119,8 @@ public class TestOutputGuardrailListener {
         .build();
     return OutputGuardrailExecutedEvent.builder()
         .invocationContext(invocationCtx)
-        .guardrailClass(OutputGuardrailAdapter.class)
+        .guardrailClass(OUTPUT_ADAPTER.getClass())
+        .guardrailName(OUTPUT_ADAPTER.name())
         .request(request)
         .result(result)
         .duration(duration)

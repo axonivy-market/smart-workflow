@@ -184,11 +184,11 @@ class TestOpenInferenceSpans {
     var rootSpan = spans.getFirst().rootSpan();
     var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
 
-    var inputGuardrail = findChild(agent, "InputGuardrailAdapter").findFirst().orElseThrow();
+    var inputGuardrail = findChild(agent, "PromptInjectionInputGuardrail").findFirst().orElseThrow();
     var inputAttrs = mapOf(inputGuardrail.attributes());
     assertThat(inputAttrs)
         .containsEntry("openinference.span.kind", "GUARDRAIL")
-        .containsEntry("validator_name", "InputGuardrailAdapter")
+        .containsEntry("validator_name", "PromptInjectionInputGuardrail")
         .containsEntry("validator_on_fail", "exception")
         .containsEntry("guardrail.type", "INPUT")
         .containsEntry("guardrail.result", "SUCCESS")
@@ -197,11 +197,11 @@ class TestOpenInferenceSpans {
         .containsEntry("output.value", "pass")
         .containsEntry("output.mime_type", "text/plain");
 
-    var outputGuardrail = findChild(agent, "OutputGuardrailAdapter").findFirst().orElseThrow();
+    var outputGuardrail = findChild(agent, "SensitiveDataOutputGuardrail").findFirst().orElseThrow();
     var outputAttrs = mapOf(outputGuardrail.attributes());
     assertThat(outputAttrs)
         .containsEntry("openinference.span.kind", "GUARDRAIL")
-        .containsEntry("validator_name", "OutputGuardrailAdapter")
+        .containsEntry("validator_name", "SensitiveDataOutputGuardrail")
         .containsEntry("validator_on_fail", "exception")
         .containsEntry("guardrail.type", "OUTPUT")
         .containsEntry("guardrail.result", "SUCCESS")
