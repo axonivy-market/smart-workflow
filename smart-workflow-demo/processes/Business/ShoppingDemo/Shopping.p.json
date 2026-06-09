@@ -97,7 +97,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.utils.DataGenerationUtils;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.util.DataGenerationUtils;",
             "DataGenerationUtils.createData();"
           ]
         },
