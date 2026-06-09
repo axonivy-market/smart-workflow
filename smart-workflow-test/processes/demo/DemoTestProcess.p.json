@@ -1,0 +1,634 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19E8B986D78DC694",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.DemoTestProcessData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "start",
+      "config" : {
+        "signature" : "start"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f10",
+      "type" : "RequestStart",
+      "name" : "testAxonIvySupportAgent",
+      "config" : {
+        "signature" : "testAxonIvySupportAgent"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "SubProcessCall",
+      "name" : "Call AxonIvySupportAgent",
+      "config" : {
+        "processCall" : "Business/AxonIvySupportDemo/Agents/AxonIvySupportAgent:askAxonIvySupport(String,String)",
+        "call" : {
+          "map" : {
+            "param.question" : "\"Portal shows 404 error on Cockpit page\"",
+            "param.username" : "\"testuser\""
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.agentResult" : "result.aiResponse"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 292, "y" : 193 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f147", "to" : "f14" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 192 }
+      }
+    }, {
+      "id" : "f20",
+      "type" : "RequestStart",
+      "name" : "testCreateSupportTask",
+      "config" : {
+        "signature" : "testCreateSupportTask"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "SubProcessCall",
+      "name" : "Call CreateSupportTaskTool",
+      "config" : {
+        "processCall" : "Business/AxonIvySupportDemo/Tools/CreateSupportTaskTool:createAxonIvySupportTask(String)",
+        "call" : {
+          "map" : {
+            "param.ticketDescription" : "\"Portal shows 404 error on Cockpit page. Reporter is: testuser.\""
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.toolResult" : "result.responseMessage"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 320 },
+        "size" : { "width" : 144, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f148", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 320 }
+      }
+    }, {
+      "id" : "f30",
+      "type" : "RequestStart",
+      "name" : "testBrandAgent",
+      "config" : {
+        "signature" : "testBrandAgent"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 448 }
+      },
+      "connect" : [
+        { "id" : "f31", "to" : "f32" }
+      ]
+    }, {
+      "id" : "f32",
+      "type" : "SubProcessCall",
+      "name" : "Call BrandAgent",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/BrandAgent:callBrandAgent(com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand,String)",
+        "call" : {
+          "map" : {
+            "param.brand" : "new com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand()",
+            "param.instructions" : "\"Find or create a brand named TestBrand\""
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.brandAgentResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 448 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f149", "to" : "f34" }
+      ]
+    }, {
+      "id" : "f34",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 448 }
+      }
+    }, {
+      "id" : "f40",
+      "type" : "RequestStart",
+      "name" : "testSupplierAgent",
+      "config" : {
+        "signature" : "testSupplierAgent"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 576 }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f42" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "SubProcessCall",
+      "name" : "Call SupplierAgent",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/SupplierAgent:callSupplierAgent(com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier,String)",
+        "call" : {
+          "map" : {
+            "param.supplier" : "new com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier()",
+            "param.instructions" : "\"Find or create a supplier named TestSupplier\""
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.supplierAgentResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 576 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f150", "to" : "f44" }
+      ]
+    }, {
+      "id" : "f44",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 576 }
+      }
+    }, {
+      "id" : "f50",
+      "type" : "RequestStart",
+      "name" : "testProductAgent",
+      "config" : {
+        "signature" : "testProductAgent"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 704 }
+      },
+      "connect" : [
+        { "id" : "f51", "to" : "f52" }
+      ]
+    }, {
+      "id" : "f52",
+      "type" : "SubProcessCall",
+      "name" : "Call ProductAgent",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/ProductAgent:productAgent(String,com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction)",
+        "call" : {
+          "map" : {
+            "param.productInfo" : "\"sku: TEST-001, name: Test Product\"",
+            "param.action" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction.SEARCH"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.productAgentResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 704 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f151", "to" : "f54" }
+      ]
+    }, {
+      "id" : "f54",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 704 }
+      }
+    }, {
+      "id" : "f60",
+      "type" : "RequestStart",
+      "name" : "testProductCategoryAgent",
+      "config" : {
+        "signature" : "testProductCategoryAgent"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 832 }
+      },
+      "connect" : [
+        { "id" : "f61", "to" : "f62" }
+      ]
+    }, {
+      "id" : "f62",
+      "type" : "SubProcessCall",
+      "name" : "Call ProductCategoryAgent",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/ProductCategoryAgent:callProductCategoryAgent(com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory,String)",
+        "call" : {
+          "map" : {
+            "param.category" : "new com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory()",
+            "param.instructions" : "\"Find or create a category named Electronics\""
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.categoryAgentResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 832 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f152", "to" : "f64" }
+      ]
+    }, {
+      "id" : "f64",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 832 }
+      }
+    }, {
+      "id" : "f70",
+      "type" : "RequestStart",
+      "name" : "testTranslationAgent",
+      "config" : {
+        "signature" : "testTranslationAgent"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 960 }
+      },
+      "connect" : [
+        { "id" : "f71", "to" : "f72" }
+      ]
+    }, {
+      "id" : "f72",
+      "type" : "SubProcessCall",
+      "name" : "Call TranslationAgent",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Agents/TranslationAgent:translationAgent(String)",
+        "call" : {
+          "map" : {
+            "param.message" : "\"Hello world\""
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.translationResult" : "result.result"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 960 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f153", "to" : "f74" }
+      ]
+    }, {
+      "id" : "f74",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 960 }
+      }
+    }, {
+      "id" : "f80",
+      "type" : "RequestStart",
+      "name" : "testFindProductBrand",
+      "config" : {
+        "signature" : "testFindProductBrand"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1088 }
+      },
+      "connect" : [
+        { "id" : "f81", "to" : "f82" }
+      ]
+    }, {
+      "id" : "f82",
+      "type" : "SubProcessCall",
+      "name" : "Call findProductBrand",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Tools/BrandTools:findProductBrand(com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria)",
+        "call" : {
+          "map" : {
+            "param.searchCriteria" : "new com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.brandToolResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1088 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f154", "to" : "f84" }
+      ]
+    }, {
+      "id" : "f84",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 1088 }
+      }
+    }, {
+      "id" : "f90",
+      "type" : "RequestStart",
+      "name" : "testCreateProductBrand",
+      "config" : {
+        "signature" : "testCreateProductBrand"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1216 }
+      },
+      "connect" : [
+        { "id" : "f91", "to" : "f92" }
+      ]
+    }, {
+      "id" : "f92",
+      "type" : "SubProcessCall",
+      "name" : "Call createProductBrand",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Tools/BrandTools:createProductBrand(com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand)",
+        "call" : {
+          "map" : {
+            "param.brand" : "new com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.brandToolResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1216 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f155", "to" : "f94" }
+      ]
+    }, {
+      "id" : "f94",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 1216 }
+      }
+    }, {
+      "id" : "f100",
+      "type" : "RequestStart",
+      "name" : "testFindSupplier",
+      "config" : {
+        "signature" : "testFindSupplier"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1344 }
+      },
+      "connect" : [
+        { "id" : "f101", "to" : "f102" }
+      ]
+    }, {
+      "id" : "f102",
+      "type" : "SubProcessCall",
+      "name" : "Call findSupplier",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Tools/SupplierTools:findSupplier(com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria)",
+        "call" : {
+          "map" : {
+            "param.searchCriteria" : "new com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.supplierToolResult" : "result.result.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1344 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f156", "to" : "f104" }
+      ]
+    }, {
+      "id" : "f104",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 1344 }
+      }
+    }, {
+      "id" : "f110",
+      "type" : "RequestStart",
+      "name" : "testCreateSupplier",
+      "config" : {
+        "signature" : "testCreateSupplier"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1472 }
+      },
+      "connect" : [
+        { "id" : "f111", "to" : "f112" }
+      ]
+    }, {
+      "id" : "f112",
+      "type" : "SubProcessCall",
+      "name" : "Call createSupplier",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Tools/SupplierTools:createSupplier(com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier)",
+        "call" : {
+          "map" : {
+            "param.supplier" : "new com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.supplierToolResult" : "result.result.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1472 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f157", "to" : "f114" }
+      ]
+    }, {
+      "id" : "f114",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 1472 }
+      }
+    }, {
+      "id" : "f120",
+      "type" : "RequestStart",
+      "name" : "testFindProductCategory",
+      "config" : {
+        "signature" : "testFindProductCategory"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1600 }
+      },
+      "connect" : [
+        { "id" : "f121", "to" : "f122" }
+      ]
+    }, {
+      "id" : "f122",
+      "type" : "SubProcessCall",
+      "name" : "Call findProductCategory",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Tools/ProductCategoryTools:findProductCategory(com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategorySearchCriteria)",
+        "call" : {
+          "map" : {
+            "param.searchCriteria" : "new com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategorySearchCriteria()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.categoryToolResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1600 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f158", "to" : "f124" }
+      ]
+    }, {
+      "id" : "f124",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 1600 }
+      }
+    }, {
+      "id" : "f130",
+      "type" : "RequestStart",
+      "name" : "testCreateProductCategory",
+      "config" : {
+        "signature" : "testCreateProductCategory"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1728 }
+      },
+      "connect" : [
+        { "id" : "f131", "to" : "f132" }
+      ]
+    }, {
+      "id" : "f132",
+      "type" : "SubProcessCall",
+      "name" : "Call createProductCategory",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Tools/ProductCategoryTools:createProductCategory(com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory)",
+        "call" : {
+          "map" : {
+            "param.category" : "new com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.categoryToolResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1728 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f159", "to" : "f134" }
+      ]
+    }, {
+      "id" : "f134",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 1728 }
+      }
+    }, {
+      "id" : "f140",
+      "type" : "RequestStart",
+      "name" : "testFindProduct",
+      "config" : {
+        "signature" : "testFindProduct"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1856 }
+      },
+      "connect" : [
+        { "id" : "f141", "to" : "f142" }
+      ]
+    }, {
+      "id" : "f142",
+      "type" : "SubProcessCall",
+      "name" : "Call findProduct",
+      "config" : {
+        "processCall" : "Business/ShoppingDemo/Tools/ProductTools:findProduct(com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductSearchCriteria)",
+        "call" : {
+          "map" : {
+            "param.searchCriteria" : "new com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductSearchCriteria()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.productToolResult" : "result.response.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1856 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f160", "to" : "f144" }
+      ]
+    }, {
+      "id" : "f144",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 488, "y" : 1856 }
+      }
+    } ]
+}

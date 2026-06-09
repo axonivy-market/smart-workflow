@@ -53,9 +53,10 @@
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryRepository;",
             "import org.apache.commons.collections4.CollectionUtils;",
+            "import org.apache.commons.lang3.StringUtils;",
             "",
             "in.response.category  = ProductCategoryRepository.getInstance().findExactProductCategory(in.searchCriteria);",
-            "in.response.isCategoryExisting = in.response.category != null;",
+            "in.response.isCategoryExisting = in.response.category != null && StringUtils.isNotBlank(in.response.category.categoryId);",
             "in.response.feedback = in.response.isCategoryExisting ? \"Product category is found\" : \"Product category not found\";",
             "in.response.productCategorySearchCriteria = in.searchCriteria;"
           ]

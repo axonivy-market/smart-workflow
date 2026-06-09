@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-test-tool-002",
+  "object": "chat.completion",
+  "created": 1758263999,
+  "model": "gpt-4.1-mini-2025-04-14",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"name\":\"Axon Ivy Support: 404 error on Cockpit page\",\"description\":\"User testuser reports a 404 error on the Cockpit page in Portal version 10.0 running on Windows 11\",\"responsible\":\"PortalSupport\"}"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 200,
+    "completion_tokens": 80,
+    "total_tokens": 280
+  }
+}
