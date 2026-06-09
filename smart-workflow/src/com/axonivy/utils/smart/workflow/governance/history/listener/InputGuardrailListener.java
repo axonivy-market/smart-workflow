@@ -21,7 +21,7 @@ public class InputGuardrailListener implements InputGuardrailExecutedListener {
 
   @Override
   public void onEvent(InputGuardrailExecutedEvent event) {
-    String guardrailName = event.guardrailClass().getSimpleName();
+    String guardrailName = event.guardrailName();
     String result = event.result().result().name();
     String rawMessage = Optional.ofNullable(event.request())
         .map(r -> r.userMessage())

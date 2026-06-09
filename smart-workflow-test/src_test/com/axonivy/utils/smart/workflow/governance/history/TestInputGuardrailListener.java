@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.listener.InputGuardrailListener;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
+import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.GuardrailRequestParams;
@@ -43,7 +45,7 @@ public class TestInputGuardrailListener {
 
     assertThat(captured).hasSize(1);
     var entry = captured.get(0);
-    assertThat(entry.name()).isEqualTo("InputGuardrailAdapter");
+    assertThat(entry.name()).isEqualTo("TestInputGuardrail");
     assertThat(entry.type()).isEqualTo("INPUT");
     assertThat(entry.result()).isEqualTo("SUCCESS");
     assertThat(entry.message()).isEqualTo("What is the weather?");
@@ -80,6 +82,14 @@ public class TestInputGuardrailListener {
   }
 
   private static final InputGuardrail GUARDRAIL_HELPER = new InputGuardrail() {};
+  private static final InputGuardrailAdapter INPUT_ADAPTER = new InputGuardrailAdapter(new TestInputGuardrail());
+
+  private static class TestInputGuardrail implements SmartWorkflowInputGuardrail {
+    @Override
+    public GuardrailResult evaluate(String message) {
+      return GuardrailResult.allow();
+    }
+  }
 
   private InputGuardrailExecutedEvent buildEvent(String userText, InputGuardrailResult result, Duration duration) {
     var invocationCtx = InvocationContext.builder()
@@ -97,7 +107,8 @@ public class TestInputGuardrailListener {
         .build();
     return InputGuardrailExecutedEvent.builder()
         .invocationContext(invocationCtx)
-        .guardrailClass(InputGuardrailAdapter.class)
+        .guardrailClass(INPUT_ADAPTER.getClass())
+        .guardrailName(INPUT_ADAPTER.name())
         .request(request)
         .result(result)
         .duration(duration)

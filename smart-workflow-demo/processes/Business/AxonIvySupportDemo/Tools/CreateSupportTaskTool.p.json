@@ -90,7 +90,7 @@
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket.class",
           "resultMapping" : "in.supportTicket",
           "query" : "<%=in.ticketDescription%>",
-          "tools" : [ ]
+          "tools" : "[]"
         }
       },
       "visual" : {
@@ -141,7 +141,7 @@
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
           "resultMapping" : "in.taskInfo",
           "query" : "<%=in.ticketDescription%>",
-          "tools" : [ ]
+          "tools" : "[]"
         }
       },
       "visual" : {
