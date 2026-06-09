@@ -8,7 +8,7 @@
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "{\"id\":\"ticket-001\",\"type\":\"PORTAL\",\"title\":\"Axon Ivy Support: 404 error on Cockpit page\",\"description\":\"User reports a 404 error when accessing the Cockpit page in Portal version 10.0\",\"reporter\":\"testuser\",\"version\":\"10.0\",\"systemOS\":\"Windows 11\",\"solution\":\"\",\"stackTrace\":\"\"}"
+        "content": "{\"id\":\"ticket-001\",\"type\":\"PORTAL\",\"title\":\"Axon Ivy Support: 404 error on Cockpit page\",\"description\":\"User reports a 404 error when accessing the Cockpit page in Portal\",\"reporter\":\"testuser\",\"version\":\"\",\"systemOS\":\"Windows 11\",\"solution\":\"\",\"stackTrace\":\"\"}"
       },
       "finish_reason": "stop"
     }
