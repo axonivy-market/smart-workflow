@@ -3,8 +3,6 @@ package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocument;
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentRepository;
@@ -16,9 +14,15 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.Log
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AgentStepStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.LogLineSeverity;
 
+import ch.ivyteam.ivy.environment.Ivy;
+
 public class DocumentExtractionService {
 
-  private static final Logger LOG = Logger.getLogger(DocumentExtractionService.class.getName());
+  private static final String STEP_NAME_KEY = "StepDocumentExtraction";
+  private static final String UNKNOWN_ERROR_MSG = "Unknown extraction error";
+  private static final String EXTRACTION_FAIL_PREFIX = "Document extraction failed: ";
+  private static final String EXTRACTION_FAIL_LOG_PREFIX = "Extraction failed: ";
+  private static final String NO_DOCS_PREFIX = "No documents found for supplier: ";
 
   private DocumentExtractionService() {
   }
@@ -45,7 +49,7 @@ public class DocumentExtractionService {
   public static String buildDocumentContext(String supplierId) {
     List<LegalDocument> docs = LegalDocumentRepository.getInstance().findByObjectId(supplierId);
     if (docs == null || docs.isEmpty()) {
-      return "No documents found for supplier: " + supplierId;
+      return NO_DOCS_PREFIX + supplierId;
     }
     StringBuilder sb = new StringBuilder();
     for (LegalDocument doc : docs) {
@@ -69,7 +73,7 @@ public class DocumentExtractionService {
 
   public static AgentProcessingStep startExtractionStep() {
     AgentProcessingStep step = new AgentProcessingStep();
-    step.setName(ValidationUtils.stepName("StepDocumentExtraction"));
+    step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
     return step;
@@ -96,7 +100,7 @@ public class DocumentExtractionService {
 
   public static String failExtractionStep(AgentProcessingStep step,
       DocumentExtractionResult result, Throwable error) {
-    step.setName(ValidationUtils.stepName("StepDocumentExtraction"));
+    step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.FAILED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
@@ -105,12 +109,11 @@ public class DocumentExtractionService {
     if (step.getLogLines() == null) {
       step.setLogLines(new ArrayList<>());
     }
-    String msg = error != null ? error.getMessage() : "Unknown extraction error";
-    LOG.log(Level.SEVERE, "Document extraction failed: " + msg, error);
-    step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.ERROR,
-        "Extraction failed: " + msg));
+    String msg = error != null ? error.getMessage() : UNKNOWN_ERROR_MSG;
+    Ivy.log().error(EXTRACTION_FAIL_PREFIX + msg, error);
+    step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.ERROR, EXTRACTION_FAIL_LOG_PREFIX + msg));
     result.setProcessingStep(step);
-    return "Document extraction failed: " + msg;
+    return EXTRACTION_FAIL_PREFIX + msg;
   }
 
   private static void buildLogForDocumentType(AgentProcessingStep step,

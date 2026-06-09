@@ -18,6 +18,10 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.LogLi
 
 public class FinancialValidationService {
 
+  private static final String STEP_NAME_KEY = "StepFinancialValidation";
+  private static final String ALL_CHECKS_PASSED = "All financial checks passed.";
+  private static final String FINDING_SUMMARY_FORMAT = "[%s] %s\n";
+
   private FinancialValidationService() {
   }
 
@@ -43,7 +47,7 @@ public class FinancialValidationService {
 
   public static AgentProcessingStep startFinancialStep() {
     AgentProcessingStep step = new AgentProcessingStep();
-    step.setName(ValidationUtils.stepName("StepFinancialValidation"));
+    step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
     return step;
@@ -71,17 +75,16 @@ public class FinancialValidationService {
         LogLineSeverity logSeverity = severity == FindingSeverity.FAILURE ? LogLineSeverity.ERROR
             : severity == FindingSeverity.WARNING ? LogLineSeverity.WARNING : LogLineSeverity.OK;
         if (severity == FindingSeverity.FAILURE || severity == FindingSeverity.WARNING) {
-          summary.append("[").append(severity).append("] ")
-                 .append(finding.getMessage()).append("\n");
+          summary.append(String.format(FINDING_SUMMARY_FORMAT, severity, finding.getMessage()));
         }
         step.getLogLines().add(LogLineBuilder.of(logSeverity, finding.getMessage()));
       }
     }
     if (step.getLogLines().isEmpty()) {
-      step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.OK, "All financial checks passed."));
+      step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.OK, ALL_CHECKS_PASSED));
     }
     result.setProcessingStep(step);
-    return summary.length() > 0 ? summary.toString() : "All financial checks passed.";
+    return summary.length() > 0 ? summary.toString() : ALL_CHECKS_PASSED;
   }
 
   public static PolicyValidationResult finalizeFinancialValidation(

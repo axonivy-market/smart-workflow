@@ -30,7 +30,13 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 public class PolicyValidationService {
 
+  private static final String STEP_NAME_KEY = "StepPolicyValidation";
+  private static final String UNKNOWN_ERROR_MSG = "Unknown policy validation error";
   private static final String POLICY_FAIL_PREFIX = "Policy validation failed: ";
+  private static final String POLICY_CANT_COMPLETE_PREFIX = "Policy validation could not complete: ";
+  private static final String ALL_CHECKS_PASSED = "All policy checks passed.";
+  private static final String ALL_RULES_PASSED_FORMAT = "All %d policy rules passed.";
+  private static final String FINDING_SUMMARY_FORMAT = "[%s] %s\n";
 
   private PolicyValidationService() {
   }
@@ -53,6 +59,7 @@ public class PolicyValidationService {
           docType.name(), RiskType.CERTIFICATION_VALIDITY);
       f.setDocumentTypeKey(docType.getDocumentTypeKey());
       f.setRiskKind(RiskKind.MISSING_DOC);
+      f.setScore(0);
       findings.add(f);
     }
     return findings;
@@ -157,7 +164,7 @@ public class PolicyValidationService {
 
   public static AgentProcessingStep startPolicyStep() {
     AgentProcessingStep step = new AgentProcessingStep();
-    step.setName(ValidationUtils.stepName("StepPolicyValidation"));
+    step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
     return step;
@@ -188,24 +195,23 @@ public class PolicyValidationService {
         LogLineSeverity logSev = sev == FindingSeverity.FAILURE ? LogLineSeverity.ERROR
             : sev == FindingSeverity.WARNING ? LogLineSeverity.WARNING : LogLineSeverity.OK;
         step.getLogLines().add(LogLineBuilder.of(logSev, finding.getMessage()));
-        summary.append("[").append(sev).append("] ")
-               .append(finding.getMessage()).append("\n");
+        summary.append(String.format(FINDING_SUMMARY_FORMAT, sev, finding.getMessage()));
       }
     }
     if (step.getLogLines().isEmpty()) {
       int count = loadPolicyRules().size();
       String summaryMsg = count > 0
-          ? "All " + count + " policy rules passed."
-          : "All policy checks passed.";
+          ? String.format(ALL_RULES_PASSED_FORMAT, count)
+          : ALL_CHECKS_PASSED;
       step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.OK, summaryMsg));
     }
     result.setProcessingStep(step);
-    return summary.length() > 0 ? summary.toString() : "All policy checks passed.";
+    return summary.length() > 0 ? summary.toString() : ALL_CHECKS_PASSED;
   }
 
   public static String failPolicyStep(AgentProcessingStep step,
       PolicyValidationResult result, Throwable error) {
-    step.setName(ValidationUtils.stepName("StepPolicyValidation"));
+    step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.FAILED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
@@ -214,11 +220,11 @@ public class PolicyValidationService {
     if (step.getLogLines() == null) {
       step.setLogLines(new ArrayList<>());
     }
-    String msg = error != null ? error.getMessage() : "Unknown policy validation error";
+    String msg = error != null ? error.getMessage() : UNKNOWN_ERROR_MSG;
     Ivy.log().error(POLICY_FAIL_PREFIX + msg, error);
     step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.ERROR, POLICY_FAIL_PREFIX + msg));
     ValidationFinding errorFinding = ValidationFindingBuilder.of(
-        FindingSeverity.FAILURE, "Policy validation could not complete: " + msg, "system", RiskType.POLICY_COMPLIANCE);
+        FindingSeverity.FAILURE, POLICY_CANT_COMPLETE_PREFIX + msg, "system", RiskType.POLICY_COMPLIANCE);
     errorFinding.setRiskKind(RiskKind.AI_VALIDATION);
     result.getFindings().add(errorFinding);
     result.setProcessingStep(step);

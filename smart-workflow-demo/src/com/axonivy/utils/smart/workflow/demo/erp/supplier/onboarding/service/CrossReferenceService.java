@@ -1,12 +1,11 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service;
 
 import java.time.Instant;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.CrossReferenceResult;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RiskKind;
@@ -21,9 +20,18 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.Findi
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.ValidationFindingType;
 
+import ch.ivyteam.ivy.environment.Ivy;
+
 public class CrossReferenceService {
 
-  private static final Logger LOG = Logger.getLogger(CrossReferenceService.class.getName());
+  private static final String STEP_NAME_KEY = "StepCrossReferenceChecks";
+  private static final String UNKNOWN_ERROR_MSG = "Unknown cross-reference error";
+  private static final String CROSS_REF_LOG_ERROR_PREFIX = "Cross-reference check error: ";
+  private static final String CROSS_REF_FAIL_PREFIX = "Cross-reference check failed: ";
+  private static final String FINDINGS_HEADER = "Cross-reference check completed. Findings:\n";
+  private static final String FINDING_FORMAT = "- [%s] %s\n";
+  private static final String NO_ISSUES_MSG = "No issues found.";
+  private static final Pattern DE_REGISTER_PATTERN = Pattern.compile("(HRB|HRA|HRE|GNR|PR|VR)[0-9]+");
 
   private static final Map<String, String> VAT_PATTERNS = Map.of(
       "DE", "DE[0-9]{9}",
@@ -43,7 +51,7 @@ public class CrossReferenceService {
 
   public static AgentProcessingStep startCrossReferenceStep() {
     AgentProcessingStep step = new AgentProcessingStep();
-    step.setName(ValidationUtils.stepName("StepCrossReferenceChecks"));
+    step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.RUNNING);
     step.setStartedAt(Instant.now());
     return step;
@@ -66,11 +74,11 @@ public class CrossReferenceService {
 
   public static String failCrossReferenceStep(AgentProcessingStep step,
       CrossReferenceResult result, Throwable error) {
-    String message = error != null ? error.getMessage() : "Unknown cross-reference error";
-    LOG.log(Level.SEVERE, "Cross-reference check error: " + message, error);
-    step.setName(ValidationUtils.stepName("StepCrossReferenceChecks"));
+    String message = error != null ? error.getMessage() : UNKNOWN_ERROR_MSG;
+    Ivy.log().error(CROSS_REF_LOG_ERROR_PREFIX + message, error);
+    step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     completeStep(step, AgentStepStatus.FAILED);
-    String summary = "Cross-reference check failed: " + message;
+    String summary = CROSS_REF_FAIL_PREFIX + message;
     step.getLogLines().add(LogLineBuilder.of(LogLineSeverity.ERROR, summary));
     if (result != null) {
       ValidationFinding errorFinding = ValidationFindingBuilder.of(
@@ -104,13 +112,12 @@ public class CrossReferenceService {
 
   public static String buildFindingsSummary(CrossReferenceResult result) {
     List<ValidationFinding> findings = result.getFindings();
-    StringBuilder summary = new StringBuilder("Cross-reference check completed. Findings:\n");
+    StringBuilder summary = new StringBuilder(FINDINGS_HEADER);
     for (ValidationFinding finding : findings) {
-      summary.append("- [").append(finding.getSeverity()).append("] ")
-             .append(finding.getMessage()).append("\n");
+      summary.append(String.format(FINDING_FORMAT, finding.getSeverity(), finding.getMessage()));
     }
     if (findings.isEmpty()) {
-      summary.append("No issues found.");
+      summary.append(NO_ISSUES_MSG);
     }
     return summary.toString();
   }
@@ -121,7 +128,7 @@ public class CrossReferenceService {
     }
     String cleaned = registerNo.trim().toUpperCase().replace(" ", "");
     if ("DE".equalsIgnoreCase(country)) {
-      boolean valid = cleaned.matches("(HRB|HRA|HRE|GNR|PR|VR)[0-9]+");
+      boolean valid = DE_REGISTER_PATTERN.matcher(cleaned).matches();
       return ValidationFindingBuilder.of(
           valid ? ValidationFindingType.COMPANY_REGISTER_VALID_DE
                 : ValidationFindingType.COMPANY_REGISTER_FORMAT_INVALID_DE,

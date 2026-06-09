@@ -2,6 +2,9 @@ package com.axonivy.utils.smart.workflow.demo.erp.mock;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.axonivy.utils.smart.workflow.demo.erp.department.model.Department;
 import com.axonivy.utils.smart.workflow.demo.erp.department.repository.DepartmentRepository;
@@ -27,12 +30,28 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 public class MockDataGenerator {
 
-  public static void mock() {
-    if (SupplierPolicyRuleRepository.getInstance().findAll().stream().noneMatch(r -> r.getRuleType() == RuleType.POLICY)) {
-      generateCompliancePolicyRules();
+  private static final Function<MockRules, SupplierPolicyRule> TO_SUPPLIER_RULE = mockRule -> {
+    SupplierPolicyRule r = new SupplierPolicyRule(
+        mockRule.name(), mockRule.rule(), mockRule.riskScore(), false, mockRule.ruleType());
+    LegalDocumentType docType = mockRule.docType();
+    boolean isCertificationSubtype = docType != null && mockRule.ruleType() == RuleType.POLICY
+        && docType.isCertification() && docType != LegalDocumentType.CERTIFICATION;
+    if (isCertificationSubtype) {
+      r.setCertificationType(docType);
+    } else {
+      r.setLegalDocumentType(docType);
     }
-    if (SupplierPolicyRuleRepository.getInstance().findAll().stream().noneMatch(r -> r.getRuleType() == RuleType.FINANCIAL)) {
-      generateFinancialPolicyRules();
+    return r;
+  };
+
+  public static void mock() {
+    Set<RuleType> seededTypes = SupplierPolicyRuleRepository.getInstance().findAll().stream()
+        .map(SupplierPolicyRule::getRuleType)
+        .collect(Collectors.toSet());
+    for (RuleType type : RuleType.values()) {
+      if (!seededTypes.contains(type)) {
+        generateRulesFor(type);
+      }
     }
     if (DepartmentRepository.getInstance().findAll().isEmpty()) {
       generateUsers();
@@ -67,44 +86,14 @@ public class MockDataGenerator {
 
     // ── Supplier Policy Rules ────────────────────────────────────────────────
 
-  public static void generateCompliancePolicyRules() {
-    Ivy.log().info("Generating compliance policy rules...");
-
+  public static void generateRulesFor(RuleType type) {
     SupplierPolicyRuleRepository repo = SupplierPolicyRuleRepository.getInstance();
-    repo.create(policyRule("RULE_03_ISO_9001",
-      "If ISO 9001 certificate is uploaded, validate that it is not expired and the certificate number is properly formatted. Flag as WARNING if the cert expires within 6 months.", 20, LegalDocumentType.ISO_9001));
-    repo.create(policyRule("RULE_04_ISO_14001",
-      "If ISO 14001 certificate is uploaded, validate that it is not expired and the scope covers the supplier's stated manufacturing or industrial operations.", 20, LegalDocumentType.ISO_14001));
-    repo.create(policyRule("RULE_05_ISO_27001",
-      "If ISO 27001 certificate is uploaded, validate that it is not expired and the scope covers IT or data processing activities relevant to the supplier.", 20, LegalDocumentType.ISO_27001));
-    repo.create(policyRule("RULE_06_GDPR_DPA",
-      "If a GDPR Data Processing Agreement is uploaded, validate that it covers the supplier's data processing obligations and appears properly signed or executed.", 20, LegalDocumentType.GDPR_DPA));
-    repo.create(policyRule("RULE_07_EU_EEA_PREFERENCE",
-      "Suppliers outside EU/EEA should be flagged as warning.", 10));
-    repo.create(policyRule("RULE_08_ANNUAL_REPORT_FINANCIAL_SOUNDNESS",
-      "Annual report is recommended; if present, financial soundness checks must pass.", 15, LegalDocumentType.ANNUAL_REPORT));
-
-    Ivy.log().info("Generated 6 compliance policy rules.");
-  }
-
-  public static void generateFinancialPolicyRules() {
-    Ivy.log().info("Generating financial policy rules...");
-
-    SupplierPolicyRuleRepository repo = SupplierPolicyRuleRepository.getInstance();
-    repo.create(financialRule("FIN_RULE_03_NEGATIVE_EQUITY",
-      "If the annual report indicates negative total equity or net liabilities exceeding total assets, flag as FAILURE.", 40, LegalDocumentType.ANNUAL_REPORT));
-    repo.create(financialRule("FIN_RULE_04_OPERATING_LOSS",
-      "If the annual report shows an operating loss for the reported fiscal year, flag as WARNING. Do not consider the report date or whether the report is current — only evaluate the financial content present in the document.", 20, LegalDocumentType.ANNUAL_REPORT));
-    repo.create(financialRule("FIN_RULE_05_INSOLVENCY_PROCEEDINGS",
-      "If the annual report or any submitted document mentions insolvency proceedings, administration, receivership, or a court-ordered asset freeze, flag as FAILURE.", 60, LegalDocumentType.ANNUAL_REPORT));
-    repo.create(financialRule("FIN_RULE_06_COMPANY_DISSOLVED",
-      "If the commercial register extract shows the company as dissolved, struck off, or in liquidation, flag as FAILURE.", 80, LegalDocumentType.COMMERCIAL_REGISTER));
-    repo.create(financialRule("FIN_RULE_07_TAX_CERTIFICATE_EXPIRED",
-      "If a tax certificate is uploaded and its validity date has passed, flag as WARNING. An expired tax certificate indicates unresolved compliance obligations.", 15, LegalDocumentType.TAX_CERTIFICATE));
-    repo.create(financialRule("FIN_RULE_08_BANKING_ACCOUNT_MISMATCH",
-      "If a banking confirmation is uploaded and the account holder name does not match the registered supplier legal name, flag as WARNING.", 20, LegalDocumentType.BANKING_CONFIRMATION));
-
-    Ivy.log().info("Generated 6 financial policy rules.");
+    List<SupplierPolicyRule> rules = Arrays.stream(MockRules.values())
+        .filter(r -> r.ruleType() == type)
+        .map(TO_SUPPLIER_RULE)
+        .collect(Collectors.toList());
+    rules.forEach(repo::create);
+    Ivy.log().info("Generated " + rules.size() + " " + type.label() + " rules.");
   }
 
   // ── Employees & Departments ───────────────────────────────────────────────
@@ -403,24 +392,4 @@ public class MockDataGenerator {
     return s;
   }
 
-  private static SupplierPolicyRule policyRule(String target, String rule, int riskScore) {
-    return new SupplierPolicyRule(target, rule, riskScore, false, RuleType.POLICY);
-  }
-
-  private static SupplierPolicyRule financialRule(String target, String rule, int riskScore, LegalDocumentType docType) {
-    SupplierPolicyRule r = new SupplierPolicyRule(target, rule, riskScore, false, RuleType.FINANCIAL);
-    r.setLegalDocumentType(docType);
-    return r;
-  }
-
-  private static SupplierPolicyRule policyRule(String target, String rule, int riskScore, LegalDocumentType docType) {
-    SupplierPolicyRule r = policyRule(target, rule, riskScore);
-    if (docType.isCertification() && docType != LegalDocumentType.CERTIFICATION) {
-      r.setCertificationType(docType);
-    } else {
-      r.setLegalDocumentType(docType);
-    }
-    return r;
-  }
 }
-

@@ -150,7 +150,7 @@ public class StartDemoBean implements Serializable {
     try {
       if (SupplierPolicyRuleRepository.getInstance().findAll().stream()
           .noneMatch(r -> r.getRuleType() == RuleType.POLICY)) {
-        MockDataGenerator.generateCompliancePolicyRules();
+        MockDataGenerator.generateRulesFor(RuleType.POLICY);
       }
       step2Status = "completed";
     } catch (Exception e) {
@@ -164,7 +164,7 @@ public class StartDemoBean implements Serializable {
     try {
       if (SupplierPolicyRuleRepository.getInstance().findAll().stream()
           .noneMatch(r -> r.getRuleType() == RuleType.FINANCIAL)) {
-        MockDataGenerator.generateFinancialPolicyRules();
+        MockDataGenerator.generateRulesFor(RuleType.FINANCIAL);
       }
       if (DepartmentRepository.getInstance().findAll().isEmpty()) {
         MockDataGenerator.generateUsers();
