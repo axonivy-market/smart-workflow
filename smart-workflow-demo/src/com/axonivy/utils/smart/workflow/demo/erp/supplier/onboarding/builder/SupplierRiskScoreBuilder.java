@@ -8,15 +8,6 @@ public class SupplierRiskScoreBuilder {
   private SupplierRiskScoreBuilder() {
   }
 
-  /**
-   * Creates a {@link SupplierRiskScore} from the three component scores,
-   * calculates the aggregate and derives the risk level.
-   *
-   * @param financialStability  financial stability score 0-100
-   * @param policyCompliance    policy compliance score 0-100
-   * @param certValidity        certificate validity score 0-100
-   * @return a fully populated SupplierRiskScore
-   */
   public static SupplierRiskScore of(int financialStability, int policyCompliance, int certValidity) {
     SupplierRiskScore score = new SupplierRiskScore();
     score.setFinancialStability(financialStability);

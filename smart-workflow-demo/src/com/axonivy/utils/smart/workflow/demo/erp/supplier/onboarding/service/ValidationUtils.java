@@ -10,16 +10,15 @@ import ch.ivyteam.ivy.environment.Ivy;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.RuleType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.model.SupplierPolicyRule;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierPolicyRuleRepository;
 
-/**
- * Package-private shared utilities used by {@link DocumentExtractionService},
- * {@link PolicyValidationService}, and {@link FinancialValidationService}.
- *
- * <p>Has zero public surface area — it is an internal implementation detail of
- * the onboarding.service package and must never be referenced from outside it.</p>
- */
 class ValidationUtils {
+
+  static final int CONTENT_TRUNCATION_LIMIT = 3000;
+  private static final int MAX_SCORE = 100;
+  private static final int MIN_SCORE = 0;
 
   private static final String STEP_NAMES_CMS_PREFIX =
       "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/";
@@ -27,18 +26,16 @@ class ValidationUtils {
   private ValidationUtils() {
   }
 
-  /**
-   * Returns the localized step display name for the given CMS key
-   * (e.g. {@code "StepDocumentExtraction"}).
-   */
   static String stepName(String cmsKey) {
     return Ivy.cms().co(STEP_NAMES_CMS_PREFIX + cmsKey);
   }
 
-  /**
-   * Loads detached copies of policy rules filtered by type so runtime mutation
-   * of {@code isPassed} does not persist globally.
-   */
+  static LogLineSeverity toLogSeverity(FindingSeverity severity) {
+    if (severity == FindingSeverity.FAILURE) return LogLineSeverity.ERROR;
+    if (severity == FindingSeverity.WARNING) return LogLineSeverity.WARNING;
+    return LogLineSeverity.OK;
+  }
+
   static List<SupplierPolicyRule> loadRulesByType(RuleType type) {
     List<SupplierPolicyRule> stored = SupplierPolicyRuleRepository.getInstance().findAllOrdered();
     List<SupplierPolicyRule> detached = new ArrayList<>();
@@ -55,10 +52,6 @@ class ValidationUtils {
     return detached;
   }
 
-  /**
-   * Builds a map of normalized rule target → highest finding severity rank
-   * across all findings in {@code result}.
-   */
   static Map<String, Integer> resolveHighestSeverityByTarget(
       PolicyValidationResult result, List<SupplierPolicyRule> rules) {
     Map<String, Integer> highestByTarget = new HashMap<>();
@@ -99,5 +92,46 @@ class ValidationUtils {
 
   static String normalizeKey(String key) {
     return key != null ? key.trim().toUpperCase() : "";
+  }
+
+  static int computeComplianceScore(PolicyValidationResult result, RuleType ruleType) {
+    List<ValidationFinding> findings = result != null ? result.getFindings() : null;
+    if (findings == null || findings.isEmpty()) {
+      return MAX_SCORE;
+    }
+    Integer explicitScore = computeScoreFromExplicitFindings(findings);
+    return explicitScore != null ? explicitScore : computeScoreFromRules(result, ruleType);
+  }
+
+  private static Integer computeScoreFromExplicitFindings(List<ValidationFinding> findings) {
+    Map<String, Integer> maxScoreBySource = new HashMap<>();
+    for (ValidationFinding finding : findings) {
+      if (finding.getScore() != null && finding.getScore() > 0 && finding.getSource() != null) {
+        maxScoreBySource.merge(normalizeKey(finding.getSource()), finding.getScore(), Math::max);
+      }
+    }
+    if (maxScoreBySource.isEmpty()) {
+      return null;
+    }
+    int totalDeduction = maxScoreBySource.values().stream().mapToInt(Integer::intValue).sum();
+    return Math.max(MIN_SCORE, Math.min(MAX_SCORE, MAX_SCORE - totalDeduction));
+  }
+
+  private static int computeScoreFromRules(PolicyValidationResult result, RuleType ruleType) {
+    List<SupplierPolicyRule> rules = loadRulesByType(ruleType);
+    if (rules.isEmpty()) {
+      return MAX_SCORE;
+    }
+    Map<String, Integer> highestSeverityByTarget = resolveHighestSeverityByTarget(result, rules);
+    int score = MAX_SCORE;
+    for (SupplierPolicyRule rule : rules) {
+      int severityRank = highestSeverityByTarget.getOrDefault(normalizeKey(rule.getTarget()), 0);
+      if (severityRank >= 2) {
+        score -= rule.getRiskScore();
+      } else if (severityRank == 1) {
+        score -= Math.round(rule.getRiskScore() / 2.0f);
+      }
+    }
+    return Math.max(MIN_SCORE, Math.min(MAX_SCORE, score));
   }
 }

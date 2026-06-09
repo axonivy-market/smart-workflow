@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +11,11 @@ import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentRepositor
 import com.axonivy.utils.smart.workflow.demo.erp.document.LegalDocumentType;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.DocumentExtractionResult;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AgentProcessingStep;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.DocumentContextBuilder;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.LogLineBuilder;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.AgentStepStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.LogLineSeverity;
 
-/**
- * Helpers for the {@code supplierDocumentExtractAgent} callable sub-process.
- *
- * <p>All methods are stateless and static so that IvyScript in process Script
- * nodes can call them with a single import line.</p>
- */
 public class DocumentExtractionService {
 
   private static final Logger LOG = Logger.getLogger(DocumentExtractionService.class.getName());
@@ -29,21 +23,11 @@ public class DocumentExtractionService {
   private DocumentExtractionService() {
   }
 
-  // ── Document loading ─────────────────────────────────────────────────────
-
-  /**
-   * Loads all legal documents for the given supplier from the repository.
-   * Returns an empty list when none are found (never null).
-   */
   public static List<LegalDocument> loadDocuments(String supplierId) {
     List<LegalDocument> docs = LegalDocumentRepository.getInstance().findByObjectId(supplierId);
     return docs != null ? docs : new ArrayList<>();
   }
 
-  /**
-   * Returns labels of all required documents for supplier onboarding —
-   * filtered by isRequired() on LegalDocumentType (includes cert sub-types).
-   */
   public static List<String> loadRequiredDocumentTypes() {
     List<String> required = new ArrayList<>();
     for (LegalDocumentType docType : LegalDocumentType.values()) {
@@ -54,41 +38,10 @@ public class DocumentExtractionService {
     return required;
   }
 
-  // ── Context building ─────────────────────────────────────────────────────
-
-  /**
-   * Builds a single-document context string for one {@link LegalDocument}.
-   */
   public static String buildSingleDocumentContext(LegalDocument doc) {
-    if (doc == null) {
-      return "No document provided.";
-    }
-    StringBuilder sb = new StringBuilder();
-    sb.append("File: ").append(doc.getFileName());
-    sb.append(", Type: ").append(doc.getDocumentType());
-    if (LegalDocumentType.CERTIFICATION.equals(doc.getDocumentType()) && doc.getDescription() != null) {
-      sb.append(", CertificationType: ").append(doc.getDescription());
-    }
-    sb.append(", Description: ").append(doc.getDescription() != null ? doc.getDescription() : "n/a");
-    if (doc.getFileContent() != null && doc.getFileContent().length > 0) {
-      String text = new String(doc.getFileContent(), StandardCharsets.UTF_8);
-      long nonPrintable = text.chars()
-          .filter(c -> c < 32 && c != '\n' && c != '\r' && c != '\t').count();
-      if (nonPrintable <= text.length() * 0.05) {
-        int limit = Math.min(text.length(), 3000);
-        sb.append(", Content: ").append(text, 0, limit);
-        if (text.length() > limit) {
-          sb.append("...[truncated]");
-        }
-      }
-    }
-    return sb.toString();
+    return DocumentContextBuilder.of(doc).withCertificationType().build();
   }
 
-  /**
-   * Loads all legal documents for the given supplier and returns a formatted
-   * document context string for the AI extraction query.
-   */
   public static String buildDocumentContext(String supplierId) {
     List<LegalDocument> docs = LegalDocumentRepository.getInstance().findByObjectId(supplierId);
     if (docs == null || docs.isEmpty()) {
@@ -96,32 +49,11 @@ public class DocumentExtractionService {
     }
     StringBuilder sb = new StringBuilder();
     for (LegalDocument doc : docs) {
-      sb.append("File: ").append(doc.getFileName());
-      sb.append(", Type: ").append(doc.getDocumentType());
-      sb.append(", Description: ").append(doc.getDescription() != null ? doc.getDescription() : "n/a");
-      if (doc.getFileContent() != null && doc.getFileContent().length > 0) {
-        String text = new String(doc.getFileContent(), StandardCharsets.UTF_8);
-        long nonPrintable = text.chars()
-            .filter(c -> c < 32 && c != '\n' && c != '\r' && c != '\t').count();
-        if (nonPrintable <= text.length() * 0.05) {
-          int limit = Math.min(text.length(), 3000);
-          sb.append(", Content: ").append(text, 0, limit);
-          if (text.length() > limit) {
-            sb.append("...[truncated]");
-          }
-        }
-      }
-      sb.append("\n");
+      sb.append(DocumentContextBuilder.of(doc).build()).append("\n");
     }
     return sb.toString();
   }
 
-  // ── Result merging ───────────────────────────────────────────────────────
-
-  /**
-   * Merges all {@link DocumentExtractionResult.ExtractedDoc} entries from
-   * {@code single} into {@code aggregate}. Both parameters may be null.
-   */
   public static void mergeExtractionResult(DocumentExtractionResult aggregate,
       DocumentExtractionResult single, LegalDocument original) {
     if (aggregate == null || single == null) {
@@ -135,12 +67,6 @@ public class DocumentExtractionService {
     }
   }
 
-  // ── Step lifecycle ───────────────────────────────────────────────────────
-
-  /**
-   * Creates and returns a new {@link AgentProcessingStep} for document
-   * extraction, already in RUNNING state.
-   */
   public static AgentProcessingStep startExtractionStep() {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName(ValidationUtils.stepName("StepDocumentExtraction"));
@@ -149,10 +75,6 @@ public class DocumentExtractionService {
     return step;
   }
 
-  /**
-   * Marks the extraction step COMPLETED, attaches log lines for each
-   * extracted document, and links it to the result.
-   */
   public static void finalizeExtractionStep(AgentProcessingStep step,
       DocumentExtractionResult result) {
     step.setStatus(AgentStepStatus.COMPLETED);
@@ -172,10 +94,6 @@ public class DocumentExtractionService {
     }
   }
 
-  /**
-   * Marks the extraction step FAILED, attaches it to the result, logs the
-   * error, and returns a plain-text error summary.
-   */
   public static String failExtractionStep(AgentProcessingStep step,
       DocumentExtractionResult result, Throwable error) {
     step.setName(ValidationUtils.stepName("StepDocumentExtraction"));

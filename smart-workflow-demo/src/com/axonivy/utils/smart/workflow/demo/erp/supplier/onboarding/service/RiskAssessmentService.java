@@ -21,25 +21,11 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.RiskL
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.SupplierRiskScore;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.ValidationFinding;
 
-/**
- * Stateless helpers for the risk score calculation step of supplier onboarding.
- *
- * <p>Computes a deterministic 3-component risk score (financial stability,
- * policy compliance, certificate validity) without calling an AI model,
- * then derives the aggregate score and routing decision.</p>
- *
- * <p>All methods are stateless and static so that IvyScript in process Script
- * nodes can call them with a single import line.</p>
- */
 public class RiskAssessmentService {
 
   private RiskAssessmentService() {
   }
 
-  // ── Step lifecycle ─────────────────────────────────────────────────────────
-
-  /** Creates and returns a new {@link AgentProcessingStep} for risk score
-   * calculation, already in RUNNING state. */
   public static AgentProcessingStep startRiskStep() {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName(ValidationUtils.stepName("StepRiskScoreCalculation"));
@@ -48,10 +34,6 @@ public class RiskAssessmentService {
     return step;
   }
 
-  /**
-   * Completes the processing step with timing and per-component log lines,
-   * then attaches it to the result.
-   */
   public static void finalizeRiskStep(AgentProcessingStep step, RiskScoreResult riskScoreResult) {
     step.setStatus(AgentStepStatus.COMPLETED);
     step.setCompletedAt(Instant.now());
@@ -91,10 +73,6 @@ public class RiskAssessmentService {
     riskScoreResult.setProcessingStep(step);
   }
 
-  /**
-   * Builds a fallback {@link RiskScoreResult} for the error boundary handler.
-   * Sets DECLINE routing with zero scores and attaches the failed processing step.
-   */
   public static RiskScoreResult failRiskStep(AgentProcessingStep step, Throwable error) {
     AgentProcessingStep resolvedStep = step != null ? step : new AgentProcessingStep();
     resolvedStep.setName(ValidationUtils.stepName("StepRiskScoreCalculation"));
@@ -118,17 +96,6 @@ public class RiskAssessmentService {
     return result;
   }
 
-  // ── Deterministic risk scoring ─────────────────────────────────────────────
-
-  /**
-   * Computes a deterministic 3-component risk score without calling an AI model.
-   * Implements the same scoring rules described in the CMS RiskScoringSystemPrompt.
-   *
-   * <p>Also called by
-   * {@link com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService}
-   * and
-   * {@link com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.FinancialValidationService}.</p>
-   */
   public static RiskScoreResult computeRiskScore(
       Integer annualVolumeEur,
       PolicyValidationResult policyResult,
@@ -137,19 +104,14 @@ public class RiskAssessmentService {
     List<ValidationFinding> policyFindings = policyResult != null && policyResult.getFindings() != null
         ? policyResult.getFindings() : java.util.Collections.emptyList();
 
-    // Derive document presence from policy findings (populated by checkRequiredDocuments)
     boolean hasAnnualReport = !hasFailureFindingForKey(policyFindings, "ANNUAL_REPORT");
     boolean hasCommercialRegister = !hasFailureFindingForKey(policyFindings, "COMMERCIAL_REGISTER");
     boolean hasSelfDeclaration = !hasFailureFindingForKey(policyFindings, "SELF_DECLARATION");
     boolean hasCertification = !hasFailureFindingForKey(policyFindings, "CERTIFICATION");
 
-    // COMPONENT 1 — financialStability (deterministic from financial rule findings)
     int financial = FinancialValidationService.computeFinancialStabilityScore(financialResult);
-
-    // COMPONENT 2 — policyCompliance (deterministic, derived from finding scores)
     int policyCompliance = PolicyValidationService.computePolicyComplianceScore(policyResult);
 
-    // COMPONENT 3 — certValidity (start 100)
     int certValidity = 100;
     if (!hasCommercialRegister) {
       certValidity -= 30;

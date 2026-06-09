@@ -271,14 +271,15 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.PolicyContextBuilder;",
             "",
             "in.ruleAlreadyEvaluated = PolicyValidationService.isRuleAlreadyEvaluated(",
             "    in.policyRules.get(in.ruleIndex), in.filteredExistingFindings);",
             "in.ruleDocumentFound = PolicyValidationService.hasRuleDocument(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult);",
-            "in.ruleContext = PolicyValidationService.buildRuleDocContext(",
+            "in.ruleContext = PolicyContextBuilder.buildRuleDocContext(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult, in.supplierContext);",
-            "in.ruleSystemPrompt = PolicyValidationService.buildSingleRuleSystemPrompt(",
+            "in.ruleSystemPrompt = PolicyContextBuilder.buildSingleRuleSystemPrompt(",
             "    in.policyRules.get(in.ruleIndex));"
           ]
         }
@@ -791,12 +792,13 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.PolicyValidationService;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.builder.PolicyContextBuilder;",
             "",
             "in.ruleDocumentFound = PolicyValidationService.hasRuleDocument(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult);",
-            "in.ruleContext = PolicyValidationService.buildRuleDocContext(",
+            "in.ruleContext = PolicyContextBuilder.buildRuleDocContext(",
             "    in.policyRules.get(in.ruleIndex), in.extractionResult, in.supplierContext);",
-            "in.ruleSystemPrompt = PolicyValidationService.buildSingleRuleSystemPrompt(",
+            "in.ruleSystemPrompt = PolicyContextBuilder.buildSingleRuleSystemPrompt(",
             "    in.policyRules.get(in.ruleIndex));"
           ]
         }
