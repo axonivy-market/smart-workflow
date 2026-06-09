@@ -13,7 +13,7 @@
         "signature" : "findProductBrand",
         "input" : {
           "params" : [
-            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandSearchCriteria", "desc" : "Search criteria to find product brand" }
+            { "name" : "searchCriteria", "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria", "desc" : "Search criteria to find product brand" }
           ],
           "map" : {
             "out.searchCriteria" : "param.searchCriteria"
@@ -21,7 +21,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -51,12 +51,13 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandRepository;",
-            "import com.axonivy.utils.smart.workflow.demo.shopping.productcategory.ProductCategoryRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryRepository;",
             "import org.apache.commons.collections4.CollectionUtils;",
+            "import org.apache.commons.lang3.StringUtils;",
             "",
             "in.response.brand  = BrandRepository.getInstance().findExactBrand(in.searchCriteria);",
-            "in.response.isBrandExisting = in.response.brand != null;",
+            "in.response.isBrandExisting = in.response.brand != null && StringUtils.isNotBlank(in.response.brand.brandId);",
             "in.response.feedback = in.response.isBrandExisting ? \"Brand is found\" : \"Brand not found\";",
             "in.response.brandSearchCriteria = in.searchCriteria;"
           ]
@@ -76,7 +77,7 @@
         "signature" : "createProductBrand",
         "input" : {
           "params" : [
-            { "name" : "brand", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.Brand", "desc" : "All information about a product brand" }
+            { "name" : "brand", "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand", "desc" : "All information about a product brand" }
           ],
           "map" : {
             "out.brand" : "param.brand"
@@ -84,7 +85,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandAgentResponse", "desc" : "" }
+            { "name" : "response", "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse", "desc" : "" }
           ],
           "map" : {
             "result.response" : "in.response"
@@ -108,7 +109,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.shopping.brand.BrandRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandRepository;",
             "",
             "in.brand = BrandRepository.getInstance().create(in.brand);",
             "",
