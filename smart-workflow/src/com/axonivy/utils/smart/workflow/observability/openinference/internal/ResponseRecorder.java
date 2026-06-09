@@ -44,9 +44,9 @@ class ResponseRecorder {
     AiMessage aiMessage = response.aiMessage();
     String prefix = String.format("%s.%d.", SemanticConventions.LLM_OUTPUT_MESSAGES, 0);
     attributes.put(prefix + SemanticConventions.MESSAGE_ROLE, "assistant");
-    attributes.put(prefix + SemanticConventions.MESSAGE_CONTENT, aiMessage.text());
+    attributes.put(prefix + SemanticConventions.MESSAGE_CONTENT, OpenInferenceCollector.resolveContent(aiMessage));
     attributes.putAll(ToolRecorder.toolRequest(prefix, aiMessage.toolExecutionRequests()));
-    attributes.put(SemanticConventions.OUTPUT_VALUE, aiMessage.text());
+    attributes.put(SemanticConventions.OUTPUT_VALUE, OpenInferenceCollector.resolveContent(aiMessage));
     attributes.put(SemanticConventions.OUTPUT_MIME_TYPE, "text/plain");
   }
 }

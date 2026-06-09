@@ -14,6 +14,9 @@ import com.axonivy.utils.smart.workflow.governance.history.listener.OutputGuardr
 import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
+import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.data.message.AiMessage;
@@ -56,7 +59,7 @@ public class TestGuardrailHistoryRecording {
     assertThat(guardrails).hasSize(1);
 
     var guardrail = guardrails.get(0);
-    assertThat(guardrail.guardrailName()).isEqualTo("InputGuardrailAdapter");
+    assertThat(guardrail.guardrailName()).isEqualTo("TestInputGuardrail");
     assertThat(guardrail.type()).isEqualTo("INPUT");
     assertThat(guardrail.result()).isEqualTo("SUCCESS");
     assertThat(guardrail.message()).isEqualTo("Hello agent");
@@ -107,6 +110,9 @@ public class TestGuardrailHistoryRecording {
     public dev.langchain4j.model.chat.response.ChatResponse execute(java.util.List<dev.langchain4j.data.message.ChatMessage> messages) { return null; }
   };
 
+  private static final InputGuardrailAdapter INPUT_ADAPTER = new InputGuardrailAdapter(new TestInputGuardrail());
+  private static final OutputGuardrailAdapter OUTPUT_ADAPTER = new OutputGuardrailAdapter(new TestOutputGuardrail());
+
   private InputGuardrailExecutedEvent buildInputEvent(String userText, InputGuardrailResult result, Duration duration) {
     var invocationCtx = InvocationContext.builder()
         .invocationId(UUID.randomUUID())
@@ -124,7 +130,8 @@ public class TestGuardrailHistoryRecording {
         .build();
     return InputGuardrailExecutedEvent.builder()
         .invocationContext(invocationCtx)
-        .guardrailClass(InputGuardrailAdapter.class)
+        .guardrailClass(INPUT_ADAPTER.getClass())
+        .guardrailName(INPUT_ADAPTER.name())
         .request(request)
         .result(result)
         .duration(duration)
@@ -152,10 +159,25 @@ public class TestGuardrailHistoryRecording {
         .build();
     return OutputGuardrailExecutedEvent.builder()
         .invocationContext(invocationCtx)
-        .guardrailClass(OutputGuardrailAdapter.class)
+        .guardrailClass(OUTPUT_ADAPTER.getClass())
+        .guardrailName(OUTPUT_ADAPTER.name())
         .request(request)
         .result(result)
         .duration(duration)
         .build();
+  }
+
+  private static class TestInputGuardrail implements SmartWorkflowInputGuardrail {
+    @Override
+    public GuardrailResult evaluate(String message) {
+      return GuardrailResult.allow();
+    }
+  }
+
+  private static class TestOutputGuardrail implements SmartWorkflowOutputGuardrail {
+    @Override
+    public GuardrailResult evaluate(String message) {
+      return GuardrailResult.allow();
+    }
   }
 }
