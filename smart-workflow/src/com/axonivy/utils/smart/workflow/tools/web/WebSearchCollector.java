@@ -14,8 +14,8 @@ import ch.ivyteam.ivy.environment.Ivy;
 public class WebSearchCollector {
 
   public static List<SmartWebSearchEngine> allEngines() {
-    var project = SpiProject.getSmartWorkflowPmv().project();
-    return new SpiLoader(project).load(SmartWebSearchEngineProvider.class)
+    var pmv = SpiProject.getSmartWorkflowPmv();
+    return new SpiLoader(pmv).load(SmartWebSearchEngineProvider.class)
         .stream()
         .flatMap(provider -> getEngines(provider).stream())
         .collect(Collectors.toList());

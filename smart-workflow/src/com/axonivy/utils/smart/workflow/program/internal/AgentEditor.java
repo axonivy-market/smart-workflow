@@ -92,8 +92,8 @@ public class AgentEditor {
 
   private List<String> javaToolNames() {
     try {
-      var project = SpiProject.getSmartWorkflowPmv().project();
-      return new SpiLoader(project).load(SmartWorkflowToolsProvider.class).stream()
+      var pmv = SpiProject.getSmartWorkflowPmv();
+      return new SpiLoader(pmv).load(SmartWorkflowToolsProvider.class).stream()
           .flatMap(provider -> {
             var tools = provider.getTools();
             return tools == null ? Stream.empty() : tools.stream();

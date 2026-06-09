@@ -25,8 +25,8 @@ public class GuardrailCollector {
   public static final String DEFAULT_OUTPUT_GUARDRAILS = "AI.Guardrails.DefaultOutput";
 
   public static Set<GuardrailProvider> allProviders() {
-    var project = SpiProject.getSmartWorkflowPmv().project();
-    return new SpiLoader(project).load(GuardrailProvider.class);
+    var pmv = SpiProject.getSmartWorkflowPmv();
+    return new SpiLoader(pmv).load(GuardrailProvider.class);
   }
 
   public static List<String> allInputGuardrailNames() {
