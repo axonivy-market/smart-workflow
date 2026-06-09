@@ -1,7 +1,8 @@
 package com.axonivy.utils.smart.workflow.demo.erp;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,33 +70,19 @@ public class InMemoryBusinessDataStore implements BusinessDataStore {
   }
 
   private String getFieldValue(Object entity, String fieldName) {
+    String suffix = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
     try {
-      String getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-      Method getter = entity.getClass().getMethod(getterName);
-      Object value = getter.invoke(entity);
-      if (value == null) {
-        return null;
-      }
-      if (value instanceof Boolean) {
-        getterName = "is" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-        try {
-          getter = entity.getClass().getMethod(getterName);
-          value = getter.invoke(entity);
-        } catch (NoSuchMethodException e) {
-          // use the get version
-        }
-      }
-      return String.valueOf(value);
+      Object value = MethodUtils.invokeExactMethod(entity, "get" + suffix);
+      return value == null ? null : String.valueOf(value);
     } catch (NoSuchMethodException e) {
-      try {
-        String isGetterName = "is" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-        Method getter = entity.getClass().getMethod(isGetterName);
-        Object value = getter.invoke(entity);
-        return value == null ? null : String.valueOf(value);
-      } catch (Exception ex) {
-        return null;
-      }
-    } catch (Exception e) {
+      // fall through to "is" getter
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      return null;
+    }
+    try {
+      Object value = MethodUtils.invokeExactMethod(entity, "is" + suffix);
+      return value == null ? null : String.valueOf(value);
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
       return null;
     }
   }
