@@ -26,7 +26,7 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.Agent
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.FindingSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.LogLineSeverity;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.RiskLevel;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.OnboardingAuditEntryFactory;
 import com.axonivy.utils.smart.workflow.demo.utils.IvyAdapterService;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -450,9 +450,9 @@ public class SupplierAgentProcessingBean implements Serializable {
       agentResponse.setFeedback(orchestrationSummary);
       syncAgentResponse(agentResponse);
       AuditTrailEntry analysisEntry =
-          SupplierOnboardingProcessService.buildAgentAnalysisAuditEntry(request, agentResponse);
-      request.setAuditTrail(
-          SupplierOnboardingProcessService.ensureAndAdd(request.getAuditTrail(), analysisEntry));
+          OnboardingAuditEntryFactory.buildAgentAnalysisAuditEntry(request, agentResponse);
+      if (request.getAuditTrail() == null) request.setAuditTrail(new ArrayList<>());
+      request.getAuditTrail().add(analysisEntry);
     } catch (Exception e) {
       step.setStatus(AgentStepStatus.FAILED);
       addStepErrorMessage(KEY_STEP_RISK_SCORE_CALCULATION, e);

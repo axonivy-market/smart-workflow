@@ -27,8 +27,8 @@ import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.AuditTrailE
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.enums.Urgency;
+import com.axonivy.utils.smart.workflow.demo.erp.supplier.onboarding.service.OnboardingAuditEntryFactory;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.parser.OnboardingRequestParser;
-import com.axonivy.utils.smart.workflow.demo.erp.supplier.processor.SupplierOnboardingProcessService;
 import com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierRepository;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -84,8 +84,9 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
   public void submit() {
     request.setStatus(OnboardingStatus.DB_CHECK);
     request.setCaseUuid(Ivy.wfCase().uuid());
-    AuditTrailEntry requestEntry = SupplierOnboardingProcessService.buildRequestAuditEntry(request);
-    request.setAuditTrail(SupplierOnboardingProcessService.ensureAndAdd(request.getAuditTrail(), requestEntry));
+    AuditTrailEntry requestEntry = OnboardingAuditEntryFactory.buildRequestAuditEntry(request);
+    if (request.getAuditTrail() == null) request.setAuditTrail(new ArrayList<>());
+    request.getAuditTrail().add(requestEntry);
   }
 
   public void saveDraft() {
