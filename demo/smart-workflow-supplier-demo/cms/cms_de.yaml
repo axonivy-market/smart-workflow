@@ -268,7 +268,7 @@ Dialogs:
                       StepSubtitle: 'Schritt 5c von 6 — Anfrage abgelehnt: Risikobewertung unter Schwellenwert'
                       SupplierDetailsTab: Lieferantendetails
                     SupplierRegistrationForm:
-                      Chips: 📋 Welche Zertifizierungen sind Pflicht?|🏠 Ist IBAN erforderlich?|🔍 Was ist eine USt-ID?
+                      Chips: Welche Zertifizierungen sind Pflicht?|Ist IBAN erforderlich?|Was ist eine USt-ID?
                       InitialMessage: Ich helfe Ihnen, die Lieferantenregistrierung abzuschließen. Füllen Sie Unternehmensdaten, Kontakt, Bankverbindung und Zertifizierungen aus. Pflichtfelder sind mit * markiert.
                       SaveDraftButton: Entwurf speichern
                       StepSubtitle: Schritt 3 von 6 — Neue Lieferantenregistrierung
@@ -279,7 +279,7 @@ Dialogs:
                       BusinessPurposeLabel: Geschäftszweck *
                       BusinessPurposePlaceholder: z. B. Logistik / Transport
                       CheckSupplierButton: Lieferantendatenbank prüfen
-                      Chips: 💡 Welche Infos brauche ich für einen neuen Lieferanten?|🔍 Wie funktioniert die Datenbankprüfung?|📋 Was ist ein gültiger Geschäftszweck?
+                      Chips: Welche Infos brauche ich für einen neuen Lieferanten?|Wie funktioniert die Datenbankprüfung?|Was ist ein gültiger Geschäftszweck?
                       DepartmentLabel: Abteilung / Kostenstelle *
                       DepartmentPlaceholder: -- Abteilung wählen --
                       ExpectedAnnualVolumeLabel: Erwartetes Jahresvolumen (€)
@@ -296,7 +296,7 @@ Dialogs:
                       SupplierCountryLabel: Lieferantenland *
                       SupplierInfoTitle: Lieferanteninformationen
                       SupplierNameLabel: Lieferantenname *
-                      SupplierNamePlaceholder: z. B. Acme GmbH, Müller Logistik AG
+
                       SupplierWebsiteLabel: Lieferanten-Website
                       SupplierWebsitePlaceholder: https://www.lieferant.de
                       UrgencyLabel: Dringlichkeit *
@@ -352,13 +352,13 @@ Dialogs:
                         BankNamePlaceholder: z.B. Commerzbank AG
                         BankingPaymentTitle: Banking & Zahlung
                         BicLabel: BIC / SWIFT
-                        BicPlaceholder: z.B. COBADEFFXXX
+
                         BusinessPurposeLabel: Geschäftszweck
                         BusinessPurposePlaceholder: z.B. Logistik / Transport
                         CertificationsCardSubtitle: Zertifikate hochladen
                         CertificationsCardTitle: Zertifizierungen & Compliance
                         CityLabel: Stadt
-                        CityPlaceholder: z.B. München
+
                         CommercialRegNoLabel: Handelsregisternummer
                         CommercialRegNoPlaceholder: z.B. HRB 123456
                         CompanyDetailsTitle: Unternehmensdetails
@@ -392,7 +392,7 @@ Dialogs:
                         RequiredDocsCardSubtitle: Compliance-Dokumente hochladen
                         RequiredDocsCardTitle: Erforderliche Dokumente
                         StreetLabel: Straße & Hausnummer
-                        StreetPlaceholder: z.B. Industriestraße 42
+
                         UrgencyLabel: Dringlichkeit
                         VatIdLabel: Umsatzsteuer-ID
                         VatIdPlaceholder: z.B. DE123456789
