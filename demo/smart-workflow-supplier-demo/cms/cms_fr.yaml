@@ -268,7 +268,7 @@ Dialogs:
                       StepSubtitle: 'Étape 5c sur 6 — Demande refusée : Score de risque inférieur au seuil'
                       SupplierDetailsTab: Détails du fournisseur
                     SupplierRegistrationForm:
-                      Chips: 📋 Quelles certifications sont obligatoires ?|🏠 L'IBAN est-il requis ?|🔍 Qu'est-ce qu'un numéro de TVA ?
+                      Chips: Quelles certifications sont obligatoires ?|L'IBAN est-il requis ?|Qu'est-ce qu'un numéro de TVA ?
                       InitialMessage: Je vais vous aider à compléter l'enregistrement du fournisseur. Remplissez les coordonnées de l'entreprise, les contacts, les informations bancaires et les certifications. Les champs obligatoires sont marqués d'un *.
                       SaveDraftButton: Enregistrer le brouillon
                       StepSubtitle: Étape 3 sur 6 — Nouvel enregistrement de fournisseur
@@ -279,7 +279,7 @@ Dialogs:
                       BusinessPurposeLabel: Objet commercial *
                       BusinessPurposePlaceholder: p. ex. Logistique / Transport
                       CheckSupplierButton: Consulter la base de données fournisseurs
-                      Chips: 💡 Quelles infos faut-il pour un nouveau fournisseur ?|🔍 Comment fonctionne la vérification BD ?|📋 Qu'est-ce qu'un objet commercial valide ?
+                      Chips: Quelles infos faut-il pour un nouveau fournisseur ?|Comment fonctionne la vérification BD ?|Qu'est-ce qu'un objet commercial valide ?
                       DepartmentLabel: Département / Centre de coûts *
                       DepartmentPlaceholder: -- Sélectionner un département --
                       ExpectedAnnualVolumeLabel: Volume annuel prévu (€) *
@@ -296,7 +296,7 @@ Dialogs:
                       SupplierCountryLabel: Pays du fournisseur *
                       SupplierInfoTitle: Informations fournisseur
                       SupplierNameLabel: Nom du fournisseur *
-                      SupplierNamePlaceholder: p. ex. Acme GmbH, Müller Logistik AG
+
                       SupplierWebsiteLabel: Site web du fournisseur
                       SupplierWebsitePlaceholder: https://www.fournisseur.com
                       UrgencyLabel: Urgence *
@@ -352,13 +352,13 @@ Dialogs:
                         BankNamePlaceholder: ex. Commerzbank AG
                         BankingPaymentTitle: Banque & paiement
                         BicLabel: BIC / SWIFT
-                        BicPlaceholder: ex. COBADEFFXXX
+
                         BusinessPurposeLabel: Objet social
                         BusinessPurposePlaceholder: ex. Logistique / Transport
                         CertificationsCardSubtitle: Téléversez vos certificats
                         CertificationsCardTitle: Certifications & conformité
                         CityLabel: Ville
-                        CityPlaceholder: ex. Munich
+
                         CommercialRegNoLabel: Numéro de registre commercial
                         CommercialRegNoPlaceholder: ex. HRB 123456
                         CompanyDetailsTitle: Détails de l'entreprise
@@ -392,7 +392,7 @@ Dialogs:
                         RequiredDocsCardSubtitle: Téléversez les documents de conformité
                         RequiredDocsCardTitle: Documents requis
                         StreetLabel: Rue & numéro
-                        StreetPlaceholder: ex. Industriestraße 42
+
                         UrgencyLabel: Urgence
                         VatIdLabel: Numéro de TVA
                         VatIdPlaceholder: ex. DE123456789
