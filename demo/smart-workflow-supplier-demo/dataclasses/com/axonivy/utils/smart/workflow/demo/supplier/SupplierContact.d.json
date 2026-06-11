@@ -1,0 +1,21 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierContact",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier",
+  "fields" : [ {
+    "name" : "firstName",
+    "comment" : "First name of the contact person"
+  }, {
+    "name" : "lastName",
+    "comment" : "Last name of the contact person"
+  }, {
+    "name" : "jobTitle",
+    "comment" : "Job title or role"
+  }, {
+    "name" : "email",
+    "comment" : "Contact email address"
+  }, {
+    "name" : "phone",
+    "comment" : "Contact phone number"
+  } ]
+}

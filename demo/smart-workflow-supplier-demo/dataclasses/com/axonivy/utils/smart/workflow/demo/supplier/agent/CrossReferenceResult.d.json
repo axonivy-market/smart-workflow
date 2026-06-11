@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "CrossReferenceResult",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.agent",
+  "fields" : [ {
+    "name" : "findings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding>",
+    "comment" : "List of cross-reference check findings: company register, VAT ID, ERP duplicate, and sanctions screening"
+  }, {
+    "name" : "processingStep",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.AgentProcessingStep",
+    "comment" : "Processing step metadata set after tool execution"
+  } ]
+}

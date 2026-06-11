@@ -1,0 +1,43 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "LegalDocument",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.document",
+  "fields" : [ {
+    "name" : "documentId",
+    "comment" : "Unique document identifier (auto-generated)"
+  }, {
+    "name" : "objectId",
+    "comment" : "ID of the owning object (e.g. supplier ID)"
+  }, {
+    "name" : "objectType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentObjectType",
+    "comment" : "Type of the owning object"
+  }, {
+    "name" : "documentType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
+    "comment" : "Category of the legal document"
+  }, {
+    "name" : "fileName",
+    "comment" : "Original file name"
+  }, {
+    "name" : "contentType",
+    "comment" : "MIME content type"
+  }, {
+    "name" : "fileContent",
+    "type" : "byte[]",
+    "comment" : "Raw file bytes"
+  }, {
+    "name" : "fileSize",
+    "type" : "java.lang.Long",
+    "comment" : "File size in bytes"
+  }, {
+    "name" : "uploadedAt",
+    "comment" : "ISO-8601 timestamp of upload"
+  }, {
+    "name" : "uploadedBy",
+    "comment" : "Username of the uploader"
+  }, {
+    "name" : "description",
+    "comment" : "Optional document description"
+  } ]
+}

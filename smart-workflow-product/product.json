@@ -8,7 +8,7 @@
         "projects": [
           {
             "groupId": "com.axonivy.utils.ai",
-            "artifactId": "smart-workflow-demo",
+            "artifactId": "smart-workflow-supplier-demo",
             "version": "${version}",
             "type": "iar"
           },

@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "Department",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.department",
+  "fields" : [ {
+    "name" : "id"
+  }, {
+    "name" : "name"
+  }, {
+    "name" : "firstLevelManager"
+  }, {
+    "name" : "secondLevelManager"
+  } ]
+}
