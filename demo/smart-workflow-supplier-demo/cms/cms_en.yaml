@@ -52,7 +52,7 @@ Dialogs:
                       Panel3Detail3: Generated a detailed validation report with explainable findings
                       Panel3Title: Document Validation
                       Panel4Desc: AI computes a composite risk score across three dimensions — financial stability, policy compliance, and certification validity — delivering an objective, auditable rating out of 100.
-                      Panel4Detail1: Analysed financial statements for stability and liquidity indicators
+                      Panel4Detail1: Analyzed financial statements for stability and liquidity indicators
                       Panel4Detail2: Cross-referenced compliance history, certifications, and policy alignment
                       Panel4Detail3: Produced a weighted composite risk score with full breakdown
                       Panel4Title: Risk Calculation
@@ -268,7 +268,7 @@ Dialogs:
                       StepSubtitle: 'Step 5c of 6 — Request Declined: Risk Score Below Threshold'
                       SupplierDetailsTab: Supplier Details
                     SupplierRegistrationForm:
-                      Chips: \uD83D\uDCCB What certifications are mandatory?|\uD83C\uDFE0 Is IBAN required?|\uD83D\uDD0D What is a VAT ID?
+                      Chips: What certifications are mandatory?|Is IBAN required?|What is a VAT ID?
                       InitialMessage: I'll help you complete the supplier registration. Fill in the company details, contact, banking info, and certifications. Required fields are marked with *.
                       SaveDraftButton: Save Draft
                       StepSubtitle: Step 3 of 6 \u2014 New Supplier Registration
@@ -279,7 +279,7 @@ Dialogs:
                       BusinessPurposeLabel: Business Purpose *
                       BusinessPurposePlaceholder: e.g. Logistics / Transport
                       CheckSupplierButton: Check Supplier Database
-                      Chips: \uD83D\uDCA1 What info do I need for a new supplier?|\uD83D\uDD0D How does the DB check work?|\uD83D\uDCCB What is a valid business purpose?
+                      Chips: What info do I need for a new supplier?|How does the DB check work?|What is a valid business purpose?
                       DepartmentLabel: Department / Cost Center *
                       DepartmentPlaceholder: -- Select Department --
                       ExpectedAnnualVolumeLabel: Expected Annual Volume (EUR)
@@ -296,7 +296,7 @@ Dialogs:
                       SupplierCountryLabel: Supplier Country *
                       SupplierInfoTitle: Supplier Information
                       SupplierNameLabel: Supplier Name *
-                      SupplierNamePlaceholder: e.g. Acme GmbH, M\u00fcller Logistik AG
+
                       SupplierWebsiteLabel: Supplier Website
                       SupplierWebsitePlaceholder: https://www.supplier.com
                       UrgencyLabel: Urgency *
@@ -373,13 +373,13 @@ Dialogs:
                         BankNamePlaceholder: e.g. Commerzbank AG
                         BankingPaymentTitle: Banking & Payment
                         BicLabel: BIC / SWIFT
-                        BicPlaceholder: e.g. COBADEFFXXX
+
                         BusinessPurposeLabel: Business Purpose
                         BusinessPurposePlaceholder: e.g. Logistics / Transport
                         CertificationsCardSubtitle: Upload your certificates
                         CertificationsCardTitle: Certifications & Compliance
                         CityLabel: City
-                        CityPlaceholder: e.g. München
+
                         CommercialRegNoLabel: Commercial Register No.
                         CommercialRegNoPlaceholder: e.g. HRB 123456
                         CompanyDetailsTitle: Company Details
@@ -413,7 +413,7 @@ Dialogs:
                         RequiredDocsCardSubtitle: Upload compliance documents
                         RequiredDocsCardTitle: Required Documents
                         StreetLabel: Street & Number
-                        StreetPlaceholder: e.g. Industriestraße 42
+
                         UrgencyLabel: Urgency
                         VatIdLabel: VAT ID
                         VatIdPlaceholder: e.g. DE123456789

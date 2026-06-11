@@ -268,7 +268,7 @@ Dialogs:
                       StepSubtitle: 'Paso 5c de 6 — Solicitud rechazada: Puntuación de riesgo por debajo del umbral'
                       SupplierDetailsTab: Detalles del proveedor
                     SupplierRegistrationForm:
-                      Chips: 📋 ¿Qué certificaciones son obligatorias?|🏠 ¿Se requiere IBAN?|🔍 ¿Qué es un ID de IVA?
+                      Chips: ¿Qué certificaciones son obligatorias?|¿Se requiere IBAN?|¿Qué es un ID de IVA?
                       InitialMessage: Le ayudaré a completar el registro del proveedor. Complete los datos de la empresa, contacto, información bancaria y certificaciones. Los campos obligatorios están marcados con *.
                       SaveDraftButton: Guardar borrador
                       StepSubtitle: Paso 3 de 6 — Nueva Registro de proveedor
@@ -279,7 +279,7 @@ Dialogs:
                       BusinessPurposeLabel: Propósito comercial *
                       BusinessPurposePlaceholder: p. ej. Logística / Transporte
                       CheckSupplierButton: Consultar base de datos de proveedores
-                      Chips: 💡 ¿Qué información necesito para un nuevo proveedor?|🔍 ¿Cómo funciona la verificación de BD?|📋 ¿Qué es un propósito comercial válido?
+                      Chips: ¿Qué información necesito para un nuevo proveedor?|¿Cómo funciona la verificación de BD?|¿Qué es un propósito comercial válido?
                       DepartmentLabel: Departamento / Centro de costes *
                       DepartmentPlaceholder: -- Seleccionar departamento --
                       ExpectedAnnualVolumeLabel: Volumen anual esperado (€)
@@ -296,7 +296,7 @@ Dialogs:
                       SupplierCountryLabel: País del proveedor *
                       SupplierInfoTitle: Información del proveedor
                       SupplierNameLabel: Nombre del proveedor *
-                      SupplierNamePlaceholder: p. ej. Acme GmbH, Müller Logistik AG
+
                       SupplierWebsiteLabel: Sitio web del proveedor
                       SupplierWebsitePlaceholder: https://www.proveedor.com
                       UrgencyLabel: Urgencia *
@@ -352,13 +352,13 @@ Dialogs:
                         BankNamePlaceholder: ej. Commerzbank AG
                         BankingPaymentTitle: Banca y pago
                         BicLabel: BIC / SWIFT
-                        BicPlaceholder: ej. COBADEFFXXX
+
                         BusinessPurposeLabel: Propósito empresarial
                         BusinessPurposePlaceholder: ej. Logística / Transporte
                         CertificationsCardSubtitle: Suba sus certificados
                         CertificationsCardTitle: Certificaciones y cumplimiento
                         CityLabel: Ciudad
-                        CityPlaceholder: ej. Múnich
+
                         CommercialRegNoLabel: Número de registro mercantil
                         CommercialRegNoPlaceholder: ej. HRB 123456
                         CompanyDetailsTitle: Datos de la empresa
@@ -392,7 +392,7 @@ Dialogs:
                         RequiredDocsCardSubtitle: Suba documentos de cumplimiento
                         RequiredDocsCardTitle: Documentos requeridos
                         StreetLabel: Calle y número
-                        StreetPlaceholder: ej. Industriestraße 42
+
                         UrgencyLabel: Urgencia
                         VatIdLabel: NIF / IVA
                         VatIdPlaceholder: ej. DE123456789
