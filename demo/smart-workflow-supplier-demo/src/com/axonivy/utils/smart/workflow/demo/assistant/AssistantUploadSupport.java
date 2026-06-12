@@ -11,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
-import com.axonivy.utils.smart.workflow.demo.utils.IvyAdapterService;
-
 import ch.ivyteam.ivy.environment.Ivy;
 
 public interface AssistantUploadSupport<T> {
@@ -70,59 +68,65 @@ public interface AssistantUploadSupport<T> {
   default void setAgentChatHistory(List<AssistantChatMessage> history) {
   }
 
-  String CMS_SAA              = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/";
-  String CMS_NO_FILE_UPLOADED = CMS_SAA + "NoFileUploadedMessage";
-  String CMS_INVALID_FILE     = CMS_SAA + "InvalidFileMessage";
-  String CMS_FILE_EMPTY       = CMS_SAA + "FileEmptyMessage";
-  String CMS_FILES_QUEUED_TPL = CMS_SAA + "FilesQueuedTemplate";
-  String CMS_FILES_READY_TPL  = CMS_SAA + "FilesReadyTemplate";
-  String CMS_FILE_READY       = CMS_SAA + "FileUploadedReadyMessage";
-  String CMS_CONFIRM_PARSE    = CMS_SAA + "ConfirmParseRequired";
-  String CMS_NO_VALUES        = CMS_SAA + "NoValuesExtracted";
-  String CMS_PARSE_SUCCESS    = CMS_SAA + "ParseSuccess";
-  String CMS_PARSE_FAILED_TPL = CMS_SAA + "ParseFailedTemplate";
+  interface Cms {
+    String BASE              = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/";
+    String NO_FILE_UPLOADED  = BASE + "NoFileUploadedMessage";
+    String INVALID_FILE      = BASE + "InvalidFileMessage";
+    String FILE_EMPTY        = BASE + "FileEmptyMessage";
+    String FILES_QUEUED_TPL  = BASE + "FilesQueuedTemplate";
+    String FILES_READY_TPL   = BASE + "FilesReadyTemplate";
+    String FILE_READY        = BASE + "FileUploadedReadyMessage";
+    String CONFIRM_PARSE     = BASE + "ConfirmParseRequired";
+    String NO_VALUES         = BASE + "NoValuesExtracted";
+    String PARSE_SUCCESS     = BASE + "ParseSuccess";
+    String PARSE_FAILED_TPL  = BASE + "ParseFailedTemplate";
+  }
 
-  String DOCUMENT_SEPARATOR_FORMAT = "--- DOCUMENT: %s ---\n";
-  String GUIDANCE_HEADER            = "Question Handling Guidelines:\n";
-  String GUIDANCE_LINE_FORMAT       = "- When the user asks \"%s\": %s\n";
-  String DEFAULT_AGENT_ERROR_MSG    = "I could not process your question.";
-  String AGENT_ERROR_FORMAT         = "Error: %s";
+  interface Format {
+    String DOCUMENT_SEPARATOR = "--- DOCUMENT: %s ---\n";
+    String GUIDANCE_HEADER    = "Question Handling Guidelines:\n";
+    String GUIDANCE_LINE      = "- When the user asks \"%s\": %s\n";
+    String DEFAULT_AGENT_ERROR = "I could not process your question.";
+    String AGENT_ERROR        = "Error: %s";
+  }
 
-  String PARAM_QUESTION         = "question";
-  String PARAM_CHAT_HISTORY     = "chatHistory";
-  String PARAM_GUIDANCE_CONTEXT = "guidanceContext";
+  interface Param {
+    String QUESTION         = "question";
+    String CHAT_HISTORY     = "chatHistory";
+    String GUIDANCE_CONTEXT = "guidanceContext";
+  }
 
   default void addUploadedDocument(FileUploadEvent event) {
     UploadedFile uploadedFile = event != null ? event.getFile() : null;
     if (uploadedFile == null) {
-      setAssistantParseFeedback(Ivy.cms().co(CMS_NO_FILE_UPLOADED));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.NO_FILE_UPLOADED));
       return;
     }
 
     String fileName = uploadedFile.getFileName();
     if (fileName == null || fileName.trim().isEmpty()) {
-      setAssistantParseFeedback(Ivy.cms().co(CMS_NO_FILE_UPLOADED));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.NO_FILE_UPLOADED));
       return;
     }
 
     String lowerFileName = fileName.toLowerCase(Locale.ROOT);
     if (!(lowerFileName.endsWith(".txt") || lowerFileName.endsWith(".md") || lowerFileName.endsWith(".pdf"))) {
-      setAssistantParseFeedback(Ivy.cms().co(CMS_INVALID_FILE));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.INVALID_FILE));
       return;
     }
 
     byte[] content = uploadedFile.getContent();
     if (content == null || content.length == 0) {
-      setAssistantParseFeedback(Ivy.cms().co(CMS_FILE_EMPTY));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.FILE_EMPTY));
       return;
     }
 
     List<UploadedDocumentEntry> updated = new ArrayList<>(getUploadedDocuments());
     updated.add(UploadedDocumentEntryFactory.of(fileName.trim(), content));
     setUploadedDocuments(updated);
-    setAssistantUploadedFileName(Ivy.cms().co(CMS_FILES_QUEUED_TPL, java.util.Arrays.asList(updated.size())));
+    setAssistantUploadedFileName(Ivy.cms().co(Cms.FILES_QUEUED_TPL, java.util.Arrays.asList(updated.size())));
     setAssistantAwaitingConfirmation(Boolean.TRUE);
-    setAssistantParseFeedback(Ivy.cms().co(CMS_FILES_READY_TPL, java.util.Arrays.asList(updated.size())));
+    setAssistantParseFeedback(Ivy.cms().co(Cms.FILES_READY_TPL, java.util.Arrays.asList(updated.size())));
   }
 
   default void uploadAssistantDocument(FileUploadEvent event) {
@@ -130,32 +134,32 @@ public interface AssistantUploadSupport<T> {
 
     UploadedFile uploadedFile = event != null ? event.getFile() : null;
     if (uploadedFile == null) {
-      setAssistantParseFeedback(Ivy.cms().co(CMS_NO_FILE_UPLOADED));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.NO_FILE_UPLOADED));
       return;
     }
 
     String fileName = uploadedFile.getFileName();
     if (fileName == null || fileName.trim().isEmpty()) {
-      setAssistantParseFeedback(Ivy.cms().co(CMS_NO_FILE_UPLOADED));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.NO_FILE_UPLOADED));
       return;
     }
 
     String lowerFileName = fileName.toLowerCase(Locale.ROOT);
     if (!(lowerFileName.endsWith(".txt") || lowerFileName.endsWith(".md") || lowerFileName.endsWith(".pdf"))) {
-      setAssistantParseFeedback(Ivy.cms().co(CMS_INVALID_FILE));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.INVALID_FILE));
       return;
     }
 
     byte[] content = uploadedFile.getContent();
     if (content == null || content.length == 0) {
-      setAssistantParseFeedback(Ivy.cms().co(CMS_FILE_EMPTY));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.FILE_EMPTY));
       return;
     }
 
     setAssistantUploadedFileName(fileName);
     setAssistantUploadedContent(new String(content, StandardCharsets.UTF_8));
     setAssistantAwaitingConfirmation(Boolean.TRUE);
-    setAssistantParseFeedback(Ivy.cms().co(CMS_FILE_READY));
+    setAssistantParseFeedback(Ivy.cms().co(Cms.FILE_READY));
   }
 
   @SuppressWarnings("unchecked")
@@ -172,7 +176,7 @@ public interface AssistantUploadSupport<T> {
       String contentToparse = buildCombinedContent();
       if (StringUtils.isBlank(contentToparse)) {
         setAssistantAwaitingConfirmation(Boolean.FALSE);
-        setAssistantParseFeedback(Ivy.cms().co(CMS_CONFIRM_PARSE));
+        setAssistantParseFeedback(Ivy.cms().co(Cms.CONFIRM_PARSE));
         return null;
       }
       params.put("content", contentToparse);
@@ -187,16 +191,16 @@ public interface AssistantUploadSupport<T> {
 
       if (parsedDraft == null) {
         setAssistantAwaitingConfirmation(Boolean.TRUE);
-        setAssistantParseFeedback(Ivy.cms().co(CMS_NO_VALUES));
+        setAssistantParseFeedback(Ivy.cms().co(Cms.NO_VALUES));
         return null;
       }
 
       applyParsedDraft(parsedDraft);
       setAssistantAwaitingConfirmation(Boolean.FALSE);
-      setAssistantParseFeedback(Ivy.cms().co(CMS_PARSE_SUCCESS));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.PARSE_SUCCESS));
     } catch (Exception ex) {
       setAssistantAwaitingConfirmation(Boolean.TRUE);
-      setAssistantParseFeedback(Ivy.cms().co(CMS_PARSE_FAILED_TPL, java.util.Arrays.asList(ex.getMessage())));
+      setAssistantParseFeedback(Ivy.cms().co(Cms.PARSE_FAILED_TPL, java.util.Arrays.asList(ex.getMessage())));
       Ivy.log().warn("Assistant parse failed", ex);
     }
 
@@ -209,7 +213,7 @@ public interface AssistantUploadSupport<T> {
       StringBuilder sb = new StringBuilder();
       for (UploadedDocumentEntry doc : docs) {
         if (!UploadedDocumentEntryFactory.isPdf(doc)) {
-          sb.append(String.format(DOCUMENT_SEPARATOR_FORMAT, doc.getFileName()));
+          sb.append(String.format(Format.DOCUMENT_SEPARATOR, doc.getFileName()));
           sb.append(UploadedDocumentEntryFactory.getContent(doc)).append("\n\n");
         }
       }
@@ -235,9 +239,9 @@ public interface AssistantUploadSupport<T> {
     if (guidance == null || guidance.isEmpty()) {
       return "";
     }
-    StringBuilder sb = new StringBuilder(GUIDANCE_HEADER);
+    StringBuilder sb = new StringBuilder(Format.GUIDANCE_HEADER);
     for (AgentGuidance g : guidance) {
-      sb.append(String.format(GUIDANCE_LINE_FORMAT, g.getQuestionPattern(), g.getInstruction()));
+      sb.append(String.format(Format.GUIDANCE_LINE, g.getQuestionPattern(), g.getInstruction()));
     }
     return sb.toString().trim();
   }
@@ -280,23 +284,23 @@ public interface AssistantUploadSupport<T> {
       }
 
       Map<String, Object> params = new HashMap<>();
-      params.put(PARAM_QUESTION, latestQuestion);
-      params.put(PARAM_CHAT_HISTORY, formattedHistory);
-      params.put(PARAM_GUIDANCE_CONTEXT, compileGuidanceContext());
+      params.put(Param.QUESTION, latestQuestion);
+      params.put(Param.CHAT_HISTORY, formattedHistory);
+      params.put(Param.GUIDANCE_CONTEXT, compileGuidanceContext());
 
       Map<String, Object> result =
           IvyAdapterService.startSubProcessInSecurityContext(signature, params);
 
       String response = (result != null && result.get(getAgentResponseKey()) != null)
           ? result.get(getAgentResponseKey()).toString()
-          : DEFAULT_AGENT_ERROR_MSG;
+          : Format.DEFAULT_AGENT_ERROR;
 
       List<AssistantChatMessage> updatedHistory = new ArrayList<>(getAgentChatHistory());
       updatedHistory.add(AssistantChatMessageFactory.of("assistant", response));
       setAgentChatHistory(updatedHistory);
     } catch (Exception e) {
       List<AssistantChatMessage> updatedHistory = new ArrayList<>(getAgentChatHistory());
-      updatedHistory.add(AssistantChatMessageFactory.of("assistant", String.format(AGENT_ERROR_FORMAT, e.getMessage())));
+      updatedHistory.add(AssistantChatMessageFactory.of("assistant", String.format(Format.AGENT_ERROR, e.getMessage())));
       setAgentChatHistory(updatedHistory);
       Ivy.log().warn("Agent chat failed", e);
     }

@@ -21,51 +21,53 @@ import ch.ivyteam.ivy.environment.Ivy;
 @ApplicationScoped
 public class AuditTrailEntryHelper {
 
-  // bubble classes
-  private static final String BUBBLE_COMPLETED = "so-tl-bubble-completed";
-  private static final String BUBBLE_AGENT     = "so-tl-bubble-agent";
-  private static final String BUBBLE_PENDING   = "so-tl-bubble-pending";
-  private static final String BUBBLE_USER      = "so-tl-bubble-user";
+  interface Bubble {
+    String COMPLETED = "so-tl-bubble-completed";
+    String AGENT     = "so-tl-bubble-agent";
+    String PENDING   = "so-tl-bubble-pending";
+    String USER      = "so-tl-bubble-user";
+  }
 
-  // entry icons
-  private static final String ICON_USER_CHECK = "ti-user-check";
-  private static final String ICON_ROBOT      = "ti-robot";
-  private static final String ICON_SETTINGS   = "ti-settings";
-  private static final String ICON_USER       = "ti-user";
+  interface Icon {
+    String USER_CHECK      = "ti-user-check";
+    String ROBOT           = "ti-robot";
+    String SETTINGS        = "ti-settings";
+    String USER            = "ti-user";
+    String CIRCLE_CHECK    = "ti-circle-check";
+    String ALERT_TRIANGLE  = "ti-alert-triangle";
+    String CIRCLE_X        = "ti-circle-x";
+    String FILE_CERTIFICATE = "ti-file-certificate";
+    String MESSAGE         = "ti-message";
+  }
 
-  // badge classes
-  private static final String BADGE_GREEN  = "so-badge-green";
-  private static final String BADGE_RED    = "so-badge-red";
-  private static final String BADGE_YELLOW = "so-badge-yellow";
-  private static final String BADGE_GRAY   = "so-badge-gray";
-  private static final String BADGE_PURPLE = "so-badge-purple";
-  private static final String BADGE_BLUE   = "so-badge-blue";
+  interface Badge {
+    String GREEN  = "so-badge-green";
+    String RED    = "so-badge-red";
+    String YELLOW = "so-badge-yellow";
+    String GRAY   = "so-badge-gray";
+    String PURPLE = "so-badge-purple";
+    String BLUE   = "so-badge-blue";
+  }
 
-  // finding row classes
-  private static final String FINDING_GREEN  = "so-finding-green";
-  private static final String FINDING_YELLOW = "so-finding-yellow";
-  private static final String FINDING_RED    = "so-finding-red";
+  interface Finding {
+    String GREEN  = "so-finding-green";
+    String YELLOW = "so-finding-yellow";
+    String RED    = "so-finding-red";
+  }
 
-  // finding icons
-  private static final String ICON_CIRCLE_CHECK   = "ti-circle-check";
-  private static final String ICON_ALERT_TRIANGLE = "ti-alert-triangle";
-  private static final String ICON_CIRCLE_X       = "ti-circle-x";
+  interface LogLine {
+    String OK      = "so-log-line-ok";
+    String WARNING = "so-log-line-warning";
+    String ERROR   = "so-log-line-error";
+  }
 
-  // log line classes
-  private static final String LOG_LINE_OK      = "so-log-line-ok";
-  private static final String LOG_LINE_WARNING = "so-log-line-warning";
-  private static final String LOG_LINE_ERROR   = "so-log-line-error";
-
-  // actor role labels
-  private static final String LABEL_APPROVER = "Approver";
-  private static final String LABEL_AGENT    = "Agent";
-  private static final String LABEL_SYSTEM   = "System";
-  private static final String LABEL_USER     = "User";
-
-  // resolved item
-  private static final String RESOLUTION_TYPE_DOCUMENT = "Document uploaded";
-  private static final String ICON_FILE_CERTIFICATE    = "ti-file-certificate";
-  private static final String ICON_MESSAGE             = "ti-message";
+  interface Label {
+    String APPROVER            = "Approver";
+    String AGENT               = "Agent";
+    String SYSTEM              = "System";
+    String USER                = "User";
+    String RESOLUTION_DOCUMENT = "Document uploaded";
+  }
 
   public String formatTimestamp(String timestamp) {
     if (timestamp == null || timestamp.isBlank()) {
@@ -83,57 +85,57 @@ public class AuditTrailEntryHelper {
 
   public String bubbleClass(AuditTrailEntry entry) {
     if (entry.getEntryType() == AuditEntryType.APPROVAL) {
-      return BUBBLE_COMPLETED;
+      return Bubble.COMPLETED;
     }
     if (entry.getActorType() == null) {
-      return BUBBLE_USER;
+      return Bubble.USER;
     }
     return switch (entry.getActorType()) {
-      case AGENT  -> BUBBLE_AGENT;
-      case SYSTEM -> BUBBLE_PENDING;
-      default     -> BUBBLE_USER;
+      case AGENT  -> Bubble.AGENT;
+      case SYSTEM -> Bubble.PENDING;
+      default     -> Bubble.USER;
     };
   }
 
   public String icon(AuditTrailEntry entry) {
     if (entry.getEntryType() == AuditEntryType.APPROVAL) {
-      return ICON_USER_CHECK;
+      return Icon.USER_CHECK;
     }
     if (entry.getActorType() == null) {
-      return ICON_USER;
+      return Icon.USER;
     }
     return switch (entry.getActorType()) {
-      case AGENT  -> ICON_ROBOT;
-      case SYSTEM -> ICON_SETTINGS;
-      default     -> ICON_USER;
+      case AGENT  -> Icon.ROBOT;
+      case SYSTEM -> Icon.SETTINGS;
+      default     -> Icon.USER;
     };
   }
 
   public String actorTypeBadgeClass(AuditTrailEntry entry) {
     if (entry.getEntryType() == AuditEntryType.APPROVAL) {
-      return BADGE_GREEN;
+      return Badge.GREEN;
     }
     if (entry.getActorType() == null) {
-      return BADGE_GRAY;
+      return Badge.GRAY;
     }
     return switch (entry.getActorType()) {
-      case AGENT  -> BADGE_PURPLE;
-      case SYSTEM -> BADGE_GRAY;
-      default     -> BADGE_BLUE;
+      case AGENT  -> Badge.PURPLE;
+      case SYSTEM -> Badge.GRAY;
+      default     -> Badge.BLUE;
     };
   }
 
   public String actorRoleLabel(AuditTrailEntry entry) {
     if (entry.getEntryType() == AuditEntryType.APPROVAL) {
-      return LABEL_APPROVER;
+      return Label.APPROVER;
     }
     if (entry.getActorType() == AuditActorType.AGENT) {
-      return LABEL_AGENT;
+      return Label.AGENT;
     }
     if (entry.getActorType() == AuditActorType.SYSTEM) {
-      return LABEL_SYSTEM;
+      return Label.SYSTEM;
     }
-    return LABEL_USER;
+    return Label.USER;
   }
 
   public String decisionBadgeClass(ApprovalDecision decision) {
@@ -141,9 +143,9 @@ public class AuditTrailEntryHelper {
       return "";
     }
     return switch (decision) {
-      case APPROVED          -> BADGE_GREEN;
-      case REJECTED          -> BADGE_RED;
-      case CHANGES_REQUESTED -> BADGE_YELLOW;
+      case APPROVED          -> Badge.GREEN;
+      case REJECTED          -> Badge.RED;
+      case CHANGES_REQUESTED -> Badge.YELLOW;
       default                -> "";
     };
   }
@@ -151,52 +153,52 @@ public class AuditTrailEntryHelper {
   public String findingRowClass(ValidationFinding finding) {
     FindingSeverity s = finding != null ? finding.getSeverity() : null;
     if (s == null) {
-      return FINDING_GREEN;
+      return Finding.GREEN;
     }
     return switch (s) {
-      case WARNING -> FINDING_YELLOW;
-      case FAILURE -> FINDING_RED;
-      default      -> FINDING_GREEN;
+      case WARNING -> Finding.YELLOW;
+      case FAILURE -> Finding.RED;
+      default      -> Finding.GREEN;
     };
   }
 
   public String findingIcon(ValidationFinding finding) {
     FindingSeverity s = finding != null ? finding.getSeverity() : null;
     if (s == null) {
-      return ICON_CIRCLE_CHECK;
+      return Icon.CIRCLE_CHECK;
     }
     return switch (s) {
-      case WARNING -> ICON_ALERT_TRIANGLE;
-      case FAILURE -> ICON_CIRCLE_X;
-      default      -> ICON_CIRCLE_CHECK;
+      case WARNING -> Icon.ALERT_TRIANGLE;
+      case FAILURE -> Icon.CIRCLE_X;
+      default      -> Icon.CIRCLE_CHECK;
     };
   }
 
   public String findingBadgeClass(ValidationFinding finding) {
     FindingSeverity s = finding != null ? finding.getSeverity() : null;
     if (s == null) {
-      return BADGE_GREEN;
+      return Badge.GREEN;
     }
     return switch (s) {
-      case WARNING -> BADGE_YELLOW;
-      case FAILURE -> BADGE_RED;
-      default      -> BADGE_GREEN;
+      case WARNING -> Badge.YELLOW;
+      case FAILURE -> Badge.RED;
+      default      -> Badge.GREEN;
     };
   }
 
   public String findingLogClass(ValidationFinding finding) {
     FindingSeverity s = finding != null ? finding.getSeverity() : null;
     if (s == null) {
-      return LOG_LINE_OK;
+      return LogLine.OK;
     }
     return switch (s) {
-      case WARNING -> LOG_LINE_WARNING;
-      case FAILURE -> LOG_LINE_ERROR;
-      default      -> LOG_LINE_OK;
+      case WARNING -> LogLine.WARNING;
+      case FAILURE -> LogLine.ERROR;
+      default      -> LogLine.OK;
     };
   }
 
   public String resolvedItemIcon(String resolutionType) {
-    return RESOLUTION_TYPE_DOCUMENT.equals(resolutionType) ? ICON_FILE_CERTIFICATE : ICON_MESSAGE;
+    return Label.RESOLUTION_DOCUMENT.equals(resolutionType) ? Icon.FILE_CERTIFICATE : Icon.MESSAGE;
   }
 }
