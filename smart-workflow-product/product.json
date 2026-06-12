@@ -8,6 +8,12 @@
         "projects": [
           {
             "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-demo",
+            "version": "${version}",
+            "type": "iar"
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-supplier-demo",
             "version": "${version}",
             "type": "iar"
