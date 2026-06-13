@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;
 import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;
-import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.ExtractedDoc;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.AgentProcessingStep;
@@ -23,14 +22,13 @@ public class DocumentExtractionService {
   private static final String UNKNOWN_ERROR_MSG = "Unknown extraction error";
   private static final String EXTRACTION_FAIL_PREFIX = "Document extraction failed: ";
   private static final String EXTRACTION_FAIL_LOG_PREFIX = "Extraction failed: ";
-  private static final String NO_DOCS_PREFIX = "No documents found for supplier: ";
+  private static final String NO_DOCUMENTS_MSG = "No documents found.";
 
   private DocumentExtractionService() {
   }
 
-  public static List<LegalDocument> loadDocuments(String supplierId) {
-    List<LegalDocument> docs = LegalDocumentRepository.getInstance().findByObjectId(supplierId);
-    return docs != null ? docs : new ArrayList<>();
+  public static List<LegalDocument> loadDocuments(List<LegalDocument> documents) {
+    return documents != null ? documents : new ArrayList<>();
   }
 
   public static List<String> loadRequiredDocumentTypes() {
@@ -47,13 +45,12 @@ public class DocumentExtractionService {
     return DocumentContextBuilder.of(doc).withCertificationType().build();
   }
 
-  public static String buildDocumentContext(String supplierId) {
-    List<LegalDocument> docs = LegalDocumentRepository.getInstance().findByObjectId(supplierId);
-    if (docs == null || docs.isEmpty()) {
-      return NO_DOCS_PREFIX + supplierId;
+  public static String buildDocumentContext(List<LegalDocument> documents) {
+    if (documents == null || documents.isEmpty()) {
+      return NO_DOCUMENTS_MSG;
     }
     StringBuilder sb = new StringBuilder();
-    for (LegalDocument doc : docs) {
+    for (LegalDocument doc : documents) {
       sb.append(DocumentContextBuilder.of(doc).build()).append("\n");
     }
     return sb.toString();
