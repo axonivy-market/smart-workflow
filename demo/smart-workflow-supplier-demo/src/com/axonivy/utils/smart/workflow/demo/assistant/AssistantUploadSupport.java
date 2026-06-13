@@ -6,8 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+
+import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
+import ch.ivyteam.ivy.security.exec.Sudo;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
@@ -184,7 +191,7 @@ public interface AssistantUploadSupport<T> {
 
     try {
 
-      Map<String, Object> result = IvyAdapterService.startSubProcessInSecurityContext(
+      Map<String, Object> result = startSubProcessInSecurityContext(
           getParseSubProcessSignature(), params);
       T parsedDraft = result != null ? (T) result.get(getParsedResultKey()) : null;
       setAssistantParsedDraft(parsedDraft);
@@ -289,7 +296,7 @@ public interface AssistantUploadSupport<T> {
       params.put(Param.GUIDANCE_CONTEXT, compileGuidanceContext());
 
       Map<String, Object> result =
-          IvyAdapterService.startSubProcessInSecurityContext(signature, params);
+          startSubProcessInSecurityContext(signature, params);
 
       String response = (result != null && result.get(getAgentResponseKey()) != null)
           ? result.get(getAgentResponseKey()).toString()
@@ -316,5 +323,35 @@ public interface AssistantUploadSupport<T> {
       sb.append(msg.getRole()).append(": ").append(msg.getContent()).append("\n");
     }
     return sb.toString().trim();
+  }
+
+  static Map<String, Object> startSubProcessInSecurityContext(String signature, Map<String, Object> params) {
+    return Sudo.get(() -> {
+      var filter = SubProcessSearchFilter.create()
+          .setSearchScope(SearchScope.SECURITY_CONTEXT)
+          .setSignature(signature).toFilter();
+
+      var subProcessStartList = SubProcessCallStartEvent.find(filter);
+      if (subProcessStartList.isEmpty()) {
+        return Map.of();
+      }
+      var subProcessStart = subProcessStartList.get(0);
+
+      Map<String, Object> resolvedParams = Optional.ofNullable(params).orElse(Map.of());
+      if (resolvedParams.isEmpty()) {
+        return subProcessStart.call().asMap();
+      }
+
+      Map<String, Object> result = new HashMap<>();
+      List<Entry<String, Object>> entryList = new ArrayList<>(resolvedParams.entrySet());
+      for (Entry<String, Object> entry : entryList) {
+        if (entryList.indexOf(entry) != entryList.size() - 1) {
+          subProcessStart.withParam(entry.getKey(), entry.getValue());
+        } else {
+          result = subProcessStart.withParam(entry.getKey(), entry.getValue()).call().asMap();
+        }
+      }
+      return result;
+    });
   }
 }
