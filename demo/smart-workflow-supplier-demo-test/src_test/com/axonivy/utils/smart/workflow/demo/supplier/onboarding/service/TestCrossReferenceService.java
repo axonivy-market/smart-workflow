@@ -2,6 +2,8 @@ package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.demo.supplier.Supplier;
@@ -34,12 +36,12 @@ class TestCrossReferenceService {
   void checkErpDuplicate_matchOutcome_dependsOnSupplierId() {
     Supplier other = new Supplier();
     other.setSupplierId("OTHER1");
-    assertThat(CrossReferenceService.checkErpDuplicate("S001", java.util.List.of(other)).getSeverity())
+    assertThat(CrossReferenceService.checkErpDuplicate("S001", List.of(other)).getSeverity())
         .isEqualTo(FindingSeverity.WARNING);
 
     Supplier same = new Supplier();
     same.setSupplierId("S001");
-    assertThat(CrossReferenceService.checkErpDuplicate("S001", java.util.List.of(same)).getSeverity())
+    assertThat(CrossReferenceService.checkErpDuplicate("S001", List.of(same)).getSeverity())
         .isEqualTo(FindingSeverity.PASSED);
   }
 
