@@ -50,9 +50,7 @@ public interface RequiredDocumentUploader extends DocumentUploader {
         .objectType(getObjectType())
         .documentType(docType)
         .fileName(event.getFile().getFileName())
-        .contentType(event.getFile().getContentType())
         .fileContent(event.getFile().getContent())
-        .fileSize(event.getFile().getSize())
         .description(description)
         .uploadedNow()
         .build();
