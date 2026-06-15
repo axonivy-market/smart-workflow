@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-supplier-dup-001",
+  "object": "chat.completion",
+  "created": 1758263999,
+  "model": "gpt-4.1-2025-04-14",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"feedback\":\"No duplicate suppliers found.\",\"isSupplierExisting\":false,\"matchScore\":0,\"suppliers\":[]}"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 120,
+    "completion_tokens": 30,
+    "total_tokens": 150
+  }
+}

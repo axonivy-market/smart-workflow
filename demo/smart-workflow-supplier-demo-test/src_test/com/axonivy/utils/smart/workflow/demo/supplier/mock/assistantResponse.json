@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-supplier-assist-001",
+  "object": "chat.completion",
+  "created": 1758263999,
+  "model": "gpt-4.1-2025-04-14",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "For supplier onboarding, the required documents are: Commercial Register Extract, VAT registration certificate, Self-Declaration form, and applicable quality certifications such as ISO 9001."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 100,
+    "completion_tokens": 50,
+    "total_tokens": 150
+  }
+}

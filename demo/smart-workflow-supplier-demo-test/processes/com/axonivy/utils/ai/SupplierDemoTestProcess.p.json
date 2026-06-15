@@ -1,0 +1,702 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19EC6C4C60552935",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.SupplierDemoTestProcessData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "start",
+      "config" : {
+        "signature" : "start"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f10",
+      "type" : "RequestStart",
+      "name" : "testAskSupplierAssistant",
+      "config" : {
+        "signature" : "testAskSupplierAssistant"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f12",
+      "type" : "SubProcessCall",
+      "name" : "Call askSupplierAssistant",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierAssistantAgent:askSupplierAssistant(String,String,String)",
+        "call" : {
+          "map" : {
+            "param.question" : "\"What documents are required for supplier onboarding?\"",
+            "param.chatHistory" : "\"\"",
+            "param.guidanceContext" : "\"\""
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.assistantResponse" : "result.aiResponse"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 192 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f14" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 192 }
+      }
+    }, {
+      "id" : "f20",
+      "type" : "RequestStart",
+      "name" : "testParseOnboardingRequest",
+      "config" : {
+        "signature" : "testParseOnboardingRequest"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f22" }
+      ]
+    }, {
+      "id" : "f22",
+      "type" : "SubProcessCall",
+      "name" : "Call parseOnboardingRequest",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierAssistantAgent:parseOnboardingRequest(String,java.io.InputStream)",
+        "call" : {
+          "map" : {
+            "param.content" : "\"Business Name: Test GmbH\\nVAT ID: DE123456789\\nAddress: Test Street 1, Berlin, Germany\"",
+            "param.inputStream" : "null"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.parseFeedback" : "result.feedback"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 320 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f23", "to" : "f24" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 320 }
+      }
+    }, {
+      "id" : "f30",
+      "type" : "RequestStart",
+      "name" : "testSupplierDocumentExtractAgent",
+      "config" : {
+        "signature" : "testSupplierDocumentExtractAgent"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 448 }
+      },
+      "connect" : [
+        { "id" : "f31", "to" : "f32" }
+      ]
+    }, {
+      "id" : "f32",
+      "type" : "SubProcessCall",
+      "name" : "Call supplierDocumentExtractAgent",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:supplierDocumentExtractAgent(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.supplier" : "new com.axonivy.utils.smart.workflow.demo.supplier.Supplier()",
+            "param.onboardingRequest" : "new com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.extractionResult" : "result.extractionResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 448 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f33", "to" : "f34" }
+      ]
+    }, {
+      "id" : "f34",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 448 }
+      }
+    }, {
+      "id" : "f40",
+      "type" : "RequestStart",
+      "name" : "testValidateAgainstPolicy",
+      "config" : {
+        "signature" : "testValidateAgainstPolicy"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 576 }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f42" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "SubProcessCall",
+      "name" : "Call validateAgainstPolicy",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:validateAgainstPolicy(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult,com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.supplier" : "new com.axonivy.utils.smart.workflow.demo.supplier.Supplier()",
+            "param.documents" : "new com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult()",
+            "param.onboardingRequest" : "new com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.policyValidationResult" : "result.policyValidationResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 576 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f43", "to" : "f44" }
+      ]
+    }, {
+      "id" : "f44",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 576 }
+      }
+    }, {
+      "id" : "f50",
+      "type" : "RequestStart",
+      "name" : "testCallRiskAssessment",
+      "config" : {
+        "signature" : "testCallRiskAssessment"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 704 }
+      },
+      "connect" : [
+        { "id" : "f51", "to" : "f52" }
+      ]
+    }, {
+      "id" : "f52",
+      "type" : "SubProcessCall",
+      "name" : "Call callRiskAssessment",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:callRiskAssessment(com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,Integer,String)",
+        "call" : {
+          "map" : {
+            "param.policyResult" : "new com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult()",
+            "param.financialResult" : "new com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult()",
+            "param.annualVolumeEur" : "50000",
+            "param.supplierId" : "\"TEST-001\""
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.riskScoreResult" : "result.riskScoreResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 704 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f53", "to" : "f54" }
+      ]
+    }, {
+      "id" : "f54",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 704 }
+      }
+    }, {
+      "id" : "f60",
+      "type" : "RequestStart",
+      "name" : "testCallDuplicateCheck",
+      "config" : {
+        "signature" : "testCallDuplicateCheck"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 832 }
+      },
+      "connect" : [
+        { "id" : "f61", "to" : "f62" }
+      ]
+    }, {
+      "id" : "f62",
+      "type" : "SubProcessCall",
+      "name" : "Call callDuplicateCheck",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:callDuplicateCheck(com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "new com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.agentResponse" : "result.agentResponse"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 832 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f63", "to" : "f64" }
+      ]
+    }, {
+      "id" : "f64",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 832 }
+      }
+    }, {
+      "id" : "f70",
+      "type" : "RequestStart",
+      "name" : "testValidateFinancialPolicy",
+      "config" : {
+        "signature" : "testValidateFinancialPolicy"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 960 }
+      },
+      "connect" : [
+        { "id" : "f71", "to" : "f72" }
+      ]
+    }, {
+      "id" : "f72",
+      "type" : "SubProcessCall",
+      "name" : "Call validateFinancialPolicy",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:validateFinancialPolicy(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult)",
+        "call" : {
+          "map" : {
+            "param.supplier" : "new com.axonivy.utils.smart.workflow.demo.supplier.Supplier()",
+            "param.documents" : "new com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult()"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.financialValidationResult" : "result.financialValidationResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 960 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f73", "to" : "f74" }
+      ]
+    }, {
+      "id" : "f74",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 960 }
+      }
+    }, {
+      "id" : "f80",
+      "type" : "RequestStart",
+      "name" : "testEmployeeRepo_findAll",
+      "config" : {
+        "signature" : "testEmployeeRepo_findAll"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1088 }
+      },
+      "connect" : [
+        { "id" : "f80c", "to" : "f81" }
+      ]
+    }, {
+      "id" : "f81",
+      "type" : "Script",
+      "name" : "Install & findAll Employees",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository;",
+"EmployeeRepository repo = EmployeeRepository.getInstance();",
+            "repo.install();",
+            "in.employeeCount = repo.findAll().size();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1088 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f81c", "to" : "f82" }
+      ]
+    }, {
+      "id" : "f82",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1088 }
+      }
+    }, {
+      "id" : "f83",
+      "type" : "RequestStart",
+      "name" : "testEmployeeRepo_findByUsername",
+      "config" : {
+        "signature" : "testEmployeeRepo_findByUsername"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1216 }
+      },
+      "connect" : [
+        { "id" : "f83c", "to" : "f84" }
+      ]
+    }, {
+      "id" : "f84",
+      "type" : "Script",
+      "name" : "Install & findByUsername",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository;",
+"EmployeeRepository repo = EmployeeRepository.getInstance();",
+            "repo.install();",
+            "in.foundEmployee = repo.findByUsername(\"sandra.collins\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1216 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f84c", "to" : "f85" }
+      ]
+    }, {
+      "id" : "f85",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1216 }
+      }
+    }, {
+      "id" : "f86",
+      "type" : "RequestStart",
+      "name" : "testEmployeeRepo_create",
+      "config" : {
+        "signature" : "testEmployeeRepo_create"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1344 }
+      },
+      "connect" : [
+        { "id" : "f86c", "to" : "f87" }
+      ]
+    }, {
+      "id" : "f87",
+      "type" : "Script",
+      "name" : "Install & create Employee",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.employee.Employee;",
+"EmployeeRepository repo = EmployeeRepository.getInstance();",
+            "repo.install();",
+            "Employee e = new Employee();",
+            "e.setUsername(\"test.employee\");",
+            "repo.create(e);",
+            "in.employeeCount = repo.findAll().size();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1344 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f87c", "to" : "f88" }
+      ]
+    }, {
+      "id" : "f88",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1344 }
+      }
+    }, {
+      "id" : "f89",
+      "type" : "RequestStart",
+      "name" : "testDepartmentRepo_findAll",
+      "config" : {
+        "signature" : "testDepartmentRepo_findAll"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1472 }
+      },
+      "connect" : [
+        { "id" : "f89c", "to" : "f90" }
+      ]
+    }, {
+      "id" : "f90",
+      "type" : "Script",
+      "name" : "Install & findAll Departments",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository;",
+"DepartmentRepository repo = DepartmentRepository.getInstance();",
+            "repo.install();",
+            "in.departmentCount = repo.findAll().size();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1472 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f90c", "to" : "f91" }
+      ]
+    }, {
+      "id" : "f91",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1472 }
+      }
+    }, {
+      "id" : "f92",
+      "type" : "RequestStart",
+      "name" : "testDepartmentRepo_findById",
+      "config" : {
+        "signature" : "testDepartmentRepo_findById"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1600 }
+      },
+      "connect" : [
+        { "id" : "f92c", "to" : "f93" }
+      ]
+    }, {
+      "id" : "f93",
+      "type" : "Script",
+      "name" : "Install & findById Department",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository;",
+"DepartmentRepository repo = DepartmentRepository.getInstance();",
+            "repo.install();",
+            "in.foundDepartment = repo.findById(\"DEPT-001\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1600 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f93c", "to" : "f94" }
+      ]
+    }, {
+      "id" : "f94",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1600 }
+      }
+    }, {
+      "id" : "f95",
+      "type" : "RequestStart",
+      "name" : "testSupplierRepo_findAll",
+      "config" : {
+        "signature" : "testSupplierRepo_findAll"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1728 }
+      },
+      "connect" : [
+        { "id" : "f95c", "to" : "f96" }
+      ]
+    }, {
+      "id" : "f96",
+      "type" : "Script",
+      "name" : "Install & findAll Suppliers",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
+"SupplierRepository repo = SupplierRepository.getInstance();",
+            "repo.install();",
+            "in.supplierCount = repo.findAll().size();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1728 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f96c", "to" : "f97" }
+      ]
+    }, {
+      "id" : "f97",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1728 }
+      }
+    }, {
+      "id" : "f98",
+      "type" : "RequestStart",
+      "name" : "testSupplierRepo_findById",
+      "config" : {
+        "signature" : "testSupplierRepo_findById"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1856 }
+      },
+      "connect" : [
+        { "id" : "f98c", "to" : "f99" }
+      ]
+    }, {
+      "id" : "f99",
+      "type" : "Script",
+      "name" : "Install & findById Supplier",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
+"SupplierRepository repo = SupplierRepository.getInstance();",
+            "repo.install();",
+            "in.foundSupplier = repo.findById(\"SUP-2019-0001\").orElse(null);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1856 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f99c", "to" : "f100" }
+      ]
+    }, {
+      "id" : "f100",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1856 }
+      }
+    }, {
+      "id" : "f101",
+      "type" : "RequestStart",
+      "name" : "testPolicyRuleRepo_findAll",
+      "config" : {
+        "signature" : "testPolicyRuleRepo_findAll"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1984 }
+      },
+      "connect" : [
+        { "id" : "f101c", "to" : "f102" }
+      ]
+    }, {
+      "id" : "f102",
+      "type" : "Script",
+      "name" : "Install & findAll PolicyRules",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository;",
+"SupplierPolicyRuleRepository repo = SupplierPolicyRuleRepository.getInstance();",
+            "repo.install();",
+            "in.policyRuleCount = repo.findAll().size();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 1984 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f102c", "to" : "f103" }
+      ]
+    }, {
+      "id" : "f103",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 1984 }
+      }
+    }, {
+      "id" : "f104",
+      "type" : "RequestStart",
+      "name" : "testPolicyRuleRepo_findByTarget",
+      "config" : {
+        "signature" : "testPolicyRuleRepo_findByTarget"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 2112 }
+      },
+      "connect" : [
+        { "id" : "f104c", "to" : "f105" }
+      ]
+    }, {
+      "id" : "f105",
+      "type" : "Script",
+      "name" : "Install & findByTarget PolicyRule",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository;",
+"SupplierPolicyRuleRepository repo = SupplierPolicyRuleRepository.getInstance();",
+            "repo.install();",
+            "in.foundPolicyRule = repo.findByTarget(\"RULE_03_ISO_9001\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 2112 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f105c", "to" : "f106" }
+      ]
+    }, {
+      "id" : "f106",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 2112 }
+      }
+    } ]
+}

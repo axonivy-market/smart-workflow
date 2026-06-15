@@ -1,0 +1,77 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierDemoTestProcessData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "assistantResponse",
+    "comment" : "Response text from askSupplierAssistant"
+  }, {
+    "name" : "parseFeedback",
+    "comment" : "Status message from parseOnboardingRequest"
+  }, {
+    "name" : "extractionResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult",
+    "comment" : "Result from supplierDocumentExtractAgent",
+    "modifiers" : [ ]
+  }, {
+    "name" : "policyValidationResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult",
+    "comment" : "Result from validateAgainstPolicy",
+    "modifiers" : [ ]
+  }, {
+    "name" : "riskScoreResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.RiskScoreResult",
+    "comment" : "Result from callRiskAssessment",
+    "modifiers" : [ ]
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse",
+    "comment" : "Result from callDuplicateCheck",
+    "modifiers" : [ ]
+  }, {
+    "name" : "financialValidationResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult",
+    "comment" : "Result from validateFinancialPolicy",
+    "modifiers" : [ ]
+  }, {
+    "name" : "employeeCount",
+    "type" : "Integer",
+    "comment" : "Employee list size from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "foundEmployee",
+    "type" : "com.axonivy.utils.smart.workflow.demo.employee.Employee",
+    "comment" : "Employee lookup result from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "departmentCount",
+    "type" : "Integer",
+    "comment" : "Department list size from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "foundDepartment",
+    "type" : "com.axonivy.utils.smart.workflow.demo.department.Department",
+    "comment" : "Department lookup result from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "supplierCount",
+    "type" : "Integer",
+    "comment" : "Supplier list size from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "foundSupplier",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.Supplier",
+    "comment" : "Supplier lookup result from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "policyRuleCount",
+    "type" : "Integer",
+    "comment" : "Policy rule list size from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "foundPolicyRule",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.SupplierPolicyRule",
+    "comment" : "Policy rule lookup result from repository test",
+    "modifiers" : [ ]
+  } ]
+}
