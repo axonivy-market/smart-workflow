@@ -23,7 +23,7 @@ class TestRequiredDocumentUploader {
   void uploadRequiredDocument_resolvesTypeAndDescription(String pendingType, String fileName,
       LegalDocumentType expectedType, String expectedDescription) {
     var uploader = uploaderWithPending(pendingType);
-    uploader.uploadRequiredDocument(fileName, "application/pdf", new byte[0], 0);
+    uploader.uploadRequiredDocument(fileName, new byte[0]);
     LegalDocument doc = uploader.getSupplierDocuments().get(0);
     assertThat(doc.getDocumentType()).isEqualTo(expectedType);
     assertThat(doc.getDescription()).isEqualTo(expectedDescription);
@@ -43,7 +43,7 @@ class TestRequiredDocumentUploader {
   @Test
   void uploadRequiredDocument_clearsPendingTypeAfterUpload() {
     var uploader = uploaderWithPending("COMMERCIAL_REGISTER");
-    uploader.uploadRequiredDocument("file.pdf", "application/pdf", new byte[0], 0);
+    uploader.uploadRequiredDocument("file.pdf", new byte[0]);
     assertThat(uploader.getPendingDocumentType()).isNull();
   }
 

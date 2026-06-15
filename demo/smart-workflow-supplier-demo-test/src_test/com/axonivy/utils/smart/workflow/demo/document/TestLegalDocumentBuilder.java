@@ -23,9 +23,7 @@ class TestLegalDocumentBuilder {
         .objectType(LegalDocumentObjectType.SUPPLIER)
         .documentType(LegalDocumentType.CONTRACT)
         .fileName("contract.pdf")
-        .contentType("application/pdf")
         .fileContent(content)
-        .fileSize(content.length)
         .description("Main contract")
         .build();
 
@@ -33,9 +31,7 @@ class TestLegalDocumentBuilder {
     assertThat(doc.getObjectType()).isEqualTo(LegalDocumentObjectType.SUPPLIER);
     assertThat(doc.getDocumentType()).isEqualTo(LegalDocumentType.CONTRACT);
     assertThat(doc.getFileName()).isEqualTo("contract.pdf");
-    assertThat(doc.getContentType()).isEqualTo("application/pdf");
     assertThat(doc.getFileContent()).isEqualTo(content);
-    assertThat(doc.getFileSize()).isEqualTo(content.length);
     assertThat(doc.getDescription()).isEqualTo("Main contract");
   }
 

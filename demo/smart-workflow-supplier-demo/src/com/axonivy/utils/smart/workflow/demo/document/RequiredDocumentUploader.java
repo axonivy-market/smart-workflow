@@ -21,13 +21,10 @@ public interface RequiredDocumentUploader extends DocumentUploader {
   default void uploadRequiredDocument(FileUploadEvent event) {
     uploadRequiredDocument(
         event.getFile().getFileName(),
-        event.getFile().getContentType(),
-        event.getFile().getContent(),
-        event.getFile().getSize());
+        event.getFile().getContent());
   }
 
-  default void uploadRequiredDocument(String fileName, String contentType,
-      byte[] fileContent, long fileSize) {
+  default void uploadRequiredDocument(String fileName, byte[] fileContent) {
     LegalDocumentType docType;
     String description = null;
 
@@ -59,9 +56,7 @@ public interface RequiredDocumentUploader extends DocumentUploader {
         .objectType(getObjectType())
         .documentType(docType)
         .fileName(fileName)
-        .contentType(contentType)
         .fileContent(fileContent)
-        .fileSize(fileSize)
         .description(description)
         .uploadedNow()
         .build();
