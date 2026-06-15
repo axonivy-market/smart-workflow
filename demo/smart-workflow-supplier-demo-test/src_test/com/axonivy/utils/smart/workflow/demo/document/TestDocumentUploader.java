@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;
-
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
@@ -18,7 +17,7 @@ class TestDocumentUploader {
   @ParameterizedTest
   @MethodSource
   void isSameSlot_sameType_returnsExpected(LegalDocumentType type, boolean expected) {
-    assertThat(DocumentUploader.isSameSlot(docOf(type), docOf(type))).isEqualTo(expected);
+    assertThat(DocumentUploader.isSameSlot(LegalDocumentBuilder.of(type), LegalDocumentBuilder.of(type))).isEqualTo(expected);
   }
 
   @SuppressWarnings("unused")
@@ -35,28 +34,17 @@ class TestDocumentUploader {
 
   @Test
   void isSameSlot_differentTypes_returnsFalse() {
-    assertThat(DocumentUploader.isSameSlot(docOf(LegalDocumentType.ISO_9001),
-        docOf(LegalDocumentType.ISO_14001))).isFalse();
-    assertThat(DocumentUploader.isSameSlot(docOf(LegalDocumentType.CONTRACT),
-        docOf(LegalDocumentType.ANNUAL_REPORT))).isFalse();
+    assertThat(DocumentUploader.isSameSlot(LegalDocumentBuilder.of(LegalDocumentType.ISO_9001),
+        LegalDocumentBuilder.of(LegalDocumentType.ISO_14001))).isFalse();
+    assertThat(DocumentUploader.isSameSlot(LegalDocumentBuilder.of(LegalDocumentType.CONTRACT),
+        LegalDocumentBuilder.of(LegalDocumentType.ANNUAL_REPORT))).isFalse();
   }
 
   @Test
   void isSameSlot_certificationBase_matchesByDescription() {
-    LegalDocument brcFood = docOfCert("BRC Food");
-    assertThat(DocumentUploader.isSameSlot(brcFood, docOfCert("BRC Food"))).isTrue();
-    assertThat(DocumentUploader.isSameSlot(brcFood, docOfCert("OHSAS 18001"))).isFalse();
+    LegalDocument brcFood = LegalDocumentBuilder.ofCert("BRC Food");
+    assertThat(DocumentUploader.isSameSlot(brcFood, LegalDocumentBuilder.ofCert("BRC Food"))).isTrue();
+    assertThat(DocumentUploader.isSameSlot(brcFood, LegalDocumentBuilder.ofCert("OHSAS 18001"))).isFalse();
   }
 
-  private static LegalDocument docOf(LegalDocumentType type) {
-    LegalDocument doc = new LegalDocument();
-    doc.setDocumentType(type);
-    return doc;
-  }
-
-  private static LegalDocument docOfCert(String description) {
-    LegalDocument doc = docOf(LegalDocumentType.CERTIFICATION);
-    doc.setDescription(description);
-    return doc;
-  }
 }
