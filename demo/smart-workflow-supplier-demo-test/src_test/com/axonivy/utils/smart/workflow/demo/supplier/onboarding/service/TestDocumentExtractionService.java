@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;
+import com.axonivy.utils.smart.workflow.demo.document.LegalDocumentBuilder;
 import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;
 
 import ch.ivyteam.ivy.environment.IvyTest;
@@ -17,7 +18,7 @@ class TestDocumentExtractionService {
 
   @Test
   void loadDocuments_returnsProvidedList() {
-    List<LegalDocument> docs = List.of(new LegalDocument());
+    List<LegalDocument> docs = List.of(LegalDocumentBuilder.of(LegalDocumentType.OTHER));
     assertThat(DocumentExtractionService.loadDocuments(docs)).isSameAs(docs);
   }
 
@@ -37,13 +38,9 @@ class TestDocumentExtractionService {
 
   @Test
   void buildDocumentContext_withMultipleDocs_includesAllFileNames() {
-    LegalDocument doc1 = new LegalDocument();
-    doc1.setFileName("first.pdf");
-    doc1.setDocumentType(LegalDocumentType.CONTRACT);
+    LegalDocument doc1 = LegalDocumentBuilder.of(LegalDocumentType.CONTRACT, "first.pdf");
 
-    LegalDocument doc2 = new LegalDocument();
-    doc2.setFileName("second.pdf");
-    doc2.setDocumentType(LegalDocumentType.ANNUAL_REPORT);
+    LegalDocument doc2 = LegalDocumentBuilder.of(LegalDocumentType.ANNUAL_REPORT, "second.pdf");
 
     assertThat(DocumentExtractionService.buildDocumentContext(List.of(doc1, doc2)))
         .contains("first.pdf", "second.pdf");
@@ -51,10 +48,8 @@ class TestDocumentExtractionService {
 
   @Test
   void buildDocumentContext_withTextContent_includesContentInOutput() {
-    LegalDocument doc = new LegalDocument();
-    doc.setFileName("report.pdf");
-    doc.setDocumentType(LegalDocumentType.ANNUAL_REPORT);
-    doc.setFileContent("Revenue: 5M EUR".getBytes(StandardCharsets.UTF_8));
+    LegalDocument doc = LegalDocumentBuilder.of(LegalDocumentType.ANNUAL_REPORT, "report.pdf",
+        "Revenue: 5M EUR".getBytes(StandardCharsets.UTF_8));
 
     assertThat(DocumentExtractionService.buildDocumentContext(List.of(doc)))
         .contains("Revenue: 5M EUR");

@@ -19,6 +19,12 @@ public interface RequiredDocumentUploader extends DocumentUploader {
   );
 
   default void uploadRequiredDocument(FileUploadEvent event) {
+    uploadRequiredDocument(
+        event.getFile().getFileName(),
+        event.getFile().getContent());
+  }
+
+  default void uploadRequiredDocument(String fileName, byte[] fileContent) {
     LegalDocumentType docType;
     String description = null;
 
@@ -42,17 +48,15 @@ public interface RequiredDocumentUploader extends DocumentUploader {
         }
       }
     } else {
-      docType = LegalDocumentType.fromFileName(event.getFile().getFileName());
+      docType = LegalDocumentType.fromFileName(fileName);
     }
 
     LegalDocument doc = LegalDocumentBuilder.builder()
         .objectId(ensureObjectId())
         .objectType(getObjectType())
         .documentType(docType)
-        .fileName(event.getFile().getFileName())
-        .contentType(event.getFile().getContentType())
-        .fileContent(event.getFile().getContent())
-        .fileSize(event.getFile().getSize())
+        .fileName(fileName)
+        .fileContent(fileContent)
         .description(description)
         .uploadedNow()
         .build();

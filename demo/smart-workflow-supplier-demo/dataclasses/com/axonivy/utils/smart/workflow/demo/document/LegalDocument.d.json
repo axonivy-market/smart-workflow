@@ -20,16 +20,9 @@
     "name" : "fileName",
     "comment" : "Original file name"
   }, {
-    "name" : "contentType",
-    "comment" : "MIME content type"
-  }, {
     "name" : "fileContent",
     "type" : "byte[]",
     "comment" : "Raw file bytes"
-  }, {
-    "name" : "fileSize",
-    "type" : "java.lang.Long",
-    "comment" : "File size in bytes"
   }, {
     "name" : "uploadedAt",
     "comment" : "ISO-8601 timestamp of upload"
