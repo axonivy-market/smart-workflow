@@ -16,7 +16,9 @@ public class PromptInjectionInputGuardrail implements SmartWorkflowInputGuardrai
   private static final Pattern PROMPT_INJECTION_PATTERN = Pattern
       .compile("(?i)(ignore (all )?previous|disregard (all )?(previous |your )?instructions?|"
           + "forget (all )?(previous |your )?instructions?|forget everything|"
-          + "pretend (to be|you are|you're)|you are now|system prompt|system:|assistant:)",
+          + "pretend (to be|you are|you're)|you are now|"
+          + "(reveal|show|print|repeat|output|display) (me )?(your |the )?system prompt|"
+          + "your system prompt|system:|assistant:)",
           Pattern.CASE_INSENSITIVE);
 
   // Pattern for excessive special characters that might be used in attacks

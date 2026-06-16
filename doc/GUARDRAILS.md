@@ -18,7 +18,7 @@ Guardrails protect AI agents by validating both user input and AI output. Smart 
 | **Catches** | Keyword-based attacks | All of the above + roleplay, authority claims, narrative payloads, obfuscation |
 | **False positives** | Low (narrowed patterns) | Very low (intent-aware) |
 | **Latency** | ~0 ms | +LLM call per message |
-| **Cost** | Free | Token cost (use `AI.Guardrails.Classifier.Model` to pin a cheap model) |
+| **Cost** | Free | Token cost (use `AI.Guardrails.PromptInjection.Classifier.Model` to pin a cheap model) |
 | **When to use** | Default / general use | High-security deployments, customer-facing chatbots |
 
 ### Configuring `AiPromptInjectionInputGuardrail`
@@ -29,14 +29,15 @@ Two variables control cost vs. coverage:
 Variables:
   AI:
     Guardrails:
-      Classifier:
-        # Pin a cheaper model for the classifier to reduce token cost.
-        # When blank, the default provider model is used.
-        Model: "gpt-4.1-nano"
-        # Allow messages shorter than this character count without an LLM call.
-        # Default is 0 (all messages are evaluated). Raise this to skip the LLM
-        # for very short messages once you understand your traffic patterns.
-        MinLength: "0"
+      PromptInjection:
+        Classifier:
+          # Pin a cheaper model for the classifier to reduce token cost.
+          # When blank, the default provider model is used.
+          Model: "gpt-4.1-nano"
+          # Allow messages shorter than this character count without an LLM call.
+          # Default is 0 (all messages are evaluated). Raise this to skip the LLM
+          # for very short messages once you understand your traffic patterns.
+          MinLength: "0"
 ```
 
 ## Configuring Default Guardrails
