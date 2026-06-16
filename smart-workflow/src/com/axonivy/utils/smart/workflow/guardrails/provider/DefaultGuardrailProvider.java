@@ -16,8 +16,8 @@ public class DefaultGuardrailProvider implements GuardrailProvider {
   @Override
   public List<SmartWorkflowInputGuardrail> getInputGuardrails() {
     return List.of(
-      new PromptInjectionInputGuardrail(), 
-      new AiPromptInjectionInputGuardrail(), 
+      new PromptInjectionInputGuardrail(),
+      new AiPromptInjectionInputGuardrail(),
       piiMaskingGuardrail);
   }
 
