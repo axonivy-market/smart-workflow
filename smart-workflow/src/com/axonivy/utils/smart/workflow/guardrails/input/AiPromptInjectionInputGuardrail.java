@@ -7,6 +7,9 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
+import com.axonivy.utils.smart.workflow.utils.IvyVar;
+
+import ch.ivyteam.ivy.environment.Ivy;
 
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
@@ -17,16 +20,28 @@ public class AiPromptInjectionInputGuardrail implements SmartWorkflowInputGuardr
 
   private static final String FAILURE_MESSAGE =
       "The input message is rejected because it contains malicious content";
+  private static final int MIN_LENGTH_FALLBACK = 0;
+
+  public interface Var {
+    String PREFIX = "AI.Guardrails.Classifier.";
+    String MODEL = PREFIX + "Model";
+    String MIN_LENGTH = PREFIX + "MinLength";
+  }
 
   @Override
   public GuardrailResult evaluate(String message) {
+    int minLength = IvyVar.integer(Var.MIN_LENGTH, MIN_LENGTH_FALLBACK);
+    if (message == null || message.length() < minLength) {
+      return GuardrailResult.allow();
+    }
     return evaluateWithLlm(message);
   }
 
   private GuardrailResult evaluateWithLlm(String message) {
     try {
+      var classifierModel = Ivy.var().get(Var.MODEL);
       var provider = ChatModelFactory.getProviderOrDefault(null);
-      var model = provider.setup(ModelOptions.options());
+      var model = provider.setup(ModelOptions.options().modelName(classifierModel));
       var modelName = model.defaultRequestParameters().modelName();
       var builder = AiServices.builder(InjectionClassifier.class)
           .chatModel(model);
