@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierBanking",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier",
+  "fields" : [ {
+    "name" : "iban",
+    "comment" : "International Bank Account Number"
+  }, {
+    "name" : "bic",
+    "comment" : "Bank Identifier Code / SWIFT"
+  }, {
+    "name" : "bankName",
+    "comment" : "Name of the bank"
+  } ]
+}

@@ -1,0 +1,34 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierSearchCriteria",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.repository",
+  "fields" : [ {
+    "name" : "supplierId",
+    "comment" : "Unique supplier identifier. Leave null if no filter is needed."
+  }, {
+    "name" : "businessNameContains",
+    "comment" : "Business name filter (case-insensitive partial match)"
+  }, {
+    "name" : "businessAddress",
+    "type" : "com.axonivy.utils.smart.workflow.demo.common.Address",
+    "comment" : "Primary business address filter"
+  }, {
+    "name" : "phone",
+    "comment" : "Main phone number filter (exact match)"
+  }, {
+    "name" : "email",
+    "comment" : "Email filter (exact match)"
+  }, {
+    "name" : "website",
+    "comment" : "Website URL filter (exact match)"
+  }, {
+    "name" : "vatId",
+    "comment" : "VAT ID filter (exact match)"
+  }, {
+    "name" : "businessPurposeContains",
+    "comment" : "Business purpose or category filter (partial match)"
+  }, {
+    "name" : "country",
+    "comment" : "Country filter (exact match)"
+  } ]
+}

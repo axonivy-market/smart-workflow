@@ -2,7 +2,7 @@
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
   "id" : "19EAF64F69DB4849",
   "config" : {
-    "data" : "com.axonivy.utils.ai.SupplierOnboardingData"
+    "data" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.process.SupplierOnboardingData"
   },
   "elements" : [ {
       "id" : "f0",

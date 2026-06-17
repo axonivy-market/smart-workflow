@@ -1,0 +1,38 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ValidationFinding",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding",
+  "fields" : [ {
+    "name" : "severity",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.FindingSeverity",
+    "comment" : "Finding severity: PASSED, WARNING, or FAILURE"
+  }, {
+    "name" : "message",
+    "comment" : "Description of the finding"
+  }, {
+    "name" : "source",
+    "comment" : "Source of the check, e.g. 'RAG policy', 'cross-reference check'"
+  }, {
+    "name" : "documentTypeKey",
+    "comment" : "If this finding requires the supplier to upload a document or certificate, provide a key identifying what to upload. Use CERTIFICATION:<NAME> for any certificate type (e.g. CERTIFICATION:ISO_9001, CERTIFICATION:BRC_FOOD, CERTIFICATION:OHSAS_18001). Use DOCUMENT:<NAME> for any other document (e.g. DOCUMENT:ANNUAL_REPORT, DOCUMENT:BANK_STATEMENT, DOCUMENT:COMMERCIAL_REGISTER). Derive NAME freely from context — do NOT limit to any fixed list. Leave null only for non-document findings such as duplicate checks or general data issues."
+  }, {
+    "name" : "score",
+    "type" : "java.lang.Integer",
+    "comment" : "Points deducted from the compliance score by this finding. 0 for PASSED, half the rule deduction for WARNING, full rule deduction for FAILURE."
+  }, {
+    "name" : "riskType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskType",
+    "comment" : "The type of risk this finding relates to: FINANCIAL_STABILITY, POLICY_COMPLIANCE, or CERTIFICATION_VALIDITY"
+  }, {
+    "name" : "riskKind",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskKind",
+    "comment" : "The kind of check that produced this finding: MISSING_DOC or AI_VALIDATION"
+  }, {
+    "name" : "resolved",
+    "type" : "Boolean"
+  }, {
+    "name" : "aiExplanation"
+  }, {
+    "name" : "userExplanation"
+  } ]
+}
