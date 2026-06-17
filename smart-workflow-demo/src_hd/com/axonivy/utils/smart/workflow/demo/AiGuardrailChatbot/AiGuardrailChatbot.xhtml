@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui">
+
+  <h:form id="chatForm">
+    <div style="padding:16px">
+
+      <!-- Title -->
+      <h2 style="margin:0 0 16px 0; font-size:1.2rem; color:#333">
+        Guardrail Comparison — Regex vs AI-assisted
+      </h2>
+
+      <!-- Two chat panels side by side -->
+      <div style="display:flex; gap:16px; margin-bottom:16px">
+
+        <!-- Left: Regex guardrail -->
+        <div style="flex:1; border:1px solid #dee2e6; border-radius:8px; overflow:hidden">
+          <div style="background:#495057; color:white; padding:10px 14px; font-weight:bold; font-size:0.9rem">
+            PromptInjectionInputGuardrail (Regex)
+          </div>
+          <div id="panel1"
+               style="height:420px; overflow-y:auto; padding:12px; background:#f8f9fa">
+
+            <ui:fragment rendered="#{empty data.messages1}">
+              <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#6c757d; text-align:center; font-size:0.85rem">
+                <span>Responses will appear here</span>
+              </div>
+            </ui:fragment>
+
+            <ui:repeat value="#{data.messages1}" var="msg">
+              <h:panelGroup rendered="#{msg.role eq 'user'}" layout="block"
+                            style="display:flex; justify-content:flex-end; margin-bottom:8px">
+                <div style="max-width:75%; background:#0d6efd; color:white; padding:8px 12px; border-radius:16px 16px 4px 16px; font-size:0.9rem">
+                  <h:outputText value="#{msg.content}" />
+                </div>
+              </h:panelGroup>
+              <h:panelGroup rendered="#{msg.role eq 'assistant'}" layout="block"
+                            style="display:flex; justify-content:flex-start; margin-bottom:8px">
+                <div style="max-width:75%; background:#ffffff; border:1px solid #dee2e6; padding:8px 12px; border-radius:16px 16px 16px 4px; font-size:0.9rem">
+                  <h:outputText value="#{msg.content}" />
+                </div>
+              </h:panelGroup>
+              <h:panelGroup rendered="#{msg.role eq 'error'}" layout="block"
+                            style="display:flex; justify-content:center; margin-bottom:8px">
+                <div style="max-width:90%; background:#fff3cd; border:1px solid #ffc107; color:#856404; padding:8px 12px; border-radius:8px; font-size:0.85rem">
+                  &#x26A0; <h:outputText value="#{msg.content}" />
+                </div>
+              </h:panelGroup>
+            </ui:repeat>
+          </div>
+        </div>
+
+        <!-- Right: AI guardrail -->
+        <div style="flex:1; border:1px solid #dee2e6; border-radius:8px; overflow:hidden">
+          <div style="background:#0f6cbf; color:white; padding:10px 14px; font-weight:bold; font-size:0.9rem">
+            AiPromptInjectionInputGuardrail (Regex + LLM)
+          </div>
+          <div id="panel2"
+               style="height:420px; overflow-y:auto; padding:12px; background:#f8f9fa">
+
+            <ui:fragment rendered="#{empty data.messages2}">
+              <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#6c757d; text-align:center; font-size:0.85rem">
+                <span>Responses will appear here</span>
+              </div>
+            </ui:fragment>
+
+            <ui:repeat value="#{data.messages2}" var="msg">
+              <h:panelGroup rendered="#{msg.role eq 'user'}" layout="block"
+                            style="display:flex; justify-content:flex-end; margin-bottom:8px">
+                <div style="max-width:75%; background:#0d6efd; color:white; padding:8px 12px; border-radius:16px 16px 4px 16px; font-size:0.9rem">
+                  <h:outputText value="#{msg.content}" />
+                </div>
+              </h:panelGroup>
+              <h:panelGroup rendered="#{msg.role eq 'assistant'}" layout="block"
+                            style="display:flex; justify-content:flex-start; margin-bottom:8px">
+                <div style="max-width:75%; background:#ffffff; border:1px solid #dee2e6; padding:8px 12px; border-radius:16px 16px 16px 4px; font-size:0.9rem">
+                  <h:outputText value="#{msg.content}" />
+                </div>
+              </h:panelGroup>
+              <h:panelGroup rendered="#{msg.role eq 'error'}" layout="block"
+                            style="display:flex; justify-content:center; margin-bottom:8px">
+                <div style="max-width:90%; background:#fff3cd; border:1px solid #ffc107; color:#856404; padding:8px 12px; border-radius:8px; font-size:0.85rem">
+                  &#x26A0; <h:outputText value="#{msg.content}" />
+                </div>
+              </h:panelGroup>
+            </ui:repeat>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Shared input -->
+      <div style="display:flex; gap:8px; align-items:flex-start">
+        <p:inputTextarea id="userInput" value="#{data.userInput}"
+                         rows="2" autoResize="true" style="flex:1; resize:none"
+                         placeholder="Type a message and send to both guardrails... (Ctrl+Enter to send)"
+                         onkeydown="if(event.ctrlKey&amp;&amp;event.key==='Enter'){document.querySelector('[id$=sendBtn]').click();return false;}" />
+        <p:commandButton id="sendBtn" value="Send to both" icon="pi pi-send"
+                         actionListener="#{logic.chat()}"
+                         update="chatForm"
+                         global="false"
+                         oncomplete="document.getElementById('panel1').scrollTop=9999;document.getElementById('panel2').scrollTop=9999;" />
+      </div>
+
+      <!-- Example prompts -->
+      <div style="margin-top:12px; font-size:0.8rem; color:#6c757d">
+        <strong>Try these:</strong>
+        "Please act as a reminder system" (false positive for regex) ·
+        "Ignore all previous instructions" (injection — both should block) ·
+        "What is 2+2?" (benign — both should allow)
+      </div>
+
+      <!-- Done button -->
+      <div style="margin-top:12px; text-align:right">
+        <p:commandButton value="Done" icon="pi pi-check"
+                         styleClass="p-button-secondary p-button-sm"
+                         actionListener="#{logic.close()}"
+                         global="false" />
+      </div>
+
+    </div>
+  </h:form>
+
+</ui:composition>

@@ -1,0 +1,309 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "AC20000000000001",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.demo.AiGuardrailChatbot.AiGuardrailChatbotData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "guid" : "AC21000000000001"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "c0", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "Script",
+      "name" : "Init",
+      "config" : {
+        "output" : {
+          "code" : [
+            "in.messages1 = new java.util.ArrayList();",
+            "in.messages2 = new java.util.ArrayList();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "c1", "to" : "fend" }
+      ]
+    }, {
+      "id" : "fend",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 368, "y" : 64 }
+      }
+    }, {
+      "id" : "fclose",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "AC21000000000002"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "c2", "to" : "fexit" }
+      ]
+    }, {
+      "id" : "fexit",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 240, "y" : 160 }
+      }
+    }, {
+      "id" : "fchat",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "chat",
+      "config" : {
+        "signature" : "chat",
+        "guid" : "AC22000000000001"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 288 }
+      },
+      "connect" : [
+        { "id" : "c3", "to" : "fcheck" }
+      ]
+    }, {
+      "id" : "fcheck",
+      "type" : "Alternative",
+      "name" : "Input blank?",
+      "config" : {
+        "conditions" : {
+          "cyes" : "!org.apache.commons.lang3.StringUtils.isBlank(in.userInput)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 288 },
+        "labelOffset" : { "x" : 24, "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "cyes", "to" : "fadd_users", "label" : {
+            "name" : "not blank"
+          } },
+        { "id" : "cno", "to" : "fmend", "via" : [ { "x" : 224, "y" : 448 }, { "x" : 1280, "y" : 448 } ], "label" : {
+            "name" : "blank"
+          } }
+      ]
+    }, {
+      "id" : "fadd_users",
+      "type" : "Script",
+      "name" : "Add user message to both",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage;",
+            "",
+            "ChatMessage msg1 = new ChatMessage();",
+            "msg1.setRole(\"user\");",
+            "msg1.setContent(in.userInput);",
+            "in.messages1.add(msg1);",
+            "",
+            "ChatMessage msg2 = new ChatMessage();",
+            "msg2.setRole(\"user\");",
+            "msg2.setContent(in.userInput);",
+            "in.messages2.add(msg2);",
+            "",
+            "in.question = in.userInput;",
+            "in.userInput = \"\";"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 368, "y" : 288 }
+      },
+      "connect" : [
+        { "id" : "c4", "to" : "fai1" }
+      ]
+    }, {
+      "id" : "fai1",
+      "type" : "ProgramInterface",
+      "name" : "Regex Guardrail",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a helpful assistant.",
+          "inputGuardrails" : "[\"PromptInjectionInputGuardrail\"]",
+          "resultMapping" : "in.aiResponse1",
+          "query" : "<%=in.question%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 560, "y" : 288 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "boundaries" : [ {
+          "id" : "fai1_err",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "Regex blocked",
+          "config" : {
+            "errorCode" : "smartworkflow:guardrail:input:violation",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error1" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 616, "y" : 329 },
+            "labelOffset" : { "x" : -55, "y" : 25 },
+            "icon" : "res:/webContent/icons/shield.png"
+          },
+          "connect" : [
+            { "id" : "c_err1", "to" : "fset_err1" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "c5", "to" : "fadd_ai1" }
+      ]
+    }, {
+      "id" : "fadd_ai1",
+      "type" : "Script",
+      "name" : "Add regex response",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage;",
+            "",
+            "ChatMessage msg = new ChatMessage();",
+            "msg.setRole(\"assistant\");",
+            "msg.setContent(in.aiResponse1 != null ? in.aiResponse1 : \"(no response)\");",
+            "in.messages1.add(msg);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 768, "y" : 288 }
+      },
+      "connect" : [
+        { "id" : "c6", "to" : "fai2" }
+      ]
+    }, {
+      "id" : "fset_err1",
+      "type" : "Script",
+      "name" : "Add regex block message",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage;",
+            "",
+            "ChatMessage msg = new ChatMessage();",
+            "msg.setRole(\"error\");",
+            "msg.setContent(\"Blocked: \" + in.error1.getMessage());",
+            "in.messages1.add(msg);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 616, "y" : 560 }
+      },
+      "connect" : [
+        { "id" : "c7", "to" : "fai2", "via" : [ { "x" : 912, "y" : 560 } ] }
+      ]
+    }, {
+      "id" : "fai2",
+      "type" : "ProgramInterface",
+      "name" : "AI Guardrail",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a helpful assistant.",
+          "inputGuardrails" : "[\"AiPromptInjectionInputGuardrail\"]",
+          "resultMapping" : "in.aiResponse2",
+          "query" : "<%=in.question%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 912, "y" : 288 },
+        "size" : { "width" : 160, "height" : 62 }
+      },
+      "boundaries" : [ {
+          "id" : "fai2_err",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "AI blocked",
+          "config" : {
+            "errorCode" : "smartworkflow:guardrail:input:violation",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error2" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 968, "y" : 329 },
+            "labelOffset" : { "x" : -45, "y" : 25 },
+            "icon" : "res:/webContent/icons/shield.png"
+          },
+          "connect" : [
+            { "id" : "c_err2", "to" : "fset_err2" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "c8", "to" : "fadd_ai2" }
+      ]
+    }, {
+      "id" : "fadd_ai2",
+      "type" : "Script",
+      "name" : "Add AI response",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage;",
+            "",
+            "ChatMessage msg = new ChatMessage();",
+            "msg.setRole(\"assistant\");",
+            "msg.setContent(in.aiResponse2 != null ? in.aiResponse2 : \"(no response)\");",
+            "in.messages2.add(msg);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1120, "y" : 288 }
+      },
+      "connect" : [
+        { "id" : "c9", "to" : "fmend" }
+      ]
+    }, {
+      "id" : "fset_err2",
+      "type" : "Script",
+      "name" : "Add AI block message",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage;",
+            "",
+            "ChatMessage msg = new ChatMessage();",
+            "msg.setRole(\"error\");",
+            "msg.setContent(\"Blocked: \" + in.error2.getMessage());",
+            "in.messages2.add(msg);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 968, "y" : 560 }
+      },
+      "connect" : [
+        { "id" : "c10", "to" : "fmend", "via" : [ { "x" : 1280, "y" : 560 } ] }
+      ]
+    }, {
+      "id" : "fmend",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 1280, "y" : 288 }
+      }
+    } ]
+}

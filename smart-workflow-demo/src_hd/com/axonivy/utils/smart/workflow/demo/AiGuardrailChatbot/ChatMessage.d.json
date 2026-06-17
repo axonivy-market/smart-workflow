@@ -1,0 +1,12 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ChatMessage",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.AiGuardrailChatbot",
+  "fields" : [ {
+    "name" : "role",
+    "type" : "String"
+  }, {
+    "name" : "content",
+    "type" : "String"
+  } ]
+}

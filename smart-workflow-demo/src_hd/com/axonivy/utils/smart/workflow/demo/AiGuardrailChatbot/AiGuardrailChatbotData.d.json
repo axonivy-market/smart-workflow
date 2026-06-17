@@ -1,0 +1,30 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "AiGuardrailChatbotData",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.AiGuardrailChatbot",
+  "fields" : [ {
+    "name" : "userInput",
+    "type" : "String"
+  }, {
+    "name" : "question",
+    "type" : "String"
+  }, {
+    "name" : "aiResponse1",
+    "type" : "String"
+  }, {
+    "name" : "aiResponse2",
+    "type" : "String"
+  }, {
+    "name" : "messages1",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage>"
+  }, {
+    "name" : "messages2",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.rag.RagDemo.ChatMessage>"
+  }, {
+    "name" : "error1",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
+  }, {
+    "name" : "error2",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
+  } ]
+}

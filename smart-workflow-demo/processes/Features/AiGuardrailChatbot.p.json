@@ -1,0 +1,43 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "AC10000000000001",
+  "config" : {
+    "data" : "Features.AiGuardrailChatbotData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "aiGuardrailChatbot",
+      "config" : {
+        "signature" : "aiGuardrailChatbot",
+        "request" : {
+          "name" : "AI Guardrail Chatbot"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f0c1", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "DialogCall",
+      "name" : "AI Guardrail Chatbot",
+      "config" : {
+        "dialog" : "com.axonivy.utils.smart.workflow.demo.AiGuardrailChatbot:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f1c1", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 400, "y" : 64 }
+      }
+    } ]
+}
