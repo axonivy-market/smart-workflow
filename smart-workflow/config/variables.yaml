@@ -11,6 +11,10 @@ Variables:
       DefaultOutput: ""
       PromptInjection:
         Classifier:
+          # AI provider used by AiPromptInjectionInputGuardrail for YES/NO classification.
+          # When blank, falls back to AI.DefaultProvider.
+          # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama]
+          Provider: ""
           # Model used by AiPromptInjectionInputGuardrail for YES/NO classification.
           # Use a lightweight model to reduce cost (e.g. gpt-4.1-nano, gemini-2.0-flash-lite).
           # When blank, falls back to the provider's default model.

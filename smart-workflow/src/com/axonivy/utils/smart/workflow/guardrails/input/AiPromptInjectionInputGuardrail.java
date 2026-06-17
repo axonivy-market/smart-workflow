@@ -26,6 +26,7 @@ public class AiPromptInjectionInputGuardrail implements SmartWorkflowInputGuardr
 
   public interface Var {
     String PREFIX = "AI.Guardrails.PromptInjection.Classifier.";
+    String PROVIDER = PREFIX + "Provider";
     String MODEL = PREFIX + "Model";
     String MIN_LENGTH = PREFIX + "MinLength";
   }
@@ -40,13 +41,16 @@ public class AiPromptInjectionInputGuardrail implements SmartWorkflowInputGuardr
   }
 
   private GuardrailResult evaluateWithLlm(String message) {
+    var classifierProvider = Ivy.var().get(Var.PROVIDER);
     var classifierModel = Ivy.var().get(Var.MODEL);
+    boolean customConfigured = (classifierProvider != null && !classifierProvider.isBlank())
+        || (classifierModel != null && !classifierModel.isBlank());
     try {
-      return runClassifier(message, classifierModel);
+      return runClassifier(message, classifierProvider, classifierModel);
     } catch (Exception e) {
-      if (classifierModel != null && !classifierModel.isBlank()) {
-        Ivy.log().warn("AI guardrail classifier: model '" + classifierModel
-            + "' is unavailable, retrying with provider default. Cause: " + e.getMessage());
+      if (customConfigured) {
+        Ivy.log().warn("AI guardrail classifier: configured provider/model '" + classifierProvider
+            + "/" + classifierModel + "' is unavailable, retrying with defaults. Cause: " + e.getMessage());
         return fallbackToDefault(message);
       }
       Ivy.log().error("AI guardrail classifier failed. Blocking as precaution. Cause: " + e.getMessage());
@@ -56,16 +60,16 @@ public class AiPromptInjectionInputGuardrail implements SmartWorkflowInputGuardr
 
   private GuardrailResult fallbackToDefault(String message) {
     try {
-      return runClassifier(message, null);
+      return runClassifier(message, null, null);
     } catch (Exception e) {
-      Ivy.log().error("AI guardrail classifier: fallback to default model also failed. "
+      Ivy.log().error("AI guardrail classifier: fallback to default provider/model also failed. "
           + "Blocking as precaution. Cause: " + e.getMessage());
       return GuardrailResult.block(SAFETY_CHECK_FAILED_MESSAGE);
     }
   }
 
-  private GuardrailResult runClassifier(String message, String modelName) {
-    var provider = ChatModelFactory.getProviderOrDefault(null);
+  private GuardrailResult runClassifier(String message, String providerName, String modelName) {
+    var provider = ChatModelFactory.getProviderOrDefault(providerName);
     var model = provider.setup(ModelOptions.options().modelName(modelName));
     var resolvedModelName = model.defaultRequestParameters().modelName();
     var builder = AiServices.builder(InjectionClassifier.class).chatModel(model);
