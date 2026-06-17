@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+  <div class="sd-slide-body flex-1 min-h-0 overflow-y-auto">
+
+    <div class="sd-ready-hero">
+      <div class="sd-slide-title font-bold text-xl">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/ReadyTitle')}</div>
+      <div>
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/ReadySub')}
+      </div>
+    </div>
+
+    <ui:include src="DocumentDownloads.xhtml" />
+    <ui:include src="GenerateData.xhtml" />
+    <ui:include src="KbDialog.xhtml" />
+
+  </div>
+
+</ui:composition>

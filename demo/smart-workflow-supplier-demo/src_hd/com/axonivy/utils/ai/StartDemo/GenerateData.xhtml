@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+  <h:form id="gen-form">
+
+    <h:outputText id="gen1-running-subtitle" styleClass="hidden" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1RunningSubtitle')}" />
+    <h:outputText id="gen2-running-subtitle" styleClass="hidden" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen2RunningSubtitle')}" />
+    <h:outputText id="gen3-running-subtitle" styleClass="hidden" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen3RunningSubtitle')}" />
+    <h:outputText id="gen-processing-subtitle" styleClass="hidden" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/GenProcessingSubtitle')}" />
+    <h:outputText id="gen-retry-button" styleClass="hidden" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/GenRetryButton')}" />
+    <h:outputText id="file-details-hide" styleClass="hidden" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/FileDetailsHide')}" />
+    <h:outputText id="file-details-toggle" styleClass="hidden" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/FileDetailsToggle')}" />
+    <h:outputText id="data-already-generated" styleClass="hidden" value="1"
+      rendered="#{startDemoBean.dataAlreadyGenerated}" />
+
+    <p:remoteCommand name="sdGenStep1"
+      actionListener="#{startDemoBean.generateVectorStore}"
+      update="sd-gen-panel"
+      oncomplete="sdGen.onStepDone(1);"
+      onerror="sdGen.onStepError();"
+      global="false" />
+    <p:remoteCommand name="sdGenStep2"
+      actionListener="#{startDemoBean.generateCompliancePolicies}"
+      update="sd-gen-panel"
+      oncomplete="sdGen.onStepDone(2);"
+      onerror="sdGen.onStepError();"
+      global="false" />
+    <p:remoteCommand name="sdGenStep3"
+      actionListener="#{startDemoBean.generateFinancialPolicies}"
+      update="sd-gen-panel"
+      oncomplete="sdGen.onStepDone(3);"
+      onerror="sdGen.onStepError();"
+      global="false" />
+
+    <ui:fragment rendered="#{!startDemoBean.dataAlreadyGenerated}">
+      <div class="flex justify-content-center mb-3">
+        <p:commandButton id="sdGenBtn"
+          value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/GenerateDataButton')}"
+          icon="ti ti-database-plus"
+          styleClass="ui-button-primary sd-gen-btn"
+          onclick="sdGen.start(); return false;"
+          type="button" />
+      </div>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{startDemoBean.dataAlreadyGenerated}">
+      <div class="sd-gen-done-banner flex align-items-center font-medium text-sm">
+        <i class="ti ti-circle-check" />
+        <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/DataAlreadyGeneratedBanner')}" escape="false" />
+      </div>
+    </ui:fragment>
+
+    <p:outputPanel id="sd-gen-panel">
+      <div class="sd-gen-timeline js-sd-gen-timeline #{startDemoBean.generationStarted ? '' : 'hidden'}">
+        <div class="so-tl js-sd-tl">
+
+          <div class="#{startDemoBean.step1Status.stepClass}">
+            <div class="so-tl-left">
+              <div class="#{startDemoBean.step1Status.bubbleClass}">
+                <i class="#{startDemoBean.step1Status.statusIcon}" />
+              </div>
+              <div class="so-tl-line" />
+            </div>
+            <div class="so-tl-card">
+              <div class="so-tl-card-header">
+                <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1Title')}</span>
+                <span class="sd-gen-step-hint text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1Hint')}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="#{startDemoBean.step2Status.stepClass}">
+            <div class="so-tl-left">
+              <div class="#{startDemoBean.step2Status.bubbleClass}">
+                <i class="#{startDemoBean.step2Status.statusIcon}" />
+              </div>
+              <div class="so-tl-line" />
+            </div>
+            <div class="so-tl-card">
+              <div class="so-tl-card-header">
+                <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen2Title')}</span>
+                <span class="sd-gen-step-hint text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen2Hint')}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="#{startDemoBean.step3Status.stepClass}">
+            <div class="so-tl-left">
+              <div class="#{startDemoBean.step3Status.bubbleClass}">
+                <i class="#{startDemoBean.step3Status.statusIcon}" />
+              </div>
+              <div class="so-tl-line" />
+            </div>
+            <div class="so-tl-card">
+              <div class="so-tl-card-header">
+                <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen3Title')}</span>
+                <span class="sd-gen-step-hint text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen3Hint')}</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- .so-tl -->
+
+        <ui:fragment rendered="#{startDemoBean.generationDone}">
+          <div class="sd-gen-done-banner flex align-items-center font-medium text-sm">
+            <i class="ti ti-circle-check" />
+            <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/GenDoneBanner')}" escape="false" />
+          </div>
+        </ui:fragment>
+
+      </div><!-- .sd-gen-timeline -->
+    </p:outputPanel>
+  </h:form>
+
+</ui:composition>
