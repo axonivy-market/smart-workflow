@@ -698,5 +698,105 @@
       "visual" : {
         "at" : { "x" : 520, "y" : 2112 }
       }
+    }, {
+      "id" : "f107",
+      "type" : "RequestStart",
+      "name" : "testInstallDemoData",
+      "config" : {
+        "signature" : "testInstallDemoData"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 2240 }
+      },
+      "connect" : [
+        { "id" : "f107c", "to" : "f108" }
+      ]
+    }, {
+      "id" : "f108",
+      "type" : "Script",
+      "name" : "Install all repos",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
+            "SupplierPolicyRuleRepository.getInstance().install();",
+            "EmployeeRepository.getInstance().install();",
+            "DepartmentRepository.getInstance().install();",
+            "SupplierRepository.getInstance().install();",
+            "out.policyRuleCount = SupplierPolicyRuleRepository.getInstance().findAll().size();",
+            "out.employeeCount   = EmployeeRepository.getInstance().findAll().size();",
+            "out.departmentCount = DepartmentRepository.getInstance().findAll().size();",
+            "out.supplierCount   = SupplierRepository.getInstance().findAll().size();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 2240 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f108c", "to" : "f109" }
+      ]
+    }, {
+      "id" : "f109",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 2240 }
+      }
+    }, {
+      "id" : "f110",
+      "type" : "RequestStart",
+      "name" : "testClearDemoData",
+      "config" : {
+        "signature" : "testClearDemoData"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 2368 }
+      },
+      "connect" : [
+        { "id" : "f110c", "to" : "f111" }
+      ]
+    }, {
+      "id" : "f111",
+      "type" : "Script",
+      "name" : "Install & uninstall all repos",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
+            "SupplierPolicyRuleRepository.getInstance().install();",
+            "EmployeeRepository.getInstance().install();",
+            "DepartmentRepository.getInstance().install();",
+            "SupplierRepository.getInstance().install();",
+            "SupplierPolicyRuleRepository.getInstance().uninstall();",
+            "EmployeeRepository.getInstance().uninstall();",
+            "DepartmentRepository.getInstance().uninstall();",
+            "SupplierRepository.getInstance().uninstall();",
+            "out.policyRuleCount = SupplierPolicyRuleRepository.getInstance().findAll().size();",
+            "out.employeeCount   = EmployeeRepository.getInstance().findAll().size();",
+            "out.departmentCount = DepartmentRepository.getInstance().findAll().size();",
+            "out.supplierCount   = SupplierRepository.getInstance().findAll().size();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 2368 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f111c", "to" : "f112" }
+      ]
+    }, {
+      "id" : "f112",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 2368 }
+      }
     } ]
 }

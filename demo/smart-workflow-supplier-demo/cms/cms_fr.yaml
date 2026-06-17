@@ -30,6 +30,8 @@ Dialogs:
                   onboarding:
                     FinishDemo:
                       HeroSub: Nous espérons que vous avez vécu une excellente expérience avec <strong>Smart Workflow</strong>.<br/>Voici un résumé de tout ce que l'IA a géré pour vous — de manière autonome, précise et entièrement traçable.
+                      HeroTitle: Félicitations !
+                      NextButtonTitle: Suivant
                       PageTitle: Smart Workflow — Résumé du processus IA
                       Panel0Desc: Le processus d'intégration commence lorsqu'un fournisseur soumet sa demande via le portail Smart Workflow. Tous les documents justificatifs requis — immatriculation commerciale, certificats fiscaux et états financiers — sont téléversés à cette étape.
                       Panel0Detail1: Le fournisseur complète le profil de l'entreprise et les coordonnées
@@ -66,6 +68,14 @@ Dialogs:
                       Panel6Detail2: Dossier fournisseur mis à jour dans le système avec le résultat final
                       Panel6Detail3: Parties prenantes notifiées de la décision et de l'achèvement du processus
                       Panel6Title: Dossier clôturé
+                      PrevButtonTitle: Précédent
+                      Step0DotTitle: Chargement de documents
+                      Step1DotTitle: Extraction de documents par IA
+                      Step2DotTitle: Guide contextuel Q&R
+                      Step3DotTitle: Validation de documents
+                      Step4DotTitle: Calcul du risque
+                      Step5DotTitle: Routage autonome
+                      Step6DotTitle: Dossier clôturé
                     StartDemo:
                       AfterItem1: Le fournisseur téléverse les documents une fois via un formulaire structuré et guidé
                       AfterItem2: L'IA visuelle extrait automatiquement 15+ champs des PDFs en quelques secondes — aucune saisie manuelle
@@ -117,6 +127,10 @@ Dialogs:
                       GenRetryButton: Réessayer
                       GenerateDataButton: Générer des données
                       KbChunksDesc: Vous trouverez ci-dessous les entrées de la base de connaissances utilisées pour alimenter le chatbot que vous allez utiliser dans cette démo.
+                      KbDialogHeader: Base de connaissances & règles de politique
+                      KbDialogToggle: Base de connaissances & règles
+                      KbTabCompliance: Conformité
+                      KbTabFinancial: Financier
                       KbTabKnowledgeBase: Base de connaissances RAG
                       NextButtonTitle: Suivant
                       PageTitle: Smart Workflow — Démo d'intégration fournisseur
@@ -273,6 +287,8 @@ Dialogs:
                       SaveDraftButton: Enregistrer le brouillon
                       StepSubtitle: Étape 3 sur 6 — Nouvel enregistrement de fournisseur
                       SubmitButton: Soumettre pour validation par l'agent
+                    SupplierOnboardingTemplate:
+                      Title: Intégration des Fournisseurs
                     SupplierRequestForm:
                       AdditionalNotesLabel: Notes supplémentaires
                       AdditionalNotesPlaceholder: Tout contexte supplémentaire pour l'équipe achats ou QM...
@@ -296,7 +312,7 @@ Dialogs:
                       SupplierCountryLabel: Pays du fournisseur *
                       SupplierInfoTitle: Informations fournisseur
                       SupplierNameLabel: Nom du fournisseur *
-
+                      SupplierNamePlaceholder: p. ex. Global Logistics GmbH
                       SupplierWebsiteLabel: Site web du fournisseur
                       SupplierWebsitePlaceholder: https://www.fournisseur.com
                       UrgencyLabel: Urgence *

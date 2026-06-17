@@ -30,6 +30,8 @@ Dialogs:
                   onboarding:
                     FinishDemo:
                       HeroSub: We hope you had a great experience with <strong>Smart Workflow</strong>.<br/>Here is a summary of everything the AI handled for you — autonomously, accurately, and fully auditable.
+                      HeroTitle: Congratulations!
+                      NextButtonTitle: Next
                       PageTitle: Smart Workflow — AI Process Summary
                       Panel0Desc: The onboarding process begins when a supplier submits their application through the Smart Workflow portal. All required supporting documents — business registration, tax certificates, and financial statements — are uploaded at this stage.
                       Panel0Detail1: Supplier completes company profile and contact information
@@ -66,6 +68,14 @@ Dialogs:
                       Panel6Detail2: Supplier record updated in the system with the final outcome
                       Panel6Detail3: Stakeholders notified of the decision and process completion
                       Panel6Title: Case Closed
+                      PrevButtonTitle: Previous
+                      Step0DotTitle: Document Upload
+                      Step1DotTitle: AI Document Extraction
+                      Step2DotTitle: Contextual Q&A Guidance
+                      Step3DotTitle: Document Validation
+                      Step4DotTitle: Risk Calculation
+                      Step5DotTitle: Autonomous Routing
+                      Step6DotTitle: Case Closed
                     StartDemo:
                       AfterItem1: Supplier uploads documents once via a structured, guided form
                       AfterItem2: Vision AI auto-extracts 15+ fields from PDFs in seconds — zero manual entry
@@ -117,6 +127,10 @@ Dialogs:
                       GenRetryButton: Retry
                       GenerateDataButton: Generate Data
                       KbChunksDesc: Below are the knowledge base entries used to provide knowledge for the chatbot you are going to use in this demo.
+                      KbDialogHeader: Knowledge Base & Policy Rules
+                      KbDialogToggle: Knowledge Base & Rules
+                      KbTabCompliance: Compliance
+                      KbTabFinancial: Financial
                       KbTabKnowledgeBase: RAG Knowledge base
                       NextButtonTitle: Next
                       PageTitle: Smart Workflow — Supplier Onboarding Demo
@@ -273,6 +287,8 @@ Dialogs:
                       SaveDraftButton: Save Draft
                       StepSubtitle: Step 3 of 6 \u2014 New Supplier Registration
                       SubmitButton: Submit for Agent Validation
+                    SupplierOnboardingTemplate:
+                      Title: Supplier Onboarding
                     SupplierRequestForm:
                       AdditionalNotesLabel: Additional Notes
                       AdditionalNotesPlaceholder: Any additional context for the procurement or QM team...
@@ -296,7 +312,7 @@ Dialogs:
                       SupplierCountryLabel: Supplier Country *
                       SupplierInfoTitle: Supplier Information
                       SupplierNameLabel: Supplier Name *
-
+                      SupplierNamePlaceholder: e.g. Global Logistics GmbH
                       SupplierWebsiteLabel: Supplier Website
                       SupplierWebsitePlaceholder: https://www.supplier.com
                       UrgencyLabel: Urgency *
