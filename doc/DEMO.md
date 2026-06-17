@@ -35,6 +35,16 @@ Use the **Supplier Onboarding** demo as the reference implementation:
 </profiles>
 ```
 
+1. **Add the test module to the `demo-test.yml` pipeline** by appending it to the `-pl` argument
+   in [`.github/workflows/demo-test.yml`](../../.github/workflows/demo-test.yml):
+
+```yaml
+mvnArgs: -pl demo/smart-workflow-supplier-demo-test,demo/smart-workflow-procurement-demo-test -am -P demo.test
+```
+
+   This keeps the pipeline fast by building only demo test modules and their dependencies,
+   skipping unrelated CI tests.
+
 ---
 
 ## Running Demo Tests

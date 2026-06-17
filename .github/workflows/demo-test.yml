@@ -11,6 +11,6 @@ jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v6
     with:
-      mvnArgs: -P demo.test
+      mvnArgs: -pl demo/smart-workflow-supplier-demo-test -am -P demo.test
       javaVersion: 25
       cspellExtraWords: .github/cspell-extra-words.txt
