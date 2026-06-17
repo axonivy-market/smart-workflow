@@ -49,11 +49,15 @@ public class LegalDocumentRepository {
 
   public List<LegalDocument> findByObjectId(String objectId) {
     List<LegalDocument> result = new ArrayList<>();
-    for (IDocument ivyDoc : Ivy.wfCase().documents().getAll()) {
-      LegalDocument ld = decodeName(ivyDoc);
-      if (objectId != null && objectId.equals(ld.getObjectId())) {
-        result.add(ld);
+    try {
+      for (IDocument ivyDoc : Ivy.wfCase().documents().getAll()) {
+        LegalDocument ld = decodeName(ivyDoc);
+        if (objectId != null && objectId.equals(ld.getObjectId())) {
+          result.add(ld);
+        }
       }
+    } catch (Exception e) {
+      Ivy.log().warn("Could not load documents for objectId '" + objectId + "': " + e.getMessage());
     }
     return result;
   }

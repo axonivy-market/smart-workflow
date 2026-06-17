@@ -1,0 +1,948 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19EC6AABB52EAE2D",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.SupplierValidationAgentData"
+  },
+  "elements" : [ {
+      "id" : "f3",
+      "type" : "CallSubStart",
+      "name" : "supplierDocumentExtractAgent(Supplier,OnboardingRequest)",
+      "config" : {
+        "signature" : "supplierDocumentExtractAgent",
+        "input" : {
+          "params" : [
+            { "name" : "supplier", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.Supplier", "desc" : "The supplier whose documents to extract" },
+            { "name" : "onboardingRequest", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest", "desc" : "The onboarding request containing the documents" }
+          ],
+          "map" : {
+            "out.supplierId" : "param.supplier.getSupplierId()",
+            "out.onboardingRequest" : "param.onboardingRequest"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "extractionResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult", "desc" : "" }
+          ],
+          "map" : {
+            "result.extractionResult" : "in.extractionResult"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 488 },
+        "description" : "Extracts structured information from the supplier's uploaded documents using AI. Returns a summary and stores the full result for policy validation."
+      },
+      "connect" : [
+        { "id" : "fb0", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "Script",
+      "name" : "Load Docs & Init Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.DocumentExtractionService;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult;",
+            "import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;",
+            "",
+            "in.documents = DocumentExtractionService.loadDocuments(LegalDocumentRepository.getInstance().findByObjectId(in.supplierId));",
+            "in.extractionResult = new DocumentExtractionResult();",
+            "in.documentIndex = 0;",
+            "in.processingStep = DocumentExtractionService.startExtractionStep();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 488 }
+      },
+      "connect" : [
+        { "id" : "fb1", "to" : "f4loop" }
+      ]
+    }, {
+      "id" : "f4loop",
+      "type" : "Alternative",
+      "name" : "More Documents?",
+      "config" : {
+        "conditions" : {
+          "f4loop1" : "in.documentIndex < in.documents.size()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 488 },
+        "labelOffset" : { "x" : 80, "y" : -8 }
+      },
+      "connect" : [
+        { "id" : "f4loop1", "to" : "f4doc" },
+        { "id" : "f4loop0", "to" : "f5fin" }
+      ]
+    }, {
+      "id" : "f4doc",
+      "type" : "Script",
+      "name" : "Build Single Doc Context",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.DocumentExtractionService;",
+            "",
+            "in.documentContext = DocumentExtractionService.buildSingleDocumentContext(in.documents.get(in.documentIndex));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 608, "y" : 488 }
+      },
+      "connect" : [
+        { "id" : "f4docc", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProgramInterface",
+      "name" : "Extract Document",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult.class",
+          "resultMapping" : "in.singleExtraction",
+          "query" : "Extract structured information from this single supplier document:\\n\\n<%= in.documentContext %>\\n\\nSupplier ID: <%= in.supplierId %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 784, "y" : 488 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f5c", "to" : "f4merge" }
+      ]
+    }, {
+      "id" : "f4merge",
+      "type" : "Script",
+      "name" : "Merge & Advance",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.DocumentExtractionService;",
+            "",
+            "DocumentExtractionService.mergeExtractionResult(in.extractionResult, in.singleExtraction, in.documents.get(in.documentIndex));",
+            "in.documentIndex = in.documentIndex + 1;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 968, "y" : 488 }
+      },
+      "connect" : [
+        { "id" : "f4mergec", "to" : "f4loop", "via" : [ { "x" : 968, "y" : 560 }, { "x" : 424, "y" : 560 } ] }
+      ]
+    }, {
+      "id" : "f5fin",
+      "type" : "Script",
+      "name" : "Finalize Extraction Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.DocumentExtractionService;",
+            "",
+            "DocumentExtractionService.finalizeExtractionStep(in.processingStep, in.extractionResult);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 424, "y" : 344 }
+      },
+      "connect" : [
+        { "id" : "f5finc", "to" : "f3end" }
+      ]
+    }, {
+      "id" : "f3end",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 752, "y" : 344 }
+      }
+    }, {
+      "id" : "f7",
+      "type" : "CallSubStart",
+      "name" : "validateAgainstPolicy(Supplier,DocumentExtractionResult,OnboardingRequest)",
+      "config" : {
+        "signature" : "validateAgainstPolicy",
+        "input" : {
+          "params" : [
+            { "name" : "supplier", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.Supplier", "desc" : "The supplier need to validate" },
+            { "name" : "documents", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult", "desc" : "documents need to validate" },
+            { "name" : "onboardingRequest", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest", "desc" : "Full request for reading/writing policyValidationFindings on incremental re-runs" }
+          ],
+          "map" : {
+            "out.extractionResult" : "param.documents",
+            "out.supplier" : "param.supplier",
+            "out.onboardingRequest" : "param.onboardingRequest"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "policyValidationResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult", "desc" : "" }
+          ],
+          "map" : {
+            "result.policyValidationResult" : "in.policyValidationResult"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 752 },
+        "description" : "Validates the supplier data and extracted documents against the onboarding policy. Call AFTER extractDocuments."
+      },
+      "connect" : [
+        { "id" : "fc0", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Init Policy Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
+            "",
+            "in.processingStep = PolicyValidationService.startPolicyStep();",
+            "in.supplierContext = dev.langchain4j.internal.Json.toJson(in.supplier);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 312, "y" : 752 }
+      },
+      "connect" : [
+        { "id" : "fc1", "to" : "f31" }
+      ]
+    }, {
+      "id" : "f8b",
+      "type" : "Script",
+      "name" : "Init Policy Loop",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
+            "import java.util.ArrayList;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding;",
+            "",
+            "in.policyRules = PolicyValidationService.loadPolicyRules();",
+            "in.ruleIndex = 0;",
+            "in.existingFindings = (in.onboardingRequest != null) ? in.onboardingRequest.getPolicyValidationFindings() : null;",
+            "in.filteredExistingFindings = PolicyValidationService.filterExistingFindings(in.existingFindings);",
+            "in.accumulatedFindings = PolicyValidationService.initAccumulatedFromExisting(in.filteredExistingFindings);",
+            "in.isProceeded = false;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 640, "y" : 752 }
+      },
+      "connect" : [
+        { "id" : "f8bc", "to" : "f9loop" }
+      ]
+    }, {
+      "id" : "f9loop",
+      "type" : "Alternative",
+      "name" : "More Rules?",
+      "config" : {
+        "conditions" : {
+          "f9loop1" : "in.ruleIndex < in.policyRules.size()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 784, "y" : 752 },
+        "labelOffset" : { "x" : 80, "y" : -8 }
+      },
+      "connect" : [
+        { "id" : "f9loop1", "to" : "f9doc" },
+        { "id" : "f9loop0", "to" : "f9fin" }
+      ]
+    }, {
+      "id" : "f9doc",
+      "type" : "Script",
+      "name" : "Build Rule Context",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.builder.PolicyContextBuilder;",
+            "",
+            "in.ruleAlreadyEvaluated = PolicyValidationService.isRuleAlreadyEvaluated(",
+            "    in.policyRules.get(in.ruleIndex), in.filteredExistingFindings);",
+            "in.ruleDocumentFound = PolicyValidationService.hasRuleDocument(",
+            "    in.policyRules.get(in.ruleIndex), in.extractionResult);",
+            "in.ruleContext = PolicyContextBuilder.buildRuleDocContext(",
+            "    in.policyRules.get(in.ruleIndex), in.extractionResult, in.supplierContext);",
+            "in.ruleSystemPrompt = PolicyContextBuilder.buildSingleRuleSystemPrompt(",
+            "    in.policyRules.get(in.ruleIndex));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 944, "y" : 752 }
+      },
+      "connect" : [
+        { "id" : "f9docc", "to" : "f9skip" }
+      ]
+    }, {
+      "id" : "f9skip",
+      "type" : "Alternative",
+      "name" : "Rule Already Evaluated?",
+      "config" : {
+        "conditions" : {
+          "f9skip1" : "in.ruleAlreadyEvaluated"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1073, "y" : 751 },
+        "labelOffset" : { "x" : 48, "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "f9skip1", "to" : "f9skipmerge", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : 16, "y" : -2 }
+          } },
+        { "id" : "f9skip0", "to" : "f9doccheck", "label" : {
+            "name" : "no",
+            "offset" : { "x" : 1, "y" : 7 }
+          } }
+      ]
+    }, {
+      "id" : "f9skipmerge",
+      "type" : "Script",
+      "name" : "Advance Index (skip)",
+      "config" : {
+        "output" : {
+          "code" : "in.ruleIndex = in.ruleIndex + 1;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1072, "y" : 856 }
+      },
+      "connect" : [
+        { "id" : "f9skipmerge_c", "to" : "f9loop", "via" : [ { "x" : 784, "y" : 856 } ] }
+      ]
+    }, {
+      "id" : "f9doccheck",
+      "type" : "Alternative",
+      "name" : "Document Present?",
+      "config" : {
+        "conditions" : {
+          "f9doccheck1" : "in.ruleDocumentFound"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1264, "y" : 752 },
+        "labelOffset" : { "x" : 32, "y" : 32 }
+      },
+      "connect" : [
+        { "id" : "f9doccheck1", "to" : "f9ai", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : 17, "y" : -5 }
+          } },
+        { "id" : "f9doccheck0", "to" : "f9merge", "label" : {
+            "name" : "no",
+            "segment" : 0.41,
+            "offset" : { "x" : 3, "y" : -6 }
+          } }
+      ]
+    }, {
+      "id" : "f9ai",
+      "type" : "ProgramInterface",
+      "name" : "Validate Rule",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "<%=in.ruleSystemPrompt%>",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult.class",
+          "resultMapping" : "in.ruleFindings",
+          "query" : "Evaluate this supplier against the policy rule.\\n\\n<%= in.ruleContext %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1264, "y" : 648 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "f9aic", "to" : "f9merge", "via" : [ { "x" : 1600, "y" : 648 } ] }
+      ]
+    }, {
+      "id" : "f9merge",
+      "type" : "Script",
+      "name" : "Merge & Advance",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
+            "",
+            "PolicyValidationService.mergeRuleFindings(in.accumulatedFindings, in.ruleFindings);",
+            "in.ruleIndex = in.ruleIndex + 1;",
+            "",
+            "in.ruleFindings.getFindings().clear();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1600, "y" : 752 }
+      },
+      "connect" : [
+        { "id" : "f9mergec", "to" : "f9loop", "via" : [ { "x" : 1600, "y" : 936 }, { "x" : 784, "y" : 936 } ] }
+      ]
+    }, {
+      "id" : "f9fin",
+      "type" : "Script",
+      "name" : "Finalize Policy Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
+            "",
+            "in.policyValidationResult = PolicyValidationService.finalizePolicyValidation(",
+            "    in.accumulatedFindings, in.documentPresenceFindings, in.processingStep, in.onboardingRequest);",
+            "in.policyRuleEvaluations = in.policyValidationResult.getRuleEvaluations();",
+            "in.policyComplianceScore = in.policyValidationResult.getComplianceScore();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 784, "y" : 656 }
+      },
+      "connect" : [
+        { "id" : "f9finc", "to" : "f7end" }
+      ]
+    }, {
+      "id" : "f7end",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 944, "y" : 656 }
+      }
+    }, {
+      "id" : "ra0",
+      "type" : "CallSubStart",
+      "name" : "callRiskAssessment(PolicyValidationResult, PolicyValidationResult, Integer, String)",
+      "config" : {
+        "signature" : "callRiskAssessment",
+        "input" : {
+          "params" : [
+            { "name" : "policyResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult", "desc" : "Policy validation findings from validateAgainstPolicy" },
+            { "name" : "financialResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult", "desc" : "Financial validation findings from validateFinancialPolicy" },
+            { "name" : "annualVolumeEur", "type" : "Integer", "desc" : "Expected annual procurement volume in EUR" },
+            { "name" : "supplierId", "type" : "String", "desc" : "Supplier ID used to load the document list for REQUIRED DOCUMENTS STATUS check" }
+          ],
+          "map" : {
+            "out.annualVolumeEur" : "param.annualVolumeEur",
+            "out.financialValidationResult" : "param.financialResult",
+            "out.policyValidationResult" : "param.policyResult",
+            "out.supplierId" : "param.supplierId"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "riskScoreResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.RiskScoreResult", "desc" : "3-component risk score, routing decision, and processing step" }
+          ],
+          "map" : {
+            "result.riskScoreResult" : "in.riskScoreResult"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1464 },
+        "labelOffset" : { "x" : 25, "y" : 49 },
+        "description" : "Computes a 3-component risk score (financialStability, policyCompliance, certValidity). Call AFTER validateAgainstPolicy and validateFinancialPolicy."
+      },
+      "connect" : [
+        { "id" : "ra10", "to" : "ra_init" }
+      ]
+    }, {
+      "id" : "ra1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 896, "y" : 1464 }
+      }
+    }, {
+      "id" : "ra_init",
+      "type" : "Script",
+      "name" : "Start Risk Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.RiskAssessmentService;",
+            "",
+            "in.processingStep = RiskAssessmentService.startRiskStep();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 304, "y" : 1464 }
+      },
+      "connect" : [
+        { "id" : "ra_init0", "to" : "ra2" }
+      ]
+    }, {
+      "id" : "ra2",
+      "type" : "Script",
+      "name" : "Compute Risk Score",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.RiskAssessmentService;",
+            "",
+            "in.riskScoreResult = RiskAssessmentService.computeRiskScore(",
+            "    in.annualVolumeEur, in.policyValidationResult, in.financialValidationResult);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 1464 }
+      },
+      "connect" : [
+        { "id" : "ra11", "to" : "ra_fin" }
+      ]
+    }, {
+      "id" : "ra_fin",
+      "type" : "Script",
+      "name" : "Finalize Risk Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.RiskAssessmentService;",
+            "",
+            "RiskAssessmentService.finalizeRiskStep(in.processingStep, in.riskScoreResult);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 720, "y" : 1464 }
+      },
+      "connect" : [
+        { "id" : "ra_fin0", "to" : "ra1" }
+      ]
+    }, {
+      "id" : "dc0",
+      "type" : "CallSubStart",
+      "name" : "callDuplicateCheck(OnboardingRequest)",
+      "config" : {
+        "signature" : "callDuplicateCheck",
+        "input" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest", "desc" : "The supplier onboarding request with supplier details to check for duplicates" }
+          ],
+          "map" : {
+            "out.request" : "param.request"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse", "desc" : "Agent response with matched suppliers, isSupplierExisting, matchScore and feedback" },
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest", "desc" : "Updated request with matchedSuppliers populated" }
+          ],
+          "map" : {
+            "result.agentResponse" : "in.agentResponse",
+            "result.request" : "in.request"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1344 }
+      },
+      "connect" : [
+        { "id" : "dc10", "to" : "dc20" }
+      ]
+    }, {
+      "id" : "dc1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 896, "y" : 1344 }
+      }
+    }, {
+      "id" : "dc20",
+      "type" : "Script",
+      "name" : "Search Suppliers DB",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierSearchCriteria;",
+            "",
+            "in.criteria = new SupplierSearchCriteria();",
+            "if (in.request != null && in.request.getSupplier() != null) {",
+            "  in.criteria.setBusinessNameContains(in.request.getSupplier().getBusinessName());",
+            "  in.criteria.setBusinessPurposeContains(in.request.getSupplier().getBusinessPurpose());",
+            "  if (in.request.getSupplier().getBusinessAddress() != null) {",
+            "    in.criteria.setCountry(in.request.getSupplier().getBusinessAddress().getCountry());",
+            "  }",
+            "}",
+            "in.toolResponse = SupplierRepository.getInstance().findSimilarSuppliers(in.criteria);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 304, "y" : 1344 }
+      },
+      "connect" : [
+        { "id" : "dc20c", "to" : "dc2" }
+      ]
+    }, {
+      "id" : "dc2",
+      "type" : "ProgramInterface",
+      "name" : "Supplier Duplicate Check Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are a supplier duplicate-check specialist for an ERP onboarding system. You will be given the details of a new supplier being onboarded and a pre-fetched list of similar suppliers already in the database. Analyze the results carefully and return a structured SupplierAgentResponse with: suppliers (the full list from the database results), isSupplierExisting (true if any similar suppliers were found, false otherwise), matchScore (0-100: 85+ = high confidence match, 50-84 = possible match, below 50 = low similarity; use 0 if no matches), and feedback (a concise human-readable summary of what was found and how closely they match, explicitly noting name similarity, whether the country matches, and whether the business purpose overlaps — a same-country supplier in the same business category is a stronger duplicate signal even if the name differs slightly).",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse.class",
+          "resultMapping" : "in.agentResponse",
+          "query" : "Check for duplicate suppliers for this new supplier being onboarded:\\n\\nNEW SUPPLIER DETAILS:\\nName: <%=in.request.supplier.businessName%>\\nCountry: <%=in.request.supplier.businessAddress != null ? in.request.supplier.businessAddress.country : \"N/A\"%>\\nVAT ID: <%=in.request.supplier.vatId != null ? in.request.supplier.vatId : \"N/A\"%>\\nBusiness Purpose: <%=in.request.supplier.businessPurpose%>\\n\\nEXISTING SIMILAR SUPPLIERS FROM DATABASE:\\n<%= dev.langchain4j.internal.Json.toJson(in.toolResponse) %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 488, "y" : 1344 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "dc11", "to" : "dc30" }
+      ]
+    }, {
+      "id" : "dc30",
+      "type" : "Script",
+      "name" : "Sync matched suppliers to request",
+      "config" : {
+        "output" : {
+          "code" : [
+            "if (in.agentResponse != null) {",
+            "  in.request.matchedSuppliers = in.agentResponse.suppliers;",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 720, "y" : 1344 }
+      },
+      "connect" : [
+        { "id" : "dc12", "to" : "dc1" }
+      ]
+    }, {
+      "id" : "f31",
+      "type" : "Script",
+      "name" : "Check required documents",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.DocumentExtractionService;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
+            "import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;",
+            "",
+            "String supplierId = in.supplier != null ? in.supplier.getSupplierId() : null;",
+            "in.documents = DocumentExtractionService.loadDocuments(LegalDocumentRepository.getInstance().findByObjectId(supplierId));",
+            "in.documentPresenceFindings = PolicyValidationService.checkRequiredDocuments(in.documents);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 480, "y" : 752 }
+      },
+      "connect" : [
+        { "id" : "f32", "to" : "f8b" }
+      ]
+    }, {
+      "id" : "vf0",
+      "type" : "CallSubStart",
+      "name" : "validateFinancialPolicy(Supplier,DocumentExtractionResult)",
+      "config" : {
+        "signature" : "validateFinancialPolicy",
+        "input" : {
+          "params" : [
+            { "name" : "supplier", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.Supplier", "desc" : "The supplier to validate" },
+            { "name" : "documents", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult", "desc" : "Extracted documents to validate against financial rules" }
+          ],
+          "map" : {
+            "out.extractionResult" : "param.documents",
+            "out.supplier" : "param.supplier"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "financialValidationResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult", "desc" : "" }
+          ],
+          "map" : {
+            "result.financialValidationResult" : "in.financialValidationResult"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 1184 },
+        "description" : "Validates the supplier's financial health against financial rules (solvency, tax, banking). Call AFTER extractDocuments."
+      },
+      "connect" : [
+        { "id" : "f35", "to" : "vf1" }
+      ]
+    }, {
+      "id" : "vf0empty",
+      "type" : "Script",
+      "name" : "Set Empty Financial Result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.FinancialValidationService;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.FindingSeverity;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskType;",
+            "import java.util.Arrays;",
+            "",
+            "ValidationFinding finding = new ValidationFinding();",
+            "finding.setSeverity(FindingSeverity.FAILURE);",
+            "finding.setMessage(\"Cannot evaluate financial status: no documents provided\");",
+            "finding.setSource(\"document-check\");",
+            "finding.setRiskType(RiskType.FINANCIAL_STABILITY);",
+            "finding.setScore(100);",
+            "",
+            "in.processingStep = FinancialValidationService.startFinancialStep();",
+            "in.financialValidationResult = PolicyValidationService.wrapFindings(Arrays.asList(finding));",
+            "FinancialValidationService.finalizeFinancialStep(in.processingStep, in.financialValidationResult);",
+            "in.financialStabilityScore = 0;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 880, "y" : 1088 }
+      },
+      "connect" : [
+        { "id" : "f39", "to" : "vf8end" }
+      ]
+    }, {
+      "id" : "vf1",
+      "type" : "Script",
+      "name" : "Init Financial Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.FinancialValidationService;",
+            "",
+            "in.processingStep = FinancialValidationService.startFinancialStep();",
+            "in.supplierContext = dev.langchain4j.internal.Json.toJson(in.supplier);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 344, "y" : 1184 }
+      },
+      "connect" : [
+        { "id" : "vf1c", "to" : "vf2" }
+      ]
+    }, {
+      "id" : "vf2",
+      "type" : "Script",
+      "name" : "Init Financial Loop",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.FinancialValidationService;",
+            "import java.util.ArrayList;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding;",
+            "",
+            "in.policyRules = FinancialValidationService.loadFinancialRules();",
+            "in.ruleIndex = 0;",
+            "in.accumulatedFindings = new ArrayList<ValidationFinding>();",
+            "in.isProceeded = false;"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 528, "y" : 1184 }
+      },
+      "connect" : [
+        { "id" : "vf2c", "to" : "vf3loop" }
+      ]
+    }, {
+      "id" : "vf3loop",
+      "type" : "Alternative",
+      "name" : "More Rules?",
+      "config" : {
+        "conditions" : {
+          "vf3loop1" : "in.ruleIndex < in.policyRules.size()"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 672, "y" : 1184 },
+        "labelOffset" : { "x" : -24, "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "vf3loop1", "to" : "vf4doc", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : -3, "y" : 6 }
+          } },
+        { "id" : "vf3loop0", "to" : "f36", "label" : {
+            "name" : "no",
+            "offset" : { "x" : 17, "y" : -2 }
+          } }
+      ]
+    }, {
+      "id" : "vf4doc",
+      "type" : "Script",
+      "name" : "Build Rule Context",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.builder.PolicyContextBuilder;",
+            "",
+            "in.ruleDocumentFound = PolicyValidationService.hasRuleDocument(",
+            "    in.policyRules.get(in.ruleIndex), in.extractionResult);",
+            "in.ruleContext = PolicyContextBuilder.buildRuleDocContext(",
+            "    in.policyRules.get(in.ruleIndex), in.extractionResult, in.supplierContext);",
+            "in.ruleSystemPrompt = PolicyContextBuilder.buildSingleRuleSystemPrompt(",
+            "    in.policyRules.get(in.ruleIndex));"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 944, "y" : 1184 }
+      },
+      "connect" : [
+        { "id" : "vf4docc", "to" : "vf5check" }
+      ]
+    }, {
+      "id" : "vf5check",
+      "type" : "Alternative",
+      "name" : "Document Present?",
+      "config" : {
+        "conditions" : {
+          "vf5check1" : "in.ruleDocumentFound"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1080, "y" : 1184 },
+        "labelOffset" : { "x" : 80, "y" : -8 }
+      },
+      "connect" : [
+        { "id" : "vf5check1", "to" : "f33" },
+        { "id" : "vf5check0", "to" : "vf6merge" }
+      ]
+    }, {
+      "id" : "vf6ai",
+      "type" : "ProgramInterface",
+      "name" : "Validate Financial Rule",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "<%=in.ruleSystemPrompt%>",
+          "tools" : "[]",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult.class",
+          "resultMapping" : "in.ruleFindings",
+          "query" : "Evaluate this supplier against the financial rule.\\n\\n<%= in.ruleContext %>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1320, "y" : 1056 },
+        "size" : { "width" : 128 }
+      },
+      "connect" : [
+        { "id" : "vf6aic", "to" : "vf6merge" }
+      ]
+    }, {
+      "id" : "vf6merge",
+      "type" : "Script",
+      "name" : "Merge & Advance",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.FinancialValidationService;",
+            "",
+            "FinancialValidationService.mergeFinancialRuleFindings(in.accumulatedFindings, in.ruleFindings);",
+            "in.ruleIndex = in.ruleIndex + 1;",
+            "",
+            "in.ruleFindings.getFindings().clear();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1320, "y" : 1184 }
+      },
+      "connect" : [
+        { "id" : "vf6mergec", "to" : "vf3loop", "via" : [ { "x" : 1320, "y" : 1256 }, { "x" : 672, "y" : 1256 } ] }
+      ]
+    }, {
+      "id" : "vf7fin",
+      "type" : "Script",
+      "name" : "Finalize Financial Step",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.FinancialValidationService;",
+            "",
+            "in.financialValidationResult = FinancialValidationService.finalizeFinancialValidation(",
+            "    in.accumulatedFindings, in.processingStep);",
+            "in.financialStabilityScore = in.financialValidationResult.getComplianceScore();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 672, "y" : 984 }
+      },
+      "connect" : [
+        { "id" : "vf7finc", "to" : "vf8end" }
+      ]
+    }, {
+      "id" : "vf8end",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 880, "y" : 984 }
+      }
+    }, {
+      "id" : "f33",
+      "type" : "Script",
+      "name" : [
+        "Set proceed",
+        "flag"
+      ],
+      "config" : {
+        "output" : {
+          "code" : "in.isProceeded = true;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1080, "y" : 1056 }
+      },
+      "connect" : [
+        { "id" : "f34", "to" : "vf6ai" }
+      ]
+    }, {
+      "id" : "f36",
+      "type" : "Alternative",
+      "name" : "Proceeded?",
+      "config" : {
+        "conditions" : {
+          "f37" : "in.isProceeded"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 672, "y" : 1088 },
+        "labelOffset" : { "x" : -32, "y" : 0 }
+      },
+      "connect" : [
+        { "id" : "f37", "to" : "vf7fin", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : 17, "y" : -5 }
+          }, "color" : "default" },
+        { "id" : "f38", "to" : "vf0empty", "label" : {
+            "name" : "no",
+            "offset" : { "x" : -3, "y" : -10 }
+          } }
+      ]
+    } ]
+}

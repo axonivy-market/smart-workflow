@@ -1,0 +1,37 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierAssistantAgentData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "question",
+    "comment" : "Latest user message (without chat history)"
+  }, {
+    "name" : "chatHistory",
+    "comment" : "Formatted chat history (previous turns, excluding the latest user message)"
+  }, {
+    "name" : "guidanceContext",
+    "comment" : "Compiled guidance from AgentGuidance records, injected into agent system prompt"
+  }, {
+    "name" : "aiResponse",
+    "comment" : "Agent response text returned to the caller"
+  }, {
+    "name" : "parseContent",
+    "comment" : "Uploaded onboarding document content (.txt/.md)"
+  }, {
+    "name" : "parsedDraft",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest",
+    "comment" : "Parsed onboarding request values extracted from uploaded content"
+  }, {
+    "name" : "parseFeedback",
+    "comment" : "Parse status message for the caller"
+  }, {
+    "name" : "departmentContext",
+    "comment" : "Available departments list injected into the parse agent system prompt"
+  }, {
+    "name" : "formattedQuery"
+  }, {
+    "name" : "inputStream",
+    "type" : "java.io.InputStream",
+    "comment" : "Uploaded PDF document stream for OCR"
+  } ]
+}
