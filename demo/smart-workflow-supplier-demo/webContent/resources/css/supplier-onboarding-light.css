@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Supplier Onboarding — light-mode variables.
+   Loaded dynamically via supplier-onboarding-#{ivyFreyaTheme.mode}.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Core palette ──────────────────────────────────────────────── */
+  --so-primary:        #4F46E5;
+  --so-primary-dark:   #3730A3;
+  --so-primary-light:  #818CF8;
+  --so-bg:             #F3F4F6;
+  --so-card:           #FFFFFF;
+  --so-text:           #111827;
+  --so-text-muted:     #6B7280;
+  --so-text-light:     #9CA3AF;
+  --so-green:          #059669;
+  --so-green-dark:     #047857;
+  --so-green-bg:       #ECFDF5;
+  --so-green-border:   #A7F3D0;
+  --so-yellow:         #D97706;
+  --so-yellow-bg:      #FFFBEB;
+  --so-yellow-border:  #FDE68A;
+  --so-red:            #DC2626;
+  --so-red-bg:         #FEF2F2;
+  --so-red-border:     #FECACA;
+  --so-blue-bg:        #EFF6FF;
+  --so-blue-border:    #BFDBFE;
+  --so-border:         #E5E7EB;
+  --so-border-dark:    #D1D5DB;
+  --so-shadow:         0 1px 3px rgba(0,0,0,.1), 0 1px 2px -1px rgba(0,0,0,.1);
+  --so-shadow-md:      0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
+
+  /* ── Structure ─────────────────────────────────────────────────── */
+  --so-step-circle-bg:    #ffffff;
+  --so-text-inverse:        white;
+  --so-doc-row-bg:        #FAFAFA;
+  --so-surface-subtle:    #F3F4F6;
+  --so-running-card-bg:   #EFF6FF;
+  --so-running-text:      #2563EB;
+
+  /* ── Badges ────────────────────────────────────────────────────── */
+  --so-badge-green-bg:    #D1FAE5;
+  --so-badge-green-text:  #065F46;
+  --so-badge-yellow-bg:   #FEF3C7;
+  --so-badge-yellow-text: #92400E;
+  --so-badge-red-bg:      #FEE2E2;
+  --so-badge-red-text:    #991B1B;
+  --so-badge-gray-bg:     #E5E7EB;
+  --so-badge-gray-text:   #4B5563;
+  --so-badge-blue-bg:     #DBEAFE;
+  --so-badge-blue-text:   #1D4ED8;
+  --so-badge-purple-bg:   #EDE9FE;
+  --so-badge-purple-text: #5B21B6;
+
+  /* ── Alert text ────────────────────────────────────────────────── */
+  --so-alert-green-text:  #065F46;
+  --so-alert-yellow-text: #92400E;
+  --so-alert-red-text:    #991B1B;
+  --so-alert-blue-text:   #1E40AF;
+
+  /* ── Timeline bubbles ──────────────────────────────────────────── */
+  --so-bubble-completed-bg:     #DCFCE7;
+  --so-bubble-completed-color:  #16A34A;
+  --so-bubble-completed-border: #86EFAC;
+  --so-bubble-failed-bg:        #FEE2E2;
+  --so-bubble-failed-color:     #DC2626;
+  --so-bubble-failed-border:    #FCA5A5;
+  --so-bubble-pending-bg:       #F3F4F6;
+  --so-bubble-pending-color:    #9CA3AF;
+  --so-bubble-pending-border:   #D1D5DB;
+  --so-bubble-agent-bg:         #EDE9FE;
+  --so-bubble-agent-color:      #7C3AED;
+  --so-bubble-agent-border:     #C4B5FD;
+  --so-bubble-user-bg:          #DBEAFE;
+  --so-bubble-user-color:       #2563EB;
+  --so-bubble-user-border:      #93C5FD;
+}
