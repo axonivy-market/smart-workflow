@@ -1,0 +1,50 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Start Demo — dark-mode variables.
+   Loaded dynamically via start-demo-#{ivyFreyaTheme.mode}.css.
+   Palette: cool blue-slate (Tailwind Slate family).
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Surfaces & text ───────────────────────────────────────────── */
+  --sd-title:           #e2e8f0;   /* slate-200 */
+  --sd-body:            #94a3b8;   /* slate-400 */
+  --sd-muted:           #64748b;   /* slate-500 */
+  --sd-text-strong:     #cbd5e1;   /* slate-300 */
+  --sd-surface:         #1e293b;   /* slate-800 */
+  --sd-surface-deep:    #0f172a;   /* slate-900 */
+  --sd-border:          #334155;   /* slate-700 */
+  --sd-border-subtle:   #334155;   /* slate-700 */
+  --sd-shadow:          0 2px 16px rgba(0,0,0,.35);
+  --sd-accent-border:   #1e2a4f;
+
+  /* ── Download header ────────────────────────────────────────────── */
+  --sd-download-header-bg: linear-gradient(135deg, #0e1a2e 0%, #1a1040 100%);
+
+  /* ── Before / After comparison (cool-shifted) ───────────────────── */
+  --sd-compare-before-bg:           #2a1520;
+  --sd-compare-before-border:       #6b2d40;
+  --sd-compare-before-header-color: #f87171;   /* red-400   */
+  --sd-compare-before-icon:         #f87171;
+  --sd-compare-after-bg:            #0e2820;
+  --sd-compare-after-border:        #1a4d38;
+  --sd-compare-after-header-color:  #4ade80;   /* green-400 */
+  --sd-compare-after-icon:          #4ade80;
+
+  /* ── Stat before / after ────────────────────────────────────────── */
+  --sd-stat-before-color:  #f87171;   /* red-400   */
+  --sd-stat-after-color:   #4ade80;   /* green-400 */
+
+  /* ── Done banner ────────────────────────────────────────────────── */
+  --sd-done-banner-bg:     #0e2820;
+  --sd-done-banner-border: #1a4d38;
+  --sd-done-banner-color:  #6ee7b7;   /* emerald-300 */
+  --sd-done-banner-icon:   #4ade80;   /* green-400   */
+
+  /* ── RAG Knowledge chunks ───────────────────────────────────────── */
+  --sd-chunk-accent:       #2dd4bf;   /* teal-400  */
+  --sd-chunk-idx-bg:       #134e4a;   /* teal-900  */
+  --sd-chunk-idx-color:    #2dd4bf;   /* teal-400  */
+  --sd-chunk-banner-bg:    #0a1e1c;
+  --sd-chunk-banner-border:#134e4a;
+  --sd-chunk-banner-color: #5eead4;   /* teal-300  */
+}

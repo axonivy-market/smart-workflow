@@ -1,0 +1,496 @@
+/* ── Page layout ─────────────────────────────────────────────────── */
+.sd-page {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ── Stable carousel height (nav buttons never jump) ─────────────── */
+/* Scoped to .sd-page to avoid touching FinishDemo's carousel.        */
+.sd-page .fd-steps-wrapper {
+  height: 70vh;
+}
+
+.sd-page .fd-step-panel {
+  height: 100%;
+}
+
+/* Override finish-demo.css display:block so the panel can be a flex  */
+/* column — lets sd-slide-body stretch and scroll independently.      */
+.sd-page .fd-step-panel.fd-active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Hero welcome section ────────────────────────────────────────── */
+.sd-hero-title {
+  color: var(--sd-title);
+  line-height: 1.15;
+  margin-bottom: 14px;
+  letter-spacing: -.5px;
+}
+
+.sd-hero-title span {
+  color: var(--primary-color);
+}
+
+.sd-slide-body {
+  background: var(--sd-surface);
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: var(--sd-shadow);
+  border: 1px solid var(--sd-border-subtle);
+}
+
+/* ── Welcome slide (Slide 0) ─────────────────────────────────────── */
+.sd-welcome {
+  padding: 40px 32px;
+}
+
+/* ── Slide header ────────────────────────────────────────────────── */
+.sd-slide-header {
+  margin-bottom: 22px;
+}
+
+.sd-slide-title {
+  color: var(--sd-title);
+  margin-bottom: 4px;
+}
+
+
+/* ── Footer (Cancel + Start Demo) ────────────────────────────────── */
+.sd-footer {
+  position: sticky;
+  bottom: 0;
+  background: transparent;
+  padding: 14px 0 4px;
+  margin-top: 16px;
+}
+
+/* ── Before / After comparison slide (Slide 2) ───────────────────── */
+.sd-compare-stats {
+  gap: 40px;
+  margin-bottom: 22px;
+}
+
+.sd-stat-row {
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sd-stat-before {
+  color: var(--sd-stat-before-color);
+  text-decoration: line-through;
+  opacity: .75;
+}
+
+.sd-stat-arrow {
+  color: var(--sd-muted);
+}
+
+.sd-stat-after {
+  color: var(--sd-stat-after-color);
+}
+
+.sd-stat-label {
+  color: var(--sd-muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.sd-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.sd-compare-col {
+  gap: 24px;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid;
+}
+
+.sd-compare-before {
+  background: var(--sd-compare-before-bg);
+  border-color: var(--sd-compare-before-border);
+}
+
+.sd-compare-after {
+  background: var(--sd-compare-after-bg);
+  border-color: var(--sd-compare-after-border);
+}
+
+
+.sd-compare-list {
+  list-style: none;
+  gap: 10px;
+}
+
+.sd-compare-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--sd-body);
+  line-height: 1.5;
+}
+
+.sd-compare-list li i {
+  font-size: 15px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.sd-compare-before .sd-compare-list li i { color: var(--sd-compare-before-icon); }
+.sd-compare-after  .sd-compare-list li i { color: var(--sd-compare-after-icon); }
+
+/* ── Are You Ready slide (Slide 3) ──────────────────────────────── */
+.sd-ready-hero {
+  padding: 8px 0 20px;
+}
+
+/* ── Pre-demo document downloads ─────────────────────────────────── */
+.sd-download-section {
+  border: 1px solid var(--sd-border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.sd-download-header {
+  background: var(--sd-download-header-bg);
+  padding: 14px 20px;
+}
+
+.sd-download-header-top {
+  gap: 12px;
+  margin-bottom: 7px;
+}
+
+.sd-download-header-title {
+  gap: 7px;
+  color: var(--sd-title);
+}
+
+.sd-download-header-title i {
+  color: #6366f1;
+  font-size: 16px;
+}
+
+.sd-download-header-actions {
+  gap: 12px;
+}
+
+.sd-details-toggle {
+  gap: 5px;
+  color: #6366f1;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sd-details-toggle:hover { color: #4f46e5; }
+
+.sd-details-chevron {
+  transition: transform .25s ease;
+}
+
+.sd-download-header-desc {
+  color: var(--sd-body);
+  line-height: 1.55;
+}
+
+/* ── Collapsible body ─────────────────────────────────────────────── */
+.sd-download-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s ease;
+}
+
+.sd-download-body.sd-download-body--open {
+  max-height: 600px;
+  border-top: 1px solid var(--sd-border-subtle);
+}
+
+.sd-download-group-label {
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--sd-muted);
+  padding: 7px 20px;
+  background: var(--sd-surface-deep);
+  border-top: 1px solid var(--sd-border-subtle);
+  border-bottom: 1px solid var(--sd-border-subtle);
+}
+
+.sd-download-row {
+  padding: 9px 20px;
+  gap: 12px;
+  border-bottom: 1px solid var(--sd-border-subtle);
+  background: var(--sd-surface);
+  transition: background .15s;
+}
+
+.sd-download-row:hover {
+  background: var(--sd-surface-deep);
+}
+
+.sd-download-row:last-child {
+  border-bottom: none;
+}
+
+.sd-download-row-info {
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sd-download-row-info > i {
+  font-size: 17px;
+  color: var(--sd-muted);
+  flex-shrink: 0;
+}
+
+.sd-download-row-name {
+  color: var(--sd-text-strong);
+  line-height: 1.35;
+}
+
+.sd-download-row-sub {
+  color: var(--sd-muted);
+  margin-top: 1px;
+}
+
+.sd-gen-timeline {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Step hint text inside timeline cards */
+.sd-gen-step-hint {
+  color: var(--sd-muted);
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* Done banner */
+.sd-gen-done-banner {
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: var(--sd-done-banner-bg);
+  border: 1px solid var(--sd-done-banner-border);
+  border-radius: 10px;
+  color: var(--sd-done-banner-color);
+}
+
+.sd-gen-done-banner .ti {
+  font-size: 20px;
+  color: var(--sd-done-banner-icon);
+  flex-shrink: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .sd-hero-title { font-size: 1.9rem; }
+  .sd-slide-body { padding: 20px; }
+  .sd-compare-grid { grid-template-columns: 1fr; }
+  .sd-compare-stats { gap: 20px; }
+  .sd-footer { flex-wrap: wrap; gap: 12px; }
+  /* More height for stacked content; hide sub-labels to save space */
+  .sd-page .fd-steps-wrapper { height: clamp(480px, 72vh, 680px); }
+  .sd-download-row { padding: 9px 14px; }
+  .sd-download-row-sub { display: none; }
+}
+
+/* ── Inner navigator — Slide 1 process-step detail panels ───────── */
+/* Remove card border/shadow from fd-panel-inner when inside StartDemo */
+.sd-page .fd-panel-inner {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+
+.sd-inner-wrapper {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sd-inner-panel {
+  display: none;
+}
+
+.sd-inner-panel.sd-inner-active {
+  display: block;
+}
+
+/* Inner dots — distinct from outer .fd-dot so syncUI() doesn't touch them */
+.sd-inner-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sd-border);
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+
+.sd-inner-dot.sd-inner-dot-active {
+  background: var(--primary-color);
+  transform: scale(1.3);
+}
+
+/* Highlight the active flow step in the inner fd-flow */
+.fd-flow .fd-flow-step[data-panel].sd-inner-flow-active .fd-flow-bubble {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+
+/* ── Knowledge Base dialog ───────────────────────────────────────── */
+.sd-kb-dialog .p-dialog-content {
+  padding: 0;
+}
+
+.sd-kb-count {
+  background: #e0e7ff;
+  color: #4338ca;
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+
+/* Chunk */
+/* Info banner above chunks */
+.sd-kb-chunks-banner {
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: var(--sd-chunk-banner-bg);
+  border: 1px solid var(--sd-chunk-banner-border);
+  border-radius: 8px;
+  color: var(--sd-chunk-banner-color);
+  line-height: 1.5;
+}
+
+.sd-kb-chunks-banner-icon {
+  margin-top: 1px;
+}
+
+.sd-kb-chunks-banner-text {
+  margin: 0;
+}
+
+/* Chunk cards */
+.sd-kb-chunk {
+  border: 1px solid var(--sd-border);
+  border-left: 3px solid var(--sd-chunk-accent);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.sd-kb-chunk-header {
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--sd-surface-deep);
+  cursor: pointer;
+  user-select: none;
+}
+
+.sd-kb-chunk-header:hover {
+  filter: brightness(.97);
+}
+
+.sd-kb-chunk--open .sd-kb-chunk-header {
+  border-bottom: 1px solid var(--sd-border-subtle);
+}
+
+.sd-kb-chunk-idx {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: 11px;
+  background: var(--sd-chunk-idx-bg);
+  color: var(--sd-chunk-idx-color);
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 10px;
+}
+
+.sd-kb-chunk-title {
+  color: var(--sd-title);
+  flex: 1;
+}
+
+.sd-kb-chunk-chevron {
+  color: var(--sd-muted);
+  transition: transform .2s;
+}
+
+.sd-kb-chunk--open .sd-kb-chunk-chevron {
+  transform: rotate(90deg);
+}
+
+.sd-kb-chunk-text {
+  display: none;
+  padding: 10px 12px;
+  color: var(--sd-body);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  background: var(--sd-surface);
+}
+
+.sd-kb-chunk--open .sd-kb-chunk-text {
+  display: block;
+}
+
+/* Rule cards */
+.sd-kb-rule-card {
+  border: 1px solid var(--sd-border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.sd-kb-rule-header {
+  gap: 8px;
+  padding: 7px 12px;
+  background: var(--sd-surface-deep);
+  border-bottom: 1px solid var(--sd-border-subtle);
+}
+
+.sd-kb-rule-id {
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  color: var(--sd-muted);
+  flex: 1;
+}
+
+.sd-kb-rule-doctype {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: #e0e7ff;
+  color: #4338ca;
+  border: 1px solid #c7d2fe;
+}
+
+.sd-kb-rule-doctype--fin {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+.sd-kb-rule-risk {
+  color: var(--sd-muted);
+}
+
+.sd-kb-rule-text {
+  color: var(--sd-text-strong);
+  line-height: 1.6;
+  padding: 10px 12px;
+  background: var(--sd-surface);
+}
