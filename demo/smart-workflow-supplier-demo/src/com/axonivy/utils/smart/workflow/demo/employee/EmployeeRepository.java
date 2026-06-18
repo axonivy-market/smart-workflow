@@ -46,20 +46,20 @@ public class EmployeeRepository extends AbstractMockRepository<Employee> {
     return list;
   }
 
-  public Employee findByUsername(String username) {
-    return findAll().stream()
+  public Employee findByUsername(String caseUuid, String username) {
+    return findAll(caseUuid).stream()
         .filter(e -> username.equalsIgnoreCase(e.getUsername()))
         .findFirst()
         .orElse(null);
   }
 
-  public Employee create(Employee employee) {
+  public Employee create(String caseUuid, Employee employee) {
     if (employee == null) {
       throw new IllegalArgumentException("Employee cannot be null");
     }
-    List<Employee> list = new ArrayList<>(findAll());
+    List<Employee> list = new ArrayList<>(findAll(caseUuid));
     list.add(employee);
-    save(list);
+    save(caseUuid, list);
     return employee;
   }
 

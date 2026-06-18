@@ -258,7 +258,36 @@
         "at" : { "x" : 96, "y" : 832 }
       },
       "connect" : [
-        { "id" : "f61", "to" : "f62" }
+        { "id" : "f61", "to" : "f61s" }
+      ]
+    }, {
+      "id" : "f61s",
+      "type" : "Script",
+      "name" : "Setup duplicate check request",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.Supplier;",
+            "import com.axonivy.utils.smart.workflow.demo.common.Address;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
+            "",
+            "SupplierRepository.getInstance().install();",
+            "in.testRequest = new OnboardingRequest();",
+            "Supplier s = new Supplier();",
+            "s.setBusinessPurpose(\"Tools & Hardware\");",
+            "Address addr = new Address();",
+            "addr.setCountry(\"DE\");",
+            "s.setBusinessAddress(addr);",
+            "in.testRequest.setSupplier(s);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 832 }
+      },
+      "connect" : [
+        { "id" : "f61sc", "to" : "f62" }
       ]
     }, {
       "id" : "f62",
@@ -268,7 +297,7 @@
         "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:callDuplicateCheck(com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)",
         "call" : {
           "map" : {
-            "param.request" : "new com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest()"
+            "param.request" : "in.testRequest"
           }
         },
         "output" : {
@@ -278,7 +307,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 296, "y" : 832 },
+        "at" : { "x" : 488, "y" : 832 },
         "size" : { "width" : 168, "height" : 62 }
       },
       "connect" : [
@@ -288,7 +317,7 @@
       "id" : "f64",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 520, "y" : 832 }
+        "at" : { "x" : 720, "y" : 832 }
       }
     }, {
       "id" : "f70",
@@ -308,11 +337,12 @@
       "type" : "SubProcessCall",
       "name" : "Call validateFinancialPolicy",
       "config" : {
-        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:validateFinancialPolicy(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult)",
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:validateFinancialPolicy(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult,java.lang.String)",
         "call" : {
           "map" : {
             "param.supplier" : "new com.axonivy.utils.smart.workflow.demo.supplier.Supplier()",
-            "param.documents" : "new com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult()"
+            "param.documents" : "new com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult()",
+            "param.caseUuid" : "ivy.wfCase.uuid"
           }
         },
         "output" : {
@@ -397,7 +427,7 @@
             "import com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository;",
 "EmployeeRepository repo = EmployeeRepository.getInstance();",
             "repo.install();",
-            "in.foundEmployee = repo.findByUsername(\"sandra.collins\");"
+            "in.foundEmployee = repo.findByUsername(null,\"sandra.collins\");"
           ]
         }
       },
@@ -440,7 +470,7 @@
             "repo.install();",
             "Employee e = new Employee();",
             "e.setUsername(\"test.employee\");",
-            "repo.create(e);",
+            "repo.create(null,e);",
             "in.employeeCount = repo.findAll().size();"
           ]
         }
@@ -521,7 +551,7 @@
             "import com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository;",
 "DepartmentRepository repo = DepartmentRepository.getInstance();",
             "repo.install();",
-            "in.foundDepartment = repo.findById(\"DEPT-001\");"
+            "in.foundDepartment = repo.findById(null,\"DEPT-001\");"
           ]
         }
       },
@@ -601,7 +631,7 @@
             "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
 "SupplierRepository repo = SupplierRepository.getInstance();",
             "repo.install();",
-            "in.foundSupplier = repo.findById(\"SUP-2019-0001\").orElse(null);"
+            "in.foundSupplier = repo.findById(null,\"SUP-2019-0001\").orElse(null);"
           ]
         }
       },
@@ -681,7 +711,7 @@
             "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository;",
 "SupplierPolicyRuleRepository repo = SupplierPolicyRuleRepository.getInstance();",
             "repo.install();",
-            "in.foundPolicyRule = repo.findByTarget(\"RULE_03_ISO_9001\");"
+            "in.foundPolicyRule = repo.findByTarget(null, \"RULE_03_ISO_9001\");"
           ]
         }
       },
@@ -797,6 +827,101 @@
       "type" : "TaskEnd",
       "visual" : {
         "at" : { "x" : 520, "y" : 2368 }
+      }
+    }, {
+      "id" : "f113",
+      "type" : "RequestStart",
+      "name" : "testDuplicateCheckAuditCapture",
+      "config" : {
+        "signature" : "testDuplicateCheckAuditCapture"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 2496 }
+      },
+      "connect" : [
+        { "id" : "f113c", "to" : "f114" }
+      ]
+    }, {
+      "id" : "f114",
+      "type" : "Script",
+      "name" : "Setup duplicate check request",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.Supplier;",
+            "import com.axonivy.utils.smart.workflow.demo.common.Address;",
+            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
+            "",
+            "SupplierRepository.getInstance().install();",
+            "in.testRequest = new OnboardingRequest();",
+            "Supplier s = new Supplier();",
+            "s.setBusinessPurpose(\"Tools & Hardware\");",
+            "Address addr = new Address();",
+            "addr.setCountry(\"DE\");",
+            "s.setBusinessAddress(addr);",
+            "in.testRequest.setSupplier(s);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 2496 }
+      },
+      "connect" : [
+        { "id" : "f114c", "to" : "f115" }
+      ]
+    }, {
+      "id" : "f115",
+      "type" : "SubProcessCall",
+      "name" : "Call callDuplicateCheck",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:callDuplicateCheck(com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.testRequest"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.agentResponse" : "result.agentResponse"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 488, "y" : 2496 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f115c", "to" : "f115b" }
+      ]
+    }, {
+      "id" : "f115b",
+      "type" : "Script",
+      "name" : "Capture audit entry",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.OnboardingAuditEntryFactory;",
+            "import java.util.ArrayList;",
+            "",
+            "if (in.testRequest.getAuditTrail() == null) { in.testRequest.setAuditTrail(new ArrayList()); }",
+            "in.testRequest.getAuditTrail().add(OnboardingAuditEntryFactory.buildDuplicateCheckAuditEntry(in.testRequest, in.agentResponse));",
+            "out.auditEntryCount = in.testRequest.getAuditTrail().size();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 712, "y" : 2496 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f115bc", "to" : "f116" }
+      ]
+    }, {
+      "id" : "f116",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 936, "y" : 2496 }
       }
     } ]
 }

@@ -192,5 +192,7 @@
   }, {
     "name" : "isProceeded",
     "type" : "Boolean"
+  }, {
+    "name" : "caseUuid"
   } ]
 }

@@ -64,7 +64,7 @@ class TestValidationUtils {
     PolicyValidationResult result = new PolicyValidationResult();
     result.setFindings(List.of(finding));
 
-    assertThat(ValidationUtils.computeComplianceScore(result, null)).isEqualTo(80);
+    assertThat(ValidationUtils.computeComplianceScore(result, null, null)).isEqualTo(80);
   }
 
   @Test
@@ -81,6 +81,6 @@ class TestValidationUtils {
     PolicyValidationResult result = new PolicyValidationResult();
     result.setFindings(new ArrayList<>(List.of(passed, failure)));
 
-    assertThat(ValidationUtils.computeComplianceScore(result, null)).isEqualTo(85);
+    assertThat(ValidationUtils.computeComplianceScore(result, null, null)).isEqualTo(85);
   }
 }

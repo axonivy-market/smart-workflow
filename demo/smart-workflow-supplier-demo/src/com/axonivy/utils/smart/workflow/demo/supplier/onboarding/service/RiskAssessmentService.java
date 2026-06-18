@@ -118,10 +118,11 @@ public class RiskAssessmentService {
   public static RiskScoreResult computeRiskScore(
       Integer annualVolumeEur,
       PolicyValidationResult policyResult,
-      PolicyValidationResult financialResult) {
-    int financial = FinancialValidationService.computeFinancialStabilityScore(financialResult);
-    int policyCompliance = PolicyValidationService.computePolicyComplianceScore(policyResult);
-    int certValidity = computeCertValidityScore(policyResult, annualVolumeEur);
+      PolicyValidationResult financialResult,
+      String caseUuid) {
+    int financial = FinancialValidationService.computeFinancialStabilityScore(financialResult, caseUuid);
+    int policyCompliance = PolicyValidationService.computePolicyComplianceScore(policyResult, caseUuid);
+    int certValidity = computeCertValidityScore(policyResult, annualVolumeEur, caseUuid);
 
     SupplierRiskScore score = SupplierRiskScoreBuilder.of(financial, policyCompliance, certValidity);
     RiskScoreResult result = new RiskScoreResult();
@@ -135,10 +136,10 @@ public class RiskAssessmentService {
   }
 
   private static int computeCertValidityScore(PolicyValidationResult policyResult,
-      Integer annualVolumeEur) {
+      Integer annualVolumeEur, String caseUuid) {
     List<ValidationFinding> findings = policyResult != null && policyResult.getFindings() != null
         ? policyResult.getFindings() : Collections.emptyList();
-    Map<String, Integer> certRules = loadCertValidityRuleScores();
+    Map<String, Integer> certRules = loadCertValidityRuleScores(caseUuid);
 
     int score = 100;
     if (hasFailureFindingForKey(findings, LegalDocumentType.COMMERCIAL_REGISTER)) {
@@ -160,9 +161,9 @@ public class RiskAssessmentService {
     return Math.max(0, Math.min(100, score));
   }
 
-  private static Map<String, Integer> loadCertValidityRuleScores() {
+  private static Map<String, Integer> loadCertValidityRuleScores(String caseUuid) {
     Map<String, Integer> scores = new HashMap<>();
-    for (SupplierPolicyRule rule : ValidationUtils.loadRulesByType(RuleType.CERT_VALIDITY)) {
+    for (SupplierPolicyRule rule : ValidationUtils.loadRulesByType(RuleType.CERT_VALIDITY, caseUuid)) {
       scores.put(rule.getTarget(), rule.getRiskScore());
     }
     return scores;

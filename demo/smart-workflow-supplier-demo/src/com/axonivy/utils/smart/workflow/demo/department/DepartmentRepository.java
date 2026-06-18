@@ -41,20 +41,20 @@ public class DepartmentRepository extends AbstractMockRepository<Department> {
     return list;
   }
 
-  public Department findById(String id) {
-    return findAll().stream()
+  public Department findById(String caseUuid, String id) {
+    return findAll(caseUuid).stream()
         .filter(d -> id.equalsIgnoreCase(d.getId()))
         .findFirst()
         .orElse(null);
   }
 
-  public Department create(Department department) {
+  public Department create(String caseUuid, Department department) {
     if (department == null) {
       throw new IllegalArgumentException("Department cannot be null");
     }
-    List<Department> list = new ArrayList<>(findAll());
+    List<Department> list = new ArrayList<>(findAll(caseUuid));
     list.add(department);
-    save(list);
+    save(caseUuid, list);
     return department;
   }
 

@@ -26,6 +26,13 @@ class TestSupplierOnboardingProcess {
   }
 
   @Test
+  void duplicateCheck_capturesAuditEntry(BpmClient client) {
+    var res = client.start().process(TEST_PROCESS.elementName("testDuplicateCheckAuditCapture")).execute();
+    SupplierDemoTestProcessData data = res.data().last();
+    assertThat(data.getAuditEntryCount()).isEqualTo(1);
+  }
+
+  @Test
   void clearDemoData_afterInstall_allRepositoriesAreEmpty(BpmClient client) {
     var res = client.start().process(TEST_PROCESS.elementName("testClearDemoData")).execute();
     SupplierDemoTestProcessData data = res.data().last();

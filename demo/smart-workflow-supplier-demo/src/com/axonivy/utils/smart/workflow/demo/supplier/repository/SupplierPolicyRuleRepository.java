@@ -48,30 +48,30 @@ public class SupplierPolicyRuleRepository extends AbstractMockRepository<Supplie
         .collect(Collectors.toList());
   }
 
-  public SupplierPolicyRule create(SupplierPolicyRule rule) {
+  public SupplierPolicyRule create(String caseUuid, SupplierPolicyRule rule) {
     if (rule == null) {
       throw new IllegalArgumentException(NULL_ARGUMENT_MESSAGE);
     }
     if (StringUtils.isBlank(rule.getTarget())) {
       throw new IllegalArgumentException(ILLEGAL_ARGUMENT_MESSAGE);
     }
-    List<SupplierPolicyRule> list = new ArrayList<>(findAll());
+    List<SupplierPolicyRule> list = new ArrayList<>(findAll(caseUuid));
     list.add(rule);
-    save(list);
+    save(caseUuid, list);
     return rule;
   }
 
-  public List<SupplierPolicyRule> findAllOrdered() {
-    List<SupplierPolicyRule> rules = new ArrayList<>(findAll());
+  public List<SupplierPolicyRule> findAllOrdered(String caseUuid) {
+    List<SupplierPolicyRule> rules = new ArrayList<>(findAll(caseUuid));
     rules.sort(Comparator.comparing(SupplierPolicyRule::getTarget, String.CASE_INSENSITIVE_ORDER));
     return rules;
   }
 
-  public SupplierPolicyRule findByTarget(String target) {
+  public SupplierPolicyRule findByTarget(String caseUuid, String target) {
     if (StringUtils.isBlank(target)) {
       return null;
     }
-    return findAll().stream()
+    return findAll(caseUuid).stream()
         .filter(r -> target.equalsIgnoreCase(r.getTarget()))
         .findFirst()
         .orElse(null);

@@ -90,9 +90,9 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
     Supplier supplier = request.getSupplier();
     var repo = SupplierRepository.getInstance();
     if (supplier.getSupplierId() == null) {
-      repo.create(supplier);
+      repo.create(request.getCaseUuid(), supplier);
     } else {
-      repo.update(supplier);
+      repo.update(request.getCaseUuid(), supplier);
     }
   }
 

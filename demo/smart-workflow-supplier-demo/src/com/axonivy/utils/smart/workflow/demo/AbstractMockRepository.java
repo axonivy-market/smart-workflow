@@ -35,8 +35,19 @@ public abstract class AbstractMockRepository<T> {
     return fromJson(json);
   }
 
+  public List<T> findAll(String caseUuid) {
+    // Callable subprocesses share the caller's case context, so Ivy.wfCase() is always correct.
+    // The caseUuid param makes the dependency on the calling case explicit in the API.
+    return findAll();
+  }
+
   protected void save(List<T> list) {
     Ivy.wfCase().customFields().textField(getField()).set(toJson(list));
+  }
+
+  protected void save(String caseUuid, List<T> list) {
+    // Callable subprocesses share the caller's case context, so Ivy.wfCase() is always correct.
+    save(list);
   }
 
   private String toJson(List<?> list) {
