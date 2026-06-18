@@ -263,7 +263,7 @@
 }
 
 .sd-gen-timeline {
-  max-width: 520px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -272,6 +272,11 @@
   color: var(--sd-muted);
   margin-left: 8px;
   white-space: nowrap;
+}
+
+/* Warning message under a step card (e.g. vector store unavailable) */
+.sd-gen-step-warning {
+  color: var(--sd-warning-color);
 }
 
 /* Done banner */

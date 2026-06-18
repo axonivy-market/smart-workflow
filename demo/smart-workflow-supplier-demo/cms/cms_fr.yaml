@@ -114,6 +114,7 @@ Dialogs:
                       FileDetailsHide: Masquer les détails
                       FileDetailsToggle: Détails des fichiers
                       Gen1Hint: Intégrer les documents de politique dans le magasin vectoriel
+                      Gen1WarningMessage: Connexion au magasin vectoriel impossible — cette démo utilisera les connaissances pré-entraînées
                       Gen1RunningSubtitle: Intégration des documents de politique dans la base vectorielle…
                       Gen1Title: Construire la base de connaissances RAG
                       Gen2Hint: 6 règles de certification et réglementation

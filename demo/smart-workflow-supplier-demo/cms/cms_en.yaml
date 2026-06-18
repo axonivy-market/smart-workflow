@@ -114,6 +114,7 @@ Dialogs:
                       FileDetailsHide: Hide details
                       FileDetailsToggle: File details
                       Gen1Hint: Ingest policy documents into vector store
+                      Gen1WarningMessage: Cannot connect to vector store — this demo will use pre-trained knowledge instead
                       Gen1RunningSubtitle: Ingesting policy documents into vector store…
                       Gen1Title: Build RAG Knowledge Base
                       Gen2Hint: 6 certification & regulatory rules
