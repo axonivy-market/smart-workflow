@@ -114,6 +114,7 @@ Dialogs:
                       FileDetailsHide: Ocultar detalles
                       FileDetailsToggle: Detalles de archivos
                       Gen1Hint: Incorporar documentos de política en el almacén vectorial
+                      Gen1WarningMessage: No se puede conectar al almacén vectorial — esta demo usará el conocimiento preentrenado
                       Gen1RunningSubtitle: Incorporando documentos de política en el almacén vectorial…
                       Gen1Title: Construir base de conocimiento RAG
                       Gen2Hint: 6 reglas de certificación y regulación
