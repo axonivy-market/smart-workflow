@@ -66,8 +66,13 @@
             <div class="so-tl-card">
               <div class="so-tl-card-header">
                 <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1Title')}</span>
-                <span class="sd-gen-step-hint text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1Hint')}</span>
+                <span class="sd-gen-step-hint text-sm">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1Hint')}</span>
               </div>
+              <ui:fragment rendered="#{startDemoBean.step1Status.name() == 'WARNING'}">
+                <div class="sd-gen-step-warning text-sm mt-1">
+                  <i class="ti ti-info-circle mr-1" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen1WarningMessage')}
+                </div>
+              </ui:fragment>
             </div>
           </div>
 
@@ -81,7 +86,7 @@
             <div class="so-tl-card">
               <div class="so-tl-card-header">
                 <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen2Title')}</span>
-                <span class="sd-gen-step-hint text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen2Hint')}</span>
+                <span class="sd-gen-step-hint text-sm">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen2Hint')}</span>
               </div>
             </div>
           </div>
@@ -96,7 +101,7 @@
             <div class="so-tl-card">
               <div class="so-tl-card-header">
                 <span class="so-tl-card-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen3Title')}</span>
-                <span class="sd-gen-step-hint text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen3Hint')}</span>
+                <span class="sd-gen-step-hint text-sm">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Gen3Hint')}</span>
               </div>
             </div>
           </div>

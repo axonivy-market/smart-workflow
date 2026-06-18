@@ -145,7 +145,6 @@
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 13px;
   line-height: 1.5;
 }
 .so-alert-green  { background: var(--so-green-bg);  border: 1px solid var(--so-green-border);  color: var(--so-alert-green-text); }
@@ -362,6 +361,7 @@
 }
 .so-tl-bubble-completed { background: var(--so-bubble-completed-bg); color: var(--so-bubble-completed-color); border: 2px solid var(--so-bubble-completed-border); }
 .so-tl-bubble-failed    { background: var(--so-bubble-failed-bg);    color: var(--so-bubble-failed-color);    border: 2px solid var(--so-bubble-failed-border); }
+.so-tl-bubble-warning   { background: var(--so-bubble-warning-bg);   color: var(--so-bubble-warning-color);   border: 2px solid var(--so-bubble-warning-border); }
 .so-tl-bubble-pending   { background: var(--so-bubble-pending-bg);   color: var(--so-bubble-pending-color);   border: 2px solid var(--so-bubble-pending-border); }
 .so-tl-bubble-agent     { background: var(--so-bubble-agent-bg);     color: var(--so-bubble-agent-color);     border: 2px solid var(--so-bubble-agent-border); }
 .so-tl-bubble-user      { background: var(--so-bubble-user-bg);      color: var(--so-bubble-user-color);      border: 2px solid var(--so-bubble-user-border); }

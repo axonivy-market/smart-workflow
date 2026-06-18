@@ -114,6 +114,7 @@ Dialogs:
                       FileDetailsHide: Details ausblenden
                       FileDetailsToggle: Dateidetails
                       Gen1Hint: Richtliniendokumente in Vektorspeicher einpflegen
+                      Gen1WarningMessage: Keine Verbindung zum Vektorspeicher — diese Demo verwendet stattdessen vortrainiertes Wissen
                       Gen1RunningSubtitle: Richtliniendokumente werden in den Vektorspeicher geladen…
                       Gen1Title: RAG-Wissensdatenbank aufbauen
                       Gen2Hint: 6 Zertifizierungs- & Regulierungsregeln
