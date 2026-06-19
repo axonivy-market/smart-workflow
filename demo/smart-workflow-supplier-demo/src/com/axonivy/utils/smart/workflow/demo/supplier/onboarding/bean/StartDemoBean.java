@@ -242,7 +242,9 @@ public class StartDemoBean implements Serializable {
       return null;
     }
     return contentObject.map(ContentObject::values)
-                        .map(values -> values.getFirst()).get();
+                        .filter(values -> !values.isEmpty())
+                        .map(List::getFirst)
+                        .orElse(null);
   }
 
   public StreamedContent downloadAllDocuments() {
