@@ -429,7 +429,7 @@
     }, {
       "id" : "ra0",
       "type" : "CallSubStart",
-      "name" : "callRiskAssessment(PolicyValidationResult, PolicyValidationResult, Integer, String)",
+      "name" : "callRiskAssessment(PolicyValidationResult, PolicyValidationResult, Integer, String, String)",
       "config" : {
         "signature" : "callRiskAssessment",
         "input" : {
@@ -437,13 +437,15 @@
             { "name" : "policyResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult", "desc" : "Policy validation findings from validateAgainstPolicy" },
             { "name" : "financialResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult", "desc" : "Financial validation findings from validateFinancialPolicy" },
             { "name" : "annualVolumeEur", "type" : "Integer", "desc" : "Expected annual procurement volume in EUR" },
-            { "name" : "supplierId", "type" : "String", "desc" : "Supplier ID used to load the document list for REQUIRED DOCUMENTS STATUS check" }
+            { "name" : "supplierId", "type" : "String", "desc" : "Supplier ID used to load the document list for REQUIRED DOCUMENTS STATUS check" },
+            { "name" : "caseUuid", "type" : "String", "desc" : "Case UUID for repository access" }
           ],
           "map" : {
             "out.annualVolumeEur" : "param.annualVolumeEur",
             "out.financialValidationResult" : "param.financialResult",
             "out.policyValidationResult" : "param.policyResult",
-            "out.supplierId" : "param.supplierId"
+            "out.supplierId" : "param.supplierId",
+            "out.caseUuid" : "param.caseUuid"
           }
         },
         "result" : {

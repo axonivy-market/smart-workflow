@@ -86,9 +86,10 @@
       "type" : "SubProcessCall",
       "name" : "Call parseOnboardingRequest",
       "config" : {
-        "processCall" : "smart/workflow/supplier/demo/agents/SupplierAssistantAgent:parseOnboardingRequest(String,java.io.InputStream)",
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierAssistantAgent:parseOnboardingRequest(String,String,java.io.InputStream)",
         "call" : {
           "map" : {
+            "param.caseUuid" : "ivy.wfCase.uuid",
             "param.content" : "\"Business Name: Test GmbH\\nVAT ID: DE123456789\\nAddress: Test Street 1, Berlin, Germany\"",
             "param.inputStream" : "null"
           }
@@ -219,13 +220,14 @@
       "type" : "SubProcessCall",
       "name" : "Call callRiskAssessment",
       "config" : {
-        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:callRiskAssessment(com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,Integer,String)",
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:callRiskAssessment(com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,Integer,String,String)",
         "call" : {
           "map" : {
             "param.policyResult" : "new com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult()",
             "param.financialResult" : "new com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult()",
             "param.annualVolumeEur" : "50000",
-            "param.supplierId" : "\"TEST-001\""
+            "param.supplierId" : "\"TEST-001\"",
+            "param.caseUuid" : "ivy.wfCase.uuid"
           }
         },
         "output" : {
@@ -387,7 +389,7 @@
             "import com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository;",
 "EmployeeRepository repo = EmployeeRepository.getInstance();",
             "repo.install();",
-            "in.employeeCount = repo.findAll().size();"
+            "in.employeeCount = repo.findAll(ivy.wfCase.uuid).size();"
           ]
         }
       },
@@ -471,7 +473,7 @@
             "Employee e = new Employee();",
             "e.setUsername(\"test.employee\");",
             "repo.create(null,e);",
-            "in.employeeCount = repo.findAll().size();"
+            "in.employeeCount = repo.findAll(ivy.wfCase.uuid).size();"
           ]
         }
       },
@@ -511,7 +513,7 @@
             "import com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository;",
 "DepartmentRepository repo = DepartmentRepository.getInstance();",
             "repo.install();",
-            "in.departmentCount = repo.findAll().size();"
+            "in.departmentCount = repo.findAll(ivy.wfCase.uuid).size();"
           ]
         }
       },
@@ -591,7 +593,7 @@
             "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
 "SupplierRepository repo = SupplierRepository.getInstance();",
             "repo.install();",
-            "in.supplierCount = repo.findAll().size();"
+            "in.supplierCount = repo.findAll(ivy.wfCase.uuid).size();"
           ]
         }
       },
@@ -671,7 +673,7 @@
             "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository;",
 "SupplierPolicyRuleRepository repo = SupplierPolicyRuleRepository.getInstance();",
             "repo.install();",
-            "in.policyRuleCount = repo.findAll().size();"
+            "in.policyRuleCount = repo.findAll(ivy.wfCase.uuid).size();"
           ]
         }
       },
@@ -756,10 +758,10 @@
             "EmployeeRepository.getInstance().install();",
             "DepartmentRepository.getInstance().install();",
             "SupplierRepository.getInstance().install();",
-            "out.policyRuleCount = SupplierPolicyRuleRepository.getInstance().findAll().size();",
-            "out.employeeCount   = EmployeeRepository.getInstance().findAll().size();",
-            "out.departmentCount = DepartmentRepository.getInstance().findAll().size();",
-            "out.supplierCount   = SupplierRepository.getInstance().findAll().size();"
+            "out.policyRuleCount = SupplierPolicyRuleRepository.getInstance().findAll(ivy.wfCase.uuid).size();",
+            "out.employeeCount   = EmployeeRepository.getInstance().findAll(ivy.wfCase.uuid).size();",
+            "out.departmentCount = DepartmentRepository.getInstance().findAll(ivy.wfCase.uuid).size();",
+            "out.supplierCount   = SupplierRepository.getInstance().findAll(ivy.wfCase.uuid).size();"
           ]
         }
       },
@@ -808,10 +810,10 @@
             "EmployeeRepository.getInstance().uninstall();",
             "DepartmentRepository.getInstance().uninstall();",
             "SupplierRepository.getInstance().uninstall();",
-            "out.policyRuleCount = SupplierPolicyRuleRepository.getInstance().findAll().size();",
-            "out.employeeCount   = EmployeeRepository.getInstance().findAll().size();",
-            "out.departmentCount = DepartmentRepository.getInstance().findAll().size();",
-            "out.supplierCount   = SupplierRepository.getInstance().findAll().size();"
+            "out.policyRuleCount = SupplierPolicyRuleRepository.getInstance().findAll(ivy.wfCase.uuid).size();",
+            "out.employeeCount   = EmployeeRepository.getInstance().findAll(ivy.wfCase.uuid).size();",
+            "out.departmentCount = DepartmentRepository.getInstance().findAll(ivy.wfCase.uuid).size();",
+            "out.supplierCount   = SupplierRepository.getInstance().findAll(ivy.wfCase.uuid).size();"
           ]
         }
       },

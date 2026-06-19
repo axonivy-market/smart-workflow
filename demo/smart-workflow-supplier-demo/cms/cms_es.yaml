@@ -216,6 +216,7 @@ Dialogs:
                       SearchConditionLabel: Condición de búsqueda
                       SearchConditionTemplate: 'nombre="{0}"  país="{1}"'
                       BusinessPurposeLabel: Propósito empresarial
+                      CancelRequest: Cancelar solicitud
                       Chips: ¿Cómo se calcula la similitud?|¿Qué pasa si no se encuentran coincidencias?|¿Puedo usar un proveedor existente?
                       EmailLabel: Correo electrónico
                       InitialMessage: He analizado la base de datos de proveedores en busca de posibles coincidencias. Revise los resultados a continuación y confirme para proceder con la creación de un nuevo proveedor.

@@ -216,6 +216,7 @@ Dialogs:
                       SearchConditionLabel: Search Condition
                       SearchConditionTemplate: 'name="{0}"  country="{1}"'
                       BusinessPurposeLabel: Business Purpose
+                      CancelRequest: Cancel Request
                       Chips: How is similarity calculated?|What if no matches are found?|Can I use an existing supplier?
                       EmailLabel: Email
                       InitialMessage: I’ve scanned the supplier database for potential matches. Review the results below and confirm to proceed with creating a new supplier.

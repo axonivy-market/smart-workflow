@@ -16,7 +16,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 208 }
+        "at" : { "x" : 112, "y" : 256 }
       },
       "connect" : [
         { "id" : "f100", "to" : "f209" }
@@ -31,7 +31,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 240, "y" : 208 }
+        "at" : { "x" : 256, "y" : 256 }
       },
       "connect" : [
         { "id" : "f210", "to" : "f198" }
@@ -44,7 +44,7 @@
         "dialog" : "com.axonivy.utils.ai.StartDemo:start()"
       },
       "visual" : {
-        "at" : { "x" : 440, "y" : 208 }
+        "at" : { "x" : 456, "y" : 256 }
       },
       "connect" : [
         { "id" : "f199", "to" : "f4" }
@@ -68,7 +68,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 624, "y" : 208 }
+        "at" : { "x" : 640, "y" : 256 }
       },
       "connect" : [
         { "id" : "f102", "to" : "f150" }
@@ -84,11 +84,11 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 792, "y" : 208 },
+        "at" : { "x" : 808, "y" : 256 },
         "labelOffset" : { "x" : -40, "y" : 24 }
       },
       "connect" : [
-        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 792, "y" : 336 } ], "label" : {
+        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 808, "y" : 384 } ], "label" : {
             "name" : "Save Draft",
             "segment" : 1.12,
             "offset" : { "x" : -23, "y" : -21 }
@@ -97,7 +97,7 @@
             "name" : "Submit",
             "offset" : { "x" : -1, "y" : -18 }
           } },
-        { "id" : "f156", "to" : "f155" }
+        { "id" : "f156", "to" : "f215" }
       ]
     }, {
       "id" : "f151",
@@ -114,10 +114,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 624, "y" : 336 }
+        "at" : { "x" : 640, "y" : 384 }
       },
       "connect" : [
-        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 624, "y" : 320 } ] }
+        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 640, "y" : 368 } ] }
       ]
     }, {
       "id" : "f162",
@@ -135,7 +135,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 968, "y" : 208 }
+        "at" : { "x" : 984, "y" : 256 }
       },
       "connect" : [
         { "id" : "f163", "to" : "f5" }
@@ -160,7 +160,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1152, "y" : 208 }
+        "at" : { "x" : 1168, "y" : 256 }
       },
       "connect" : [
         { "id" : "f103", "to" : "f5a" }
@@ -182,7 +182,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 1324, "y" : 209 },
+        "at" : { "x" : 1340, "y" : 257 },
         "size" : { "width" : 136, "height" : 62 }
       },
       "connect" : [
@@ -203,7 +203,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1512, "y" : 208 }
+        "at" : { "x" : 1528, "y" : 256 }
       },
       "connect" : [
         { "id" : "f161", "to" : "f6" }
@@ -228,17 +228,38 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1672, "y" : 208 }
+        "at" : { "x" : 1688, "y" : 256 }
       },
       "connect" : [
-        { "id" : "f164", "to" : "f196" }
+        { "id" : "f164", "to" : "fd0" }
+      ]
+    }, {
+      "id" : "fd0",
+      "type" : "Alternative",
+      "name" : "Declined?",
+      "config" : {
+        "conditions" : {
+          "f214" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus.DECLINED.equals(in.request.status)",
+          "fd0c2" : ""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1848, "y" : 256 },
+        "labelOffset" : { "x" : -40, "y" : 24 }
+      },
+      "connect" : [
+        { "id" : "fd0c2", "to" : "f196", "label" : {
+            "name" : "no",
+            "offset" : { "y" : -16 }
+          } },
+        { "id" : "f214", "to" : "f215", "via" : [ { "x" : 1848, "y" : 192 } ] }
       ]
     }, {
       "id" : "f1",
       "type" : "TaskEnd",
       "name" : "End",
       "visual" : {
-        "at" : { "x" : 2184, "y" : 208 }
+        "at" : { "x" : 2304, "y" : 256 }
       }
     }, {
       "id" : "f212",
@@ -256,7 +277,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 2024, "y" : 208 }
+        "at" : { "x" : 2144, "y" : 256 }
       },
       "connect" : [
         { "id" : "f213", "to" : "f1" }
@@ -266,7 +287,7 @@
       "type" : "TaskEnd",
       "name" : "Cancel",
       "visual" : {
-        "at" : { "x" : 792, "y" : 88 },
+        "at" : { "x" : 808, "y" : 16 },
         "labelOffset" : { "x" : 49, "y" : 41 }
       }
     }, {
@@ -277,10 +298,40 @@
         "dialog" : "com.axonivy.utils.ai.EndDemo:start()"
       },
       "visual" : {
-        "at" : { "x" : 1864, "y" : 208 }
+        "at" : { "x" : 1984, "y" : 256 }
       },
       "connect" : [
         { "id" : "f211", "to" : "f212" }
+      ]
+    }, {
+      "id" : "f215",
+      "type" : "Alternative",
+      "visual" : {
+        "at" : { "x" : 808, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f216", "to" : "f217", "color" : "default" }
+      ]
+    }, {
+      "id" : "f217",
+      "type" : "Script",
+      "name" : "Clear demo data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository.getInstance().uninstall();"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 808, "y" : 104 }
+      },
+      "connect" : [
+        { "id" : "f218", "to" : "f155", "color" : "default" }
       ]
     } ]
 }

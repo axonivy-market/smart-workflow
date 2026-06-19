@@ -15,6 +15,9 @@
     "name" : "aiResponse",
     "comment" : "Agent response text returned to the caller"
   }, {
+    "name" : "caseUuid",
+    "comment" : "Case UUID used to load repository data (e.g. departments)"
+  }, {
     "name" : "parseContent",
     "comment" : "Uploaded onboarding document content (.txt/.md)"
   }, {

@@ -193,6 +193,7 @@
     "name" : "isProceeded",
     "type" : "Boolean"
   }, {
-    "name" : "caseUuid"
+    "name" : "caseUuid",
+    "comment" : "Case UUID used to load repository data"
   } ]
 }

@@ -35,7 +35,7 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
 
   private static final String AGENT_SUBPROCESS_SIG  = "askSupplierAssistant(String,String,String)";
   private static final String AGENT_RESPONSE_KEY    = "aiResponse";
-  private static final String PARSE_SUBPROCESS_SIG  = "parseOnboardingRequest(String,java.io.InputStream)";
+  private static final String PARSE_SUBPROCESS_SIG  = "parseOnboardingRequest(String,String,java.io.InputStream)";
   private static final String PARSE_RESULT_KEY      = "draft";
   private OnboardingRequest request;
   private List<Department> departments = new ArrayList<>();
@@ -72,7 +72,7 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
       request.getSupplier().setBusinessAddress(new Address());
     }
 
-    departments = DepartmentRepository.getInstance().findAll();
+    departments = DepartmentRepository.getInstance().findAll(Ivy.wfCase().uuid());
     countries = List.of(Country.values());
     urgencies = List.of(Urgency.values());
   }

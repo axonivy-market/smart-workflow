@@ -198,6 +198,7 @@ public interface AssistantUploadSupport<T> {
         : null;
 
     Map<String, Object> params = new HashMap<>();
+    params.put("caseUuid", Ivy.wfCase().uuid());
     if (pdfDoc != null) {
       params.put("inputStream", UploadedDocumentEntryFactory.getInputStream(pdfDoc));
     } else {

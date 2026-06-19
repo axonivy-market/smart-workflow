@@ -2,6 +2,7 @@ package com.axonivy.utils.smart.workflow.demo;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,15 +31,11 @@ public abstract class AbstractMockRepository<T> {
     Ivy.wfCase().customFields().textField(getField()).set(null);
   }
 
-  public List<T> findAll() {
-    String json = Ivy.wfCase().customFields().textField(getField()).getOrNull();
-    return fromJson(json);
-  }
-
   public List<T> findAll(String caseUuid) {
-    // Callable subprocesses share the caller's case context, so Ivy.wfCase() is always correct.
-    // The caseUuid param makes the dependency on the calling case explicit in the API.
-    return findAll();
+    String json = Optional.ofNullable(Ivy.wf().findCase(caseUuid))
+      .map(c -> c.customFields().textField(getField()).getOrNull())
+      .orElse(null);
+    return fromJson(json);
   }
 
   protected void save(List<T> list) {
@@ -46,7 +43,6 @@ public abstract class AbstractMockRepository<T> {
   }
 
   protected void save(String caseUuid, List<T> list) {
-    // Callable subprocesses share the caller's case context, so Ivy.wfCase() is always correct.
     save(list);
   }
 
