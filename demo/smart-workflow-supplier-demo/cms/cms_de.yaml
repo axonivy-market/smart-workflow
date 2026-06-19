@@ -370,13 +370,13 @@ Dialogs:
                         BankNamePlaceholder: z.B. Commerzbank AG
                         BankingPaymentTitle: Banking & Zahlung
                         BicLabel: BIC / SWIFT
-
+                        BicPlaceholder: z.B. COBADEFFXXX
                         BusinessPurposeLabel: Geschäftszweck
                         BusinessPurposePlaceholder: z.B. Logistik / Transport
                         CertificationsCardSubtitle: Zertifikate hochladen
                         CertificationsCardTitle: Zertifizierungen & Compliance
                         CityLabel: Stadt
-
+                        CityPlaceholder: z.B. München
                         CommercialRegNoLabel: Handelsregisternummer
                         CommercialRegNoPlaceholder: z.B. HRB 123456
                         CompanyDetailsTitle: Unternehmensdetails
@@ -410,7 +410,7 @@ Dialogs:
                         RequiredDocsCardSubtitle: Compliance-Dokumente hochladen
                         RequiredDocsCardTitle: Erforderliche Dokumente
                         StreetLabel: Straße & Hausnummer
-
+                        StreetPlaceholder: z.B. Industriestraße 42
                         UrgencyLabel: Dringlichkeit
                         VatIdLabel: Umsatzsteuer-ID
                         VatIdPlaceholder: z.B. DE123456789
