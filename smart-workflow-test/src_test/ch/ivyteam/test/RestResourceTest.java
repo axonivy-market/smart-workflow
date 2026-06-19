@@ -16,6 +16,7 @@ import ch.ivyteam.test.resource.ResourceResponse;
 @Inherited
 @IvyProcessTest(enableWebServer = true)
 @ExtendWith(ResourceResponse.class)
+@ExtendWith(DisableCustomFieldTrackingExtension.class)
 public @interface RestResourceTest {
 
 }
