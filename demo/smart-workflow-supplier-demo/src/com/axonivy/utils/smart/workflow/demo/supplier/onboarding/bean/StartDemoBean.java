@@ -27,6 +27,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.SupplierPolicyRule;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RuleType;
 import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository;
 import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;
+import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;
 import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchIngestor;
 
 import ch.ivyteam.ivy.cm.ContentObject;
@@ -181,9 +182,9 @@ public class StartDemoBean implements Serializable {
     step1Status = StepStatus.RUNNING;
     try {
       String collection = SupplierOnboardingKnowledge.COLLECTION;
-      VectorStoreRestClient vsClient = VectorStoreRestClient.fromIvyVars();
-      if (vsClient.indexExists(collection)) {
-        vsClient.deleteIndex(collection);
+      OpenSearchRestClient client = OpenSearchRestClient.fromIvyVars();
+      if (client.indexExists(collection)) {
+        VectorStoreRestClient.deleteIndex(collection);
         Ivy.log().info(String.format(LOG_INDEX_DELETED, collection));
       }
       OpenSearchIngestor ingestor = new OpenSearchIngestor();
@@ -243,24 +244,14 @@ public class StartDemoBean implements Serializable {
       return null;
     }
     return contentObject.map(ContentObject::values)
-                        .map(values -> values.getFirst()).get();
+                        .filter(values -> !values.isEmpty())
+                        .map(List::getFirst)
+                        .orElse(null);
   }
 
   public StreamedContent downloadAllDocuments() {
     try {
-      var baos = new ByteArrayOutputStream();
-      try (var zos = new ZipOutputStream(baos)) {
-        for (DemoDoc doc : DemoDoc.values()) {
-          ContentObjectValue cov = doc.getCms();
-          if (cov == null) continue;
-          try (var is = cov.read().inputStream()) {
-            zos.putNextEntry(new ZipEntry(doc.getFileName()));
-            is.transferTo(zos);
-            zos.closeEntry();
-          }
-        }
-      }
-      var zipBytes = baos.toByteArray();
+      var zipBytes = buildDocumentsZip();
       return DefaultStreamedContent.builder()
           .name(ZIP_FILE_NAME)
           .contentType(ZIP_CONTENT_TYPE)
@@ -270,6 +261,23 @@ public class StartDemoBean implements Serializable {
       Ivy.log().error("Failed to create demo documents ZIP", e);
       return null;
     }
+  }
+
+  private static byte[] buildDocumentsZip() throws IOException {
+    var outputStream = new ByteArrayOutputStream();
+    try (var zipStream = new ZipOutputStream(outputStream)) {
+      for (DemoDoc doc : DemoDoc.values()) {
+        ContentObjectValue contentObject = doc.getCms();
+        if (contentObject != null) {
+          try (var contentObjectInputStream = contentObject.read().inputStream()) {
+            zipStream.putNextEntry(new ZipEntry(doc.getFileName()));
+            contentObjectInputStream.transferTo(zipStream);
+            zipStream.closeEntry();
+          }
+        }
+      }
+    }
+    return outputStream.toByteArray();
   }
 
   public boolean isHasProcurementRole() {

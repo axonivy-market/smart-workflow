@@ -11,7 +11,7 @@
 
     <ui:define name="content">
 
-      <ui:param name="assistantUploadEnabled" value="false" />
+      <ui:param name="resolvedUploadEnabled" value="#{empty assistantUploadEnabled ? false : assistantUploadEnabled}" />
       <!-- Pages may override assistantBean to bind the sidebar to a different bean.
            Defaults to supplierRequestBean when not provided. -->
       <ui:param name="resolvedAssistantBean" value="#{assistantBean != null ? assistantBean : supplierRequestBean}" />
@@ -38,14 +38,16 @@
             </ui:insert>
           </div>
           <!-- Sticky footer inside form column -->
-          <div class="so-page-footer">
-            <div class="so-page-footer-left">
-              <ui:insert name="footer-left" />
+          <h:form>
+            <div class="so-page-footer">
+              <div class="so-page-footer-left">
+                <ui:insert name="footer-left" />
+              </div>
+              <p:outputPanel id="footer-right-panel" styleClass="so-page-footer-right">
+                <ui:insert name="footer-right" />
+              </p:outputPanel>
             </div>
-            <p:outputPanel id="footer-right-panel" styleClass="so-page-footer-right">
-              <ui:insert name="footer-right" />
-            </p:outputPanel>
-          </div>
+          </h:form>
         </div>
 
         <!-- Resize handle -->
@@ -55,7 +57,7 @@
         <div class="so-ai-col" id="so-ai-col">
           <ic:com.axonivy.utils.ai.components.SupplierAiAssistant
             id="supplier-ai-assistant"
-            uploadEnabled="#{assistantUploadEnabled and resolvedAssistantBean.assistantUploadEnabled}"
+            uploadEnabled="#{resolvedUploadEnabled and resolvedAssistantBean.assistantUploadEnabled}"
             uploadListener="#{resolvedAssistantBean.addUploadedDocument}"
             confirmParseListener="#{resolvedAssistantBean.confirmAssistantDocumentParse}"
             uploadedFileName="#{resolvedAssistantBean.assistantUploadedFileName}"

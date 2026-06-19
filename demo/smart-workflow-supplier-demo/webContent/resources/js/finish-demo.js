@@ -55,6 +55,11 @@
   };
 
   function onKeyDown(e) {
+    const t = e.target;
+    const tag = t && t.tagName ? t.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || (t && t.isContentEditable)) {
+      return;
+    }
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       window.fdNextStep();
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
