@@ -1,18 +1,11 @@
 package com.axonivy.utils.smart.workflow.rag.opensearch.internal;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConf;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -52,7 +45,7 @@ public class OpenSearchRestClient {
     String userName = Ivy.var().get(OpenSearchConf.USER_NAME);
     String password = Ivy.var().get(OpenSearchConf.PASSWORD);
     WebTarget base = Ivy.rest().client(OPENSEARCH_CLIENT)
-      .register(new AuthFilter(apiKey, userName, password));
+      .register(new OpenSearchAuthFilter(apiKey, userName, password));
     return new OpenSearchRestClient(base);
   }
 
@@ -168,45 +161,4 @@ public class OpenSearchRestClient {
     }
   }
 
-  private static final class AuthFilter implements ClientRequestFilter {
-
-    private static final String AUTH_KEY = "Authorization";
-    private static final String API_KEY_FORMAT = "ApiKey %s";
-    private static final String BASIC_FORMAT = "Basic %s";
-
-    private final String apiKey;
-    private final String userName;
-    private final String password;
-
-    AuthFilter(String apiKey, String userName, String password) {
-      this.apiKey = apiKey;
-      this.userName = userName;
-      this.password = password;
-    }
-
-    @Override
-    public void filter(ClientRequestContext context) throws IOException {
-      boolean hasApiKey = StringUtils.isNotBlank(apiKey);
-      boolean hasBasicAuth = StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password);
-
-      if (hasApiKey) {
-        addApiKeyHeader(context);
-        return;
-      }
-      if (hasBasicAuth) {
-        addBasicAuthHeader(context);
-      }
-    }
-
-    private void addApiKeyHeader(ClientRequestContext context) {
-      context.getHeaders().putSingle(AUTH_KEY, String.format(API_KEY_FORMAT, apiKey));
-    }
-
-    private void addBasicAuthHeader(ClientRequestContext context) {
-      String raw = userName + ":" + password;
-      String encoded = Base64.getEncoder().encodeToString(raw.getBytes(StandardCharsets.UTF_8));
-      context.getHeaders().putSingle(AUTH_KEY, String.format(BASIC_FORMAT, encoded));
-    }
-
-  }
 }
