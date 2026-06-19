@@ -16,7 +16,7 @@ import ch.ivyteam.ivy.workflow.document.IDocument;
 
 public class LegalDocumentRepository {
 
-  private static final String SEP = "\t";
+  private static final String SEP = ";";
   private static LegalDocumentRepository instance;
 
   public static LegalDocumentRepository getInstance() {
