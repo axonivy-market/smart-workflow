@@ -83,5 +83,15 @@
     "type" : "Integer",
     "comment" : "Number of audit trail entries on testRequest after duplicate check",
     "modifiers" : [ ]
+  }, {
+    "name" : "foundLegalDocument",
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.LegalDocument",
+    "comment" : "LegalDocument lookup result from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "legalDocumentCount",
+    "type" : "Integer",
+    "comment" : "LegalDocument list size from findByObjectId repository test",
+    "modifiers" : [ ]
   } ]
 }
