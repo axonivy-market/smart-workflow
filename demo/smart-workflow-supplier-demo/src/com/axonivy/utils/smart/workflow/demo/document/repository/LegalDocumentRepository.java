@@ -16,13 +16,10 @@ import ch.ivyteam.ivy.workflow.document.IDocument;
 
 public class LegalDocumentRepository {
 
-  private static final String SEP = "\t";
-  private static LegalDocumentRepository instance;
+  private static final String SEP = ";";
+  private static final LegalDocumentRepository instance = new LegalDocumentRepository();
 
   public static LegalDocumentRepository getInstance() {
-    if (instance == null) {
-      instance = new LegalDocumentRepository();
-    }
     return instance;
   }
 
