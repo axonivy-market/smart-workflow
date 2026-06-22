@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.security.exec.Sudo;
 
 public abstract class AbstractMockRepository<T> {
 
@@ -32,7 +33,10 @@ public abstract class AbstractMockRepository<T> {
   }
 
   public List<T> findAll(String caseUuid) {
-    String json = Optional.ofNullable(Ivy.wf().findCase(caseUuid))
+    var wfCase = Sudo.get(() -> {
+      return Ivy.wf().findCase(caseUuid);
+    });
+    String json = Optional.ofNullable(wfCase)
       .map(c -> c.customFields().textField(getField()).getOrNull())
       .orElse(null);
     return fromJson(json);
@@ -43,7 +47,12 @@ public abstract class AbstractMockRepository<T> {
   }
 
   protected void save(String caseUuid, List<T> list) {
-    save(list);
+    Sudo.run(() -> {
+      var wfCase = Ivy.wf().findCase(caseUuid);
+      if (wfCase != null) {
+        wfCase.customFields().textField(getField()).set(toJson(list));
+      }
+    });
   }
 
   private String toJson(List<?> list) {
