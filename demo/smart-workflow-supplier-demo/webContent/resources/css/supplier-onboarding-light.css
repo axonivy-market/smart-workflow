@@ -65,6 +65,9 @@
   --so-bubble-failed-bg:        #FEE2E2;
   --so-bubble-failed-color:     #DC2626;
   --so-bubble-failed-border:    #FCA5A5;
+  --so-bubble-warning-bg:       #FEF9C3;
+  --so-bubble-warning-color:    #CA8A04;
+  --so-bubble-warning-border:   #FDE047;
   --so-bubble-pending-bg:       #F3F4F6;
   --so-bubble-pending-color:    #9CA3AF;
   --so-bubble-pending-border:   #D1D5DB;

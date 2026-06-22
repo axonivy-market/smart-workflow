@@ -1,0 +1,77 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19ECE372391EABB8",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.StartDemo.StartDemoData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "guid" : "19ECE372392C3BD1"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "19ECE372394CB737"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 160 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogEventStart",
+      "name" : "logout",
+      "config" : {
+        "guid" : "19ECE372395A0001"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Logout",
+      "config" : {
+        "output" : {
+          "code" : "ivy.session.logoutSessionUser();"
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 352, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f4", "color" : "default" }
+      ]
+    } ]
+}

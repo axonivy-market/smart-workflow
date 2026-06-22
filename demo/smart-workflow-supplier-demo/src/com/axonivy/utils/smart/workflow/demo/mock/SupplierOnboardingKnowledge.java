@@ -8,8 +8,6 @@ public final class SupplierOnboardingKnowledge {
 
   private SupplierOnboardingKnowledge() {}
 
-  // ── 1. Process Overview ───────────────────────────────────────────────────
-
   private static final String PROCESS_OVERVIEW = """
       Supplier Onboarding Process Overview:
       Step 1: A user starts the process by requesting to add a new supplier. A questionnaire pops up for the user to fill out: supplier name, purpose, products/services needed, expected annual volume, urgency, and needed-by date.
@@ -23,8 +21,6 @@ public final class SupplierOnboardingKnowledge {
       Step 5c: RED score (< 45): The request is declined. The user, supervisor, and QM/ISM manager are all notified.
       Step 6: The agent triggers ERP posting, completes the process, and produces a structured end-summary including decisions made, policies applied, human interventions, and final result.
       """;
-
-  // ── 2. Required Supplier Fields ───────────────────────────────────────────
 
   private static final String REQUIRED_FIELDS = """
       Required Supplier Registration Fields:
@@ -42,8 +38,6 @@ public final class SupplierOnboardingKnowledge {
       - Documents: Supporting documents such as company registration, VAT certificate, ISO certificates, annual report (for large volumes), insurance certificate.
       """;
 
-  // ── 3. Certification Requirements ─────────────────────────────────────────
-
   private static final String CERTIFICATION_REQUIREMENTS = """
       Supplier Certification Requirements:
       ISO 9001 — Quality Management System: Required for all suppliers with an expected annual volume above EUR 50,000. The supplier must provide a valid certificate number and expiry date. Upload the certificate document.
@@ -52,8 +46,6 @@ public final class SupplierOnboardingKnowledge {
       GDPR Data Processing Agreement (DPA): Required if the supplier processes personal data on behalf of the company (e.g. cloud services, HR tools, marketing platforms). Upload the signed DPA document.
       How to fill in certifications: For each applicable certification, check the box, enter the certificate number (e.g. QMS-2024-DE-001), set the expiry date, and upload the certificate file using the upload button next to that certification.
       """;
-
-  // ── 4. Risk Scoring Rules ─────────────────────────────────────────────────
 
   private static final String RISK_SCORING = """
       Supplier Risk Scoring:
@@ -68,8 +60,6 @@ public final class SupplierOnboardingKnowledge {
       RED (aggregate < 45): High Risk — Automatic decline. The request is rejected and the user, supervisor, and QM/ISM manager are notified with the reason.
       """;
 
-  // ── 5. Document Requirements ──────────────────────────────────────────────
-
   private static final String DOCUMENT_REQUIREMENTS = """
       Required Documents for Supplier Onboarding:
       - Company Registration Document: Proof of legal incorporation (e.g. Handelsregisterauszug in Germany). Confirms the supplier is a registered legal entity.
@@ -81,8 +71,6 @@ public final class SupplierOnboardingKnowledge {
       Documents can be uploaded in the supplier registration form using the upload button. Accepted file types include PDF, TXT, and MD for draft parsing.
       """;
 
-  // ── 6. Approval and Routing ────────────────────────────────────────────────
-
   private static final String APPROVAL_ROUTING = """
       Supplier Onboarding Approval Process:
       GREEN Route (score >= 80): After validation, a supervisor approval task is created. Once the supervisor approves, a second approval task is assigned to the QM/ISM manager. After both approve, the supplier record is automatically posted to the ERP system and the requester is notified of completion.
@@ -90,8 +78,6 @@ public final class SupplierOnboardingKnowledge {
       RED Route (score < 45): The supplier request is automatically declined. A structured decline reason is recorded. The requester, their supervisor, and the QM/ISM manager are all notified with the decline summary.
       All routing decisions, approvals, and human interventions are recorded in a structured audit trail attached to the case.
       """;
-
-  // ── 7. Banking and IBAN ────────────────────────────────────────────────────
 
   private static final String BANKING_DETAILS = """
       Supplier Banking Details:
@@ -102,16 +88,12 @@ public final class SupplierOnboardingKnowledge {
       Account Holder Name: Should match the registered business name of the supplier.
       """;
 
-  // ── 8. Urgency Levels ─────────────────────────────────────────────────────
-
   private static final String URGENCY_LEVELS = """
       Supplier Request Urgency Levels:
       NORMAL: Standard processing timeline. No expedited review needed. Used for planned procurement where the supplier is not yet urgently needed.
       HIGH: Expedited review requested. The procurement team and approvers are informed of the higher priority. Suitable when a supplier is needed within a short timeframe.
       CRITICAL: Immediate attention required. All involved roles (approvers, QM/ISM manager) are notified with high-priority flags. Used when operations depend on this supplier being onboarded urgently (e.g. production blockages, emergency sourcing).
       """;
-
-  // ── 9. VAT ID Format ──────────────────────────────────────────────────────
 
   private static final String VAT_ID_FORMAT = """
       VAT ID (Value Added Tax Identification Number):
@@ -121,8 +103,6 @@ public final class SupplierOnboardingKnowledge {
       The VAT ID is used for tax verification during cross-reference checks in the validation step.
       """;
 
-  // ── 10. Duplicate Check ────────────────────────────────────────────────────
-
   private static final String DUPLICATE_CHECK = """
       Supplier Duplicate Check:
       Before creating a new supplier record, the system automatically checks the supplier database for existing or similar suppliers. The check uses supplier name, country, and business purpose to find matches with a similarity score (0-100).
@@ -131,8 +111,6 @@ public final class SupplierOnboardingKnowledge {
       2. Proceed with the new supplier request if the existing match does not meet their needs.
       This check prevents duplicate supplier entries in the ERP and reduces procurement risk.
       """;
-
-  // ── 11. Clarification Process ─────────────────────────────────────────────
 
   private static final String CLARIFICATION_PROCESS = """
       Supplier Onboarding Clarification Process:
@@ -149,8 +127,6 @@ public final class SupplierOnboardingKnowledge {
       After each clarification cycle the agent re-evaluates and recalculates the risk score. The maximum number of clarification cycles is 3. If the retry count exceeds this maximum the request is automatically declined.
       """;
 
-  // ── 12. Agent Validation Steps ────────────────────────────────────────────
-
   private static final String AGENT_VALIDATION_STEPS = """
       Agent Validation Steps:
       The Supplier Agent performs four sequential processing steps during the validation stage:
@@ -161,8 +137,6 @@ public final class SupplierOnboardingKnowledge {
       Each step produces validation findings with one of these severities: PASSED (no issue), WARNING (clarification advisable), FAILURE (serious gap that must be resolved), INSUFFICIENT (incomplete data), CLARIFICATION_NEEDED (explicit clarification required).
       Findings that require a document upload carry a document type key in the format CERTIFICATION:<NAME> (e.g. CERTIFICATION:ISO_9001, CERTIFICATION:ISO_14001, CERTIFICATION:ISO_27001) or DOCUMENT:<NAME> (e.g. DOCUMENT:ANNUAL_REPORT, DOCUMENT:COMMERCIAL_REGISTER, DOCUMENT:BANK_STATEMENT). Findings without a document requirement (e.g. duplicate checks, data issues) carry no key.
       """;
-
-  // ── 13. Onboarding Status Lifecycle ──────────────────────────────────────
 
   private static final String ONBOARDING_STATUS_LIFECYCLE = """
       Supplier Onboarding Status Lifecycle:
@@ -178,8 +152,6 @@ public final class SupplierOnboardingKnowledge {
       COMPLETED — The supplier was successfully validated, approved, and posted to the ERP system.
       """;
 
-  // ── 14. Decline Conditions and Notifications ──────────────────────────────
-
   private static final String DECLINE_AND_WITHDRAWAL = """
       Supplier Onboarding Decline Conditions and Notifications:
       A supplier onboarding request can be declined in three ways:
@@ -192,8 +164,6 @@ public final class SupplierOnboardingKnowledge {
       - Creates a "Decline review" task so the involved parties can review the decline summary.
       After the decline review task is completed the process routes to the completion screen which shows the full decline summary including the audit trail and notifications sent.
       """;
-
-  // ── Registry ──────────────────────────────────────────────────────────────
 
   public static List<String> getAll() {
     return List.of(

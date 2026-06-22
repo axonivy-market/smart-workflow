@@ -1,0 +1,109 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+<cc:interface componentType="IvyComponent">
+  <!-- Current OnboardingStatus enum name, e.g. "REQUEST", "DB_CHECK", "SUPPLIER_DATA" -->
+  <cc:attribute name="status" type="java.lang.String" required="true" />
+</cc:interface>
+
+<cc:implementation>
+  <c:set var="s" value="#{cc.attrs.status}" />
+
+  <c:choose>
+    <c:when test="#{s == 'COMPLETED' or s == 'DECLINED'}">
+      <c:set var="currentStep" value="6" />
+    </c:when>
+    <c:when test="#{s == 'RISK_SCORING' or s == 'APPROVAL_PENDING'}">
+      <c:set var="currentStep" value="5" />
+    </c:when>
+    <c:when test="#{s == 'VALIDATION' or s == 'CLARIFICATION_REQUIRED'}">
+      <c:set var="currentStep" value="4" />
+    </c:when>
+    <c:when test="#{s == 'SUPPLIER_DATA'}">
+      <c:set var="currentStep" value="3" />
+    </c:when>
+    <c:when test="#{s == 'DB_CHECK'}">
+      <c:set var="currentStep" value="2" />
+    </c:when>
+    <c:otherwise>
+      <c:set var="currentStep" value="1" />
+    </c:otherwise>
+  </c:choose>
+
+  <!-- Stepper Bar -->
+  <div class="so-stepper-bar">
+    <div class="flex align-items-center">
+
+      <!-- Step 1: Request -->
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 1 ? 'active' : (currentStep gt 1 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
+          <ui:fragment rendered="#{currentStep gt 1}"><i class="ti ti-check" /></ui:fragment>
+          <ui:fragment rendered="#{(currentStep lt 1) or (currentStep eq 1)}">1</ui:fragment>
+        </div>
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierOnboardingSteps/Step1')}
+      </div>
+
+      <div class="so-step-connector #{currentStep gt 1 ? 'done' : ''}"></div>
+
+      <!-- Step 2: DB Check -->
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 2 ? 'active' : (currentStep gt 2 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
+          <ui:fragment rendered="#{currentStep gt 2}"><i class="ti ti-check" /></ui:fragment>
+          <ui:fragment rendered="#{currentStep le 2}">2</ui:fragment>
+        </div>
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierOnboardingSteps/Step2')}
+      </div>
+
+      <div class="so-step-connector #{currentStep gt 2 ? 'done' : ''}"></div>
+
+      <!-- Step 3: Supplier Data -->
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 3 ? 'active' : (currentStep gt 3 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
+          <ui:fragment rendered="#{currentStep gt 3}"><i class="ti ti-check" /></ui:fragment>
+          <ui:fragment rendered="#{currentStep le 3}">3</ui:fragment>
+        </div>
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierOnboardingSteps/Step3')}
+      </div>
+
+      <div class="so-step-connector #{currentStep gt 3 ? 'done' : ''}"></div>
+
+      <!-- Step 4: Validation -->
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 4 ? 'active' : (currentStep gt 4 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
+          <ui:fragment rendered="#{currentStep gt 4}"><i class="ti ti-check" /></ui:fragment>
+          <ui:fragment rendered="#{currentStep le 4}">4</ui:fragment>
+        </div>
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierOnboardingSteps/Step4')}
+      </div>
+
+      <div class="so-step-connector #{currentStep gt 4 ? 'done' : ''}"></div>
+
+      <!-- Step 5: Risk Score -->
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 5 ? 'active' : (currentStep gt 5 ? 'done' : '')}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
+          <ui:fragment rendered="#{currentStep gt 5}"><i class="ti ti-check" /></ui:fragment>
+          <ui:fragment rendered="#{currentStep le 5}">5</ui:fragment>
+        </div>
+        #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierOnboardingSteps/Step5')}
+      </div>
+
+      <div class="so-step-connector #{currentStep gt 5 ? 'done' : ''}"></div>
+
+      <!-- Step 6: Complete / Declined -->
+      <div class="so-step-item flex align-items-center gap-1 #{currentStep eq 6 ? 'active' : ''}">
+        <div class="so-step-circle border-circle flex align-items-center justify-content-center flex-shrink-0">
+          <ui:fragment rendered="#{currentStep eq 6 and s == 'DECLINED'}"><i class="ti ti-x" /></ui:fragment>
+          <ui:fragment rendered="#{currentStep eq 6 and s != 'DECLINED'}"><i class="ti ti-check" /></ui:fragment>
+          <ui:fragment rendered="#{currentStep lt 6}">6</ui:fragment>
+        </div>
+        #{s == 'DECLINED' ? ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierOnboardingSteps/Step6Declined') : ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierOnboardingSteps/Step6Complete')}
+      </div>
+
+    </div>
+  </div>
+
+</cc:implementation>
+
+</html>

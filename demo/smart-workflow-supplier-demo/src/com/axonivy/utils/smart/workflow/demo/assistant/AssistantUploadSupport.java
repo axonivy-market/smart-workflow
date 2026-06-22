@@ -15,12 +15,16 @@ import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 import ch.ivyteam.ivy.security.exec.Sudo;
+import javax.faces.event.ActionEvent;
+
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
 public interface AssistantUploadSupport<T> {
+
+  String ATTR_FILE_NAME = "fileName";
 
   T getFormData();
 
@@ -103,14 +107,32 @@ public interface AssistantUploadSupport<T> {
     String GUIDANCE_CONTEXT = "guidanceContext";
   }
 
+  default void removeUploadedDocument(ActionEvent event) {
+    removeUploadedDocument((String) event.getComponent().getAttributes().get(ATTR_FILE_NAME));
+  }
+
+  default void removeUploadedDocument(String fileName) {
+    List<UploadedDocumentEntry> updated = new ArrayList<>(getUploadedDocuments());
+    updated.removeIf(d -> d.getFileName().equals(fileName));
+    setUploadedDocuments(updated);
+    if (updated.isEmpty()) {
+      setAssistantAwaitingConfirmation(Boolean.FALSE);
+      setAssistantParseFeedback(null);
+      setAssistantUploadedFileName(null);
+    } else {
+      setAssistantParseFeedback(Ivy.cms().co(Cms.FILES_READY_TPL, java.util.Arrays.asList(updated.size())));
+      setAssistantUploadedFileName(Ivy.cms().co(Cms.FILES_QUEUED_TPL, java.util.Arrays.asList(updated.size())));
+    }
+  }
+
   default void addUploadedDocument(FileUploadEvent event) {
     UploadedFile uploadedFile = event != null ? event.getFile() : null;
-    if (uploadedFile == null) {
-      setAssistantParseFeedback(Ivy.cms().co(Cms.NO_FILE_UPLOADED));
-      return;
-    }
+    String fileName = uploadedFile != null ? uploadedFile.getFileName() : null;
+    byte[] content  = uploadedFile != null ? uploadedFile.getContent()  : null;
+    addUploadedDocument(fileName, content);
+  }
 
-    String fileName = uploadedFile.getFileName();
+  default void addUploadedDocument(String fileName, byte[] content) {
     if (fileName == null || fileName.trim().isEmpty()) {
       setAssistantParseFeedback(Ivy.cms().co(Cms.NO_FILE_UPLOADED));
       return;
@@ -122,7 +144,6 @@ public interface AssistantUploadSupport<T> {
       return;
     }
 
-    byte[] content = uploadedFile.getContent();
     if (content == null || content.length == 0) {
       setAssistantParseFeedback(Ivy.cms().co(Cms.FILE_EMPTY));
       return;

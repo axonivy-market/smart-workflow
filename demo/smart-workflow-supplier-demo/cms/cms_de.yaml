@@ -30,6 +30,8 @@ Dialogs:
                   onboarding:
                     FinishDemo:
                       HeroSub: Wir hoffen, dass Sie eine tolle Erfahrung mit <strong>Smart Workflow</strong> gemacht haben.<br/>Hier ist eine Zusammenfassung von allem, was die KI für Sie erledigt hat — autonom, präzise und vollständig nachvollziehbar.
+                      HeroTitle: Herzlichen Glückwunsch!
+                      NextButtonTitle: Weiter
                       PageTitle: Smart Workflow — KI-Prozesszusammenfassung
                       Panel0Desc: Der Onboarding-Prozess beginnt, wenn ein Lieferant seinen Antrag über das Smart Workflow-Portal einreicht. Alle erforderlichen Unterlagen — Gewerbeanmeldung, Steuerbescheinigungen und Finanzberichte — werden in dieser Phase hochgeladen.
                       Panel0Detail1: Lieferant vervollständigt Unternehmensprofil und Kontaktdaten
@@ -66,6 +68,14 @@ Dialogs:
                       Panel6Detail2: Lieferantendatensatz im System mit dem endgültigen Ergebnis aktualisiert
                       Panel6Detail3: Stakeholder über die Entscheidung und den Abschluss des Prozesses informiert
                       Panel6Title: Fall abgeschlossen
+                      PrevButtonTitle: Zurück
+                      Step0DotTitle: Dokument-Upload
+                      Step1DotTitle: KI-Dokumentenextraktion
+                      Step2DotTitle: Kontextuelle F&A-Beratung
+                      Step3DotTitle: Dokumentvalidierung
+                      Step4DotTitle: Risikoberechnung
+                      Step5DotTitle: Autonomes Routing
+                      Step6DotTitle: Fall abgeschlossen
                     StartDemo:
                       AfterItem1: Lieferant lädt Dokumente einmalig über ein strukturiertes, geführtes Formular hoch
                       AfterItem2: Vision-KI extrahiert automatisch 15+ Felder aus PDFs in Sekunden — keine manuelle Eingabe
@@ -104,6 +114,7 @@ Dialogs:
                       FileDetailsHide: Details ausblenden
                       FileDetailsToggle: Dateidetails
                       Gen1Hint: Richtliniendokumente in Vektorspeicher einpflegen
+                      Gen1WarningMessage: Keine Verbindung zum Vektorspeicher — diese Demo verwendet stattdessen vortrainiertes Wissen
                       Gen1RunningSubtitle: Richtliniendokumente werden in den Vektorspeicher geladen…
                       Gen1Title: RAG-Wissensdatenbank aufbauen
                       Gen2Hint: 6 Zertifizierungs- & Regulierungsregeln
@@ -117,6 +128,10 @@ Dialogs:
                       GenRetryButton: Wiederholen
                       GenerateDataButton: Daten generieren
                       KbChunksDesc: Unten sind die Wissensdatenbankeinträge, die dem Chatbot in dieser Demo als Wissensbasis dienen.
+                      KbDialogHeader: Wissensdatenbank & Richtlinien
+                      KbDialogToggle: Wissensdatenbank & Regeln
+                      KbTabCompliance: Compliance
+                      KbTabFinancial: Finanzen
                       KbTabKnowledgeBase: RAG-Wissensdatenbank
                       NextButtonTitle: Weiter
                       PageTitle: Smart Workflow — Lieferanten-Onboarding Demo
@@ -273,6 +288,8 @@ Dialogs:
                       SaveDraftButton: Entwurf speichern
                       StepSubtitle: Schritt 3 von 6 — Neue Lieferantenregistrierung
                       SubmitButton: Zur Agentenvalidierung einreichen
+                    SupplierOnboardingTemplate:
+                      Title: Lieferanten-Onboarding
                     SupplierRequestForm:
                       AdditionalNotesLabel: Zusätzliche Hinweise
                       AdditionalNotesPlaceholder: Zusätzlicher Kontext für das Beschaffungs- oder QM-Team...
@@ -296,7 +313,7 @@ Dialogs:
                       SupplierCountryLabel: Lieferantenland *
                       SupplierInfoTitle: Lieferanteninformationen
                       SupplierNameLabel: Lieferantenname *
-
+                      SupplierNamePlaceholder: z. B. Global Logistics GmbH
                       SupplierWebsiteLabel: Lieferanten-Website
                       SupplierWebsitePlaceholder: https://www.lieferant.de
                       UrgencyLabel: Dringlichkeit *

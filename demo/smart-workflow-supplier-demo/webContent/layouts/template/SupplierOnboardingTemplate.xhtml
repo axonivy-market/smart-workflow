@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">
+      <ui:insert name="page-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingTemplate/Title')}</ui:insert>
+    </ui:define>
+
+    <ui:define name="content">
+
+      <ui:param name="resolvedUploadEnabled" value="#{empty assistantUploadEnabled ? false : assistantUploadEnabled}" />
+      <!-- Pages may override assistantBean to bind the sidebar to a different bean.
+           Defaults to supplierRequestBean when not provided. -->
+      <ui:param name="resolvedAssistantBean" value="#{assistantBean != null ? assistantBean : supplierRequestBean}" />
+
+      <!-- Stylesheet -->
+      <h:outputStylesheet library="css" name="supplier-onboarding.css" />
+      <h:outputStylesheet library="css" name="supplier-onboarding-#{ivyFreyaTheme.mode}.css" />
+
+      <!-- Stepper + step banner -->
+      <ic:com.axonivy.utils.ai.components.SupplierOnboardingSteps
+        status="#{status}"
+        stepTitle="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierOnboardingTemplate/Title')}"
+        stepSubtitle="#{stepSubtitle}" />
+
+      <!-- Main 2-column content area — fixed/resizable AI panel -->
+      <div class="so-body-columns">
+
+        <!-- Left: form content + sticky footer -->
+        <div class="so-form-column flex flex-column">
+          <p:messages id="form-messages" />
+          <div class="so-main-content flex-1">
+            <ui:insert name="form-content">
+              <!-- Default placeholder — pages override this slot -->
+            </ui:insert>
+          </div>
+          <!-- Sticky footer inside form column -->
+          <h:form>
+            <div class="so-page-footer">
+              <div class="so-page-footer-left">
+                <ui:insert name="footer-left" />
+              </div>
+              <p:outputPanel id="footer-right-panel" styleClass="so-page-footer-right">
+                <ui:insert name="footer-right" />
+              </p:outputPanel>
+            </div>
+          </h:form>
+        </div>
+
+        <!-- Resize handle -->
+        <div class="so-resize-handle" id="so-resize-handle"></div>
+
+        <!-- Right: AI assistant panel -->
+        <div class="so-ai-col" id="so-ai-col">
+          <ic:com.axonivy.utils.ai.components.SupplierAiAssistant
+            id="supplier-ai-assistant"
+            uploadEnabled="#{resolvedUploadEnabled and resolvedAssistantBean.assistantUploadEnabled}"
+            uploadListener="#{resolvedAssistantBean.addUploadedDocument}"
+            confirmParseListener="#{resolvedAssistantBean.confirmAssistantDocumentParse}"
+            uploadedFileName="#{resolvedAssistantBean.assistantUploadedFileName}"
+            awaitingConfirmation="#{resolvedAssistantBean.assistantAwaitingConfirmation}"
+            parseFeedback="#{resolvedAssistantBean.assistantParseFeedback}"
+            uploadedDocuments="#{resolvedAssistantBean.uploadedDocuments}"
+            removeDocumentListener="#{resolvedAssistantBean.removeUploadedDocument}"
+            sendMessageListener="#{resolvedAssistantBean.sendAgentMessage}"
+            getAnswerListener="#{resolvedAssistantBean.getAgentAnswer}"
+            chatHistory="#{resolvedAssistantBean.agentChatHistory}"
+            userMessage="#{resolvedAssistantBean.agentUserMessage}"
+            guidanceList="#{guidanceListOverride != null ? guidanceListOverride : resolvedAssistantBean.agentGuidance}" />
+        </div>
+
+      </div>
+
+      <script>
+        (function () {
+          function initPanelResize() {
+            const handle = document.getElementById('so-resize-handle');
+            const panel  = document.getElementById('so-ai-col');
+            if (!handle || !panel) return;
+
+            const MIN_W = 300, MAX_W = 600;
+            let startX, startW;
+
+            handle.addEventListener('mousedown', function (e) {
+              startX = e.clientX;
+              startW = panel.offsetWidth;
+              handle.classList.add('so-dragging');
+              document.body.style.cursor     = 'col-resize';
+              document.body.style.userSelect = 'none';
+
+              function onMove(e) {
+                const delta = startX - e.clientX;
+                const w = Math.min(MAX_W, Math.max(MIN_W, startW + delta));
+                panel.style.width = w + 'px';
+                panel.style.flex  = '0 0 ' + w + 'px';
+              }
+
+              function onUp() {
+                handle.classList.remove('so-dragging');
+                document.body.style.cursor     = '';
+                document.body.style.userSelect = '';
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup',   onUp);
+              }
+
+              document.addEventListener('mousemove', onMove);
+              document.addEventListener('mouseup',   onUp);
+              e.preventDefault();
+            });
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPanelResize);
+          } else {
+            initPanelResize();
+          }
+        })();
+      </script>
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+</html>

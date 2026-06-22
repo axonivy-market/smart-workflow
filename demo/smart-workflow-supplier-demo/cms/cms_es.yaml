@@ -30,6 +30,8 @@ Dialogs:
                   onboarding:
                     FinishDemo:
                       HeroSub: Esperamos que haya tenido una gran experiencia con <strong>Smart Workflow</strong>.<br/>Aquí hay un resumen de todo lo que la IA gestionó por usted — de forma autónoma, precisa y completamente auditable.
+                      HeroTitle: ¡Felicitaciones!
+                      NextButtonTitle: Siguiente
                       PageTitle: Smart Workflow — Resumen del proceso de IA
                       Panel0Desc: El proceso de incorporación comienza cuando un proveedor envía su solicitud a través del portal Smart Workflow. Todos los documentos de apoyo requeridos — registro empresarial, certificados fiscales y estados financieros — se cargan en esta etapa.
                       Panel0Detail1: El proveedor completa el perfil de la empresa y la información de contacto
@@ -66,6 +68,14 @@ Dialogs:
                       Panel6Detail2: Registro del proveedor actualizado en el sistema con el resultado final
                       Panel6Detail3: Partes interesadas notificadas de la decisión y finalización del proceso
                       Panel6Title: Caso cerrado
+                      PrevButtonTitle: Anterior
+                      Step0DotTitle: Carga de documentos
+                      Step1DotTitle: Extracción de documentos con IA
+                      Step2DotTitle: Guía contextual de P&R
+                      Step3DotTitle: Validación de documentos
+                      Step4DotTitle: Cálculo de riesgo
+                      Step5DotTitle: Enrutamiento autónomo
+                      Step6DotTitle: Caso cerrado
                     StartDemo:
                       AfterItem1: El proveedor carga documentos una vez a través de un formulario estructurado y guiado
                       AfterItem2: La IA visual extrae automáticamente 15+ campos de PDFs en segundos — sin entrada manual
@@ -104,6 +114,7 @@ Dialogs:
                       FileDetailsHide: Ocultar detalles
                       FileDetailsToggle: Detalles de archivos
                       Gen1Hint: Incorporar documentos de política en el almacén vectorial
+                      Gen1WarningMessage: No se puede conectar al almacén vectorial — esta demo usará el conocimiento preentrenado
                       Gen1RunningSubtitle: Incorporando documentos de política en el almacén vectorial…
                       Gen1Title: Construir base de conocimiento RAG
                       Gen2Hint: 6 reglas de certificación y regulación
@@ -117,6 +128,10 @@ Dialogs:
                       GenRetryButton: Reintentar
                       GenerateDataButton: Generar datos
                       KbChunksDesc: A continuación se muestran las entradas de la base de conocimiento utilizadas para proporcionar conocimiento al chatbot que usará en esta demo.
+                      KbDialogHeader: Base de conocimiento y reglas de política
+                      KbDialogToggle: Base de conocimiento y reglas
+                      KbTabCompliance: Cumplimiento
+                      KbTabFinancial: Financiero
                       KbTabKnowledgeBase: Base de conocimiento RAG
                       NextButtonTitle: Siguiente
                       PageTitle: Smart Workflow — Demo de incorporación de proveedores
@@ -273,6 +288,8 @@ Dialogs:
                       SaveDraftButton: Guardar borrador
                       StepSubtitle: Paso 3 de 6 — Nueva Registro de proveedor
                       SubmitButton: Enviar para validación del agente
+                    SupplierOnboardingTemplate:
+                      Title: Incorporación de Proveedores
                     SupplierRequestForm:
                       AdditionalNotesLabel: Notas adicionales
                       AdditionalNotesPlaceholder: Contexto adicional para el equipo de compras o QM...
@@ -296,7 +313,7 @@ Dialogs:
                       SupplierCountryLabel: País del proveedor *
                       SupplierInfoTitle: Información del proveedor
                       SupplierNameLabel: Nombre del proveedor *
-
+                      SupplierNamePlaceholder: p. ej. Global Logistics GmbH
                       SupplierWebsiteLabel: Sitio web del proveedor
                       SupplierWebsitePlaceholder: https://www.proveedor.com
                       UrgencyLabel: Urgencia *

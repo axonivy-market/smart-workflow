@@ -60,6 +60,10 @@ public class OpenSearchRestClient {
     this.target = target;
   }
 
+  public WebTarget target() {
+    return target;
+  }
+
   public void ping() {
     try (Response response = target.request(MediaType.APPLICATION_JSON).head()) {
       if (!isSuccessful(response)) {
@@ -179,34 +183,25 @@ public class OpenSearchRestClient {
     private final String password;
 
     AuthFilter(String apiKey, String userName, String password) {
-      this.apiKey = apiKey;
-      this.userName = userName;
-      this.password = password;
+      this.apiKey    = apiKey;
+      this.userName  = userName;
+      this.password  = password;
     }
 
     @Override
     public void filter(ClientRequestContext context) throws IOException {
-      boolean hasApiKey = StringUtils.isNotBlank(apiKey);
+      boolean hasApiKey    = StringUtils.isNotBlank(apiKey);
       boolean hasBasicAuth = StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password);
 
       if (hasApiKey) {
-        addApiKeyHeader(context);
+        context.getHeaders().putSingle(AUTH_KEY, String.format(API_KEY_FORMAT, apiKey));
         return;
       }
       if (hasBasicAuth) {
-        addBasicAuthHeader(context);
+        String raw = userName + ":" + password;
+        String encoded = Base64.getEncoder().encodeToString(raw.getBytes(StandardCharsets.UTF_8));
+        context.getHeaders().putSingle(AUTH_KEY, String.format(BASIC_FORMAT, encoded));
       }
     }
-
-    private void addApiKeyHeader(ClientRequestContext context) {
-      context.getHeaders().putSingle(AUTH_KEY, String.format(API_KEY_FORMAT, apiKey));
-    }
-
-    private void addBasicAuthHeader(ClientRequestContext context) {
-      String raw = userName + ":" + password;
-      String encoded = Base64.getEncoder().encodeToString(raw.getBytes(StandardCharsets.UTF_8));
-      context.getHeaders().putSingle(AUTH_KEY, String.format(BASIC_FORMAT, encoded));
-    }
-
   }
 }

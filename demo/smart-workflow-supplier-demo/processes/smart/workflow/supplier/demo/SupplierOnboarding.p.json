@@ -7,21 +7,167 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "RequestStart",
-      "name" : "start",
+      "name" : "Supplier Onboarding",
       "config" : {
-        "signature" : "start"
+        "signature" : "start",
+        "request" : {
+          "name" : "Supplier Onboarding",
+          "description" : "Request a new supplier onboarding process"
+        }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 64 }
+        "at" : { "x" : 96, "y" : 208 }
       },
       "connect" : [
-        { "id" : "f2", "to" : "f1" }
+        { "id" : "f100", "to" : "f209" }
+      ]
+    }, {
+      "id" : "f209",
+      "type" : "Script",
+      "name" : "Save session username",
+      "config" : {
+        "output" : {
+          "code" : "in.sessionUsername = ivy.session.getSessionUserName();"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f210", "to" : "f198" }
+      ]
+    }, {
+      "id" : "f198",
+      "type" : "DialogCall",
+      "name" : "Start demo",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.StartDemo:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 440, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f199", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "DialogCall",
+      "name" : "Supplier request form",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.SupplierRequestForm:start(com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.request" : "result.request"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f102", "to" : "f150" }
+      ]
+    }, {
+      "id" : "f150",
+      "type" : "Alternative",
+      "name" : "Check status",
+      "config" : {
+        "conditions" : {
+          "f152" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus.REQUEST.equals(in.request.status)",
+          "f153" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus.DB_CHECK.equals(in.request.status)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 792, "y" : 208 },
+        "labelOffset" : { "x" : -40, "y" : 24 }
+      },
+      "connect" : [
+        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 792, "y" : 336 } ], "label" : {
+            "name" : "Save Draft",
+            "segment" : 1.12,
+            "offset" : { "x" : -23, "y" : -21 }
+          } },
+        { "id" : "f153", "to" : "f196", "label" : {
+            "name" : "Submit",
+            "offset" : { "x" : -1, "y" : -18 }
+          } },
+        { "id" : "f156", "to" : "f155" }
+      ]
+    }, {
+      "id" : "f151",
+      "type" : "TaskSwitchEvent",
+      "name" : "Continue supplier request",
+      "config" : {
+        "task" : {
+          "name" : "Continue supplier request - <%= in1.request.supplier.businessName %>",
+          "description" : "Continue filling out the supplier request form",
+          "responsible" : {
+            "type" : "USER_FROM_ATTRIBUTE",
+            "script" : "in1.sessionUsername"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 624, "y" : 336 }
+      },
+      "connect" : [
+        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 624, "y" : 320 } ] }
       ]
     }, {
       "id" : "f1",
       "type" : "TaskEnd",
+      "name" : "Submit (placeholder)",
       "visual" : {
-        "at" : { "x" : 352, "y" : 64 }
+        "at" : { "x" : 1312, "y" : 208 },
+        "description" : "Placeholder — rest of the process will be wired here later"
       }
+    }, {
+      "id" : "f212",
+      "type" : "Script",
+      "name" : "Clear demo data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository.getInstance().uninstall();"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 1152, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f213", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f155",
+      "type" : "TaskEnd",
+      "name" : "Cancel",
+      "visual" : {
+        "at" : { "x" : 792, "y" : 88 },
+        "labelOffset" : { "x" : 49, "y" : 41 }
+      }
+    }, {
+      "id" : "f196",
+      "type" : "DialogCall",
+      "name" : "End Demo",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.EndDemo:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 968, "y" : 208 }
+      },
+      "connect" : [
+        { "id" : "f211", "to" : "f212" }
+      ]
     } ]
 }
