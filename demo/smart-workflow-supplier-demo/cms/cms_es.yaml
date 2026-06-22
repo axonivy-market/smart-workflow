@@ -370,13 +370,11 @@ Dialogs:
                         BankNamePlaceholder: ej. Commerzbank AG
                         BankingPaymentTitle: Banca y pago
                         BicLabel: BIC / SWIFT
-                        BicPlaceholder: ej. COBADEFFXXX
                         BusinessPurposeLabel: Propósito empresarial
                         BusinessPurposePlaceholder: ej. Logística / Transporte
                         CertificationsCardSubtitle: Suba sus certificados
                         CertificationsCardTitle: Certificaciones y cumplimiento
                         CityLabel: Ciudad
-                        CityPlaceholder: ej. Múnich
                         CommercialRegNoLabel: Número de registro mercantil
                         CommercialRegNoPlaceholder: ej. HRB 123456
                         CompanyDetailsTitle: Datos de la empresa
@@ -410,7 +408,6 @@ Dialogs:
                         RequiredDocsCardSubtitle: Suba documentos de cumplimiento
                         RequiredDocsCardTitle: Documentos requeridos
                         StreetLabel: Calle y número
-                        StreetPlaceholder: ej. Industriestraße 42
                         UrgencyLabel: Urgencia
                         VatIdLabel: NIF / IVA
                         VatIdPlaceholder: ej. DE123456789

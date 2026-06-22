@@ -117,7 +117,6 @@
           value="#{cc.attrs.bean.supplier.businessAddress.street1}"
           required="#{param['skipValidation'] != 'true'}"
           label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/StreetLabel')}"
-          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/StreetPlaceholder')}"
           disabled="#{cc.attrs.readOnly}" />
       </div>
 
@@ -137,7 +136,6 @@
           value="#{cc.attrs.bean.supplier.businessAddress.city}"
           required="#{param['skipValidation'] != 'true'}"
           label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CityLabel')}"
-          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CityPlaceholder')}"
           disabled="#{cc.attrs.readOnly}" />
       </div>
 
@@ -272,7 +270,6 @@
             <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BicLabel')}</label>
             <p:inputText id="bic"
               value="#{cc.attrs.bean.supplier.banking.bic}"
-              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BicPlaceholder')}"
               disabled="#{cc.attrs.readOnly}" />
           </div>
 
