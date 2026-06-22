@@ -370,13 +370,13 @@ Dialogs:
                         BankNamePlaceholder: ex. Commerzbank AG
                         BankingPaymentTitle: Banque & paiement
                         BicLabel: BIC / SWIFT
-
+                        BicPlaceholder: ex. COBADEFFXXX
                         BusinessPurposeLabel: Objet social
                         BusinessPurposePlaceholder: ex. Logistique / Transport
                         CertificationsCardSubtitle: Téléversez vos certificats
                         CertificationsCardTitle: Certifications & conformité
                         CityLabel: Ville
-
+                        CityPlaceholder: ex. Munich
                         CommercialRegNoLabel: Numéro de registre commercial
                         CommercialRegNoPlaceholder: ex. HRB 123456
                         CompanyDetailsTitle: Détails de l'entreprise
@@ -410,7 +410,7 @@ Dialogs:
                         RequiredDocsCardSubtitle: Téléversez les documents de conformité
                         RequiredDocsCardTitle: Documents requis
                         StreetLabel: Rue & numéro
-
+                        StreetPlaceholder: ex. Industriestraße 42
                         UrgencyLabel: Urgence
                         VatIdLabel: Numéro de TVA
                         VatIdPlaceholder: ex. DE123456789
