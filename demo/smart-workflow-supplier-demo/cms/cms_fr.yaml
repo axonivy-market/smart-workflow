@@ -216,6 +216,7 @@ Dialogs:
                       SearchConditionLabel: Condition de recherche
                       SearchConditionTemplate: 'nom="{0}"  pays="{1}"'
                       BusinessPurposeLabel: Objet social
+                      CancelRequest: Annuler la demande
                       Chips: Comment la similarité est-elle calculée ?|Que se passe-t-il si aucune correspondance n’est trouvée ?|Puis-je utiliser un fournisseur existant ?
                       EmailLabel: E-mail
                       InitialMessage: J’ai analysé la base de données des fournisseurs à la recherche de correspondances potentielles. Consultez les résultats ci-dessous et confirmez pour procéder à la création d’un nouveau fournisseur.

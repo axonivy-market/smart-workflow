@@ -44,7 +44,8 @@ public class StartDemoBean implements Serializable {
     PENDING   ("so-checklist-item pending so-tl-item",   "so-tl-bubble so-tl-bubble-pending",   "ti ti-clock"),
     RUNNING   ("so-checklist-item running so-tl-item",   "so-tl-bubble so-tl-bubble-running",   "ti ti-loader so-spin"),
     COMPLETED ("so-checklist-item completed so-tl-item", "so-tl-bubble so-tl-bubble-completed", "ti ti-circle-check"),
-    FAILED    ("so-checklist-item failed so-tl-item",    "so-tl-bubble so-tl-bubble-failed",    "ti ti-circle-x");
+    FAILED    ("so-checklist-item failed so-tl-item",    "so-tl-bubble so-tl-bubble-failed",    "ti ti-circle-x"),
+    WARNING   ("so-checklist-item warning so-tl-item",   "so-tl-bubble so-tl-bubble-warning",   "ti ti-alert-triangle");
 
     private final String stepClass;
     private final String bubbleClass;
@@ -168,10 +169,11 @@ public class StartDemoBean implements Serializable {
   }
 
   public boolean isDataAlreadyGenerated() {
-    var rules = SupplierPolicyRuleRepository.getInstance().findAll();
+    String caseUuid = Ivy.wfCase().uuid();
+    var rules = SupplierPolicyRuleRepository.getInstance().findAll(caseUuid);
     boolean hasPolicyRules    = rules.stream().anyMatch(r -> r.getRuleType() == RuleType.POLICY);
     boolean hasFinancialRules = rules.stream().anyMatch(r -> r.getRuleType() == RuleType.FINANCIAL);
-    boolean hasSuppliers      = !SupplierRepository.getInstance().findAll().isEmpty();
+    boolean hasSuppliers      = !SupplierRepository.getInstance().findAll(caseUuid).isEmpty();
     return hasPolicyRules && hasFinancialRules && hasSuppliers;
   }
 
@@ -193,7 +195,7 @@ public class StartDemoBean implements Serializable {
       }
       step1Status = StepStatus.COMPLETED;
     } catch (Exception e) {
-      step1Status = StepStatus.FAILED;
+      step1Status = StepStatus.WARNING;
       Ivy.log().warn("Vector store ingestion failed (non-fatal, proceeding)", e);
     }
   }

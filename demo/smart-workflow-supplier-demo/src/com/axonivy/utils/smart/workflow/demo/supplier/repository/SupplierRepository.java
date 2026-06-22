@@ -18,6 +18,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.SupplierBanking;
 import com.axonivy.utils.smart.workflow.demo.supplier.SupplierCertification;
 import com.axonivy.utils.smart.workflow.demo.supplier.SupplierContact;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -159,70 +160,91 @@ public class SupplierRepository extends AbstractMockRepository<Supplier> {
     return list;
   }
 
-  public Supplier create(Supplier supplier) {
+  public Supplier create(String caseUuid, Supplier supplier) {
     if (supplier == null) {
       throw new IllegalArgumentException("Supplier cannot be null");
     }
     if (StringUtils.isBlank(supplier.getSupplierId())) {
       supplier.setSupplierId(IdGenerationUtils.generateRandomId());
     }
-    List<Supplier> list = new ArrayList<>(findAll());
+    List<Supplier> list = new ArrayList<>(findAll(caseUuid));
     list.add(supplier);
-    save(list);
+    save(caseUuid, list);
     return supplier;
   }
 
-  public Optional<Supplier> update(Supplier supplier) {
+  public Optional<Supplier> update(String caseUuid, Supplier supplier) {
     if (supplier == null) {
       return Optional.empty();
     }
-    List<Supplier> list = new ArrayList<>(findAll());
+    List<Supplier> list = new ArrayList<>(findAll(caseUuid));
     int idx = indexById(list, supplier.getSupplierId());
     if (idx < 0) {
       return Optional.empty();
     }
     list.set(idx, supplier);
     try {
-      save(list);
+      save(caseUuid, list);
     } catch (Exception e) {
       Ivy.log().error(e);
     }
     return Optional.of(supplier);
   }
 
-  public void delete(Supplier supplier) {
+  public void delete(String caseUuid, Supplier supplier) {
     if (supplier == null) {
       return;
     }
-    List<Supplier> list = new ArrayList<>(findAll());
+    List<Supplier> list = new ArrayList<>(findAll(caseUuid));
     list.removeIf(s -> supplier.getSupplierId().equals(s.getSupplierId()));
-    save(list);
+    save(caseUuid, list);
   }
 
-  public Optional<Supplier> findById(String id) {
-    return findAll().stream()
+  public Optional<Supplier> findById(String caseUuid, String id) {
+    return findAll(caseUuid).stream()
         .filter(s -> id.equalsIgnoreCase(s.getSupplierId()))
         .findFirst();
   }
 
-  public List<Supplier> findByCriteria(SupplierSearchCriteria criteria) {
-    List<Supplier> all = findAll();
+  public List<Supplier> findByCriteria(String caseUuid, SupplierSearchCriteria criteria) {
+    List<Supplier> all = findAll(caseUuid);
     if (criteria == null || !hasAnyFilter(criteria)) {
       return all;
     }
     return applyFilters(all.stream(), criteria).collect(Collectors.toList());
   }
 
-  public List<Supplier> findMatchingsByCriteria(SupplierSearchCriteria criteria) {
-    List<Supplier> all = findAll();
+  public List<Supplier> findMatchingsByCriteria(String caseUuid, SupplierSearchCriteria criteria) {
+    List<Supplier> all = findAll(caseUuid);
     if (criteria == null || !hasAnyFilter(criteria)) {
       return all;
     }
     return applyFilters(all.stream(), criteria).collect(Collectors.toList());
   }
 
-  public SupplierAgentResponse findSimilarSuppliers(SupplierSearchCriteria criteria) {
-    List<Supplier> matches = findMatchingsByCriteria(criteria);
+  public static SupplierSearchCriteria criteriaFromRequest(OnboardingRequest request) {
+    SupplierSearchCriteria criteria = new SupplierSearchCriteria();
+    if (request == null || request.getSupplier() == null) {
+      return criteria;
+    }
+    String businessName = request.getSupplier().getBusinessName();
+    if (businessName != null && !businessName.trim().isEmpty()) {
+      String trimmed = businessName.trim();
+      int spaceIdx = trimmed.indexOf(" ");
+      criteria.setBusinessNameContains(spaceIdx > 0 ? trimmed.substring(0, spaceIdx) : trimmed);
+    }
+    if (request.getSupplier().getBusinessAddress() != null) {
+      criteria.setCountry(request.getSupplier().getBusinessAddress().getCountry());
+    }
+    return criteria;
+  }
+
+  public SupplierAgentResponse findSimilarSuppliers(String caseUuid, OnboardingRequest request) {
+    return findSimilarSuppliers(caseUuid, criteriaFromRequest(request));
+  }
+
+  public SupplierAgentResponse findSimilarSuppliers(String caseUuid, SupplierSearchCriteria criteria) {
+    List<Supplier> matches = findMatchingsByCriteria(caseUuid, criteria);
     int size = matches != null ? matches.size() : 0;
 
     SupplierAgentResponse response = new SupplierAgentResponse();
@@ -236,11 +258,11 @@ public class SupplierRepository extends AbstractMockRepository<Supplier> {
     return response;
   }
 
-  public Optional<Supplier> findExactSupplier(SupplierSearchCriteria criteria) {
+  public Optional<Supplier> findExactSupplier(String caseUuid, SupplierSearchCriteria criteria) {
     if (criteria == null || !hasAnyFilter(criteria)) {
       return Optional.empty();
     }
-    return applyFilters(findAll().stream(), criteria).findFirst();
+    return applyFilters(findAll(caseUuid).stream(), criteria).findFirst();
   }
 
   private Stream<Supplier> applyFilters(Stream<Supplier> stream, SupplierSearchCriteria criteria) {

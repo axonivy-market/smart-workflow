@@ -234,7 +234,7 @@
             "import java.util.ArrayList;",
             "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding;",
             "",
-            "in.policyRules = PolicyValidationService.loadPolicyRules();",
+            "in.policyRules = PolicyValidationService.loadPolicyRules(in.onboardingRequest.getCaseUuid());",
             "in.ruleIndex = 0;",
             "in.existingFindings = (in.onboardingRequest != null) ? in.onboardingRequest.getPolicyValidationFindings() : null;",
             "in.filteredExistingFindings = PolicyValidationService.filterExistingFindings(in.existingFindings);",
@@ -408,7 +408,7 @@
             "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.PolicyValidationService;",
             "",
             "in.policyValidationResult = PolicyValidationService.finalizePolicyValidation(",
-            "    in.accumulatedFindings, in.documentPresenceFindings, in.processingStep, in.onboardingRequest);",
+            "    in.accumulatedFindings, in.documentPresenceFindings, in.processingStep, in.onboardingRequest, in.onboardingRequest.getCaseUuid());",
             "in.policyRuleEvaluations = in.policyValidationResult.getRuleEvaluations();",
             "in.policyComplianceScore = in.policyValidationResult.getComplianceScore();"
           ]
@@ -429,7 +429,7 @@
     }, {
       "id" : "ra0",
       "type" : "CallSubStart",
-      "name" : "callRiskAssessment(PolicyValidationResult, PolicyValidationResult, Integer, String)",
+      "name" : "callRiskAssessment(PolicyValidationResult, PolicyValidationResult, Integer, String, String)",
       "config" : {
         "signature" : "callRiskAssessment",
         "input" : {
@@ -437,13 +437,15 @@
             { "name" : "policyResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult", "desc" : "Policy validation findings from validateAgainstPolicy" },
             { "name" : "financialResult", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult", "desc" : "Financial validation findings from validateFinancialPolicy" },
             { "name" : "annualVolumeEur", "type" : "Integer", "desc" : "Expected annual procurement volume in EUR" },
-            { "name" : "supplierId", "type" : "String", "desc" : "Supplier ID used to load the document list for REQUIRED DOCUMENTS STATUS check" }
+            { "name" : "supplierId", "type" : "String", "desc" : "Supplier ID used to load the document list for REQUIRED DOCUMENTS STATUS check" },
+            { "name" : "caseUuid", "type" : "String", "desc" : "Case UUID for repository access" }
           ],
           "map" : {
             "out.annualVolumeEur" : "param.annualVolumeEur",
             "out.financialValidationResult" : "param.financialResult",
             "out.policyValidationResult" : "param.policyResult",
-            "out.supplierId" : "param.supplierId"
+            "out.supplierId" : "param.supplierId",
+            "out.caseUuid" : "param.caseUuid"
           }
         },
         "result" : {
@@ -498,7 +500,7 @@
             "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.RiskAssessmentService;",
             "",
             "in.riskScoreResult = RiskAssessmentService.computeRiskScore(",
-            "    in.annualVolumeEur, in.policyValidationResult, in.financialValidationResult);"
+            "    in.annualVolumeEur, in.policyValidationResult, in.financialValidationResult, in.caseUuid);"
           ]
         }
       },
@@ -572,17 +574,8 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;",
-            "import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierSearchCriteria;",
             "",
-            "in.criteria = new SupplierSearchCriteria();",
-            "if (in.request != null && in.request.getSupplier() != null) {",
-            "  in.criteria.setBusinessNameContains(in.request.getSupplier().getBusinessName());",
-            "  in.criteria.setBusinessPurposeContains(in.request.getSupplier().getBusinessPurpose());",
-            "  if (in.request.getSupplier().getBusinessAddress() != null) {",
-            "    in.criteria.setCountry(in.request.getSupplier().getBusinessAddress().getCountry());",
-            "  }",
-            "}",
-            "in.toolResponse = SupplierRepository.getInstance().findSimilarSuppliers(in.criteria);"
+            "in.toolResponse = SupplierRepository.getInstance().findSimilarSuppliers(in.request.getCaseUuid(), in.request);"
           ]
         }
       },
@@ -658,17 +651,19 @@
     }, {
       "id" : "vf0",
       "type" : "CallSubStart",
-      "name" : "validateFinancialPolicy(Supplier,DocumentExtractionResult)",
+      "name" : "validateFinancialPolicy(Supplier,DocumentExtractionResult,String)",
       "config" : {
         "signature" : "validateFinancialPolicy",
         "input" : {
           "params" : [
             { "name" : "supplier", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.Supplier", "desc" : "The supplier to validate" },
-            { "name" : "documents", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult", "desc" : "Extracted documents to validate against financial rules" }
+            { "name" : "documents", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult", "desc" : "Extracted documents to validate against financial rules" },
+            { "name" : "caseUuid", "type" : "String", "desc" : "Case UUID for repository access" }
           ],
           "map" : {
             "out.extractionResult" : "param.documents",
-            "out.supplier" : "param.supplier"
+            "out.supplier" : "param.supplier",
+            "out.caseUuid" : "param.caseUuid"
           }
         },
         "result" : {
@@ -755,7 +750,7 @@
             "import java.util.ArrayList;",
             "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding;",
             "",
-            "in.policyRules = FinancialValidationService.loadFinancialRules();",
+            "in.policyRules = FinancialValidationService.loadFinancialRules(in.caseUuid);",
             "in.ruleIndex = 0;",
             "in.accumulatedFindings = new ArrayList<ValidationFinding>();",
             "in.isProceeded = false;"
@@ -886,7 +881,7 @@
             "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.FinancialValidationService;",
             "",
             "in.financialValidationResult = FinancialValidationService.finalizeFinancialValidation(",
-            "    in.accumulatedFindings, in.processingStep);",
+            "    in.accumulatedFindings, in.processingStep, in.caseUuid);",
             "in.financialStabilityScore = in.financialValidationResult.getComplianceScore();"
           ]
         }

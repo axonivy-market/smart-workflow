@@ -24,6 +24,11 @@
     "comment" : "Result from callRiskAssessment",
     "modifiers" : [ ]
   }, {
+    "name" : "testRequest",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest",
+    "comment" : "Prepared OnboardingRequest for callDuplicateCheck test",
+    "modifiers" : [ ]
+  }, {
     "name" : "agentResponse",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse",
     "comment" : "Result from callDuplicateCheck",
@@ -72,6 +77,11 @@
     "name" : "foundPolicyRule",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.SupplierPolicyRule",
     "comment" : "Policy rule lookup result from repository test",
+    "modifiers" : [ ]
+  }, {
+    "name" : "auditEntryCount",
+    "type" : "Integer",
+    "comment" : "Number of audit trail entries on testRequest after duplicate check",
     "modifiers" : [ ]
   } ]
 }

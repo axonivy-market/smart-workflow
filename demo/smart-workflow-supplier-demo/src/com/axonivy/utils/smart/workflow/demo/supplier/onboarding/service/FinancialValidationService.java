@@ -25,8 +25,8 @@ public class FinancialValidationService {
   private FinancialValidationService() {
   }
 
-  public static List<SupplierPolicyRule> loadFinancialRules() {
-    return ValidationUtils.loadRulesByType(RuleType.FINANCIAL);
+  public static List<SupplierPolicyRule> loadFinancialRules(String caseUuid) {
+    return ValidationUtils.loadRulesByType(RuleType.FINANCIAL, caseUuid);
   }
 
   public static void mergeFinancialRuleFindings(List<ValidationFinding> accumulated,
@@ -41,8 +41,8 @@ public class FinancialValidationService {
     }
   }
 
-  public static int computeFinancialStabilityScore(PolicyValidationResult result) {
-    return ValidationUtils.computeComplianceScore(result, RuleType.FINANCIAL);
+  public static int computeFinancialStabilityScore(PolicyValidationResult result, String caseUuid) {
+    return ValidationUtils.computeComplianceScore(result, RuleType.FINANCIAL, caseUuid);
   }
 
   public static AgentProcessingStep startFinancialStep() {
@@ -89,10 +89,11 @@ public class FinancialValidationService {
 
   public static PolicyValidationResult finalizeFinancialValidation(
       List<ValidationFinding> accumulatedFindings,
-      AgentProcessingStep processingStep) {
+      AgentProcessingStep processingStep,
+      String caseUuid) {
     PolicyValidationResult result = PolicyValidationService.wrapFindings(accumulatedFindings);
     finalizeFinancialStep(processingStep, result);
-    result.setComplianceScore(computeFinancialStabilityScore(result));
+    result.setComplianceScore(computeFinancialStabilityScore(result, caseUuid));
     return result;
   }
 }

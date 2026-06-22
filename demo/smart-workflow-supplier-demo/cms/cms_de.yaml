@@ -216,6 +216,7 @@ Dialogs:
                       SearchConditionLabel: Suchbedingung
                       SearchConditionTemplate: 'Name="{0}"  Land="{1}"'
                       BusinessPurposeLabel: 'Geschäftszweck:'
+                      CancelRequest: Anfrage abbrechen
                       Chips: Wie wird Ähnlichkeit berechnet?|Was passiert, wenn keine Übereinstimmungen gefunden werden?|Kann ich einen vorhandenen Lieferanten verwenden?
                       EmailLabel: E-Mail
                       InitialMessage: Ich habe die Lieferantendatenbank nach möglichen Übereinstimmungen durchsucht. Überprüfen Sie die Ergebnisse unten und bestätigen Sie, um mit der Erstellung eines neuen Lieferanten fortzufahren.

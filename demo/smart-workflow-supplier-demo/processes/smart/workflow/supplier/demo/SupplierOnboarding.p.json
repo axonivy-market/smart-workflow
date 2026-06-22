@@ -16,7 +16,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 208 }
+        "at" : { "x" : 112, "y" : 256 }
       },
       "connect" : [
         { "id" : "f100", "to" : "f209" }
@@ -31,7 +31,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 240, "y" : 208 }
+        "at" : { "x" : 256, "y" : 256 }
       },
       "connect" : [
         { "id" : "f210", "to" : "f198" }
@@ -44,7 +44,7 @@
         "dialog" : "com.axonivy.utils.ai.StartDemo:start()"
       },
       "visual" : {
-        "at" : { "x" : 440, "y" : 208 }
+        "at" : { "x" : 456, "y" : 256 }
       },
       "connect" : [
         { "id" : "f199", "to" : "f4" }
@@ -68,7 +68,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 624, "y" : 208 }
+        "at" : { "x" : 640, "y" : 256 }
       },
       "connect" : [
         { "id" : "f102", "to" : "f150" }
@@ -84,20 +84,20 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 792, "y" : 208 },
+        "at" : { "x" : 808, "y" : 256 },
         "labelOffset" : { "x" : -40, "y" : 24 }
       },
       "connect" : [
-        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 792, "y" : 336 } ], "label" : {
+        { "id" : "f152", "to" : "f151", "via" : [ { "x" : 808, "y" : 384 } ], "label" : {
             "name" : "Save Draft",
             "segment" : 1.12,
             "offset" : { "x" : -23, "y" : -21 }
           } },
-        { "id" : "f153", "to" : "f196", "label" : {
+        { "id" : "f153", "to" : "f162", "label" : {
             "name" : "Submit",
             "offset" : { "x" : -1, "y" : -18 }
           } },
-        { "id" : "f156", "to" : "f155" }
+        { "id" : "f156", "to" : "f215" }
       ]
     }, {
       "id" : "f151",
@@ -114,18 +114,152 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 624, "y" : 336 }
+        "at" : { "x" : 640, "y" : 384 }
       },
       "connect" : [
-        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 624, "y" : 320 } ] }
+        { "id" : "f154", "to" : "f4", "via" : [ { "x" : 640, "y" : 368 } ] }
+      ]
+    }, {
+      "id" : "f162",
+      "type" : "TaskSwitchEvent",
+      "name" : "Agent perform duplicate check",
+      "config" : {
+        "task" : {
+          "name" : "Use Supplier Agent to review duplicate check - <%= in1.request.supplier.businessName %>",
+          "description" : "Agent perform duplicate check",
+          "responsible" : {
+            "type" : "USER_FROM_ATTRIBUTE",
+            "script" : "in1.sessionUsername"
+          },
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 984, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f163", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "SubProcessCall",
+      "name" : "AI Agent: Check duplicate supplier",
+      "config" : {
+        "processCall" : "smart/workflow/supplier/demo/agents/SupplierValidationAgent:callDuplicateCheck(com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.agentResponse" : "result.agentResponse",
+            "out.request" : "result.request"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1168, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f103", "to" : "f5a" }
+      ]
+    }, {
+      "id" : "f5a",
+      "type" : "Script",
+      "name" : "Capture duplicate check audit entry",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.OnboardingAuditEntryFactory;",
+            "import java.util.ArrayList;",
+            "",
+            "if (in.request.getAuditTrail() == null) { in.request.setAuditTrail(new ArrayList()); }",
+            "in.request.getAuditTrail().add(OnboardingAuditEntryFactory.buildDuplicateCheckAuditEntry(in.request, in.agentResponse));"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 1340, "y" : 257 },
+        "size" : { "width" : 136, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f5a1", "to" : "f160" }
+      ]
+    }, {
+      "id" : "f160",
+      "type" : "TaskSwitchEvent",
+      "name" : "Review duplicate check result",
+      "config" : {
+        "task" : {
+          "name" : "Review duplicate check - <%= in1.request.supplier.businessName %>",
+          "description" : "Review the agent duplicate check result and decide how to proceed",
+          "responsible" : {
+            "type" : "USER_FROM_ATTRIBUTE",
+            "script" : "in1.sessionUsername"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1528, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f161", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "DialogCall",
+      "name" : "Duplicate check result",
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.SupplierDuplicateCheck:start(com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest,com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse)",
+        "call" : {
+          "map" : {
+            "param.request" : "in.request",
+            "param.agentResponse" : "in.agentResponse"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.request" : "result.request"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1688, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f164", "to" : "fd0" }
+      ]
+    }, {
+      "id" : "fd0",
+      "type" : "Alternative",
+      "name" : "Declined?",
+      "config" : {
+        "conditions" : {
+          "f214" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus.DECLINED.equals(in.request.status)",
+          "fd0c2" : ""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1848, "y" : 256 },
+        "labelOffset" : { "x" : -40, "y" : 24 }
+      },
+      "connect" : [
+        { "id" : "fd0c2", "to" : "f196", "label" : {
+            "name" : "no",
+            "offset" : { "y" : -16 }
+          } },
+        { "id" : "f214", "to" : "f215", "via" : [ { "x" : 1848, "y" : 192 } ] }
       ]
     }, {
       "id" : "f1",
       "type" : "TaskEnd",
-      "name" : "Submit (placeholder)",
+      "name" : "End",
       "visual" : {
-        "at" : { "x" : 1312, "y" : 208 },
-        "description" : "Placeholder — rest of the process will be wired here later"
+        "at" : { "x" : 2304, "y" : 256 }
       }
     }, {
       "id" : "f212",
@@ -143,7 +277,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 1152, "y" : 208 }
+        "at" : { "x" : 2144, "y" : 256 }
       },
       "connect" : [
         { "id" : "f213", "to" : "f1" }
@@ -153,7 +287,7 @@
       "type" : "TaskEnd",
       "name" : "Cancel",
       "visual" : {
-        "at" : { "x" : 792, "y" : 88 },
+        "at" : { "x" : 808, "y" : 16 },
         "labelOffset" : { "x" : 49, "y" : 41 }
       }
     }, {
@@ -164,10 +298,40 @@
         "dialog" : "com.axonivy.utils.ai.EndDemo:start()"
       },
       "visual" : {
-        "at" : { "x" : 968, "y" : 208 }
+        "at" : { "x" : 1984, "y" : 256 }
       },
       "connect" : [
         { "id" : "f211", "to" : "f212" }
+      ]
+    }, {
+      "id" : "f215",
+      "type" : "Alternative",
+      "visual" : {
+        "at" : { "x" : 808, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f216", "to" : "f217", "color" : "default" }
+      ]
+    }, {
+      "id" : "f217",
+      "type" : "Script",
+      "name" : "Clear demo data",
+      "config" : {
+        "output" : {
+          "code" : [
+            "com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierPolicyRuleRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.employee.EmployeeRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository.getInstance().uninstall();",
+            "com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository.getInstance().uninstall();"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 808, "y" : 104 }
+      },
+      "connect" : [
+        { "id" : "f218", "to" : "f155", "color" : "default" }
       ]
     } ]
 }

@@ -15,6 +15,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.FindingSe
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskKind;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskType;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
@@ -71,7 +72,7 @@ class TestFinancialValidationService {
     finding.setMessage("Revenue below threshold");
 
     PolicyValidationResult result = FinancialValidationService.finalizeFinancialValidation(
-        List.of(finding), step);
+        List.of(finding), step, Ivy.wfCase().uuid());
 
     assertThat(result.getComplianceScore()).isEqualTo(90);
     assertThat(result.getProcessingStep()).isNotNull();

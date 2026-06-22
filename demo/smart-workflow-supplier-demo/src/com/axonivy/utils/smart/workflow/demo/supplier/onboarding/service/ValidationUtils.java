@@ -35,8 +35,8 @@ class ValidationUtils {
     return LogLineSeverity.OK;
   }
 
-  public static List<SupplierPolicyRule> loadRulesByType(RuleType type) {
-    List<SupplierPolicyRule> stored = SupplierPolicyRuleRepository.getInstance().findAllOrdered();
+  public static List<SupplierPolicyRule> loadRulesByType(RuleType type, String caseUuid) {
+    List<SupplierPolicyRule> stored = SupplierPolicyRuleRepository.getInstance().findAllOrdered(caseUuid);
     List<SupplierPolicyRule> detached = new ArrayList<>();
     for (SupplierPolicyRule rule : stored) {
       if (!type.equals(rule.getRuleType())) {
@@ -97,13 +97,13 @@ class ValidationUtils {
     return key != null ? key.trim().toUpperCase() : "";
   }
 
-  public static int computeComplianceScore(PolicyValidationResult result, RuleType ruleType) {
+  public static int computeComplianceScore(PolicyValidationResult result, RuleType ruleType, String caseUuid) {
     List<ValidationFinding> findings = result != null ? result.getFindings() : null;
     if (findings == null || findings.isEmpty()) {
       return MAX_SCORE;
     }
     Integer explicitScore = computeScoreFromExplicitFindings(findings);
-    return explicitScore != null ? explicitScore : computeScoreFromRules(result, ruleType);
+    return explicitScore != null ? explicitScore : computeScoreFromRules(result, ruleType, caseUuid);
   }
 
   private static Integer computeScoreFromExplicitFindings(List<ValidationFinding> findings) {
@@ -120,8 +120,8 @@ class ValidationUtils {
     return Math.max(MIN_SCORE, Math.min(MAX_SCORE, MAX_SCORE - totalDeduction));
   }
 
-  private static int computeScoreFromRules(PolicyValidationResult result, RuleType ruleType) {
-    List<SupplierPolicyRule> rules = loadRulesByType(ruleType);
+  private static int computeScoreFromRules(PolicyValidationResult result, RuleType ruleType, String caseUuid) {
+    List<SupplierPolicyRule> rules = loadRulesByType(ruleType, caseUuid);
     if (rules.isEmpty()) {
       return MAX_SCORE;
     }

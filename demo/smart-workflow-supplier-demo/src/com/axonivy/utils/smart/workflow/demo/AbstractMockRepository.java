@@ -2,12 +2,14 @@ package com.axonivy.utils.smart.workflow.demo;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.security.exec.Sudo;
 
 public abstract class AbstractMockRepository<T> {
 
@@ -30,13 +32,27 @@ public abstract class AbstractMockRepository<T> {
     Ivy.wfCase().customFields().textField(getField()).set(null);
   }
 
-  public List<T> findAll() {
-    String json = Ivy.wfCase().customFields().textField(getField()).getOrNull();
+  public List<T> findAll(String caseUuid) {
+    var wfCase = Sudo.get(() -> {
+      return Ivy.wf().findCase(caseUuid);
+    });
+    String json = Optional.ofNullable(wfCase)
+      .map(c -> c.customFields().textField(getField()).getOrNull())
+      .orElse(null);
     return fromJson(json);
   }
 
   protected void save(List<T> list) {
     Ivy.wfCase().customFields().textField(getField()).set(toJson(list));
+  }
+
+  protected void save(String caseUuid, List<T> list) {
+    Sudo.run(() -> {
+      var wfCase = Ivy.wf().findCase(caseUuid);
+      if (wfCase != null) {
+        wfCase.customFields().textField(getField()).set(toJson(list));
+      }
+    });
   }
 
   private String toJson(List<?> list) {

@@ -89,15 +89,17 @@
     }, {
       "id" : "f40",
       "type" : "CallSubStart",
-      "name" : "parseOnboardingRequest(String,InputStream)",
+      "name" : "parseOnboardingRequest(String,String,InputStream)",
       "config" : {
         "signature" : "parseOnboardingRequest",
         "input" : {
           "params" : [
+            { "name" : "caseUuid", "type" : "String", "desc" : "Case UUID used to load repository data (e.g. departments)" },
             { "name" : "content", "type" : "String", "desc" : "Uploaded onboarding document content (.txt/.md)" },
             { "name" : "inputStream", "type" : "java.io.InputStream", "desc" : "Document binary stream for OCR (for .pdf files)" }
           ],
           "map" : {
+            "out.caseUuid" : "param.caseUuid",
             "out.parseContent" : "param.content",
             "out.inputStream" : "param.inputStream"
           }
@@ -213,7 +215,7 @@
             "import com.axonivy.utils.smart.workflow.demo.department.Department;",
             "import com.axonivy.utils.smart.workflow.demo.department.DepartmentRepository;",
             "",
-            "java.util.List<Department> depts = DepartmentRepository.getInstance().findAll();",
+            "java.util.List<Department> depts = DepartmentRepository.getInstance().findAll(in.caseUuid);",
             "StringBuilder sb = new StringBuilder();",
             "for (Department d : depts) {",
             "  sb.append(d.getId()).append(\": \").append(d.getName()).append(\"\\n\");",

@@ -41,8 +41,8 @@ public class PolicyValidationService {
   private PolicyValidationService() {
   }
 
-  public static List<SupplierPolicyRule> loadPolicyRules() {
-    return ValidationUtils.loadRulesByType(RuleType.POLICY);
+  public static List<SupplierPolicyRule> loadPolicyRules(String caseUuid) {
+    return ValidationUtils.loadRulesByType(RuleType.POLICY, caseUuid);
   }
 
   public static List<ValidationFinding> checkRequiredDocuments(List<LegalDocument> docs) {
@@ -148,8 +148,8 @@ public class PolicyValidationService {
     return result;
   }
 
-  public static List<SupplierPolicyRule> evaluatePolicyRules(PolicyValidationResult result) {
-    List<SupplierPolicyRule> rules = loadPolicyRules();
+  public static List<SupplierPolicyRule> evaluatePolicyRules(PolicyValidationResult result, String caseUuid) {
+    List<SupplierPolicyRule> rules = loadPolicyRules(caseUuid);
     Map<String, Integer> highestSeverityByTarget = ValidationUtils.resolveHighestSeverityByTarget(result, rules);
     for (SupplierPolicyRule rule : rules) {
       int severityRank = highestSeverityByTarget.getOrDefault(ValidationUtils.normalizeKey(rule.getTarget()), 0);
@@ -158,8 +158,8 @@ public class PolicyValidationService {
     return rules;
   }
 
-  public static int computePolicyComplianceScore(PolicyValidationResult result) {
-    return ValidationUtils.computeComplianceScore(result, RuleType.POLICY);
+  public static int computePolicyComplianceScore(PolicyValidationResult result, String caseUuid) {
+    return ValidationUtils.computeComplianceScore(result, RuleType.POLICY, caseUuid);
   }
 
   public static AgentProcessingStep startPolicyStep() {
@@ -171,7 +171,7 @@ public class PolicyValidationService {
   }
 
   public static String finalizePolicyStep(AgentProcessingStep step,
-      PolicyValidationResult result) {
+      PolicyValidationResult result, String caseUuid) {
     step.setStatus(AgentStepStatus.COMPLETED);
     step.setCompletedAt(Instant.now());
     if (step.getStartedAt() != null) {
@@ -199,7 +199,7 @@ public class PolicyValidationService {
       }
     }
     if (step.getLogLines().isEmpty()) {
-      int count = loadPolicyRules().size();
+      int count = loadPolicyRules(caseUuid).size();
       String summaryMsg = count > 0
           ? String.format(ALL_RULES_PASSED_FORMAT, count)
           : ALL_CHECKS_PASSED;
@@ -235,12 +235,13 @@ public class PolicyValidationService {
       List<ValidationFinding> accumulatedFindings,
       List<ValidationFinding> presenceFindings,
       AgentProcessingStep processingStep,
-      OnboardingRequest onboardingRequest) {
+      OnboardingRequest onboardingRequest,
+      String caseUuid) {
     PolicyValidationResult result = wrapFindings(accumulatedFindings);
     mergePresenceFindings(result, presenceFindings);
-    finalizePolicyStep(processingStep, result);
-    result.setRuleEvaluations(evaluatePolicyRules(result));
-    result.setComplianceScore(computePolicyComplianceScore(result));
+    finalizePolicyStep(processingStep, result, caseUuid);
+    result.setRuleEvaluations(evaluatePolicyRules(result, caseUuid));
+    result.setComplianceScore(computePolicyComplianceScore(result, caseUuid));
     if (onboardingRequest != null) {
       onboardingRequest.setPolicyValidationFindings(result.getFindings());
     }
