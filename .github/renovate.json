@@ -27,6 +27,18 @@
         "maven"
       ],
       "matchPackageNames": [
+        "/^dev\\.langchain4j:.*/"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "matchManagers": [
+        "maven"
+      ],
+      "matchPackageNames": [
         "dev.langchain4j:langchain4j-community-web-search-engine-duckduckgo"
       ],
       "ignoreUnstable": false
