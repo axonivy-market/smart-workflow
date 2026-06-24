@@ -885,7 +885,8 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 296, "y" : 2496 }
+        "at" : { "x" : 288, "y" : 2497 },
+        "size" : { "width" : 128, "height" : 62 }
       },
       "connect" : [
         { "id" : "f114c", "to" : "f115" }
@@ -944,6 +945,164 @@
       "type" : "TaskEnd",
       "visual" : {
         "at" : { "x" : 936, "y" : 2496 }
+      }
+    }, {
+      "id" : "f117",
+      "type" : "RequestStart",
+      "name" : "testLegalDocumentRepo_saveAndFindById",
+      "config" : {
+        "signature" : "testLegalDocumentRepo_saveAndFindById"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 2624 }
+      },
+      "connect" : [
+        { "id" : "f117c", "to" : "f118" }
+      ]
+    }, {
+      "id" : "f118",
+      "type" : "Script",
+      "name" : "Save & findById LegalDocument",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;",
+            "import com.axonivy.utils.smart.workflow.demo.document.LegalDocumentBuilder;",
+            "import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;",
+            "import ch.ivyteam.ivy.cm.ContentObject;",
+            "import ch.ivyteam.ivy.cm.ContentObjectValue;",
+            "",
+            "String path = \"/Files/ERP/DemoCompany/Certifications/ISO9001\";",
+            "ContentObject content = ivy.cm.findObject(path).get() as ContentObject;",
+            "ContentObjectValue val = content.values().getFirst() as ContentObjectValue;",
+            "",
+            "LegalDocument doc = LegalDocumentBuilder.of(LegalDocumentType.ISO_9001, \"ISO9001.pdf\", val.read().inputStream().readAllBytes());",
+            "LegalDocumentRepository repo = LegalDocumentRepository.getInstance();",
+            "LegalDocument saved = repo.save(doc);",
+            "in.foundLegalDocument = repo.findById(saved.getDocumentId()).orElse(null) as LegalDocument;"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 304, "y" : 2624 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f118c", "to" : "f119" }
+      ]
+    }, {
+      "id" : "f119",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 2624 }
+      }
+    }, {
+      "id" : "f120",
+      "type" : "RequestStart",
+      "name" : "testLegalDocumentRepo_findByObjectId",
+      "config" : {
+        "signature" : "testLegalDocumentRepo_findByObjectId"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 2752 }
+      },
+      "connect" : [
+        { "id" : "f120c", "to" : "f121" }
+      ]
+    }, {
+      "id" : "f121",
+      "type" : "Script",
+      "name" : "Save & findByObjectId LegalDocument",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;",
+            "import com.axonivy.utils.smart.workflow.demo.document.LegalDocumentBuilder;",
+            "import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;",
+            "import ch.ivyteam.ivy.cm.ContentObject;",
+            "import ch.ivyteam.ivy.cm.ContentObjectValue;",
+            "",
+            "String path = \"/Files/ERP/DemoCompany/Certifications/ISO9001\";",
+            "ContentObject content = ivy.cm.findObject(path).get() as ContentObject;",
+            "ContentObjectValue val = content.values().getFirst() as ContentObjectValue;",
+            "",
+            "LegalDocument doc = LegalDocumentBuilder.builder().documentType(LegalDocumentType.ISO_9001).objectId(\"TEST-OBJ-001\").fileName(\"ISO9001.pdf\").fileContent(val.read().inputStream().readAllBytes()).build();",
+            "LegalDocumentRepository repo = LegalDocumentRepository.getInstance();",
+            "repo.save(doc);",
+            "in.legalDocumentCount = repo.findByObjectId(\"TEST-OBJ-001\").size();"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 2752 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f121c", "to" : "f122" }
+      ]
+    }, {
+      "id" : "f122",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 2752 }
+      }
+    }, {
+      "id" : "f123",
+      "type" : "RequestStart",
+      "name" : "testLegalDocumentRepo_delete",
+      "config" : {
+        "signature" : "testLegalDocumentRepo_delete"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 2880 }
+      },
+      "connect" : [
+        { "id" : "f123c", "to" : "f124" }
+      ]
+    }, {
+      "id" : "f124",
+      "type" : "Script",
+      "name" : "Save, delete & verify LegalDocument",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;",
+            "import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;",
+            "import com.axonivy.utils.smart.workflow.demo.document.LegalDocumentBuilder;",
+            "import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;",
+            "import ch.ivyteam.ivy.cm.ContentObject;",
+            "import ch.ivyteam.ivy.cm.ContentObjectValue;",
+            "",
+            "",
+            "String path = \"/Files/ERP/DemoCompany/Certifications/ISO9001\";",
+            "ContentObject content = ivy.cm.findObject(path).get() as ContentObject;",
+            "ContentObjectValue val = content.values().getFirst() as ContentObjectValue;",
+            "",
+            "LegalDocument doc = LegalDocumentBuilder.of(LegalDocumentType.ISO_9001, \"ISO9001.pdf\", val.read().inputStream().readAllBytes());",
+            "LegalDocumentRepository repo = LegalDocumentRepository.getInstance();",
+            "repo.save(doc);",
+            "repo.delete(doc);",
+            "in.foundLegalDocument = repo.findById(doc.getDocumentId()).orElse(null) as LegalDocument;"
+          ]
+        },
+        "sudo" : true
+      },
+      "visual" : {
+        "at" : { "x" : 296, "y" : 2880 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f124c", "to" : "f125" }
+      ]
+    }, {
+      "id" : "f125",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 520, "y" : 2880 }
       }
     } ]
 }

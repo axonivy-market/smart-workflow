@@ -391,13 +391,11 @@ Dialogs:
                         BankNamePlaceholder: e.g. Commerzbank AG
                         BankingPaymentTitle: Banking & Payment
                         BicLabel: BIC / SWIFT
-
                         BusinessPurposeLabel: Business Purpose
                         BusinessPurposePlaceholder: e.g. Logistics / Transport
                         CertificationsCardSubtitle: Upload your certificates
                         CertificationsCardTitle: Certifications & Compliance
                         CityLabel: City
-
                         CommercialRegNoLabel: Commercial Register No.
                         CommercialRegNoPlaceholder: e.g. HRB 123456
                         CompanyDetailsTitle: Company Details
@@ -431,7 +429,6 @@ Dialogs:
                         RequiredDocsCardSubtitle: Upload compliance documents
                         RequiredDocsCardTitle: Required Documents
                         StreetLabel: Street & Number
-
                         UrgencyLabel: Urgency
                         VatIdLabel: VAT ID
                         VatIdPlaceholder: e.g. DE123456789

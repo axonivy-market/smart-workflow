@@ -370,13 +370,11 @@ Dialogs:
                         BankNamePlaceholder: z.B. Commerzbank AG
                         BankingPaymentTitle: Banking & Zahlung
                         BicLabel: BIC / SWIFT
-
                         BusinessPurposeLabel: Geschäftszweck
                         BusinessPurposePlaceholder: z.B. Logistik / Transport
                         CertificationsCardSubtitle: Zertifikate hochladen
                         CertificationsCardTitle: Zertifizierungen & Compliance
                         CityLabel: Stadt
-
                         CommercialRegNoLabel: Handelsregisternummer
                         CommercialRegNoPlaceholder: z.B. HRB 123456
                         CompanyDetailsTitle: Unternehmensdetails
@@ -410,7 +408,6 @@ Dialogs:
                         RequiredDocsCardSubtitle: Compliance-Dokumente hochladen
                         RequiredDocsCardTitle: Erforderliche Dokumente
                         StreetLabel: Straße & Hausnummer
-
                         UrgencyLabel: Dringlichkeit
                         VatIdLabel: Umsatzsteuer-ID
                         VatIdPlaceholder: z.B. DE123456789
