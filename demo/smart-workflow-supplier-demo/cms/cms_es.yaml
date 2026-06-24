@@ -10,7 +10,11 @@ Dialogs:
                   AuditTrail:
                     EmptyMessage: Aún no se han registrado entradas de auditoría.
                     ExpandCollapseTooltip: Haga clic para expandir / contraer
+                    MatchedSuppliersLabel: Proveedores coincidentes
+                    ResolvedItemsLabel: Elementos resueltos
                     Title: Registro de auditoría completo
+                    UserExplanationLabel: Explicación del usuario
+                    ValidationFindingsLabel: Resultados de validación
                   LegalDocuments:
                     AdditionalDocumentSubtitle: Documento adicional
                     AnnualReportLabel: Último informe anual
@@ -341,6 +345,7 @@ Dialogs:
                         ThresholdGreen: Por encima del umbral de aprobación ≥ 70
                         ThresholdRed: Por debajo del umbral mínimo (< 40)
                         ThresholdYellow: Aclaración requerida (40-69)
+                        ValidationStepsPlaceholder: El agente de IA analizará y validará su formulario de registro — los resultados se mostrarán aquí.
                         ValidationStepsTitle: Pasos de Validación
                       SupplierAiAssistant:
                         AssistantName: Asistente IA de Proveedores
