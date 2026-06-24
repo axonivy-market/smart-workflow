@@ -65,6 +65,9 @@ public class DocumentExtractionService {
       single.getDocumentSummaries().forEach(doc -> {
           doc.setDocumentType(original.getDocumentType());
       });
+      if (aggregate.getDocumentSummaries() == null) {
+        aggregate.setDocumentSummaries(new ArrayList<>());
+      }
       aggregate.getDocumentSummaries().addAll(single.getDocumentSummaries());
     }
   }
@@ -73,16 +76,16 @@ public class DocumentExtractionService {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.RUNNING);
-    step.setStartedAt(Instant.now());
+    step.setStartedAt(Instant.now().toEpochMilli());
     return step;
   }
 
   public static void finalizeExtractionStep(AgentProcessingStep step,
       DocumentExtractionResult result) {
     step.setStatus(AgentStepStatus.COMPLETED);
-    step.setCompletedAt(Instant.now());
+    step.setCompletedAt(Instant.now().toEpochMilli());
     if (step.getStartedAt() != null) {
-      step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+      step.setDurationMs(step.getCompletedAt() - step.getStartedAt());
     }
     if (result != null && result.getDocumentSummaries() != null) {
       for (ExtractedDoc doc : result.getDocumentSummaries()) {
@@ -100,9 +103,9 @@ public class DocumentExtractionService {
       DocumentExtractionResult result, Throwable error) {
     step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.FAILED);
-    step.setCompletedAt(Instant.now());
+    step.setCompletedAt(Instant.now().toEpochMilli());
     if (step.getStartedAt() != null) {
-      step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+      step.setDurationMs(step.getCompletedAt() - step.getStartedAt());
     }
     if (step.getLogLines() == null) {
       step.setLogLines(new ArrayList<>());

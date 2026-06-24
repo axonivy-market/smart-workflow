@@ -45,9 +45,17 @@ public class LegalDocumentRepository {
   }
 
   public List<LegalDocument> findByObjectId(String objectId) {
+    return findByObjectId(objectId, (String) null);
+  }
+
+  public List<LegalDocument> findByObjectId(String objectId, String caseUuid) {
     List<LegalDocument> result = new ArrayList<>();
     try {
-      for (IDocument ivyDoc : Ivy.wfCase().documents().getAll()) {
+      var wfCase = caseUuid != null ? Ivy.wf().findCase(caseUuid) : Ivy.wfCase();
+      if (wfCase == null) {
+        return result;
+      }
+      for (IDocument ivyDoc : wfCase.documents().getAll()) {
         LegalDocument ld = decodeName(ivyDoc);
         if (objectId != null && objectId.equals(ld.getObjectId())) {
           result.add(ld);

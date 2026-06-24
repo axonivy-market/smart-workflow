@@ -18,7 +18,8 @@
           ],
           "map" : {
             "out.supplierId" : "param.supplier.getSupplierId()",
-            "out.onboardingRequest" : "param.onboardingRequest"
+            "out.onboardingRequest" : "param.onboardingRequest",
+            "out.caseUuid" : "param.onboardingRequest.getCaseUuid()"
           }
         },
         "result" : {
@@ -51,7 +52,7 @@
             "import com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult;",
             "import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;",
             "",
-            "in.documents = DocumentExtractionService.loadDocuments(LegalDocumentRepository.getInstance().findByObjectId(in.supplierId));",
+            "in.documents = DocumentExtractionService.loadDocuments(LegalDocumentRepository.getInstance().findByObjectId(in.supplierId, in.caseUuid));",
             "in.extractionResult = new DocumentExtractionResult();",
             "in.documentIndex = 0;",
             "in.processingStep = DocumentExtractionService.startExtractionStep();"
@@ -637,7 +638,7 @@
             "import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;",
             "",
             "String supplierId = in.supplier != null ? in.supplier.getSupplierId() : null;",
-            "in.documents = DocumentExtractionService.loadDocuments(LegalDocumentRepository.getInstance().findByObjectId(supplierId));",
+            "in.documents = DocumentExtractionService.loadDocuments(LegalDocumentRepository.getInstance().findByObjectId(supplierId, in.onboardingRequest != null ? in.onboardingRequest.getCaseUuid() : null));",
             "in.documentPresenceFindings = PolicyValidationService.checkRequiredDocuments(in.documents);"
           ]
         }
