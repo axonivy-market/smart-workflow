@@ -1,8 +1,6 @@
 package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -11,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;
 import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;
@@ -22,14 +20,15 @@ import ch.ivyteam.ivy.environment.IvyTest;
 @IvyTest
 public class TestCertificationHelper {
 
-  @SuppressWarnings("unused")
-  static Stream<LegalDocumentType> certificationTypes() {
-    return Arrays.stream(LegalDocumentType.certificationValues());
-  }
-
-  @ParameterizedTest
-  @MethodSource("certificationTypes")
-  void init_whenNoExistingCertification_initializeDefaultCertificationState(LegalDocumentType type) {
+  @ParameterizedTest(name = "{0}")
+  @CsvSource({
+      "init_ISO9001NoExisting_defaultState, ISO_9001",
+      "init_ISO14001NoExisting_defaultState, ISO_14001",
+      "init_ISO27001NoExisting_defaultState, ISO_27001",
+      "init_GdprDpaNoExisting_defaultState, GDPR_DPA"
+  })
+  void init_whenNoExistingCertification_initializeDefaultCertificationState(
+      String testName, LegalDocumentType type) {
     CertificationHelper manager = new CertificationHelper();
 
     manager.init(null);
@@ -42,9 +41,15 @@ public class TestCertificationHelper {
     assertFalse(Boolean.TRUE.equals(cert.getUploaded()));
   }
 
-  @ParameterizedTest
-  @MethodSource("certificationTypes")
-  void init_whenExistingCertificationExists_overrideDefaultCertificationState(LegalDocumentType type) {
+  @ParameterizedTest(name = "{0}")
+  @CsvSource({
+      "init_ISO9001Existing_overridden, ISO_9001",
+      "init_ISO14001Existing_overridden, ISO_14001",
+      "init_ISO27001Existing_overridden, ISO_27001",
+      "init_GdprDpaExisting_overridden, GDPR_DPA"
+  })
+  void init_whenExistingCertificationExists_overrideDefaultCertificationState(
+      String testName, LegalDocumentType type) {
     CertificationHelper manager = new CertificationHelper();
 
     SupplierCertification existing = new SupplierCertification();
@@ -57,9 +62,15 @@ public class TestCertificationHelper {
     assertSame(existing, manager.getCertDetails().get(type));
   }
 
-  @ParameterizedTest
-  @MethodSource("certificationTypes")
-  void buildCertificationList_whenDocumentExists_setUploadedToTrue(LegalDocumentType type) {
+  @ParameterizedTest(name = "{0}")
+  @CsvSource({
+      "buildList_ISO9001DocExists_uploaded, ISO_9001",
+      "buildList_ISO14001DocExists_uploaded, ISO_14001",
+      "buildList_ISO27001DocExists_uploaded, ISO_27001",
+      "buildList_GdprDpaDocExists_uploaded, GDPR_DPA"
+  })
+  void buildCertificationList_whenDocumentExists_setUploadedToTrue(
+      String testName, LegalDocumentType type) {
     CertificationHelper manager = new CertificationHelper();
     manager.init(null);
 
@@ -78,9 +89,15 @@ public class TestCertificationHelper {
     assertTrue(Boolean.TRUE.equals(cert.getUploaded()));
   }
 
-  @ParameterizedTest
-  @MethodSource("certificationTypes")
-  void buildCertificationList_whenCertificationChecked_setUploadedToTrue(LegalDocumentType type) {
+  @ParameterizedTest(name = "{0}")
+  @CsvSource({
+      "buildList_ISO9001Checked_uploaded, ISO_9001",
+      "buildList_ISO14001Checked_uploaded, ISO_14001",
+      "buildList_ISO27001Checked_uploaded, ISO_27001",
+      "buildList_GdprDpaChecked_uploaded, GDPR_DPA"
+  })
+  void buildCertificationList_whenCertificationChecked_setUploadedToTrue(
+      String testName, LegalDocumentType type) {
     CertificationHelper manager = new CertificationHelper();
     manager.init(null);
 
@@ -97,9 +114,15 @@ public class TestCertificationHelper {
     assertTrue(Boolean.TRUE.equals(cert.getUploaded()));
   }
 
-  @ParameterizedTest
-  @MethodSource("certificationTypes")
-  void buildCertificationList_whenNoDocumentAndNotChecked_setUploadedToFalse(LegalDocumentType type) {
+  @ParameterizedTest(name = "{0}")
+  @CsvSource({
+      "buildList_ISO9001NoneChecked_notUploaded, ISO_9001",
+      "buildList_ISO14001NoneChecked_notUploaded, ISO_14001",
+      "buildList_ISO27001NoneChecked_notUploaded, ISO_27001",
+      "buildList_GdprDpaNoneChecked_notUploaded, GDPR_DPA"
+  })
+  void buildCertificationList_whenNoDocumentAndNotChecked_setUploadedToFalse(
+      String testName, LegalDocumentType type) {
     CertificationHelper manager = new CertificationHelper();
     manager.init(null);
 
