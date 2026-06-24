@@ -25,7 +25,10 @@ public class DummyChatModelProvider implements ChatModelProvider {
 
   @Override
   public List<String> models() {
-    return List.of(ModelNames.GENIOUS, ModelNames.SUPERMAN, ModelNames.CLASSIC);
+    return List.of(
+      ModelNames.GENIOUS, 
+      ModelNames.SUPERMAN, 
+      ModelNames.CLASSIC);
   }
 
   @Override
