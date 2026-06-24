@@ -14,7 +14,7 @@ services:
       - "6006:6006"
 
   opensearch:
-    image: opensearchproject/opensearch:2.19.5
+    image: opensearchproject/opensearch:3.7.0
     environment:
       - discovery.type=single-node
       - DISABLE_SECURITY_PLUGIN=true
