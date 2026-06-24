@@ -3,7 +3,6 @@ package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +14,10 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 import com.axonivy.utils.smart.workflow.demo.assistant.AgentGuidance;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.SupplierOnboardingGuidance;
 import com.axonivy.utils.smart.workflow.demo.assistant.AssistantChatMessage;
 import com.axonivy.utils.smart.workflow.demo.assistant.AssistantUploadSupport;
 import com.axonivy.utils.smart.workflow.demo.assistant.UploadedDocumentEntry;
-import com.axonivy.utils.smart.workflow.demo.common.Address;
 import com.axonivy.utils.smart.workflow.demo.document.CertificationUploader;
 import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;
 import com.axonivy.utils.smart.workflow.demo.document.LegalDocumentBuilder;
@@ -26,13 +25,12 @@ import com.axonivy.utils.smart.workflow.demo.document.RequiredDocumentUploader;
 import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentObjectType;
 import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;
 import com.axonivy.utils.smart.workflow.demo.supplier.Supplier;
-import com.axonivy.utils.smart.workflow.demo.supplier.SupplierBanking;
 import com.axonivy.utils.smart.workflow.demo.supplier.SupplierCertification;
-import com.axonivy.utils.smart.workflow.demo.supplier.SupplierContact;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces.LogicCloseSupport;
-import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.Country;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces.SupplierFormSupport;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.OnboardingRequestHelper;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.CertificationHelper;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.DocumentDisplayHelper;
@@ -43,7 +41,7 @@ import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
 @ViewScoped
 public class SupplierRegistrationFormBean
     implements Serializable, CertificationUploader, RequiredDocumentUploader,
-               AssistantUploadSupport<OnboardingRequest>, LogicCloseSupport {
+               AssistantUploadSupport<OnboardingRequest>, LogicCloseSupport, SupplierFormSupport {
 
   private static final long serialVersionUID = 1L;
   private static final String CONTENT_TYPE_OCTET_STREAM = "application/octet-stream";
@@ -51,8 +49,6 @@ public class SupplierRegistrationFormBean
   protected OnboardingRequest request;
 
   private List<LegalDocument> supplierDocuments = new ArrayList<>();
-  private List<Country> countries;
-  private List<String> legalForms;
   private String pendingDocumentType;
 
   private final CertificationHelper certHelper = new CertificationHelper();
@@ -71,30 +67,12 @@ public class SupplierRegistrationFormBean
     }
     this.request = request;
     ensureNestedObjectsExist();
-    countries = Arrays.asList(Country.values());
-    legalForms = Arrays.asList(
-        "GmbH", "AG", "GmbH & Co. KG", "SE", "UG", "KG", "OHG", "e.K.", "Ltd.", "S.A.", "B.V.", "Other");
     loadDocuments();
     certHelper.init(request.getSupplier().getCertifications());
   }
 
   private void ensureNestedObjectsExist() {
-    if (request.getSupplier() == null) {
-      request.setSupplier(new Supplier());
-    }
-    Supplier s = request.getSupplier();
-    if (s.getBusinessAddress() == null) {
-      s.setBusinessAddress(new Address());
-    }
-    if (s.getPrimaryContact() == null) {
-      s.setPrimaryContact(new SupplierContact());
-    }
-    if (s.getBanking() == null) {
-      s.setBanking(new SupplierBanking());
-    }
-    if (s.getCertifications() == null) {
-      s.setCertifications(new ArrayList<>());
-    }
+    OnboardingRequestHelper.ensureNestedObjectsExist(request);
   }
 
   @Override
@@ -197,6 +175,7 @@ public class SupplierRegistrationFormBean
     }
   }
 
+  @Override
   public LegalDocument getDocumentByTypeKey(String typeKey) {
     if (typeKey == null) {
       return null;
@@ -222,6 +201,7 @@ public class SupplierRegistrationFormBean
     }
   }
 
+  @Override
   public StreamedContent downloadDocument(String documentId) {
     LegalDocument doc = getSupplierDocuments().stream()
         .filter(candidate -> documentId.equals(candidate.getDocumentId()))
@@ -238,14 +218,17 @@ public class SupplierRegistrationFormBean
         .build();
   }
 
+  @Override
   public LegalDocument getCompanyRegistrationDoc() {
     return getDocumentByType(LegalDocumentType.COMMERCIAL_REGISTER);
   }
 
+  @Override
   public LegalDocument getSelfDeclarationDoc() {
     return getDocumentByType(LegalDocumentType.SELF_DECLARATION);
   }
 
+  @Override
   public LegalDocument getAnnualReportDoc() {
     return getDocumentByType(LegalDocumentType.ANNUAL_REPORT);
   }
@@ -307,35 +290,7 @@ public class SupplierRegistrationFormBean
 
   @Override
   public List<AgentGuidance> getAgentGuidance() {
-    return List.of(
-        guidance("What certifications are required?",
-            "use the openSearchSearch tool with collection 'supplier-onboarding-demo'"
-                + " to look up certification requirements, then summarize which certifications "
-                + "(ISO 9001, ISO 14001, ISO 27001, GDPR DPA) are required and how to fill them in"),
-        guidance("How does risk scoring work?",
-            "use the openSearchSearch tool with collection 'supplier-onboarding-demo'"
-                + " to look up risk scoring rules, then explain the four components and "
-                + "GREEN/YELLOW/RED thresholds"),
-        guidance("What documents do I need to upload?",
-            "use the openSearchSearch tool with collection 'supplier-onboarding-demo'"
-                + " to look up document requirements, then list what needs to be uploaded"),
-        guidance("Is IBAN required?",
-            "use the openSearchSearch tool with collection 'supplier-onboarding-demo'"
-                + " to look up banking requirements, then confirm that IBAN is mandatory "
-                + "and explain the format"),
-        guidance("What is a VAT ID?",
-            "explain what a VAT ID is, give country-specific format examples (e.g. DE123456789 for Germany), "
-                + "and clarify that it is optional but recommended for EU suppliers"),
-        guidance("Can you parse my supplier document?",
-            "ask the user to upload one or more .txt or .md files using the upload button, "
-                + "then confirm parsing to auto-fill the registration form fields"));
-  }
-
-  private static AgentGuidance guidance(String questionPattern, String instruction) {
-    AgentGuidance g = new AgentGuidance();
-    g.setQuestionPattern(questionPattern);
-    g.setInstruction(instruction);
-    return g;
+    return SupplierOnboardingGuidance.forRegistration();
   }
 
   public OnboardingRequest getRequest() {
@@ -351,14 +306,6 @@ public class SupplierRegistrationFormBean
 
   public Supplier getSupplier() {
     return request != null ? request.getSupplier() : null;
-  }
-
-  public List<Country> getCountries() {
-    return countries;
-  }
-
-  public List<String> getLegalForms() {
-    return legalForms;
   }
 
   public boolean isAssistantUploadEnabled() {

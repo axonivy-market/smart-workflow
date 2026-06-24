@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import com.axonivy.utils.smart.workflow.demo.assistant.AgentGuidance;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.SupplierOnboardingGuidance;
 import com.axonivy.utils.smart.workflow.demo.assistant.AssistantChatMessage;
 import com.axonivy.utils.smart.workflow.demo.assistant.AssistantUploadSupport;
 import com.axonivy.utils.smart.workflow.demo.assistant.UploadedDocumentEntry;
@@ -18,7 +19,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.Supplier;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.AuditTrailEntry;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces.LogicCloseSupport;
-import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.Country;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces.SupplierFormSupport;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.Urgency;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.OnboardingAuditEntryFactory;
@@ -29,7 +30,8 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 @ManagedBean
 @ViewScoped
-public class SupplierRequestBean implements Serializable, AssistantUploadSupport<OnboardingRequest>, LogicCloseSupport {
+public class SupplierRequestBean implements Serializable, AssistantUploadSupport<OnboardingRequest>, LogicCloseSupport,
+                                           SupplierFormSupport {
 
   private static final long serialVersionUID = 1L;
 
@@ -39,7 +41,6 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
   private static final String PARSE_RESULT_KEY      = "draft";
   private OnboardingRequest request;
   private List<Department> departments = new ArrayList<>();
-  private List<Country> countries = new ArrayList<>();
   private List<Urgency> urgencies = new ArrayList<>();
 
   private String assistantUploadedFileName;
@@ -73,7 +74,6 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
     }
 
     departments = DepartmentRepository.getInstance().findAll(Ivy.wfCase().uuid());
-    countries = List.of(Country.values());
     urgencies = List.of(Urgency.values());
   }
 
@@ -137,22 +137,7 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
 
   @Override
   public List<AgentGuidance> getAgentGuidance() {
-    return List.of(
-        guidance("What info do I need for a new supplier?",
-            "explain the required fields: supplier business name, legal form, VAT ID, business address, primary contact, and the department/business purpose"),
-        guidance("How does the DB check work?",
-            "explain that after submitting the request the system searches the supplier database for similar entries by name and country using the findSimilarSuppliers tool, then presents any matches so the user can decide whether to reuse an existing supplier or proceed with a new registration"),
-        guidance("What is a valid business purpose?",
-            "ask the user to describe the procurement purpose, then suggest the most relevant department from the available list and explain what constitutes a clear business purpose (e.g. product category, service type, cost centre)"),
-        guidance("Can you parse my supplier document?",
-            "ask the user to upload a .txt or .md file using the upload button, then confirm parsing to auto-fill the form fields"));
-  }
-
-  private static AgentGuidance guidance(String questionPattern, String instruction) {
-    AgentGuidance g = new AgentGuidance();
-    g.setQuestionPattern(questionPattern);
-    g.setInstruction(instruction);
-    return g;
+    return SupplierOnboardingGuidance.forRequest();
   }
 
   @Override
@@ -190,10 +175,6 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
 
   public List<Department> getDepartments() {
     return departments;
-  }
-
-  public List<Country> getCountries() {
-    return countries;
   }
 
   public List<Urgency> getUrgencies() {
