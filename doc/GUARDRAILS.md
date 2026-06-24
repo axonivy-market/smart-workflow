@@ -6,8 +6,42 @@ Guardrails protect AI agents by validating both user input and AI output. Smart 
 
 | Guardrail | Type | Description |
 |-----------|------|-------------|
-| `PromptInjectionInputGuardrail` | Input | Blocks common prompt injection attacks |
+| `PromptInjectionInputGuardrail` | Input | Blocks common prompt injection attacks using regex patterns. Low latency, no LLM cost. Use as a basic first line of defence. |
+| `AiPromptInjectionInputGuardrail` | Input | LLM-based classifier that catches subtle injections missed by regex — roleplay jailbreaks, authority spoofing, narrative payloads, gradual drift. Use when stricter protection is needed. |
 | `SensitiveDataOutputGuardrail` | Output | Blocks responses containing API keys or private keys |
+
+### Choosing an Input Guardrail
+
+| | `PromptInjectionInputGuardrail` | `AiPromptInjectionInputGuardrail` |
+|---|---|---|
+| **Detection method** | Regex patterns | LLM classifier |
+| **Catches** | Keyword-based attacks | All of the above + roleplay, authority claims, narrative payloads, obfuscation |
+| **False positives** | Low (narrowed patterns) | Very low (intent-aware) |
+| **Latency** | ~0 ms | +LLM call per message |
+| **Cost** | Free | Token cost (use `AI.Guardrails.PromptInjection.Classifier.Provider` + `Model` to pin a cheap model) |
+| **When to use** | Default / general use | High-security deployments, customer-facing chatbots |
+
+### Configuring `AiPromptInjectionInputGuardrail`
+
+Three variables control cost vs. coverage:
+
+```yaml
+Variables:
+  AI:
+    Guardrails:
+      PromptInjection:
+        Classifier:
+          # AI provider for the classifier. When blank, falls back to AI.DefaultProvider.
+          # Use a provider that offers cheap, fast models (e.g. OpenAI for gpt-4.1-nano).
+          Provider: ""
+          # Pin a cheaper model for the classifier to reduce token cost.
+          # When blank, the provider's default model is used.
+          Model: "gpt-4.1-nano"
+          # Allow messages shorter than this character count without an LLM call.
+          # Default is 0 (all messages are evaluated). Raise this to skip the LLM
+          # for very short messages once you understand your traffic patterns.
+          MinLength: "0"
+```
 
 ## Configuring Default Guardrails
 
