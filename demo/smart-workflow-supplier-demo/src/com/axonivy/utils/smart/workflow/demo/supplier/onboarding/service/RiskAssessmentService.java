@@ -49,15 +49,15 @@ public class RiskAssessmentService {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.RUNNING);
-    step.setStartedAt(Instant.now());
+    step.setStartedAt(Instant.now().toEpochMilli());
     return step;
   }
 
   public static void finalizeRiskStep(AgentProcessingStep step, RiskScoreResult riskScoreResult) {
     step.setStatus(AgentStepStatus.COMPLETED);
-    step.setCompletedAt(Instant.now());
+    step.setCompletedAt(Instant.now().toEpochMilli());
     if (step.getStartedAt() != null) {
-      step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+      step.setDurationMs(step.getCompletedAt() - step.getStartedAt());
     }
     if (step.getLogLines() == null) {
       step.setLogLines(new ArrayList<>());
@@ -96,10 +96,10 @@ public class RiskAssessmentService {
     AgentProcessingStep resolvedStep = step != null ? step : new AgentProcessingStep();
     resolvedStep.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     resolvedStep.setStatus(AgentStepStatus.FAILED);
-    resolvedStep.setCompletedAt(Instant.now());
+    resolvedStep.setCompletedAt(Instant.now().toEpochMilli());
     if (resolvedStep.getStartedAt() != null) {
       resolvedStep.setDurationMs(
-          resolvedStep.getCompletedAt().toEpochMilli() - resolvedStep.getStartedAt().toEpochMilli());
+          resolvedStep.getCompletedAt() - resolvedStep.getStartedAt());
     }
     if (resolvedStep.getLogLines() == null) {
       resolvedStep.setLogLines(new ArrayList<>());

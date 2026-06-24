@@ -53,7 +53,7 @@ public class CrossReferenceService {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.RUNNING);
-    step.setStartedAt(Instant.now());
+    step.setStartedAt(Instant.now().toEpochMilli());
     return step;
   }
 
@@ -92,9 +92,9 @@ public class CrossReferenceService {
 
   private static void completeStep(AgentProcessingStep step, AgentStepStatus status) {
     step.setStatus(status);
-    step.setCompletedAt(Instant.now());
+    step.setCompletedAt(Instant.now().toEpochMilli());
     if (step.getStartedAt() != null) {
-      step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+      step.setDurationMs(step.getCompletedAt() - step.getStartedAt());
     }
     if (step.getLogLines() == null) {
       step.setLogLines(new ArrayList<>());

@@ -166,16 +166,16 @@ public class PolicyValidationService {
     AgentProcessingStep step = new AgentProcessingStep();
     step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.RUNNING);
-    step.setStartedAt(Instant.now());
+    step.setStartedAt(Instant.now().toEpochMilli());
     return step;
   }
 
   public static String finalizePolicyStep(AgentProcessingStep step,
       PolicyValidationResult result, String caseUuid) {
     step.setStatus(AgentStepStatus.COMPLETED);
-    step.setCompletedAt(Instant.now());
+    step.setCompletedAt(Instant.now().toEpochMilli());
     if (step.getStartedAt() != null) {
-      step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+      step.setDurationMs(step.getCompletedAt() - step.getStartedAt());
     }
     if (step.getLogLines() == null) {
       step.setLogLines(new ArrayList<>());
@@ -213,9 +213,9 @@ public class PolicyValidationService {
       PolicyValidationResult result, Throwable error) {
     step.setName(ValidationUtils.stepName(STEP_NAME_KEY));
     step.setStatus(AgentStepStatus.FAILED);
-    step.setCompletedAt(Instant.now());
+    step.setCompletedAt(Instant.now().toEpochMilli());
     if (step.getStartedAt() != null) {
-      step.setDurationMs(step.getCompletedAt().toEpochMilli() - step.getStartedAt().toEpochMilli());
+      step.setDurationMs(step.getCompletedAt() - step.getStartedAt());
     }
     if (step.getLogLines() == null) {
       step.setLogLines(new ArrayList<>());

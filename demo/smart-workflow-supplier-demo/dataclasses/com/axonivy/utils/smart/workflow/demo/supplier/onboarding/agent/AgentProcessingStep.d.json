@@ -13,12 +13,12 @@
     "comment" : "Current status of this processing step: PENDING, RUNNING, COMPLETED, or FAILED"
   }, {
     "name" : "startedAt",
-    "type" : "java.time.Instant",
-    "comment" : "Timestamp when this step started processing"
+    "type" : "Long",
+    "comment" : "Timestamp (epoch millis) when this step started processing"
   }, {
     "name" : "completedAt",
-    "type" : "java.time.Instant",
-    "comment" : "Timestamp when this step finished processing"
+    "type" : "Long",
+    "comment" : "Timestamp (epoch millis) when this step finished processing"
   }, {
     "name" : "durationMs",
     "type" : "Long",
