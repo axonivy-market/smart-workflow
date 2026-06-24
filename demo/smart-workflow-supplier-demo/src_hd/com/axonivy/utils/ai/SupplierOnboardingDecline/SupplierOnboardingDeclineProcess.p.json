@@ -1,0 +1,73 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19FF001122330006",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.SupplierOnboardingDecline.SupplierOnboardingDeclineData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start(OnboardingRequest,SupplierAgentResponse,List)",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest", "desc" : "" },
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse", "desc" : "" },
+            { "name" : "notificationRecords", "type" : "java.util.List", "desc" : "" }
+          ],
+          "map" : {
+            "out.request" : "param.request",
+            "out.agentResponse" : "param.agentResponse",
+            "out.notificationRecords" : "param.notificationRecords"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest", "desc" : "" },
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse", "desc" : "" },
+            { "name" : "notificationRecords", "type" : "java.util.List", "desc" : "" }
+          ],
+          "map" : {
+            "result.request" : "in.request",
+            "result.agentResponse" : "in.agentResponse",
+            "result.notificationRecords" : "in.notificationRecords"
+          }
+        },
+        "guid" : "19FF001122330061"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "close()",
+      "config" : {
+        "signature" : "close",
+        "guid" : "19FF001122330062"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    } ]
+}
