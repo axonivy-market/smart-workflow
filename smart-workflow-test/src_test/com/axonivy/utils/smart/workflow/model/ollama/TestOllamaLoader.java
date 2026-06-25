@@ -48,15 +48,22 @@ public class TestOllamaLoader {
 
   @Test
   void modelNameIsPassedAsRequestParameter() {
-    ChatModel model = provider.setup(new ModelOptions(MODEL, false, List.of()));
+    ChatModel model = provider.setup(new ModelOptions(MODEL, false, false, List.of()));
     assertThat(model.defaultRequestParameters().modelName()).isEqualTo(MODEL);
   }
 
   @Test
   void structuredOutputIsAdvertisedAsSupported() {
-    ChatModel model = provider.setup(new ModelOptions(MODEL, true, List.of()));
+    ChatModel model = provider.setup(new ModelOptions(MODEL, true, false, List.of()));
     assertThat(model.supportedCapabilities())
         .contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
+  }
+
+  @Test
+  void structuredOutputWithToolsDoesNotConstrainJsonSchema() {
+    ChatModel model = provider.setup(new ModelOptions(MODEL, true, true, List.of()));
+    assertThat(model.supportedCapabilities())
+        .doesNotContain(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 
   @Test
