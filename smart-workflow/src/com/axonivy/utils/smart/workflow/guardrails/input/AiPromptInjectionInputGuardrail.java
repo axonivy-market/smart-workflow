@@ -194,7 +194,7 @@ public class AiPromptInjectionInputGuardrail implements SmartWorkflowInputGuardr
     var systemPrompt = resolveSystemPrompt();
     var builder = AiServices.builder(InjectionClassifier.class)
         .chatModel(model)
-        .systemMessageProvider(__ -> systemPrompt);
+        .systemMessageProvider(_ -> systemPrompt);
     AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), resolvedModelName)))
         .forEach(builder::registerListener);
     var classifier = builder.build();
