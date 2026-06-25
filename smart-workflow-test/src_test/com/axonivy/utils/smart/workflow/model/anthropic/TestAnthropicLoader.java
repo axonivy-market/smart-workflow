@@ -50,7 +50,7 @@ public class TestAnthropicLoader {
 
   @Test
   void capabilities() {
-    ChatModel structured = provider.setup(new ModelOptions(MODEL, true, List.of()));
+    ChatModel structured = provider.setup(new ModelOptions(MODEL, true, false, List.of()));
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 

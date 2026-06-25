@@ -17,10 +17,11 @@ public interface ChatModelProvider {
   public static record ModelOptions(
       String modelName,
       boolean structuredOutput,
+      boolean hasTools,
       List<ChatModelListener> listeners) {
 
     public ModelOptions() {
-      this(null, false, List.of());
+      this(null, false, false, List.of());
     }
 
     public static ModelOptions options() {
@@ -28,15 +29,19 @@ public interface ChatModelProvider {
     }
 
     public ModelOptions structuredOutput(boolean structured) {
-      return new ModelOptions(modelName, structured, listeners);
+      return new ModelOptions(modelName, structured, hasTools, listeners);
+    }
+
+    public ModelOptions hasTools(boolean tools) {
+      return new ModelOptions(modelName, structuredOutput, tools, listeners);
     }
 
     public ModelOptions modelName(String name) {
-      return new ModelOptions(name, structuredOutput, listeners);
+      return new ModelOptions(name, structuredOutput, hasTools, listeners);
     }
 
     public ModelOptions listeners(List<ChatModelListener> chatListeners) {
-      return new ModelOptions(modelName, structuredOutput, chatListeners);
+      return new ModelOptions(modelName, structuredOutput, hasTools, chatListeners);
     }
   }
 

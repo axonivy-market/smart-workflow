@@ -39,7 +39,7 @@ class TestChatModelProviders {
   @MethodSource("providerNames")
   void observable_sharesModelAsRequestParameter(String providerName) {
     var provider = ChatModelFactory.create(providerName).orElseThrow();
-    var model = provider.setup(new ModelOptions("AwesomeModel", true, List.of()));
+    var model = provider.setup(new ModelOptions("AwesomeModel", true, false, List.of()));
     assertThat(model.defaultRequestParameters().modelName())
         .as("Model as request parameter; allows tracing distribution for provider " + providerName)
         .isEqualTo("AwesomeModel");
@@ -60,7 +60,7 @@ class TestChatModelProviders {
         System.out.println("response");
       }
     };
-    var model = provider.setup(new ModelOptions("", true, List.of(myListener)));
+    var model = provider.setup(new ModelOptions("", true, false, List.of(myListener)));
     assertThat(model.listeners())
         .as("providers install listeners passed from Agent")
         .contains(myListener);
