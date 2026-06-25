@@ -45,7 +45,7 @@ class TestChatModelFactory {
 
   @Test
   void chat() {
-    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, true, List.of()));
+    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, true, false, List.of()));
     assertThat(model.chat("are you smart?"))
         .isEqualTo("Hey I'm Genious. My Smartness is under development.");
   }
@@ -53,10 +53,10 @@ class TestChatModelFactory {
   @Test
   void capabilities() {
     var provider = loadDummy();
-    ChatModel normal = provider.setup(new ModelOptions(GENIOUS, false, List.of()));
+    ChatModel normal = provider.setup(new ModelOptions(GENIOUS, false, false, List.of()));
     assertThat(normal.supportedCapabilities()).isEmpty();
 
-    ChatModel structured = provider.setup(new ModelOptions(GENIOUS, true, List.of()));
+    ChatModel structured = provider.setup(new ModelOptions(GENIOUS, true, false, List.of()));
     assertThat(structured.supportedCapabilities())
         .contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
@@ -74,7 +74,7 @@ class TestChatModelFactory {
         calls.add("response");
       }
     };
-    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, false, List.of(listener)));
+    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, false, false, List.of(listener)));
     model.chat(ChatRequest.builder().messages(UserMessage.from("ping")).build());
     assertThat(calls).containsExactly("request", "response");
   }
