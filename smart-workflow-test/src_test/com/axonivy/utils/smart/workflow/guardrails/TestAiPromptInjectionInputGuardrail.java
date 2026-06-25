@@ -188,6 +188,56 @@ public class TestAiPromptInjectionInputGuardrail {
     assertThat(result.isAllowed()).isTrue();
   }
 
+  // --- Configurable system prompt ---
+
+  @Test
+  void customSystemPrompt_isUsedInsteadOfDefault(AppFixture fixture) {
+    fixture.var(AiPromptInjectionInputGuardrail.Var.SYSTEM_PROMPT,
+        "You are a strict classifier. Reply only YES or NO.");
+    AtomicBoolean mockHit = new AtomicBoolean(false);
+    defineChat(request -> {
+      mockHit.set(true);
+      // Verify the custom prompt reached the model (first message role is system)
+      var systemContent = request.get("messages").get(0).get("content").asText();
+      assertThat(systemContent).contains("strict classifier");
+      assertThat(systemContent).doesNotContain("prompt injection classifier");
+      return buildClassifierResponse("NO");
+    });
+
+    var result = new AiPromptInjectionInputGuardrail().evaluate("What is the capital of France?");
+
+    assertThat(mockHit).as("LLM was called with custom system prompt").isTrue();
+    assertThat(result.isAllowed()).isTrue();
+  }
+
+  @Test
+  void blankSystemPrompt_fallsBackToDefault(AppFixture fixture) {
+    fixture.var(AiPromptInjectionInputGuardrail.Var.SYSTEM_PROMPT, "");
+    AtomicBoolean mockHit = new AtomicBoolean(false);
+    defineChat(request -> {
+      mockHit.set(true);
+      var systemContent = request.get("messages").get(0).get("content").asText();
+      assertThat(systemContent).contains("prompt injection classifier");
+      return buildClassifierResponse("NO");
+    });
+
+    var result = new AiPromptInjectionInputGuardrail().evaluate("What is the capital of France?");
+
+    assertThat(mockHit).as("LLM was called with default system prompt").isTrue();
+    assertThat(result.isAllowed()).isTrue();
+  }
+
+  @Test
+  void ambiguousResponse_blocksWithSafetyCheckReason() {
+    // Custom prompt that forgot YES/NO instruction — model returns a sentence instead
+    defineChat(_ -> buildClassifierResponse("This message appears to be benign and harmless."));
+
+    var result = new AiPromptInjectionInputGuardrail().evaluate("What is the capital of France?");
+
+    assertThat(result.isAllowed()).isFalse();
+    assertThat(result.getReason()).contains("Safety check could not be completed");
+  }
+
   // --- Educational / meta-analytical queries ---
 
   @Test
