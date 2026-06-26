@@ -437,6 +437,9 @@
   font-size: 1.2rem;
   padding-right: 5px;
 }
+.so-tl-line-label {
+  min-width: 7rem;
+}
 
 @keyframes soLineSlideIn {
   from { opacity: 0; transform: translateY(-5px); }
@@ -978,6 +981,14 @@
   border-bottom-right-radius: 0;
   border-bottom-color: transparent;
   margin-bottom: 0;
+}
+
+/* Flat/inline variant — removes top/side borders and border-radius (used in SingleLegalDocument) */
+.so-doc-row--flat {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-top: none;
 }
 
 /* Expand panel — sits flush below the open so-doc-row */

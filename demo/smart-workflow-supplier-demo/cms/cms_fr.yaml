@@ -10,7 +10,11 @@ Dialogs:
                   AuditTrail:
                     EmptyMessage: Aucune entrée d'audit enregistrée pour l'instant.
                     ExpandCollapseTooltip: Cliquer pour développer / réduire
+                    MatchedSuppliersLabel: Fournisseurs correspondants
+                    ResolvedItemsLabel: Éléments résolus
                     Title: Journal d'audit complet
+                    UserExplanationLabel: Explication de l'utilisateur
+                    ValidationFindingsLabel: Résultats de validation
                   LegalDocuments:
                     AdditionalDocumentSubtitle: Document supplémentaire
                     AnnualReportLabel: Dernier rapport annuel
@@ -341,6 +345,7 @@ Dialogs:
                         ThresholdGreen: Au-dessus du seuil d'approbation ≥ 70
                         ThresholdRed: En dessous du seuil minimum (< 40)
                         ThresholdYellow: Clarification requise (40-69)
+                        ValidationStepsPlaceholder: "L'agent IA analysera et validera votre formulaire d'inscription — les résultats s'afficheront ici."
                         ValidationStepsTitle: Étapes de validation
                       SupplierAiAssistant:
                         AssistantName: Assistant IA fournisseur

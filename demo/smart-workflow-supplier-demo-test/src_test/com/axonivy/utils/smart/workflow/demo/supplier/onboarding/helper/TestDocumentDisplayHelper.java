@@ -45,7 +45,7 @@ public class TestDocumentDisplayHelper {
     assertEquals("Business License",
         DocumentDisplayHelper.getDocumentTypeLabel("DOCUMENT:BUSINESS_LICENSE"));
 
-    assertEquals("Iso 9001 Certificate",
+    assertEquals("ISO 9001 — Quality Management",
         DocumentDisplayHelper.getDocumentTypeLabel("CERTIFICATION:ISO_9001"));
 
     assertEquals("Company Registration Extract",
@@ -64,7 +64,7 @@ public class TestDocumentDisplayHelper {
     assertEquals("Upload the required Business License document",
         DocumentDisplayHelper.getDocumentTypeSubtitle("DOCUMENT:BUSINESS_LICENSE"));
 
-    assertEquals("Upload a valid Iso 9001 certificate",
+    assertEquals("Required for suppliers > €50k annual volume",
         DocumentDisplayHelper.getDocumentTypeSubtitle("CERTIFICATION:ISO_9001"));
 
     assertEquals("Official commercial register document",

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.demo.assistant.AgentGuidance;
 import com.axonivy.utils.smart.workflow.demo.enums.Status;
 import com.axonivy.utils.smart.workflow.demo.supplier.Supplier;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse;
@@ -145,5 +146,18 @@ class TestSupplierDuplicateCheckBean {
     bean.init(new OnboardingRequest(), new SupplierAgentResponse());
 
     assertThat(bean.getIconClass()).isEqualTo(Status.SUCCESS.iconClass);
+  }
+
+  @Test
+  void getAgentGuidance_returns4EntriesWithNonBlankContent() {
+    SupplierDuplicateCheckBean bean = new SupplierDuplicateCheckBean();
+
+    List<AgentGuidance> guidance = bean.getAgentGuidance();
+
+    assertThat(guidance).hasSize(4);
+    assertThat(guidance).allSatisfy(g -> {
+      assertThat(g.getQuestionPattern()).isNotBlank();
+      assertThat(g.getInstruction()).isNotBlank();
+    });
   }
 }

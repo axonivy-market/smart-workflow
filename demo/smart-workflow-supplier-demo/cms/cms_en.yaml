@@ -10,7 +10,11 @@ Dialogs:
                   AuditTrail:
                     EmptyMessage: No audit entries captured yet.
                     ExpandCollapseTooltip: Click to expand / collapse
+                    MatchedSuppliersLabel: Matched Suppliers
+                    ResolvedItemsLabel: Resolved items
                     Title: Full Audit Trail
+                    UserExplanationLabel: User explanation
+                    ValidationFindingsLabel: Validation Findings
                   LegalDocuments:
                     AdditionalDocumentSubtitle: Additional document
                     AnnualReportLabel: Last Annual Report
@@ -341,6 +345,7 @@ Dialogs:
                         ThresholdGreen: Above approval threshold \u2265 70
                         ThresholdRed: Below minimum threshold (< 40)
                         ThresholdYellow: Clarification required (40-69)
+                        ValidationStepsPlaceholder: The AI agent will analyze and validate your registration form — results will show here.
                         ValidationStepsTitle: Validation Steps
                       SupplierAiAssistant:
                         AssistantName: Supplier AI Assistant

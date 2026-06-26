@@ -10,7 +10,11 @@ Dialogs:
                   AuditTrail:
                     EmptyMessage: Noch keine Prüfeinträge erfasst.
                     ExpandCollapseTooltip: Zum Erweitern / Reduzieren klicken
+                    MatchedSuppliersLabel: Übereinstimmende Lieferanten
+                    ResolvedItemsLabel: Gelöste Punkte
                     Title: Vollständiges Prüfprotokoll
+                    UserExplanationLabel: Benutzererklärung
+                    ValidationFindingsLabel: Validierungsergebnisse
                   LegalDocuments:
                     AdditionalDocumentSubtitle: Zusätzliches Dokument
                     AnnualReportLabel: Letzter Jahresabschluss
@@ -341,6 +345,7 @@ Dialogs:
                         ThresholdGreen: Über dem Genehmigungsschwellenwert ≥ 70
                         ThresholdRed: Unter dem Mindestschwellenwert (< 40)
                         ThresholdYellow: Klärung erforderlich (40-69)
+                        ValidationStepsPlaceholder: Der KI-Agent analysiert und validiert Ihr Registrierungsformular — die Ergebnisse werden hier angezeigt.
                         ValidationStepsTitle: Validierungsschritte
                       SupplierAiAssistant:
                         AssistantName: Lieferanten-KI-Assistent
