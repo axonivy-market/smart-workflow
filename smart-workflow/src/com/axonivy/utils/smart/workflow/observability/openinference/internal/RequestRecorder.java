@@ -84,7 +84,7 @@ class RequestRecorder {
       String messagesJson = OpenInferenceCollector.objectMapper.writeValueAsString(messagesList);
       attributes.put(SemanticConventions.INPUT_VALUE, messagesJson);
       attributes.put(SemanticConventions.INPUT_MIME_TYPE, "application/json");
-    } catch (JsonProcessingException ex) {
+    } catch (Exception ex) {
       Ivy.log().warn("Failed to serialize input messages", ex);
     }
   }
@@ -127,7 +127,7 @@ class RequestRecorder {
         case USER -> {
           messageMap.put("role", "user");
           if (message instanceof UserMessage userMessage) {
-            messageMap.put("content", userMessage.singleText());
+            messageMap.put("content", OpenInferenceCollector.textOf(userMessage));
           }
         }
         case CUSTOM -> {

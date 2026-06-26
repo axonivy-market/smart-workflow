@@ -41,7 +41,7 @@ public class ChatModelFactory {
   }
 
   public static Set<ChatModelProvider> providers() {
-    var project = SpiProject.getSmartWorkflowPmv().project(); // TODO: caching?
-    return new SpiLoader(project).load(ChatModelProvider.class);
+    var pmv = SpiProject.getSmartWorkflowPmv(); // TODO: caching?
+    return new SpiLoader(pmv).load(ChatModelProvider.class);
   }
 }

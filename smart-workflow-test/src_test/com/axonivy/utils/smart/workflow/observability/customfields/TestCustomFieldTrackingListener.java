@@ -34,6 +34,7 @@ class TestCustomFieldTrackingListener {
 
   @BeforeEach
   void setup(AppFixture fixture, ResourceResponder responder) {
+    fixture.var(CustomFieldTrackingListener.Var.ENABLED, "true");
     fixture.var(AiConf.DEFAULT_PROVIDER, OpenAiModelProvider.NAME);
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("customfields"));
     fixture.var(OpenAiConf.API_KEY, "");

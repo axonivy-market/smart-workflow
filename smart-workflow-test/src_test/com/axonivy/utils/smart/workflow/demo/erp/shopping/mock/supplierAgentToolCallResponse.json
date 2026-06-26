@@ -1,0 +1,31 @@
+{
+  "id": "chatcmpl-supplier-agent-tool-001",
+  "object": "chat.completion",
+  "created": 1758263999,
+  "model": "gpt-4.1-2025-04-14",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_findSupplier_001",
+            "type": "function",
+            "function": {
+              "name": "findSupplier",
+              "arguments": "{\"searchCriteria\":{\"businessNameContains\":\"TestSupplier\"}}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 100,
+    "completion_tokens": 50,
+    "total_tokens": 150
+  }
+}

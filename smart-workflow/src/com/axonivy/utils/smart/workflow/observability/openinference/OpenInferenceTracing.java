@@ -18,7 +18,6 @@ import com.axonivy.utils.smart.workflow.utils.IvyVar;
 import ch.ivyteam.ivy.trace.Attribute;
 import ch.ivyteam.ivy.trace.Span;
 import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.observability.api.event.AiServiceCompletedEvent;
 import dev.langchain4j.observability.api.event.AiServiceErrorEvent;
 import dev.langchain4j.observability.api.event.AiServiceRequestIssuedEvent;
@@ -180,9 +179,9 @@ public class OpenInferenceTracing implements AiListenerProvider {
     public void onEvent(InputGuardrailExecutedEvent event) {
       String inputMessage = options.hideInput ? null : Optional.ofNullable(event.request())
           .map(r -> r.userMessage())
-          .map(UserMessage::singleText)
+          .map(OpenInferenceCollector::textOf)
           .orElse(null);
-      String guardrailName = event.guardrailClass().getSimpleName();
+      String guardrailName = event.guardrailName();
       traceGuardrail(event, "INPUT", inputMessage, guardrailName);
     }
   }
@@ -194,9 +193,9 @@ public class OpenInferenceTracing implements AiListenerProvider {
       String outputMessage = options.hideOutput ? null : Optional.ofNullable(event.request())
           .map(r -> r.responseFromLLM())
           .map(r -> r.aiMessage())
-          .map(AiMessage::text)
+          .map(OpenInferenceCollector::resolveContent)
           .orElse(null);
-      String guardrailName = event.guardrailClass().getSimpleName();
+      String guardrailName = event.guardrailName();
       traceGuardrail(event, "OUTPUT", outputMessage, guardrailName);
     }
   }

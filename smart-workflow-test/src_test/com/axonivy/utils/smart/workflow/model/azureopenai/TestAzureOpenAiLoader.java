@@ -16,7 +16,6 @@ import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
-import ch.ivyteam.ivy.project.model.Project;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 
@@ -40,8 +39,8 @@ public class TestAzureOpenAiLoader {
 
   @Test
   void load() {
-    Project project = IProcessModelVersion.current().project();
-    var impls = new SpiLoader(project).load(ChatModelProvider.class);
+    var pmv = IProcessModelVersion.current();
+    var impls = new SpiLoader(pmv).load(ChatModelProvider.class);
     assertThat(impls).isNotEmpty();
     var azureModel = impls.stream().filter(p -> (p instanceof AzureOpenAiModelProvider)).toList();
     assertThat(azureModel).as("SPI loader finds Azure OpenAI implementor").isNotEmpty();
@@ -64,10 +63,10 @@ public class TestAzureOpenAiLoader {
 
   @Test
   void capabilities() {
-    ChatModel normal = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    ChatModel normal = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, false, List.of()));
     assertThat(normal.supportedCapabilities()).isEmpty();
 
-    ChatModel structured = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, true, List.of()));
+    ChatModel structured = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, true, false, List.of()));
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 
@@ -84,7 +83,7 @@ public class TestAzureOpenAiLoader {
   @Test
   void temperature_gpt4(AppFixture fixture) {
     fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-4.1-mini");
-    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, false, List.of()));
     assertThat(model.defaultRequestParameters().temperature())
         .isEqualTo(0.0);
   }
@@ -92,7 +91,7 @@ public class TestAzureOpenAiLoader {
   @Test
   void temperature_gpt5(AppFixture fixture) {
     fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-5");
-    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, false, List.of()));
     assertThat(model.defaultRequestParameters().temperature())
         .isEqualTo(1.0);
   }
@@ -100,7 +99,7 @@ public class TestAzureOpenAiLoader {
   @Test
   void temperature_gpt5_nano(AppFixture fixture) {
     fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "gpt-5-nano");
-    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, List.of()));
+    var model = provider.setup(new ModelOptions(TEST_DEPLOYMENT_NAME, false, false, List.of()));
     assertThat(model.defaultRequestParameters().temperature())
         .isEqualTo(1.0);
   }

@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-test-agent-final-001",
+  "object": "chat.completion",
+  "created": 1758263999,
+  "model": "gpt-4.1-mini-2025-04-14",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"aiResult\":\"Task has been created successfully for the Portal 404 error on Cockpit page. Please check the support task for details.\",\"ticket\":null}"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 250,
+    "completion_tokens": 40,
+    "total_tokens": 290
+  }
+}

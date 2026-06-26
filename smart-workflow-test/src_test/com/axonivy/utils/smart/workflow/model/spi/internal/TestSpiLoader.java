@@ -10,15 +10,14 @@ import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.environment.IvyTest;
-import ch.ivyteam.ivy.project.model.Project;
 
 @IvyTest
 class TestSpiLoader {
 
   @Test
   void load() {
-    Project project = IProcessModelVersion.current().project();
-    var impls = new SpiLoader(project).load(ChatModelProvider.class);
+    var pmv = IProcessModelVersion.current();
+    var impls = new SpiLoader(pmv).load(ChatModelProvider.class);
     assertThat(impls).isNotEmpty();
     var dummies = impls.stream()
         .filter(p -> (p instanceof DummyChatModelProvider))

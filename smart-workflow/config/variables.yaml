@@ -5,10 +5,28 @@ Variables:
     DefaultProvider: ""
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
-      # Default input guardrails. Separated by comma. Available: PromptInjectionInputGuardrail, PiiMaskingGuardrail
+      # Default input guardrails. Separated by comma. Available: PromptInjectionInputGuardrail, AiPromptInjectionInputGuardrail, PiiMaskingGuardrail
       DefaultInput: ""
       # Default output guardrails. Separated by comma. Available: SensitiveDataOutputGuardrail, PiiMaskingGuardrail
       DefaultOutput: ""
+      PromptInjection:
+        Classifier:
+          # AI provider used by AiPromptInjectionInputGuardrail for YES/NO classification.
+          # When blank, falls back to AI.DefaultProvider.
+          # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama]
+          Provider: ""
+          # Model used by AiPromptInjectionInputGuardrail for YES/NO classification.
+          # Use a lightweight model to reduce cost (e.g. gpt-4.1-nano, gemini-2.0-flash-lite).
+          # When blank, falls back to the provider's default model.
+          Model: ""
+          # Custom system prompt for the YES/NO classifier.
+          # When blank, the built-in prompt is used (covers 8 attack categories and 5 safe categories).
+          # Must instruct the model to reply with only YES or NO.
+          SystemPrompt: ""
+          # Messages shorter than this character count are allowed without LLM evaluation.
+          # Set to 0 (default) to evaluate all messages. Raise this value to skip LLM calls
+          # for short messages and reduce cost - tune based on your expected message patterns.
+          MinLength: "0"
     Tool:
       WebSearch:
         # Name of the search engine to use. Must match the name() of a registered SmartWebSearchEngine. Example: "duckduckgo"

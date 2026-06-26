@@ -20,7 +20,7 @@ public class OutputGuardrailListener implements OutputGuardrailExecutedListener 
 
   @Override
   public void onEvent(OutputGuardrailExecutedEvent event) {
-    String guardrailName = event.guardrailClass().getSimpleName();
+    String guardrailName = event.guardrailName();
     String result = event.result().result().name();
     String message = Optional.ofNullable(event.request())
         .map(r -> r.responseFromLLM())
