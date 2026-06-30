@@ -74,8 +74,9 @@ public class AgentCallExecutor {
     var agentBuilder = AiServices.builder(agentType);
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
-    configureModel(agentBuilder, structured.isPresent());
-    configureToolProvider(agentBuilder);
+    var toolFilter = executeListOfStrings(Conf.TOOLS).orElse(null);
+    configureModel(agentBuilder, structured.isPresent(), toolFilter);
+    configureToolProvider(agentBuilder, toolFilter);
     configureGuardrails(agentBuilder);
     configureSystemMessage(human, agentBuilder);
     var agent = agentBuilder.build();
@@ -144,13 +145,14 @@ public class AgentCallExecutor {
     return humanInTheLoop;
   }
 
-  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured) {
+  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured, List<String> toolFilter) {
     var providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var provider = ChatModelFactory.getProviderOrDefault(providerName);
     var modelOptions = options()
         .modelName(model)
-        .structuredOutput(structured);
+        .structuredOutput(structured)
+        .hasTools(toolFilter != null && !toolFilter.isEmpty());
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);
     var modelName = chatModel.defaultRequestParameters().modelName();
@@ -158,8 +160,7 @@ public class AgentCallExecutor {
       .forEach(agentBuilder::registerListener);
   }
 
-  private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    List<String> toolFilter = executeListOfStrings(Conf.TOOLS).orElse(null);
+  private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter) {
     ToolProvider ivyTools = new IvySubProcessToolsProvider().filtering(toolFilter);
     agentBuilder.toolProvider(request -> {
       List<AiServiceTool> all = new ArrayList<>(ivyTools.provideTools(request).aiServiceTools());

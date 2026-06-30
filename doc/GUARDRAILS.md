@@ -23,7 +23,7 @@ Guardrails protect AI agents by validating both user input and AI output. Smart 
 
 ### Configuring `AiPromptInjectionInputGuardrail`
 
-Three variables control cost vs. coverage:
+Four variables control cost, coverage, and classification behaviour:
 
 ```yaml
 Variables:
@@ -37,11 +37,31 @@ Variables:
           # Pin a cheaper model for the classifier to reduce token cost.
           # When blank, the provider's default model is used.
           Model: "gpt-4.1-nano"
+          # Custom system prompt for the YES/NO classifier.
+          # When blank, the built-in prompt is used (covers 8 attack categories and 5 safe categories).
+          # Must instruct the model to reply with only YES or NO.
+          SystemPrompt: ""
           # Allow messages shorter than this character count without an LLM call.
           # Default is 0 (all messages are evaluated). Raise this to skip the LLM
           # for very short messages once you understand your traffic patterns.
           MinLength: "0"
 ```
+
+#### Customising the system prompt
+
+The built-in prompt covers generic prompt injection patterns. For domain-specific deployments you may need to extend it — for example, a financial chatbot that should also block attempts to invoke "advisor mode" with no compliance checks, or a support bot that should reject attempts to impersonate internal staff.
+
+Set `SystemPrompt` to your own text. The prompt **must** end with an instruction to reply with only `YES` or `NO`:
+
+```
+You are a prompt injection classifier for a financial services chatbot.
+[... your custom rules ...]
+Reply ONLY YES or NO.
+```
+
+Leave the variable blank to use the built-in prompt.
+
+> **Important:** The classifier must reply with `YES` or `NO`. If the model returns anything else (e.g. a sentence), the guardrail **blocks the message as a precaution** and logs a warning to alert you to the misconfiguration.
 
 ## Configuring Default Guardrails
 
