@@ -1,0 +1,27 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierOnboardingApprovalData",
+  "namespace" : "com.axonivy.utils.ai.SupplierOnboardingApproval",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse"
+  }, {
+    "name" : "approvalStage",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalStage"
+  }, {
+    "name" : "approvalDecision",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalDecision"
+  }, {
+    "name" : "approvalComment"
+  }, {
+    "name" : "approvalActor"
+  }, {
+    "name" : "approvalAt"
+  }, {
+    "name" : "auditEntry",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.AuditTrailEntry"
+  } ]
+}

@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/PageTitle')}</ui:define>
+    <ui:define name="content">
+
+      <h:outputStylesheet library="css" name="supplier-onboarding.css" />
+      <h:outputStylesheet library="css" name="supplier-onboarding-#{ivyFreyaTheme.mode}.css" />
+      <h:outputStylesheet library="css" name="finish-demo.css" />
+      <h:outputStylesheet library="css" name="finish-demo-#{ivyFreyaTheme.mode}.css" />
+      <h:outputScript library="js" name="finish-demo.js" target="body" />
+
+      <div class="fd-wizard">
+
+        <div class="fd-wizard-header">
+          <div class="fd-hero">
+            <div class="fd-hero-icon"><i class="ti ti-confetti" /></div>
+            <div class="fd-hero-body">
+              <div class="fd-hero-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/HeroTitle')}</div>
+              <div class="fd-hero-sub">
+                <h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/HeroSub')}" escape="false" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fd-flow">
+          <div class="fd-flow-step" data-step="0" onclick="fdGoToStep(0)">
+            <div class="fd-flow-bubble fd-cap-icon--blue"><i class="ti ti-upload"></i></div>
+          </div>
+          <div class="fd-flow-arrow"></div>
+          <div class="fd-flow-step" data-step="1" onclick="fdGoToStep(1)">
+            <div class="fd-flow-bubble fd-cap-icon--blue"><i class="ti ti-object-scan"></i></div>
+          </div>
+          <div class="fd-flow-arrow"></div>
+          <div class="fd-flow-step" data-step="2" onclick="fdGoToStep(2)">
+            <div class="fd-flow-bubble fd-cap-icon--purple"><i class="ti ti-message-chatbot"></i></div>
+          </div>
+          <div class="fd-flow-arrow"></div>
+          <div class="fd-flow-step" data-step="3" onclick="fdGoToStep(3)">
+            <div class="fd-flow-bubble fd-cap-icon--amber"><i class="ti ti-shield-search"></i></div>
+          </div>
+          <div class="fd-flow-arrow"></div>
+          <div class="fd-flow-step" data-step="4" onclick="fdGoToStep(4)">
+            <div class="fd-flow-bubble fd-cap-icon--green"><i class="ti ti-chart-bar"></i></div>
+          </div>
+          <div class="fd-flow-arrow"></div>
+          <div class="fd-flow-step" data-step="5" onclick="fdGoToStep(5)">
+            <div class="fd-flow-bubble fd-cap-icon--indigo"><i class="ti ti-ai-gateway"></i></div>
+          </div>
+          <div class="fd-flow-arrow"></div>
+          <div class="fd-flow-step" data-step="6" onclick="fdGoToStep(6)">
+            <div class="fd-flow-bubble fd-cap-icon--green"><i class="ti ti-circle-check"></i></div>
+          </div>
+        </div>
+
+        <div class="fd-step-navigator">
+
+          <button id="fd-prev" class="fd-nav-btn" type="button" onclick="fdPrevStep()"
+            title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/PrevButtonTitle')}">
+            <i class="ti ti-chevron-left"></i>
+          </button>
+
+          <div class="fd-steps-wrapper">
+            <ui:include src="StepPanels.xhtml" />
+          </div>
+
+          <button id="fd-next" class="fd-nav-btn" type="button" onclick="fdNextStep()"
+            title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/NextButtonTitle')}">
+            <i class="ti ti-chevron-right"></i>
+          </button>
+
+        </div>
+
+        <div class="fd-step-dots">
+          <span class="fd-dot" onclick="fdGoToStep(0)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Step0DotTitle')}"></span>
+          <span class="fd-dot" onclick="fdGoToStep(1)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Step1DotTitle')}"></span>
+          <span class="fd-dot" onclick="fdGoToStep(2)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Step2DotTitle')}"></span>
+          <span class="fd-dot" onclick="fdGoToStep(3)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Step3DotTitle')}"></span>
+          <span class="fd-dot" onclick="fdGoToStep(4)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Step4DotTitle')}"></span>
+          <span class="fd-dot" onclick="fdGoToStep(5)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Step5DotTitle')}"></span>
+          <span class="fd-dot" onclick="fdGoToStep(6)" title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Step6DotTitle')}"></span>
+        </div>
+
+      </div>
+
+    </ui:define>
+  </ui:composition>
+</h:body>
+
+</html>

@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierAgentProcessingData",
+  "namespace" : "com.axonivy.utils.ai.SupplierAgentProcessing",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse"
+  }, {
+    "name" : "routingDecision"
+  } ]
+}

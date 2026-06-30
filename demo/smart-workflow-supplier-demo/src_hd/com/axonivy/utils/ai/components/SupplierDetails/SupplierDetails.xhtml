@@ -1,0 +1,316 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<cc:interface componentType="IvyComponent">
+  <cc:attribute name="bean" required="true" />
+  <cc:attribute name="readOnly" type="java.lang.Boolean" default="false" />
+</cc:interface>
+
+<cc:implementation>
+  <!-- ═══ Card 0: Procurement Context ══════════════════════════════ -->
+  <div class="so-card">
+    <div class="border-bottom-1 surface-border mb-3">
+      <span class="so-card-title"><i class="ti ti-shopping-cart text-2xl mr-2"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ProcurementContextTitle')}</span>
+    </div>
+    <div class="formgrid grid">
+
+      <div class="field ui-fluid col-12 md:col-6">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/RequestedByLabel')}</label>
+        <p:inputText id="requested-by"
+          value="#{cc.attrs.bean.request.requestedBy}"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/RequestedByPlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-6">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/DepartmentLabel')}</label>
+        <p:inputText id="dept"
+          value="#{cc.attrs.bean.request.department}"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/DepartmentPlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ProductsServicesLabel')}</label>
+        <p:inputTextarea id="products-services"
+          value="#{cc.attrs.bean.request.productsServicesNeeded}"
+          rows="2"
+          autoResize="true"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ProductsServicesPlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-4">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/AnnualVolumeLabel')}</label>
+        <p:inputNumber id="annual-volume"
+          value="#{cc.attrs.bean.request.expectedAnnualVolume}"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/AnnualVolumeLabel')}"
+          symbol="€"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/AnnualVolumePlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-4">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/UrgencyLabel')}</label>
+        <p:inputText id="urgency"
+          value="#{cc.attrs.bean.request.urgency}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-4">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/NeededByDateLabel')}</label>
+        <p:datePicker id="needed-by"
+          value="#{cc.attrs.bean.request.neededByDate}"
+          pattern="dd.MM.yyyy"
+          showIcon="true"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/AdditionalNotesLabel')}</label>
+        <p:inputTextarea id="additional-notes"
+          value="#{cc.attrs.bean.request.additionalNotes}"
+          rows="2"
+          autoResize="true"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/AdditionalNotesPlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ Card 1: Company Details ═══════════════════════════════════ -->
+  <div class="so-card">
+    <div class="border-bottom-1 surface-border mb-3">
+      <span class="so-card-title"><i class="ti ti-building text-2xl mr-2"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CompanyDetailsTitle')}</span>
+    </div>
+    <div class="formgrid grid">
+
+      <div class="field ui-fluid col-12 md:col-8">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CompanyNameLabel')} <span class="text-red-500">*</span></label>
+        <p:inputText id="business-name"
+          value="#{cc.attrs.bean.supplier.businessName}"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CompanyNameLabel')}"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CompanyNamePlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-4">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/LegalFormLabel')} <span class="text-red-500">*</span></label>
+        <p:selectOneMenu id="legal-form"
+          value="#{cc.attrs.bean.supplier.legalForm}"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/LegalFormLabel')}"
+          disabled="#{cc.attrs.readOnly}">
+          <f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/LegalFormSelectDefault')}" itemValue="" noSelectionOption="true" />
+          <f:selectItems value="#{cc.attrs.bean.legalForms}" var="lf"
+            itemLabel="#{lf}" itemValue="#{lf}" />
+        </p:selectOneMenu>
+      </div>
+
+      <div class="field ui-fluid col-12">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/StreetLabel')} <span class="text-red-500">*</span></label>
+        <p:inputText id="street"
+          value="#{cc.attrs.bean.supplier.businessAddress.street1}"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/StreetLabel')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-3">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ZipCodeLabel')} <span class="text-red-500">*</span></label>
+        <p:inputText id="zip"
+          value="#{cc.attrs.bean.supplier.businessAddress.zipCode}"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ZipCodeLabel')}"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ZipCodePlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-4">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CityLabel')} <span class="text-red-500">*</span></label>
+        <p:inputText id="city"
+          value="#{cc.attrs.bean.supplier.businessAddress.city}"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CityLabel')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-5">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CountryLabel')} <span class="text-red-500">*</span></label>
+        <p:selectOneMenu id="country"
+          value="#{cc.attrs.bean.supplier.businessAddress.country}"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CountryLabel')}"
+          disabled="#{cc.attrs.readOnly}">
+          <f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CountrySelectDefault')}" itemValue="" noSelectionOption="true" />
+          <f:selectItems value="#{cc.attrs.bean.countries}" var="c"
+            itemLabel="#{c.displayName} (#{c.code})" itemValue="#{c.code}" />
+        </p:selectOneMenu>
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-4">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/VatIdLabel')}</label>
+        <p:inputText id="vat-id"
+          value="#{cc.attrs.bean.supplier.vatId}"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/VatIdPlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-4">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CommercialRegNoLabel')}</label>
+        <p:inputText id="reg-no"
+          value="#{cc.attrs.bean.supplier.commercialRegisterNo}"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CommercialRegNoPlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12 md:col-4">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/WebsiteLabel')}</label>
+        <p:inputText id="website"
+          value="#{cc.attrs.bean.supplier.website}"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/WebsitePlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+      <div class="field ui-fluid col-12">
+        <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BusinessPurposeLabel')} <span class="text-red-500">*</span></label>
+        <p:inputText id="business-purpose"
+          value="#{cc.attrs.bean.supplier.businessPurpose}"
+          required="#{param['skipValidation'] != 'true'}"
+          label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BusinessPurposeLabel')}"
+          placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BusinessPurposePlaceholder')}"
+          disabled="#{cc.attrs.readOnly}" />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ Cards 2 & 3: Primary Contact + Banking & Payment ════ -->
+  <div class="grid">
+
+    <div class="col-12 flex flex-column">
+      <div class="so-card flex-1">
+        <div class="border-bottom-1 surface-border mb-3">
+          <span class="so-card-title"><i class="ti ti-user text-2xl mr-2"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/PrimaryContactTitle')}</span>
+        </div>
+        <div class="formgrid grid">
+
+          <div class="field ui-fluid col-12 md:col-4">
+            <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactFirstNameLabel')} <span class="text-red-500">*</span></label>
+            <p:inputText id="contact-first"
+              value="#{cc.attrs.bean.supplier.primaryContact.firstName}"
+              required="#{param['skipValidation'] != 'true'}"
+              label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactFirstNameLabel')}"
+              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactFirstNamePlaceholder')}"
+              disabled="#{cc.attrs.readOnly}" />
+          </div>
+
+          <div class="field ui-fluid col-12 md:col-4">
+            <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactLastNameLabel')} <span class="text-red-500">*</span></label>
+            <p:inputText id="contact-last"
+              value="#{cc.attrs.bean.supplier.primaryContact.lastName}"
+              required="#{param['skipValidation'] != 'true'}"
+              label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactLastNameLabel')}"
+              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactLastNamePlaceholder')}"
+              disabled="#{cc.attrs.readOnly}" />
+          </div>
+
+          <div class="field ui-fluid col-12 md:col-4">
+            <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactJobTitleLabel')}</label>
+            <p:inputText id="contact-title"
+              value="#{cc.attrs.bean.supplier.primaryContact.jobTitle}"
+              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactJobTitlePlaceholder')}"
+              disabled="#{cc.attrs.readOnly}" />
+          </div>
+
+          <div class="field ui-fluid col-12 md:col-7">
+            <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactEmailLabel')} <span class="text-red-500">*</span></label>
+            <p:inputText id="contact-email"
+              value="#{cc.attrs.bean.supplier.primaryContact.email}"
+              required="#{param['skipValidation'] != 'true'}"
+              label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactEmailLabel')}"
+              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactEmailPlaceholder')}"
+              disabled="#{cc.attrs.readOnly}" />
+          </div>
+
+          <div class="field ui-fluid col-12 md:col-5">
+            <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactPhoneLabel')}</label>
+            <p:inputText id="contact-phone"
+              value="#{cc.attrs.bean.supplier.primaryContact.phone}"
+              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/ContactPhonePlaceholder')}"
+              disabled="#{cc.attrs.readOnly}" />
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 flex flex-column">
+      <div class="so-card flex-1">
+        <div class="border-bottom-1 surface-border mb-3">
+          <span class="so-card-title"><i class="ti ti-building-bank text-2xl mr-2"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BankingPaymentTitle')}</span>
+        </div>
+        <div class="formgrid grid">
+
+          <div class="field ui-fluid col-12">
+            <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/IbanLabel')} <span class="text-red-500">*</span></label>
+            <p:inputText id="iban"
+              value="#{cc.attrs.bean.supplier.banking.iban}"
+              required="#{param['skipValidation'] != 'true'}"
+              label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/IbanLabel')}"
+              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/IbanPlaceholder')}"
+              disabled="#{cc.attrs.readOnly}" />
+          </div>
+
+          <div class="field ui-fluid col-12 md:col-6">
+            <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BicLabel')}</label>
+            <p:inputText id="bic"
+              value="#{cc.attrs.bean.supplier.banking.bic}"
+              disabled="#{cc.attrs.readOnly}" />
+          </div>
+
+          <div class="field ui-fluid col-12 md:col-6">
+            <label class="block mb-1 font-medium">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BankNameLabel')}</label>
+            <p:inputText id="bank-name"
+              value="#{cc.attrs.bean.supplier.banking.bankName}"
+              placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/BankNamePlaceholder')}"
+              disabled="#{cc.attrs.readOnly}" />
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ Card 4: Certifications & Compliance ══════════════════════ -->
+  <ic:com.axonivy.utils.ai.components.LegalDocuments
+    id="certificationsCard"
+    mode="CERTIFICATIONS"
+    bean="#{cc.attrs.bean}"
+    cardTitle="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CertificationsCardTitle')}"
+    cardSubtitle="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/CertificationsCardSubtitle')}"
+    cardIcon="ti ti-certificate"
+    uploadWidgetVar="legalDocsUploadWidget"
+    updateTargets=":#{cc.clientId}:certificationsCard:certifications-panel :#{cc.clientId}:requiredDocsCard:req-docs-panel"
+    readOnly="#{cc.attrs.readOnly}" />
+
+  <!-- ═══ Card 5: Required Documents ════════════════════════════════════ -->
+  <ic:com.axonivy.utils.ai.components.LegalDocuments
+    id="requiredDocsCard"
+    mode="REQUIRED_DOCUMENTS"
+    bean="#{cc.attrs.bean}"
+    cardTitle="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/RequiredDocsCardTitle')}"
+    cardSubtitle="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierDetails/RequiredDocsCardSubtitle')}"
+    cardIcon="ti ti-paperclip"
+    uploadWidgetVar="legalDocsUploadWidget"
+    updateTargets=":#{cc.clientId}:certificationsCard:certifications-panel :#{cc.clientId}:requiredDocsCard:req-docs-panel"
+    readOnly="#{cc.attrs.readOnly}" />
+
+</cc:implementation>
+
+</html>

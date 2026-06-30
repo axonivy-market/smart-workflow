@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+  <div class="sd-slide-body flex-1 min-h-0 overflow-y-auto">
+
+    <div class="sd-slide-header">
+      <div class="sd-slide-title font-bold text-xl">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Slide2Title')}</div>
+      <div>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/Slide2Sub')}</div>
+    </div>
+
+    <div class="sd-compare-stats flex justify-content-center flex-wrap">
+      <div class="sd-stat flex flex-column align-items-center text-center">
+        <div class="sd-stat-row flex align-items-center">
+          <span class="sd-stat-before font-bold text-base">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatTimeBefore')}</span>
+          <span class="sd-stat-arrow text-base"><i class="ti ti-arrow-right"></i></span>
+          <span class="sd-stat-after font-bold text-base">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatTimeAfter')}</span>
+        </div>
+        <div class="sd-stat-label text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatTimeLabel')}</div>
+      </div>
+      <div class="sd-stat flex flex-column align-items-center text-center">
+        <div class="sd-stat-row flex align-items-center">
+          <span class="sd-stat-before font-bold text-base">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatStepsBefore')}</span>
+          <span class="sd-stat-arrow text-base"><i class="ti ti-arrow-right"></i></span>
+          <span class="sd-stat-after font-bold text-base">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatStepsAfter')}</span>
+        </div>
+        <div class="sd-stat-label text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatStepsLabel')}</div>
+      </div>
+      <div class="sd-stat flex flex-column align-items-center text-center">
+        <div class="sd-stat-row flex align-items-center">
+          <span class="sd-stat-before font-bold text-base">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatErrorBefore')}</span>
+          <span class="sd-stat-arrow text-base"><i class="ti ti-arrow-right"></i></span>
+          <span class="sd-stat-after font-bold text-base">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatErrorAfter')}</span>
+        </div>
+        <div class="sd-stat-label text-xs">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/StatErrorLabel')}</div>
+      </div>
+    </div>
+
+    <div class="sd-compare-grid">
+
+      <div class="sd-compare-col sd-compare-before flex align-items-start">
+        <div class="fd-panel-left">
+          <div class="fd-panel-icon fd-cap-icon--amber"><i class="ti ti-mood-sad"></i></div>
+        </div>
+        <div class="fd-panel-right">
+          <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/TraditionalHeader')}</div>
+          <ul class="sd-compare-list flex flex-column p-0 m-0">
+            <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem1')}</span></li>
+            <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem2')}</span></li>
+            <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem3')}</span></li>
+            <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem4')}</span></li>
+            <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem5')}</span></li>
+            <li><i class="ti ti-x"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/BeforeItem6')}</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sd-compare-col sd-compare-after flex align-items-start">
+        <div class="fd-panel-left">
+          <div class="fd-panel-icon fd-cap-icon--green"><i class="ti ti-sparkles"></i></div>
+        </div>
+        <div class="fd-panel-right">
+          <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AiPoweredHeader')}</div>
+          <ul class="sd-compare-list flex flex-column p-0 m-0">
+            <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem1')}</span></li>
+            <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem2')}</span></li>
+            <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem3')}</span></li>
+            <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem4')}</span></li>
+            <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem5')}</span></li>
+            <li><i class="ti ti-check"></i><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/AfterItem6')}</span></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- .sd-slide-body -->
+
+</ui:composition>

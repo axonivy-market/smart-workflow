@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "LogLine",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent",
+  "fields" : [ {
+    "name" : "severity",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.LogLineSeverity",
+    "comment" : "Severity of this log line: OK, WARNING, or ERROR — maps to check/warn/error icon in the UI"
+  }, {
+    "name" : "message",
+    "comment" : "Human-readable description of what happened at this step detail"
+  }, {
+    "name" : "italic",
+    "type" : "Boolean"
+  } ]
+}

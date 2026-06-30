@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0-dev/app/custom-fields.json
+#
+# == Custom Fields Information ==
+#
+# You can define here your project custom fields.
+# Have a look at our documentation for more information.
+#
+CustomFields:
+  Cases:
+    MOCK_EMPLOYEES:
+      Label: Mock Employees
+      Type: STRING
+    MOCK_DEPARTMENTS:
+      Label: Mock Departments
+      Type: STRING
+    MOCK_SUPPLIERS:
+      Label: Mock Suppliers
+      Type: STRING
+    MOCK_POLICY_RULES:
+      Label: Mock Policy Rules
+      Type: STRING
