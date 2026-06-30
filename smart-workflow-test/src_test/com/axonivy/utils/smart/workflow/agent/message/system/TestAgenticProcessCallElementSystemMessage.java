@@ -1,7 +1,6 @@
 package com.axonivy.utils.smart.workflow.agent.message.system;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -28,7 +27,7 @@ class TestAgenticProcessCallElementSystemMessage {
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
   @BeforeEach
-  void setup(AppFixture fixture, ResourceResponder responder) {
+  void setup(AppFixture fixture, ResourceResponder responder) { 
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("systemMessage"));
     fixture.var(OpenAiConf.API_KEY, "");
     MockOpenAI.defineChat(_ -> responder.send("response.json"));
