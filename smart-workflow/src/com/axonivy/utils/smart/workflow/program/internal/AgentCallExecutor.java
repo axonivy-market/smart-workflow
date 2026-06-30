@@ -1,7 +1,5 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
-import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +16,7 @@ import com.axonivy.utils.smart.workflow.memory.id.IdStore;
 import com.axonivy.utils.smart.workflow.memory.id.ProcessDataField;
 import com.axonivy.utils.smart.workflow.memory.store.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
@@ -149,6 +148,7 @@ public class AgentCallExecutor {
     var providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var provider = ChatModelFactory.getProviderOrDefault(providerName);
+    var agentName = resolveElementName();
     var modelOptions = options()
         .modelName(model)
         .structuredOutput(structured)
@@ -156,8 +156,20 @@ public class AgentCallExecutor {
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);
     var modelName = chatModel.defaultRequestParameters().modelName();
-    AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName)))
+    AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName), agentName))
       .forEach(agentBuilder::registerListener);
+  }
+
+  private String resolveElementName() {
+    try {
+      return context.script()
+          .executeExpression(
+              "ch.ivyteam.ivy.bpm.engine.restricted.model.IProcessElement.current().getName()",
+              String.class)
+          .orElse("");
+    } catch (Exception e) {
+      return "";
+    }
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter) {

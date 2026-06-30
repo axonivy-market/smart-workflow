@@ -1,8 +1,12 @@
 package com.axonivy.utils.smart.workflow.governance.history.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
+import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -26,6 +30,8 @@ public class AgentConversationEntry {
   private String caseUuid;
   private String taskUuid;
   private String agentId;
+  private String agentName;
+  private String processName;
   private String messagesJson;
   private String tokenUsageJson;
   private String lastUpdated;
@@ -41,6 +47,12 @@ public class AgentConversationEntry {
   public String getAgentId() { return agentId; }
   public void setAgentId(String agentId) { this.agentId = agentId; }
 
+  public String getAgentName() { return agentName; }
+  public void setAgentName(String agentName) { this.agentName = agentName; }
+
+  public String getProcessName() { return processName; }
+  public void setProcessName(String processName) { this.processName = processName; }
+
   public String getMessagesJson() { return messagesJson; }
   public void setMessagesJson(String messagesJson) { this.messagesJson = messagesJson; }
 
@@ -49,6 +61,38 @@ public class AgentConversationEntry {
 
   public String getLastUpdated() { return lastUpdated; }
   public void setLastUpdated(String lastUpdated) { this.lastUpdated = lastUpdated; }
+
+  @JsonIgnore
+  public long getCaseId() { return 0L; }
+
+  @JsonIgnore
+  public String getLastUpdatedRaw() { return lastUpdated != null ? lastUpdated : ""; }
+
+  @JsonIgnore
+  public String getLastUpdatedText() {
+    if (lastUpdated == null) return "—";
+    try {
+      return LocalDateTime.parse(lastUpdated)
+          .format(DatePatternUtils.dateTimeFormatter());
+    } catch (Exception e) {
+      return lastUpdated;
+    }
+  }
+
+  @JsonIgnore
+  public int getMessageCount() {
+    return ChatHistoryJsonParser.getMessageCount(this);
+  }
+
+  @JsonIgnore
+  public int getTotalTokens() {
+    return ChatHistoryJsonParser.getTotalTokens(this);
+  }
+
+  @JsonIgnore
+  public String getModelName() {
+    return ChatHistoryJsonParser.getModelName(this);
+  }
 
   public String getToolExecutionsJson() { return toolExecutionsJson; }
   public void setToolExecutionsJson(String toolExecutionsJson) { this.toolExecutionsJson = toolExecutionsJson; }
