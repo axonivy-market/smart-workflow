@@ -1,0 +1,31 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "AgentProcessingStep",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent",
+  "fields" : [ {
+    "name" : "stepKey"
+  }, {
+    "name" : "name",
+    "comment" : "Step title, e.g. 'Document Extraction'"
+  }, {
+    "name" : "status",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AgentStepStatus",
+    "comment" : "Current status of this processing step: PENDING, RUNNING, COMPLETED, or FAILED"
+  }, {
+    "name" : "startedAt",
+    "type" : "Long",
+    "comment" : "Timestamp (epoch millis) when this step started processing"
+  }, {
+    "name" : "completedAt",
+    "type" : "Long",
+    "comment" : "Timestamp (epoch millis) when this step finished processing"
+  }, {
+    "name" : "durationMs",
+    "type" : "Long",
+    "comment" : "Elapsed time in milliseconds from start to completion"
+  }, {
+    "name" : "logLines",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.LogLine>",
+    "comment" : "Detail log lines for this step, each with a severity and message"
+  } ]
+}

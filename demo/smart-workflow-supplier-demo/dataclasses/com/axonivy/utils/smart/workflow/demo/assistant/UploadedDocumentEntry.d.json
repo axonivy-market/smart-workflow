@@ -1,0 +1,11 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "UploadedDocumentEntry",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.assistant",
+  "fields" : [ {
+    "name" : "fileName"
+  }, {
+    "name" : "data",
+    "type" : "byte[]"
+  } ]
+}

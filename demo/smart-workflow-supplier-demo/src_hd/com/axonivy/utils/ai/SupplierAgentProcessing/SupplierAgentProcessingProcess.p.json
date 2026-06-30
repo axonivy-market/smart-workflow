@@ -1,0 +1,82 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19FF001122330002",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.SupplierAgentProcessing.SupplierAgentProcessingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start(OnboardingRequest)",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "params" : [
+            { "name" : "request", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest", "desc" : "" }
+          ],
+          "map" : {
+            "out.request" : "param.request"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "agentResponse", "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse", "desc" : "" },
+            { "name" : "routingDecision", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.agentResponse" : "in.agentResponse",
+            "result.routingDecision" : "in.routingDecision"
+          }
+        },
+        "guid" : "19FF001122330021"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "c01", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      }
+    }, {
+      "id" : "f53",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "close()",
+      "config" : {
+        "signature" : "close",
+        "guid" : "19FF001122330022"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f54", "to" : "f52" }
+      ]
+    }, {
+      "id" : "f52",
+      "type" : "Script",
+      "name" : "Sync Routing Decision",
+      "config" : {
+        "output" : {
+          "code" : "in.routingDecision = in.agentResponse != null ? in.agentResponse.getRoutingDecision() : null;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "c52", "to" : "f51" }
+      ]
+    }, {
+      "id" : "f51",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 160 }
+      }
+    } ]
+}

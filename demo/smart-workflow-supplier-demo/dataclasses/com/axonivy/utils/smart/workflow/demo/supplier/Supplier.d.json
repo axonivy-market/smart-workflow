@@ -1,0 +1,55 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "Supplier",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier",
+  "fields" : [ {
+    "name" : "supplierId",
+    "comment" : "Unique supplier identifier"
+  }, {
+    "name" : "businessName",
+    "comment" : "Legal business name of the supplier"
+  }, {
+    "name" : "legalForm",
+    "comment" : "Legal form, e.g. GmbH, AG, SE"
+  }, {
+    "name" : "vatId",
+    "comment" : "VAT identification number, e.g. DE123456789"
+  }, {
+    "name" : "commercialRegisterNo",
+    "comment" : "Commercial register number, e.g. HRB 123456"
+  }, {
+    "name" : "businessPurpose",
+    "comment" : "Business purpose or category, e.g. Logistics / Transport"
+  }, {
+    "name" : "businessAddress",
+    "type" : "com.axonivy.utils.smart.workflow.demo.common.Address",
+    "comment" : "Primary business address"
+  }, {
+    "name" : "phone",
+    "comment" : "Main phone number"
+  }, {
+    "name" : "email",
+    "comment" : "Main email address"
+  }, {
+    "name" : "website",
+    "comment" : "Company website URL"
+  }, {
+    "name" : "primaryContact",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.SupplierContact",
+    "comment" : "Primary contact person at the supplier"
+  }, {
+    "name" : "banking",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.SupplierBanking",
+    "comment" : "Banking and payment information"
+  }, {
+    "name" : "certifications",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.SupplierCertification>",
+    "comment" : "List of certifications and compliance documents"
+  }, {
+    "name" : "requiredDocumentIds",
+    "type" : "java.util.List<String>"
+  }, {
+    "name" : "certificationDocumentIds",
+    "type" : "java.util.List<String>"
+  } ]
+}

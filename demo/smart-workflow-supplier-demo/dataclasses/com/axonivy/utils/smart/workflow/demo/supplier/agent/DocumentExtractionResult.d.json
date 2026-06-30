@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "DocumentExtractionResult",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.agent",
+  "fields" : [ {
+    "name" : "documentSummaries",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.agent.ExtractedDoc>",
+    "comment" : "List of extracted documents produced by the AI extraction step"
+  }, {
+    "name" : "processingStep",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.AgentProcessingStep",
+    "comment" : "Processing step metadata set after tool execution"
+  } ]
+}

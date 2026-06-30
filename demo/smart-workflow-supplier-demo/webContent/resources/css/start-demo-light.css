@@ -1,0 +1,50 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Start Demo — light-mode variables.
+   Loaded dynamically via start-demo-#{ivyFreyaTheme.mode}.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Surfaces & text ───────────────────────────────────────────── */
+  --sd-title:           #1e293b;
+  --sd-body:            #475569;
+  --sd-muted:           #94a3b8;
+  --sd-warning-color:   #CA8A04;
+  --sd-text-strong:     #334155;
+  --sd-surface:         #ffffff;
+  --sd-surface-deep:    #f8fafc;
+  --sd-border:          #e2e8f0;
+  --sd-border-subtle:   #f1f5f9;
+  --sd-shadow:          0 2px 16px rgba(0,0,0,.06);
+  --sd-accent-border:   #e0e7ff;
+
+  /* ── Download header ────────────────────────────────────────────── */
+  --sd-download-header-bg: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%);
+
+  /* ── Before / After comparison ──────────────────────────────────── */
+  --sd-compare-before-bg:           #fff5f5;
+  --sd-compare-before-border:       #fecaca;
+  --sd-compare-before-header-color: #b91c1c;
+  --sd-compare-before-icon:         #ef4444;
+  --sd-compare-after-bg:            #f0fdf4;
+  --sd-compare-after-border:        #bbf7d0;
+  --sd-compare-after-header-color:  #15803d;
+  --sd-compare-after-icon:          #22c55e;
+
+  /* ── Stat before / after ────────────────────────────────────────── */
+  --sd-stat-before-color:  #dc2626;
+  --sd-stat-after-color:   #059669;
+
+  /* ── Done banner ────────────────────────────────────────────────── */
+  --sd-done-banner-bg:     #d1fae5;
+  --sd-done-banner-border: #6ee7b7;
+  --sd-done-banner-color:  #065f46;
+  --sd-done-banner-icon:   #059669;
+
+  /* ── RAG Knowledge chunks ───────────────────────────────────────── */
+  --sd-chunk-accent:       #0d9488;
+  --sd-chunk-idx-bg:       #0d9488;
+  --sd-chunk-idx-color:    #ffffff;
+  --sd-chunk-banner-bg:    #f0fdfa;
+  --sd-chunk-banner-border:#99f6e4;
+  --sd-chunk-banner-color: #0f766e;
+}

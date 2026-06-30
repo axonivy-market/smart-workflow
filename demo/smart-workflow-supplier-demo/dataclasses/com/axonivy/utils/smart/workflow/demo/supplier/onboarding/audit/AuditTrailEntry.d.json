@@ -1,0 +1,48 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "AuditTrailEntry",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit",
+  "fields" : [ {
+    "name" : "timestamp",
+    "comment" : "Event timestamp in ISO-8601 text format"
+  }, {
+    "name" : "actor",
+    "comment" : "Display name of the actor"
+  }, {
+    "name" : "actorType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AuditActorType",
+    "comment" : "Actor type such as USER, AGENT, SYSTEM"
+  }, {
+    "name" : "action",
+    "comment" : "Functional action summary shown to users"
+  }, {
+    "name" : "technicalDetail",
+    "comment" : "Optional technical detail, tool, or source reference"
+  }, {
+    "name" : "declineReasons",
+    "type" : "java.util.List<String>"
+  }, {
+    "name" : "decision",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalDecision"
+  }, {
+    "name" : "stage",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalStage"
+  }, {
+    "name" : "comment"
+  }, {
+    "name" : "resolvedItems",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.ResolvedClarificationItem>"
+  }, {
+    "name" : "entryType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AuditEntryType"
+  }, {
+    "name" : "requestSummaryLines",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.RequestSummaryLine>"
+  }, {
+    "name" : "findings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding>"
+  }, {
+    "name" : "matchedSupplierNames",
+    "type" : "java.util.List<String>"
+  } ]
+}
