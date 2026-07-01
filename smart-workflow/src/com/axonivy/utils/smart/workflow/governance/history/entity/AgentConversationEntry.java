@@ -1,12 +1,21 @@
 package com.axonivy.utils.smart.workflow.governance.history.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
+import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser.TokenUsage;
+import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import ch.ivyteam.ivy.environment.Ivy;
+
 public class AgentConversationEntry {
+
+  private static final String SERIALIZATION_FAILURE_MESSAGE = "AgentConversationEntry: failed to serialize %s for caseUuid=%s: %s";
 
   public record ToolExecution(
       @JsonProperty("toolName")   String toolName,
@@ -26,11 +35,20 @@ public class AgentConversationEntry {
   private String caseUuid;
   private String taskUuid;
   private String agentId;
+  private String agentName;
+  private String processName;
   private String messagesJson;
   private String tokenUsageJson;
   private String lastUpdated;
   private String toolExecutionsJson;
   private String guardrailExecutionsJson;
+
+  @JsonIgnore
+  private TokenUsage tokenUsage;
+  @JsonIgnore
+  private List<ToolExecution> toolExecutionsCache;
+  @JsonIgnore
+  private List<GuardrailExecution> guardrailExecutionsCache;
 
   public String getCaseUuid() { return caseUuid; }
   public void setCaseUuid(String caseUuid) { this.caseUuid = caseUuid; }
@@ -41,42 +59,109 @@ public class AgentConversationEntry {
   public String getAgentId() { return agentId; }
   public void setAgentId(String agentId) { this.agentId = agentId; }
 
+  public String getAgentName() { return agentName; }
+  public void setAgentName(String agentName) { this.agentName = agentName; }
+
+  public String getProcessName() { return processName; }
+  public void setProcessName(String processName) { this.processName = processName; }
+
   public String getMessagesJson() { return messagesJson; }
   public void setMessagesJson(String messagesJson) { this.messagesJson = messagesJson; }
 
   public String getTokenUsageJson() { return tokenUsageJson; }
-  public void setTokenUsageJson(String tokenUsageJson) { this.tokenUsageJson = tokenUsageJson; }
+  public void setTokenUsageJson(String tokenUsageJson) {
+    this.tokenUsageJson = tokenUsageJson;
+    this.tokenUsage = null;
+  }
 
   public String getLastUpdated() { return lastUpdated; }
   public void setLastUpdated(String lastUpdated) { this.lastUpdated = lastUpdated; }
 
+  @JsonIgnore
+  public String getLastUpdatedRaw() { return lastUpdated != null ? lastUpdated : ""; }
+
+  @JsonIgnore
+  public String getLastUpdatedText() {
+    if (lastUpdated == null) return "—";
+    try {
+      return LocalDateTime.parse(lastUpdated)
+          .format(DatePatternUtils.dateTimeFormatter());
+    } catch (Exception e) {
+      return lastUpdated;
+    }
+  }
+
+  @JsonIgnore
+  public int getMessageCount() {
+    return ChatHistoryJsonParser.getMessageCount(this);
+  }
+
+  @JsonIgnore
+  public int getTotalTokens() {
+    return tokenUsage().totalTokens();
+  }
+
+  @JsonIgnore
+  public String getModelName() {
+    return tokenUsage().modelName();
+  }
+
+  private TokenUsage tokenUsage() {
+    if (tokenUsage == null) {
+      tokenUsage = ChatHistoryJsonParser.parseTokenUsage(this);
+    }
+    return tokenUsage;
+  }
+
   public String getToolExecutionsJson() { return toolExecutionsJson; }
-  public void setToolExecutionsJson(String toolExecutionsJson) { this.toolExecutionsJson = toolExecutionsJson; }
+  public void setToolExecutionsJson(String toolExecutionsJson) {
+    this.toolExecutionsJson = toolExecutionsJson;
+    this.toolExecutionsCache = null;
+  }
 
   public List<ToolExecution> getToolExecutions() {
-    return JsonUtils.jsonValueToEntities(toolExecutionsJson, ToolExecution.class);
+    if (toolExecutionsCache == null) {
+      toolExecutionsCache = List.copyOf(JsonUtils.jsonValueToEntities(toolExecutionsJson, ToolExecution.class));
+    }
+    return toolExecutionsCache;
   }
 
   public void setToolExecutions(List<ToolExecution> toolExecutions) {
     try {
       toolExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(toolExecutions);
+      toolExecutionsCache = List.copyOf(toolExecutions);
     } catch (JsonProcessingException e) {
+      logSerializationFailure("toolExecutions", e);
       toolExecutionsJson = null;
+      toolExecutionsCache = null;
     }
   }
 
   public String getGuardrailExecutionsJson() { return guardrailExecutionsJson; }
-  public void setGuardrailExecutionsJson(String guardrailExecutionsJson) { this.guardrailExecutionsJson = guardrailExecutionsJson; }
+  public void setGuardrailExecutionsJson(String guardrailExecutionsJson) {
+    this.guardrailExecutionsJson = guardrailExecutionsJson;
+    this.guardrailExecutionsCache = null;
+  }
 
   public List<GuardrailExecution> getGuardrailExecutions() {
-    return JsonUtils.jsonValueToEntities(guardrailExecutionsJson, GuardrailExecution.class);
+    if (guardrailExecutionsCache == null) {
+      guardrailExecutionsCache = List.copyOf(JsonUtils.jsonValueToEntities(guardrailExecutionsJson, GuardrailExecution.class));
+    }
+    return guardrailExecutionsCache;
   }
 
   public void setGuardrailExecutions(List<GuardrailExecution> guardrailExecutions) {
     try {
       guardrailExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(guardrailExecutions);
+      guardrailExecutionsCache = List.copyOf(guardrailExecutions);
     } catch (JsonProcessingException e) {
+      logSerializationFailure("guardrailExecutions", e);
       guardrailExecutionsJson = null;
+      guardrailExecutionsCache = null;
     }
+  }
+
+  private void logSerializationFailure(String field, JsonProcessingException e) {
+    Ivy.log().warn(String.format(SERIALIZATION_FAILURE_MESSAGE, field, caseUuid, e.getMessage()));
   }
 }
