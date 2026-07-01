@@ -63,9 +63,9 @@ public class TestAgentConversationEntry {
   }
 
   @Test
-  void getMessageCount_withNullJson_returnsZero() {
+  void nullMessagesJson_getMessageCount_returnsInvalid() {
     var entry = new AgentConversationEntry();
-    assertThat(entry.getMessageCount()).isEqualTo(0);
+    assertThat(entry.getMessageCount()).isEqualTo(-1);
   }
 
   // ── getTotalTokens (delegates to ChatHistoryJsonParser) ──────────────────────

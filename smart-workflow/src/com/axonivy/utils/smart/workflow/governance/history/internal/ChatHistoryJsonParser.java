@@ -23,14 +23,14 @@ public class ChatHistoryJsonParser {
         .map(json -> {
           try {
             JsonNode array = JsonUtils.getObjectMapper().readTree(json);
-            return array.isArray() ? array.size() : 0;
+            return array.isArray() ? array.size() : -1;
           } catch (IOException e) {
             Ivy.log().warn(String.format("ChatHistoryJsonParser: failed to parse messagesJson for caseUuid=%s: %s",
                 entry.getCaseUuid(), e.getMessage()));
-            return 0;
+            return -1;
           }
         })
-        .orElse(0);
+        .orElse(-1);
   }
 
   public static int getTotalTokens(AgentConversationEntry entry) {
