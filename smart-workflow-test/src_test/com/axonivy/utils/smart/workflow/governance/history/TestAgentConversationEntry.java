@@ -11,8 +11,6 @@ import ch.ivyteam.ivy.environment.IvyTest;
 @IvyTest
 public class TestAgentConversationEntry {
 
-  // ── getLastUpdatedRaw ────────────────────────────────────────────────────────
-
   @Test
   void getLastUpdatedRaw_null_returnsEmpty() {
     var entry = new AgentConversationEntry();
@@ -25,8 +23,6 @@ public class TestAgentConversationEntry {
     entry.setLastUpdated("2025-01-15T10:30:00");
     assertThat(entry.getLastUpdatedRaw()).isEqualTo("2025-01-15T10:30:00");
   }
-
-  // ── getLastUpdatedText ───────────────────────────────────────────────────────
 
   @Test
   void getLastUpdatedText_null_returnsDash() {
@@ -42,7 +38,7 @@ public class TestAgentConversationEntry {
     assertThat(text)
         .isNotNull()
         .isNotEqualTo("—")
-        .isNotEqualTo("2025-06-15T14:30:00") // formatted, not raw ISO
+        .isNotEqualTo("2025-06-15T14:30:00")
         .contains("2025");
   }
 
@@ -53,8 +49,6 @@ public class TestAgentConversationEntry {
     assertThat(entry.getLastUpdatedText()).isEqualTo("not-a-date");
   }
 
-  // ── getMessageCount (delegates to ChatHistoryJsonParser) ─────────────────────
-
   @Test
   void getMessageCount_withValidJson_returnsCount() {
     var entry = new AgentConversationEntry();
@@ -63,12 +57,10 @@ public class TestAgentConversationEntry {
   }
 
   @Test
-  void getMessageCount_withNullJson_returnsZero() {
+  void nullMessagesJson_getMessageCount_returnsInvalid() {
     var entry = new AgentConversationEntry();
-    assertThat(entry.getMessageCount()).isEqualTo(0);
+    assertThat(entry.getMessageCount()).isEqualTo(-1);
   }
-
-  // ── getTotalTokens (delegates to ChatHistoryJsonParser) ──────────────────────
 
   @Test
   void getTotalTokens_withValidJson_returnsSum() {
@@ -83,8 +75,6 @@ public class TestAgentConversationEntry {
     assertThat(entry.getTotalTokens()).isEqualTo(0);
   }
 
-  // ── getModelName (delegates to ChatHistoryJsonParser) ────────────────────────
-
   @Test
   void getModelName_withValidJson_returnsFirstModelName() {
     var entry = new AgentConversationEntry();
@@ -97,8 +87,6 @@ public class TestAgentConversationEntry {
     var entry = new AgentConversationEntry();
     assertThat(entry.getModelName()).isEqualTo(ChatHistoryJsonParser.UNKNOWN_MODEL);
   }
-
-  // ── agentName / processName fields ───────────────────────────────────────────
 
   @Test
   void agentNameAndProcessName_setAndGetCorrectly() {

@@ -27,7 +27,7 @@ class TestAgenticProcessCallElementSystemMessage {
   LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
 
   @BeforeEach
-  void setup(AppFixture fixture, ResourceResponder responder) { 
+  void setup(AppFixture fixture, ResourceResponder responder) {
     fixture.var(OpenAiConf.BASE_URL, OpenAiTestClient.localMockApiUrl("systemMessage"));
     fixture.var(OpenAiConf.API_KEY, "");
     MockOpenAI.defineChat(_ -> responder.send("response.json"));

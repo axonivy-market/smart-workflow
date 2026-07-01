@@ -15,6 +15,10 @@ public class ChatHistoryJsonParser {
   private static final String FIELD_MODEL_NAME = "modelName";
   public static final String UNKNOWN_MODEL = "unknown";
 
+  public record TokenUsage(int totalTokens, String modelName) {
+    public static final TokenUsage EMPTY = new TokenUsage(0, UNKNOWN_MODEL);
+  }
+
   private ChatHistoryJsonParser() {}
 
   public static int getMessageCount(AgentConversationEntry entry) {
@@ -23,24 +27,24 @@ public class ChatHistoryJsonParser {
         .map(json -> {
           try {
             JsonNode array = JsonUtils.getObjectMapper().readTree(json);
-            return array.isArray() ? array.size() : 0;
+            return array.isArray() ? array.size() : -1;
           } catch (IOException e) {
             Ivy.log().warn(String.format("ChatHistoryJsonParser: failed to parse messagesJson for caseUuid=%s: %s",
                 entry.getCaseUuid(), e.getMessage()));
-            return 0;
+            return -1;
           }
         })
-        .orElse(0);
+        .orElse(-1);
   }
 
-  public static int getTotalTokens(AgentConversationEntry entry) {
+  public static TokenUsage parseTokenUsage(AgentConversationEntry entry) {
     return Optional.ofNullable(entry)
         .map(AgentConversationEntry::getTokenUsageJson)
         .map(json -> {
           try {
             JsonNode array = JsonUtils.getObjectMapper().readTree(json);
             if (!array.isArray()) {
-              return 0;
+              return TokenUsage.EMPTY;
             }
             int total = 0;
             for (JsonNode node : array) {
@@ -49,33 +53,28 @@ public class ChatHistoryJsonParser {
                 total += tokens.intValue();
               }
             }
-            return total;
+            String modelName = UNKNOWN_MODEL;
+            if (array.size() > 0) {
+              JsonNode modelNode = array.get(0).get(FIELD_MODEL_NAME);
+              if (modelNode != null && !modelNode.isNull()) {
+                modelName = modelNode.asText();
+              }
+            }
+            return new TokenUsage(total, modelName);
           } catch (IOException e) {
             Ivy.log().warn(String.format("ChatHistoryJsonParser: failed to parse tokenUsageJson for caseUuid=%s: %s",
                 entry.getCaseUuid(), e.getMessage()));
-            return 0;
+            return TokenUsage.EMPTY;
           }
         })
-        .orElse(0);
+        .orElse(TokenUsage.EMPTY);
+  }
+
+  public static int getTotalTokens(AgentConversationEntry entry) {
+    return parseTokenUsage(entry).totalTokens();
   }
 
   public static String getModelName(AgentConversationEntry entry) {
-    return Optional.ofNullable(entry)
-        .map(AgentConversationEntry::getTokenUsageJson)
-        .map(json -> {
-          try {
-            JsonNode array = JsonUtils.getObjectMapper().readTree(json);
-            if (!array.isArray() || !array.elements().hasNext()) {
-              return UNKNOWN_MODEL;
-            }
-            JsonNode modelNode = array.get(0).get(FIELD_MODEL_NAME);
-            return modelNode != null && !modelNode.isNull() ? modelNode.asText() : UNKNOWN_MODEL;
-          } catch (IOException e) {
-            Ivy.log().warn(String.format("ChatHistoryJsonParser: failed to parse tokenUsageJson for caseUuid=%s: %s",
-                entry.getCaseUuid(), e.getMessage()));
-            return UNKNOWN_MODEL;
-          }
-        })
-        .orElse(UNKNOWN_MODEL);
+    return parseTokenUsage(entry).modelName();
   }
 }

@@ -1,11 +1,8 @@
 package com.axonivy.utils.smart.workflow.governance.history.listener;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
@@ -13,6 +10,7 @@ import com.axonivy.utils.smart.workflow.observability.AiListenerProvider;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.workflow.ICase;
 import dev.langchain4j.observability.api.listener.AiServiceListener;
 
 public class ChatHistoryListener implements AiListenerProvider {
@@ -34,14 +32,9 @@ public class ChatHistoryListener implements AiListenerProvider {
     }
     String caseUuid = Ivy.wfCase().uuid();
     String taskUuid = Ivy.wfTask().uuid();
-    String agentId = StringUtils.isBlank(agentName)
-        ? UUID.randomUUID().toString()
-        : UUID.nameUUIDFromBytes(agentName.getBytes(StandardCharsets.UTF_8)).toString();
+    String agentId = generateAgentId(agentName);
 
-    String processName = Optional.ofNullable(Ivy.wfCase())
-        .map(c -> c.getProcessStart())
-        .map(ps -> StringUtils.defaultIfBlank(ps.getName(), ps.getRequestPath()))
-        .orElse("");
+    String processName = getProcessName();
 
     var repo = new ChatHistoryRepository(caseUuid, taskUuid, agentId, agentName, processName, new IvyRepoHistoryStorage());
     return List.of(
@@ -51,4 +44,20 @@ public class ChatHistoryListener implements AiListenerProvider {
         new OutputGuardrailListener(repo));
   }
 
+  private static String generateAgentId(String agentName) {
+    return Optional.ofNullable(agentName)
+        .filter(s -> !s.isBlank())
+        .map(UUID::fromString)
+        .map(UUID::toString)
+        .orElseGet(() -> UUID.randomUUID().toString());
+  }
+
+  private static String getProcessName() {
+    return Optional.ofNullable(Ivy.wfCase())
+        .map(ICase::getProcessStart)
+        .map(process -> Optional.ofNullable(process.getName())
+            .filter(name -> !name.isBlank())
+            .orElseGet(process::getRequestPath))
+        .orElse("");
+  }
 }

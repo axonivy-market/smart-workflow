@@ -23,19 +23,19 @@ public class TestChatHistoryJsonParser {
   }
 
   @Test
-  void getMessageCount_returnsZero_forNullInput() {
-    assertThat(ChatHistoryJsonParser.getMessageCount(null)).isEqualTo(0);
-    assertThat(ChatHistoryJsonParser.getMessageCount(new AgentConversationEntry())).isEqualTo(0);
+  void nullInput_getMessageCount_returnsInvalid() {
+    assertThat(ChatHistoryJsonParser.getMessageCount(null)).isEqualTo(-1);
+    assertThat(ChatHistoryJsonParser.getMessageCount(new AgentConversationEntry())).isEqualTo(-1);
   }
 
   @Test
-  void getMessageCount_notAnArray_returnsZero() {
-    assertThat(ChatHistoryJsonParser.getMessageCount(entryWithMessages("{\"type\":\"USER\"}"))).isEqualTo(0);
+  void notAnArray_getMessageCount_returnsInvalid() {
+    assertThat(ChatHistoryJsonParser.getMessageCount(entryWithMessages("{\"type\":\"USER\"}"))).isEqualTo(-1);
   }
 
   @Test
-  void getMessageCount_invalidJson_returnsZero() {
-    assertThat(ChatHistoryJsonParser.getMessageCount(entryWithMessages("NOT_VALID_JSON"))).isEqualTo(0);
+  void invalidJson_getMessageCount_returnsInvalid() {
+    assertThat(ChatHistoryJsonParser.getMessageCount(entryWithMessages("NOT_VALID_JSON"))).isEqualTo(-1);
   }
 
   @Test
