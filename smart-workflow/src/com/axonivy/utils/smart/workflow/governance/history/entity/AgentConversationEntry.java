@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
+import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser.TokenUsage;
 import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,6 +38,9 @@ public class AgentConversationEntry {
   private String lastUpdated;
   private String toolExecutionsJson;
   private String guardrailExecutionsJson;
+
+  @JsonIgnore
+  private TokenUsage tokenUsage;
 
   public String getCaseUuid() { return caseUuid; }
   public void setCaseUuid(String caseUuid) { this.caseUuid = caseUuid; }
@@ -83,12 +87,19 @@ public class AgentConversationEntry {
 
   @JsonIgnore
   public int getTotalTokens() {
-    return ChatHistoryJsonParser.getTotalTokens(this);
+    return tokenUsage().totalTokens();
   }
 
   @JsonIgnore
   public String getModelName() {
-    return ChatHistoryJsonParser.getModelName(this);
+    return tokenUsage().modelName();
+  }
+
+  private TokenUsage tokenUsage() {
+    if (tokenUsage == null) {
+      tokenUsage = ChatHistoryJsonParser.parseTokenUsage(this);
+    }
+    return tokenUsage;
   }
 
   public String getToolExecutionsJson() { return toolExecutionsJson; }
