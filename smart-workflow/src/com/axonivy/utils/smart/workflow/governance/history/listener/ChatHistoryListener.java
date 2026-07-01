@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.history.listener;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,9 +48,16 @@ public class ChatHistoryListener implements AiListenerProvider {
   private static String generateAgentId(String agentName) {
     return Optional.ofNullable(agentName)
         .filter(s -> !s.isBlank())
-        .map(UUID::fromString)
-        .map(UUID::toString)
+        .map(ChatHistoryListener::toUuid)
         .orElseGet(() -> UUID.randomUUID().toString());
+  }
+
+  private static String toUuid(String name) {
+    try {
+      return UUID.fromString(name).toString();
+    } catch (IllegalArgumentException e) {
+      return UUID.nameUUIDFromBytes(name.getBytes(StandardCharsets.UTF_8)).toString();
+    }
   }
 
   private static String getProcessName() {
