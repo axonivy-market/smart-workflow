@@ -63,9 +63,6 @@ public class AgentConversationEntry {
   public void setLastUpdated(String lastUpdated) { this.lastUpdated = lastUpdated; }
 
   @JsonIgnore
-  public long getCaseId() { return 0L; }
-
-  @JsonIgnore
   public String getLastUpdatedRaw() { return lastUpdated != null ? lastUpdated : ""; }
 
   @JsonIgnore
