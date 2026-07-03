@@ -28,4 +28,24 @@ Dialogs:
               ColumnTokens: Jetons
               ColumnModel: Modèle
               ViewDetails: Voir les détails
-              AnalyticsHeader: 'Analyse d''Utilisation des Tokens'
+            Analytics:
+              SectionTitle: 'Analyse d''Utilisation des Tokens'
+              KpiTotalSessions: Sessions totales
+              KpiTotalTokens: Tokens totaux
+              KpiAvgResponseTime: Temps de réponse moyen
+              KpiTopModel: Modèle principal
+              UnitMs: ms
+              ChartTokenTimeline: 'Utilisation des tokens dans le temps'
+              ChartModelDist: Distribution des modèles
+              ChartTokenStacked: 'Tokens d''entrée vs sortie par jour'
+              ChartTopCases: Top processus par utilisation de tokens
+              ChartResponseTime: Distribution du temps de réponse
+              DatasetTotalTokens: Tokens totaux
+              DatasetInputTokens: 'Tokens d''entrée'
+              DatasetOutputTokens: Tokens de sortie
+              DatasetSessions: Sessions
+              BucketUnder5s: '< 5 s'
+              Bucket5to10s: '5–10 s'
+              Bucket10to15s: '10–15 s'
+              BucketOver15s: '> 15 s'
+              UnknownProcess: inconnu
