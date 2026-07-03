@@ -1,13 +1,8 @@
 package com.axonivy.utils.smart.workflow.governance.history.entity;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
-import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser.TokenUsage;
-import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -43,13 +38,6 @@ public class AgentConversationEntry {
   private String toolExecutionsJson;
   private String guardrailExecutionsJson;
 
-  @JsonIgnore
-  private TokenUsage tokenUsage;
-  @JsonIgnore
-  private List<ToolExecution> toolExecutionsCache;
-  @JsonIgnore
-  private List<GuardrailExecution> guardrailExecutionsCache;
-
   public String getCaseUuid() { return caseUuid; }
   public void setCaseUuid(String caseUuid) { this.caseUuid = caseUuid; }
 
@@ -69,95 +57,40 @@ public class AgentConversationEntry {
   public void setMessagesJson(String messagesJson) { this.messagesJson = messagesJson; }
 
   public String getTokenUsageJson() { return tokenUsageJson; }
-  public void setTokenUsageJson(String tokenUsageJson) {
-    this.tokenUsageJson = tokenUsageJson;
-    this.tokenUsage = null;
-  }
+  public void setTokenUsageJson(String tokenUsageJson) { this.tokenUsageJson = tokenUsageJson; }
 
   public String getLastUpdated() { return lastUpdated; }
   public void setLastUpdated(String lastUpdated) { this.lastUpdated = lastUpdated; }
 
-  @JsonIgnore
-  public String getLastUpdatedRaw() { return lastUpdated != null ? lastUpdated : ""; }
-
-  @JsonIgnore
-  public String getLastUpdatedText() {
-    if (lastUpdated == null) return "—";
-    try {
-      return LocalDateTime.parse(lastUpdated)
-          .format(DatePatternUtils.dateTimeFormatter());
-    } catch (Exception e) {
-      return lastUpdated;
-    }
-  }
-
-  @JsonIgnore
-  public int getMessageCount() {
-    return ChatHistoryJsonParser.getMessageCount(this);
-  }
-
-  @JsonIgnore
-  public int getTotalTokens() {
-    return tokenUsage().totalTokens();
-  }
-
-  @JsonIgnore
-  public String getModelName() {
-    return tokenUsage().modelName();
-  }
-
-  private TokenUsage tokenUsage() {
-    if (tokenUsage == null) {
-      tokenUsage = ChatHistoryJsonParser.parseTokenUsage(this);
-    }
-    return tokenUsage;
-  }
-
   public String getToolExecutionsJson() { return toolExecutionsJson; }
-  public void setToolExecutionsJson(String toolExecutionsJson) {
-    this.toolExecutionsJson = toolExecutionsJson;
-    this.toolExecutionsCache = null;
-  }
+  public void setToolExecutionsJson(String toolExecutionsJson) { this.toolExecutionsJson = toolExecutionsJson; }
 
   public List<ToolExecution> getToolExecutions() {
-    if (toolExecutionsCache == null) {
-      toolExecutionsCache = List.copyOf(JsonUtils.jsonValueToEntities(toolExecutionsJson, ToolExecution.class));
-    }
-    return toolExecutionsCache;
+    return List.copyOf(JsonUtils.jsonValueToEntities(toolExecutionsJson, ToolExecution.class));
   }
 
   public void setToolExecutions(List<ToolExecution> toolExecutions) {
     try {
       toolExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(toolExecutions);
-      toolExecutionsCache = List.copyOf(toolExecutions);
     } catch (JsonProcessingException e) {
       logSerializationFailure("toolExecutions", e);
       toolExecutionsJson = null;
-      toolExecutionsCache = null;
     }
   }
 
   public String getGuardrailExecutionsJson() { return guardrailExecutionsJson; }
-  public void setGuardrailExecutionsJson(String guardrailExecutionsJson) {
-    this.guardrailExecutionsJson = guardrailExecutionsJson;
-    this.guardrailExecutionsCache = null;
-  }
+  public void setGuardrailExecutionsJson(String guardrailExecutionsJson) { this.guardrailExecutionsJson = guardrailExecutionsJson; }
 
   public List<GuardrailExecution> getGuardrailExecutions() {
-    if (guardrailExecutionsCache == null) {
-      guardrailExecutionsCache = List.copyOf(JsonUtils.jsonValueToEntities(guardrailExecutionsJson, GuardrailExecution.class));
-    }
-    return guardrailExecutionsCache;
+    return List.copyOf(JsonUtils.jsonValueToEntities(guardrailExecutionsJson, GuardrailExecution.class));
   }
 
   public void setGuardrailExecutions(List<GuardrailExecution> guardrailExecutions) {
     try {
       guardrailExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(guardrailExecutions);
-      guardrailExecutionsCache = List.copyOf(guardrailExecutions);
     } catch (JsonProcessingException e) {
       logSerializationFailure("guardrailExecutions", e);
       guardrailExecutionsJson = null;
-      guardrailExecutionsCache = null;
     }
   }
 
