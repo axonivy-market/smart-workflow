@@ -38,7 +38,7 @@ public class HistoryEntryFilter {
     if (filterModel == null || filterModel.isBlank()) {
       return true;
     }
-    String stored = entry.getModelName();
+    String stored = ChatHistoryJsonParser.getModelName(entry);
     return stored != null && (stored.contains(filterModel) || filterModel.contains(stored));
   }
 

@@ -88,9 +88,9 @@
                   <p:tooltip value="#{row.taskDisplayName}" for="task-name" trackMouse="true"
                                 rendered="#{row['class'].simpleName eq 'TaskHistoryGroup'}" />
                   <h:outputText id="agent-name" value="#{empty row.agentName ? row.agentId : row.agentName}"
-                                rendered="#{row['class'].simpleName eq 'AgentConversationEntry'}" />
+                                rendered="#{row['class'].simpleName eq 'AgentConversationView'}" />
                   <p:tooltip value="#{empty row.agentName ? row.agentId : row.agentName}" for="agent-name" trackMouse="true"
-                                rendered="#{row['class'].simpleName eq 'AgentConversationEntry'}" />
+                                rendered="#{row['class'].simpleName eq 'AgentConversationView'}" />
                 </p:column>
 
                 <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/GovernanceDashboard/ColumnLastUpdated')}" sortBy="#{row.lastUpdatedRaw}" width="15%">
