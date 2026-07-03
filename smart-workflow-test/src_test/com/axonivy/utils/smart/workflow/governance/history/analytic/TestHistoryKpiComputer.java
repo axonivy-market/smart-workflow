@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.analytic.internal.HistoryAggregator;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.internal.HistoryKpiComputer;
+import com.axonivy.utils.smart.workflow.governance.ui.model.DashboardKpi;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 
