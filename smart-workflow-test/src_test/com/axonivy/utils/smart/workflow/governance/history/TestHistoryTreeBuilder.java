@@ -10,6 +10,7 @@ import org.primefaces.model.TreeNode;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.ui.HistoryTreeBuilder;
+import com.axonivy.utils.smart.workflow.governance.ui.entity.AgentConversationView;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.CaseHistoryGroup;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.TaskHistoryGroup;
 
@@ -47,7 +48,7 @@ public class TestHistoryTreeBuilder {
     assertThat(taskNode.getChildCount()).isOne();
     TreeNode<Object> agentNode = taskNode.getChildren().get(0);
     assertThat(agentNode.getType()).isEqualTo("agent");
-    assertThat(agentNode.getData()).isSameAs(entry);
+    assertThat(agentNode.getData()).isInstanceOf(AgentConversationView.class);
   }
 
   @Test
