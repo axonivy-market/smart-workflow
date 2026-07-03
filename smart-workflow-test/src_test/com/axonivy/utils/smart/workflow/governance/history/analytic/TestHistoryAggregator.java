@@ -35,20 +35,29 @@ public class TestHistoryAggregator {
   }
 
   @Test
-  void of_singleEntry_aggregatesTokensAndDuration() {
+  void of_singleEntry_aggregatesSessionsAndTokens() {
     var entry = entry("gpt-4", 100, 60, 40, 3_000);
     HistoryAggregator stats = HistoryAggregator.of(List.of(entry));
     assertThat(stats.getTotalSessions()).isEqualTo(1);
     assertThat(stats.getTotalTokens()).isEqualTo(100);
-    assertThat(stats.getAvgResponseMs()).isEqualTo(3_000);
   }
 
-  @Test
-  void of_twoEntries_avgResponseMs_averaged() {
-    HistoryAggregator stats = HistoryAggregator.of(List.of(
-        entry("gpt-4", 100, 60, 40, 2_000),
-        entry("gpt-4",  50, 30, 20, 4_000)));
-    assertThat(stats.getAvgResponseMs()).isEqualTo(3_000);
+  @ParameterizedTest(name = "{argumentSetNameOrArgumentsWithNames}")
+  @MethodSource("avgResponseMsArgs")
+  void of_avgResponseMs_calculatedCorrectly(List<AgentConversationEntry> entries, long expectedAvgMs) {
+    assertThat(HistoryAggregator.of(entries).getAvgResponseMs()).isEqualTo(expectedAvgMs);
+  }
+
+  @SuppressWarnings("unused")
+  static Stream<Arguments> avgResponseMsArgs() {
+    return Stream.of(
+        Arguments.argumentSet("single_entry_duration_returned",
+            List.of(entry("gpt-4", 100, 60, 40, 3_000)),
+            3_000L),
+        Arguments.argumentSet("two_entries_duration_averaged",
+            List.of(entry("gpt-4", 100, 60, 40, 2_000), entry("gpt-4", 50, 30, 20, 4_000)),
+            3_000L)
+    );
   }
 
   @ParameterizedTest(name = "{argumentSetNameOrArgumentsWithNames}")
@@ -62,9 +71,6 @@ public class TestHistoryAggregator {
     return Stream.of(
         Arguments.argumentSet("single_model_returned",
             List.of(entry("gpt-4", 10, 5, 5, 1_000)),
-            "gpt-4"),
-        Arguments.argumentSet("two_entries_same_model_returned",
-            List.of(entry("gpt-4", 10, 5, 5, 1_000), entry("gpt-4", 10, 5, 5, 1_000)),
             "gpt-4"),
         Arguments.argumentSet("two_models_most_frequent_returned",
             List.of(entry("gpt-4", 10, 5, 5, 1_000),

@@ -18,10 +18,10 @@ import org.primefaces.model.charts.bar.BarChartOptions;
 
 abstract class AbstractChartBuilder<M> {
 
-  abstract M build(HistoryAggregator stats);
+  public abstract M build(HistoryAggregator stats);
 
-  static final DateTimeFormatter DAY_FMT = DateTimeFormatter.ofPattern("MMM dd");
-  static final String CMS = "/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/";
+  protected static final DateTimeFormatter DAY_FMT = DateTimeFormatter.ofPattern("MMM dd");
+  protected static final String CMS = "/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/";
 
   interface ChartConfig {
     int    MIN_TIMELINE_DAYS = 5;
@@ -33,32 +33,32 @@ abstract class AbstractChartBuilder<M> {
     String STACK_TOKENS      = "tokens";
   }
 
-  BarChartModel barModel(List<String> labels, BarChartOptions options, BarChartDataSet... datasets) {
+  protected BarChartModel barModel(List<String> labels, BarChartOptions options, BarChartDataSet... datasets) {
     BarChartModel model = new BarChartModel();
     model.setData(chartData(labels, datasets));
     model.setOptions(options);
     return model;
   }
 
-  static <V> void padToMinDays(Map<LocalDate, V> map, Supplier<V> zero) {
+  protected static <V> void padToMinDays(Map<LocalDate, V> map, Supplier<V> zero) {
     LocalDate padFrom = map.keySet().stream().max(Comparator.naturalOrder()).orElseGet(LocalDate::now);
     while (map.size() < ChartConfig.MIN_TIMELINE_DAYS) {
       map.put(padFrom = padFrom.plusDays(1), zero.get());
     }
   }
 
-  void applyResponsiveOptions(ChartOptions options) {
+  protected void applyResponsiveOptions(ChartOptions options) {
     options.setResponsive(true);
     options.setMaintainAspectRatio(false);
   }
 
-  CartesianLinearTicks integerTicks() {
+  protected CartesianLinearTicks integerTicks() {
     CartesianLinearTicks ticks = new CartesianLinearTicks();
     ticks.setPrecision(0);
     return ticks;
   }
 
-  CartesianScales xIntegerScales() {
+  protected CartesianScales xIntegerScales() {
     CartesianLinearAxes axis = new CartesianLinearAxes();
     axis.setTicks(integerTicks());
     CartesianScales scales = new CartesianScales();
@@ -66,7 +66,7 @@ abstract class AbstractChartBuilder<M> {
     return scales;
   }
 
-  CartesianScales yIntegerScales() {
+  protected CartesianScales yIntegerScales() {
     CartesianLinearAxes axis = new CartesianLinearAxes();
     axis.setTicks(integerTicks());
     CartesianScales scales = new CartesianScales();
@@ -74,7 +74,7 @@ abstract class AbstractChartBuilder<M> {
     return scales;
   }
 
-  String truncate(String s, int maxLen) {
+  protected String truncate(String s, int maxLen) {
     if (s == null) {
       return "";
     }

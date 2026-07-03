@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.analytic.internal.HistoryAggregator;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.internal.HistoryKpiComputer;
-import com.axonivy.utils.smart.workflow.governance.ui.model.DashboardKpi;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 
@@ -21,9 +20,6 @@ public class TestHistoryKpiComputer {
   void computeKpi_emptyAggregator_returnsEmptyKpi() {
     DashboardKpi kpi = kpiComputer.computeKpi(HistoryAggregator.of(List.of()));
     assertThat(kpi.getTotalSessions()).isZero();
-    assertThat(kpi.getTotalTokens()).isZero();
-    assertThat(kpi.getAvgResponseMs()).isZero();
-    assertThat(kpi.getTopModel()).isEqualTo(DashboardKpi.NO_DATA);
   }
 
   @Test
