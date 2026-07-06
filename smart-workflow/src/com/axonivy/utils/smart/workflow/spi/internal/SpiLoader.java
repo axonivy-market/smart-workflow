@@ -28,11 +28,16 @@ public class SpiLoader {
     return pmvsInScope()
         .flatMap(p -> findImpl(p, type).stream())
         .filter(type::isInstance)
-        .distinct()
+        .collect(Collectors.toMap(
+            impl -> impl.getClass().getName(),
+            impl -> impl,
+            (existing, duplicate) -> existing))
+        .values()
+        .stream()
         .collect(Collectors.toSet());
   }
 
-  private Stream<IProcessModelVersion> pmvsInScope() {
+  protected Stream<IProcessModelVersion> pmvsInScope() {
     return Stream.concat(Stream.of(pmv), pmv.getAllDependentProcessModelVersions());
   }
 
