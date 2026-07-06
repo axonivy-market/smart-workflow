@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
 
 public interface HistoryGroupView {
 
@@ -38,22 +39,23 @@ class HistoryEntryStats implements HistoryGroupView {
     return entries.stream()
         .filter(entry -> entry.getLastUpdated() != null)
         .max(Comparator.comparing(AgentConversationEntry::getLastUpdated))
-        .map(AgentConversationEntry::getLastUpdatedText)
+        .map(e -> new AgentConversationView(e))
+        .map(AgentConversationView::getLastUpdatedText)
         .orElse(NO_DATE);
   }
 
   @Override
   public int getMessageCount() {
-    return entries.stream().mapToInt(AgentConversationEntry::getMessageCount).sum();
+    return entries.stream().mapToInt(e -> ChatHistoryJsonParser.getMessageCount(e)).sum();
   }
 
   @Override
   public int getTotalTokens() {
-    return entries.stream().mapToInt(AgentConversationEntry::getTotalTokens).sum();
+    return entries.stream().mapToInt(e -> ChatHistoryJsonParser.getTotalTokens(e)).sum();
   }
 
   @Override
   public String getModelName() {
-    return entries.isEmpty() ? "unknown" : entries.get(0).getModelName();
+    return entries.isEmpty() ? "unknown" : ChatHistoryJsonParser.getModelName(entries.get(0));
   }
 }

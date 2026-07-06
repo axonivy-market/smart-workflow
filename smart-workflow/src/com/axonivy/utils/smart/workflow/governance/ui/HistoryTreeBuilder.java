@@ -10,6 +10,7 @@ import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistory
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.CaseNode;
 import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.TaskNode;
+import com.axonivy.utils.smart.workflow.governance.ui.entity.AgentConversationView;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.CaseHistoryGroup;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.TaskHistoryGroup;
 import com.axonivy.utils.smart.workflow.governance.ui.enums.HistoryNodeType;
@@ -43,7 +44,7 @@ public class HistoryTreeBuilder {
   }
 
   private static void addAgentNode(AgentNode agentNode, TreeNode<Object> taskTreeNode) {
-    TreeNode<Object> node = new DefaultTreeNode<>(HistoryNodeType.AGENT.value(), agentNode.chat(), taskTreeNode);
+    TreeNode<Object> node = new DefaultTreeNode<>(HistoryNodeType.AGENT.value(), new AgentConversationView(agentNode.chat()), taskTreeNode);
     node.setExpanded(false);
   }
 
