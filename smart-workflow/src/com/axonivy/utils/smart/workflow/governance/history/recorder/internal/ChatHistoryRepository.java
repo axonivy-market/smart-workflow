@@ -29,15 +29,19 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
   private final String caseUuid;
   private final String taskUuid;
   private final String agentId;
+  private final String agentName;
+  private final String processName;
   private final HistoryStorage storage;
 
   private AgentConversationEntry currentEntry;
 
-  public ChatHistoryRepository(String caseUuid, String taskUuid, String agentId, HistoryStorage storage) {
+  public ChatHistoryRepository(String caseUuid, String taskUuid, String agentId, String agentName, String processName, HistoryStorage storage) {
     this.caseUuid = caseUuid;
     this.taskUuid = taskUuid;
     this.agentId = agentId;
     this.storage = storage;
+    this.agentName = agentName;
+    this.processName = processName;
   }
 
   @Override
@@ -73,6 +77,8 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
     entry.setCaseUuid(caseUuid);
     entry.setTaskUuid(taskUuid);
     entry.setAgentId(agentId);
+    entry.setAgentName(agentName);
+    entry.setProcessName(processName);
     return entry;
   }
 
