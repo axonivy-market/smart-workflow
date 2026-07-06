@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+  <p:dialog id="kb-dialog" widgetVar="kbDialog" modal="true"
+            resizable="false" draggable="false"
+            height="50vh" width="70vw"
+            appendTo="@(body)"
+            styleClass="sd-kb-dialog">
+    <f:facet name="header">
+      <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/KbDialogHeader')}</span>
+    </f:facet>
+    <p:tabView>
+
+      <p:tab>
+        <f:facet name="title">
+          <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/KbTabKnowledgeBase')}</span>
+          <span class="sd-kb-count">#{startDemoBean.knowledgeChunks.size()}</span>
+        </f:facet>
+        <div class="sd-kb-panel">
+          <div class="sd-kb-chunks-banner flex align-items-start">
+            <i class="ti ti-info-circle sd-kb-chunks-banner-icon flex-shrink-0 text-base" />
+            <p class="sd-kb-chunks-banner-text">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/KbChunksDesc')}</p>
+          </div>
+          <ui:repeat value="#{startDemoBean.knowledgeChunks}" var="chunk" varStatus="chunkLoop">
+            <div class="sd-kb-chunk">
+              <div class="sd-kb-chunk-header flex align-items-center" onclick="sdKbChunkToggle(this)">
+                <span class="sd-kb-chunk-idx inline-flex justify-content-center align-items-center font-bold flex-shrink-0">#{startDemoBean.formatIndex(chunkLoop.index + 1)}</span>
+                <span class="sd-kb-chunk-title font-semibold">#{chunk.title}</span>
+                <i class="ti ti-chevron-right sd-kb-chunk-chevron flex-shrink-0 text-lg" />
+              </div>
+              <div class="sd-kb-chunk-text">
+                <h:outputText value="#{chunk.body}" />
+              </div>
+            </div>
+          </ui:repeat>
+        </div>
+      </p:tab>
+
+      <p:tab>
+        <f:facet name="title">
+          <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/KbTabCompliance')}</span>
+          <span class="sd-kb-count">#{startDemoBean.complianceRules.size()}</span>
+        </f:facet>
+        <div class="sd-kb-panel">
+          <ui:repeat value="#{startDemoBean.complianceRules}" var="rule">
+            <div class="sd-kb-rule-card">
+              <div class="sd-kb-rule-header flex align-items-center">
+                <span class="sd-kb-rule-id font-bold">#{rule.target}</span>
+                <h:outputText value="#{rule.legalDocumentType.label}"
+                  styleClass="sd-kb-rule-doctype font-bold flex-shrink-0"
+                  rendered="#{rule.legalDocumentType ne null}" />
+                <span class="sd-kb-rule-risk font-bold flex-shrink-0">Risk −#{rule.riskScore}</span>
+              </div>
+              <div class="sd-kb-rule-text">
+                <h:outputText value="#{rule.rule}" />
+              </div>
+            </div>
+          </ui:repeat>
+        </div>
+      </p:tab>
+
+      <p:tab>
+        <f:facet name="title">
+          <i class="ti ti-chart-bar" />
+          <span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/StartDemo/KbTabFinancial')}</span>
+          <span class="sd-kb-count">#{startDemoBean.financialRules.size()}</span>
+        </f:facet>
+        <div class="sd-kb-panel">
+          <ui:repeat value="#{startDemoBean.financialRules}" var="rule">
+            <div class="sd-kb-rule-card">
+              <div class="sd-kb-rule-header flex align-items-center">
+                <span class="sd-kb-rule-id font-bold">#{rule.target}</span>
+                <h:outputText value="#{rule.legalDocumentType.label}"
+                  styleClass="sd-kb-rule-doctype sd-kb-rule-doctype--fin font-bold flex-shrink-0"
+                  rendered="#{rule.legalDocumentType ne null}" />
+                <span class="sd-kb-rule-risk font-bold flex-shrink-0">Risk −#{rule.riskScore}</span>
+              </div>
+              <div class="sd-kb-rule-text">
+                <h:outputText value="#{rule.rule}" />
+              </div>
+            </div>
+          </ui:repeat>
+        </div>
+      </p:tab>
+
+    </p:tabView>
+  </p:dialog>
+
+</ui:composition>

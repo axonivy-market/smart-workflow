@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "RiskScoreResult",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.agent",
+  "fields" : [ {
+    "name" : "riskScore",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.SupplierRiskScore"
+  }, {
+    "name" : "routingDecision",
+    "comment" : "Routing decision based on risk score: APPROVAL, CLARIFICATION, or DECLINE"
+  }, {
+    "name" : "processingStep",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.AgentProcessingStep",
+    "comment" : "Processing step metadata set after tool execution"
+  } ]
+}

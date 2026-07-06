@@ -1,0 +1,22 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ExtractedDoc",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.agent",
+  "fields" : [ {
+    "name" : "fileName",
+    "comment" : "Exact filename of the document, e.g. 'iso9001_cert.pdf'"
+  }, {
+    "name" : "documentType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
+    "comment" : "Document type matching LegalDocumentType enum"
+  }, {
+    "name" : "extractedFieldsSummary",
+    "comment" : "Comma-separated summary of key extracted fields"
+  }, {
+    "name" : "note",
+    "comment" : "Short human-readable log note for the UI"
+  }, {
+    "name" : "content",
+    "comment" : "Full extracted text content of the document"
+  } ]
+}

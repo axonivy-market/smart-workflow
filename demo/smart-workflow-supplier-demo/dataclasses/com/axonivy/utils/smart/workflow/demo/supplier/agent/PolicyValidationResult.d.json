@@ -1,0 +1,26 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "PolicyValidationResult",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.agent",
+  "fields" : [ {
+    "name" : "findings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding>",
+    "comment" : "Validation findings produced by the policy check — each classified as PASSED, WARNING, or FAILURE"
+  }, {
+    "name" : "documentExtractionResult",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult",
+    "comment" : "Document extraction result used as input for policy validation"
+  }, {
+    "name" : "processingStep",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.AgentProcessingStep",
+    "comment" : "Processing step metadata set after tool execution"
+  }, {
+    "name" : "ruleEvaluations",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.SupplierPolicyRule>",
+    "comment" : "Evaluated policy rules"
+  }, {
+    "name" : "complianceScore",
+    "type" : "java.lang.Integer",
+    "comment" : "Computed compliance score"
+  } ]
+}

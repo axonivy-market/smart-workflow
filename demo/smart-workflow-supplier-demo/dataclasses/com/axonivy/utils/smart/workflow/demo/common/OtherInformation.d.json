@@ -1,0 +1,10 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "OtherInformation",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.common",
+  "fields" : [ {
+    "name" : "name"
+  }, {
+    "name" : "value"
+  } ]
+}

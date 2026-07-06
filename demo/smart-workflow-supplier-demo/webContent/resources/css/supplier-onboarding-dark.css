@@ -1,0 +1,208 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Supplier Onboarding — dark-mode variables + hardcoded-colour overrides.
+   Loaded dynamically via supplier-onboarding-#{ivyFreyaTheme.mode}.css.
+   Palette: cool blue-slate base (Tailwind Slate family); semantic
+   tints shifted to share the same cool temperature as the surface.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Core palette ──────────────────────────────────────────────── */
+  --so-primary:        #818CF8;   /* indigo-400  — readable on dark bg  */
+  --so-primary-dark:   #6366F1;
+  --so-primary-light:  #A5B4FC;
+  --so-bg:             #0f172a;   /* slate-900  */
+  --so-card:           #1e293b;   /* slate-800  */
+  --so-text:           #e2e8f0;   /* slate-200  */
+  --so-text-muted:     #94a3b8;   /* slate-400  */
+  --so-text-light:     #64748b;   /* slate-500  */
+  --so-green:          #34d399;   /* emerald-400 */
+  --so-green-dark:     #10b981;   /* emerald-500 */
+  --so-green-bg:       #0e2820;
+  --so-green-border:   #1a4d38;
+  --so-yellow:         #fbbf24;   /* amber-400  */
+  --so-yellow-bg:      #231a08;
+  --so-yellow-border:  #4a3a0a;
+  --so-red:            #fb7185;   /* rose-400   */
+  --so-red-bg:         #2a1520;
+  --so-red-border:     #6b2d40;
+  --so-blue-bg:        #0e2038;
+  --so-blue-border:    #1a3a5c;
+  --so-border:         #334155;   /* slate-700  */
+  --so-border-dark:    #475569;   /* slate-600  */
+  --so-shadow:         0 1px 3px rgba(0,0,0,.35), 0 1px 2px -1px rgba(0,0,0,.3);
+  --so-shadow-md:      0 4px 6px -1px rgba(0,0,0,.35), 0 2px 4px -2px rgba(0,0,0,.3);
+
+  /* ── Structure ─────────────────────────────────────────────────── */
+  --so-step-circle-bg:    #1e293b;
+  --so-text-inverse:        white;
+  --so-doc-row-bg:        #0f172a;
+  --so-surface-subtle:    #1e293b;
+  --so-running-card-bg:   #0e2038;
+  --so-running-text:      #7dd3fc;   /* sky-300  */
+
+  /* ── Badges ────────────────────────────────────────────────────── */
+  --so-badge-green-bg:    #0e2820;
+  --so-badge-green-text:  #6ee7b7;   /* emerald-300 */
+  --so-badge-yellow-bg:   #231a08;
+  --so-badge-yellow-text: #fcd34d;   /* amber-300   */
+  --so-badge-red-bg:      #2a1520;
+  --so-badge-red-text:    #fda4af;   /* rose-300    */
+  --so-badge-gray-bg:     #334155;
+  --so-badge-gray-text:   #94a3b8;
+  --so-badge-blue-bg:     #0e2038;
+  --so-badge-blue-text:   #7dd3fc;   /* sky-300     */
+  --so-badge-purple-bg:   #1a1040;
+  --so-badge-purple-text: #c084fc;   /* purple-400  */
+
+  /* ── Alert text ────────────────────────────────────────────────── */
+  --so-alert-green-text:  #6ee7b7;
+  --so-alert-yellow-text: #fcd34d;
+  --so-alert-red-text:    #fda4af;
+  --so-alert-blue-text:   #7dd3fc;
+
+  /* ── Timeline bubbles ──────────────────────────────────────────── */
+  --so-bubble-completed-bg:     #0e2820;
+  --so-bubble-completed-color:  #4ade80;   /* green-400   */
+  --so-bubble-completed-border: #1a4d38;
+  --so-bubble-failed-bg:        #2a1520;
+  --so-bubble-failed-color:     #fb7185;   /* rose-400    */
+  --so-bubble-failed-border:    #6b2d40;
+  --so-bubble-warning-bg:       #2a2008;
+  --so-bubble-warning-color:    #fbbf24;   /* amber-400   */
+  --so-bubble-warning-border:   #6b5010;
+  --so-bubble-pending-bg:       #1e293b;
+  --so-bubble-pending-color:    #64748b;
+  --so-bubble-pending-border:   #334155;
+  --so-bubble-agent-bg:         #1a1040;
+  --so-bubble-agent-color:      #c084fc;   /* purple-400  */
+  --so-bubble-agent-border:     #3d2a6b;
+  --so-bubble-user-bg:          #0e2038;
+  --so-bubble-user-color:       #7dd3fc;   /* sky-300     */
+  --so-bubble-user-border:      #1a3a5c;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Direct overrides for hardcoded colours remaining in the layout CSS.
+   All selectors are unscoped because so-* classes appear on any page.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Approval banner (amber themed) ─────────────────────────────── */
+.so-approval-banner {
+  background:   #231a08;
+  border-color: #4a3a0a;
+}
+.so-approval-banner-icon   { color: #fcd34d; }
+.so-approval-banner-title  { color: #fcd34d; }
+.so-approval-banner-desc   { color: #fbbf24; }
+.so-approval-banner-meta   { color: #f59e0b; }
+
+/* ── Doc row expand panel ────────────────────────────────────────── */
+.so-doc-row-expand { background: #1e293b; }
+
+/* ── Clarification item number badge ─────────────────────────────── */
+.so-clarification-item-num {
+  background: #fbbf24;
+  color:      #1c1004;
+}
+
+/* ── Doc row — resolved state ────────────────────────────────────── */
+.so-doc-row--resolved {
+  background:   #0e2820;
+  border-color: #1a4d38;
+}
+.so-doc-row--resolved .so-clarification-item-num {
+  background: #34d399;
+  color:      #0a2010;
+}
+
+/* ── Clarification banner (amber) ────────────────────────────────── */
+.so-clarification-banner {
+  background:   #231a08;
+  border-color: #4a3a0a;
+}
+.so-clarification-banner-icon  { color: #fbbf24; }
+.so-clarification-banner-title { color: #fcd34d; }
+.so-clarification-banner-desc  { color: #fbbf24; border-bottom-color: #4a3a0a; }
+.so-clarification-banner-meta  { color: #f59e0b; }
+.so-clarification-banner-score {
+  background:   #231a08;
+  border-color: #4a3a0a;
+}
+.so-clarification-banner-score-num   { color: #fbbf24; }
+.so-clarification-banner-score-label { color: #fbbf24; }
+
+/* ── Decline banner modifier ─────────────────────────────────────── */
+.so-decline-banner {
+  background:   #2a1520;
+  border-color: #6b2d40;
+}
+.so-decline-banner .so-clarification-banner-icon  { color: #fb7185; }
+.so-decline-banner .so-clarification-banner-title { color: #fda4af; }
+.so-decline-banner .so-clarification-banner-desc  { color: #fda4af; border-bottom-color: #6b2d40; }
+.so-decline-banner .so-clarification-banner-meta  { color: #fb7185; }
+.so-decline-banner .so-clarification-banner-score {
+  background:   #2a1520;
+  border-color: #6b2d40;
+}
+.so-decline-banner .so-clarification-banner-score-num   { color: #fb7185; }
+.so-decline-banner .so-clarification-banner-score-label { color: #fb7185; }
+
+/* ── Success banner modifier ─────────────────────────────────────── */
+.so-success-banner {
+  background:   #0e2820;
+  border-color: #1a4d38;
+}
+.so-success-banner .so-clarification-banner-icon  { color: #34d399; }
+.so-success-banner .so-clarification-banner-title { color: #6ee7b7; }
+.so-success-banner .so-clarification-banner-desc  { color: #6ee7b7; border-bottom-color: #1a4d38; }
+.so-success-banner .so-clarification-banner-meta  { color: #6ee7b7; }
+.so-success-banner .so-clarification-banner-score {
+  background:   #0e2820;
+  border-color: #1a4d38;
+}
+.so-success-banner .so-clarification-banner-score-num   { color: #34d399; }
+.so-success-banner .so-clarification-banner-score-label { color: #34d399; }
+
+/* ── Notification avatar ─────────────────────────────────────────── */
+.so-notification-avatar {
+  background: #334155;
+  color:      #94a3b8;
+}
+
+/* ── Info button ─────────────────────────────────────────────────── */
+.so-info-btn {
+  background:   #0e2038;
+  border-color: #1a3a5c;
+  color:        #7dd3fc;
+}
+.so-info-btn:hover {
+  background:   #122848;
+  border-color: #254d72;
+}
+
+/* ── Info box ────────────────────────────────────────────────────── */
+.so-info-box {
+  background:   #0e2038;
+  border-color: #1a3a5c;
+}
+.so-info-box--warning {
+  background:   #2d1f00;
+  border-color: #b45309;
+}
+.so-info-box-warning-title { color: #fcd34d; }
+.so-info-box-warning-desc  { color: #fbbf24; }
+
+/* ── Help dialog ─────────────────────────────────────────────────── */
+.so-help-body          { color: #94a3b8; }
+.so-help-section       { background: #0f172a; border-color: #334155; }
+.so-help-section-title { color: #7dd3fc; }
+.so-help-badge         { background: #0e2038; color: #7dd3fc; }
+.so-help-badge-code    { background: #0e2820; color: #6ee7b7; }
+.so-help-rule          { color: #94a3b8; }
+.so-help-rule-red      { color: #fda4af; }
+.so-help-rule-yellow   { color: #fcd34d; }
+.so-help-formula-box   { background: #0e2038; border-color: #1a3a5c; color: #7dd3fc; }
+.so-help-threshold-green  { background: #0e2820; color: #6ee7b7; border-color: #1a4d38; }
+.so-help-threshold-yellow { background: #231a08; color: #fcd34d; border-color: #4a3a0a; }
+.so-help-threshold-red    { background: #2a1520; color: #fda4af; border-color: #6b2d40; }
+

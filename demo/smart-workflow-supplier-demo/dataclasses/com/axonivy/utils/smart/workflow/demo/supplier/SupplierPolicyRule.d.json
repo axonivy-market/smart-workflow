@@ -1,0 +1,30 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierPolicyRule",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier",
+  "fields" : [ {
+    "name" : "target",
+    "comment" : "Unique target key for this rule, e.g. RULE_01_COMMERCIAL_REGISTER"
+  }, {
+    "name" : "rule",
+    "comment" : "Human-readable rule text"
+  }, {
+    "name" : "riskScore",
+    "type" : "Integer",
+    "comment" : "Risk score deduction when this rule is violated"
+  }, {
+    "name" : "passed",
+    "type" : "Boolean",
+    "comment" : "Runtime evaluation flag: true if passed for the current supplier"
+  }, {
+    "name" : "ruleType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RuleType",
+    "comment" : "The type of rule, e.g. policy rule or financial rule"
+  }, {
+    "name" : "legalDocumentType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType"
+  }, {
+    "name" : "certificationType",
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType"
+  } ]
+}
