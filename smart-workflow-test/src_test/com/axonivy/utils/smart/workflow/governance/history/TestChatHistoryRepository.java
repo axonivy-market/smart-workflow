@@ -27,10 +27,10 @@ public class TestChatHistoryRepository {
   @BeforeEach
   void setUp() {
     storage = new InMemoryHistoryStorage();
-    listener = new AgentResponseListener(new ChatHistoryRepository("case-1", "task-1", "test-agent", storage));
+    listener = new AgentResponseListener(new ChatHistoryRepository("case-1", "task-1", "test-agent", "Test Agent", "test-process", storage));
   }
 
-  @Test
+  @Test 
   void storesMessagesAndMetadata() {
     listener.onEvent(buildEvent("It's so hot", "chat", 5, 10, "Head to Lake Lucerne, it's refreshing!"));
 
@@ -59,6 +59,9 @@ public class TestChatHistoryRepository {
         .contains("\"outputTokens\":10")
         .contains("\"aiServiceMethod\":\"chat\"")
         .contains("\"toolNames\":[]");
+
+    assertThat(entry.getAgentName()).isEqualTo("Test Agent");
+    assertThat(entry.getProcessName()).isEqualTo("test-process");
   }
 
   private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName,
