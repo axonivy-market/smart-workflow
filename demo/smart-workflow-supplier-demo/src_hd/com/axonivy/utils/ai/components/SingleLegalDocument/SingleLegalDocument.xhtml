@@ -1,0 +1,74 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<cc:interface componentType="IvyComponent">
+  <cc:attribute name="documentTypeKey" type="java.lang.String" required="true" />
+  <cc:attribute name="bean" required="true" />
+  <cc:attribute name="uploadWidgetVar" type="java.lang.String" required="true" />
+  <cc:attribute name="updateTargets" type="java.lang.String" required="true" />
+</cc:interface>
+
+<cc:implementation>
+
+  <p:fileUpload id="sld-upload"
+    style="display:none;"
+    widgetVar="#{cc.attrs.uploadWidgetVar}"
+    listener="#{cc.attrs.bean.uploadRequiredDocument}"
+    auto="true"
+    update="#{cc.attrs.updateTargets}"
+    allowTypes="/(\.|\/)((pdf)|(txt)|(md)|(doc)|(docx)|(jpg)|(jpeg)|(png))$/i"
+    accept=".pdf,.txt,.md,.doc,.docx,.jpg,.jpeg,.png"
+    sizeLimit="10485760" />
+
+  <div class="so-doc-row so-doc-row--flat m-0 surface-0">
+
+    <div class="flex align-items-center gap-2 flex-1 min-w-0">
+      <i class="ti ti-file-certificate so-text-muted flex-shrink-0"></i>
+      <div class="min-w-0">
+        <div class="font-semibold">
+          <h:outputText value="#{cc.attrs.bean.getDocumentTypeLabel(cc.attrs.documentTypeKey)}" />
+        </div>
+        <div class="text-sm so-text-muted">
+          <h:outputText value="#{cc.attrs.bean.getDocumentTypeSubtitle(cc.attrs.documentTypeKey)}" />
+        </div>
+      </div>
+    </div>
+
+    <div class="flex align-items-center gap-2 flex-shrink-0">
+      <p:outputPanel id="sld-doc-status" layout="inline"
+        rendered="#{cc.attrs.bean.getDocumentByTypeKey(cc.attrs.documentTypeKey) != null}">
+        <span class="so-doc-uploaded">
+          <i class="ti ti-check mr-1" />
+          <span class="so-doc-name">
+            <h:outputText value="#{cc.attrs.bean.getDocumentByTypeKey(cc.attrs.documentTypeKey).fileName}" />
+          </span>
+        </span>
+      </p:outputPanel>
+      <p:commandButton
+        icon="ti ti-download"
+        title="#{ivy.cms.co('/Labels/Download')}"
+        styleClass="ui-button-outlined ui-button-sm"
+        rendered="#{cc.attrs.bean.getDocumentByTypeKey(cc.attrs.documentTypeKey) != null}"
+        ajax="false"
+        immediate="true">
+        <p:fileDownload value="#{cc.attrs.bean.downloadDocument(cc.attrs.bean.getDocumentByTypeKey(cc.attrs.documentTypeKey).documentId)}" />
+      </p:commandButton>
+      <p:commandButton
+        value="#{cc.attrs.bean.getDocumentByTypeKey(cc.attrs.documentTypeKey) != null ? ivy.cms.co('/Labels/Replace') : ivy.cms.co('/Labels/Upload')}"
+        icon="ti ti-upload"
+        styleClass="ui-button-outlined ui-button-sm"
+        process="@this"
+        update="@none"
+        oncomplete="PF('#{cc.attrs.uploadWidgetVar}').show()">
+        <f:setPropertyActionListener
+          value="#{cc.attrs.documentTypeKey}"
+          target="#{cc.attrs.bean.pendingDocumentType}" />
+      </p:commandButton>
+    </div>
+
+  </div>
+
+</cc:implementation>
+
+</html>

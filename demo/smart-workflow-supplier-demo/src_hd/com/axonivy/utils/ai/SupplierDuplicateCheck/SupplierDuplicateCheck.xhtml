@@ -1,0 +1,164 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui">
+<h:body>
+  <f:metadata>
+    <f:event type="preRenderView" listener="#{supplierDuplicateCheckBean.init(data.request, data.agentResponse)}" />
+  </f:metadata>
+  <ui:composition template="/layouts/template/SupplierOnboardingTemplate.xhtml">
+
+    <ui:param name="status"               value="DB_CHECK" />
+    <ui:param name="stepSubtitle"         value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/StepSubtitle')}" />
+    <ui:param name="initialMessage"       value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/InitialMessage')}" />
+    <ui:param name="chips"                value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/Chips')}" />
+    <ui:param name="guidanceListOverride" value="#{supplierDuplicateCheckBean.agentGuidance}" />
+
+    <ui:define name="form-content">
+      <h:form id="form">
+
+        <!-- No duplicates found -->
+        <ui:fragment rendered="#{!supplierDuplicateCheckBean.hasMatches}">
+          <div class="so-alert so-alert-green mb-3">
+            <span class="so-alert-icon"><i class="ti ti-circle-check" /></span>
+            <div>
+              <div class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/NoDuplicatesTitle')}</div>
+              <div>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/NoDuplicatesDesc')}</div>
+            </div>
+          </div>
+        </ui:fragment>
+
+        <!-- Warning: potential matches found -->
+        <ui:fragment rendered="#{supplierDuplicateCheckBean.hasMatches}">
+          <div class="so-alert so-alert-yellow mb-3">
+            <span class="so-alert-icon"><i class="ti ti-alert-triangle" /></span>
+            <div>
+              <div class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/WarningTitle')}</div>
+              <div>
+                <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/WarningDesc')}">
+                  <f:param value="#{supplierDuplicateCheckBean.matchCount}" />
+                </h:outputFormat>
+              </div>
+            </div>
+          </div>
+        </ui:fragment>
+
+        <!-- Agent Result section -->
+        <div class="so-agent-section">
+          <div class="line-height-3">
+            <div class="font-semibold mb-1 mt-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/SearchConditionLabel')}</div>
+            <div>
+              <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/SearchConditionTemplate')}">
+                <f:param value="#{supplierDuplicateCheckBean.request.supplier.businessName}" />
+                <f:param value="#{supplierDuplicateCheckBean.request.supplier.businessAddress.country}" />
+              </h:outputFormat>
+            </div>
+            <div class="font-semibold mb-1 mt-3">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/AgentAnalysisLabel')}</div>
+            <div class="#{supplierDuplicateCheckBean.colorClass}">
+              <h:outputText value="#{supplierDuplicateCheckBean.agentResponse.feedback}" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Match cards (read-only, only when duplicates exist) -->
+        <ui:fragment rendered="#{supplierDuplicateCheckBean.hasMatches}">
+          <div class="so-divider" />
+          <div class="flex justify-content-between align-items-center pb-2 mb-3">
+            <span class="text-lg font-semibold"><i class="ti ti-clipboard-list mr-1" />
+              <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/PotentialMatchesTitle')}">
+                <f:param value="#{supplierDuplicateCheckBean.matchCount}" />
+              </h:outputFormat>
+            </span>
+          </div>
+
+          <ui:repeat value="#{supplierDuplicateCheckBean.matches}" var="match">
+            <div class="so-card pb-2">
+              <div class="flex justify-content-between align-items-start mb-2">
+                <div>
+                  <div class="font-semibold mb-3">
+                    <h:outputText value="#{match.businessName} (#{match.supplierId} • #{match.businessAddress.country})" />
+                  </div>
+                </div>
+                <span class="so-badge so-badge-purple"><i class="ti ti-target-arrow mr-1" /> #{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/PotentialMatchBadge')}</span>
+              </div>
+
+              <div class="formgrid grid so-match-grid">
+                <div class="col-12 md:col-6">
+                  <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/BusinessPurposeLabel')}</span>
+                  <span class="ml-1"><h:outputText value="#{match.businessPurpose}" /></span>
+                </div>
+                <ui:fragment rendered="#{not empty match.legalForm}">
+                  <div class="col-12 md:col-6">
+                    <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/LegalFormLabel')}</span>
+                    <span class="ml-1"><h:outputText value="#{match.legalForm}" /></span>
+                  </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{not empty match.email}">
+                  <div class="col-12 md:col-6">
+                    <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/EmailLabel')}</span>
+                    <span class="ml-1"><h:outputText value="#{match.email}" /></span>
+                  </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{not empty match.vatId}">
+                  <div class="col-12 md:col-6">
+                    <span class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/VatIdLabel')}</span>
+                    <span class="ml-1"><h:outputText value="#{match.vatId}" /></span>
+                  </div>
+                </ui:fragment>
+              </div>
+            </div>
+          </ui:repeat>
+        </ui:fragment>
+
+        <!-- Duplicate-confirm dialog (only shown when matches exist) -->
+        <p:confirmDialog id="dup-confirm-dialog"
+          widgetVar="dupConfirmDialog"
+          header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/ConfirmDialogTitle')}"
+          message="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/ConfirmDialogMessage')}"
+          appendTo="@(body)"
+          closable="false">
+          <p:commandButton
+            value="#{ivy.cms.co('/Labels/Confirm')}"
+            icon="pi pi-arrow-right" iconPos="right"
+            actionListener="#{supplierDuplicateCheckBean.confirmAndClose}"
+            process="form" update="@(form) form-messages"
+            styleClass="ui-button-primary" />
+          <p:commandButton
+            value="#{ivy.cms.co('/Labels/Cancel')}"
+            styleClass="ui-button-secondary"
+            onclick="PF('dupConfirmDialog').hide(); return false;"
+            type="button" />
+        </p:confirmDialog>
+
+      </h:form>
+    </ui:define>
+
+    <ui:define name="footer-left">
+      <p:commandButton
+        value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierDuplicateCheck/CancelRequest')}"
+        icon="pi pi-times"
+        actionListener="#{supplierDuplicateCheckBean.cancelRequest}"
+        styleClass="ui-button-secondary" />
+    </ui:define>
+
+    <ui:define name="footer-right">
+      <!-- No duplicates: proceed directly -->
+      <p:commandButton id="confirm"
+        rendered="#{!supplierDuplicateCheckBean.hasMatches}"
+        value="#{ivy.cms.co('/Labels/Confirm')}"
+        icon="pi pi-arrow-right" iconPos="right"
+        actionListener="#{supplierDuplicateCheckBean.confirmAndClose}"
+        process="form" update="@(form) form-messages"
+        styleClass="ui-button-primary" />
+      <!-- Duplicates found: ask for confirmation first -->
+      <p:commandButton id="confirm-with-check"
+        rendered="#{supplierDuplicateCheckBean.hasMatches}"
+        value="#{ivy.cms.co('/Labels/Confirm')}"
+        icon="pi pi-arrow-right" iconPos="right"
+        onclick="PF('dupConfirmDialog').show(); return false;"
+        type="button"
+        styleClass="ui-button-primary" />
+    </ui:define>
+
+  </ui:composition>
+</h:body>
+</html>

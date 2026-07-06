@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+  <div class="sd-slide-body flex-1 min-h-0 overflow-y-auto">
+
+    <div class="fd-flow">
+      <div class="fd-flow-step" data-panel="0" onclick="sdInnerGo(0)">
+        <div class="fd-flow-bubble fd-cap-icon--blue"><i class="ti ti-upload"></i></div>
+      </div>
+      <div class="fd-flow-arrow"></div>
+      <div class="fd-flow-step" data-panel="1" onclick="sdInnerGo(1)">
+        <div class="fd-flow-bubble fd-cap-icon--blue"><i class="ti ti-object-scan"></i></div>
+      </div>
+      <div class="fd-flow-arrow"></div>
+      <div class="fd-flow-step" data-panel="2" onclick="sdInnerGo(2)">
+        <div class="fd-flow-bubble fd-cap-icon--purple"><i class="ti ti-message-chatbot"></i></div>
+      </div>
+      <div class="fd-flow-arrow"></div>
+      <div class="fd-flow-step" data-panel="3" onclick="sdInnerGo(3)">
+        <div class="fd-flow-bubble fd-cap-icon--amber"><i class="ti ti-shield-search"></i></div>
+      </div>
+      <div class="fd-flow-arrow"></div>
+      <div class="fd-flow-step" data-panel="4" onclick="sdInnerGo(4)">
+        <div class="fd-flow-bubble fd-cap-icon--green"><i class="ti ti-chart-bar"></i></div>
+      </div>
+      <div class="fd-flow-arrow"></div>
+      <div class="fd-flow-step" data-panel="5" onclick="sdInnerGo(5)">
+        <div class="fd-flow-bubble fd-cap-icon--indigo"><i class="ti ti-ai-gateway"></i></div>
+      </div>
+      <div class="fd-flow-arrow"></div>
+      <div class="fd-flow-step" data-panel="6" onclick="sdInnerGo(6)">
+        <div class="fd-flow-bubble fd-cap-icon--green"><i class="ti ti-circle-check"></i></div>
+      </div>
+    </div>
+
+    <div class="sd-inner-wrapper">
+
+      <div class="sd-inner-panel" data-panel="0">
+        <div class="fd-panel-inner">
+          <div class="fd-panel-left">
+            <div class="fd-panel-icon fd-cap-icon--blue"><i class="ti ti-upload"></i></div>
+          </div>
+          <div class="fd-panel-right">
+            <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel0Title')}</div>
+            <div class="fd-panel-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel0Desc')}</div>
+            <div class="fd-panel-details">
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel0Detail1')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel0Detail2')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel0Detail3')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-inner-panel" data-panel="1">
+        <div class="fd-panel-inner">
+          <div class="fd-panel-left">
+            <div class="fd-panel-icon fd-cap-icon--blue"><i class="ti ti-object-scan"></i></div>
+          </div>
+          <div class="fd-panel-right">
+            <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel1Title')}</div>
+            <div class="fd-panel-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel1Desc')}</div>
+            <div class="fd-panel-details">
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel1Detail1')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel1Detail2')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel1Detail3')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-inner-panel" data-panel="2">
+        <div class="fd-panel-inner">
+          <div class="fd-panel-left">
+            <div class="fd-panel-icon fd-cap-icon--purple"><i class="ti ti-message-chatbot"></i></div>
+          </div>
+          <div class="fd-panel-right">
+            <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel2Title')}</div>
+            <div class="fd-panel-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel2Desc')}</div>
+            <div class="fd-panel-details">
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel2Detail1')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel2Detail2')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel2Detail3')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-inner-panel" data-panel="3">
+        <div class="fd-panel-inner">
+          <div class="fd-panel-left">
+            <div class="fd-panel-icon fd-cap-icon--amber"><i class="ti ti-shield-search"></i></div>
+          </div>
+          <div class="fd-panel-right">
+            <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel3Title')}</div>
+            <div class="fd-panel-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel3Desc')}</div>
+            <div class="fd-panel-details">
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel3Detail1')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel3Detail2')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel3Detail3')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-inner-panel" data-panel="4">
+        <div class="fd-panel-inner">
+          <div class="fd-panel-left">
+            <div class="fd-panel-icon fd-cap-icon--green"><i class="ti ti-chart-bar"></i></div>
+          </div>
+          <div class="fd-panel-right">
+            <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel4Title')}</div>
+            <div class="fd-panel-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel4Desc')}</div>
+            <div class="fd-panel-details">
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel4Detail1')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel4Detail2')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel4Detail3')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-inner-panel" data-panel="5">
+        <div class="fd-panel-inner">
+          <div class="fd-panel-left">
+            <div class="fd-panel-icon fd-cap-icon--indigo"><i class="ti ti-ai-gateway"></i></div>
+          </div>
+          <div class="fd-panel-right">
+            <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel5Title')}</div>
+            <div class="fd-panel-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel5Desc')}</div>
+            <div class="fd-panel-details">
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel5Detail1')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel5Detail2')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel5Detail3')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-inner-panel" data-panel="6">
+        <div class="fd-panel-inner">
+          <div class="fd-panel-left">
+            <div class="fd-panel-icon fd-cap-icon--green"><i class="ti ti-circle-check"></i></div>
+          </div>
+          <div class="fd-panel-right">
+            <div class="fd-panel-title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel6Title')}</div>
+            <div class="fd-panel-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel6Desc')}</div>
+            <div class="fd-panel-details">
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel6Detail1')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel6Detail2')}</div>
+              <div class="fd-panel-detail-item"><i class="ti ti-check"></i>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/FinishDemo/Panel6Detail3')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- .sd-inner-wrapper -->
+
+  </div><!-- .sd-slide-body -->
+
+</ui:composition>

@@ -19,7 +19,7 @@
     <dependency>
       <groupId>com.axonivy.ivy.api.test</groupId>
       <artifactId>ivy-test-api</artifactId>
-      <scope>test</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>

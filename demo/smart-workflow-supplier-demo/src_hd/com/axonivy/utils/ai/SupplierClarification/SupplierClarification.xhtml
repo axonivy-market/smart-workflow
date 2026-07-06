@@ -1,0 +1,221 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <f:metadata>
+    <f:event type="preRenderView" listener="#{supplierClarificationBean.init(data.request)}" />
+  </f:metadata>
+  <ui:composition template="/layouts/template/SupplierOnboardingTemplate.xhtml">
+
+    <ui:param name="status"         value="CLARIFICATION_REQUIRED" />
+    <ui:param name="stepSubtitle"   value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/StepSubtitle')}" />
+    <ui:param name="initialMessage" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/InitialMessage')}" />
+
+    <ui:define name="form-content">
+      <h:outputScript library="js" name="supplier-clarification.js" target="head" />
+      <h:form id="form">
+
+        <p:tabView id="clarification-tabs" styleClass="so-approval-tabs mb-3">
+
+          <!-- ── Tab 1: Clarification ──────────────────────────────────────── -->
+          <p:tab>
+            <f:facet name="title"><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/ClarificationTab')}</span></f:facet>
+
+            <p:messages id="form-messages" />
+
+            <!-- Last-retry warning -->
+            <p:messages id="last-retry-warning" />
+            <p:outputPanel rendered="#{data.clarificationCycle >= data.maxRetries and data.maxRetries > 0}">
+              <p:growl id="last-retry-growl" sticky="true" showDetail="true" />
+              <div class="so-info-box so-info-box--warning mb-3">
+                <i class="ti ti-alert-triangle" />
+                <div>
+                  <div class="font-semibold text-sm so-info-box-warning-title">
+                    <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/FinalAttemptTitle')}">
+                      <f:param value="#{data.clarificationCycle}" />
+                      <f:param value="#{data.maxRetries}" />
+                    </h:outputFormat>
+                  </div>
+                  <div class="text-sm so-info-box-warning-desc">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/FinalAttemptDesc')}</div>
+                </div>
+              </div>
+            </p:outputPanel>
+
+            <!-- Yellow banner -->
+            <div class="so-clarification-banner #{supplierClarificationBean.bannerModifierClass} mb-3">
+              <div class="so-clarification-banner-icon"><i class="ti ti-alert-triangle" /></div>
+              <div class="so-clarification-banner-main">
+                <div class="so-clarification-banner-title">
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/BannerTitle')}">
+                    <f:param value="#{data.request.supplier.businessName}" />
+                  </h:outputFormat>
+                </div>
+                <div class="so-clarification-banner-desc">
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/BannerDescTemplate')}">
+                    <f:param value="#{supplierClarificationBean.agentResponse.riskScore.aggregate}" />
+                  </h:outputFormat>
+                </div>
+                <div class="so-clarification-banner-meta">
+                  <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/BannerMetaTemplate')}" escape="false">
+                    <f:param value="#{ivy.case.name}" />
+                    <f:param value="#{data.request.requestedBy}" />
+                  </h:outputFormat>
+                  · <a href="#" class="so-banner-toggle-link" onclick="soToggleBannerScore(this); return false;">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/ShowDetailsLink')}</a>
+                </div>
+                <div class="so-banner-score-details hidden">
+                  <div class="so-score-bars mt-3">
+                    <div class="so-score-bar-row">
+                      <span class="so-score-bar-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/FinancialStabilityLabel')}</span>
+                      <div class="so-score-bar-track">
+                        <div class="so-score-bar-fill #{supplierClarificationBean.getScoreBarClass(supplierClarificationBean.agentResponse.riskScore.financialStability)}"
+                          data-score="#{supplierClarificationBean.agentResponse.riskScore.financialStability}" />
+                      </div>
+                      <span class="so-score-bar-num">#{supplierClarificationBean.agentResponse.riskScore.financialStability}</span>
+                    </div>
+                    <div class="so-score-bar-row">
+                      <span class="so-score-bar-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/PolicyComplianceLabel')}</span>
+                      <div class="so-score-bar-track">
+                        <div class="so-score-bar-fill #{supplierClarificationBean.getScoreBarClass(supplierClarificationBean.agentResponse.riskScore.policyCompliance)}"
+                          data-score="#{supplierClarificationBean.agentResponse.riskScore.policyCompliance}" />
+                      </div>
+                      <span class="so-score-bar-num">#{supplierClarificationBean.agentResponse.riskScore.policyCompliance}</span>
+                    </div>
+                    <div class="so-score-bar-row">
+                      <span class="so-score-bar-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/CertValidityLabel')}</span>
+                      <div class="so-score-bar-track">
+                        <div class="so-score-bar-fill #{supplierClarificationBean.getScoreBarClass(supplierClarificationBean.agentResponse.riskScore.certValidity)}"
+                          data-score="#{supplierClarificationBean.agentResponse.riskScore.certValidity}" />
+                      </div>
+                      <span class="so-score-bar-num">#{supplierClarificationBean.agentResponse.riskScore.certValidity}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="so-clarification-banner-score">
+                <div class="so-clarification-banner-score-num">#{supplierClarificationBean.agentResponse.riskScore.aggregate}</div>
+                <div class="so-clarification-banner-score-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/RiskScoreLabel')}</div>
+                <span class="so-badge #{supplierClarificationBean.bannerBadgeClass}">#{supplierClarificationBean.bannerBadgeLabel}</span>
+              </div>
+            </div>
+
+            <!-- Clarification items -->
+            <div class="so-card mb-3">
+              <div class="flex justify-content-between align-items-center border-bottom-1 surface-border pb-2 mb-3">
+                <span class="text-base font-semibold">
+                  <i class="ti ti-alert-circle mr-2" />#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/ItemsTitle')}
+                </span>
+              </div>
+              <p:outputPanel id="clarification-items-panel">
+                <ui:fragment rendered="#{not empty supplierClarificationBean.validationFindingsArray}">
+                  <ui:repeat value="#{supplierClarificationBean.validationFindingsArray}" var="item" varStatus="vs">
+                    <div class="so-doc-row #{item.resolved ? 'so-doc-row--resolved' : ''} #{supplierClarificationBean.isItemExpanded(vs.index) ? 'so-doc-row--open' : ''}">
+                      <div class="flex align-items-center gap-2 flex-1 min-w-0">
+                        <div class="so-clarification-item-num">#{vs.index + 1}</div>
+                        <i class="#{validationFindingHelper.problemType(item).name() eq 'DOCUMENT' ? 'ti ti-file-certificate' : validationFindingHelper.problemType(item).name() eq 'DUPLICATE' ? 'ti ti-copy' : 'ti ti-alert-circle'} so-text-muted flex-shrink-0" />
+                        <div class="min-w-0">
+                          <div class="font-semibold">#{item.message}</div>
+                          <ui:fragment rendered="#{validationFindingHelper.problemType(item).name() eq 'DOCUMENT' and not item.resolved}">
+                            <div class="text-sm so-text-muted">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/DocumentAcceptedTypes')}</div>
+                          </ui:fragment>
+                        </div>
+                      </div>
+                      <div class="flex align-items-center gap-2 flex-shrink-0">
+                        <ui:fragment rendered="#{item.resolved}">
+                          <span class="so-doc-uploaded"><i class="ti ti-check mr-1" />#{ivy.cms.co('/Labels/Resolve')}</span>
+                        </ui:fragment>
+                        <p:commandButton
+                          value="#{supplierClarificationBean.isItemExpanded(vs.index) ? ivy.cms.co('/Labels/Close') : (item.resolved ? ivy.cms.co('/Labels/View') : ivy.cms.co('/Labels/Resolve'))}"
+                          icon="#{supplierClarificationBean.isItemExpanded(vs.index) ? 'ti ti-chevron-up' : (item.resolved ? 'ti ti-eye' : 'ti ti-edit')}"
+                          styleClass="ui-button-outlined ui-button-sm"
+                          actionListener="#{supplierClarificationBean.toggleResolve(vs.index)}"
+                          update=":form:clarification-tabs"
+                          process="@this" global="false" />
+                      </div>
+                    </div>
+                    <p:outputPanel rendered="#{supplierClarificationBean.isItemExpanded(vs.index)}"
+                      styleClass="so-doc-row-expand">
+                      <ui:fragment rendered="#{validationFindingHelper.problemType(item).name() eq 'DOCUMENT' and item.documentTypeKey ne null}">
+                        <ic:com.axonivy.utils.ai.components.SingleLegalDocument
+                          documentTypeKey="#{item.documentTypeKey}"
+                          bean="#{supplierClarificationBean}"
+                          uploadWidgetVar="clarificationItemUpload#{vs.index}"
+                          updateTargets=":form:clarification-tabs :footer-form:footer-right-panel" />
+                      </ui:fragment>
+                      <ui:fragment rendered="#{item.riskKind ne 'MISSING_DOC'}">
+                        <ic:com.axonivy.utils.ai.components.ProblemExplanation
+                          item="#{item}"
+                          bean="#{supplierClarificationBean}"
+                          itemIndex="#{vs.index}"
+                          updateTargets=":form:clarification-tabs :footer-form:footer-right-panel" />
+                      </ui:fragment>
+                    </p:outputPanel>
+                  </ui:repeat>
+                </ui:fragment>
+                <ui:fragment rendered="#{empty supplierClarificationBean.validationFindingsArray}">
+                  <div class="so-doc-row">
+                    <div class="flex align-items-center gap-2">
+                      <div class="so-clarification-item-num">1</div>
+                      <i class="ti ti-info-circle so-text-muted" />
+                      <span class="text-sm">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/AdditionalInfoRequired')}</span>
+                    </div>
+                  </div>
+                </ui:fragment>
+              </p:outputPanel>
+            </div>
+
+          </p:tab>
+
+          <!-- ── Tab 2: Supplier Details ────────────────────────────────── -->
+          <p:tab>
+            <f:facet name="title"><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/SupplierDetailsTab')}</span></f:facet>
+            <ic:com.axonivy.utils.ai.components.SupplierDetails
+              bean="#{supplierClarificationBean}"
+              readOnly="true" />
+          </p:tab>
+
+          <!-- ── Tab 3: Analysis Result ─────────────────────────────────── -->
+          <p:tab>
+            <f:facet name="title"><span>#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/AnalysisResultTab')}</span></f:facet>
+            <ic:com.axonivy.utils.ai.components.SupplierAgentProcessingDetails
+              bean="#{supplierClarificationBean}"
+              agentResponse="#{data.agentResponse}"
+              readOnly="true" />
+          </p:tab>
+
+        </p:tabView>
+
+      </h:form>
+    </ui:define>
+
+    <ui:define name="footer-left">
+      <p:commandButton id="withdraw"
+        value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/WithdrawButton')}"
+        styleClass="ui-button-secondary"
+        process="@none"
+        actionListener="#{logic.close}">
+        <f:setPropertyActionListener target="#{data.withdraw}" value="#{true}" />
+      </p:commandButton>
+    </ui:define>
+
+    <ui:define name="footer-right">
+      <p:commandButton id="escalate"
+        value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/EscalateButton')}"
+        styleClass="ui-button-secondary"
+        process="@none"
+        actionListener="#{logic.close}">
+        <f:setPropertyActionListener target="#{data.escalateToQmIsm}" value="#{true}" />
+      </p:commandButton>
+      <p:commandButton id="submit"
+        value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/SupplierClarification/SubmitButton')}"
+        icon="#{supplierClarificationBean.isAllItemsResolved() ? 'ti ti-circle-check' : ''}"
+        styleClass="#{supplierClarificationBean.isAllItemsResolved() ? 'ui-button-success' : 'ui-button-warning'}"
+        form="form"
+        process="form"
+        update="form"
+        actionListener="#{logic.close}" />
+    </ui:define>
+
+  </ui:composition>
+</h:body>
+</html>
