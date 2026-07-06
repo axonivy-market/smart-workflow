@@ -35,7 +35,7 @@ class TestSpiLoader {
     var loader = new SpiLoader(pmv) {
       @Override
       protected Stream<IProcessModelVersion> pmvsInScope() {
-        return Stream.of(pmv, pmv); // same PMV twice simulates duplicate dependency declarations
+        return Stream.of(pmv, pmv);
       }
     };
     var impls = loader.load(ChatModelProvider.class);
