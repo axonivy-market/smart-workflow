@@ -1,0 +1,15 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierOnboardingDeclineData",
+  "namespace" : "com.axonivy.utils.ai.SupplierOnboardingDecline",
+  "fields" : [ {
+    "name" : "request",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
+  }, {
+    "name" : "agentResponse",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse"
+  }, {
+    "name" : "notificationRecords",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.NotificationRecord>"
+  } ]
+}

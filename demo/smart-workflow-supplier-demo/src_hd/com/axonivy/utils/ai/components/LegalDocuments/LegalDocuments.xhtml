@@ -1,0 +1,313 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:cc="http://xmlns.jcp.org/jsf/composite" xmlns:ic="http://ivyteam.ch/jsf/component"
+  xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<cc:interface componentType="IvyComponent">
+  <!-- "CERTIFICATIONS" or "REQUIRED_DOCUMENTS" -->
+  <cc:attribute name="mode" type="java.lang.String" required="true" />
+  <cc:attribute name="bean" required="true" />
+  <cc:attribute name="cardTitle" type="java.lang.String" required="true" />
+  <cc:attribute name="cardSubtitle" type="java.lang.String" default="" />
+  <cc:attribute name="cardIcon" type="java.lang.String" default="" />
+  <cc:attribute name="uploadWidgetVar" type="java.lang.String" required="true" />
+  <cc:attribute name="updateTargets" type="java.lang.String" required="true" />
+  <cc:attribute name="readOnly" type="java.lang.Boolean" default="false" />
+</cc:interface>
+
+<cc:implementation>
+  <div class="so-card">
+
+    <!-- ── Card header ─────────────────────────────────────────────────── -->
+    <div class="flex justify-content-between align-items-center border-bottom-1 surface-border pb-2 mb-3">
+      <span class="so-card-title">
+        <i class="#{cc.attrs.cardIcon} mr-2"></i>
+        <h:outputText value="#{cc.attrs.cardTitle}" />
+      </span>
+      <span class="text-color-secondary mb-3">
+        <h:outputText value="#{cc.attrs.cardSubtitle}" />
+      </span>
+    </div>
+
+    <!-- ── CERTIFICATIONS mode ─────────────────────────────────────────── -->
+    <h:panelGroup id="certifications-panel" layout="block"
+      rendered="#{cc.attrs.mode eq 'CERTIFICATIONS'}">
+      <ui:repeat value="#{cc.attrs.bean.certificationTypes}" var="certType">
+        <div class="so-doc-row">
+
+          <!-- LEFT: icon + label -->
+          <div class="flex align-items-center gap-2 flex-1 min-w-0">
+            <i class="ti ti-certificate so-text-muted flex-shrink-0 text-2xl"></i>
+            <div class="min-w-0">
+              <div class="font-semibold"><h:outputText value="#{certType.label}" /></div>
+              <div class="so-text-muted"><h:outputText value="#{certType.subtitle}" /></div>
+            </div>
+          </div>
+
+          <!-- RIGHT: badge + uploaded chip + upload button -->
+          <div class="flex align-items-center gap-2 flex-shrink-0">
+            <span class="#{certType.required ? 'so-badge-required' : 'so-badge-optional'}">#{certType.required ? ivy.cms.co('/Labels/Required') : ivy.cms.co('/Labels/Optional')}</span>
+            <p:outputPanel id="cert-doc-panel" layout="inline"
+              rendered="#{cc.attrs.bean.getDocumentForCert(certType) != null}">
+              <span class="so-doc-uploaded">
+                <i class="ti ti-check mr-1"></i>
+                <span class="so-doc-name">
+                  <h:outputText value="#{cc.attrs.bean.getDocumentForCert(certType).fileName}" />
+                </span>
+              </span>
+              <p:tooltip for="cert-doc-panel"
+                value="#{cc.attrs.bean.getDocumentForCert(certType).fileName}" />
+            </p:outputPanel>
+            <p:commandButton
+              icon="ti ti-download"
+              title="#{ivy.cms.co('/Labels/Download')}"
+              styleClass="ui-button-outlined ui-button-sm"
+              rendered="#{cc.attrs.bean.getDocumentForCert(certType) != null}"
+              ajax="false"
+              immediate="true">
+              <p:fileDownload value="#{cc.attrs.bean.downloadDocument(cc.attrs.bean.getDocumentForCert(certType).documentId)}" />
+            </p:commandButton>
+            <p:commandButton
+              value="#{cc.attrs.bean.getDocumentForCert(certType) != null ? ivy.cms.co('/Labels/Replace') : certType.uploadLabel}"
+              icon="ti ti-upload"
+              styleClass="ui-button-outlined ui-button-sm"
+              rendered="#{not cc.attrs.readOnly}"
+              process="@this"
+              update="@none"
+              oncomplete="PF('#{cc.attrs.uploadWidgetVar}').show()">
+              <f:setPropertyActionListener
+                value="#{certType.documentTypeKey}"
+                target="#{cc.attrs.bean.pendingDocumentType}" />
+            </p:commandButton>
+          </div>
+
+        </div>
+      </ui:repeat>
+    </h:panelGroup>
+
+    <!-- ── REQUIRED_DOCUMENTS mode ────────────────────────────────────── -->
+    <h:panelGroup layout="block" rendered="#{cc.attrs.mode eq 'REQUIRED_DOCUMENTS'}">
+
+      <!-- Hidden shared upload widget -->
+      <p:fileUpload id="req-doc-upload"
+        style="display:none;"
+        rendered="#{not cc.attrs.readOnly}"
+        widgetVar="#{cc.attrs.uploadWidgetVar}"
+        listener="#{cc.attrs.bean.uploadRequiredDocument}"
+        auto="true"
+        dragDropSupport="true"
+        dropZone="req-doc-dropzone"
+        update="#{cc.attrs.updateTargets} req-docs-panel"
+        allowTypes="/(\.|\/)((pdf)|(doc)|(docx)|(jpg)|(jpeg)|(png)|(txt)|(md))$/i"
+        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.md"
+        sizeLimit="10485760" />
+
+      <h:panelGroup id="req-docs-panel" layout="block">
+
+        <!-- Row: Company Registration Extract -->
+        <div class="so-doc-row">
+          <div class="flex align-items-center gap-2 flex-1 min-w-0">
+            <i class="ti ti-file-description so-text-muted flex-shrink-0 text-2xl"></i>
+            <div class="min-w-0">
+              <div class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/CommercialRegisterLabel')}</div>
+              <div class="so-text-muted">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/CommercialRegisterSubtitle')}</div>
+            </div>
+          </div>
+          <div class="flex align-items-center gap-2 flex-shrink-0">
+            <span class="#{cc.attrs.bean.legalDocumentTypeRequired['COMMERCIAL_REGISTER'] ? 'so-badge-required' : 'so-badge-optional'}">#{cc.attrs.bean.legalDocumentTypeRequired['COMMERCIAL_REGISTER'] ? ivy.cms.co('/Labels/Required') : ivy.cms.co('/Labels/Optional')}</span>
+            <p:outputPanel id="company-reg-doc-panel" layout="inline"
+              rendered="#{cc.attrs.bean.companyRegistrationDoc != null}">
+              <span class="so-doc-uploaded">
+                <i class="ti ti-check mr-1"></i>
+                <span class="so-doc-name">
+                  <h:outputText value="#{cc.attrs.bean.companyRegistrationDoc.fileName}" />
+                </span>
+              </span>
+              <p:tooltip for="company-reg-doc-panel"
+                value="#{cc.attrs.bean.companyRegistrationDoc.fileName}" />
+            </p:outputPanel>
+            <p:commandButton
+              icon="ti ti-download"
+              title="#{ivy.cms.co('/Labels/Download')}"
+              styleClass="ui-button-outlined ui-button-sm"
+              rendered="#{cc.attrs.bean.companyRegistrationDoc != null}"
+              ajax="false"
+              immediate="true">
+              <p:fileDownload value="#{cc.attrs.bean.downloadDocument(cc.attrs.bean.companyRegistrationDoc.documentId)}" />
+            </p:commandButton>
+            <p:commandButton id="upload-company-reg"
+              value="#{cc.attrs.bean.companyRegistrationDoc != null ? ivy.cms.co('/Labels/Replace') : ivy.cms.co('/Labels/Upload')}"
+              icon="ti ti-upload"
+              styleClass="ui-button-outlined ui-button-sm"
+              rendered="#{not cc.attrs.readOnly}"
+              process="@this"
+              update="@none"
+              oncomplete="PF('#{cc.attrs.uploadWidgetVar}').show()">
+              <f:setPropertyActionListener value="COMMERCIAL_REGISTER"
+                target="#{cc.attrs.bean.pendingDocumentType}" />
+            </p:commandButton>
+          </div>
+        </div>
+
+        <!-- Row: Self-Declaration -->
+        <div class="so-doc-row">
+          <div class="flex align-items-center gap-2 flex-1 min-w-0">
+            <i class="ti ti-file-text so-text-muted flex-shrink-0 text-2xl"></i>
+            <div class="min-w-0">
+              <div class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/SelfDeclarationLabel')}</div>
+              <div class="so-text-muted">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/SelfDeclarationSubtitle')}</div>
+            </div>
+          </div>
+          <div class="flex align-items-center gap-2 flex-shrink-0">
+            <span class="#{cc.attrs.bean.legalDocumentTypeRequired['SELF_DECLARATION'] ? 'so-badge-required' : 'so-badge-optional'}">#{cc.attrs.bean.legalDocumentTypeRequired['SELF_DECLARATION'] ? ivy.cms.co('/Labels/Required') : ivy.cms.co('/Labels/Optional')}</span>
+            <p:outputPanel id="self-decl-doc-panel" layout="inline"
+              rendered="#{cc.attrs.bean.selfDeclarationDoc != null}">
+              <span class="so-doc-uploaded">
+                <i class="ti ti-check mr-1"></i>
+                <span class="so-doc-name">
+                  <h:outputText value="#{cc.attrs.bean.selfDeclarationDoc.fileName}" />
+                </span>
+              </span>
+              <p:tooltip for="self-decl-doc-panel"
+                value="#{cc.attrs.bean.selfDeclarationDoc.fileName}" />
+            </p:outputPanel>
+            <p:commandButton
+              icon="ti ti-download"
+              title="#{ivy.cms.co('/Labels/Download')}"
+              styleClass="ui-button-outlined ui-button-sm"
+              rendered="#{cc.attrs.bean.selfDeclarationDoc != null}"
+              ajax="false"
+              immediate="true">
+              <p:fileDownload value="#{cc.attrs.bean.downloadDocument(cc.attrs.bean.selfDeclarationDoc.documentId)}" />
+            </p:commandButton>
+            <p:commandButton id="upload-self-decl"
+              value="#{cc.attrs.bean.selfDeclarationDoc != null ? ivy.cms.co('/Labels/Replace') : ivy.cms.co('/Labels/Upload')}"
+              icon="ti ti-upload"
+              styleClass="ui-button-outlined ui-button-sm"
+              rendered="#{not cc.attrs.readOnly}"
+              process="@this"
+              update="@none"
+              oncomplete="PF('#{cc.attrs.uploadWidgetVar}').show()">
+              <f:setPropertyActionListener value="SELF_DECLARATION"
+                target="#{cc.attrs.bean.pendingDocumentType}" />
+            </p:commandButton>
+          </div>
+        </div>
+
+        <!-- Row: Last Annual Report -->
+        <div class="so-doc-row">
+          <div class="flex align-items-center gap-2 flex-1 min-w-0">
+            <i class="ti ti-report-analytics so-text-muted flex-shrink-0 text-2xl"></i>
+            <div class="min-w-0">
+              <div class="font-semibold">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/AnnualReportLabel')}</div>
+              <div class="so-text-muted">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/AnnualReportSubtitle')}</div>
+            </div>
+          </div>
+          <div class="flex align-items-center gap-2 flex-shrink-0">
+            <span class="#{cc.attrs.bean.legalDocumentTypeRequired['ANNUAL_REPORT'] ? 'so-badge-required' : 'so-badge-optional'}">#{cc.attrs.bean.legalDocumentTypeRequired['ANNUAL_REPORT'] ? ivy.cms.co('/Labels/Required') : ivy.cms.co('/Labels/Optional')}</span>
+            <p:outputPanel id="annual-report-doc-panel" layout="inline"
+              rendered="#{cc.attrs.bean.annualReportDoc != null}">
+              <span class="so-doc-uploaded">
+                <i class="ti ti-check mr-1"></i>
+                <span class="so-doc-name">
+                  <h:outputText value="#{cc.attrs.bean.annualReportDoc.fileName}" />
+                </span>
+              </span>
+              <p:tooltip for="annual-report-doc-panel"
+                value="#{cc.attrs.bean.annualReportDoc.fileName}" />
+            </p:outputPanel>
+            <p:commandButton
+              icon="ti ti-download"
+              title="#{ivy.cms.co('/Labels/Download')}"
+              styleClass="ui-button-outlined ui-button-sm"
+              rendered="#{cc.attrs.bean.annualReportDoc != null}"
+              ajax="false"
+              immediate="true">
+              <p:fileDownload value="#{cc.attrs.bean.downloadDocument(cc.attrs.bean.annualReportDoc.documentId)}" />
+            </p:commandButton>
+            <h:panelGroup rendered="#{cc.attrs.bean.annualReportDoc != null and not cc.attrs.readOnly}">
+              <p:commandButton
+                icon="ti ti-trash"
+                title="#{ivy.cms.co('/Labels/Remove')}"
+                styleClass="ui-button-outlined ui-button-sm ui-button-danger"
+                actionListener="#{cc.attrs.bean.removeSupplierDocument}"
+                process="@this"
+                update="#{cc.attrs.updateTargets} req-docs-panel">
+                <f:attribute name="documentId" value="#{cc.attrs.bean.annualReportDoc.documentId}" />
+              </p:commandButton>
+            </h:panelGroup>
+            <p:commandButton id="upload-annual-report"
+              value="#{cc.attrs.bean.annualReportDoc != null ? ivy.cms.co('/Labels/Replace') : ivy.cms.co('/Labels/Upload')}"
+              icon="ti ti-upload"
+              styleClass="ui-button-outlined ui-button-sm"
+              rendered="#{not cc.attrs.readOnly}"
+              process="@this"
+              update="@none"
+              oncomplete="PF('#{cc.attrs.uploadWidgetVar}').show()">
+              <f:setPropertyActionListener value="ANNUAL_REPORT"
+                target="#{cc.attrs.bean.pendingDocumentType}" />
+            </p:commandButton>
+          </div>
+        </div>
+
+        <!-- Dynamic rows for additional (drag-and-dropped) documents -->
+        <ui:repeat value="#{cc.attrs.bean.additionalDocuments}" var="addDoc">
+          <div class="so-doc-row">
+            <div class="flex align-items-center gap-2 flex-1 min-w-0">
+              <i class="ti ti-file so-text-muted flex-shrink-0 text-2xl"></i>
+              <div class="min-w-0">
+                <div class="font-semibold">
+                  <h:outputText value="#{addDoc.documentType.label}" />
+                </div>
+                <div class="so-text-muted">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/AdditionalDocumentSubtitle')}</div>
+              </div>
+            </div>
+            <div class="flex align-items-center gap-2 flex-shrink-0">
+              <span class="so-badge-optional">#{ivy.cms.co('/Labels/Optional')}</span>
+              <p:outputPanel id="add-doc-panel" layout="inline">
+                <span class="so-doc-uploaded">
+                  <i class="ti ti-check mr-1"></i>
+                  <span class="so-doc-name">
+                    <h:outputText value="#{addDoc.fileName}" />
+                  </span>
+                </span>
+                <p:tooltip for="add-doc-panel" value="#{addDoc.fileName}" />
+              </p:outputPanel>
+              <p:commandButton
+                icon="ti ti-download"
+                title="#{ivy.cms.co('/Labels/Download')}"
+                styleClass="ui-button-outlined ui-button-sm"
+                ajax="false"
+                immediate="true">
+                <p:fileDownload value="#{cc.attrs.bean.downloadDocument(addDoc.documentId)}" />
+              </p:commandButton>
+              <p:commandButton
+                icon="ti ti-trash"
+                title="#{ivy.cms.co('/Labels/Remove')}"
+                styleClass="ui-button-outlined ui-button-sm ui-button-danger"
+                rendered="#{not cc.attrs.readOnly}"
+                actionListener="#{cc.attrs.bean.removeSupplierDocument}"
+                process="@this"
+                update="#{cc.attrs.updateTargets}">
+                <f:attribute name="documentId" value="#{addDoc.documentId}" />
+              </p:commandButton>
+            </div>
+          </div>
+        </ui:repeat>
+
+        <!-- Drop zone -->
+        <p:outputPanel id="req-doc-dropzone" rendered="#{not cc.attrs.readOnly}" styleClass="so-doc-dropzone mt-3">
+          <i class="ti ti-cloud-upload text-5xl so-text-muted mb-1"></i>
+          <span class="so-text-muted">#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/DragAndDropHint')}</span>
+          <p:commandLink id="req-doc-browse" value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/components/LegalDocuments/BrowseFilesLink')}"
+            styleClass="text-primary"
+            onclick="PF('#{cc.attrs.uploadWidgetVar}').show();return false;" />
+        </p:outputPanel>
+
+      </h:panelGroup>
+    </h:panelGroup>
+
+  </div>
+
+</cc:implementation>
+
+</html>

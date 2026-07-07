@@ -1,0 +1,23 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierCertification",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier",
+  "fields" : [ {
+    "name" : "type",
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
+    "comment" : "Type of certification"
+  }, {
+    "name" : "certNumber",
+    "comment" : "Certificate number"
+  }, {
+    "name" : "expiryDate",
+    "comment" : "Expiry date in ISO format yyyy-MM-dd"
+  }, {
+    "name" : "documentReference",
+    "comment" : "Reference to uploaded document filename"
+  }, {
+    "name" : "uploaded",
+    "type" : "Boolean",
+    "comment" : "Whether the certificate document has been uploaded"
+  } ]
+}

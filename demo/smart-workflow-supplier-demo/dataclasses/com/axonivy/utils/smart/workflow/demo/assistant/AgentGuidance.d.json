@@ -1,0 +1,10 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "AgentGuidance",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.assistant",
+  "fields" : [ {
+    "name" : "questionPattern"
+  }, {
+    "name" : "instruction"
+  } ]
+}

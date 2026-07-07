@@ -1,0 +1,66 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "OnboardingRequest",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding",
+  "annotations" : [ "@com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)" ],
+  "fields" : [ {
+    "name" : "requestedBy",
+    "comment" : "User who initiated the request"
+  }, {
+    "name" : "department",
+    "comment" : "Department ID from the available departments list, e.g. DEPT-001"
+  }, {
+    "name" : "productsServicesNeeded",
+    "comment" : "Products or services needed from this supplier"
+  }, {
+    "name" : "expectedAnnualVolume",
+    "type" : "java.lang.Double",
+    "comment" : "Expected annual procurement volume in EUR, e.g. 50000"
+  }, {
+    "name" : "urgency",
+    "comment" : "Request urgency: Normal, High, or Critical"
+  }, {
+    "name" : "neededByDate",
+    "type" : "java.time.LocalDate",
+    "comment" : "Date by which the supplier is needed, format yyyy-MM-dd"
+  }, {
+    "name" : "additionalNotes",
+    "comment" : "Additional context or notes for the procurement or QM team"
+  }, {
+    "name" : "supplier",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.Supplier",
+    "comment" : "The supplier being onboarded"
+  }, {
+    "name" : "riskScore",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.SupplierRiskScore",
+    "comment" : "Risk score assessment result from the agent"
+  }, {
+    "name" : "status",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus",
+    "comment" : "Current status of the onboarding workflow"
+  }, {
+    "name" : "matchedSuppliers",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.Supplier>",
+    "comment" : "Existing suppliers matched during the duplicate check step"
+  }, {
+    "name" : "policyValidationFindings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding>",
+    "comment" : "Policy validation findings saved from the most recent agent analysis run"
+  }, {
+    "name" : "caseUuid",
+    "comment" : "Case UUID from Ivy.wfCase().uuid()"
+  }, {
+    "name" : "completedAt",
+    "comment" : "Completion timestamp in ISO-8601 text format"
+  }, {
+    "name" : "processDuration",
+    "comment" : "Human-readable process duration text, e.g. 1h 8min"
+  }, {
+    "name" : "declinedAt",
+    "comment" : "Decline timestamp in ISO-8601 text format, set only on the RED path"
+  }, {
+    "name" : "auditTrail",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.AuditTrailEntry>",
+    "comment" : "Full ordered audit trail for this onboarding request"
+  } ]
+}

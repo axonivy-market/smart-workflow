@@ -68,6 +68,16 @@ class TestChatModelProviders {
 
   @ParameterizedTest
   @MethodSource("providerNames")
+  void models_namesAreApiCompatible(String providerName) {
+    var models = ChatModelFactory.create(providerName).orElseThrow().models();
+    assertThat(models).allSatisfy(name ->
+        assertThat(name)
+            .as("model name for provider '%s' should be a lowercase API name, not an enum constant", providerName)
+            .matches("[a-z0-9][a-z0-9.\\-:_]*"));
+  }
+
+  @ParameterizedTest
+  @MethodSource("providerNames")
   void installer_promotesProvider(String providerName) throws Exception {
     if (providerName.equals("dummy")) {
       return; // dummy provider is not actually installed, just for testing resolution

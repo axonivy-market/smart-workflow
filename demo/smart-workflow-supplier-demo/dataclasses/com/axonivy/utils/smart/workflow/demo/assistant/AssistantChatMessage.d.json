@@ -1,0 +1,12 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "AssistantChatMessage",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.assistant",
+  "fields" : [ {
+    "name" : "role"
+  }, {
+    "name" : "content"
+  }, {
+    "name" : "timestamp"
+  } ]
+}

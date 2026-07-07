@@ -1,0 +1,18 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "Address",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.common",
+  "fields" : [ {
+    "name" : "street1"
+  }, {
+    "name" : "street2"
+  }, {
+    "name" : "city"
+  }, {
+    "name" : "state"
+  }, {
+    "name" : "zipCode"
+  }, {
+    "name" : "country"
+  } ]
+}

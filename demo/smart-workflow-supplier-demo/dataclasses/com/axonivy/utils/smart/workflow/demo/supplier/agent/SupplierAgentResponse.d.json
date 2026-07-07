@@ -1,0 +1,48 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "SupplierAgentResponse",
+  "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.agent",
+  "fields" : [ {
+    "name" : "status",
+    "type" : "com.axonivy.utils.smart.workflow.demo.enums.Status",
+    "comment" : "Status of the action"
+  }, {
+    "name" : "feedback",
+    "comment" : "Feedback after running an action"
+  }, {
+    "name" : "riskScore",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.SupplierRiskScore",
+    "comment" : "Risk score assessment result from the agent"
+  }, {
+    "name" : "validationFindings",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding>",
+    "comment" : "List of validation findings from document extraction and policy checks"
+  }, {
+    "name" : "matchScore",
+    "type" : "java.lang.Integer",
+    "comment" : "Similarity match score in percent (0-100) for duplicate check results"
+  }, {
+    "name" : "routingDecision",
+    "comment" : "Routing decision based on risk score: APPROVAL, CLARIFICATION, or DECLINE"
+  }, {
+    "name" : "processingSteps",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.AgentProcessingStep>",
+    "comment" : "Processing steps with timing and log lines from agent tool execution"
+  }, {
+    "name" : "supplier",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.Supplier",
+    "comment" : "The supplier related to the action"
+  }, {
+    "name" : "suppliers",
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.Supplier>",
+    "comment" : "The list of suppliers related to the action"
+  }, {
+    "name" : "isSupplierExisting",
+    "type" : "Boolean",
+    "comment" : "Existence status of the supplier"
+  }, {
+    "name" : "supplierSearchCriteria",
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierSearchCriteria",
+    "comment" : "Search criteria to find the supplier"
+  } ]
+}
