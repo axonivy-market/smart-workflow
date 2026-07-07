@@ -20,8 +20,7 @@ public class TopCasesChartBuilder extends AbstractChartBuilder<BarChartModel> {
     List<Map.Entry<String, Long>> sorted = topCasesEntries(stats);
 
     List<String> labels = sorted.stream()
-        .map(item -> truncate(item.getKey().isEmpty() ? unknownLabel : item.getKey(),
-            ChartConfig.MAX_LABEL_LENGTH))
+        .map(item -> item.getKey().isEmpty() ? unknownLabel : item.getKey())
         .collect(Collectors.toList());
     List<Number> values = sorted.stream().map(Map.Entry::getValue).collect(Collectors.toList());
 

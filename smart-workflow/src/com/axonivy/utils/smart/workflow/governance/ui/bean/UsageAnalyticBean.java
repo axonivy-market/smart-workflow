@@ -29,7 +29,7 @@ public class UsageAnalyticBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private static final int ANALYTICS_LOOKBACK_DAYS = 6; // last 7 days inclusive of today
+  private static final int ANALYTICS_LOOKBACK_DAYS = 6;
 
   private final HistoryStorage storage                             = new IvyRepoHistoryStorage();
   private final HistoryKpiComputer kpiComputer                     = new HistoryKpiComputer();

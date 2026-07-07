@@ -14,6 +14,7 @@ import org.primefaces.model.charts.optionconfig.legend.Legend;
 import ch.ivyteam.ivy.environment.Ivy;
 
 import com.axonivy.utils.smart.workflow.governance.ui.model.ChartPalette;
+import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 
 public class TokenTimelineChartBuilder extends AbstractChartBuilder<BarChartModel> {
 
@@ -26,7 +27,7 @@ public class TokenTimelineChartBuilder extends AbstractChartBuilder<BarChartMode
     totalsByDay.entrySet().stream()
         .sorted(Map.Entry.comparingByKey())
         .forEach(item -> {
-          labels.add(item.getKey().format(DAY_FMT));
+          labels.add(item.getKey().format(DatePatternUtils.DAY_FMT));
           values.add(item.getValue());
         });
 

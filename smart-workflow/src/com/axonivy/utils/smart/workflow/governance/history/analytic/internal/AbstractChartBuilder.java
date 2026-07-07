@@ -1,7 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.history.analytic.internal;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +19,11 @@ abstract class AbstractChartBuilder<M> {
 
   public abstract M build(HistoryAggregator stats);
 
-  protected static final DateTimeFormatter DAY_FMT = DateTimeFormatter.ofPattern("MMM dd");
   protected static final String CMS = "/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/";
 
   interface ChartConfig {
     int    MIN_TIMELINE_DAYS = 5;
     int    TOP_N_PROCESSES   = 5;
-    int    MAX_LABEL_LENGTH  = 20;
     int    BAR_THICKNESS     = 30;
     String AXIS_HORIZONTAL   = "y";
     String LEGEND_RIGHT      = "right";
@@ -72,13 +69,6 @@ abstract class AbstractChartBuilder<M> {
     CartesianScales scales = new CartesianScales();
     scales.addYAxesData(axis);
     return scales;
-  }
-
-  protected String truncate(String s, int maxLen) {
-    if (s == null) {
-      return "";
-    }
-    return s.length() <= maxLen ? s : s.substring(0, maxLen - 1) + "\u2026";
   }
 
   private ChartData chartData(List<String> labels, BarChartDataSet... dataSets) {

@@ -148,8 +148,6 @@ public class TestHistoryAggregator {
     );
   }
 
-  // ── helpers ──────────────────────────────────────────────────────────────────
-
   static AgentConversationEntry entry(String model, long total, long input, long output, long durationMs) {
     var e = new AgentConversationEntry();
     e.setTokenUsageJson(tokenJson(model, total, input, output, durationMs));

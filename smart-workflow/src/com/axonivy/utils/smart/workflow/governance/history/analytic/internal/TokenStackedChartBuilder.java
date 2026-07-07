@@ -15,6 +15,7 @@ import org.primefaces.model.charts.bar.BarChartOptions;
 import ch.ivyteam.ivy.environment.Ivy;
 
 import com.axonivy.utils.smart.workflow.governance.ui.model.ChartPalette;
+import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 
 public class TokenStackedChartBuilder extends AbstractChartBuilder<BarChartModel> {
 
@@ -30,7 +31,7 @@ public class TokenStackedChartBuilder extends AbstractChartBuilder<BarChartModel
     byDay.entrySet().stream()
         .sorted(Map.Entry.comparingByKey())
         .forEach(item -> {
-          labels.add(item.getKey().format(DAY_FMT));
+          labels.add(item.getKey().format(DatePatternUtils.DAY_FMT));
           inputData.add(item.getValue()[0]);
           outputData.add(item.getValue()[1]);
         });
