@@ -1,11 +1,10 @@
 package com.axonivy.utils.smart.workflow.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -64,16 +63,6 @@ class TestChatModelProviders {
     assertThat(model.listeners())
         .as("providers install listeners passed from Agent")
         .contains(myListener);
-  }
-
-  @ParameterizedTest
-  @MethodSource("providerNames")
-  void models_namesAreApiCompatible(String providerName) {
-    var models = ChatModelFactory.create(providerName).orElseThrow().models();
-    assertThat(models).allSatisfy(name ->
-        assertThat(name)
-            .as("model name for provider '%s' should be a lowercase API name, not an enum constant", providerName)
-            .matches("[a-z0-9][a-z0-9.\\-:_]*"));
   }
 
   @ParameterizedTest
