@@ -33,7 +33,10 @@ public class CaseTreeNode {
     Map<String, List<AgentConversationEntry>> byCase = new LinkedHashMap<>();
     for (AgentConversationEntry entry : entries) {
       String key = entry.getCaseUuid() != null ? entry.getCaseUuid() : "";
-      byCase.computeIfAbsent(key, k -> new ArrayList<>()).add(entry);
+      if (!byCase.containsKey(key)) {
+        byCase.put(key, new ArrayList<>());
+      }
+      byCase.get(key).add(entry);
     }
 
     List<CaseTreeNode> nodes = new ArrayList<>();
@@ -49,7 +52,10 @@ public class CaseTreeNode {
     Map<String, List<AgentConversationEntry>> byTask = new LinkedHashMap<>();
       for (AgentConversationEntry entry : caseGroup.getValue()) {
         String taskKey = entry.getTaskUuid() != null ? entry.getTaskUuid() : "";
-        byTask.computeIfAbsent(taskKey, k -> new ArrayList<>()).add(entry);
+        if (!byTask.containsKey(taskKey)) {
+          byTask.put(taskKey, new ArrayList<>());
+        }
+        byTask.get(taskKey).add(entry);
       }
 
       List<TaskTreeNode> taskNodes = buildTaskNodes(byTask);
