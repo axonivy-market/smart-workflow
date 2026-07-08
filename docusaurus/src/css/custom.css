@@ -28,3 +28,16 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+.navbar .dsla-search-wrapper {
+  width: min(320px, 38vw);
+  margin-left: 0.5rem;
+}
+
+.navbar .dsla-search-field {
+  min-width: 180px;
+}
+
+.navbar .aa-Input {
+  min-height: 40px;
+}

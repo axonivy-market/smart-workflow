@@ -325,5 +325,73 @@
   "theme.tags.tagsPageTitle": {
     "message": "Tags",
     "description": "The title of the tag list page"
+  },
+  "homepage.subtitle": {
+    "message": "Bringen Sie KI direkt in Axon Ivy"
+  },
+  "homepage.exploreButton": {
+    "message": "Übersicht erkunden"
+  },
+  "homepage.feature.setup": {
+    "message": "Vertraute Einrichtung"
+  },
+  "homepage.feature.setup.desc": {
+    "message": "Fügen Sie KI-Agenten ohne strukturelle Änderungen in BPMN-Prozesse ein und konfigurieren Sie alles über die Standardoberflächen von Axon Ivy."
+  },
+  "homepage.feature.enterprise": {
+    "message": "Enterprise-ready"
+  },
+  "homepage.feature.enterprise.desc": {
+    "message": "Entwickelt für Unternehmensanforderungen mit standardmäßiger Unterstützung für Protokollierung, Überwachung und Konfigurationssteuerung."
+  },
+  "homepage.feature.tools": {
+    "message": "Flexible Werkzeuge"
+  },
+  "homepage.feature.tools.desc": {
+    "message": "Verwandeln Sie jeden aufrufbaren Prozess in ein für KI auffindbares Werkzeug und befähigen Sie Agenten zu autonomen Handlungen."
+  },
+  "homepage.feature.models": {
+    "message": "Multi-Modell-Unterstützung"
+  },
+  "homepage.feature.models.desc": {
+    "message": "Nutzen Sie nahtlos ressourcenschonende oder fortschrittliche Sprachmodelle, je nach Komplexität der anstehenden Aufgabe."
+  },
+  "homepage.feature.outputs": {
+    "message": "Typsichere Ausgaben"
+  },
+  "homepage.feature.outputs.desc": {
+    "message": "Erzeugen Sie strukturierte Java-Objekte direkt aus KI-Antworten für die sofortige und vorhersehbare Verwendung in Ihrem Workflow."
+  },
+  "homepage.feature.nlp": {
+    "message": "Verarbeitung natürlicher Sprache"
+  },
+  "homepage.feature.nlp.desc": {
+    "message": "Akzeptieren Sie unstrukturierte, dialogorientierte Eingaben und geben Sie benutzerfreundliche, synthetisierte Ausgaben zurück."
+  },
+  "homepage.title": {
+    "message": "Smart Workflow"
+  },
+  "homepage.description": {
+    "message": "Smart Workflow bringt KI direkt in Axon Ivy"
+  },
+  "cmfcmf/d-s-l.searchBar.placeholder": {
+    "message": "Suchen...",
+    "description": "Placeholder shown in the searchbar"
+  },
+  "cmfcmf/d-s-l.searchBar.clearButtonTitle": {
+    "message": "Leeren",
+    "description": "Title of the button to clear the current search input"
+  },
+  "cmfcmf/d-s-l.searchBar.detachedCancelButtonText": {
+    "message": "Abbrechen",
+    "description": "Text of the button to close the detached search window"
+  },
+  "cmfcmf/d-s-l.searchBar.submitButtonTitle": {
+    "message": "Suchen",
+    "description": "Title of the button to submit a new search"
+  },
+  "cmfcmf/d-s-l.searchBar.noResults": {
+    "message": "Keine Suchergebnissse gefunden.",
+    "description": "message shown if no results are found"
   }
 }
