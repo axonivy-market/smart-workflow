@@ -1,8 +1,11 @@
 package com.axonivy.utils.smart.workflow.governance.history.internal;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -24,7 +27,42 @@ public class ChatHistoryJsonParser {
     public static final TokenUsage EMPTY = new TokenUsage(0L, UNKNOWN_MODEL, 0L, 0L, 0L);
   }
 
+  public record ArgumentEntry(String key, String value) {
+    public String getKey() {
+      return key;
+    }
+
+    public String getValue() {
+      return value;
+    }
+  }
+
   private ChatHistoryJsonParser() {}
+
+  public static List<ArgumentEntry> getArgumentEntries(ToolExecution exec) {
+    String args = exec.arguments();
+    if (args == null || args.isBlank()) {
+      return List.of();
+    }
+    try {
+      JsonNode node = JsonUtils.getObjectMapper().readTree(args);
+      if (!node.isObject()) {
+        return List.of();
+      }
+      List<ArgumentEntry> entries = new ArrayList<>();
+      var fieldNames = node.fieldNames();
+      while (fieldNames.hasNext()) {
+        var key = fieldNames.next();
+        var val = node.get(key);
+        entries.add(new ArgumentEntry(key, val.isTextual() ? val.asText() : val.toPrettyString()));
+      }
+      return entries;
+    } catch (IOException e) {
+      Ivy.log().warn(String.format(PARSE_FAILURE_MESSAGE,
+          "toolArguments", exec.toolName(), e.getMessage()));
+      return List.of();
+    }
+  }
 
   public static int getMessageCount(AgentConversationEntry entry) {
     if (entry == null || entry.getMessagesJson() == null) return -1;
