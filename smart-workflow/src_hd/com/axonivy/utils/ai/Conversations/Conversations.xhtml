@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+  xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+  <ui:composition template="/layouts/frame-10-full-width.xhtml">
+    <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/Title')}</ui:define>
+    <ui:define name="content">
+
+      <h:outputStylesheet library="css" name="ai-governance.css" />
+      <h:outputStylesheet library="css" name="ai-governance-light.css" />
+      <h:outputStylesheet library="css" name="ai-governance-dark.css" />
+      <h:outputScript library="js" name="conversation-viewer.js" target="head" />
+
+      <div class="governance-page mx-auto">
+        <h:form id="conv-form">
+          <f:event listener="#{conversationsBean.preRender(data.caseUuid)}" type="preRenderComponent" />
+          <ui:include src="Header.xhtml" />
+
+          <!-- Empty placeholder -->
+          <h:panelGroup rendered="#{conversationsBean.caseNode == null}" layout="block"
+                        styleClass="cv-empty-state flex flex-column align-items-center justify-content-center text-color-secondary">
+            <i class="ti ti-message-2 text-5xl block mb-3" />
+            <div class="font-semibold mb-2 text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/EmptyStateTitle')}</div>
+            <div class="text-sm text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/EmptyStateMessage')}</div>
+          </h:panelGroup>
+
+          <h:panelGroup id="cv-content-panel" layout="block" rendered="#{conversationsBean.caseNode != null}" styleClass="card mt-4 mb-0 p-0 overflow-hidden cv-content-panel">
+
+            <ui:include src="CaseDetailsDialog.xhtml" />
+
+            <div class="cv-timeline-wrap px-2">
+              <ui:include src="Summary.xhtml" />
+              <div class="cv-timeline py-2">
+                <ui:repeat var="task" value="#{conversationsBean.caseNode.tasks}" varStatus="taskStatus">
+                  <ui:include src="ConversationTemplate.xhtml" />
+                </ui:repeat>
+              </div>
+            </div>
+          </h:panelGroup>
+
+        </h:form>
+      </div>
+      <script>
+        window.isHideTaskName = true;
+        window.isHideTaskAction = true;
+        window.isHideCaseInfo = true;
+      </script>
+    </ui:define>
+  </ui:composition>
+</h:body>
+</html>
