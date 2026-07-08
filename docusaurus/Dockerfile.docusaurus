@@ -1,0 +1,9 @@
+FROM node:lts
+WORKDIR /app
+
+# Copy package.json and install dependencies during the image build
+COPY package.json .
+RUN npm install
+
+# Start the server instantly when the container runs
+CMD npm start -- --host 0.0.0.0 --poll 1000

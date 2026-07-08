@@ -10,62 +10,8 @@ Guardrails protect AI agents by validating both user input and AI output. Smart 
 
 | Guardrail | Type | Description |
 |-----------|------|-------------|
-| `PromptInjectionInputGuardrail` | Input | Blocks common prompt injection attacks using regex patterns. Low latency, no LLM cost. Use as a basic first line of defence. |
-| `AiPromptInjectionInputGuardrail` | Input | LLM-based classifier that catches subtle injections missed by regex — roleplay jailbreaks, authority spoofing, narrative payloads, gradual drift. Use when stricter protection is needed. |
+| `PromptInjectionInputGuardrail` | Input | Blocks common prompt injection attacks |
 | `SensitiveDataOutputGuardrail` | Output | Blocks responses containing API keys or private keys |
-
-### Choosing an Input Guardrail
-
-| | `PromptInjectionInputGuardrail` | `AiPromptInjectionInputGuardrail` |
-|---|---|---|
-| **Detection method** | Regex patterns | LLM classifier |
-| **Catches** | Keyword-based attacks | All of the above + roleplay, authority claims, narrative payloads, obfuscation |
-| **False positives** | Low (narrowed patterns) | Very low (intent-aware) |
-| **Latency** | ~0 ms | +LLM call per message |
-| **Cost** | Free | Token cost (use `AI.Guardrails.PromptInjection.Classifier.Provider` + `Model` to pin a cheap model) |
-| **When to use** | Default / general use | High-security deployments, customer-facing chatbots |
-
-### Configuring `AiPromptInjectionInputGuardrail`
-
-Four variables control cost, coverage, and classification behaviour:
-
-```yaml
-Variables:
-  AI:
-    Guardrails:
-      PromptInjection:
-        Classifier:
-          # AI provider for the classifier. When blank, falls back to AI.DefaultProvider.
-          # Use a provider that offers cheap, fast models (e.g. OpenAI for gpt-4.1-nano).
-          Provider: ""
-          # Pin a cheaper model for the classifier to reduce token cost.
-          # When blank, the provider's default model is used.
-          Model: "gpt-4.1-nano"
-          # Custom system prompt for the YES/NO classifier.
-          # When blank, the built-in prompt is used (covers 8 attack categories and 5 safe categories).
-          # Must instruct the model to reply with only YES or NO.
-          SystemPrompt: ""
-          # Allow messages shorter than this character count without an LLM call.
-          # Default is 0 (all messages are evaluated). Raise this to skip the LLM
-          # for very short messages once you understand your traffic patterns.
-          MinLength: "0"
-```
-
-#### Customising the system prompt
-
-The built-in prompt covers generic prompt injection patterns. For domain-specific deployments you may need to extend it — for example, a financial chatbot that should also block attempts to invoke "advisor mode" with no compliance checks, or a support bot that should reject attempts to impersonate internal staff.
-
-Set `SystemPrompt` to your own text. The prompt **must** end with an instruction to reply with only `YES` or `NO`:
-
-```
-You are a prompt injection classifier for a financial services chatbot.
-[... your custom rules ...]
-Reply ONLY YES or NO.
-```
-
-Leave the variable blank to use the built-in prompt.
-
-> **Important:** The classifier must reply with `YES` or `NO`. If the model returns anything else (e.g. a sentence), the guardrail **blocks the message as a precaution** and logs a warning to alert you to the misconfiguration.
 
 ## Configuring Default Guardrails
 

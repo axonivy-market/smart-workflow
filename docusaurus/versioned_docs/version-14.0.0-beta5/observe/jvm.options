@@ -1,0 +1,7 @@
+# OpenTelemetry -> Arize Phoenix
+-Dotel.traces.exporter=otlp
+-Dotel.exporter.otlp.endpoint=http://localhost:6006
+-Dotel.resource.attributes=openinference.project.name=smart-workflow
+
+# Run Engine in VSCode dev mode
+-Ddev.mode=true

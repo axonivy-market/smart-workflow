@@ -72,7 +72,3 @@ AI.DefaultProvider           = OpenAI          # or AzureOpenAI / Gemini
 AI.RAG.OpenSearch.Url        = https://my-opensearch.us-east-1.es.amazonaws.com
 # AI.RAG.EmbeddingModel.Provider can be left blank if AI.DefaultProvider supports embedding
 ```
-
-> **Tip:** Our [Devcontainer](dev/DEVCONTAINER.md) is pre-configured with an
-> OpenSearch service, so you can skip the server setup and `AI.RAG.OpenSearch.Url`
-> configuration. In that environment you only need to define the AI Provider API key.
