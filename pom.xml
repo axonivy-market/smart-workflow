@@ -55,6 +55,12 @@
         <module>demo/smart-workflow-supplier-demo-test</module>
       </modules>
     </profile>
+    <profile>
+      <id>webtest.test</id>
+      <modules>
+        <module>smart-workflow-webtest</module>
+      </modules>
+    </profile>
   </profiles>
 
 </project>
