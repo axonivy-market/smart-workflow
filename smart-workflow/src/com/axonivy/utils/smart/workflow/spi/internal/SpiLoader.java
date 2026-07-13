@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.spi.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -64,7 +63,7 @@ public class SpiLoader {
       @SuppressWarnings("unchecked")
       var instance = (T) loaded.getConstructor().newInstance();
       return Optional.of(instance);
-    } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+    } catch (Exception ex) {
       return Optional.empty();
     }
   }
@@ -80,7 +79,7 @@ public class SpiLoader {
         var what = read(in);
         implRefs.add(what);
       }
-    } catch (IOException ex) {
+    } catch (Exception ex) {
 
     }
     return implRefs;
