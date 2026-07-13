@@ -5,11 +5,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ch.ivyteam.ivy.application.IProcessModelVersion;
@@ -25,14 +26,18 @@ public class SpiLoader {
   }
 
   public <T> Set<T> load(Class<T> type) {
-    return pmvsInScope()
-        .flatMap(p -> findImpl(p, type).stream())
-        .filter(type::isInstance)
-        .distinct()
-        .collect(Collectors.toSet());
+    Map<String, T> seen = new HashMap<>();
+    List<T> implementations = pmvsInScope()
+      .flatMap(p -> findImpl(p, type).stream())
+      .filter(type::isInstance)
+      .toList();
+    for (T impl : implementations) {
+      seen.putIfAbsent(impl.getClass().getName(), impl);
+    }
+    return new HashSet<>(seen.values());
   }
 
-  private Stream<IProcessModelVersion> pmvsInScope() {
+  protected Stream<IProcessModelVersion> pmvsInScope() {
     return Stream.concat(Stream.of(pmv), pmv.getAllDependentProcessModelVersions());
   }
 
