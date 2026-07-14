@@ -435,8 +435,8 @@
             "import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;",
             "import Features.RagDemo.IndexMetaView;",
             "import Features.RagDemo.EmbeddedChunkView;",
-            "import javax.faces.application.FacesMessage;",
-            "import javax.faces.context.FacesContext;",
+            "import jakarta.faces.application.FacesMessage;",
+            "import jakarta.faces.context.FacesContext;",
             "import dev.langchain4j.data.segment.TextSegment;",
             "import dev.langchain4j.store.embedding.EmbeddingMatch;",
             "import dev.langchain4j.store.embedding.EmbeddingSearchResult;",
@@ -523,8 +523,8 @@
       "config" : {
         "output" : {
           "code" : [
-            "import javax.faces.application.FacesMessage;",
-            "import javax.faces.context.FacesContext;",
+            "import jakarta.faces.application.FacesMessage;",
+            "import jakarta.faces.context.FacesContext;",
             "",
             "FacesContext fc = FacesContext.getCurrentInstance();",
             "boolean success = in.ragResult != null && !in.ragResult.hasError();",
@@ -607,8 +607,8 @@
         "output" : {
           "code" : [
             "import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;",
-            "import javax.faces.application.FacesMessage;",
-            "import javax.faces.context.FacesContext;",
+            "import jakarta.faces.application.FacesMessage;",
+            "import jakarta.faces.context.FacesContext;",
             "",
             "try {",
             "  OpenSearchRestClient.fromIvyVars().ping();",

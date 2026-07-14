@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.demo.erp.bean;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -7,16 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import com.axonivy.utils.smart.workflow.demo.service.IvyAdapterService;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 
-@ManagedBean
+@Named
 @ViewScoped
-public class ChatBean {
+public class ChatBean implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   public static class ChatMessage {
     private final String role;
