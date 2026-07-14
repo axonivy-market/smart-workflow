@@ -18,11 +18,11 @@ import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvide
 
 import ch.ivyteam.ivy.process.call.StartParameter;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
-import ch.ivyteam.ivy.process.extension.ui.ExtensionUiBuilder;
+import ch.ivyteam.ivy.process.program.ui.ProgramUiBuilder;
 
 public class AgentEditor {
 
-  public void initUiFields(ExtensionUiBuilder ui) {
+  public void editor(ProgramUiBuilder ui) {
     ui.group("Message")
         .add(ui.label("User message:").create())
         .add(ui.textField(Conf.QUERY).multiline().create())
