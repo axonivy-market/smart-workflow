@@ -6,3 +6,4 @@ Pii, Ollama, testcontainers, llava, nomic, mxbai, gemma, qwen, mistral, nemo
 opensearchproject, trixie, devcontainers
 IBAN, Iban
 chatbots, roleplay, defence, Customising, behaviour
+facelets
