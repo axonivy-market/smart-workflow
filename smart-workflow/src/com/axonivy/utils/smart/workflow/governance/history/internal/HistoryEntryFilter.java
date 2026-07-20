@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.governance.history.internal;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -15,13 +14,6 @@ public class HistoryEntryFilter {
   private static final String ERROR_PARSING_DATE = "Failed to parse lastUpdated: {0}";
 
   private HistoryEntryFilter() {}
-
-  public static List<AgentConversationEntry> filterByDateRange(
-      List<AgentConversationEntry> entries, LocalDate from, LocalDate to) {
-    return entries.stream()
-        .filter(e -> isWithinDateRange(e, from, to))
-        .toList();
-  }
 
   public static List<AgentConversationEntry> filter(
       List<AgentConversationEntry> entries,
@@ -48,19 +40,6 @@ public class HistoryEntryFilter {
     }
     String stored = ChatHistoryJsonParser.getModelName(entry);
     return stored != null && (stored.contains(filterModel) || filterModel.contains(stored));
-  }
-
-  private static boolean isWithinDateRange(AgentConversationEntry entry, LocalDate from, LocalDate to) {
-    if (entry.getLastUpdated() == null) {
-      return false;
-    }
-    try {
-      LocalDate d = LocalDateTime.parse(entry.getLastUpdated()).toLocalDate();
-      return !d.isBefore(from) && !d.isAfter(to);
-    } catch (DateTimeParseException ex) {
-      Ivy.log().warn(ERROR_PARSING_DATE, ex.getMessage());
-      return false;
-    }
   }
 
   private static boolean matchesDateRangeFilter(AgentConversationEntry entry, String filterDateRange) {

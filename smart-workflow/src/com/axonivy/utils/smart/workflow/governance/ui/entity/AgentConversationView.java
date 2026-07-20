@@ -31,10 +31,6 @@ public class AgentConversationView {
   public String getAgentName()   { return entry.getAgentName(); }
   public String getProcessName() { return entry.getProcessName(); }
 
-  public String getLastUpdatedRaw() {
-    return entry.getLastUpdated() != null ? entry.getLastUpdated() : "";
-  }
-
   public String getLastUpdatedText() {
     if (entry.getLastUpdated() == null) return NO_DATE;
     try {
@@ -49,7 +45,7 @@ public class AgentConversationView {
     return ChatHistoryJsonParser.getMessageCount(entry);
   }
 
-  public long getTotalTokens() {
+  public int getTotalTokens() {
     return tokenUsage().totalTokens();
   }
 

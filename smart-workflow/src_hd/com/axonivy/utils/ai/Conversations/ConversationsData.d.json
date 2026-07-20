@@ -1,9 +1,0 @@
-{
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
-  "simpleName" : "ConversationsData",
-  "namespace" : "com.axonivy.utils.ai.Conversations",
-  "fields" : [ {
-      "name" : "caseUuid",
-      "type" : "String"
-    } ]
-}

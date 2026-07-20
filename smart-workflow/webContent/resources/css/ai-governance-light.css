@@ -2,5 +2,4 @@ body.light {
   --ag-row-hover-bg: var(--blue-50);
   --ag-row-highlight-bg: var(--blue-100);
   --widget-header-icon: var(--ivy-primary-color-black, var(--text-color));
-  --surface-ground: #F3F3F3;
 }

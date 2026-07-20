@@ -2,13 +2,6 @@ Labels:
   Common:
     Actions: Acciones
     Back: Volver
-    Duration:
-      InProgress: En progreso
-      Minutes: '{0} min'
-      Hour: '{0} hora'
-      Hours: '{0} horas'
-      HourMinutes: '{0} hora {1} min'
-      HoursMinutes: '{0} horas {1} min'
 Dialogs:
   com:
     axonivy:
@@ -35,82 +28,4 @@ Dialogs:
               ColumnTokens: Tokens
               ColumnModel: Modelo
               ViewDetails: Ver detalles
-            Analytics:
-              SectionTitle: Análisis de Uso de Tokens
-              KpiTotalSessions: Sesiones Totales
-              KpiTotalTokens: Tokens Totales
-              KpiAvgResponseTime: Tiempo de Respuesta Promedio
-              KpiTopModel: Modelo Principal
-              UnitMs: ms
-              ChartTokenTimeline: Uso de Tokens en el Tiempo
-              ChartModelDist: Distribución de Modelos
-              ChartTokenStacked: Tokens de Entrada vs Salida por Día
-              ChartTopCases: Top Procesos por Uso de Tokens
-              ChartResponseTime: Distribución del Tiempo de Respuesta
-              DatasetTotalTokens: Tokens Totales
-              DatasetInputTokens: Tokens de Entrada
-              DatasetOutputTokens: Tokens de Salida
-              DatasetSessions: Sesiones
-              BucketUnder5s: '< 5 s'
-              Bucket5to10s: '5–10 s'
-              Bucket10to15s: '10–15 s'
-              BucketOver15s: '> 15 s'
-              UnknownProcess: desconocido
-          Conversations:
-            Conversations:
-              Title: Conversaciones
-              EmptyStateTitle: No se encontró historial
-              EmptyStateMessage: No se encontró historial de conversación para este caso.
-              CaseLabel: 'Caso:'
-              ExportButton: Exportar
-              DetailsButton: Detalles
-              AnalyzeButton: Analizar
-              MenuExport: Exportar
-              CaseInformation: Información del Caso
-              SidebarCaseDetails: Detalles del Caso
-              SidebarProcessViewer: Visor de Proceso
-              SidebarClose: Cerrar
-              NavHeader: Agentes por Tarea
-              KpiTask: Tarea
-              KpiTotalMessages: Total de Mensajes
-              KpiTotalTokens: Total de Tokens
-              KpiAverageDuration: Duración Promedio
-              TaskLabel: 'Tarea {0}'
-              TaskAgentTokens: '{0} agentes · {1} tokens'
-              AgentLabel: 'Agente {0}'
-              TokenCount: '{0} tokens'
-              TabSystemPrompt: Prompt del Sistema
-              NoSystemPrompt: No hay prompt del sistema configurado
-              TabInput: Entrada
-              NoInputMessages: No hay mensajes de entrada
-              TabResponse: Respuesta
-              NoResponse: Sin respuesta
-              TabTools: 'Llamadas de herramienta ({0})'
-              ToolInputParameters: Parámetros de entrada
-              NoParameters: Sin parámetros
-              ToolResult: Resultado
-              ToolStatusOk: OK
-              NoOutput: Sin salida
-              TabMetadata: Metadatos
-              MetaStartTime: Hora de inicio
-              MetaModel: Modelo
-              MetaInputTokens: Tokens de entrada
-              MetaOutputTokens: Tokens de salida
-              MetaTotalTokens: Tokens totales
-              MetaDuration: Duración
-              CaseId: ID del Caso
-              CaseState: Estado
-              CaseCategory: Categoría del Caso
-              NotAvailable: N/D
-              SectionRoleUser: Información de Roles y Usuarios
-              CaseCreator: Creador
-              SectionTimeInfo: Información de Tiempo
-              CaseCreated: Creado
-              CaseFinished: Finalizado
-              CaseProcessingTime: Tiempo de Procesamiento
-              SectionDescription: Descripción
-              NoDescription: Sin descripción
-              CaseUnavailable: Los detalles del caso no están disponibles.
-              ProcessFlowTitle: Flujo del Proceso
-              ProcessViewerUnavailableTitle: 'Lo sentimos...'
-              ProcessViewerUnavailableMsg: El visor de proceso no está disponible para este caso.
+              AnalyticsHeader: Análisis de Uso de Tokens
