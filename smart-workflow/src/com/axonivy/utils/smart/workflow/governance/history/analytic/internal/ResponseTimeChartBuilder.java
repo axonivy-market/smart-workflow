@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.governance.history.analytic.internal;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartModel;
@@ -24,7 +23,7 @@ public class ResponseTimeChartBuilder extends AbstractChartBuilder<BarChartModel
   @Override
   public BarChartModel build(HistoryAggregator stats) {
     List<String> labels = bucketLabels();
-    List<Number> values = Arrays.stream(stats.getResponseTimeBuckets()).boxed().collect(Collectors.toList());
+    List<Number> values = toLongNumbers(Arrays.stream(stats.getResponseTimeBuckets()).boxed());
 
     BarChartDataSet dataSet = new BarChartDataSet();
     dataSet.setLabel(Ivy.cms().co(CMS + "DatasetSessions"));

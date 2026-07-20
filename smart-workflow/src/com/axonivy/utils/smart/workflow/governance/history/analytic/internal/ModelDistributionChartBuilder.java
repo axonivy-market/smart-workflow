@@ -19,7 +19,7 @@ public class ModelDistributionChartBuilder extends AbstractChartBuilder<DonutCha
   public DonutChartModel build(HistoryAggregator stats) {
     List<Map.Entry<String, Long>> countEntries = new ArrayList<>(stats.getCountByModel().entrySet());
     List<String> labels = countEntries.stream().map(Map.Entry::getKey).collect(Collectors.toList());
-    List<Number> values = countEntries.stream().map(Map.Entry::getValue).collect(Collectors.toList());
+    List<Number> values = toLongNumbers(countEntries.stream().map(Map.Entry::getValue));
 
     PieChartDataSet dataSet = new PieChartDataSet();
     dataSet.setData(values);
