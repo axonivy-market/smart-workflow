@@ -50,6 +50,10 @@ public class AgentConversationEntry {
   public String getAgentName() { return agentName; }
   public void setAgentName(String agentName) { this.agentName = agentName; }
 
+  public String getDisplayName() {
+    return (agentName != null && !agentName.isBlank()) ? agentName : agentId;
+  }
+
   public String getProcessName() { return processName; }
   public void setProcessName(String processName) { this.processName = processName; }
 

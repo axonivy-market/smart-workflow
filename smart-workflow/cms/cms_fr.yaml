@@ -2,6 +2,13 @@ Labels:
   Common:
     Actions: Actions
     Back: Retour
+    Duration:
+      InProgress: En cours
+      Minutes: '{0} min'
+      Hour: '{0} heure'
+      Hours: '{0} heures'
+      HourMinutes: '{0} heure {1} min'
+      HoursMinutes: '{0} heures {1} min'
 Dialogs:
   com:
     axonivy:
@@ -28,4 +35,82 @@ Dialogs:
               ColumnTokens: Jetons
               ColumnModel: Modèle
               ViewDetails: Voir les détails
-              AnalyticsHeader: 'Analyse d''Utilisation des Tokens'
+            Analytics:
+              SectionTitle: 'Analyse d''Utilisation des Tokens'
+              KpiTotalSessions: Sessions totales
+              KpiTotalTokens: Tokens totaux
+              KpiAvgResponseTime: Temps de réponse moyen
+              KpiTopModel: Modèle principal
+              UnitMs: ms
+              ChartTokenTimeline: 'Utilisation des tokens dans le temps'
+              ChartModelDist: Distribution des modèles
+              ChartTokenStacked: 'Tokens d''entrée vs sortie par jour'
+              ChartTopCases: Top processus par utilisation de tokens
+              ChartResponseTime: Distribution du temps de réponse
+              DatasetTotalTokens: Tokens totaux
+              DatasetInputTokens: 'Tokens d''entrée'
+              DatasetOutputTokens: Tokens de sortie
+              DatasetSessions: Sessions
+              BucketUnder5s: '< 5 s'
+              Bucket5to10s: '5–10 s'
+              Bucket10to15s: '10–15 s'
+              BucketOver15s: '> 15 s'
+              UnknownProcess: inconnu
+          Conversations:
+            Conversations:
+              Title: Conversations
+              EmptyStateTitle: Aucun historique trouvé
+              EmptyStateMessage: Aucun historique de conversation trouvé pour ce cas.
+              CaseLabel: 'Cas :'
+              ExportButton: Exporter
+              DetailsButton: Détails
+              AnalyzeButton: Analyser
+              MenuExport: Exporter
+              CaseInformation: Informations du Cas
+              SidebarCaseDetails: Détails du Cas
+              SidebarProcessViewer: Visionneuse de Processus
+              SidebarClose: Fermer
+              NavHeader: Agents par Tâche
+              KpiTask: Tâche
+              KpiTotalMessages: Total des Messages
+              KpiTotalTokens: Total des Tokens
+              KpiAverageDuration: Durée Moyenne
+              TaskLabel: 'Tâche {0}'
+              TaskAgentTokens: '{0} agents · {1} tokens'
+              AgentLabel: 'Agent {0}'
+              TokenCount: '{0} tokens'
+              TabSystemPrompt: Prompt Système
+              NoSystemPrompt: Aucun prompt système configuré
+              TabInput: Entrée
+              NoInputMessages: 'Aucun message d''entrée'
+              TabResponse: Réponse
+              NoResponse: Aucune réponse
+              TabTools: 'Appels d''outils ({0})'
+              ToolInputParameters: 'Paramètres d''entrée'
+              NoParameters: Aucun paramètre
+              ToolResult: Résultat
+              ToolStatusOk: OK
+              NoOutput: Aucune sortie
+              TabMetadata: Métadonnées
+              MetaStartTime: Heure de début
+              MetaModel: Modèle
+              MetaInputTokens: 'Tokens d''entrée'
+              MetaOutputTokens: Tokens de sortie
+              MetaTotalTokens: Total des tokens
+              MetaDuration: Durée
+              CaseId: ID du Cas
+              CaseState: État
+              CaseCategory: Catégorie du Cas
+              NotAvailable: N/D
+              SectionRoleUser: Informations sur les Rôles et Utilisateurs
+              CaseCreator: Créateur
+              SectionTimeInfo: Informations Temporelles
+              CaseCreated: Créé
+              CaseFinished: Terminé
+              CaseProcessingTime: Temps de Traitement
+              SectionDescription: Description
+              NoDescription: Aucune description
+              CaseUnavailable: Les détails du cas ne sont pas disponibles.
+              ProcessFlowTitle: Flux du Processus
+              ProcessViewerUnavailableTitle: 'Oups... désolé'
+              ProcessViewerUnavailableMsg: 'La visionneuse de processus n''est pas disponible pour ce cas.'
