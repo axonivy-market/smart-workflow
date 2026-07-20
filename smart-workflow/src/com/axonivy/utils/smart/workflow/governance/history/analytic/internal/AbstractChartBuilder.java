@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.ChartOptions;
@@ -35,6 +37,12 @@ abstract class AbstractChartBuilder<M> {
     model.setData(chartData(labels, datasets));
     model.setOptions(options);
     return model;
+  }
+
+  protected static List<Number> toLongNumbers(Stream<Long> longs) {
+    List<Number> result = new ArrayList<>();
+    longs.forEach(result::add);
+    return result;
   }
 
   protected static <V> void padToMinDays(Map<LocalDate, V> map, Supplier<V> zero) {
