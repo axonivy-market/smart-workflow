@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.donut.DonutChartModel;
 
@@ -23,7 +20,10 @@ import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorag
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.ui.model.DashboardKpi;
 
-@ManagedBean
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+
+@Named("usageAnalyticBean")
 @ViewScoped
 public class UsageAnalyticBean implements Serializable {
 
