@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.internal.CaseService;
 import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
@@ -22,8 +18,11 @@ import com.axonivy.utils.smart.workflow.governance.utils.TimeCalculationUtils;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.viewer.api.ProcessViewer;
 import ch.ivyteam.ivy.workflow.ICase;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 
-@ManagedBean
+@Named("conversationsBean")
 @ViewScoped
 public class ConversationsBean implements Serializable {
 
