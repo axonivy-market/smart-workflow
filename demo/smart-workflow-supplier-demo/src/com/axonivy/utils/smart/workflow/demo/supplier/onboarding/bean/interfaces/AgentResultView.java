@@ -6,6 +6,8 @@ import com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentRespons
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.LogLineSeverity;
 
+import jakarta.faces.context.FacesContext;
+
 public interface AgentResultView {
 
   String CMS_ONBOARDING              = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/";
@@ -17,7 +19,7 @@ public interface AgentResultView {
   SupplierAgentResponse getAgentResponse();
 
   static SupplierAgentResponse resolveAgentResponse() {
-    javax.faces.context.FacesContext ctx = javax.faces.context.FacesContext.getCurrentInstance();
+    FacesContext ctx = FacesContext.getCurrentInstance();
     return (SupplierAgentResponse) ctx.getApplication()
         .evaluateExpressionGet(ctx, "#{data.agentResponse}", Object.class);
   }

@@ -4,19 +4,19 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import com.axonivy.utils.smart.workflow.demo.assistant.AgentGuidance;
-import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.SupplierOnboardingGuidance;
 import com.axonivy.utils.smart.workflow.demo.enums.Status;
 import com.axonivy.utils.smart.workflow.demo.supplier.Supplier;
-import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces.LogicCloseSupport;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.SupplierOnboardingGuidance;
 
-@ManagedBean
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+
+@Named
 @ViewScoped
 public class SupplierDuplicateCheckBean implements Serializable, LogicCloseSupport {
 
