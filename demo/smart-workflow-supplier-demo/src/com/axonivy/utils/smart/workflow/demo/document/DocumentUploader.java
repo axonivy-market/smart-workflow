@@ -5,13 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.faces.event.ActionEvent;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentObjectType;
 import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;
 import com.axonivy.utils.smart.workflow.demo.document.repository.LegalDocumentRepository;
+
+import jakarta.faces.event.ActionEvent;
 
 public interface DocumentUploader {
 
