@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.axonivy.ivy.api</groupId>
     <artifactId>ivy-project-parent</artifactId>
-    <version>14.0.0-SNAPSHOT</version>
-    <relativePath />
+    <version>14.0.0-jakarta-SNAPSHOT</version>
+    <relativePath></relativePath>
   </parent>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-supplier-demo-test</artifactId>
@@ -64,10 +65,12 @@
           <execution>
             <id>create-classes-dir</id>
             <phase>initialize</phase>
-            <goals><goal>run</goal></goals>
+            <goals>
+              <goal>run</goal>
+            </goals>
             <configuration>
               <target>
-                <mkdir dir="${project.build.outputDirectory}"/>
+                <mkdir dir="${project.build.outputDirectory}" />
               </target>
             </configuration>
           </execution>

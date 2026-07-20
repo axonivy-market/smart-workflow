@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.portal;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;

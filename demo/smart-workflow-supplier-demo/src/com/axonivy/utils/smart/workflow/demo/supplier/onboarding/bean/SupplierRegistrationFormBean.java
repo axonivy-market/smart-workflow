@@ -7,14 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 import com.axonivy.utils.smart.workflow.demo.assistant.AgentGuidance;
-import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.SupplierOnboardingGuidance;
 import com.axonivy.utils.smart.workflow.demo.assistant.AssistantChatMessage;
 import com.axonivy.utils.smart.workflow.demo.assistant.AssistantUploadSupport;
 import com.axonivy.utils.smart.workflow.demo.assistant.UploadedDocumentEntry;
@@ -30,14 +26,18 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingReque
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces.LogicCloseSupport;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces.SupplierFormSupport;
-import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.OnboardingRequestHelper;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.CertificationHelper;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.DocumentDisplayHelper;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.OnboardingRequestHelper;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.SupplierOnboardingGuidance;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.OnboardingRequestParser;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
 
-@ManagedBean
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+
+@Named
 @ViewScoped
 public class SupplierRegistrationFormBean
     implements Serializable, CertificationUploader, RequiredDocumentUploader,
