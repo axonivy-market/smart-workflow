@@ -1,9 +1,8 @@
 package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces;
 
-import javax.el.ELContext;
-import javax.el.MethodExpression;
-import javax.faces.context.FacesContext;
-
+import jakarta.el.ELContext;
+import jakarta.el.MethodExpression;
+import jakarta.faces.context.FacesContext;
 
 public interface LogicCloseSupport {
 

@@ -2,7 +2,7 @@ package com.axonivy.utils.smart.workflow.client;
 
 import java.time.Duration;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.http.client.HttpClient;
