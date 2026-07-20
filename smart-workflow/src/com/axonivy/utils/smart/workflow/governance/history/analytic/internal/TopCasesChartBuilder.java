@@ -22,7 +22,7 @@ public class TopCasesChartBuilder extends AbstractChartBuilder<BarChartModel> {
     List<String> labels = sorted.stream()
         .map(item -> item.getKey().isEmpty() ? unknownLabel : item.getKey())
         .collect(Collectors.toList());
-    List<Number> values = sorted.stream().map(Map.Entry::getValue).collect(Collectors.toList());
+    List<Number> values = toLongNumbers(sorted.stream().map(Map.Entry::getValue));
 
     BarChartDataSet dataSet = new BarChartDataSet();
     dataSet.setLabel(Ivy.cms().co(CMS + "DatasetTotalTokens"));
