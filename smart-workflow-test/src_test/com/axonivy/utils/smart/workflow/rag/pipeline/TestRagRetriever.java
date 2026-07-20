@@ -1,15 +1,17 @@
 package com.axonivy.utils.smart.workflow.rag.pipeline;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.output.Response;
+import dev.langchain4j.model.embedding.request.EmbeddingRequest;
+import dev.langchain4j.model.embedding.response.EmbeddingResponse;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
@@ -31,10 +33,14 @@ public class TestRagRetriever {
   private final Embedding stubEmbedding = Embedding.from(new float[]{0.1f, 0.2f, 0.3f});
 
   @SuppressWarnings("unused")
-  private final EmbeddingModel embeddingModel = textSegments ->
-      Response.from(textSegments.stream()
-          .map(ts -> stubEmbedding)
-          .toList());
+  private final EmbeddingModel embeddingModel = new EmbeddingModel() {
+    @Override
+    public EmbeddingResponse embed(EmbeddingRequest request) {
+      return EmbeddingResponse.builder()
+          .embeddings(List.of(stubEmbedding))
+          .build();
+    }
+  };
 
   @Test
   void performSearchReturnsEmptyMatchesWhenNoResults() {
