@@ -18,6 +18,11 @@
       <artifactId>ivy-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.axonivy.ivy.spi</groupId>
+      <artifactId>ivy-process-extension-spi</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.axonivy.ivy.api.test</groupId>
       <artifactId>ivy-test-api</artifactId>
       <scope>provided</scope>
