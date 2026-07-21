@@ -1,10 +1,15 @@
 package com.axonivy.utils.smart.workflow.governance.ui.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.analyze.service.CaseAnalysisService;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.CaseStatistics;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service.CaseStatisticsService;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport;
 import com.axonivy.utils.smart.workflow.governance.history.internal.CaseService;
 import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
@@ -36,6 +41,9 @@ public class ConversationsBean implements Serializable {
   private CaseTreeNode caseNode;
   private List<AgentConversationEntry> entries;
   private ICase ivyCase;
+  private CaseStatistics caseStatistics;
+  private AiGovernanceReport aiGovernanceReport;
+  private boolean aiAnalyzing;
 
   @PostConstruct
   public void init() {
@@ -49,6 +57,11 @@ public class ConversationsBean implements Serializable {
       List<CaseTreeNode> tree = CaseTreeNode.buildTree(entries);
       caseNode = tree.isEmpty() ? null : tree.get(0);
       ivyCase = CaseService.findCase(caseUuid);
+      if (caseNode != null && entries != null && !entries.isEmpty()) {
+        caseStatistics = CaseStatisticsService.compute(
+            caseNode.getCaseUuid(), ivyCase != null ? ivyCase.getName() : null,
+            CaseAnalysisService.buildSummaries(entries));
+      }
     }
   }
 
@@ -115,5 +128,119 @@ public class ConversationsBean implements Serializable {
 
   public CaseTreeNode getCaseNode() {
     return caseNode;
+  }
+
+  public void generateAiRecommendation() {
+    if (caseNode == null) {
+      return;
+    }
+    aiAnalyzing = true;
+    try {
+      var result = CaseAnalysisService.analyze(caseNode.getCaseUuid(), ivyCase, entries);
+      aiGovernanceReport = result.aiReport();
+    } catch (Exception e) {
+      Ivy.log().error("Failed to generate AI recommendation for case {0}: {1}", caseNode.getCaseUuid(), e.getMessage());
+      aiGovernanceReport = null;
+    } finally {
+      aiAnalyzing = false;
+    }
+  }
+
+  public CaseStatistics getCaseStatistics() {
+    return caseStatistics;
+  }
+
+  public boolean isReportGenerated() {
+    return caseStatistics != null;
+  }
+
+  public List<String[]> getAgentInfoRows(CaseStatistics.AgentStats as) {
+    var s = as.getSummary();
+    var rows = new ArrayList<String[]>();
+    if (s.getAgentName() != null && !s.getAgentName().isBlank()) {
+      rows.add(new String[]{"ID", s.getAgentId()});
+    }
+    rows.add(new String[]{"Model",         s.getModel() != null ? s.getModel() : "N/A"});
+    rows.add(new String[]{"Finish reason", s.getFinishReason() != null ? s.getFinishReason() : "N/A"});
+    return rows;
+  }
+
+  public List<String[]> getAgentTokenRows(CaseStatistics.AgentStats as) {
+    var s = as.getSummary();
+    var rows = new ArrayList<String[]>();
+    rows.add(new String[]{"Tokens",        fmtLong(s.getTotalTokens())});
+    if (as.getTokensPerMsg() > 0) {
+      rows.add(new String[]{"Tokens/message", fmtDec(as.getTokensPerMsg())});
+    }
+    if (as.getThroughputTokensPerSec() > 0) {
+      rows.add(new String[]{"Throughput", String.format("%.1f tokens/sec", as.getThroughputTokensPerSec())});
+    }
+    if (isReportGenerated() && caseStatistics.getTotalTokens() > 0) {
+      rows.add(new String[]{"Token share", as.getTokenSharePct() + "% of case total"});
+    }
+    return rows;
+  }
+
+  public List<String[]> getAgentActivityRows(CaseStatistics.AgentStats as) {
+    var s = as.getSummary();
+    var rows = new ArrayList<String[]>();
+    rows.add(new String[]{"Messages",   String.valueOf(s.getMessageCount())});
+    rows.add(new String[]{"Tool calls", String.valueOf(s.getToolCallCount())});
+    rows.add(new String[]{"Duration",   s.getDurationMs() + " ms"});
+    if (isReportGenerated() && caseStatistics.getTotalDurationMs() > 0) {
+      rows.add(new String[]{"Time share", as.getTimeSharePct() + "% of case total"});
+    }
+    return rows;
+  }
+
+  public List<String[]> getOrderedRiskItems(AiGovernanceReport.RiskAssessment ra) {
+    if (ra == null) return List.of();
+    var base  = "/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/";
+    var items = new ArrayList<String[]>();
+    addRisk(items, Ivy.cms().co(base + "AiRiskOperational"), ra.getOperational());
+    addRisk(items, Ivy.cms().co(base + "AiRiskCompliance"),  ra.getCompliance());
+    addRisk(items, Ivy.cms().co(base + "AiRiskCost"),        ra.getCost());
+    addRisk(items, Ivy.cms().co(base + "AiRiskReliability"), ra.getReliability());
+    items.sort((a, b) -> riskLevelOrder(a[1]) - riskLevelOrder(b[1]));
+    return items;
+  }
+
+  private static void addRisk(List<String[]> list, String label, AiGovernanceReport.RiskEntry entry) {
+    if (entry != null) {
+      list.add(new String[]{label,
+          entry.getLevel()  != null ? entry.getLevel()  : "",
+          entry.getDetail() != null ? entry.getDetail() : ""});
+    }
+  }
+
+  private static int riskLevelOrder(String level) {
+    if ("High".equalsIgnoreCase(level))     return 0;
+    if ("Moderate".equalsIgnoreCase(level)) return 1;
+    return 2;
+  }
+
+  private static String fmtLong(long n) {
+    return String.format("%,d", n);
+  }
+
+  private static String fmtDec(double n) {
+    return String.format("%.0f", n);
+  }
+
+  public AiGovernanceReport getAiGovernanceReport() {
+    return aiGovernanceReport;
+  }
+
+  public boolean isAiAnalyzing() {
+    return aiAnalyzing;
+  }
+
+  public boolean isInternalSmartWorkflow() {
+    if (ivyCase == null) {
+      return false;
+    }
+    return ivyCase.customFields().stringField("internalSmartWorkflow").get()
+        .filter("true"::equals)
+        .isPresent();
   }
 }

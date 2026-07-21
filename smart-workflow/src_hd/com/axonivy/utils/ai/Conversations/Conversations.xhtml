@@ -31,6 +31,7 @@
 
             <div class="cv-timeline-wrap px-2">
               <ui:include src="Summary.xhtml" />
+              <ui:include src="AiReport.xhtml" />
               <div class="cv-timeline py-2">
                 <ui:repeat var="task" value="#{conversationsBean.caseNode.tasks}" varStatus="taskStatus">
                   <ui:include src="ConversationTemplate.xhtml" />
