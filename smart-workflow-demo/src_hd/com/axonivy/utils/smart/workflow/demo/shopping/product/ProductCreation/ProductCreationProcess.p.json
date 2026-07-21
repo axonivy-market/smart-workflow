@@ -3,7 +3,7 @@
   "id" : "1994B47EF9815D17",
   "kind" : "HTML_DIALOG",
   "config" : {
-    "data" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.ProductCreation.ProductCreationData"
+    "data" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductCreation.ProductCreationData"
   },
   "elements" : [ {
       "id" : "f0",
