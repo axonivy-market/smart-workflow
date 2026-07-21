@@ -1,116 +1,175 @@
-Labels:
-  Common:
-    Actions: Aktionen
-    Back: Zurück
-    Duration:
-      InProgress: In Bearbeitung
-      Minutes: '{0} Min.'
-      Hour: '{0} Stunde'
-      Hours: '{0} Stunden'
-      HourMinutes: '{0} Stunde {1} Min.'
-      HoursMinutes: '{0} Stunden {1} Min.'
 Dialogs:
   com:
     axonivy:
       utils:
         ai:
-          GovernanceDashboard:
-            GovernanceDashboard:
-              Title: KI-Governance-Center
-              HistoryTableHeader: Verlaufstabelle
-              SummaryCount: '{0} Fälle - {1} Aufgaben'
-              FilterBy: 'Filtern nach:'
-              FilterCasePlaceholder: Fallname, ID oder Beschreibung
-              AllModels: Alle Modelle
-              AllTime: Gesamter Zeitraum
-              Today: Heute
-              Last7Days: Letzte 7 Tage
-              Last30Days: Letzte 30 Tage
-              NoHistoryFound: Keine Verlaufsdaten gefunden.
-              ColumnCaseTaskAgent: Fall/Aufgabe/Agent
-              AgentLabel: 'Agent {0}'
-              ColumnLastUpdated: Zuletzt aktualisiert
-              ColumnMessages: Nachrichten
-              MessagesBadge: '{0} Nachr.'
-              ColumnTokens: Token
-              ColumnModel: Modell
-              ViewDetails: Details anzeigen
-            Analytics:
-              SectionTitle: Token-Nutzungsanalyse
-              KpiTotalSessions: Sitzungen gesamt
-              KpiTotalTokens: Token gesamt
-              KpiAvgResponseTime: Ø Antwortzeit
-              KpiTopModel: Top-Modell
-              UnitMs: ms
-              ChartTokenTimeline: Token-Nutzung im Zeitverlauf
-              ChartModelDist: Modellverteilung
-              ChartTokenStacked: Eingabe- vs. Ausgabe-Token pro Tag
-              ChartTopCases: Top-Prozesse nach Token-Verbrauch
-              ChartResponseTime: Antwortzeit-Verteilung
-              DatasetTotalTokens: Token gesamt
-              DatasetInputTokens: Eingabe-Token
-              DatasetOutputTokens: Ausgabe-Token
-              DatasetSessions: Sitzungen
-              BucketUnder5s: '< 5 s'
-              Bucket5to10s: '5–10 s'
-              Bucket10to15s: '10–15 s'
-              BucketOver15s: '> 15 s'
-              UnknownProcess: unbekannt
           Conversations:
             Conversations:
-              Title: Gespräche
-              EmptyStateTitle: Kein Verlauf gefunden
-              EmptyStateMessage: Kein Gesprächsverlauf für diesen Fall gefunden.
-              CaseLabel: 'Fall:'
-              ExportButton: Exportieren
-              DetailsButton: Details
+              AgentLabel: Agent {0}
+              AiAnomalies: 'Anomalien:'
+              AiErrorsGuardrails: 'Fehler & Guardrails:'
+              AiAnalyzeStep1: "Gesprächsverlauf lesen..."
+              AiAnalyzeStep2: "Tool-Nutzung analysieren..."
+              AiAnalyzeStep3: "Anomalien erkennen..."
+              AiAnalyzeStep4: "Risikofaktoren bewerten..."
+              AiAnalyzeStep5: "Compliance prüfen..."
+              AiAnalyzeStep6: "Empfehlungen generieren..."
+              AiGenerateButton: KI-Empfehlung generieren
+              AiNoReport: Keine KI-Empfehlung verfügbar. Bericht generieren, um Erkenntnisse zu sehen.
+              AiRiskCompliance: Compliance
+              AiRiskCost: Kosten
+              AiRiskOperational: Betrieb
+              AiRiskReliability: Zuverlässigkeit
+              AiSectionEfficiency: Effizienzchancen
+              AiSectionRecommendations: Empfehlungen
+              AiSectionRisk: Risikobewertung
+              AiSectionSummary: Zusammenfassung
+              AiSectionToolUsage: Tool-Nutzungsmuster
+              AiSectionReliability: Zuverlässigkeitsbedenken
+              AiSuggestions: 'Vorschläge:'
               AnalyzeButton: Analysieren
-              MenuExport: Exportieren
+              AnalyzingDialogMessage: Die KI analysiert die Falldaten. Dies kann einen Moment dauern...
+              AnalyzingDialogTitle: KI-Analyse läuft
+              CaseCategory: Fallkategorie
+              CaseCreated: Erstellt
+              CaseCreator: Ersteller
+              CaseFinished: Abgeschlossen
+              CaseId: Fall-ID
               CaseInformation: Fall-Informationen
-              SidebarCaseDetails: Falldetails
-              SidebarProcessViewer: Prozessanzeige
-              SidebarClose: Schließen
-              NavHeader: Agenten nach Aufgabe
+              CaseLabel: 'Fall:'
+              CaseProcessingTime: Bearbeitungszeit
+              CaseState: Status
+              CaseUnavailable: Falldetails sind nicht verfügbar.
+              DetailsButton: Details
+              EmptyStateMessage: Kein Gesprächsverlauf für diesen Fall gefunden.
+              EmptyStateTitle: Kein Verlauf gefunden
+              ExportButton: Exportieren
+              KpiAverageDuration: Ø Dauer
               KpiTask: Aufgabe
               KpiTotalMessages: Nachrichten gesamt
               KpiTotalTokens: Token gesamt
-              KpiAverageDuration: Ø Dauer
-              TaskLabel: 'Aufgabe {0}'
-              TaskAgentTokens: '{0} Agenten · {1} Token'
-              AgentLabel: 'Agent {0}'
-              TokenCount: '{0} Tokens'
-              TabSystemPrompt: Systemprompt
-              NoSystemPrompt: Kein Systemprompt konfiguriert
-              TabInput: Eingabe
+              MenuExport: Exportieren
+              ReportPanelTitle: Analysebericht
+              MetaDuration: Dauer
+              MetaInputTokens: Eingabe-Token
+              MetaModel: Modell
+              MetaOutputTokens: Ausgabe-Token
+              MetaStartTime: Startzeit
+              MetaTotalTokens: Token gesamt
+              NavHeader: Agenten nach Aufgabe
+              NoDescription: Keine Beschreibung
               NoInputMessages: Keine Eingabenachrichten
-              TabResponse: Antwort
-              NoResponse: Keine Antwort
-              TabTools: 'Tool-Aufrufe ({0})'
-              ToolInputParameters: Eingabeparameter
+              NoOutput: Keine Ausgabe
               NoParameters: Keine Parameter
+              NoResponse: Keine Antwort
+              NoSystemPrompt: Kein Systemprompt konfiguriert
+              NotAvailable: N/V
+              ProcessFlowTitle: Prozessablauf
+              ProcessViewerUnavailableMsg: Der Prozessbetrachter ist für diesen Fall nicht verfügbar.
+              ProcessViewerUnavailableTitle: Entschuldigung
+              ReportTabAiRecommendation: KI-Empfehlung
+              ReportTabStatistic: Statistik
+              SectionDescription: Beschreibung
+              SectionRoleUser: Rollen- und Benutzerinformationen
+              SectionTimeInfo: Zeitinformationen
+              SidebarCaseDetails: Falldetails
+              SidebarClose: Schließen
+              SidebarProcessViewer: Prozessanzeige
+              StatAgentHeader: 'Agent #{0} — {1}'
+              StatAgentSectionActivity: Aktivität
+              StatAgentSectionInfo: Info
+              StatAgents: Agenten
+              StatAnomalies: 'Anomalien ({0}):'
+              StatColAvgMs: Ø ms
+              StatColGuardrail: Guardrail
+              StatColNulls: Nullwerte
+              StatColSuccess: Erfolg
+              StatColSuccessRate: Erfolgsrate
+              StatMaxSingle: Max. Einzeln
+              StatNoAnomalies: Keine Anomalien erkannt
+              StatNoReport: Kein Bericht verfügbar. Erstellen Sie einen Bericht über das Aktionsmenü.
+              StatNullEmpty: Null/leer
+              StatSectionAgentBreakdown: Agenten-Aufschlüsselung
+              StatSectionTokenUsage: Token-Nutzung
+              StatSectionToolEffectiveness: Tool-Effektivität
+              StatSubGuardrails: 'Guardrails:'
+              StatSuccessful: Erfolgreich
+              StatTotalCalls: Aufrufe gesamt
+              TabInput: Eingabe
+              TabMetadata: Metadaten
+              TabResponse: Antwort
+              TabSystemPrompt: Systemprompt
+              TabTools: Tool-Aufrufe ({0})
+              TaskAgentTokens: '{0} Agenten · {1} Token'
+              TaskLabel: Aufgabe {0}
+              Title: Gespräche
+              TokenCount: '{0} Tokens'
+              ToolInputParameters: Eingabeparameter
               ToolResult: Ergebnis
               ToolStatusOk: OK
-              NoOutput: Keine Ausgabe
-              TabMetadata: Metadaten
-              MetaStartTime: Startzeit
-              MetaModel: Modell
-              MetaInputTokens: Eingabe-Token
-              MetaOutputTokens: Ausgabe-Token
-              MetaTotalTokens: Token gesamt
-              MetaDuration: Dauer
-              CaseId: Fall-ID
-              CaseState: Status
-              CaseCategory: Fallkategorie
-              NotAvailable: N/V
-              SectionRoleUser: Rollen- und Benutzerinformationen
-              CaseCreator: Ersteller
-              SectionTimeInfo: Zeitinformationen
-              CaseCreated: Erstellt
-              CaseFinished: Abgeschlossen
-              CaseProcessingTime: Bearbeitungszeit
-              SectionDescription: Beschreibung
-              NoDescription: Keine Beschreibung
-              CaseUnavailable: Falldetails sind nicht verfügbar.
-              ProcessFlowTitle: Prozessablauf
-              ProcessViewerUnavailableTitle: Entschuldigung
-              ProcessViewerUnavailableMsg: Der Prozessbetrachter ist für diesen Fall nicht verfügbar.
+          GovernanceDashboard:
+            Analytics:
+              Bucket10to15s: 10–15 s
+              Bucket5to10s: 5–10 s
+              BucketOver15s: '> 15 s'
+              BucketUnder5s: < 5 s
+              ChartModelDist: Modellverteilung
+              ChartResponseTime: Antwortzeit-Verteilung
+              ChartTokenStacked: Eingabe- vs. Ausgabe-Token pro Tag
+              ChartTokenTimeline: Token-Nutzung im Zeitverlauf
+              ChartTopCases: Top-Prozesse nach Token-Verbrauch
+              DatasetInputTokens: Eingabe-Token
+              DatasetOutputTokens: Ausgabe-Token
+              DatasetSessions: Sitzungen
+              DatasetTotalTokens: Token gesamt
+              KpiAvgResponseTime: Ø Antwortzeit
+              KpiTopModel: Top-Modell
+              KpiTotalSessions: Sitzungen gesamt
+              KpiTotalTokens: Token gesamt
+              SectionTitle: Token-Nutzungsanalyse
+              UnitMs: ms
+              UnknownProcess: unbekannt
+            GovernanceDashboard:
+              AgentLabel: Agent {0}
+              AllModels: Alle Modelle
+              AllTime: Gesamter Zeitraum
+              ColumnCaseTaskAgent: Fall/Aufgabe/Agent
+              ColumnLastUpdated: Zuletzt aktualisiert
+              ColumnMessages: Nachrichten
+              ColumnModel: Modell
+              ColumnTokens: Token
+              FilterBy: 'Filtern nach:'
+              FilterCasePlaceholder: Fallname, ID oder Beschreibung
+              HistoryTableHeader: Verlaufstabelle
+              Last30Days: Letzte 30 Tage
+              Last7Days: Letzte 7 Tage
+              MessagesBadge: '{0} Nachr.'
+              NoHistoryFound: Keine Verlaufsdaten gefunden.
+              SummaryCount: '{0} Fälle - {1} Aufgaben'
+              Title: KI-Governance-Center
+              Today: Heute
+              ViewDetails: Details anzeigen
+Labels:
+  Common:
+    Actions: Aktionen
+    Back: Zurück
+    Calls: Aufrufe
+    Case: Fall
+    Duration:
+      Hour: '{0} Stunde'
+      HourMinutes: '{0} Stunde {1} Min.'
+      Hours: '{0} Stunden'
+      HoursMinutes: '{0} Stunden {1} Min.'
+      InProgress: In Bearbeitung
+      Minutes: '{0} Min.'
+    Errors: Fehler
+    Failed: Fehlgeschlagen
+    Fatal: Fatal
+    Grade: Bewertung
+    Input: Eingabe
+    Output: Ausgabe
+    Passed: Bestanden
+    Process: Prozess
+    Rate: Rate
+    Tool: Tool
+    UUID: UUID

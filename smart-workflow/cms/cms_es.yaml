@@ -1,116 +1,175 @@
-Labels:
-  Common:
-    Actions: Acciones
-    Back: Volver
-    Duration:
-      InProgress: En progreso
-      Minutes: '{0} min'
-      Hour: '{0} hora'
-      Hours: '{0} horas'
-      HourMinutes: '{0} hora {1} min'
-      HoursMinutes: '{0} horas {1} min'
 Dialogs:
   com:
     axonivy:
       utils:
         ai:
-          GovernanceDashboard:
-            GovernanceDashboard:
-              Title: Centro de Gobernanza de IA
-              HistoryTableHeader: Tabla de Historial
-              SummaryCount: '{0} casos - {1} tareas'
-              FilterBy: 'Filtrar por:'
-              FilterCasePlaceholder: Nombre, ID o descripción del caso
-              AllModels: Todos los modelos
-              AllTime: Todo el tiempo
-              Today: Hoy
-              Last7Days: Últimos 7 días
-              Last30Days: Últimos 30 días
-              NoHistoryFound: No se encontraron registros de historial.
-              ColumnCaseTaskAgent: Caso/Tarea/Agente
-              AgentLabel: 'Agente {0}'
-              ColumnLastUpdated: Última actualización
-              ColumnMessages: Mensajes
-              MessagesBadge: '{0} msgs'
-              ColumnTokens: Tokens
-              ColumnModel: Modelo
-              ViewDetails: Ver detalles
-            Analytics:
-              SectionTitle: Análisis de Uso de Tokens
-              KpiTotalSessions: Sesiones Totales
-              KpiTotalTokens: Tokens Totales
-              KpiAvgResponseTime: Tiempo de Respuesta Promedio
-              KpiTopModel: Modelo Principal
-              UnitMs: ms
-              ChartTokenTimeline: Uso de Tokens en el Tiempo
-              ChartModelDist: Distribución de Modelos
-              ChartTokenStacked: Tokens de Entrada vs Salida por Día
-              ChartTopCases: Top Procesos por Uso de Tokens
-              ChartResponseTime: Distribución del Tiempo de Respuesta
-              DatasetTotalTokens: Tokens Totales
-              DatasetInputTokens: Tokens de Entrada
-              DatasetOutputTokens: Tokens de Salida
-              DatasetSessions: Sesiones
-              BucketUnder5s: '< 5 s'
-              Bucket5to10s: '5–10 s'
-              Bucket10to15s: '10–15 s'
-              BucketOver15s: '> 15 s'
-              UnknownProcess: desconocido
           Conversations:
             Conversations:
-              Title: Conversaciones
-              EmptyStateTitle: No se encontró historial
-              EmptyStateMessage: No se encontró historial de conversación para este caso.
-              CaseLabel: 'Caso:'
-              ExportButton: Exportar
-              DetailsButton: Detalles
+              AgentLabel: Agente {0}
+              AiAnomalies: 'Anomalías:'
+              AiErrorsGuardrails: 'Errores y Guardrails:'
+              AiAnalyzeStep1: "Leyendo historial de conversación..."
+              AiAnalyzeStep2: "Analizando uso de herramientas..."
+              AiAnalyzeStep3: "Detectando anomalías..."
+              AiAnalyzeStep4: "Evaluando factores de riesgo..."
+              AiAnalyzeStep5: "Evaluando cumplimiento..."
+              AiAnalyzeStep6: "Generando recomendaciones..."
+              AiGenerateButton: Generar Recomendación IA
+              AiNoReport: No hay recomendación de IA disponible. Genere un informe para ver los resultados.
+              AiRiskCompliance: Cumplimiento
+              AiRiskCost: Costo
+              AiRiskOperational: Operacional
+              AiRiskReliability: Confiabilidad
+              AiSectionEfficiency: Oportunidades de Eficiencia
+              AiSectionRecommendations: Recomendaciones
+              AiSectionRisk: Evaluación de Riesgos
+              AiSectionSummary: Resumen Ejecutivo
+              AiSectionToolUsage: Patrones de Uso de Herramientas
+              AiSectionReliability: Preocupaciones de Confiabilidad
+              AiSuggestions: 'Sugerencias:'
               AnalyzeButton: Analizar
-              MenuExport: Exportar
+              AnalyzingDialogMessage: Usando IA para analizar los datos del caso. Esto puede tardar un momento...
+              AnalyzingDialogTitle: Análisis de IA en Progreso
+              CaseCategory: Categoría del Caso
+              CaseCreated: Creado
+              CaseCreator: Creador
+              CaseFinished: Finalizado
+              CaseId: ID del Caso
               CaseInformation: Información del Caso
-              SidebarCaseDetails: Detalles del Caso
-              SidebarProcessViewer: Visor de Proceso
-              SidebarClose: Cerrar
-              NavHeader: Agentes por Tarea
+              CaseLabel: 'Caso:'
+              CaseProcessingTime: Tiempo de Procesamiento
+              CaseState: Estado
+              CaseUnavailable: Los detalles del caso no están disponibles.
+              DetailsButton: Detalles
+              EmptyStateMessage: No se encontró historial de conversación para este caso.
+              EmptyStateTitle: No se encontró historial
+              ExportButton: Exportar
+              KpiAverageDuration: Duración Promedio
               KpiTask: Tarea
               KpiTotalMessages: Total de Mensajes
               KpiTotalTokens: Total de Tokens
-              KpiAverageDuration: Duración Promedio
-              TaskLabel: 'Tarea {0}'
-              TaskAgentTokens: '{0} agentes · {1} tokens'
-              AgentLabel: 'Agente {0}'
-              TokenCount: '{0} tokens'
-              TabSystemPrompt: Prompt del Sistema
-              NoSystemPrompt: No hay prompt del sistema configurado
-              TabInput: Entrada
+              MenuExport: Exportar
+              ReportPanelTitle: Informe de Análisis
+              MetaDuration: Duración
+              MetaInputTokens: Tokens de entrada
+              MetaModel: Modelo
+              MetaOutputTokens: Tokens de salida
+              MetaStartTime: Hora de inicio
+              MetaTotalTokens: Tokens totales
+              NavHeader: Agentes por Tarea
+              NoDescription: Sin descripción
               NoInputMessages: No hay mensajes de entrada
-              TabResponse: Respuesta
-              NoResponse: Sin respuesta
-              TabTools: 'Llamadas de herramienta ({0})'
-              ToolInputParameters: Parámetros de entrada
+              NoOutput: Sin salida
               NoParameters: Sin parámetros
+              NoResponse: Sin respuesta
+              NoSystemPrompt: No hay prompt del sistema configurado
+              NotAvailable: N/D
+              ProcessFlowTitle: Flujo del Proceso
+              ProcessViewerUnavailableMsg: El visor de proceso no está disponible para este caso.
+              ProcessViewerUnavailableTitle: Lo sentimos...
+              ReportTabAiRecommendation: Recomendación IA
+              ReportTabStatistic: Estadística
+              SectionDescription: Descripción
+              SectionRoleUser: Información de Roles y Usuarios
+              SectionTimeInfo: Información de Tiempo
+              SidebarCaseDetails: Detalles del Caso
+              SidebarClose: Cerrar
+              SidebarProcessViewer: Visor de Proceso
+              StatAgentHeader: 'Agent #{0} — {1}'
+              StatAgentSectionActivity: Actividad
+              StatAgentSectionInfo: Info
+              StatAgents: Agentes
+              StatAnomalies: 'Anomalías ({0}):'
+              StatColAvgMs: Prom. ms
+              StatColGuardrail: Guardrail
+              StatColNulls: Nulos
+              StatColSuccess: Éxito
+              StatColSuccessRate: Tasa de éxito
+              StatMaxSingle: Máx. individual
+              StatNoAnomalies: No se detectaron anomalías
+              StatNoReport: No hay informe disponible. Genere un informe desde el menú Acciones.
+              StatNullEmpty: Nulo/vacío
+              StatSectionAgentBreakdown: Desglose por agente
+              StatSectionTokenUsage: Uso de tokens
+              StatSectionToolEffectiveness: Efectividad de herramientas
+              StatSubGuardrails: 'Guardrails:'
+              StatSuccessful: Exitosas
+              StatTotalCalls: Total de llamadas
+              TabInput: Entrada
+              TabMetadata: Metadatos
+              TabResponse: Respuesta
+              TabSystemPrompt: Prompt del Sistema
+              TabTools: Llamadas de herramienta ({0})
+              TaskAgentTokens: '{0} agentes · {1} tokens'
+              TaskLabel: Tarea {0}
+              Title: Conversaciones
+              TokenCount: '{0} tokens'
+              ToolInputParameters: Parámetros de entrada
               ToolResult: Resultado
               ToolStatusOk: OK
-              NoOutput: Sin salida
-              TabMetadata: Metadatos
-              MetaStartTime: Hora de inicio
-              MetaModel: Modelo
-              MetaInputTokens: Tokens de entrada
-              MetaOutputTokens: Tokens de salida
-              MetaTotalTokens: Tokens totales
-              MetaDuration: Duración
-              CaseId: ID del Caso
-              CaseState: Estado
-              CaseCategory: Categoría del Caso
-              NotAvailable: N/D
-              SectionRoleUser: Información de Roles y Usuarios
-              CaseCreator: Creador
-              SectionTimeInfo: Información de Tiempo
-              CaseCreated: Creado
-              CaseFinished: Finalizado
-              CaseProcessingTime: Tiempo de Procesamiento
-              SectionDescription: Descripción
-              NoDescription: Sin descripción
-              CaseUnavailable: Los detalles del caso no están disponibles.
-              ProcessFlowTitle: Flujo del Proceso
-              ProcessViewerUnavailableTitle: 'Lo sentimos...'
-              ProcessViewerUnavailableMsg: El visor de proceso no está disponible para este caso.
+          GovernanceDashboard:
+            Analytics:
+              Bucket10to15s: 10–15 s
+              Bucket5to10s: 5–10 s
+              BucketOver15s: '> 15 s'
+              BucketUnder5s: < 5 s
+              ChartModelDist: Distribución de Modelos
+              ChartResponseTime: Distribución del Tiempo de Respuesta
+              ChartTokenStacked: Tokens de Entrada vs Salida por Día
+              ChartTokenTimeline: Uso de Tokens en el Tiempo
+              ChartTopCases: Top Procesos por Uso de Tokens
+              DatasetInputTokens: Tokens de Entrada
+              DatasetOutputTokens: Tokens de Salida
+              DatasetSessions: Sesiones
+              DatasetTotalTokens: Tokens Totales
+              KpiAvgResponseTime: Tiempo de Respuesta Promedio
+              KpiTopModel: Modelo Principal
+              KpiTotalSessions: Sesiones Totales
+              KpiTotalTokens: Tokens Totales
+              SectionTitle: Análisis de Uso de Tokens
+              UnitMs: ms
+              UnknownProcess: desconocido
+            GovernanceDashboard:
+              AgentLabel: Agente {0}
+              AllModels: Todos los modelos
+              AllTime: Todo el tiempo
+              ColumnCaseTaskAgent: Caso/Tarea/Agente
+              ColumnLastUpdated: Última actualización
+              ColumnMessages: Mensajes
+              ColumnModel: Modelo
+              ColumnTokens: Tokens
+              FilterBy: 'Filtrar por:'
+              FilterCasePlaceholder: Nombre, ID o descripción del caso
+              HistoryTableHeader: Tabla de Historial
+              Last30Days: Últimos 30 días
+              Last7Days: Últimos 7 días
+              MessagesBadge: '{0} msgs'
+              NoHistoryFound: No se encontraron registros de historial.
+              SummaryCount: '{0} casos - {1} tareas'
+              Title: Centro de Gobernanza de IA
+              Today: Hoy
+              ViewDetails: Ver detalles
+Labels:
+  Common:
+    Actions: Acciones
+    Back: Volver
+    Calls: Llamadas
+    Case: Caso
+    Duration:
+      Hour: '{0} hora'
+      HourMinutes: '{0} hora {1} min'
+      Hours: '{0} horas'
+      HoursMinutes: '{0} horas {1} min'
+      InProgress: En progreso
+      Minutes: '{0} min'
+    Errors: Errores
+    Failed: Fallido
+    Fatal: Fatal
+    Grade: Calificación
+    Input: Entrada
+    Output: Salida
+    Passed: Pasado
+    Process: Proceso
+    Rate: Tasa
+    Tool: Herramienta
+    UUID: UUID

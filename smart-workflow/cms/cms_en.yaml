@@ -1,116 +1,175 @@
-Labels:
-  Common:
-    Actions: Actions
-    Back: Back
-    Duration:
-      InProgress: In progress
-      Minutes: '{0} min'
-      Hour: '{0} hour'
-      Hours: '{0} hours'
-      HourMinutes: '{0} hour {1} min'
-      HoursMinutes: '{0} hours {1} min'
 Dialogs:
   com:
     axonivy:
       utils:
         ai:
-          GovernanceDashboard:
-            GovernanceDashboard:
-              Title: AI Governance Center
-              HistoryTableHeader: History Table
-              SummaryCount: '{0} cases - {1} tasks'
-              FilterBy: 'Filter by:'
-              FilterCasePlaceholder: Case name, ID or description
-              AllModels: All models
-              AllTime: All time
-              Today: Today
-              Last7Days: Last 7 days
-              Last30Days: Last 30 days
-              NoHistoryFound: No history records found.
-              ColumnCaseTaskAgent: Case/Task/Agent
-              AgentLabel: 'Agent {0}'
-              ColumnLastUpdated: Last updated
-              ColumnMessages: Messages
-              MessagesBadge: '{0} msgs'
-              ColumnTokens: Tokens
-              ColumnModel: Model
-              ViewDetails: View details
-            Analytics:
-              SectionTitle: Token Usage Analytics
-              KpiTotalSessions: Total Sessions
-              KpiTotalTokens: Total Tokens
-              KpiAvgResponseTime: Avg Response Time
-              KpiTopModel: Top Model
-              UnitMs: ms
-              ChartTokenTimeline: Token Usage Over Time
-              ChartModelDist: Model Distribution
-              ChartTokenStacked: Input vs Output Tokens per Day
-              ChartTopCases: Top Processes by Token Usage
-              ChartResponseTime: Response Time Distribution
-              DatasetTotalTokens: Total Tokens
-              DatasetInputTokens: Input Tokens
-              DatasetOutputTokens: Output Tokens
-              DatasetSessions: Sessions
-              BucketUnder5s: '< 5 s'
-              Bucket5to10s: '5–10 s'
-              Bucket10to15s: '10–15 s'
-              BucketOver15s: '> 15 s'
-              UnknownProcess: unknown
           Conversations:
             Conversations:
-              Title: Conversations
-              EmptyStateTitle: No History Found
-              EmptyStateMessage: No conversation history found for this case.
-              CaseLabel: 'Case:'
-              ExportButton: Export
-              DetailsButton: Details
+              AgentLabel: Agent {0}
+              AiAnomalies: 'Anomalies:'
+              AiErrorsGuardrails: 'Errors & Guardrails:'
+              AiAnalyzeStep1: Reading conversation history...
+              AiAnalyzeStep2: Analyzing tool usage...
+              AiAnalyzeStep3: Detecting anomalies...
+              AiAnalyzeStep4: Evaluating risk factors...
+              AiAnalyzeStep5: Assessing compliance...
+              AiAnalyzeStep6: Generating recommendations...
+              AiGenerateButton: Generate AI Recommendation
+              AiNoReport: No AI recommendation available. Generate a report to see insights.
+              AiRiskCompliance: Compliance
+              AiRiskCost: Cost
+              AiRiskOperational: Operational
+              AiRiskReliability: Reliability
+              AiSectionEfficiency: Efficiency Opportunities
+              AiSectionRecommendations: Recommendations
+              AiSectionRisk: Risk Assessment
+              AiSectionSummary: Executive Summary
+              AiSectionToolUsage: Tool Usage Patterns
+              AiSectionReliability: Reliability Concerns
+              AiSuggestions: 'Suggestions:'
               AnalyzeButton: Analyze
-              MenuExport: Export
+              AnalyzingDialogMessage: Using AI to analyze the case data. This may take a moment...
+              AnalyzingDialogTitle: AI Analysis in Progress
+              CaseCategory: Case Category
+              CaseCreated: Created
+              CaseCreator: Creator
+              CaseFinished: Finished
+              CaseId: Case Id
               CaseInformation: Case Information
-              SidebarCaseDetails: Case Details
-              SidebarProcessViewer: Process Viewer
-              SidebarClose: Close
-              NavHeader: Agents by Task
+              CaseLabel: 'Case:'
+              CaseProcessingTime: Processing Time
+              CaseState: State
+              CaseUnavailable: Case details are not available.
+              DetailsButton: Details
+              EmptyStateMessage: No conversation history found for this case.
+              EmptyStateTitle: No History Found
+              ExportButton: Export
+              KpiAverageDuration: Average Duration
               KpiTask: Task
               KpiTotalMessages: Total Messages
               KpiTotalTokens: Total Tokens
-              KpiAverageDuration: Average Duration
-              TaskLabel: 'Task {0}'
-              TaskAgentTokens: '{0} agents · {1} tokens'
-              AgentLabel: 'Agent {0}'
-              TokenCount: '{0} tokens'
-              TabSystemPrompt: System Prompt
-              NoSystemPrompt: No system prompt configured
-              TabInput: Input
+              MenuExport: Export
+              ReportPanelTitle: Analysis Report
+              MetaDuration: Duration
+              MetaInputTokens: Input tokens
+              MetaModel: Model
+              MetaOutputTokens: Output tokens
+              MetaStartTime: Start time
+              MetaTotalTokens: Total tokens
+              NavHeader: Agents by Task
+              NoDescription: No description
               NoInputMessages: No input messages
-              TabResponse: Response
-              NoResponse: No response
-              TabTools: 'Tool Calls ({0})'
-              ToolInputParameters: Input parameters
+              NoOutput: No output
               NoParameters: No parameters
+              NoResponse: No response
+              NoSystemPrompt: No system prompt configured
+              NotAvailable: N/A
+              ProcessFlowTitle: Process Flow
+              ProcessViewerUnavailableMsg: Process viewer is not available for this case.
+              ProcessViewerUnavailableTitle: Oops... sorry
+              ReportTabAiRecommendation: AI Recommendation
+              ReportTabStatistic: Statistic
+              SectionDescription: Description
+              SectionRoleUser: Role and User Information
+              SectionTimeInfo: Time Information
+              SidebarCaseDetails: Case Details
+              SidebarClose: Close
+              SidebarProcessViewer: Process Viewer
+              StatAgentHeader: 'Agent #{0} — {1}'
+              StatAgentSectionActivity: Activity
+              StatAgentSectionInfo: Info
+              StatAgents: Agents
+              StatAnomalies: 'Anomalies ({0}):'
+              StatColAvgMs: Avg ms
+              StatColGuardrail: Guardrail
+              StatColNulls: Nulls
+              StatColSuccess: Success
+              StatColSuccessRate: Success rate
+              StatMaxSingle: Max single
+              StatNoAnomalies: No anomalies detected
+              StatNoReport: No report available. Generate a report from the Actions menu.
+              StatNullEmpty: Null/empty
+              StatSectionAgentBreakdown: Agent Breakdown
+              StatSectionTokenUsage: Token Usage
+              StatSectionToolEffectiveness: Tool Effectiveness
+              StatSubGuardrails: 'Guardrails:'
+              StatSuccessful: Successful
+              StatTotalCalls: Total calls
+              TabInput: Input
+              TabMetadata: Metadata
+              TabResponse: Response
+              TabSystemPrompt: System Prompt
+              TabTools: Tool Calls ({0})
+              TaskAgentTokens: '{0} agents · {1} tokens'
+              TaskLabel: Task {0}
+              Title: Conversations
+              TokenCount: '{0} tokens'
+              ToolInputParameters: Input parameters
               ToolResult: Result
               ToolStatusOk: OK
-              NoOutput: No output
-              TabMetadata: Metadata
-              MetaStartTime: Start time
-              MetaModel: Model
-              MetaInputTokens: Input tokens
-              MetaOutputTokens: Output tokens
-              MetaTotalTokens: Total tokens
-              MetaDuration: Duration
-              CaseId: Case Id
-              CaseState: State
-              CaseCategory: Case Category
-              NotAvailable: N/A
-              SectionRoleUser: Role and User Information
-              CaseCreator: Creator
-              SectionTimeInfo: Time Information
-              CaseCreated: Created
-              CaseFinished: Finished
-              CaseProcessingTime: Processing Time
-              SectionDescription: Description
-              NoDescription: No description
-              CaseUnavailable: Case details are not available.
-              ProcessFlowTitle: Process Flow
-              ProcessViewerUnavailableTitle: 'Oops... sorry'
-              ProcessViewerUnavailableMsg: Process viewer is not available for this case.
+          GovernanceDashboard:
+            Analytics:
+              Bucket10to15s: 10–15 s
+              Bucket5to10s: 5–10 s
+              BucketOver15s: '> 15 s'
+              BucketUnder5s: < 5 s
+              ChartModelDist: Model Distribution
+              ChartResponseTime: Response Time Distribution
+              ChartTokenStacked: Input vs Output Tokens per Day
+              ChartTokenTimeline: Token Usage Over Time
+              ChartTopCases: Top Processes by Token Usage
+              DatasetInputTokens: Input Tokens
+              DatasetOutputTokens: Output Tokens
+              DatasetSessions: Sessions
+              DatasetTotalTokens: Total Tokens
+              KpiAvgResponseTime: Avg Response Time
+              KpiTopModel: Top Model
+              KpiTotalSessions: Total Sessions
+              KpiTotalTokens: Total Tokens
+              SectionTitle: Token Usage Analytics
+              UnitMs: ms
+              UnknownProcess: unknown
+            GovernanceDashboard:
+              AgentLabel: Agent {0}
+              AllModels: All models
+              AllTime: All time
+              ColumnCaseTaskAgent: Case/Task/Agent
+              ColumnLastUpdated: Last updated
+              ColumnMessages: Messages
+              ColumnModel: Model
+              ColumnTokens: Tokens
+              FilterBy: 'Filter by:'
+              FilterCasePlaceholder: Case name, ID or description
+              HistoryTableHeader: History Table
+              Last30Days: Last 30 days
+              Last7Days: Last 7 days
+              MessagesBadge: '{0} msgs'
+              NoHistoryFound: No history records found.
+              SummaryCount: '{0} cases - {1} tasks'
+              Title: AI Governance Center
+              Today: Today
+              ViewDetails: View details
+Labels:
+  Common:
+    Actions: Actions
+    Back: Back
+    Calls: Calls
+    Case: Case
+    Duration:
+      Hour: '{0} hour'
+      HourMinutes: '{0} hour {1} min'
+      Hours: '{0} hours'
+      HoursMinutes: '{0} hours {1} min'
+      InProgress: In progress
+      Minutes: '{0} min'
+    Errors: Errors
+    Failed: Failed
+    Fatal: Fatal
+    Grade: Grade
+    Input: Input
+    Output: Output
+    Passed: Passed
+    Process: Process
+    Rate: Rate
+    Tool: Tool
+    UUID: UUID
