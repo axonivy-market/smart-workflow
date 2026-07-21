@@ -20,9 +20,8 @@ const config: Config = {
   baseUrl: '/',
 
   // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'axonivy-market',
+  projectName: 'smart-workflow',
 
   onBrokenLinks: 'warn',
   markdown: {
@@ -44,9 +43,6 @@ const config: Config = {
     ],
   ],
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'de'],
@@ -57,7 +53,7 @@ const config: Config = {
       de: {
         htmlLang: 'de-DE',
       },
-    }
+    },
   },
 
   presets: [
@@ -65,19 +61,18 @@ const config: Config = {
       'classic',
       {
         docs: {
+          // Product docs live in the monorepo /doc folder (not website/docs).
+          path: '../doc',
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/axonivy-market/smart-workflow/tree/master/doc/',
           versions: {
             current: {
-              label: '14.0.0-beta6', // <--- Change "Next" to whatever you want here!
-              // path: 'dev',       // (Optional) You can also change the URL from /docs/next/ to /docs/dev/
+              label: '14.0.0-beta6',
             },
           },
         },
-        blog: false, // Disabled the blog since we removed the blog folder
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
