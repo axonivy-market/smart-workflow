@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "AIHistoryAnalyzerData",
+  "namespace" : "com.axonivy.utils.ai.internal.agents",
+  "fields" : [ {
+    "name" : "caseUuid"
+  }, {
+    "name" : "iCase",
+    "type" : "ch.ivyteam.ivy.workflow.ICase"
+  }, {
+    "name" : "prompt"
+  }, {
+    "name" : "governanceReport",
+    "type" : "com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport"
+  } ]
+}
