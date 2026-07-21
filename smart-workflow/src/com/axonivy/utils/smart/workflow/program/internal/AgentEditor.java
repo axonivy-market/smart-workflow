@@ -23,21 +23,21 @@ import ch.ivyteam.ivy.process.program.ui.ProgramUiBuilder;
 public class AgentEditor {
 
   public void editor(ProgramUiBuilder ui) {
-    ui.group("Message")
+    ui.group("✉️ Message")
         .add(ui.label("User message:").create())
         .add(ui.textField(Conf.QUERY).multiline().create())
         .add(ui.label("System message:").create())
         .add(ui.textField(Conf.SYSTEM).multiline().create())
         .create();
 
-    ui.group("Tools")
+    ui.group("🛠️ Tools")
         .add(ui.label(toolsHelp()).multiline().create())
         .add(ui.scriptField(Conf.TOOLS).requireType(List.class).create())
         .create();
 
     String inputGuardrailList = inputGuardrailsList();
     String outputGuardrailList = outputGuardrailsList();
-    var guardrailsGroup = ui.group("Guardrails");
+    var guardrailsGroup = ui.group("🛡️ Guardrails");
     guardrailsGroup.add(ui.label("Select guardrails to apply, or keep empty to use the default guardrails").create());
     guardrailsGroup
         .add(ui.label("Available input guardrails:\n").create())
@@ -49,7 +49,7 @@ public class AgentEditor {
         .add(ui.scriptField(Conf.OUTPUT_GUARD_RAILS).requireType(List.class).create());
     guardrailsGroup.create();
 
-    ui.group("Model")
+    ui.group("🧠️ Model")
         .add(ui.label("Provider").create())
         .add(ui.label(providersHelp()).multiline().create())
         .add(ui.scriptField(Conf.PROVIDER).requireType(String.class).create())
@@ -59,7 +59,7 @@ public class AgentEditor {
         .add(ui.label("Keep empty to use default from variables.yaml").create())
         .create();
 
-    ui.group("Output")
+    ui.group("➡️ Output")
         .add(ui.label("Expect result of type:").create())
         .add(ui.scriptField(Conf.OUTPUT).requireType(Class.class).create())
         .add(ui.label("Map result to:").create())
