@@ -19,7 +19,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$;
 
 @IvyWebTest(browser="chrome")
-class GovernanceDashboardTest implements LoginFixture, GovernanceDashboardFixture {
+class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFixture {
 
   private GovernanceDashboardPage page;
 
