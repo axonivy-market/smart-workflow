@@ -1,6 +1,6 @@
 {
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
-  "id" : "19FF001122330009",
+  "id" : "19FF001122330008",
   "kind" : "HTML_DIALOG",
   "config" : {
     "data" : "com.axonivy.utils.ai.components.SingleLegalDocument.SingleLegalDocumentData"
