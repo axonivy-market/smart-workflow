@@ -156,8 +156,7 @@
 
   <div id="cv-ai-gen-btn-wrap" class="flex flex-column align-items-center py-4">
     <p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/AiGenerateButton')}"
-                     icon="ti ti-brain"
-                     styleClass="p-button-sm"
+styleClass="p-button-sm"
                      action="#{conversationsBean.generateAiRecommendation()}"
                      process="@form"
                      update=":conv-form:ai-report-panel"

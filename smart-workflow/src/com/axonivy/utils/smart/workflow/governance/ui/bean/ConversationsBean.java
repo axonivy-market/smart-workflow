@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.governance.ui.bean;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +11,12 @@ import com.axonivy.utils.smart.workflow.governance.history.analytic.report.stati
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service.CaseStatisticsService;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReportEntry;
 import com.axonivy.utils.smart.workflow.governance.history.internal.CaseService;
 import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
+import com.axonivy.utils.smart.workflow.governance.history.storage.AiGovernanceReportStorage;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoAiReportStorage;
 import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.ui.model.CaseTreeNode;
 import com.axonivy.utils.smart.workflow.governance.utils.MessageViewModelParser;
@@ -43,6 +47,7 @@ public class ConversationsBean implements Serializable {
   private ICase ivyCase;
   private CaseStatistics caseStatistics;
   private AiGovernanceReport aiGovernanceReport;
+  private String aiReportGeneratedAt;
   private boolean aiAnalyzing;
 
   @PostConstruct
@@ -62,6 +67,11 @@ public class ConversationsBean implements Serializable {
             caseNode.getCaseUuid(), ivyCase != null ? ivyCase.getName() : null,
             CaseAnalysisService.buildSummaries(entries));
       }
+      AiGovernanceReportStorage reportStorage = new IvyRepoAiReportStorage();
+      reportStorage.findByCaseUuid(caseUuid).ifPresent(e -> {
+        aiGovernanceReport = e.getReport();
+        aiReportGeneratedAt = e.getGeneratedAt();
+      });
     }
   }
 
@@ -138,6 +148,16 @@ public class ConversationsBean implements Serializable {
     try {
       var result = CaseAnalysisService.analyze(caseNode.getCaseUuid(), ivyCase, entries);
       aiGovernanceReport = result.aiReport();
+      if (aiGovernanceReport != null) {
+        var entry = new AiGovernanceReportEntry();
+        entry.setCaseUuid(caseNode.getCaseUuid());
+        entry.setGeneratedAt(LocalDateTime.now().toString());
+        entry.setReport(aiGovernanceReport);
+        AiGovernanceReportStorage reportStorage = new IvyRepoAiReportStorage();
+        reportStorage.findByCaseUuid(caseNode.getCaseUuid()).ifPresent(reportStorage::delete);
+        reportStorage.save(entry);
+        aiReportGeneratedAt = entry.getGeneratedAt();
+      }
     } catch (Exception e) {
       Ivy.log().error("Failed to generate AI recommendation for case {0}: {1}", caseNode.getCaseUuid(), e.getMessage());
       aiGovernanceReport = null;
@@ -229,6 +249,10 @@ public class ConversationsBean implements Serializable {
 
   public AiGovernanceReport getAiGovernanceReport() {
     return aiGovernanceReport;
+  }
+
+  public String getAiReportGeneratedAt() {
+    return aiReportGeneratedAt;
   }
 
   public boolean isAiAnalyzing() {
