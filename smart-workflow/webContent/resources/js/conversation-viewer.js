@@ -46,8 +46,52 @@
   })();
 
 
-  global.CvAgent    = CvAgent;
-  global.CvToolCard = CvToolCard;
+  var CvAiAnalyze = (function () {
+    var _interval = null;
+    var _idx = 0;
+
+    function start() {
+      var btnWrap = document.getElementById('cv-ai-gen-btn-wrap');
+      var panel   = document.getElementById('cv-ai-analyzing-inline');
+      var msgEl   = document.getElementById('cv-ai-analyze-msg-text');
+      if (!panel || !msgEl) return;
+
+      var raw      = panel.getAttribute('data-messages') || '';
+      var messages = raw.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+      if (!messages.length) return;
+
+      if (btnWrap) btnWrap.classList.add('hidden');
+      panel.classList.remove('hidden');
+      panel.classList.add('flex');
+
+      _idx = 0;
+      _setMsg(msgEl, messages[0]);
+
+      _interval = setInterval(function () {
+        _idx = (_idx + 1) % messages.length;
+        _setMsg(msgEl, messages[_idx]);
+      }, 1500);
+    }
+
+    function stop() {
+      if (_interval) { clearInterval(_interval); _interval = null; }
+    }
+
+    function _setMsg(el, text) {
+      el.style.opacity = '0';
+      setTimeout(function () {
+        el.textContent = text;
+        el.style.opacity = '1';
+      }, 180);
+    }
+
+    return { start: start, stop: stop };
+  })();
+
+  global.CvAgent     = CvAgent;
+  global.CvToolCard  = CvToolCard;
   global.CvToolInput = CvToolInput;
+  global.CvAiAnalyze = CvAiAnalyze;
 
 })(window);
+
