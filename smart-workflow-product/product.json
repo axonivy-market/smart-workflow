@@ -20,6 +20,13 @@
           },
           {
             "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-dashboard",
+            "version": "${version}",
+            "type": "iar",
+            "importInWorkspace": false
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-openai",
             "version": "${version}",
             "type": "iar",
