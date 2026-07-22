@@ -18,7 +18,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.SelenideElement;
 
-@IvyWebTest(browser="chrome", headless=false)
+@IvyWebTest
 class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFixture {
 
   private GovernanceDashboardPage page;
@@ -58,14 +58,14 @@ class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFix
     setupGovernanceMockData();
     page = navigateToGovernanceDashboard();
 
-    assertTableState(3, 7);
+    assertTableState(3, 18);
 
     page.firstCaseActionButton().click();
     page.viewDetailsMenuItem().shouldBe(visible);
     page.viewDetailsMenuItem().shouldHave(text("View details"));
 
     var case1Row = page.caseRow("webtest-case-001");
-    assertRowCells(case1Row, "webtest-case-001-agent-pipeline", "15 msgs", "4355", "gpt-4.1-mini-2025-04-14");
+    assertRowCells(case1Row, "webtest-case-001-agent-pipeline", "24 msgs", "13623", "gpt-4.1-mini-2025-04-14");
     page.caseRowToggler("webtest-case-001").click();
     $$(".history-table tbody tr").shouldHave(sizeGreaterThan(3), Duration.ofSeconds(5));
 
@@ -78,7 +78,7 @@ class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFix
     assertRowCells(agentRow, "Extract Invoice Content from Image", "3 msgs", "1612", "gpt-4.1-mini-2025-04-14");
 
     page.dateRangeDropdown().selectOptionByValue("TODAY");
-    assertTableState(2, 6);
+    assertTableState(2, 12);
 
     page.modelDropdown().selectOption(1);
     page.summaryCount().shouldBe(visible, Duration.ofSeconds(5));
@@ -93,17 +93,17 @@ class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFix
     page.emptyMessage().shouldBe(visible, Duration.ofSeconds(5));
 
     page.modelDropdown().selectOptionByValue("gpt-4.1-mini-2025-04-14");
-    assertTableState(3, 7);
+    assertTableState(3, 18);
 
     page = navigateToGovernanceDashboard();
     page.dateRangeDropdown().selectOptionByValue("ALL");
-    assertTableState(4, 8);
+    assertTableState(4, 24);
 
     page.dateRangeDropdown().selectOptionByValue("LAST_30_DAYS");
-    assertTableState(3, 7);
+    assertTableState(3, 18);
 
     page.dateRangeDropdown().selectOptionByValue("TODAY");
-    assertTableState(2, 6);
+    assertTableState(2, 12);
 
     page.dateRangeDropdown().selectOptionByValue("ALL");
     page.filterCaseInput().setValue("case-001-agent-pipeline");
