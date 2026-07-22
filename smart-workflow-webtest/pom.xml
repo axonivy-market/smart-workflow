@@ -97,7 +97,8 @@
           <includes>
             <include>**/*WebTest.java</include>
           </includes>
-          <argLine>-Dtest.engine.url=${test.engine.url} -Dtest.engine.app=${test.engine.app}</argLine>
+          <argLine>-Dtest.engine.url=${test.engine.url}
+            -Dtest.engine.app=smartworkflowwebtest</argLine>
         </configuration>
       </plugin>
     </plugins>
