@@ -8,9 +8,9 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.history.internal.HistoryEntryFilter;
+import com.axonivy.utils.smart.workflow.governance.history.filter.HistoryEntryFilter;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
-import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.storage.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.governance.ui.HistoryTreeBuilder;
 import com.axonivy.utils.smart.workflow.governance.ui.enums.DateRange;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;

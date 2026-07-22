@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.history.internal;
+package com.axonivy.utils.smart.workflow.governance.history;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;

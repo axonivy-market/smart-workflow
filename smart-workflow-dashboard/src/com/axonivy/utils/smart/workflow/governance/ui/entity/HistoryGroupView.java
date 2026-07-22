@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
+import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryJsonParser;
 
 public interface HistoryGroupView {
 

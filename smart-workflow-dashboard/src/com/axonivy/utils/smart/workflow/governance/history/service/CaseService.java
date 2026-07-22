@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.governance.history.internal;
+package com.axonivy.utils.smart.workflow.governance.history.service;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.security.exec.Sudo;

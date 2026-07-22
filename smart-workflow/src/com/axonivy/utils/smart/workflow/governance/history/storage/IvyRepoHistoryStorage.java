@@ -1,10 +1,8 @@
-package com.axonivy.utils.smart.workflow.governance.history.storage.internal;
+package com.axonivy.utils.smart.workflow.governance.history.storage;
 
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
-
 import ch.ivyteam.ivy.environment.Ivy;
 
 public class IvyRepoHistoryStorage implements HistoryStorage {

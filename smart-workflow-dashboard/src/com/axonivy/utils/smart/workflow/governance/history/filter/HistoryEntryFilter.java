@@ -1,10 +1,12 @@
-package com.axonivy.utils.smart.workflow.governance.history.internal;
+package com.axonivy.utils.smart.workflow.governance.history.filter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryJsonParser;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.service.CaseService;
 import com.axonivy.utils.smart.workflow.governance.ui.enums.DateRange;
 
 import ch.ivyteam.ivy.environment.Ivy;

@@ -6,10 +6,10 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;
-import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
-import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.CaseNode;
-import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.TaskNode;
+import com.axonivy.utils.smart.workflow.governance.history.AgentHistoryTreeBuilder;
+import com.axonivy.utils.smart.workflow.governance.history.AgentHistoryTreeBuilder.AgentNode;
+import com.axonivy.utils.smart.workflow.governance.history.AgentHistoryTreeBuilder.CaseNode;
+import com.axonivy.utils.smart.workflow.governance.history.AgentHistoryTreeBuilder.TaskNode;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.AgentConversationView;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.CaseHistoryGroup;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.TaskHistoryGroup;
