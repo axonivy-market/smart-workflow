@@ -83,23 +83,6 @@
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <id>start.test.engine</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>start-test-engine</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>stop.test.engine</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>stop-test-engine</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
