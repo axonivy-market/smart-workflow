@@ -1,0 +1,365 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19AB0001DEAD0001",
+  "config" : {
+    "data" : "smart.workflow.webtest.SetupTestDataData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Setup Test Data",
+      "config" : {
+        "signature" : "setupTestData",
+        "request" : {
+          "name" : "Setup Test Data"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "e0", "to" : "f14" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "TriggerCall",
+      "name" : "create test case 1",
+      "config" : {
+        "processCall" : "Webtest/SetupTestData:createTestCase1()"
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f16", "color" : "default" }
+      ]
+    }, {
+      "id" : "f16",
+      "type" : "TriggerCall",
+      "name" : "create test case 2",
+      "config" : {
+        "processCall" : "Webtest/SetupTestData:createTestCase2()"
+      },
+      "visual" : {
+        "at" : { "x" : 364, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f16c", "to" : "f17", "color" : "default" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "TriggerCall",
+      "name" : "create test case 3",
+      "config" : {
+        "processCall" : "Webtest/SetupTestData:createTestCase3()"
+      },
+      "visual" : {
+        "at" : { "x" : 504, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f17c", "to" : "f18", "color" : "default" }
+      ]
+    }, {
+      "id" : "f18",
+      "type" : "TriggerCall",
+      "name" : "create test case 4",
+      "config" : {
+        "processCall" : "Webtest/SetupTestData:createTestCase4()"
+      },
+      "visual" : {
+        "at" : { "x" : 644, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f18c", "to" : "f2", "color" : "default" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "Script",
+      "name" : "Create Mock Entries",
+      "config" : {
+        "output" : {
+          "code" : "com.axonivy.utils.smart.workflow.governance.webtest.GovernanceMockDataFactory.createAll();"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 800, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "e1", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "Script",
+      "name" : "Check Entry Count",
+      "config" : {
+        "output" : {
+          "code" : "out.ready = com.axonivy.utils.smart.workflow.governance.webtest.GovernanceMockDataFactory.countCreatedEntries() >= com.axonivy.utils.smart.workflow.governance.webtest.GovernanceMockDataFactory.EXPECTED_COUNT;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 936, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "e4", "to" : "f7" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "Alternative",
+      "name" : "Count Matched?",
+      "config" : {
+        "conditions" : {
+          "e5" : "in.ready"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1072, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "e5", "to" : "f1" },
+        { "id" : "e6", "to" : "f8" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Wait 1 sec",
+      "config" : {
+        "output" : {
+          "code" : "Thread.sleep(1000);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1072, "y" : 144 }
+      },
+      "connect" : [
+        { "id" : "e7", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1208, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "RequestStart",
+      "name" : "Cleanup Test Data",
+      "config" : {
+        "signature" : "cleanupTestData",
+        "request" : {
+          "name" : "Cleanup Test Data"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "e2", "to" : "f4" }
+      ]
+    }, {
+      "id" : "f4",
+      "type" : "Script",
+      "name" : "Delete Mock Entries",
+      "config" : {
+        "output" : {
+          "code" : "com.axonivy.utils.smart.workflow.governance.webtest.GovernanceMockDataFactory.deleteAll();"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "e3", "to" : "f5" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 368, "y" : 160 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "RequestStart",
+      "name" : "createTestCase1",
+      "config" : {
+        "signature" : "createTestCase1",
+        "triggerable" : true,
+        "case" : {
+          "name" : "webtest-case-001-agent-pipeline"
+        },
+        "task" : {
+          "name" : "webtest-task-001a-image",
+          "responsible" : {
+            "roles" : [ "SYSTEM" ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 104, "y" : 312 }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f10", "var" : "in1" }
+      ]
+    }, {
+      "id" : "f10",
+      "type" : "TaskSwitchGateway",
+      "config" : {
+        "tasks" : [ {
+            "id" : "Task1a",
+            "name" : "webtest-task-001a-image",
+            "skipTasklist" : true
+          }, {
+            "id" : "Task1b",
+            "name" : "webtest-task-001b-analysis",
+            "skipTasklist" : true
+          } ]
+      },
+      "visual" : {
+        "at" : { "x" : 272, "y" : 312 }
+      },
+      "connect" : [
+        { "id" : "f13a", "to" : "f11", "condition" : "ivp==\"Task1a.ivp\"" },
+        { "id" : "f13b", "to" : "f11", "condition" : "ivp==\"Task1b.ivp\"" }
+      ]
+    }, {
+      "id" : "f11",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 456, "y" : 312 }
+      }
+    }, {
+      "id" : "f19",
+      "type" : "RequestStart",
+      "name" : "createTestCase2",
+      "config" : {
+        "signature" : "createTestCase2",
+        "triggerable" : true,
+        "case" : {
+          "name" : "webtest-case-002-agent-pipeline"
+        },
+        "task" : {
+          "name" : "webtest-task-002a-image",
+          "responsible" : {
+            "roles" : [ "SYSTEM" ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 104, "y" : 432 }
+      },
+      "connect" : [
+        { "id" : "f19c", "to" : "f20", "var" : "in1" }
+      ]
+    }, {
+      "id" : "f20",
+      "type" : "TaskSwitchGateway",
+      "config" : {
+        "tasks" : [ {
+            "id" : "Task2a",
+            "name" : "webtest-task-002a-image",
+            "skipTasklist" : true
+          } ]
+      },
+      "visual" : {
+        "at" : { "x" : 272, "y" : 432 }
+      },
+      "connect" : [
+        { "id" : "f20c", "to" : "f21", "condition" : "ivp==\"Task2a.ivp\"" }
+      ]
+    }, {
+      "id" : "f21",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 456, "y" : 432 }
+      }
+    }, {
+      "id" : "f22",
+      "type" : "RequestStart",
+      "name" : "createTestCase3",
+      "config" : {
+        "signature" : "createTestCase3",
+        "triggerable" : true,
+        "case" : {
+          "name" : "webtest-case-003-agent-pipeline"
+        },
+        "task" : {
+          "name" : "webtest-task-003a-image",
+          "responsible" : {
+            "roles" : [ "SYSTEM" ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 104, "y" : 552 }
+      },
+      "connect" : [
+        { "id" : "f22c", "to" : "f23", "var" : "in1" }
+      ]
+    }, {
+      "id" : "f23",
+      "type" : "TaskSwitchGateway",
+      "config" : {
+        "tasks" : [ {
+            "id" : "Task3a",
+            "name" : "webtest-task-003a-image",
+            "skipTasklist" : true
+          } ]
+      },
+      "visual" : {
+        "at" : { "x" : 272, "y" : 552 }
+      },
+      "connect" : [
+        { "id" : "f23c", "to" : "f24", "condition" : "ivp==\"Task3a.ivp\"" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 456, "y" : 552 }
+      }
+    }, {
+      "id" : "f25",
+      "type" : "RequestStart",
+      "name" : "createTestCase4",
+      "config" : {
+        "signature" : "createTestCase4",
+        "triggerable" : true,
+        "case" : {
+          "name" : "webtest-case-004-agent-pipeline"
+        },
+        "task" : {
+          "name" : "webtest-task-004a-image",
+          "responsible" : {
+            "roles" : [ "SYSTEM" ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 104, "y" : 672 }
+      },
+      "connect" : [
+        { "id" : "f25c", "to" : "f26", "var" : "in1" }
+      ]
+    }, {
+      "id" : "f26",
+      "type" : "TaskSwitchGateway",
+      "config" : {
+        "tasks" : [ {
+            "id" : "Task4a",
+            "name" : "webtest-task-004a-image",
+            "skipTasklist" : true
+          } ]
+      },
+      "visual" : {
+        "at" : { "x" : 272, "y" : 672 }
+      },
+      "connect" : [
+        { "id" : "f26c", "to" : "f27", "condition" : "ivp==\"Task4a.ivp\"" }
+      ]
+    }, {
+      "id" : "f27",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 456, "y" : 672 }
+      }
+    } ]
+}
