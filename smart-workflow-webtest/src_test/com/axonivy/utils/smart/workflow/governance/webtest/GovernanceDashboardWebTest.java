@@ -58,7 +58,7 @@ class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFix
     setupGovernanceMockData();
     page = navigateToGovernanceDashboard();
 
-    assertTableState(3, 18);
+    assertTableState(3, 7);
 
     page.firstCaseActionButton().click();
     page.viewDetailsMenuItem().shouldBe(visible);
@@ -78,7 +78,7 @@ class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFix
     assertRowCells(agentRow, "Extract Invoice Content from Image", "3 msgs", "1612", "gpt-4.1-mini-2025-04-14");
 
     page.dateRangeDropdown().selectOptionByValue("TODAY");
-    assertTableState(2, 12);
+    assertTableState(2, 6);
 
     page.modelDropdown().selectOption(1);
     page.summaryCount().shouldBe(visible, Duration.ofSeconds(5));
@@ -89,21 +89,21 @@ class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFix
     setupGovernanceMockData();
     page = navigateToGovernanceDashboard();
 
-    page.modelDropdown().selectOptionByValue("claude-opus-4-7");
+    page.modelDropdown().selectOptionByValue("gpt-3.5-turbo");
     page.emptyMessage().shouldBe(visible, Duration.ofSeconds(5));
 
     page.modelDropdown().selectOptionByValue("gpt-4.1-mini-2025-04-14");
-    assertTableState(3, 18);
+    assertTableState(3, 7);
 
     page = navigateToGovernanceDashboard();
     page.dateRangeDropdown().selectOptionByValue("ALL");
-    assertTableState(4, 24);
+    assertTableState(4, 8);
 
     page.dateRangeDropdown().selectOptionByValue("LAST_30_DAYS");
-    assertTableState(3, 18);
+    assertTableState(3, 7);
 
     page.dateRangeDropdown().selectOptionByValue("TODAY");
-    assertTableState(2, 12);
+    assertTableState(2, 6);
 
     page.dateRangeDropdown().selectOptionByValue("ALL");
     page.filterCaseInput().setValue("case-001-agent-pipeline");
