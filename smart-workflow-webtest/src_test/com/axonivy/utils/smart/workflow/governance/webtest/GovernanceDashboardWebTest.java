@@ -65,7 +65,7 @@ class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFix
     page.viewDetailsMenuItem().shouldHave(text("View details"));
 
     var case1Row = page.caseRow("webtest-case-001");
-    assertRowCells(case1Row, "webtest-case-001-agent-pipeline", "24 msgs", "13623", "gpt-4.1-mini-2025-04-14");
+    assertRowCells(case1Row, "webtest-case-001-agent-pipeline", "15 msgs", "4355", "gpt-4.1-mini-2025-04-14");
     page.caseRowToggler("webtest-case-001").click();
     $$(".history-table tbody tr").shouldHave(sizeGreaterThan(3), Duration.ofSeconds(5));
 
