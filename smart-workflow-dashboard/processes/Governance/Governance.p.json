@@ -1,0 +1,52 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "id" : "19F0212A34042E00",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.GovernanceData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Governance Dashboard",
+      "config" : {
+        "signature" : "governance",
+        "request" : {
+          "name" : "Governance Dashboard"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 360, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "DialogCall",
+      "name" : [
+        "Governance",
+        "Dashboard"
+      ],
+      "config" : {
+        "dialog" : "com.axonivy.utils.ai.GovernanceDashboard:start()",
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.selectedCaseUuid" : "result.selectedCaseUuid"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    } ]
+}
