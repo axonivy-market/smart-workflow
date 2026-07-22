@@ -83,6 +83,31 @@
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+          <execution>
+            <id>selenium.web.tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <argLine>-Dtest.engine.url=${test.engine.url}
+            -Dtest.engine.app=smartworkflowwebtest</argLine>
+        </configuration>
       </plugin>
     </plugins>
   </build>
