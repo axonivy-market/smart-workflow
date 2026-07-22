@@ -97,10 +97,7 @@
           <includes>
             <include>**/*WebTest.java</include>
           </includes>
-          <systemPropertyVariables>
-            <test.engine.url>${test.engine.url}</test.engine.url>
-            <test.engine.app>${test.engine.app}</test.engine.app>
-          </systemPropertyVariables>
+          <argLine>@{argLine}</argLine>
         </configuration>
       </plugin>
     </plugins>
