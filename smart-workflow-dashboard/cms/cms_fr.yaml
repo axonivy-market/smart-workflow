@@ -1,0 +1,31 @@
+Labels:
+  Common:
+    Actions: Actions
+    Back: Retour
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        ai:
+          GovernanceDashboard:
+            GovernanceDashboard:
+              Title: Centre de Gouvernance IA
+              HistoryTableHeader: Tableau des Historiques
+              SummaryCount: '{0} cas - {1} tâches'
+              FilterBy: 'Filtrer par :'
+              FilterCasePlaceholder: Nom, ID ou description du cas
+              AllModels: Tous les modèles
+              AllTime: Toute la période
+              Today: 'Aujourd''hui'
+              Last7Days: 7 derniers jours
+              Last30Days: 30 derniers jours
+              NoHistoryFound: Aucun historique trouvé.
+              ColumnCaseTaskAgent: Cas/Tâche/Agent
+              AgentLabel: 'Agent {0}'
+              ColumnLastUpdated: Dernière mise à jour
+              ColumnMessages: Messages
+              MessagesBadge: '{0} msgs'
+              ColumnTokens: Jetons
+              ColumnModel: Modèle
+              ViewDetails: Voir les détails
+              AnalyticsHeader: 'Analyse d''Utilisation des Tokens'
