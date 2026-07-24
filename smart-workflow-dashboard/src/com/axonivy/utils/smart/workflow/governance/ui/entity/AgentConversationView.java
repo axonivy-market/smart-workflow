@@ -3,11 +3,11 @@ package com.axonivy.utils.smart.workflow.governance.ui.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryJsonParser;
+import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryJsonParser.TokenUsage;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.GuardrailExecution;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
-import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryJsonParser;
-import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryJsonParser.TokenUsage;
 import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 
 public class AgentConversationView {
@@ -45,7 +45,7 @@ public class AgentConversationView {
     return ChatHistoryJsonParser.getMessageCount(entry);
   }
 
-  public int getTotalTokens() {
+  public long getTotalTokens() {
     return tokenUsage().totalTokens();
   }
 

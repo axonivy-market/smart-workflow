@@ -14,7 +14,7 @@ public interface HistoryGroupView {
 
   int getMessageCount();
 
-  int getTotalTokens();
+  long getTotalTokens();
 
   String getModelName();
 
@@ -50,8 +50,8 @@ class HistoryEntryStats implements HistoryGroupView {
   }
 
   @Override
-  public int getTotalTokens() {
-    return entries.stream().mapToInt(e -> ChatHistoryJsonParser.getTotalTokens(e)).sum();
+  public long getTotalTokens() {
+    return entries.stream().mapToLong(e -> ChatHistoryJsonParser.getTotalTokens(e)).sum();
   }
 
   @Override
