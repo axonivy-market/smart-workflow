@@ -5,13 +5,13 @@ import java.net.URI;
 import com.axonivy.utils.smart.workflow.program.internal.AgentCallExecutor;
 import com.axonivy.utils.smart.workflow.program.internal.AgentEditor;
 
-import ch.ivyteam.ivy.process.model.diagram.icon.IconDecorator;
 import ch.ivyteam.ivy.process.program.activity.AbortableExecution;
 import ch.ivyteam.ivy.process.program.activity.ProgramExecutor;
+import ch.ivyteam.ivy.process.program.element.ProgramIconDecorator;
 import ch.ivyteam.ivy.process.program.ui.ProgramEditorUi;
 import ch.ivyteam.ivy.process.program.ui.ProgramUiBuilder;
 
-public class AgenticProcessCall implements ProgramExecutor, ProgramEditorUi, IconDecorator {
+public class AgenticProcessCall implements ProgramExecutor, ProgramEditorUi, ProgramIconDecorator {
 
   @Override
   public AbortableExecution newExecution() {

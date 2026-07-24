@@ -148,7 +148,7 @@ public class AgentCallExecutor {
     var providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var provider = ChatModelFactory.getProviderOrDefault(providerName);
-    var agentName = resolveElementName();
+    var agentName = context.element().name();
     var modelOptions = options()
         .modelName(model)
         .structuredOutput(structured)
@@ -158,18 +158,6 @@ public class AgentCallExecutor {
     var modelName = chatModel.defaultRequestParameters().modelName();
     AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName), agentName))
       .forEach(agentBuilder::registerListener);
-  }
-
-  private String resolveElementName() {
-    try {
-      return context.script()
-          .executeExpression(
-              "ch.ivyteam.ivy.bpm.engine.restricted.model.IProcessElement.current().getName()",
-              String.class)
-          .orElse("");
-    } catch (Exception e) {
-      return "";
-    }
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter) {
