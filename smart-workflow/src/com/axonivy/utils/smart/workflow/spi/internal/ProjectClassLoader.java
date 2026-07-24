@@ -1,14 +1,14 @@
 package com.axonivy.utils.smart.workflow.spi.internal;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
+import ch.ivyteam.ivy.application.project.Project;
 
 public class ProjectClassLoader {
 
   public static ClassLoader current() {
-    return of(IProcessModelVersion.current());
+    return of(Project.current());
   }
 
-  public static ClassLoader of(IProcessModelVersion pmv) {
+  public static ClassLoader of(Project pmv) {
     return ch.ivyteam.ivy.java.project.ProjectClassLoader.of(pmv);
   }
 

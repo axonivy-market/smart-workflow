@@ -13,7 +13,7 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
+import ch.ivyteam.ivy.application.project.Project;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.model.chat.Capability;
@@ -39,8 +39,7 @@ public class TestAzureOpenAiLoader {
 
   @Test
   void load() {
-    var pmv = IProcessModelVersion.current();
-    var impls = new SpiLoader(pmv).load(ChatModelProvider.class);
+    var impls = new SpiLoader(Project.current()).load(ChatModelProvider.class);
     assertThat(impls).isNotEmpty();
     var azureModel = impls.stream().filter(p -> (p instanceof AzureOpenAiModelProvider)).toList();
     assertThat(azureModel).as("SPI loader finds Azure OpenAI implementor").isNotEmpty();
