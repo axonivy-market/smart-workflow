@@ -95,12 +95,8 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
           <includes>
-            <include>**/*WebTest.java</include>
+            <include>**/*WebIT.java</include>
           </includes>
-          <systemPropertyVariables>
-            <test.engine.url>${test.engine.url}</test.engine.url>
-            <test.engine.app>${test.engine.app}</test.engine.app>
-          </systemPropertyVariables>
         </configuration>
       </plugin>
     </plugins>

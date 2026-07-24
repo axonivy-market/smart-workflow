@@ -19,7 +19,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.SelenideElement;
 
 @IvyWebTest
-class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFixture {
+class GovernanceDashboardWebIT implements LoginFixture, GovernanceDashboardFixture {
 
   private GovernanceDashboardPage page;
 
