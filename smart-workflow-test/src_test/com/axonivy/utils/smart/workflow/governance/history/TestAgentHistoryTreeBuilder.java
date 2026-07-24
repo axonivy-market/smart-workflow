@@ -6,11 +6,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.governance.history.AgentHistoryTreeBuilder.AgentNode;
+import com.axonivy.utils.smart.workflow.governance.history.AgentHistoryTreeBuilder.CaseNode;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
-import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder;
-import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.AgentNode;
-import com.axonivy.utils.smart.workflow.governance.history.internal.AgentHistoryTreeBuilder.CaseNode;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 

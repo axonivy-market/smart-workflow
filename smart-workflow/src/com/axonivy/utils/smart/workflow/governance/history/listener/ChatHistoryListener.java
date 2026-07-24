@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.axonivy.utils.smart.workflow.governance.history.recorder.internal.ChatHistoryRepository;
-import com.axonivy.utils.smart.workflow.governance.history.storage.internal.IvyRepoHistoryStorage;
+import com.axonivy.utils.smart.workflow.governance.history.storage.IvyRepoHistoryStorage;
 import com.axonivy.utils.smart.workflow.observability.AiListenerProvider;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
