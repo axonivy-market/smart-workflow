@@ -39,8 +39,12 @@ public class TestChatHistoryJsonParser {
 
   @Test
   void getTotalTokens_sumsAllEntries() {
-    var entry = entryWithTokens("[{\"totalTokens\":10,\"modelName\":\"m\"},{\"totalTokens\":5,\"modelName\":\"m\"}]");
-    assertThat(ChatHistoryJsonParser.getTotalTokens(entry)).isEqualTo(15);
+    var entry = entryWithTokens("[{\"totalTokens\":10,\"inputTokens\":3,\"outputTokens\":7,\"modelName\":\"m\",\"durationMs\":200},{\"totalTokens\":5,\"inputTokens\":2,\"outputTokens\":3,\"modelName\":\"m\",\"durationMs\":400}]");
+    assertThat(ChatHistoryJsonParser.getTotalTokens(entry)).isEqualTo(15L);
+    var usage = ChatHistoryJsonParser.parseTokenUsage(entry);
+    assertThat(usage.inputTokens()).isEqualTo(5L);
+    assertThat(usage.outputTokens()).isEqualTo(10L);
+    assertThat(usage.avgDurationMs()).isEqualTo(300L);
   }
 
   @Test
@@ -52,16 +56,28 @@ public class TestChatHistoryJsonParser {
   void getTotalTokens_returnsZero_forNullInput() {
     assertThat(ChatHistoryJsonParser.getTotalTokens(null)).isEqualTo(0);
     assertThat(ChatHistoryJsonParser.getTotalTokens(new AgentConversationEntry())).isEqualTo(0);
+    assertThat(ChatHistoryJsonParser.getAvgDurationMs(null)).isEqualTo(0L);
+    assertThat(ChatHistoryJsonParser.getAvgDurationMs(new AgentConversationEntry())).isEqualTo(0L);
   }
 
   @Test
   void getTotalTokens_missingTokenField_returnsZero() {
-    assertThat(ChatHistoryJsonParser.getTotalTokens(entryWithTokens("[{\"modelName\":\"gpt-4\"}]"))).isEqualTo(0);
+    var usage = ChatHistoryJsonParser.parseTokenUsage(entryWithTokens("[{\"modelName\":\"gpt-4\"}]"));
+    assertThat(usage.totalTokens()).isEqualTo(0L);
+    assertThat(usage.inputTokens()).isEqualTo(0L);
+    assertThat(usage.outputTokens()).isEqualTo(0L);
+    assertThat(usage.avgDurationMs()).isEqualTo(0L);
   }
 
   @Test
   void getTotalTokens_invalidJson_returnsZero() {
     assertThat(ChatHistoryJsonParser.getTotalTokens(entryWithTokens("NOT_VALID_JSON"))).isEqualTo(0);
+  }
+
+  @Test
+  void getAvgDurationMs_multipleEntries_returnsAverage() {
+    var entry = entryWithTokens("[{\"durationMs\":200},{\"durationMs\":400}]");
+    assertThat(ChatHistoryJsonParser.getAvgDurationMs(entry)).isEqualTo(300L);
   }
 
   @Test
