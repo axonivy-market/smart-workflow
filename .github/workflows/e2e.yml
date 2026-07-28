@@ -21,6 +21,7 @@ jobs:
       mvnArgs: -P e2e.test -Dproviders=${{ inputs.providers }}
       javaVersion: 25
       cspellExtraWords: .github/cspell-extra-words.txt
+      ivyVersion: sprint
     secrets:
       mvnArgs: |
         -DOPEN_AI_API_KEY=${{ secrets.OPEN_AI_API_KEY }} \

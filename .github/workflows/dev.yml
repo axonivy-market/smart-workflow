@@ -16,3 +16,4 @@ jobs:
     uses: axonivy-market/github-workflows/.github/workflows/dev.yml@v6
     with:
       targetBranchForBuildFromMaster: master
+      ivyVersion: sprint
