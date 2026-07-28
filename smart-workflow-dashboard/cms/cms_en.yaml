@@ -2,6 +2,13 @@ Labels:
   Common:
     Actions: Actions
     Back: Back
+    Duration:
+      InProgress: In progress
+      Minutes: '{0} min'
+      Hour: '{0} hour'
+      Hours: '{0} hours'
+      HourMinutes: '{0} hour {1} min'
+      HoursMinutes: '{0} hours {1} min'
 Dialogs:
   com:
     axonivy:
@@ -49,3 +56,61 @@ Dialogs:
               Bucket10to15s: '10–15 s'
               BucketOver15s: '> 15 s'
               UnknownProcess: unknown
+          Conversations:
+            Conversations:
+              Title: Conversations
+              EmptyStateTitle: No History Found
+              EmptyStateMessage: No conversation history found for this case.
+              CaseLabel: 'Case:'
+              ExportButton: Export
+              DetailsButton: Details
+              AnalyzeButton: Analyze
+              MenuExport: Export
+              CaseInformation: Case Information
+              SidebarCaseDetails: Case Details
+              SidebarProcessViewer: Process Viewer
+              SidebarClose: Close
+              NavHeader: Agents by Task
+              KpiTask: Task
+              KpiTotalMessages: Total Messages
+              KpiTotalTokens: Total Tokens
+              KpiAverageDuration: Average Duration
+              TaskLabel: 'Task {0}'
+              TaskAgentTokens: '{0} agents · {1} tokens'
+              AgentLabel: 'Agent {0}'
+              TokenCount: '{0} tokens'
+              TabSystemPrompt: System Prompt
+              NoSystemPrompt: No system prompt configured
+              TabInput: Input
+              NoInputMessages: No input messages
+              TabResponse: Response
+              NoResponse: No response
+              TabTools: 'Tool Calls ({0})'
+              ToolInputParameters: Input parameters
+              NoParameters: No parameters
+              ToolResult: Result
+              ToolStatusOk: OK
+              NoOutput: No output
+              TabMetadata: Metadata
+              MetaStartTime: Start time
+              MetaModel: Model
+              MetaInputTokens: Input tokens
+              MetaOutputTokens: Output tokens
+              MetaTotalTokens: Total tokens
+              MetaDuration: Duration
+              CaseId: Case Id
+              CaseState: State
+              CaseCategory: Case Category
+              NotAvailable: N/A
+              SectionRoleUser: Role and User Information
+              CaseCreator: Creator
+              SectionTimeInfo: Time Information
+              CaseCreated: Created
+              CaseFinished: Finished
+              CaseProcessingTime: Processing Time
+              SectionDescription: Description
+              NoDescription: No description
+              CaseUnavailable: Case details are not available.
+              ProcessFlowTitle: Process Flow
+              ProcessViewerUnavailableTitle: 'Oops... sorry'
+              ProcessViewerUnavailableMsg: Process viewer is not available for this case.
