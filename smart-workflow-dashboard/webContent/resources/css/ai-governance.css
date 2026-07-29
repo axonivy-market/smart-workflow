@@ -458,3 +458,134 @@ body.dark .tool-timeline-result-body:not(.tool-timeline-result--empty) {
 body.dark .tool-timeline-result-body.tool-timeline-result--empty {
   background: var(--surface-50);
 }
+
+/* ── AI Analysis Report ───────────────────────────────────────────── */
+.cv-detail-subheading {
+  font-weight: 500;
+}
+.cv-stat-label {
+  min-width: 8rem;
+}
+.cv-stat-key-col {
+  width: 40%;
+}
+.cv-metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .cv-metric-grid { grid-template-columns: 1fr; }
+}
+
+.cv-bar-track {
+  height: 6px;
+  background: var(--surface-200, #e2e8f0);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.cv-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.cv-bar-fill--blue   { background: var(--blue-500,   #3b82f6); }
+.cv-bar-fill--green  { background: var(--green-500,  #22c55e); }
+.cv-bar-fill--yellow { background: var(--yellow-500, #eab308); }
+.cv-bar-fill--red    { background: var(--red-500,    #ef4444); }
+.cv-bar-fill--orange { background: var(--orange-400, #fb923c); }
+
+.cv-bar-split {
+  display: flex;
+  height: 6px;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.cv-bar-float-wrap {
+  position: relative;
+  padding-top: 1.25rem;
+}
+
+.cv-bar-float-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.cv-risk-list-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.cv-risk-dot--high     { background: var(--red-400,    #f87171); }
+.cv-risk-dot--moderate { background: var(--orange-400, #fb923c); }
+.cv-risk-dot--low      { background: var(--green-400,  #4ade80); }
+
+.cv-risk-badge--low      { background: var(--green-100,  #dcfce7); color: var(--green-700,  #15803d); font-size: 0.75rem; font-weight: 700; }
+.cv-risk-badge--moderate { background: var(--yellow-100, #fef9c3); color: var(--yellow-800, #854d0e); font-size: 0.75rem; font-weight: 700; }
+.cv-risk-badge--high     { background: var(--red-100,    #fee2e2); color: var(--red-800,    #991b1b); font-size: 0.75rem; font-weight: 700; }
+
+.cv-obs-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--surface-400, #94a3b8);
+  flex-shrink: 0; display: inline-block;
+  margin-top: 6px;
+}
+
+.cv-suggestions-indent {
+  border-left: 2px solid var(--surface-border);
+}
+
+.cv-rec-card { border-left: 3px solid var(--blue-500, #3b82f6); }
+
+/* ── AI Analyze inline progress ───────────────────────────────────── */
+.cv-ai-analyze-wrap {
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1rem;
+  gap: 1rem;
+}
+
+.cv-ai-analyze-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--surface-border, #e5e7eb);
+  border-top-color: var(--primary-color, #6366f1);
+  border-radius: 50%;
+  animation: cv-spin 0.9s linear infinite;
+}
+
+@keyframes cv-spin {
+  to { transform: rotate(360deg); }
+}
+
+.cv-ai-analyze-msg {
+  color: var(--text-color-secondary);
+  min-width: 240px;
+  text-align: center;
+  transition: opacity 0.18s ease;
+}
+
+.cv-ai-analyze-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.cv-ai-analyze-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary-color, #6366f1);
+  animation: cv-dot-pulse 1.2s infinite ease-in-out both;
+}
+
+.cv-ai-analyze-dot:nth-child(2) { animation-delay: 0.2s; }
+.cv-ai-analyze-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes cv-dot-pulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.35; }
+  40%            { transform: scale(1.0); opacity: 1.0; }
+}
