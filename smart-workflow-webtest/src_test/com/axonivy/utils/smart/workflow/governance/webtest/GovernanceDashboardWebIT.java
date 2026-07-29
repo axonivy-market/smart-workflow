@@ -12,13 +12,14 @@ import com.axonivy.utils.smart.workflow.governance.webtest.fixture.LoginFixture;
 import com.axonivy.utils.smart.workflow.governance.webtest.page.GovernanceDashboardPage;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
+import static com.codeborne.selenide.Condition.empty;
 import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.SelenideElement;
 
-@IvyWebTest(browser="chrome")
+@IvyWebTest(browser="chrome", headless=false)
 class GovernanceDashboardWebIT implements LoginFixture, GovernanceDashboardFixture {
 
   private GovernanceDashboardPage page;
@@ -113,6 +114,27 @@ class GovernanceDashboardWebIT implements LoginFixture, GovernanceDashboardFixtu
     page.filterCaseInput().clear();
     page.filterCaseInput().pressEnter();
     page.caseRows().shouldHave(size(4), Duration.ofSeconds(5));
+  }
+
+  @Test
+  void dashboard_statistics() {
+    setupGovernanceMockData();
+    page = navigateToGovernanceDashboard();
+
+    page.kpiTotalSessions().shouldBe(visible, Duration.ofSeconds(10));
+    page.kpiTotalSessions().shouldNotBe(empty);
+    page.kpiTotalTokens().shouldBe(visible);
+    page.kpiTotalTokens().shouldNotBe(empty);
+    page.kpiAvgResponseTime().shouldBe(visible);
+    page.kpiAvgResponseTime().shouldNotBe(empty);
+    page.kpiTopModel().shouldBe(visible);
+    page.kpiTopModel().shouldNotBe(empty);
+
+    page.chartPanelTokenTimeline().shouldBe(visible);
+    page.chartPanelModelDist().shouldBe(visible);
+    page.chartPanelTokenStacked().shouldBe(visible);
+    page.chartPanelTopCases().shouldBe(visible);
+    page.chartPanelResponseTime().shouldBe(visible);
   }
 
   private void assertTableState(int caseCount, int taskCount) {
