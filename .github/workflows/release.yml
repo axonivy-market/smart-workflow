@@ -8,6 +8,11 @@ on:
         required: true
         default: 14.0.0-b1
         description: the release to introduce (e.g. b1/b2)
+      ivyVersion:
+        type: string
+        required: false
+        default: dev
+        description: ivy engine permalink (e.g. sprint, nightly, dev)
 
 permissions:
   contents: write
@@ -18,5 +23,5 @@ jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/release.yml@v6
     with:
-      mvnArgs: -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }}
+      mvnArgs: -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }} -Divy.engine.download.url=https://dev.axonivy.com/permalink/${{ inputs.ivyVersion }}/axonivy-engine.zip
       javaVersion: 25
