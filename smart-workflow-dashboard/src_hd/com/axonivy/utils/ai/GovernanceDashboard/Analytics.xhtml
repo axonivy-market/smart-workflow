@@ -25,29 +25,29 @@
 
       <div class="grid mb-4">
         <div class="col-3">
-          <div class="kpi-card surface-ground border-round p-4">
+          <div id="kpi-card-total-sessions" class="kpi-card surface-ground border-round p-4">
             <div class="kpi-label text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/KpiTotalSessions')}</div>
-            <div class="kpi-value text-xl font-bold py-2">#{usageAnalyticBean.kpi.totalSessions}</div>
+            <div id="kpi-total-sessions" class="kpi-value text-xl font-bold py-2">#{usageAnalyticBean.kpi.totalSessions}</div>
           </div>
         </div>
         <div class="col-3">
-          <div class="kpi-card surface-ground border-round p-4">
+          <div id="kpi-card-total-tokens" class="kpi-card surface-ground border-round p-4">
             <div class="kpi-label text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/KpiTotalTokens')}</div>
-            <div class="kpi-value text-xl font-bold py-2">#{usageAnalyticBean.kpi.formattedTotalTokens}</div>
+            <div id="kpi-total-tokens" class="kpi-value text-xl font-bold py-2">#{usageAnalyticBean.kpi.formattedTotalTokens}</div>
           </div>
         </div>
         <div class="col-3">
-          <div class="kpi-card surface-ground border-round p-4">
+          <div id="kpi-card-avg-response-time" class="kpi-card surface-ground border-round p-4">
             <div class="kpi-label text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/KpiAvgResponseTime')}</div>
-            <div class="kpi-value text-xl font-bold py-2">#{usageAnalyticBean.kpi.avgResponseMs} #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/UnitMs')}</div>
+            <div id="kpi-avg-response-time" class="kpi-value text-xl font-bold py-2">#{usageAnalyticBean.kpi.avgResponseMs} #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/UnitMs')}</div>
           </div>
         </div>
         <div class="col-3">
-          <div class="kpi-card surface-ground border-round p-4">
+          <div id="kpi-card-top-model" class="kpi-card surface-ground border-round p-4">
             <div class="kpi-label text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/KpiTopModel')}</div>
-            <p:outputPanel id="top-model-val" styleClass="kpi-value text-xl font-bold font-mono py-2 overflow-hidden text-overflow-ellipsis white-space-nowrap block">
+            <p:outputPanel id="kpi-top-model" styleClass="kpi-value text-xl font-bold font-mono py-2 overflow-hidden text-overflow-ellipsis white-space-nowrap block">
               #{usageAnalyticBean.kpi.topModel}
-              <p:tooltip value="#{usageAnalyticBean.kpi.topModel}" for="top-model-val" />
+              <p:tooltip value="#{usageAnalyticBean.kpi.topModel}" for="kpi-top-model" />
             </p:outputPanel>
           </div>
         </div>
@@ -55,14 +55,14 @@
 
       <div class="grid mb-4">
         <div class="col-6">
-          <div class="chart-panel surface-ground border-round p-3">
+          <div id="chart-panel-token-timeline" class="chart-panel surface-ground border-round p-3">
             <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartTokenTimeline')}</div>
             <p:barChart id="chart-token-timeline" model="#{usageAnalyticBean.tokenTimelineChart}"
                         styleClass="chart-h-240" />
           </div>
         </div>
         <div class="col-6">
-          <div class="chart-panel surface-ground border-round p-3">
+          <div id="chart-panel-model-dist" class="chart-panel surface-ground border-round p-3">
             <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartModelDist')}</div>
             <p:donutChart id="chart-model-dist" model="#{usageAnalyticBean.modelDistributionChart}"
                           styleClass="chart-h-240" />
@@ -72,14 +72,14 @@
 
       <div class="grid mb-4">
         <div class="col-6">
-          <div class="chart-panel surface-ground border-round p-3">
+          <div id="chart-panel-token-stacked" class="chart-panel surface-ground border-round p-3">
             <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartTokenStacked')}</div>
             <p:barChart id="chart-token-stacked" model="#{usageAnalyticBean.tokenStackedChart}"
                         styleClass="chart-h-220" />
           </div>
         </div>
         <div class="col-6">
-          <div class="chart-panel surface-ground border-round p-3">
+          <div id="chart-panel-top-cases" class="chart-panel surface-ground border-round p-3">
             <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartTopCases')}</div>
             <p:barChart id="chart-top-cases" model="#{usageAnalyticBean.topCasesChart}"
                         styleClass="chart-h-220" />
@@ -87,7 +87,7 @@
         </div>
       </div>
 
-      <div class="chart-panel surface-ground border-round p-3">
+      <div id="chart-panel-response-time" class="chart-panel surface-ground border-round p-3">
         <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartResponseTime')}</div>
         <p:barChart id="chart-response-time" model="#{usageAnalyticBean.responseTimeChart}"
                     styleClass="chart-h-220" />
