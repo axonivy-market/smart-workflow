@@ -9,6 +9,11 @@ on:
         description: 'Comma-separated provider names to run E2E for. Empty = all. E.g. "OpenAI,Ollama"'
         required: false
         default: ''
+      ivyVersion:
+        type: string
+        required: false
+        default: dev
+        description: ivy engine permalink (e.g. sprint, nightly, dev)
 
 permissions:
   contents: read
@@ -21,6 +26,7 @@ jobs:
       mvnArgs: -P e2e.test -Dproviders=${{ inputs.providers }}
       javaVersion: 25
       cspellExtraWords: .github/cspell-extra-words.txt
+      ivyVersion: ${{ inputs.ivyVersion || 'dev' }}
     secrets:
       mvnArgs: |
         -DOPEN_AI_API_KEY=${{ secrets.OPEN_AI_API_KEY }} \
