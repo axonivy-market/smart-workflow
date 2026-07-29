@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui">
+<h:body>
+<p:outputPanel id="ai-report-panel" layout="block"
+               rendered="#{conversationsBean.caseNode != null}">
+
+  <p:panel toggleable="true" collapsed="true"
+           header="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ReportPanelTitle')}"
+           styleClass="cv-report-panel mt-3 mb-2">
+    <p:tabView styleClass="cv-report-tabs">
+      <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ReportTabStatistic')}">
+        <ui:include src="StatisticReport.xhtml" />
+      </p:tab>
+      <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ReportTabAiRecommendation')}">
+        <ui:include src="AiRecommendation.xhtml" />
+      </p:tab>
+    </p:tabView>
+  </p:panel>
+
+</p:outputPanel>
+</h:body>
+</html>
