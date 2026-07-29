@@ -10,7 +10,7 @@ import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
+import ch.ivyteam.ivy.application.project.Project;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
@@ -18,8 +18,8 @@ class TestSpiLoader {
 
   @Test
   void load() {
-    var pmv = IProcessModelVersion.current();
-    var impls = new SpiLoader(pmv).load(ChatModelProvider.class);
+    var project = Project.current();
+    var impls = new SpiLoader(project).load(ChatModelProvider.class);
     assertThat(impls).isNotEmpty();
     var dummies = impls.stream()
         .filter(p -> (p instanceof DummyChatModelProvider))
@@ -31,11 +31,11 @@ class TestSpiLoader {
 
   @Test
   void load_noDuplicates_samePmvTwice() {
-    var pmv = IProcessModelVersion.current();
-    var loader = new SpiLoader(pmv) {
+    var project = Project.current();
+    var loader = new SpiLoader(project) {
       @Override
-      protected Stream<IProcessModelVersion> pmvsInScope() {
-        return Stream.of(pmv, pmv);
+      protected Stream<Project> pmvsInScope() {
+        return Stream.of(project, project);
       }
     };
     var impls = loader.load(ChatModelProvider.class);
