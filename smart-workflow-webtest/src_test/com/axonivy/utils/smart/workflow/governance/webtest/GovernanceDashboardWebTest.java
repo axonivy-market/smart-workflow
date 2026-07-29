@@ -18,7 +18,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.SelenideElement;
 
-@IvyWebTest(browser="chrome", headless=false)
+@IvyWebTest
 class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFixture {
 
   private GovernanceDashboardPage page;
@@ -89,7 +89,7 @@ class GovernanceDashboardWebTest implements LoginFixture, GovernanceDashboardFix
     setupGovernanceMockData();
     page = navigateToGovernanceDashboard();
 
-    page.modelDropdown().selectOptionByValue("claude-opus-4-7");
+    page.modelDropdown().selectOptionByValue("gpt-3.5-turbo");
     page.emptyMessage().shouldBe(visible, Duration.ofSeconds(5));
 
     page.modelDropdown().selectOptionByValue("gpt-4.1-mini-2025-04-14");
