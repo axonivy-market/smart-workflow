@@ -8,8 +8,10 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.faces.convert.ConverterException;
 import jakarta.faces.convert.FacesConverter;
+import jakarta.enterprise.context.ApplicationScoped;
 
-@FacesConverter("pojoConverter")
+@FacesConverter(value = "pojoConverter", managed = true)
+@ApplicationScoped
 public class PojoConverter implements Converter<Object> {
   private static final String UNIQUE_CONVERTER_IDENTIFIER = PojoConverter.class.getName();
   private static final String KEY_DELIMITER = ":::";
