@@ -44,6 +44,12 @@ class TestProgramConfigMigrator {
         .isEqualTo("in.myTools");
   }
 
+  @Test
+  void v2_provider() {
+    var config = migrate(Map.of("provider", "\"openai\""));
+    assertThat(config.get("provider")).isEqualTo("openai");
+  }
+
   private static Map<String, String> migrate(Map<String, String> config) {
     return new AgentConfigMigrator().migrateConfig(config);
   }

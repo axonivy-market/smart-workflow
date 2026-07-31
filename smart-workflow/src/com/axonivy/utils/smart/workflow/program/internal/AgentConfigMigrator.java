@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,10 @@ public class AgentConfigMigrator implements ProgramConfigMigrator {
     }
     var latest = new HashMap<>(config);
     toComma(latest, "tools");
+    Optional.ofNullable(config.get("provider"))
+      .filter(Predicate.not(String::isBlank))
+      .map(provider -> StringUtils.substringBetween(provider, "\""))
+      .ifPresent(newProvider -> latest.put("provider", newProvider));
     return latest;
   }
 

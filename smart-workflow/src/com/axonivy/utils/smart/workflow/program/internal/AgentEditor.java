@@ -57,11 +57,11 @@ public class AgentEditor {
     guardrailsGroup.create();
 
     ui.group("🧠️ Model")
-        .add(ui.label("Provider").create())
-        .add(ui.label(providersHelp()).multiline().create())
-        .add(ui.scriptField(Conf.PROVIDER)
-          .help("Keep empty to use default from variables.yaml")
-          .requireType(String.class).create())
+        .add(ui.multiSelect(Conf.PROVIDER)
+          .label("Provider:")
+          .items(providersList())
+          .help("Choose one of the supported providers. Keep empty to use default from variables.yaml")
+          .create())
         .add(ui.scriptField(Conf.MODEL)
           .label("Model:")
           .help("Keep empty to use default from variables.yaml")
@@ -79,10 +79,6 @@ public class AgentEditor {
           .requireType(Object.class)
           .create())
         .create();
-  }
-
-  private String providersHelp() {
-    return "Choose one of the supported AI providers:\n" + providersList();
   }
 
   private List<SelectItem> toolList() {
@@ -118,12 +114,11 @@ public class AgentEditor {
     }
   }
 
-  private String providersList() {
-    var providers = Optional.ofNullable(ChatModelFactory.providers());
-    if (providers.isEmpty()) {
-      return StringUtils.EMPTY;
-    }
-    return providers.get().stream().map(ChatModelProvider::name).distinct().collect(Collectors.joining(", "));
+  private List<SelectItem> providersList() {
+    return ChatModelFactory.providers().stream()
+      .distinct()
+      .map(provider -> SelectItem.of(provider.name()))
+      .toList();
   }
 
   private String inputGuardrailsList() {
