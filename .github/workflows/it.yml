@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '0 1 * * *' # 1 AM every night
   workflow_dispatch:
+    inputs:
+      ivyVersion:
+        type: string
+        required: false
+        default: dev
+        description: ivy engine permalink (e.g. sprint, nightly, dev)
 
 permissions:
   contents: read
@@ -16,3 +22,4 @@ jobs:
       mvnArgs: -P container.test
       javaVersion: 25
       cspellExtraWords: .github/cspell-extra-words.txt
+      ivyVersion: ${{ inputs.ivyVersion || 'dev' }}
