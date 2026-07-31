@@ -50,6 +50,18 @@ class TestProgramConfigMigrator {
     assertThat(config.get("provider")).isEqualTo("openai");
   }
 
+  @Test
+  void v2_inputGuardrails() {
+    var config = migrate(Map.of("inputGuardrails", "[\"Guardrail1\", \"Guardrail2\"]"));
+    assertThat(config.get("inputGuardrails")).isEqualTo("Guardrail1,Guardrail2");
+  }
+
+  @Test
+  void v2_outputGuardrails() {
+    var config = migrate(Map.of("outputGuardrails", "[\"Guardrail1\", \"Guardrail2\"]"));
+    assertThat(config.get("outputGuardrails")).isEqualTo("Guardrail1,Guardrail2");
+  }
+
   private static Map<String, String> migrate(Map<String, String> config) {
     return new AgentConfigMigrator().migrateConfig(config);
   }

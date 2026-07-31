@@ -24,6 +24,8 @@ public class AgentConfigMigrator implements ProgramConfigMigrator {
     }
     var latest = new HashMap<>(config);
     toComma(latest, "tools");
+    toComma(latest, "inputGuardrails");
+    toComma(latest, "outputGuardrails");
     Optional.ofNullable(config.get("provider"))
       .filter(Predicate.not(String::isBlank))
       .map(provider -> StringUtils.substringBetween(provider, "\""))

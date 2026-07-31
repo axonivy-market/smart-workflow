@@ -5,14 +5,12 @@ import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.Model
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
-import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.memory.IvyMemory;
 import com.axonivy.utils.smart.workflow.memory.id.IdStore;
 import com.axonivy.utils.smart.workflow.memory.id.ProcessDataField;
@@ -112,14 +110,6 @@ public class AgentCallExecutor {
     }
   }
 
-  private Optional<List<String>> executeListOfStrings(String configKey) {
-    return execute(configKey, List.class)
-        .map(rawList -> ((List<?>) rawList).stream()
-            .filter(String.class::isInstance)
-            .map(String.class::cast)
-            .toList());
-  }
-
   private void configureSystemMessage(HumanInTheLoop human, AiServices<? extends DynamicAgent<?>> agentBuilder) {
     if (human.isRestoredConversion()) {
       return; // keep system message from initial conversion
@@ -166,7 +156,7 @@ public class AgentCallExecutor {
     if (!providerConfig.isEmpty()) {
       providerName = providerConfig.get(0);
       if (providerConfig.size() > 1) {
-        Ivy.log().error("Only one provider is allowed. Will use " + providerConfig.get(0) + ", and ignore other from: " + providerConfig);
+        Ivy.log().warn("Only one provider is allowed. Will use " + providerConfig.get(0) + ", and ignore other from: " + providerConfig);
       }
     }
     return providerName;
@@ -183,10 +173,10 @@ public class AgentCallExecutor {
   }
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    Set<GuardrailProvider> providers = GuardrailCollector.allProviders();
-    List<String> inputGuardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
+    var providers = GuardrailCollector.allProviders();
+    var inputGuardrailFilters = context.config().getList(Conf.INPUT_GUARD_RAILS);
     agentBuilder.inputGuardrails(GuardrailCollector.inputGuardrailAdapters(providers, inputGuardrailFilters));
-    List<String> outputGuardrailFilters = executeListOfStrings(Conf.OUTPUT_GUARD_RAILS).orElse(null);
+    var outputGuardrailFilters = context.config().getList(Conf.OUTPUT_GUARD_RAILS);
     agentBuilder.outputGuardrails(GuardrailCollector.outputGuardrailAdapters(providers, outputGuardrailFilters));
   }
 }
