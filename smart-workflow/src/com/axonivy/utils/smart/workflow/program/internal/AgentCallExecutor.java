@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
+import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +18,6 @@ import com.axonivy.utils.smart.workflow.memory.id.IdStore;
 import com.axonivy.utils.smart.workflow.memory.id.ProcessDataField;
 import com.axonivy.utils.smart.workflow.memory.store.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
-import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
@@ -73,7 +74,7 @@ public class AgentCallExecutor {
     var agentBuilder = AiServices.builder(agentType);
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
-    var toolFilter = executeListOfStrings(Conf.TOOLS).orElse(null);
+    var toolFilter = context.config().getList(Conf.TOOLS);
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
     configureToolProvider(agentBuilder, toolFilter);
     configureGuardrails(agentBuilder);
@@ -136,7 +137,7 @@ public class AgentCallExecutor {
     return new MemoryContext(new ProcessDataField(context.script()), store);
   }
 
-  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) { }
+  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) {}
 
   private HumanInTheLoop configureHumanInTheLoop(MemoryContext memory, AiServices<? extends DynamicAgent<?>> agentBuilder) {
     HumanInTheLoop humanInTheLoop = new HumanInTheLoop(memory.memoryId, memory.store);
@@ -157,7 +158,7 @@ public class AgentCallExecutor {
     agentBuilder.chatModel(chatModel);
     var modelName = chatModel.defaultRequestParameters().modelName();
     AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName), agentName))
-      .forEach(agentBuilder::registerListener);
+        .forEach(agentBuilder::registerListener);
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter) {
