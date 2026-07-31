@@ -25,15 +25,21 @@ public class AgentEditor {
 
   public void editor(ProgramUiBuilder ui) {
     ui.group("✉️ Message")
-        .add(ui.label("User message:").create())
-        .add(ui.textField(Conf.QUERY).multiline().create())
-        .add(ui.label("System message:").create())
-        .add(ui.textField(Conf.SYSTEM).multiline().create())
+        .add(ui.textField(Conf.QUERY)
+          .label("User message:")
+          .multiline()
+          .create())
+        .add(ui.textField(Conf.SYSTEM)
+          .label("System message:")
+          .multiline()
+          .create())
         .create();
 
     ui.group("🛠️ Tools")
-        .add(ui.label("Select the available tools:").create())
-        .add(ui.multiSelect(Conf.TOOLS).items(toolList()).create())
+        .add(ui.multiSelect(Conf.TOOLS)
+          .label("Available tools:")
+          .items(toolList())
+          .create())
         .create();
 
     String inputGuardrailList = inputGuardrailsList();
@@ -53,18 +59,25 @@ public class AgentEditor {
     ui.group("🧠️ Model")
         .add(ui.label("Provider").create())
         .add(ui.label(providersHelp()).multiline().create())
-        .add(ui.scriptField(Conf.PROVIDER).requireType(String.class).create())
-        .add(ui.label("Keep empty to use default from variables.yaml").create())
-        .add(ui.label("Model").create())
-        .add(ui.scriptField(Conf.MODEL).requireType(String.class).create())
-        .add(ui.label("Keep empty to use default from variables.yaml").create())
+        .add(ui.scriptField(Conf.PROVIDER)
+          .help("Keep empty to use default from variables.yaml")
+          .requireType(String.class).create())
+        .add(ui.scriptField(Conf.MODEL)
+          .label("Model:")
+          .help("Keep empty to use default from variables.yaml")
+          .requireType(String.class)
+          .create())
         .create();
 
     ui.group("➡️ Output")
-        .add(ui.label("Expect result of type:").create())
-        .add(ui.scriptField(Conf.OUTPUT).requireType(Class.class).create())
-        .add(ui.label("Map result to:").create())
-        .add(ui.scriptField(Conf.MAP_TO).requireType(Object.class).create())
+        .add(ui.scriptField(Conf.OUTPUT)
+          .label("Expect result of type:")
+          .requireType(Class.class)
+          .create())
+        .add(ui.scriptField(Conf.MAP_TO)
+          .label("Map result to:")
+          .requireType(Object.class)
+          .create())
         .create();
   }
 
