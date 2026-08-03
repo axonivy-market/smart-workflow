@@ -16,6 +16,7 @@
     <module>models/smart-workflow-anthropic</module>
     <module>rag/smart-workflow-opensearch-rag</module>
     <module>demo/smart-workflow-supplier-demo</module>
+    <module>smart-workflow-dashboard</module>
     <module>smart-workflow-demo</module>
     <module>smart-workflow-test</module>
     <module>smart-workflow-product</module>
