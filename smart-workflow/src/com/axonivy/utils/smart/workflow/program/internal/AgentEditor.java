@@ -12,27 +12,34 @@ import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
-import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
 
+import ch.ivyteam.ivy.process.call.StartDescriptor;
 import ch.ivyteam.ivy.process.call.StartParameter;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import ch.ivyteam.ivy.process.program.ui.ProgramUiBuilder;
+import ch.ivyteam.ivy.process.program.ui.select.SelectItem;
 
 public class AgentEditor {
 
   public void editor(ProgramUiBuilder ui) {
     ui.group("✉️ Message")
-        .add(ui.label("User message:").create())
-        .add(ui.textField(Conf.QUERY).multiline().create())
-        .add(ui.label("System message:").create())
-        .add(ui.textField(Conf.SYSTEM).multiline().create())
+        .add(ui.textField(Conf.QUERY)
+          .label("User message:")
+          .multiline()
+          .create())
+        .add(ui.textField(Conf.SYSTEM)
+          .label("System message:")
+          .multiline()
+          .create())
         .create();
 
     ui.group("🛠️ Tools")
-        .add(ui.label(toolsHelp()).multiline().create())
-        .add(ui.scriptField(Conf.TOOLS).requireType(List.class).create())
+        .add(ui.multiSelect(Conf.TOOLS)
+          .label("Available tools:")
+          .items(toolList())
+          .create())
         .create();
 
     String inputGuardrailList = inputGuardrailsList();
@@ -52,45 +59,52 @@ public class AgentEditor {
     ui.group("🧠️ Model")
         .add(ui.label("Provider").create())
         .add(ui.label(providersHelp()).multiline().create())
-        .add(ui.scriptField(Conf.PROVIDER).requireType(String.class).create())
-        .add(ui.label("Keep empty to use default from variables.yaml").create())
-        .add(ui.label("Model").create())
-        .add(ui.scriptField(Conf.MODEL).requireType(String.class).create())
-        .add(ui.label("Keep empty to use default from variables.yaml").create())
+        .add(ui.scriptField(Conf.PROVIDER)
+          .help("Keep empty to use default from variables.yaml")
+          .requireType(String.class).create())
+        .add(ui.scriptField(Conf.MODEL)
+          .label("Model:")
+          .help("Keep empty to use default from variables.yaml")
+          .requireType(String.class)
+          .create())
         .create();
 
     ui.group("➡️ Output")
-        .add(ui.label("Expect result of type:").create())
-        .add(ui.scriptField(Conf.OUTPUT).requireType(Class.class).create())
-        .add(ui.label("Map result to:").create())
-        .add(ui.scriptField(Conf.MAP_TO).requireType(Object.class).create())
+        .add(ui.scriptField(Conf.OUTPUT)
+          .label("Expect result of type:")
+          .requireType(Class.class)
+          .create())
+        .add(ui.scriptField(Conf.MAP_TO)
+          .label("Map result to:")
+          .requireType(Object.class)
+          .create())
         .create();
-  }
-
-  private String toolsHelp() {
-    return "You have the following tools ready to assist you:\n" + toolList() + "\n\n"
-        + "Select the available tools, or keep empty to use all:";
   }
 
   private String providersHelp() {
     return "Choose one of the supported AI providers:\n" + providersList();
   }
 
-  private String toolList() {
+  private List<SelectItem> toolList() {
     try {
       var ivyTools = IvyToolsProcesses
           .toolStarts().stream()
           .map(SubProcessCallStartEvent::description)
-          .map(tool -> "- " + tool.name() + tool.in().stream().map(StartParameter::name).toList());
-      var javaTools = javaToolNames().stream()
-          .map(name -> "- " + name);
-      return Stream.concat(ivyTools, javaTools).collect(Collectors.joining("\n"));
+          .map(AgentEditor::toItem);
+      return Stream.concat(ivyTools, javaToolNames()).toList();
     } catch (Exception ex) {
-      return "";
+      return List.of();
     }
   }
 
-  private List<String> javaToolNames() {
+  private static SelectItem toItem(StartDescriptor tool) {
+    String params = tool.in().isEmpty() ? ""
+        : tool.in().stream().map(StartParameter::name)
+            .collect(Collectors.joining(", ", " (", ")"));
+    return SelectItem.of(tool.name(), tool.name() + params, "🧰️", tool.description());
+  }
+
+  private Stream<SelectItem> javaToolNames() {
     try {
       var pmv = SpiProject.getSmartWorkflowPmv();
       return new SpiLoader(pmv).load(SmartWorkflowToolsProvider.class).stream()
@@ -98,11 +112,9 @@ public class AgentEditor {
             var tools = provider.getTools();
             return tools == null ? Stream.empty() : tools.stream();
           })
-          .map(SmartWorkflowTool::name)
-          .distinct()
-          .toList();
+          .map(t -> SelectItem.of(t.name(), t.name(), "☕️", t.description()));
     } catch (Exception ex) {
-      return List.of();
+      return Stream.empty();
     }
   }
 
