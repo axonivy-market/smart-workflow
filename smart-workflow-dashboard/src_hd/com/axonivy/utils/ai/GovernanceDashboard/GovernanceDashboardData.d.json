@@ -1,8 +1,0 @@
-{
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
-  "simpleName" : "GovernanceDashboardData",
-  "namespace" : "com.axonivy.utils.ai.GovernanceDashboard",
-  "fields" : [ {
-    "name" : "selectedCaseUuid"
-  } ]
-}
