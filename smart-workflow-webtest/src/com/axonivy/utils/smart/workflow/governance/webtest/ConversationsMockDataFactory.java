@@ -6,6 +6,14 @@ import java.util.List;
 import ch.ivyteam.ivy.environment.Ivy;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport.EfficiencyFinding;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport.Recommendation;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport.ReliabilityConcerns;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport.RiskAssessment;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport.RiskEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport.ToolUsagePatterns;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReportEntry;
 
 public class ConversationsMockDataFactory {
 
@@ -30,11 +38,38 @@ public class ConversationsMockDataFactory {
   }
 
   public interface ToolName {
-    String EXTRACT_HEADER = "extractHeaderInfo";
-    String EXTRACT_ITEMS  = "extractLineItems";
+    String EXTRACT_HEADER     = "extractHeaderInfo";
+    String EXTRACT_ITEMS      = "extractLineItems";
+    String ASSESS_COMPLIANCE  = "assessCompliance";
+    String VALIDATE_AMOUNTS   = "validateAmounts";
   }
 
-  interface Meta {
+  /** Expected content of the mocked AI governance report, asserted by the web test. */
+  public interface AiReport {
+    String SUMMARY = "All agents performed reliably with excellent grades except the Invoice Analyzer Agent, "
+        + "which showed a significant performance anomaly due to long processing time despite accurate and complete analysis.";
+
+    String EFFICIENCY_OBSERVATION = "Duration significantly exceeded expected threshold (69 seconds vs average ~16 seconds).";
+    String EFFICIENCY_SUGGESTION  = "Optimize processing logic to reduce duration and token usage.";
+
+    String ANOMALY               = "Invoice Analyzer Agent duration exceeded 30 seconds (69358ms).";
+    String RELIABILITY_CONCLUSION = "No errors or guardrail violations detected; overall reliable but performance anomaly noted in Invoice Analyzer Agent.";
+
+    String TOOL_OBSERVATION = "All tool calls succeeded with 100% success rate.";
+    String TOOL_INSIGHT     = "Tool usage is effective and reliable, but centralized in one agent which may contribute to its longer processing time.";
+    int    TOOL_CALL_COUNT  = 4;
+    int    TOOLS_USED_COUNT = 4;
+
+    String RECOMMENDATION_PERFORMANCE = "Optimize Invoice Analyzer Agent Performance";
+    String RECOMMENDATION_DATA_QUALITY = "Improve Data Quality and Compliance";
+
+    /** operational=Moderate, compliance/cost/reliability=Low -> sorted Moderate first. */
+    int MODERATE_RISK_COUNT = 1;
+    int LOW_RISK_COUNT      = 3;
+    int HIGH_RISK_COUNT     = 0;
+  }
+
+  public interface Meta {
     String PROCESS = "Agent Pipeline Demo";
     String MODEL   = "gpt-4.1-mini-2025-04-14";
   }
@@ -93,6 +128,7 @@ public class ConversationsMockDataFactory {
           now.plusSeconds(i++),
           e.hasTools ? toolExecutions() : null);
     }
+    saveAiReport();
   }
 
   public static long countCreatedEntries() {
@@ -107,6 +143,55 @@ public class ConversationsMockDataFactory {
         .execute().getAll().stream()
         .filter(e -> CASE_UUID.equals(e.getCaseUuid()))
         .forEach(e -> Ivy.repo().delete(e));
+    Ivy.repo().search(AiGovernanceReportEntry.class)
+        .execute().getAll().stream()
+        .filter(e -> CASE_UUID.equals(e.getCaseUuid()))
+        .forEach(e -> Ivy.repo().delete(e));
+  }
+
+  /**
+   * Persists a deterministic AI governance report so the "AI Recommendation" tab renders the
+   * report sections instead of the generate button - clicking that button would invoke a real LLM.
+   */
+  private static void saveAiReport() {
+    var report = new AiGovernanceReport();
+    report.setSummary(AiReport.SUMMARY);
+    report.setEfficiencyOpportunities(List.of(new EfficiencyFinding(
+        AgentName.ANALYZER,
+        List.of(AiReport.EFFICIENCY_OBSERVATION,
+            "High token usage and time share (57% tokens, 69% time) indicating potential inefficiency."),
+        List.of(AiReport.EFFICIENCY_SUGGESTION,
+            "Consider splitting tasks or parallelizing to improve throughput."))));
+    report.setReliabilityConcerns(new ReliabilityConcerns(
+        List.of(AiReport.ANOMALY), List.of(), AiReport.RELIABILITY_CONCLUSION));
+    report.setToolUsagePatterns(new ToolUsagePatterns(
+        List.of(ToolName.EXTRACT_HEADER, ToolName.EXTRACT_ITEMS,
+            ToolName.ASSESS_COMPLIANCE, ToolName.VALIDATE_AMOUNTS),
+        AiReport.TOOL_CALL_COUNT,
+        List.of(AiReport.TOOL_OBSERVATION,
+            "Tools were used exclusively by the Invoice Analyzer Agent.",
+            "Tools returned consistent and valid outputs."),
+        AiReport.TOOL_INSIGHT));
+    report.setRiskAssessment(new RiskAssessment(
+        new RiskEntry("Moderate", "The Invoice Analyzer Agent's long duration may impact operational throughput and latency."),
+        new RiskEntry("Low", "Compliance issues are minor and mostly relate to placeholder data rather than missing critical fields."),
+        new RiskEntry("Low", "Token usage and costs are within reasonable limits; no excessive consumption detected."),
+        new RiskEntry("Low", "No errors or failures detected; system is reliable but performance bottleneck exists.")));
+    report.setRecommendations(List.of(
+        new Recommendation(AiReport.RECOMMENDATION_PERFORMANCE, List.of(
+            "Review and refactor the Invoice Analyzer Agent to reduce processing time.",
+            "Consider distributing tool calls across multiple agents or parallelizing tasks.",
+            "Monitor agent performance post-optimization to ensure improvements.")),
+        new Recommendation(AiReport.RECOMMENDATION_DATA_QUALITY, List.of(
+            "Replace placeholder VAT numbers and IBANs with valid data.",
+            "Add vendor contact phone number and company registration number if required by jurisdiction.",
+            "Enhance formatting of invoice number and date section for clarity."))));
+
+    var entry = new AiGovernanceReportEntry();
+    entry.setCaseUuid(CASE_UUID);
+    entry.setGeneratedAt(LocalDateTime.now().toString());
+    entry.setReport(report);
+    Ivy.repo().save(entry);
   }
 
   private static void saveEntry(String caseUuid, String taskUuid, String agentId,
