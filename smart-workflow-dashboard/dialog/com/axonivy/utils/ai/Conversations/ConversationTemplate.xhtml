@@ -57,106 +57,110 @@
             <p:tabView styleClass="cv-agent-tabview border-none bg-transparent border-noround p-0" activeIndex="1">
 
               <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabSystemPrompt')}"
-                     rendered="#{not empty conversationsBean.getSystemMessages(agent.entry)}"
-                     contentStyleClass="cv-tab-content--system p-4">
-                <ui:repeat var="msg" value="#{conversationsBean.getSystemMessages(agent.entry)}">
-                  <div class="cv-tab-msg-text text-color">#{msg.text}</div>
-                </ui:repeat>
+                     rendered="#{not empty conversationsBean.getSystemMessages(agent.entry)}">
+                <div class="cv-tab-content--system p-4">
+                  <ui:repeat var="msg" value="#{conversationsBean.getSystemMessages(agent.entry)}">
+                    <div class="cv-tab-msg-text text-color">#{msg.text}</div>
+                  </ui:repeat>
+                </div>
               </p:tab>
 
-              <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabInput')}"
-                     contentStyleClass="cv-tab-content--input p-4 surface-0">
-                <h:panelGroup rendered="#{empty conversationsBean.getUserMessages(agent.entry)}"
-                              layout="block" styleClass="cv-tab-empty text-center text-color-secondary font-italic py-3">
-                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoInputMessages')}
-                </h:panelGroup>
-                <ui:repeat var="msg" value="#{conversationsBean.getUserMessages(agent.entry)}" varStatus="s">
-                  <h:panelGroup layout="block"
-                                styleClass="cv-tab-msg-turn #{s.index gt 0 ? 'cv-tab-msg-turn--sep pt-3 mt-3' : ''}">
-                    <div class="cv-tab-msg-text text-color">#{msg.text}</div>
+              <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabInput')}">
+                <div class="cv-tab-content--input p-4 surface-0">
+                  <h:panelGroup rendered="#{empty conversationsBean.getUserMessages(agent.entry)}"
+                                layout="block" styleClass="cv-tab-empty text-center text-color-secondary font-italic py-3">
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoInputMessages')}
                   </h:panelGroup>
-                </ui:repeat>
+                  <ui:repeat var="msg" value="#{conversationsBean.getUserMessages(agent.entry)}" varStatus="s">
+                    <h:panelGroup layout="block"
+                                  styleClass="cv-tab-msg-turn #{s.index gt 0 ? 'cv-tab-msg-turn--sep pt-3 mt-3' : ''}">
+                      <div class="cv-tab-msg-text text-color">#{msg.text}</div>
+                    </h:panelGroup>
+                  </ui:repeat>
+                </div>
               </p:tab>
 
-              <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabResponse')}"
-                     contentStyleClass="cv-tab-content--response p-4">
-                <h:panelGroup rendered="#{empty conversationsBean.getAssistantMessages(agent.entry)}"
-                              layout="block" styleClass="cv-tab-empty text-center text-color-secondary font-italic py-3">
-                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoResponse')}
-                </h:panelGroup>
-                <ui:repeat var="msg" value="#{conversationsBean.getAssistantMessages(agent.entry)}" varStatus="s">
-                  <h:panelGroup layout="block"
-                                styleClass="cv-tab-msg-turn #{s.index gt 0 ? 'cv-tab-msg-turn--sep pt-3 mt-3' : ''}">
-                    <div class="cv-tab-msg-text text-color">#{msg.text}</div>
+              <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabResponse')}">
+                <div class="cv-tab-content--response p-4">
+                  <h:panelGroup rendered="#{empty conversationsBean.getAssistantMessages(agent.entry)}"
+                                layout="block" styleClass="cv-tab-empty text-center text-color-secondary font-italic py-3">
+                    #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoResponse')}
                   </h:panelGroup>
-                </ui:repeat>
+                  <ui:repeat var="msg" value="#{conversationsBean.getAssistantMessages(agent.entry)}" varStatus="s">
+                    <h:panelGroup layout="block"
+                                  styleClass="cv-tab-msg-turn #{s.index gt 0 ? 'cv-tab-msg-turn--sep pt-3 mt-3' : ''}">
+                      <div class="cv-tab-msg-text text-color">#{msg.text}</div>
+                    </h:panelGroup>
+                  </ui:repeat>
+                </div>
               </p:tab>
 
               <p:tab title="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/TabTools', [agent.toolCount])}"
-                     rendered="#{agent.toolCount gt 0}"
-                     contentStyleClass="cv-tab-content--tools p-3 surface-0">
-                <div class="tool-timeline">
-                  <ui:repeat var="tool" value="#{agent.tools}" varStatus="ts">
-                    <div class="tool-timeline-item">
-                      <div class="tool-timeline-node absolute flex align-items-center justify-content-center w-2rem h-2rem border-circle surface-ground text-color-secondary z-1">#{ts.index + 1}</div>
-                      <div class="tool-timeline-card border-1 border-solid surface-border border-round-lg surface-0 overflow-hidden">
+                     rendered="#{agent.toolCount gt 0}">
+                <div class="cv-tab-content--tools p-3 surface-0">
+                  <div class="tool-timeline">
+                    <ui:repeat var="tool" value="#{agent.tools}" varStatus="ts">
+                      <div class="tool-timeline-item">
+                        <div class="tool-timeline-node absolute flex align-items-center justify-content-center w-2rem h-2rem border-circle surface-ground text-color-secondary z-1">#{ts.index + 1}</div>
+                        <div class="tool-timeline-card border-1 border-solid surface-border border-round-lg surface-0 overflow-hidden">
 
-                        <div class="tool-timeline-card-header flex align-items-center gap-2 px-3 cursor-pointer select-none"
-                             onclick="CvToolCard.toggle(this)">
-                          <i class="tool-timeline-card-chevron tif tif-chevron-right text-color-secondary flex-shrink-0" />
-                          <span class="flex-1">#{tool.toolName}</span>
-                        </div>
-
-                        <div class="tool-timeline-card-body hidden">
-
-                          <!-- Result header -->
-                          <div class="tool-timeline-result-header flex align-items-center gap-3 py-2 px-3 border-bottom-1 surface-border">
-                            <i class="tif tif-check-circle text-sm text-color-secondary flex-shrink-0" />
-                            <span class="text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolResult')}</span>
-                          </div>
-                          <!-- Result content -->
-                          <div class="tool-timeline-result-body px-3 py-2 #{empty tool.resultText ? 'tool-timeline-result--empty' : ''}">
-                            <h:panelGroup rendered="#{empty tool.resultText}" layout="block"
-                                          styleClass="text-color-secondary font-italic text-sm">
-                              #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoOutput')}
-                            </h:panelGroup>
-                            <h:panelGroup rendered="#{not empty tool.resultText}" layout="block">
-                              <div class="cv-tab-msg-text text-color">#{tool.resultText}</div>
-                            </h:panelGroup>
+                          <div class="tool-timeline-card-header flex align-items-center gap-2 px-3 cursor-pointer select-none"
+                               onclick="CvToolCard.toggle(this)">
+                            <i class="tool-timeline-card-chevron tif tif-chevron-right text-color-secondary flex-shrink-0" />
+                            <span class="flex-1">#{tool.toolName}</span>
                           </div>
 
-                          <!-- Input parameters (collapsed by default) -->
-                          <div class="tool-timeline-input">
-                            <div class="tool-timeline-input-toggle flex align-items-center gap-3 py-2 px-3 cursor-pointer select-none border-bottom-1 surface-border"
-                                 onclick="CvToolInput.toggle(this)">
-                              <i class="tool-timeline-input-chevron tif tif-chevron-right text-sm text-color-secondary flex-shrink-0" />
-                              <span class="text-color-secondary">
-                                #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolInputParameters')}
-                              </span>
+                          <div class="tool-timeline-card-body hidden">
+
+                            <!-- Result header -->
+                            <div class="tool-timeline-result-header flex align-items-center gap-3 py-2 px-3 border-bottom-1 surface-border">
+                              <i class="tif tif-check-circle text-sm text-color-secondary flex-shrink-0" />
+                              <span class="text-color-secondary">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolResult')}</span>
                             </div>
-                            <div class="tool-timeline-input-body hidden px-3 pb-3">
-                              <h:panelGroup rendered="#{empty tool.argumentEntries}" layout="block"
-                                            styleClass="text-center text-color-secondary font-italic py-3 text-sm">
-                                #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoParameters')}
+                            <!-- Result content -->
+                            <div class="tool-timeline-result-body px-3 py-2 #{empty tool.resultText ? 'tool-timeline-result--empty' : ''}">
+                              <h:panelGroup rendered="#{empty tool.resultText}" layout="block"
+                                            styleClass="text-color-secondary font-italic text-sm">
+                                #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoOutput')}
                               </h:panelGroup>
-                              <h:panelGroup rendered="#{not empty tool.argumentEntries}" layout="block"
-                                            styleClass="flex flex-column mt-2">
-                                <ui:repeat var="arg" value="#{tool.argumentEntries}">
-                                  <div class="tool-timeline-kv-row flex gap-2 py-1 px-2 align-items-baseline">
-                                    <div class="tool-timeline-kv-key text-color-secondary white-space-nowrap flex-shrink-0 pr-1">#{arg.key}</div>
-                                    <div class="tool-timeline-val-cell flex-1 min-w-0">
-                                      <div class="cv-tab-msg-text text-color">#{arg.value}</div>
+                              <h:panelGroup rendered="#{not empty tool.resultText}" layout="block">
+                                <div class="cv-tab-msg-text text-color">#{tool.resultText}</div>
+                              </h:panelGroup>
+                            </div>
+
+                            <!-- Input parameters (collapsed by default) -->
+                            <div class="tool-timeline-input">
+                              <div class="tool-timeline-input-toggle flex align-items-center gap-3 py-2 px-3 cursor-pointer select-none border-bottom-1 surface-border"
+                                   onclick="CvToolInput.toggle(this)">
+                                <i class="tool-timeline-input-chevron tif tif-chevron-right text-sm text-color-secondary flex-shrink-0" />
+                                <span class="text-color-secondary">
+                                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/ToolInputParameters')}
+                                </span>
+                              </div>
+                              <div class="tool-timeline-input-body hidden px-3 pb-3">
+                                <h:panelGroup rendered="#{empty tool.argumentEntries}" layout="block"
+                                              styleClass="text-center text-color-secondary font-italic py-3 text-sm">
+                                  #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/NoParameters')}
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{not empty tool.argumentEntries}" layout="block"
+                                              styleClass="flex flex-column mt-2">
+                                  <ui:repeat var="arg" value="#{tool.argumentEntries}">
+                                    <div class="tool-timeline-kv-row flex gap-2 py-1 px-2 align-items-baseline">
+                                      <div class="tool-timeline-kv-key text-color-secondary white-space-nowrap flex-shrink-0 pr-1">#{arg.key}</div>
+                                      <div class="tool-timeline-val-cell flex-1 min-w-0">
+                                        <div class="cv-tab-msg-text text-color">#{arg.value}</div>
+                                      </div>
                                     </div>
-                                  </div>
-                                </ui:repeat>
-                              </h:panelGroup>
+                                  </ui:repeat>
+                                </h:panelGroup>
+                              </div>
                             </div>
-                          </div>
 
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </ui:repeat>
+                    </ui:repeat>
+                  </div>
                 </div>
               </p:tab>
 

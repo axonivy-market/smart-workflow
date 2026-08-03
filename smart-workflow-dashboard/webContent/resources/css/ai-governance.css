@@ -233,79 +233,14 @@ body.dark .cv-tl-node {
   padding: 1px 6px;
 }
 
-.cv-agent-tabview .ui-tabview-nav {
-  background: var(--surface-50, #f8fafc);
-  border: none;
-  border-bottom: 1px solid var(--surface-border);
-  border-radius: 0;
-  padding: 0 4px;
-}
-
-.cv-agent-tabview .ui-tabview-nav li {
-  border: none;
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
-  margin: 0 0 -1px;
-  background: transparent;
-  top: 0;
-}
-
-.cv-agent-tabview .ui-tabview-nav li a,
-.cv-agent-tabview .ui-tabview-nav li a:hover {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  color: var(--text-color-secondary);
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  padding: 9px 14px;
-  transition: color 0.15s ease, background 0.15s ease;
-  margin: 0;
-}
-
-.cv-agent-tabview .ui-tabview-nav li:not(.ui-state-active) a:hover {
-  background: var(--surface-100, #f1f5f9);
-  color: var(--text-color);
-}
-
-.cv-agent-tabview .ui-tabview-nav li:nth-child(1).ui-state-active {
-  border-bottom-color: var(--purple-400, #c084fc);
-}
-.cv-agent-tabview .ui-tabview-nav li:nth-child(1).ui-state-active a {
-  color: var(--purple-700, #7e22ce);
-  background: transparent;
-}
-.cv-agent-tabview .ui-tabview-nav li:nth-child(2).ui-state-active {
-  border-bottom-color: var(--blue-400, #60a5fa);
-}
-.cv-agent-tabview .ui-tabview-nav li:nth-child(2).ui-state-active a {
-  color: var(--blue-600, #2563eb);
-  background: transparent;
-}
-.cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active {
-  border-bottom-color: var(--green-500, #22c55e);
-}
-.cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active a {
-  color: var(--green-700, #15803d);
-  background: transparent;
-}
-.cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active {
-  border-bottom-color: var(--orange-400, #fb923c);
-}
-.cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active a {
-  color: var(--orange-600, #ea580c);
-  background: transparent;
-}
-
-.cv-agent-tabview .ui-tabview-panels {
+.cv-agent-tabview .ui-tabs-panels {
   border: none;
   border-radius: 0;
   padding: 0;
   background: transparent;
 }
 
-.cv-agent-tabview .ui-tabview-panel {
+.cv-agent-tabview .ui-tabs-panel {
   padding: 0;
 }
 
@@ -350,19 +285,6 @@ body.dark .cv-tab-content--response {
 body.dark .cv-tab-content--system {
   background: var(--surface-50);
   border-left: 3px solid var(--purple-400);
-}
-
-body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(1).ui-state-active a {
-  color: var(--purple-300);
-}
-body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(2).ui-state-active a {
-  color: var(--blue-300);
-}
-body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(3).ui-state-active a {
-  color: var(--green-400);
-}
-body.dark .cv-agent-tabview .ui-tabview-nav li:nth-child(4).ui-state-active a {
-  color: var(--orange-400);
 }
 
 

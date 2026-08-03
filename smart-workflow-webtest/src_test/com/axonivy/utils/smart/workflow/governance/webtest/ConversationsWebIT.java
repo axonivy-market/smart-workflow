@@ -15,7 +15,7 @@ import static com.codeborne.selenide.Condition.cssClass;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 
-@IvyWebTest(browser = "chrome", headless = false)
+@IvyWebTest(browser = "chrome")
 class ConversationsWebIT implements LoginFixture, ConversationsFixture {
 
   private ConversationsPage page;
