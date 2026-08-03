@@ -11,7 +11,7 @@
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-webtest</artifactId>
   <version>14.0.0-SNAPSHOT</version>
-  <packaging>iar</packaging>
+  <packaging>iar-integration-test</packaging>
   <dependencies>
     <dependency>
       <groupId>com.axonivy.ivy.api</groupId>
@@ -26,6 +26,12 @@
       <groupId>com.codeborne</groupId>
       <artifactId>selenide</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.axonivy.utils.ai</groupId>
+      <artifactId>smart-workflow-dashboard</artifactId>
+      <version>${project.version}</version>
+      <type>iar</type>
     </dependency>
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
@@ -83,7 +89,16 @@
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
+        <extensions>true</extensions>
         <version>${project.parent.version}</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*WebIT.java</include>
+          </includes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
