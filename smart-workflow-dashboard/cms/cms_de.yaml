@@ -9,7 +9,7 @@ Dialogs:
         ai:
           GovernanceDashboard:
             GovernanceDashboard:
-              Title: KI-Governance-Center
+              Title: KI-Governance-Zentrum
               HistoryTableHeader: Verlaufstabelle
               SummaryCount: '{0} Fälle - {1} Aufgaben'
               FilterBy: 'Filtern nach:'
