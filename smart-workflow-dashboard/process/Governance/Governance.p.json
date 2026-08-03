@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process-1.json",
   "id" : "19F0212A34042E00",
   "config" : {
     "data" : "com.axonivy.utils.ai.GovernanceData"
