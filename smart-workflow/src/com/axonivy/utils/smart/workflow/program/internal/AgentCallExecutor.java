@@ -1,22 +1,21 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
+import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailErrors;
-import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.memory.IvyMemory;
 import com.axonivy.utils.smart.workflow.memory.id.IdStore;
 import com.axonivy.utils.smart.workflow.memory.id.ProcessDataField;
 import com.axonivy.utils.smart.workflow.memory.store.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
-import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
@@ -73,7 +72,7 @@ public class AgentCallExecutor {
     var agentBuilder = AiServices.builder(agentType);
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
-    var toolFilter = executeListOfStrings(Conf.TOOLS).orElse(null);
+    var toolFilter = context.config().getList(Conf.TOOLS);
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
     configureToolProvider(agentBuilder, toolFilter);
     configureGuardrails(agentBuilder);
@@ -111,14 +110,6 @@ public class AgentCallExecutor {
     }
   }
 
-  private Optional<List<String>> executeListOfStrings(String configKey) {
-    return execute(configKey, List.class)
-        .map(rawList -> ((List<?>) rawList).stream()
-            .filter(String.class::isInstance)
-            .map(String.class::cast)
-            .toList());
-  }
-
   private void configureSystemMessage(HumanInTheLoop human, AiServices<? extends DynamicAgent<?>> agentBuilder) {
     if (human.isRestoredConversion()) {
       return; // keep system message from initial conversion
@@ -136,7 +127,7 @@ public class AgentCallExecutor {
     return new MemoryContext(new ProcessDataField(context.script()), store);
   }
 
-  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) { }
+  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) {}
 
   private HumanInTheLoop configureHumanInTheLoop(MemoryContext memory, AiServices<? extends DynamicAgent<?>> agentBuilder) {
     HumanInTheLoop humanInTheLoop = new HumanInTheLoop(memory.memoryId, memory.store);
@@ -145,9 +136,8 @@ public class AgentCallExecutor {
   }
 
   private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured, List<String> toolFilter) {
-    var providerName = execute(Conf.PROVIDER, String.class).orElse(StringUtils.EMPTY);
+    var provider = ChatModelFactory.getProviderOrDefault(configuredProvider());
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
-    var provider = ChatModelFactory.getProviderOrDefault(providerName);
     var agentName = context.element().name();
     var modelOptions = options()
         .modelName(model)
@@ -157,7 +147,19 @@ public class AgentCallExecutor {
     agentBuilder.chatModel(chatModel);
     var modelName = chatModel.defaultRequestParameters().modelName();
     AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName), agentName))
-      .forEach(agentBuilder::registerListener);
+        .forEach(agentBuilder::registerListener);
+  }
+
+  private String configuredProvider() {
+    String providerName = null;
+    List<String> providerConfig = context.config().getList(Conf.PROVIDER);
+    if (!providerConfig.isEmpty()) {
+      providerName = providerConfig.get(0);
+      if (providerConfig.size() > 1) {
+        Ivy.log().warn("Only one provider is allowed. Will use " + providerConfig.get(0) + ", and ignore other from: " + providerConfig);
+      }
+    }
+    return providerName;
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter) {
@@ -171,10 +173,10 @@ public class AgentCallExecutor {
   }
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
-    Set<GuardrailProvider> providers = GuardrailCollector.allProviders();
-    List<String> inputGuardrailFilters = executeListOfStrings(Conf.INPUT_GUARD_RAILS).orElse(null);
+    var providers = GuardrailCollector.allProviders();
+    var inputGuardrailFilters = context.config().getList(Conf.INPUT_GUARD_RAILS);
     agentBuilder.inputGuardrails(GuardrailCollector.inputGuardrailAdapters(providers, inputGuardrailFilters));
-    List<String> outputGuardrailFilters = executeListOfStrings(Conf.OUTPUT_GUARD_RAILS).orElse(null);
+    var outputGuardrailFilters = context.config().getList(Conf.OUTPUT_GUARD_RAILS);
     agentBuilder.outputGuardrails(GuardrailCollector.outputGuardrailAdapters(providers, outputGuardrailFilters));
   }
 }
