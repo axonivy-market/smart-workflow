@@ -1,15 +1,11 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
@@ -42,26 +38,25 @@ public class AgentEditor {
           .create())
         .create();
 
-    String inputGuardrailList = inputGuardrailsList();
-    String outputGuardrailList = outputGuardrailsList();
-    var guardrailsGroup = ui.group("🛡️ Guardrails");
-    guardrailsGroup.add(ui.label("Select guardrails to apply, or keep empty to use the default guardrails").create());
-    guardrailsGroup
-        .add(ui.label("Available input guardrails:\n").create())
-        .add(ui.label(inputGuardrailList).multiline().create())
-        .add(ui.scriptField(Conf.INPUT_GUARD_RAILS).requireType(List.class).create());
-    guardrailsGroup
-        .add(ui.label("Available output guardrails:\n").create())
-        .add(ui.label(outputGuardrailList).multiline().create())
-        .add(ui.scriptField(Conf.OUTPUT_GUARD_RAILS).requireType(List.class).create());
-    guardrailsGroup.create();
+    ui.group("🛡️ Guardrails")
+        .add(ui.label("Select guardrails to apply, or keep empty to use the default guardrails")
+          .create())
+        .add(ui.multiSelect(Conf.INPUT_GUARD_RAILS)
+          .label("Input guardrails:")
+          .items(inputGuardrailsList())
+          .create())
+        .add(ui.multiSelect(Conf.OUTPUT_GUARD_RAILS)
+          .label("Output guardrails:")
+          .items(outputGuardrailsList())
+          .create())
+        .create();
 
     ui.group("🧠️ Model")
-        .add(ui.label("Provider").create())
-        .add(ui.label(providersHelp()).multiline().create())
-        .add(ui.scriptField(Conf.PROVIDER)
-          .help("Keep empty to use default from variables.yaml")
-          .requireType(String.class).create())
+        .add(ui.multiSelect(Conf.PROVIDER)
+          .label("Provider:")
+          .items(providersList())
+          .help("Choose one of the supported providers. Keep empty to use default from variables.yaml")
+          .create())
         .add(ui.scriptField(Conf.MODEL)
           .label("Model:")
           .help("Keep empty to use default from variables.yaml")
@@ -79,10 +74,6 @@ public class AgentEditor {
           .requireType(Object.class)
           .create())
         .create();
-  }
-
-  private String providersHelp() {
-    return "Choose one of the supported AI providers:\n" + providersList();
   }
 
   private List<SelectItem> toolList() {
@@ -118,23 +109,22 @@ public class AgentEditor {
     }
   }
 
-  private String providersList() {
-    var providers = Optional.ofNullable(ChatModelFactory.providers());
-    if (providers.isEmpty()) {
-      return StringUtils.EMPTY;
-    }
-    return providers.get().stream().map(ChatModelProvider::name).distinct().collect(Collectors.joining(", "));
+  private List<SelectItem> providersList() {
+    return ChatModelFactory.providers().stream()
+      .distinct()
+      .map(provider -> SelectItem.of(provider.name()))
+      .toList();
   }
 
-  private String inputGuardrailsList() {
+  private List<SelectItem> inputGuardrailsList() {
     return GuardrailCollector.allInputGuardrailNames().stream()
-        .map(name -> "- " + name)
-        .collect(Collectors.joining("\n"));
+        .map(name -> SelectItem.of(name, name, "➡️", null))
+        .toList();
   }
 
-  private String outputGuardrailsList() {
+  private List<SelectItem> outputGuardrailsList() {
     return GuardrailCollector.allOutputGuardrailNames().stream()
-        .map(name -> "- " + name)
-        .collect(Collectors.joining("\n"));
+        .map(name -> SelectItem.of(name, name, "⬅️", null))
+        .toList();
   }
 }
