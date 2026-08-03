@@ -31,6 +31,10 @@ public class AgentConversationView {
   public String getAgentName()   { return entry.getAgentName(); }
   public String getProcessName() { return entry.getProcessName(); }
 
+  public String getLastUpdatedRaw() {
+    return entry.getLastUpdated() != null ? entry.getLastUpdated() : "";
+  }
+
   public String getLastUpdatedText() {
     if (entry.getLastUpdated() == null) return NO_DATE;
     try {
@@ -55,14 +59,14 @@ public class AgentConversationView {
 
   public List<ToolExecution> getToolExecutions() {
     if (toolExecutions == null) {
-      toolExecutions = List.copyOf(entry.getToolExecutions());
+      toolExecutions = entry.getToolExecutions();
     }
     return toolExecutions;
   }
 
   public List<GuardrailExecution> getGuardrailExecutions() {
     if (guardrailExecutions == null) {
-      guardrailExecutions = List.copyOf(entry.getGuardrailExecutions());
+      guardrailExecutions = entry.getGuardrailExecutions();
     }
     return guardrailExecutions;
   }
