@@ -7,6 +7,8 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 public final class DatePatternUtils {
 
+  public static final DateTimeFormatter DAY_FMT = DateTimeFormatter.ofPattern("MMM dd");
+
   public static DateTimeFormatter dateTimeFormatter() {
     return DateTimeFormatter
         .ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
