@@ -13,5 +13,12 @@
   }, {
     "name" : "analysisResult",
     "comment" : "Summary and analysis produced by the SelfContainedAgent"
+  }, {
+    "name" : "circuitBreakerResult"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError",
+    "comment" : "Error caught when an agent call is stopped by the circuit breaker",
+    "modifiers" : [ ]
   } ]
 }

@@ -1,7 +1,8 @@
 package com.axonivy.utils.smart.workflow.utils;
 
-import ch.ivyteam.ivy.environment.Ivy;
 import org.apache.commons.lang3.math.NumberUtils;
+
+import ch.ivyteam.ivy.environment.Ivy;
 
 public class IvyVar {
   
@@ -15,6 +16,10 @@ public class IvyVar {
 
   public static double decimal(String name, double defaultValue) {
     return NumberUtils.toDouble(Ivy.var().get(name), defaultValue);
+  }
+
+  public static void set(String name, String value) {
+    Ivy.var().set(name, value);
   }
 }
 

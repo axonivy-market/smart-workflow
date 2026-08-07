@@ -1,0 +1,11 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "CircuitBreakerData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "hasPermission",
+    "type" : "Boolean"
+  }, {
+    "name" : "result"
+  } ]
+}

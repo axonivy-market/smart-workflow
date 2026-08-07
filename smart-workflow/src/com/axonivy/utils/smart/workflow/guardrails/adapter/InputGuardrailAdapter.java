@@ -2,10 +2,9 @@ package com.axonivy.utils.smart.workflow.guardrails.adapter;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
+import com.axonivy.utils.smart.workflow.utils.UserMessages;
 
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrail;
@@ -20,14 +19,13 @@ public class InputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkflo
 
   @Override
   public InputGuardrailResult validate(UserMessage userMessage) {
-    String message = Optional.ofNullable(userMessage).map(UserMessage::singleText).orElse(StringUtils.EMPTY);
-    return doValidate(message);
+    return doValidate(UserMessages.text(userMessage));
   }
 
   @Override
   public InputGuardrailResult validate(InputGuardrailRequest request) {
-    String message = Optional.ofNullable(request).map(InputGuardrailRequest::userMessage).map(UserMessage::singleText)
-        .orElse(StringUtils.EMPTY);
+    String message = UserMessages.text(
+        Optional.ofNullable(request).map(InputGuardrailRequest::userMessage).orElse(null));
     String invocationId = Optional.ofNullable(request)
         .map(InputGuardrailRequest::requestParams)
         .map(p -> p.invocationContext())
@@ -45,7 +43,9 @@ public class InputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkflo
         ? getDelegate().evaluate(message, invocationId)
         : getDelegate().evaluate(message);
     if (!result.isAllowed()) {
-      return failure(result.getReason());
+      return result.getCause()
+          .map(cause -> failure(result.getReason(), cause))
+          .orElseGet(() -> failure(result.getReason()));
     }
     return result.getRewrittenMessage().map(this::successWith).orElseGet(this::success);
   }

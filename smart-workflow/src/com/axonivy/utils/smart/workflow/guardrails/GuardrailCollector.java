@@ -1,11 +1,13 @@
 package com.axonivy.utils.smart.workflow.guardrails;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +43,8 @@ public class GuardrailCollector {
     return guardrailAdapters(providers, filters,
         DEFAULT_INPUT_GUARDRAILS,
         GuardrailProvider::getInputGuardrails,
-        InputGuardrailAdapter::new);
+        InputGuardrailAdapter::new,
+        true);
   }
 
   public static List<String> allOutputGuardrailNames() {
@@ -56,13 +59,19 @@ public class GuardrailCollector {
     return guardrailAdapters(providers, filters,
         DEFAULT_OUTPUT_GUARDRAILS,
         GuardrailProvider::getOutputGuardrails,
-        OutputGuardrailAdapter::new);
+        OutputGuardrailAdapter::new,
+        false);
   }
 
+  /**
+   * Names selectable in the agent editor's guardrail pickers. Always-on guardrails are excluded since
+   * they cannot be deselected — they run for every agent call regardless of what is picked here.
+   */
   private static <G extends SmartWorkflowGuardrail> List<String> allGuardrailNames(
       Function<GuardrailProvider, List<G>> providerExtractor) {
     Set<String> uniqueNames = allProviders().stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
+        .filter(Predicate.not(SmartWorkflowGuardrail::alwaysOn))
         .map(SmartWorkflowGuardrail::name)
         .collect(Collectors.toCollection(LinkedHashSet::new));
     return List.copyOf(uniqueNames);
@@ -73,18 +82,28 @@ public class GuardrailCollector {
       List<String> filters,
       String defaultVariableKey,
       Function<GuardrailProvider, List<G>> providerExtractor,
-      Function<G, A> adapterFactory) {
-
-    Set<String> requestedNames = new LinkedHashSet<>(
-        (filters != null && !filters.isEmpty()) ? filters : readVariableNames(defaultVariableKey));
-
-    if (requestedNames.isEmpty()) {
-      return List.of();
-    }
+      Function<G, A> adapterFactory,
+      boolean alwaysOnFirst) {
 
     Map<String, G> guardrailsByName = providers.stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
-        .collect(Collectors.toMap(SmartWorkflowGuardrail::name, g -> g, (existing, _) -> existing));
+        .collect(Collectors.toMap(SmartWorkflowGuardrail::name, g -> g, (existing, _) -> existing, LinkedHashMap::new));
+
+    List<String> alwaysOnNames = guardrailsByName.values().stream()
+        .filter(SmartWorkflowGuardrail::alwaysOn)
+        .map(SmartWorkflowGuardrail::name)
+        .toList();
+
+    List<String> configuredNames = (filters != null && !filters.isEmpty()) ? filters : readVariableNames(defaultVariableKey);
+
+    Set<String> requestedNames = new LinkedHashSet<>();
+    if (alwaysOnFirst) {
+      requestedNames.addAll(alwaysOnNames);
+    }
+    requestedNames.addAll(configuredNames);
+    if (!alwaysOnFirst) {
+      requestedNames.addAll(alwaysOnNames);
+    }
 
     return requestedNames.stream()
         .filter(guardrailsByName::containsKey)
