@@ -1,0 +1,285 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process-1.json",
+  "id" : "19FE952C1AF641A9",
+  "config" : {
+    "data" : "com.axonivy.utils.ai.ApplicationScopeData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "stopApplicationAgents",
+      "config" : {
+        "signature" : "stopApplicationAgents",
+        "request" : {
+          "name" : "Demo stop agents in the application"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f3", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "Script",
+      "name" : [
+        "Stop all agents in ",
+        "application"
+      ],
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.utils.IvyVar;",
+            "import com.axonivy.utils.smart.workflow.guardrails.circuitbreaker.CircuitBreakerSignal;",
+            "",
+            "IvyVar.set(CircuitBreakerSignal.STOP_ALL_VARIABLE, \"true\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f2" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 432, "y" : 64 }
+      }
+    }, {
+      "id" : "f20",
+      "type" : "RequestStart",
+      "name" : "runApplicationAgentsDemo",
+      "config" : {
+        "signature" : "runApplicationAgentsDemo",
+        "request" : {
+          "name" : "Run Application Agents Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f30", "to" : "f23" }
+      ]
+    }, {
+      "id" : "f21",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1744, "y" : 256 }
+      }
+    }, {
+      "id" : "f22",
+      "type" : "Script",
+      "name" : "Load Invoice PNG as InputStream",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.utils.FileProcessingUtils;",
+            "",
+            "in.invoiceStream = FileProcessingUtils.loadInputStreamFromCms(\"/Features/FileExtractionDemo/InvoiceImage\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 472, "y" : 257 },
+        "size" : { "width" : 168, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f31", "to" : "f24", "color" : "default" }
+      ]
+    }, {
+      "id" : "f23",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 1: Image Extraction",
+      "config" : {
+        "task" : {
+          "name" : "Task 1: Image Extraction",
+          "skipTasklist" : true
+        },
+        "case" : {
+          "name" : "Agent Pipeline Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f32", "to" : "f22", "color" : "default" }
+      ]
+    }, {
+      "id" : "f24",
+      "type" : "ProgramInterface",
+      "name" : "Extract Invoice Content from Image",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "You are an invoice OCR specialist. Extract all text content from the invoice image exactly as it appears, preserving structure, labels, values, and layout as clearly as possible.",
+          "tools" : "",
+          "resultMapping" : "in.invoiceContent",
+          "query" : "Extract all text content from this invoice image: <%=in.invoiceStream%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 672, "y" : 256 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "boundaries" : [ {
+          "id" : "f39",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "Agent stopped",
+          "config" : {
+            "errorCode" : "smartworkflow:stop",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 728, "y" : 297 },
+            "labelOffset" : { "x" : -55, "y" : 25 },
+            "icon" : "res:/webContent/icons/shield.png"
+          },
+          "connect" : [
+            { "id" : "f40", "to" : "f38" }
+          ]
+        } ],
+      "connect" : [
+        { "id" : "f33", "to" : "f25", "color" : "default" }
+      ]
+    }, {
+      "id" : "f25",
+      "type" : "Script",
+      "name" : "Release Invoice Stream",
+      "config" : {
+        "output" : {
+          "code" : "in.invoiceStream = null;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 856, "y" : 257 }
+      },
+      "connect" : [
+        { "id" : "f34", "to" : "f26", "color" : "default" }
+      ]
+    }, {
+      "id" : "f26",
+      "type" : "TaskSwitchEvent",
+      "name" : "Task 2: Invoice Analysis",
+      "config" : {
+        "task" : {
+          "name" : "Task 2: Invoice Analysis",
+          "skipTasklist" : true
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 992, "y" : 256 }
+      },
+      "connect" : [
+        { "id" : "f35", "to" : "f27", "color" : "default" }
+      ]
+    }, {
+      "id" : "f27",
+      "type" : "SubProcessCall",
+      "name" : "Analyze Invoice",
+      "config" : {
+        "processCall" : "Patterns/SelfContainedAgent:call(String)",
+        "call" : {
+          "map" : {
+            "param.invoiceContent" : "in.invoiceContent"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out.analysisResult" : "result.analysisResult",
+            "out.isStopped" : "result.isStopped"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1152, "y" : 256 },
+        "size" : { "width" : 152, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f36", "to" : "f42", "color" : "default" }
+      ]
+    }, {
+      "id" : "f42",
+      "type" : "Alternative",
+      "name" : "circuit breaker stopped?",
+      "config" : {
+        "conditions" : {
+          "f45" : "in.isStopped"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1352, "y" : 256 },
+        "labelOffset" : { "y" : -24 }
+      },
+      "connect" : [
+        { "id" : "f45", "to" : "f44", "label" : {
+            "name" : "yes",
+            "offset" : { "x" : 17, "y" : -3 }
+          }, "color" : "default" },
+        { "id" : "f46", "to" : "f28", "via" : [ { "x" : 1424, "y" : 256 }, { "x" : 1424, "y" : 257 } ], "label" : {
+            "name" : "no",
+            "segment" : 1.5,
+            "offset" : { "x" : -7, "y" : 6 }
+          } }
+      ]
+    }, {
+      "id" : "f44",
+      "type" : "Script",
+      "name" : "Log circuit breaker info",
+      "config" : {
+        "output" : {
+          "code" : "ivy.log.warn(\"[ApplicationScope] Analyze Invoice call stopped by circuit breaker.\");"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1352, "y" : 368 }
+      },
+      "connect" : [
+        { "id" : "f47", "to" : "f21", "via" : [ { "x" : 1744, "y" : 368 } ] }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "Script",
+      "name" : "Log Analysis Result",
+      "config" : {
+        "output" : {
+          "code" : [
+            "ivy.log.warn(\"=== Invoice Analysis Result ===\");",
+            "ivy.log.warn(\"{0}\", in.analysisResult);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1552, "y" : 257 },
+        "size" : { "width" : 144, "height" : 62 }
+      },
+      "connect" : [
+        { "id" : "f37", "to" : "f21" }
+      ]
+    }, {
+      "id" : "f38",
+      "type" : "Script",
+      "name" : "Handle stopped agent",
+      "config" : {
+        "output" : {
+          "code" : "ivy.log.warn(\"[ApplicationScope] Agent stopped by circuit breaker: {0}\", in.error.getMessage());"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 728, "y" : 432 }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f21", "via" : [ { "x" : 1744, "y" : 432 } ] }
+      ]
+    } ]
+}

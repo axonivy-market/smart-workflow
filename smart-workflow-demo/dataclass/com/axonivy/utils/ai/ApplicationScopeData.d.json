@@ -1,7 +1,7 @@
 {
   "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
-  "simpleName" : "AgentPipelineData",
-  "namespace" : "Patterns",
+  "simpleName" : "ApplicationScopeData",
+  "namespace" : "com.axonivy.utils.ai",
   "fields" : [ {
     "name" : "invoiceStream",
     "type" : "java.io.InputStream",
@@ -13,5 +13,14 @@
   }, {
     "name" : "analysisResult",
     "comment" : "Summary and analysis produced by the SelfContainedAgent"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError",
+    "comment" : "Error caught when an agent call is stopped by the circuit breaker",
+    "modifiers" : [ ]
+  }, {
+    "name" : "isStopped",
+    "type" : "boolean",
+    "comment" : "True if the Analyze Invoice call was stopped by the circuit breaker"
   } ]
 }

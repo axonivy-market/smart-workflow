@@ -82,28 +82,6 @@
         "at" : { "x" : 584, "y" : 64 },
         "size" : { "width" : 152, "height" : 62 }
       },
-      "boundaries" : [ {
-          "id" : "f30",
-          "type" : "ErrorBoundaryEvent",
-          "name" : "Agent stopped",
-          "config" : {
-            "errorCode" : "smartworkflow:stop",
-            "output" : {
-              "map" : {
-                "out" : "in",
-                "out.error" : "error"
-              }
-            }
-          },
-          "visual" : {
-            "at" : { "x" : 640, "y" : 105 },
-            "labelOffset" : { "x" : -55, "y" : 25 },
-            "icon" : "res:/webContent/icons/shield.png"
-          },
-          "connect" : [
-            { "id" : "f31", "to" : "f34", "via" : [ { "x" : 640, "y" : 200 } ] }
-          ]
-        } ],
       "connect" : [
         { "id" : "f8", "to" : "f16", "color" : "default" }
       ]
@@ -182,21 +160,6 @@
         { "id" : "f10", "to" : "f1" }
       ]
     }, {
-      "id" : "f34",
-      "type" : "Script",
-      "name" : "Handle stopped agent",
-      "config" : {
-        "output" : {
-          "code" : "ivy.log.warn(\"[AgentPipeline] Agent stopped by circuit breaker: {0}\", in.error.getMessage());"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 1264, "y" : 200 }
-      },
-      "connect" : [
-        { "id" : "f35", "to" : "f1", "via" : [ { "x" : 1416, "y" : 200 } ] }
-      ]
-    }, {
       "id" : "f11",
       "type" : "ProcessAnnotation",
       "name" : [
@@ -205,64 +168,8 @@
         "A linear chain of agents where each one processes an input and passes the result to the next stage. Best practice: assign a dedicated task to each agent so that execution is tracked, resumable, and visible in the task history."
       ],
       "visual" : {
-        "at" : { "x" : 400, "y" : 256 },
+        "at" : { "x" : 408, "y" : 168 },
         "size" : { "width" : 700, "height" : 80 }
       }
-    }, {
-      "id" : "f18",
-      "type" : "RequestStart",
-      "name" : "demoStopAll",
-      "config" : {
-        "signature" : "demoStopAll",
-        "request" : {
-          "name" : "Demo stop all agents"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 336 }
-      },
-      "connect" : [
-        { "id" : "f21", "to" : "f23" }
-      ]
-    }, {
-      "id" : "f20",
-      "type" : "TaskEnd",
-      "visual" : {
-        "at" : { "x" : 568, "y" : 336 }
-      }
-    }, {
-      "id" : "f23",
-      "type" : "SubProcessCall",
-      "name" : "Stop all agents",
-      "config" : {
-        "processCall" : "Features/CircuitBreaker:stopAllAgent()",
-        "output" : {
-          "map" : {
-            "out" : "in",
-            "out.circuitBreakerResult" : "result.result"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 264, "y" : 336 }
-      },
-      "connect" : [
-        { "id" : "f24", "to" : "f25" }
-      ]
-    }, {
-      "id" : "f25",
-      "type" : "Script",
-      "name" : "Log result",
-      "config" : {
-        "output" : {
-          "code" : "ivy.log.error(in.circuitBreakerResult);"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 440, "y" : 336 }
-      },
-      "connect" : [
-        { "id" : "f26", "to" : "f20", "color" : "default" }
-      ]
     } ]
 }
