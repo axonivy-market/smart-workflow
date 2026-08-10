@@ -40,6 +40,6 @@ public class TaskHistoryGroup implements HistoryGroupView {
 
   @Override public String getLastUpdatedText() { return stats.getLastUpdatedText(); }
   @Override public int    getMessageCount()    { return stats.getMessageCount(); }
-  @Override public int    getTotalTokens()     { return stats.getTotalTokens(); }
+  @Override public long   getTotalTokens()     { return stats.getTotalTokens(); }
   @Override public String getModelName()       { return stats.getModelName(); }
 }
