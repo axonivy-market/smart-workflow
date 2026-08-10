@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.guardrails.adapter;
 
 import java.util.Optional;
 
-import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailInspectionText;
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 

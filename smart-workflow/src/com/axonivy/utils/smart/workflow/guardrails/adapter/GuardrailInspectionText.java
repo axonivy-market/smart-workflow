@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.guardrails.entity;
+package com.axonivy.utils.smart.workflow.guardrails.adapter;
 
 import java.util.List;
 import java.util.Optional;

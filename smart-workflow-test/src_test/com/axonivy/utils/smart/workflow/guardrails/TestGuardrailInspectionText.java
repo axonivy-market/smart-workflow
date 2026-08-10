@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailInspectionText;
+import com.axonivy.utils.smart.workflow.guardrails.adapter.GuardrailInspectionText;
 
 import dev.langchain4j.data.message.AudioContent;
 import dev.langchain4j.data.message.Content;

@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.axonivy.utils.smart.workflow.governance.history.recorder.GuardrailExecutionRecorder;
-import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailInspectionText;
+import com.axonivy.utils.smart.workflow.guardrails.adapter.GuardrailInspectionText;
 import com.axonivy.utils.smart.workflow.guardrails.pii.PiiDetector;
 
 import dev.langchain4j.guardrail.GuardrailResult.Failure;
