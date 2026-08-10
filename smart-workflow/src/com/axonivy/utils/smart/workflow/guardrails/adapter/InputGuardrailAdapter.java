@@ -2,8 +2,7 @@ package com.axonivy.utils.smart.workflow.guardrails.adapter;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailInspectionText;
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 
@@ -20,14 +19,13 @@ public class InputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkflo
 
   @Override
   public InputGuardrailResult validate(UserMessage userMessage) {
-    String message = Optional.ofNullable(userMessage).map(UserMessage::singleText).orElse(StringUtils.EMPTY);
-    return doValidate(message);
+    return doValidate(GuardrailInspectionText.text(userMessage));
   }
 
   @Override
   public InputGuardrailResult validate(InputGuardrailRequest request) {
-    String message = Optional.ofNullable(request).map(InputGuardrailRequest::userMessage).map(UserMessage::singleText)
-        .orElse(StringUtils.EMPTY);
+    String message = GuardrailInspectionText.text(
+        Optional.ofNullable(request).map(InputGuardrailRequest::userMessage).orElse(null));
     String invocationId = Optional.ofNullable(request)
         .map(InputGuardrailRequest::requestParams)
         .map(p -> p.invocationContext())
