@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.bar.BarChartOptions;
-
 import com.axonivy.utils.smart.workflow.governance.history.analytic.chart.model.ChartPalette;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
-public class TopCasesChartBuilder extends AbstractChartBuilder<BarChartModel> {
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.dataset.BarDataset;
+import software.xdev.chartjs.model.options.BarOptions;
+
+public class TopCasesChartBuilder extends AbstractChartBuilder<BarChart> {
 
   @Override
-  public BarChartModel build(HistoryAggregator aggregator) {
+  public BarChart build(HistoryAggregator aggregator) {
     String unknownLabel = Ivy.cms().co(String.format(ANALYTICS_CMS_PATTERN, "UnknownProcess"));
     List<Map.Entry<String, Long>> sorted = topCasesEntries(aggregator);
 
@@ -26,12 +26,12 @@ public class TopCasesChartBuilder extends AbstractChartBuilder<BarChartModel> {
       values.add(item.getValue());
     });
 
-    BarChartDataSet dataSet = new BarChartDataSet();
+    BarDataset dataSet = new BarDataset();
     dataSet.setLabel(Ivy.cms().co(String.format(ANALYTICS_CMS_PATTERN, "DatasetTotalTokens")));
-    dataSet.setBackgroundColor(ChartPalette.PASTEL_COLORS.colors(labels.size()));
+    dataSet.setBackgroundColor(asColors(ChartPalette.PASTEL_COLORS.colors(labels.size())));
     dataSet.setData(values);
 
-    BarChartOptions options = new BarChartOptions();
+    BarOptions options = new BarOptions();
     applyResponsiveOptions(options);
     options.setIndexAxis(ChartConfig.AXIS_HORIZONTAL);
     options.setScales(xIntegerScales());
