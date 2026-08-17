@@ -1,20 +1,22 @@
 package com.axonivy.utils.smart.workflow.governance.history.analytic.chart;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.primefaces.model.charts.ChartData;
-import org.primefaces.model.charts.ChartOptions;
-import org.primefaces.model.charts.axes.cartesian.CartesianScales;
-import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearAxes;
-import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearTicks;
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.bar.BarChartOptions;
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.data.BarData;
+import software.xdev.chartjs.model.dataset.BarDataset;
+import software.xdev.chartjs.model.enums.IndexAxis;
+import software.xdev.chartjs.model.options.BarOptions;
+import software.xdev.chartjs.model.options.Options;
+import software.xdev.chartjs.model.options.scale.Scales;
+import software.xdev.chartjs.model.options.scale.cartesian.linear.LinearScaleOptions;
+import software.xdev.chartjs.model.options.scale.cartesian.linear.LinearTickOptions;
 
 abstract class AbstractChartBuilder<M> {
 
@@ -23,26 +25,27 @@ abstract class AbstractChartBuilder<M> {
   protected static final String ANALYTICS_CMS_PATTERN = "/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/%s";
 
   interface ChartConfig {
-    int    MIN_TIMELINE_DAYS = 5;
-    int    TOP_N_PROCESSES   = 5;
-    int    BAR_THICKNESS     = 30;
-    String AXIS_HORIZONTAL   = "y";
-    String LEGEND_RIGHT      = "right";
-    String STACK_TOKENS      = "tokens";
+    int       MIN_TIMELINE_DAYS = 5;
+    int       TOP_N_PROCESSES   = 5;
+    int       BAR_THICKNESS     = 30;
+    IndexAxis AXIS_HORIZONTAL   = IndexAxis.Y;
+    String    LEGEND_RIGHT      = "right";
+    String    STACK_TOKENS      = "tokens";
   }
 
-  protected BarChartModel barModel(List<String> labels, BarChartOptions options, BarChartDataSet... datasets) {
-    BarChartModel model = new BarChartModel();
-    model.setData(chartData(labels, datasets));
-    model.setOptions(options);
-    return model;
+  protected BarChart barModel(List<String> labels, BarOptions options, BarDataset... datasets) {
+    BarData data = new BarData().setLabels(labels).setDatasets(Arrays.asList(datasets));
+    return new BarChart().setData(data).setOptions(options);
   }
 
   protected static List<Number> toLongNumbers(Stream<Long> values) {
     return values.map(Number.class::cast).toList();
   }
 
-  // mutates map: fills gaps and pads to MIN_TIMELINE_DAYS
+  protected static List<Object> asColors(List<String> hexColors) {
+    return new ArrayList<>(hexColors);
+  }
+
   protected static <V> void padTimelineToMinDays(NavigableMap<LocalDate, V> map, Supplier<V> emptyValueSupplier) {
     LocalDate lastDate;
     if (!map.isEmpty()) {
@@ -59,39 +62,20 @@ abstract class AbstractChartBuilder<M> {
     }
   }
 
-  protected void applyResponsiveOptions(ChartOptions options) {
+  protected void applyResponsiveOptions(Options<?, ?> options) {
     options.setResponsive(true);
     options.setMaintainAspectRatio(false);
   }
 
-  protected CartesianLinearTicks integerTicks() {
-    CartesianLinearTicks ticks = new CartesianLinearTicks();
-    ticks.setPrecision(0);
-    return ticks;
+  protected LinearTickOptions integerTicks() {
+    return new LinearTickOptions().setPrecision(0);
   }
 
-  protected CartesianScales xIntegerScales() {
-    CartesianScales scales = new CartesianScales();
-    scales.addXAxesData(integerAxis());
-    return scales;
+  protected Scales xIntegerScales() {
+    return new Scales().addScale(Scales.ScaleAxis.X, new LinearScaleOptions().setTicks(integerTicks()));
   }
 
-  protected CartesianScales yIntegerScales() {
-    CartesianScales scales = new CartesianScales();
-    scales.addYAxesData(integerAxis());
-    return scales;
-  }
-
-  private CartesianLinearAxes integerAxis() {
-    CartesianLinearAxes axis = new CartesianLinearAxes();
-    axis.setTicks(integerTicks());
-    return axis;
-  }
-
-  private ChartData chartData(List<String> labels, BarChartDataSet... dataSets) {
-    ChartData data = new ChartData();
-    data.setLabels(labels);
-    Arrays.stream(dataSets).forEach(data::addChartDataSet);
-    return data;
+  protected Scales yIntegerScales() {
+    return new Scales().addScale(Scales.ScaleAxis.Y, new LinearScaleOptions().setTicks(integerTicks()));
   }
 }

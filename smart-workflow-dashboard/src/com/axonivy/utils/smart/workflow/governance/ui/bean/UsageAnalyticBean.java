@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.donut.DonutChartModel;
-
 import com.axonivy.utils.smart.workflow.governance.history.analytic.chart.HistoryAggregator;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.chart.ModelDistributionChartBuilder;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.chart.ResponseTimeChartBuilder;
@@ -21,6 +18,10 @@ import com.axonivy.utils.smart.workflow.governance.history.storage.IvyRepoHistor
 
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.charts.Chart;
+import software.xdev.chartjs.model.charts.DoughnutChart;
 
 @Named("usageAnalyticBean")
 @ViewScoped
@@ -40,11 +41,11 @@ public class UsageAnalyticBean implements Serializable {
   private boolean loaded = false;
 
   private DashboardKpi kpi = DashboardKpi.empty();
-  private BarChartModel tokenTimelineChart;
-  private DonutChartModel modelDistributionChart;
-  private BarChartModel tokenStackedChart;
-  private BarChartModel topCasesChart;
-  private BarChartModel responseTimeChart;
+  private BarChart tokenTimelineChart;
+  private DoughnutChart modelDistributionChart;
+  private BarChart tokenStackedChart;
+  private BarChart topCasesChart;
+  private BarChart responseTimeChart;
 
   public void loadAnalytics() {
     refreshAnalytics();
@@ -67,9 +68,14 @@ public class UsageAnalyticBean implements Serializable {
 
   public boolean isLoaded() { return loaded; }
   public DashboardKpi getKpi() { return kpi; }
-  public BarChartModel getTokenTimelineChart() { return tokenTimelineChart; }
-  public DonutChartModel getModelDistributionChart() { return modelDistributionChart; }
-  public BarChartModel getTokenStackedChart() { return tokenStackedChart; }
-  public BarChartModel getTopCasesChart() { return topCasesChart; }
-  public BarChartModel getResponseTimeChart() { return responseTimeChart; }
+
+  public String getTokenTimelineChart() { return toJson(tokenTimelineChart); }
+  public String getModelDistributionChart() { return toJson(modelDistributionChart); }
+  public String getTokenStackedChart() { return toJson(tokenStackedChart); }
+  public String getTopCasesChart() { return toJson(topCasesChart); }
+  public String getResponseTimeChart() { return toJson(responseTimeChart); }
+
+  private static String toJson(Chart<?, ?, ?> model) {
+    return model == null ? null : model.toJson();
+  }
 }
