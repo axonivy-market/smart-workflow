@@ -5,13 +5,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.dataset.BarDataset;
 
 @IvyTest
 public class TestTokenStackedChartBuilder {
@@ -20,8 +20,8 @@ public class TestTokenStackedChartBuilder {
 
   @Test
   void build_emptyAggregator_twoDatasetsMinDaysAllZero() {
-    BarChartModel model = BUILDER.build(HistoryAggregator.of(List.of()));
-    assertThat(model.getData().getDataSet()).hasSize(2);
+    BarChart model = BUILDER.build(HistoryAggregator.of(List.of()));
+    assertThat(model.getData().getDatasets()).hasSize(2);
     assertThat((List<?>) model.getData().getLabels())
         .hasSize(AbstractChartBuilder.ChartConfig.MIN_TIMELINE_DAYS);
     assertThat(inputValues(model)).allMatch(v -> v.longValue() == 0L);
@@ -33,7 +33,7 @@ public class TestTokenStackedChartBuilder {
     LocalDateTime today = LocalDateTime.now().withHour(9);
     HistoryAggregator aggregator = HistoryAggregator.of(List.of(
         entryWithDate("m", 100, 40, 60, 1_000, today)));
-    BarChartModel model = BUILDER.build(aggregator);
+    BarChart model = BUILDER.build(aggregator);
     String todayLabel = today.toLocalDate().format(DatePatternUtils.DAY_FMT);
     int idx = ((List<?>) model.getData().getLabels()).indexOf(todayLabel);
     assertThat(inputValues(model).get(idx).longValue()).isEqualTo(40L);
@@ -53,12 +53,12 @@ public class TestTokenStackedChartBuilder {
     assertThat(labels.indexOf(olderLabel)).isLessThan(labels.indexOf(newerLabel));
   }
 
-  private static List<Number> inputValues(BarChartModel model) {
-    return ((BarChartDataSet) model.getData().getDataSet().get(0)).getData();
+  private static List<Number> inputValues(BarChart model) {
+    return ((BarDataset) model.getData().getDatasets().get(0)).getData(Number.class);
   }
 
-  private static List<Number> outputValues(BarChartModel model) {
-    return ((BarChartDataSet) model.getData().getDataSet().get(1)).getData();
+  private static List<Number> outputValues(BarChart model) {
+    return ((BarDataset) model.getData().getDatasets().get(1)).getData(Number.class);
   }
 
   private static AgentConversationEntry entryWithDate(String model, long total, long input, long output,
