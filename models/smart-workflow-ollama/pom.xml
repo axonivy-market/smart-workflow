@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-ollama</artifactId>
-  <version>14.0.0-b8-SNAPSHOT</version>
+  <version>14.0.0-SNAPSHOT</version>
   <packaging>iar</packaging>
   <properties>
     <langchain4j.version>1.18.1</langchain4j.version>
