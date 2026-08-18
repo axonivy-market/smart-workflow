@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.guardrails.adapter;
 
 import java.util.Optional;
 
-import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailInspectionText;
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 
@@ -43,9 +42,7 @@ public class InputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkflo
         ? getDelegate().evaluate(message, invocationId)
         : getDelegate().evaluate(message);
     if (!result.isAllowed()) {
-      return result.getCause()
-          .map(cause -> failure(result.getReason(), cause))
-          .orElseGet(() -> failure(result.getReason()));
+      return failure(result.getReason());
     }
     return result.getRewrittenMessage().map(this::successWith).orElseGet(this::success);
   }

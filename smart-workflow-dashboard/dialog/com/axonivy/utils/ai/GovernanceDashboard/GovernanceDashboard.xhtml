@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="jakarta.faces.core"
   xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets"
-  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui">
+  xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="primefaces">
 <h:body>
   <ui:composition template="/layouts/frame-10-full-width.xhtml">
     <ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/GovernanceDashboard/Title')}</ui:define>
@@ -129,6 +129,10 @@
 
             </h:panelGroup>
           </div>
+
+          <!-- Section 2: Token Usage Analytics -->
+          <ui:include src="Analytics.xhtml" />
+
         </h:form>
       </div>
 

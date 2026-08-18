@@ -24,34 +24,28 @@ import dev.langchain4j.invocation.InvocationContext;
 
 class TestInputGuardrailAdapter {
 
-  @Test
-  void validateUserMessage_allowsSafeInput() {
-    var adapter = new InputGuardrailAdapter(message -> GuardrailResult.allow());
-
-    var result = adapter.validate(UserMessage.from(TextContent.from("hello")));
-
-    assertThat(result.result()).isEqualTo(Result.SUCCESS);
-  }
+  record Case(GuardrailResult delegateResult, Result expectedResult, String expectedSuccessfulText,
+      String expectedFailureMessage) {}
 
   @Test
-  void validateUserMessage_blocksUnsafeInputWithReason() {
-    var adapter = new InputGuardrailAdapter(message -> GuardrailResult.block("blocked reason"));
+  void validateUserMessage_returnsResultsFromDelegate() {
+    var cases = List.of(
+        new Case(GuardrailResult.allow(), Result.SUCCESS, null, null),
+        new Case(GuardrailResult.block("blocked reason"), Result.FAILURE, null, "blocked reason"),
+        new Case(GuardrailResult.allowWithRewrite("rewritten"), Result.SUCCESS_WITH_RESULT, "rewritten", null));
 
-    var result = adapter.validate(UserMessage.from(TextContent.from("bad input")));
+    for (var testCase : cases) {
+      var adapter = new InputGuardrailAdapter(_ -> testCase.delegateResult());
 
-    assertThat(result.result()).isEqualTo(Result.FAILURE);
-    List<Failure> failures = result.failures();
-    assertThat(failures).extracting(Failure::message).containsExactly("blocked reason");
-  }
+      var result = adapter.validate(UserMessage.from(TextContent.from("hello")));
 
-  @Test
-  void validateUserMessage_returnsRewrittenText() {
-    var adapter = new InputGuardrailAdapter(message -> GuardrailResult.allowWithRewrite("rewritten"));
-
-    var result = adapter.validate(UserMessage.from(TextContent.from("original")));
-
-    assertThat(result.result()).isEqualTo(Result.SUCCESS_WITH_RESULT);
-    assertThat(result.successfulText()).isEqualTo("rewritten");
+      assertThat(result.result()).as("case %s", testCase).isEqualTo(testCase.expectedResult());
+      assertThat(result.successfulText()).as("case %s", testCase).isEqualTo(testCase.expectedSuccessfulText());
+      if (testCase.expectedFailureMessage() != null) {
+        List<Failure> failures = result.failures();
+        assertThat(failures).extracting(Failure::message).containsExactly(testCase.expectedFailureMessage());
+      }
+    }
   }
 
   @Test
