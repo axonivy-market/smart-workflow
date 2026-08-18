@@ -10,8 +10,4 @@ public interface SmartWorkflowGuardrail {
   default String name() {
     return getClass().getSimpleName();
   }
-
-  default boolean alwaysOn() {
-    return false;
-  }
 }

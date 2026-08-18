@@ -1,10 +1,10 @@
 package com.axonivy.utils.smart.workflow.guardrails.circuitbreaker;
 
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
-import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
-import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.entity.internal.SmartWorkflowInternalInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.entity.internal.SmartWorkflowInternalOutputGuardrail;
 
-public class CircuitBreakerGuardrail implements SmartWorkflowInputGuardrail, SmartWorkflowOutputGuardrail {
+public class CircuitBreakerGuardrail implements SmartWorkflowInternalInputGuardrail, SmartWorkflowInternalOutputGuardrail {
 
   private final CircuitBreakerSignal signal;
 
@@ -14,11 +14,6 @@ public class CircuitBreakerGuardrail implements SmartWorkflowInputGuardrail, Sma
 
   public CircuitBreakerGuardrail(CircuitBreakerSignal signal) {
     this.signal = signal;
-  }
-
-  @Override
-  public boolean alwaysOn() {
-    return true;
   }
 
   @Override
