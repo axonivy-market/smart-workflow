@@ -16,14 +16,14 @@ class TestVariableCircuitBreakerSignal {
 
   @Test
   void stopReason_variableTrue_isTripped(AppFixture fixture) {
-    fixture.var(VariableCircuitBreakerSignal.STOP_ALL_VARIABLE, "true");
+    fixture.var(VariableCircuitBreakerSignal.ENABLED_VARIABLE, "true");
 
     assertThat(signal.stopReason()).contains("All AI agent activities are currently stopped.");
   }
 
   @Test
   void stopReason_variableTrueIgnoresCase_isTripped(AppFixture fixture) {
-    fixture.var(VariableCircuitBreakerSignal.STOP_ALL_VARIABLE, "TrUe");
+    fixture.var(VariableCircuitBreakerSignal.ENABLED_VARIABLE, "TrUe");
 
     assertThat(signal.stopReason()).isNotEmpty();
   }
@@ -35,7 +35,7 @@ class TestVariableCircuitBreakerSignal {
   @Test
   void stopReason_looseBooleanValues_isNotTripped(AppFixture fixture) {
     for (String value : List.of("false", "", " ", "yes", "on", "y", "t", "1", "true ")) {
-      fixture.var(VariableCircuitBreakerSignal.STOP_ALL_VARIABLE, value);
+      fixture.var(VariableCircuitBreakerSignal.ENABLED_VARIABLE, value);
 
       assertThat(signal.stopReason()).as("value '%s'", value).isEmpty();
     }

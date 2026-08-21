@@ -8,14 +8,14 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 public class VariableCircuitBreakerSignal implements CircuitBreakerSignal {
 
-  static final String STOP_ALL_VARIABLE = "AI.CircuitBreaker.StopAll";
+  static final String ENABLED_VARIABLE = "AI.CircuitBreaker.Enabled";
 
   private static final String STOP_MESSAGE = "All AI agent activities are currently stopped.";
 
   @Override
   public Optional<String> stopReason() {
     try {
-      if (!"true".equalsIgnoreCase(Ivy.var().get(STOP_ALL_VARIABLE))) {
+      if (!"true".equalsIgnoreCase(Ivy.var().get(ENABLED_VARIABLE))) {
         return Optional.empty();
       }
       return Optional.of(STOP_MESSAGE);
@@ -25,6 +25,6 @@ public class VariableCircuitBreakerSignal implements CircuitBreakerSignal {
   }
 
   public static void setStopAll(boolean stop) {
-    Ivy.var().set(STOP_ALL_VARIABLE, Boolean.toString(stop));
+    Ivy.var().set(ENABLED_VARIABLE, Boolean.toString(stop));
   }
 }
