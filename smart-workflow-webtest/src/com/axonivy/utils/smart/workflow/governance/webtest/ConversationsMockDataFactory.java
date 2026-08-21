@@ -121,7 +121,9 @@ public class ConversationsMockDataFactory {
     entry.setMessagesJson(messagesJson);
     entry.setTokenUsageJson(tokenUsageJson);
     entry.setLastUpdated(lastUpdated.toString());
-    entry.setToolExecutions(toolExecutions);
+    if (toolExecutions != null) {
+      entry.setToolExecutions(toolExecutions);
+    }
     Ivy.repo().save(entry);
   }
 

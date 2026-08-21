@@ -75,8 +75,7 @@ public class AgentConversationEntry {
 
   public void setToolExecutions(List<ToolExecution> toolExecutions) {
     if (toolExecutions == null) {
-      toolExecutionsJson = null;
-      return;
+      throw new IllegalArgumentException("toolExecutions must not be null");
     }
     try {
       toolExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(toolExecutions);
@@ -95,8 +94,7 @@ public class AgentConversationEntry {
 
   public void setGuardrailExecutions(List<GuardrailExecution> guardrailExecutions) {
     if (guardrailExecutions == null) {
-      guardrailExecutionsJson = null;
-      return;
+      throw new IllegalArgumentException("guardrailExecutions must not be null");
     }
     try {
       guardrailExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(guardrailExecutions);
