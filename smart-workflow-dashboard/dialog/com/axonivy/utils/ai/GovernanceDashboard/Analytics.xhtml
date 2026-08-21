@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets"
-  xmlns:p="http://primefaces.org/ui">
+  xmlns:p="primefaces">
 
 <ui:composition>
 
@@ -57,14 +57,14 @@
         <div class="col-6">
           <div id="chart-panel-token-timeline" class="chart-panel surface-ground border-round p-3">
             <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartTokenTimeline')}</div>
-            <p:barChart id="chart-token-timeline" model="#{usageAnalyticBean.tokenTimelineChart}"
+            <p:chart id="chart-token-timeline" value="#{usageAnalyticBean.tokenTimelineChart}"
                         styleClass="chart-h-240" />
           </div>
         </div>
         <div class="col-6">
           <div id="chart-panel-model-dist" class="chart-panel surface-ground border-round p-3">
             <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartModelDist')}</div>
-            <p:donutChart id="chart-model-dist" model="#{usageAnalyticBean.modelDistributionChart}"
+            <p:chart id="chart-model-dist" value="#{usageAnalyticBean.modelDistributionChart}"
                           styleClass="chart-h-240" />
           </div>
         </div>
@@ -74,14 +74,14 @@
         <div class="col-6">
           <div id="chart-panel-token-stacked" class="chart-panel surface-ground border-round p-3">
             <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartTokenStacked')}</div>
-            <p:barChart id="chart-token-stacked" model="#{usageAnalyticBean.tokenStackedChart}"
+            <p:chart id="chart-token-stacked" value="#{usageAnalyticBean.tokenStackedChart}"
                         styleClass="chart-h-220" />
           </div>
         </div>
         <div class="col-6">
           <div id="chart-panel-top-cases" class="chart-panel surface-ground border-round p-3">
             <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartTopCases')}</div>
-            <p:barChart id="chart-top-cases" model="#{usageAnalyticBean.topCasesChart}"
+            <p:chart id="chart-top-cases" value="#{usageAnalyticBean.topCasesChart}"
                         styleClass="chart-h-220" />
           </div>
         </div>
@@ -89,7 +89,7 @@
 
       <div id="chart-panel-response-time" class="chart-panel surface-ground border-round p-3">
         <div class="font-semibold text-xl mb-2">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/ChartResponseTime')}</div>
-        <p:barChart id="chart-response-time" model="#{usageAnalyticBean.responseTimeChart}"
+        <p:chart id="chart-response-time" value="#{usageAnalyticBean.responseTimeChart}"
                     styleClass="chart-h-220" />
       </div>
 

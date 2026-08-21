@@ -6,23 +6,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.primefaces.model.charts.axes.cartesian.CartesianScales;
-import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearAxes;
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.bar.BarChartOptions;
-
-import ch.ivyteam.ivy.environment.Ivy;
-
 import com.axonivy.utils.smart.workflow.governance.history.analytic.chart.model.ChartPalette;
 import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 
-public class TokenStackedChartBuilder extends AbstractChartBuilder<BarChartModel> {
+import ch.ivyteam.ivy.environment.Ivy;
+
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.dataset.BarDataset;
+import software.xdev.chartjs.model.options.BarOptions;
+import software.xdev.chartjs.model.options.scale.Scales;
+import software.xdev.chartjs.model.options.scale.cartesian.category.CategoryScaleOptions;
+import software.xdev.chartjs.model.options.scale.cartesian.linear.LinearScaleOptions;
+
+public class TokenStackedChartBuilder extends AbstractChartBuilder<BarChart> {
 
   private static final ChartPalette PALETTE = ChartPalette.TWO_PASTEL_COLORS;
 
   @Override
-  public BarChartModel build(HistoryAggregator aggregator) {
+  public BarChart build(HistoryAggregator aggregator) {
     Map<LocalDate, HistoryAggregator.TokenPair> byDay = prepareInputOutputByDay(aggregator);
 
     List<String> labels = new ArrayList<>();
@@ -34,10 +35,10 @@ public class TokenStackedChartBuilder extends AbstractChartBuilder<BarChartModel
       outputData.add(pair.output());
     });
 
-    BarChartDataSet inputDataSet  = stackedTokenDataSet(String.format(ANALYTICS_CMS_PATTERN, "DatasetInputTokens"),  PALETTE.color(0), inputData);
-    BarChartDataSet outputDataSet = stackedTokenDataSet(String.format(ANALYTICS_CMS_PATTERN, "DatasetOutputTokens"), PALETTE.color(1), outputData);
+    BarDataset inputDataSet  = stackedTokenDataSet(String.format(ANALYTICS_CMS_PATTERN, "DatasetInputTokens"),  PALETTE.color(0), inputData);
+    BarDataset outputDataSet = stackedTokenDataSet(String.format(ANALYTICS_CMS_PATTERN, "DatasetOutputTokens"), PALETTE.color(1), outputData);
 
-    BarChartOptions options = new BarChartOptions();
+    BarOptions options = new BarOptions();
     applyResponsiveOptions(options);
     options.setScales(stackedTokenAxes());
 
@@ -50,8 +51,8 @@ public class TokenStackedChartBuilder extends AbstractChartBuilder<BarChartModel
     return map;
   }
 
-  private BarChartDataSet stackedTokenDataSet(String labelKey, String color, List<Number> data) {
-    BarChartDataSet dataSet = new BarChartDataSet();
+  private BarDataset stackedTokenDataSet(String labelKey, String color, List<Number> data) {
+    BarDataset dataSet = new BarDataset();
     dataSet.setLabel(Ivy.cms().co(labelKey));
     dataSet.setBackgroundColor(color);
     dataSet.setData(data);
@@ -59,15 +60,14 @@ public class TokenStackedChartBuilder extends AbstractChartBuilder<BarChartModel
     return dataSet;
   }
 
-  private CartesianScales stackedTokenAxes() {
-    CartesianLinearAxes xAxis = new CartesianLinearAxes();
+  private Scales stackedTokenAxes() {
+    CategoryScaleOptions xAxis = new CategoryScaleOptions();
     xAxis.setStacked(true);
-    CartesianLinearAxes yAxis = new CartesianLinearAxes();
+    LinearScaleOptions yAxis = new LinearScaleOptions();
     yAxis.setStacked(true);
     yAxis.setTicks(integerTicks());
-    CartesianScales scales = new CartesianScales();
-    scales.addXAxesData(xAxis);
-    scales.addYAxesData(yAxis);
-    return scales;
+    return new Scales()
+        .addScale(Scales.ScaleAxis.X, xAxis)
+        .addScale(Scales.ScaleAxis.Y, yAxis);
   }
 }

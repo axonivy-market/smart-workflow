@@ -4,12 +4,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
-import org.primefaces.model.charts.donut.DonutChartModel;
-import org.primefaces.model.charts.pie.PieChartDataSet;
-
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+
+import software.xdev.chartjs.model.charts.DoughnutChart;
+import software.xdev.chartjs.model.dataset.DoughnutDataset;
 
 @IvyTest
 public class TestModelDistributionChartBuilder {
@@ -18,7 +18,7 @@ public class TestModelDistributionChartBuilder {
 
   @Test
   void build_emptyAggregator_emptyLabelsAndData() {
-    DonutChartModel model = BUILDER.build(HistoryAggregator.of(List.of()));
+    DoughnutChart model = BUILDER.build(HistoryAggregator.of(List.of()));
     assertThat((List<?>) model.getData().getLabels()).isEmpty();
     assertThat(dataValues(model)).isEmpty();
   }
@@ -29,7 +29,7 @@ public class TestModelDistributionChartBuilder {
         entry("gpt-4",  100, 60, 40, 1_000),
         entry("gpt-4",   50, 30, 20, 1_000),
         entry("claude",  80, 50, 30, 1_000)));
-    DonutChartModel model = BUILDER.build(aggregator);
+    DoughnutChart model = BUILDER.build(aggregator);
     List<?> labels = (List<?>) model.getData().getLabels();
     List<Number> values = dataValues(model);
     assertThat(labels).hasSize(2);
@@ -42,8 +42,8 @@ public class TestModelDistributionChartBuilder {
     assertThat(values.get(claudeIdx).longValue()).isEqualTo(1L);
   }
 
-  private static List<Number> dataValues(DonutChartModel model) {
-    return ((PieChartDataSet) model.getData().getDataSet().get(0)).getData();
+  private static List<Number> dataValues(DoughnutChart model) {
+    return ((DoughnutDataset) model.getData().getDatasets().get(0)).getData(Number.class);
   }
 
   private static AgentConversationEntry entry(String model, long total, long input, long output, long durationMs) {

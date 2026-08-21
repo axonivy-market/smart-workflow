@@ -6,20 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.bar.BarChartOptions;
-import org.primefaces.model.charts.optionconfig.legend.Legend;
-
-import ch.ivyteam.ivy.environment.Ivy;
-
 import com.axonivy.utils.smart.workflow.governance.history.analytic.chart.model.ChartPalette;
 import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 
-public class TokenTimelineChartBuilder extends AbstractChartBuilder<BarChartModel> {
+import ch.ivyteam.ivy.environment.Ivy;
+
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.dataset.BarDataset;
+import software.xdev.chartjs.model.options.BarOptions;
+import software.xdev.chartjs.model.options.LegendOptions;
+import software.xdev.chartjs.model.options.Plugins;
+
+public class TokenTimelineChartBuilder extends AbstractChartBuilder<BarChart> {
 
   @Override
-  public BarChartModel build(HistoryAggregator aggregator) {
+  public BarChart build(HistoryAggregator aggregator) {
     Map<LocalDate, Long> totalsByDay = prepareTotalTokensByDay(aggregator);
 
     List<String> labels = new ArrayList<>();
@@ -29,18 +30,17 @@ public class TokenTimelineChartBuilder extends AbstractChartBuilder<BarChartMode
       values.add(total);
     });
 
-    BarChartDataSet dataSet = new BarChartDataSet();
+    BarDataset dataSet = new BarDataset();
     dataSet.setLabel(Ivy.cms().co(String.format(ANALYTICS_CMS_PATTERN, "DatasetTotalTokens")));
-    dataSet.setBackgroundColor(ChartPalette.PASTEL_COLORS.colors(labels.size()));
+    dataSet.setBackgroundColor(asColors(ChartPalette.PASTEL_COLORS.colors(labels.size())));
     dataSet.setData(values);
 
-    Legend legend = new Legend();
-    legend.setDisplay(false);
+    LegendOptions legend = new LegendOptions().setDisplay(false);
 
-    BarChartOptions options = new BarChartOptions();
+    BarOptions options = new BarOptions();
     applyResponsiveOptions(options);
     options.setScales(yIntegerScales());
-    options.setLegend(legend);
+    options.setPlugins(new Plugins().setLegend(legend));
 
     return barModel(labels, options, dataSet);
   }
