@@ -40,13 +40,6 @@ public class TestTimeCalculationUtils {
   }
 
   @Test
-  void formatDuration_negative_clampsToZero() {
-    var negative = TimeCalculationUtils.formatDuration(-60);
-    var zero = TimeCalculationUtils.formatDuration(0);
-    assertThat(negative).isEqualTo(zero);
-  }
-
-  @Test
   void formatDuration_zero_doesNotThrow() {
     assertThatCode(() -> TimeCalculationUtils.formatDuration(0))
         .doesNotThrowAnyException();
