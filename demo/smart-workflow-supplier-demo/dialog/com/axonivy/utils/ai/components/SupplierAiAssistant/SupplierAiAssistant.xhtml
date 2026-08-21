@@ -194,15 +194,13 @@
                 listener="#{cc.attrs.uploadListener}"
                 mode="advanced"
                 auto="true"
-                dragDropSupport="false"
+                dragDrop="false"
                 process="@this"
                 update="@all"
-                allowTypes="/(\.|\/)(txt|md|pdf)$/"
                 accept=".txt,.md,.pdf"
-                sizeLimit="5242880"
-                invalidFileMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidFileMessage')}"
-                invalidSizeMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidSizeMessage')}"
-                styleClass="hidden" />
+                styleClass="hidden">
+                <p:validateFile allowTypes="/(\.|\/)(txt|md|pdf)$/" sizeLimit="5242880" />
+              </p:fileUpload>
               <p:commandButton id="assistant-upload-trigger"
                 type="button"
                 icon="ti ti-file-upload"

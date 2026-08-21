@@ -51,9 +51,10 @@
           <p:fileUpload auto="true" multiple="false" accept=".txt,.md,.pdf"
             listener="#{logic.handleFileUpload}"
             update="step2-panel rag-footer"
-            allowTypes="/(\.|\/)(txt|md|pdf)$/"
             label="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/rag/RagDemo/ChooseFileLabel')}"
-            styleClass="rag-file-upload" />
+            styleClass="rag-file-upload">
+            <p:validateFile allowTypes="/(\.|\/)(txt|md|pdf)$/" />
+          </p:fileUpload>
         </div>
       </div>
 
