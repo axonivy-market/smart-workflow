@@ -94,12 +94,14 @@
         widgetVar="#{cc.attrs.uploadWidgetVar}"
         listener="#{cc.attrs.bean.uploadRequiredDocument}"
         auto="true"
-        dragDropSupport="true"
+        dragDrop="true"
         dropZone="req-doc-dropzone"
         update="#{cc.attrs.updateTargets} req-docs-panel"
-        allowTypes="/(\.|\/)((pdf)|(doc)|(docx)|(jpg)|(jpeg)|(png)|(txt)|(md))$/i"
-        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.md"
-        sizeLimit="10485760" />
+        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.md">
+        <p:validateFile
+          allowTypes="/(\.|\/)((pdf)|(doc)|(docx)|(jpg)|(jpeg)|(png)|(txt)|(md))$/i"
+          sizeLimit="10485760" />
+      </p:fileUpload>
 
       <h:panelGroup id="req-docs-panel" layout="block">
 
