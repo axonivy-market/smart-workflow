@@ -1,39 +1,30 @@
 package com.axonivy.utils.smart.workflow.guardrails.circuitbreaker.internal;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.apache.commons.lang3.BooleanUtils;
-
-import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 import com.axonivy.utils.smart.workflow.guardrails.circuitbreaker.CircuitBreakerSignal;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
 public class VariableCircuitBreakerSignal implements CircuitBreakerSignal {
 
+  static final String STOP_ALL_VARIABLE = "AI.CircuitBreaker.StopAll";
 
-  private static final String DEFAULT_MESSAGE = "All AI agent activities are currently stopped.";
+  private static final String STOP_MESSAGE = "All AI agent activities are currently stopped.";
 
   @Override
   public Optional<String> stopReason() {
     try {
-      if (!BooleanUtils.toBoolean(Ivy.var().get(CircuitBreakerSignal.STOP_ALL_VARIABLE))) {
+      if (!"true".equalsIgnoreCase(Ivy.var().get(STOP_ALL_VARIABLE))) {
         return Optional.empty();
       }
-      return Optional.of(buildReason());
+      return Optional.of(STOP_MESSAGE);
     } catch (RuntimeException ex) {
       return Optional.empty();
     }
   }
 
-  private static String buildReason() {
-    try {
-      String user = Ivy.session().getSessionUserName();
-      String time = LocalDateTime.now().format(DatePatternUtils.dateTimeFormatter());
-      return "All AI agent activities are stopped by " + user + " at " + time;
-    } catch (RuntimeException ex) {
-      return DEFAULT_MESSAGE;
-    }
+  public static void setStopAll(boolean stop) {
+    Ivy.var().set(STOP_ALL_VARIABLE, Boolean.toString(stop));
   }
 }

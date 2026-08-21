@@ -6,11 +6,17 @@ import com.axonivy.utils.smart.workflow.guardrails.circuitbreaker.internal.Varia
 
 public interface CircuitBreakerSignal {
 
-  String STOP_ALL_VARIABLE = "AI.CircuitBreaker.StopAll";
-
   Optional<String> stopReason();
 
   static CircuitBreakerSignal defaultSignal() {
     return new VariableCircuitBreakerSignal();
+  }
+
+  static void stopAll() {
+    VariableCircuitBreakerSignal.setStopAll(true);
+  }
+
+  static void resumeAll() {
+    VariableCircuitBreakerSignal.setStopAll(false);
   }
 }
