@@ -17,9 +17,5 @@ public class IvyVar {
   public static double decimal(String name, double defaultValue) {
     return NumberUtils.toDouble(Ivy.var().get(name), defaultValue);
   }
-
-  public static void set(String name, String value) {
-    Ivy.var().set(name, value);
-  }
 }
 
