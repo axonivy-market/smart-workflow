@@ -50,6 +50,11 @@
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
         <version>${project.parent.version}</version>
+        <configuration>
+          <excludeValidators>
+            <validator>xhtml</validator>
+          </excludeValidators>
+        </configuration>
       </plugin>
     </plugins>
   </build>

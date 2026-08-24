@@ -17,9 +17,11 @@
     listener="#{cc.attrs.bean.uploadRequiredDocument}"
     auto="true"
     update="#{cc.attrs.updateTargets}"
-    allowTypes="/(\.|\/)((pdf)|(txt)|(md)|(doc)|(docx)|(jpg)|(jpeg)|(png))$/i"
-    accept=".pdf,.txt,.md,.doc,.docx,.jpg,.jpeg,.png"
-    sizeLimit="10485760" />
+    accept=".pdf,.txt,.md,.doc,.docx,.jpg,.jpeg,.png">
+    <p:validateFile
+      allowTypes="/(\.|\/)((pdf)|(txt)|(md)|(doc)|(docx)|(jpg)|(jpeg)|(png))$/i"
+      sizeLimit="10485760" />
+  </p:fileUpload>
 
   <div class="so-doc-row so-doc-row--flat m-0 surface-0">
 
