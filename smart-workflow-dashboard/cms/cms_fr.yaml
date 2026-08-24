@@ -2,6 +2,8 @@ Labels:
   Common:
     Actions: Actions
     Back: Retour
+    Calls: Appels
+    Case: Cas
     Duration:
       InProgress: En cours
       Minutes: '{0} min'
@@ -9,6 +11,17 @@ Labels:
       Hours: '{0} heures'
       HourMinutes: '{0} heure {1} min'
       HoursMinutes: '{0} heures {1} min'
+    Errors: Erreurs
+    Failed: Échoué
+    Fatal: Fatal
+    Grade: Note
+    Input: Entrée
+    Output: Sortie
+    Passed: Passé
+    Process: Processus
+    Rate: Taux
+    Tool: Outil
+    UUID: UUID
 Dialogs:
   com:
     axonivy:
@@ -114,3 +127,49 @@ Dialogs:
               ProcessFlowTitle: Flux du Processus
               ProcessViewerUnavailableTitle: 'Oups... désolé'
               ProcessViewerUnavailableMsg: 'La visionneuse de processus n''est pas disponible pour ce cas.'
+              AiAnalyzeStep1: "Lecture de l'historique..."
+              AiAnalyzeStep2: "Analyse de l'utilisation des outils..."
+              AiAnalyzeStep3: "Détection des anomalies..."
+              AiAnalyzeStep4: "Évaluation des risques..."
+              AiAnalyzeStep5: "Évaluation de la conformité..."
+              AiAnalyzeStep6: "Génération des recommandations..."
+              AiAnomalies: 'Anomalies :'
+              AiErrorsGuardrails: 'Erreurs & Garde-fous :'
+              AiGenerateButton: Générer une Recommandation IA
+              AiNoReport: Aucune recommandation IA disponible. Générez un rapport pour voir les résultats.
+              AiRiskCompliance: Conformité
+              AiRiskCost: Coût
+              AiRiskOperational: Opérationnel
+              AiRiskReliability: Fiabilité
+              AiSectionEfficiency: "Opportunités d'Efficacité"
+              AiSectionRecommendations: Recommandations
+              AiSectionReliability: Préoccupations de Fiabilité
+              AiSectionRisk: Évaluation des Risques
+              AiSectionSummary: Résumé Exécutif
+              AiSectionToolUsage: "Modèles d'Utilisation des Outils"
+              AiSuggestions: 'Suggestions :'
+              AnalyzingDialogMessage: "L'IA analyse les données du cas. Cela peut prendre un moment..."
+              AnalyzingDialogTitle: Analyse IA en cours
+              ReportPanelTitle: "Rapport d'Analyse"
+              ReportTabAiRecommendation: Recommandation IA
+              ReportTabStatistic: Statistique
+              StatAgentHeader: 'Agent #{0} — {1}'
+              StatAgentSectionActivity: Activité
+              StatAgentSectionInfo: Info
+              StatAgents: Agents
+              StatAnomalies: 'Anomalies ({0}) :'
+              StatColAvgMs: Moy. ms
+              StatColGuardrail: Guardrail
+              StatColNulls: Nuls
+              StatColSuccess: Succès
+              StatColSuccessRate: Taux de succès
+              StatMaxSingle: Max. individuel
+              StatNoAnomalies: Aucune anomalie détectée
+              StatNoReport: Aucun rapport disponible. Générez un rapport depuis le menu Actions.
+              StatNullEmpty: Null/vide
+              StatSectionAgentBreakdown: Détail par agent
+              StatSectionTokenUsage: Utilisation des tokens
+              StatSectionToolEffectiveness: Efficacité des outils
+              StatSubGuardrails: 'Guardrails :'
+              StatSuccessful: Réussis
+              StatTotalCalls: Appels totaux

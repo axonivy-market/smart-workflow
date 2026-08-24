@@ -34,7 +34,8 @@
 
       <p:menuitem value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MenuExport')}"
                   icon="ti ti-download"
-                  disabled="true" />
+                  disabled="true"
+                  rendered="#{not conversationsBean.internalSmartWorkflow}" />
     </p:menuButton>
     </p:outputPanel>
 </div>
