@@ -49,10 +49,11 @@
                               styleClass="upload-component doc-upload"
                               onupload="updateUploadStatus('doc', 'success')"
                               onerror="updateUploadStatus('doc', 'error')"
-                              dragDropSupport="true"
-                              allowTypes="/(\.|\/)(pdf|md)$/"
+                              dragDrop="true"
                               uploadLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/ProductCreation/UploadDocument')}"
-                              cancelLabel="#{ivy.cms.co('/Labels/Cancel')}" />
+                              cancelLabel="#{ivy.cms.co('/Labels/Cancel')}">
+                  <p:validateFile allowTypes="/(\.|\/)(pdf|md)$/" />
+                </p:fileUpload>
                 
                 <!-- Document Upload Status Indicator -->
                 <h:panelGroup id="doc-upload-status" layout="block" styleClass="mt-3" rendered="#{not empty data.productInfo}">
@@ -115,10 +116,11 @@
                               styleClass="upload-component image-upload"
                               onupload="updateUploadStatus('image', 'success')"
                               onerror="updateUploadStatus('image', 'error')"
-                              dragDropSupport="true"
-                              allowTypes="/(\.|\/)(jpg)$/"
+                              dragDrop="true"
                               uploadLabel="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/shopping/product/ProductCreation/UploadImage')}"
-                              cancelLabel="#{ivy.cms.co('/Labels/Cancel')}" />
+                              cancelLabel="#{ivy.cms.co('/Labels/Cancel')}">
+                  <p:validateFile allowTypes="/(\.|\/)(jpg)$/" />
+                </p:fileUpload>
 
                 <!-- Image Upload Status Indicator -->
                 <h:panelGroup id="img-upload-status" layout="block" styleClass="mt-3" rendered="#{not empty data.imageBase64}">
