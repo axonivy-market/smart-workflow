@@ -61,7 +61,7 @@ const config: Config = {
       'classic',
       {
         docs: {
-          // Product docs live in the monorepo /doc folder (not website/docs).
+          // Product docs live in the monorepo /doc folder (not smart-workflow-document/docs).
           path: '../doc',
           sidebarPath: './sidebars.ts',
           editUrl:
