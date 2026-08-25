@@ -411,7 +411,7 @@ Variablen zusätzlich gesetzt werden müssen.
 
 To request support for additional AI model providers, please open an issue or
 submit a pull request on GitHub. When contributing, make sure to follow the
-[Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned
+[Models Contribution Guideline](../doc/user/MODELS.md) to keep your provider aligned
 with the Smart Workflow ecosystem.
 
 ```yaml
@@ -551,7 +551,7 @@ Axon Ivy Smart Workflow supports extracting content from PDF and image files
 reason over uploaded documents and images directly within your workflows.
 
 Not all providers and models support multimodal input. Refer to the [Models
-Contribution Guideline](../doc/MODELS.md#file-extraction-support) for the full
+Contribution Guideline](../doc/user/MODELS.md#file-extraction-support) for the full
 list of supported providers and file types.
 
 ### Guardrails
@@ -594,7 +594,7 @@ If no guardrails are specified, the agent uses the default guardrails from
 `variables.yaml`.
 
 Smart Workflow also lets you implement custom guardrails and handle guardrail
-errors. For more details, see the [Guardrails Guideline](../doc/GUARDRAILS.md).
+errors. For more details, see the [Guardrails Guideline](../doc/user/GUARDRAILS.md).
 
 ### Defining Tools
 
@@ -604,7 +604,7 @@ callable sub-process) and **Java Tools** (implement `SmartWorkflowTool` and
 register via SPI).
 
 For step-by-step instructions on creating both tool types, see the [Tools
-Guide](../doc/TOOLS.md).
+Guide](../doc/user/TOOLS.md).
 
 ### Definition des KI-Agenten
 

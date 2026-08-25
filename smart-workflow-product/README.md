@@ -180,7 +180,7 @@ To extract from a file, include the file content in the agent's user message. Th
 
 </details>
 
-Not all providers support multimodal input — see the [Models Contribution Guideline](../doc/MODELS.md#file-extraction-support) for supported providers and file types.
+Not all providers support multimodal input — see the [Models Contribution Guideline](../doc/user/MODELS.md#file-extraction-support) for supported providers and file types.
 
 ---
 
@@ -275,7 +275,7 @@ Furthermore, most model providers need an ApiKey or another unique identifier.
 Check your provider below, to see which variables need to be set in addition.
 
 To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
-When contributing, make sure to follow the [Models Contribution Guideline](../doc/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
+When contributing, make sure to follow the [Models Contribution Guideline](../doc/user/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
 
 ```yaml
 @variables.yaml@
@@ -403,7 +403,7 @@ Axon Ivy Smart Workflow supports extracting content from PDF and image files (PN
 This allows AI agents to read and reason over uploaded documents and images directly within your workflows.
 
 Not all providers and models support multimodal input.
-Refer to the [Models Contribution Guideline](../doc/MODELS.md#file-extraction-support) for the full list of supported providers and file types.
+Refer to the [Models Contribution Guideline](../doc/user/MODELS.md#file-extraction-support) for the full list of supported providers and file types.
 
 ### Guardrails
 
@@ -441,13 +441,13 @@ In the agent configuration, specify guardrails as a String array:
 
 If no guardrails are specified, the agent uses the default guardrails from `variables.yaml`.
 
-Smart Workflow also lets you implement custom guardrails and handle guardrail errors. For more details, see the [Guardrails Guideline](../doc/GUARDRAILS.md).
+Smart Workflow also lets you implement custom guardrails and handle guardrail errors. For more details, see the [Guardrails Guideline](../doc/user/GUARDRAILS.md).
 
 ### Defining Tools
 
 To function effectively, AI agents require tools to perform tasks. Smart Workflow supports two kinds of tools: **Callable Process Tools** (any tagged callable sub-process) and **Java Tools** (implement `SmartWorkflowTool` and register via SPI).
 
-For step-by-step instructions on creating both tool types, see the [Tools Guide](../doc/TOOLS.md).
+For step-by-step instructions on creating both tool types, see the [Tools Guide](../doc/user/TOOLS.md).
 
 ### Defining AI agent
 
