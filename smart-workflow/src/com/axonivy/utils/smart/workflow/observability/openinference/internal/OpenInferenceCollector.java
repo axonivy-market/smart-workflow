@@ -10,8 +10,6 @@ import java.util.stream.Stream;
 import com.arize.semconv.trace.SemanticConventions;
 import com.arize.semconv.trace.SemanticConventions.LLMProvider;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.AiMessage;
@@ -19,13 +17,17 @@ import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public class OpenInferenceCollector {
 
   static final ObjectMapper objectMapper = new ObjectMapper();
-  static final ObjectMapper toolParamMapper = new ObjectMapper().setVisibility(
-      PropertyAccessor.FIELD,
-      Visibility.ANY);
+  static final ObjectMapper toolParamMapper = JsonMapper
+      .builderWithJackson2Defaults()
+      .changeDefaultVisibility(visibility -> visibility
+          .withFieldVisibility(Visibility.ANY))
+      .build();
 
   private final Map<String, Object> attributes = new LinkedHashMap<>();
 

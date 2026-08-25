@@ -3,12 +3,11 @@ package com.axonivy.utils.smart.workflow.tools.subprocess.provider;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import jakarta.ws.rs.core.Response;
-
 import org.apache.commons.io.IOUtils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
 class SubProcessToolsProviderChat {
 

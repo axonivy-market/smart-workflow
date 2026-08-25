@@ -2,16 +2,12 @@ package com.axonivy.utils.smart.workflow.demo.support.planning;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import AgentDemo.SupportAgentToolsWithPlanningData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
@@ -20,6 +16,9 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.resource.ResourceResponder;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
 @RestResourceTest
 public class TestSupportAgentToolsWithPlanning {

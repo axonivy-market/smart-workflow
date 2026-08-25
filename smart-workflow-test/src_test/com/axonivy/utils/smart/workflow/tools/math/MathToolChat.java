@@ -1,11 +1,9 @@
 package com.axonivy.utils.smart.workflow.tools.math;
 
-import jakarta.ws.rs.core.Response;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-
 import ch.ivyteam.test.resource.ResourceResponder;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
 public class MathToolChat {
 
@@ -24,8 +22,8 @@ public class MathToolChat {
 
   public Response authError(JsonNode request) {
     return Response.status(401)
-      .entity(responder.load("reAuthError.json"))
-      .build();
+        .entity(responder.load("reAuthError.json"))
+        .build();
   }
 
 }

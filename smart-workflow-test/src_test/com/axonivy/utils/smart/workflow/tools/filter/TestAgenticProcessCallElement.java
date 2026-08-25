@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -14,8 +12,6 @@ import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
@@ -24,6 +20,9 @@ import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
 @RestResourceTest
 class TestAgenticProcessCallElement {
@@ -43,7 +42,7 @@ class TestAgenticProcessCallElement {
   private Response toolsFilter(JsonNode request, ResourceResponder responder) {
     var tools = (ArrayNode) request.get("tools");
     var toolNames = new ArrayList<String>();
-    tools.forEach(tool -> toolNames.add(tool.get("function").get("name").asText()));
+    tools.forEach(tool -> toolNames.add(tool.get("function").get("name").asString()));
     if (toolNames.size() == 1 && "whoami".equals(toolNames.get(0))) {
       return responder.send("response.json");
     }

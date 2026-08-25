@@ -4,12 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.security.exec.Sudo;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 public abstract class AbstractMockRepository<T> {
 
@@ -58,7 +56,7 @@ public abstract class AbstractMockRepository<T> {
   private String toJson(List<?> list) {
     try {
       return MAPPER.writeValueAsString(list);
-    } catch (JsonProcessingException e) {
+    } catch (Exception e) {
       Ivy.log().error("Failed to serialize " + getField(), e);
       return "[]";
     }
@@ -70,7 +68,7 @@ public abstract class AbstractMockRepository<T> {
     }
     try {
       return MAPPER.readValue(json, getListType());
-    } catch (JsonProcessingException e) {
+    } catch (Exception e) {
       Ivy.log().error("Failed to deserialize " + getField(), e);
       return Collections.emptyList();
     }
