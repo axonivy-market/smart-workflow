@@ -13,8 +13,7 @@ Set the circuit breaker in `variables.yaml`:
 ```yaml
 Variables:
   AI:
-    # Emergency circuit breaker. Blocks AI agent calls at the guardrail layer.
-    # A tool loop already in flight finishes before the block takes effect.
+    # Emergency circuit breaker.
     CircuitBreaker:
       # "true" stops ALL AI agent calls in this application. "false" (or blank) allows them again.
       Enabled: "false"
