@@ -18,17 +18,17 @@ public class DefaultGuardrailProvider implements GuardrailProvider {
   @Override
   public List<SmartWorkflowInputGuardrail> getInputGuardrails() {
     return List.of(
-      new PromptInjectionInputGuardrail(),
-      new AiPromptInjectionInputGuardrail(),
-      piiMaskingGuardrail,
-      circuitBreakerGuardrail);
+        new PromptInjectionInputGuardrail(),
+        new AiPromptInjectionInputGuardrail(),
+        piiMaskingGuardrail,
+        circuitBreakerGuardrail);
   }
 
   @Override
   public List<SmartWorkflowOutputGuardrail> getOutputGuardrails() {
     return List.of(
-      new SensitiveDataOutputGuardrail(),
-      piiMaskingGuardrail,
-      circuitBreakerGuardrail);
+        new SensitiveDataOutputGuardrail(),
+        piiMaskingGuardrail,
+        circuitBreakerGuardrail);
   }
 }

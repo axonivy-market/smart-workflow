@@ -25,7 +25,7 @@ public class BlockCompetitorMentionGuardrail implements SmartWorkflowInputGuardr
       if (lower.contains(competitor)) {
         return GuardrailResult.block(
             "Message blocked: competitor product '" + competitor + "' mentioned. "
-            + "Do not reference competitor products in AI queries.");
+                + "Do not reference competitor products in AI queries.");
       }
     }
     return GuardrailResult.allow();

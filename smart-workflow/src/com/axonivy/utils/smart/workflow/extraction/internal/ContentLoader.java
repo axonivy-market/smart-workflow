@@ -34,8 +34,8 @@ public class ContentLoader {
   private static Optional<Content> resolveCmsObject(ContentObject obj, String cmsPath) {
     return switch (obj.meta().contentObjectType()) {
       case STRING -> Optional.of(TextContent.from(Ivy.cms().co(cmsPath)));
-      case FILE   -> extractFromCmsFile(obj);
-      default     -> Optional.empty();
+      case FILE -> extractFromCmsFile(obj);
+      default -> Optional.empty();
     };
   }
 
@@ -89,7 +89,7 @@ public class ContentLoader {
     try {
       String mime = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(data));
       return switch (mime != null ? mime : "") {
-        case "image/png"  -> Optional.of("png");
+        case "image/png" -> Optional.of("png");
         case "image/jpeg" -> Optional.of("jpeg");
         default -> resolvePdfExtension(data);
       };
@@ -104,7 +104,8 @@ public class ContentLoader {
   private static Optional<String> resolvePdfExtension(byte[] data) {
     return data.length >= PDF_PREFIX.length
         && Arrays.equals(data, 0, PDF_PREFIX.length,
-          PDF_PREFIX, 0, PDF_PREFIX.length)
-        ? Optional.of("pdf") : Optional.empty();
+            PDF_PREFIX, 0, PDF_PREFIX.length)
+                ? Optional.of("pdf")
+                : Optional.empty();
   }
 }

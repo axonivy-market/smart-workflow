@@ -56,7 +56,8 @@ public class DeclineOrchestrationService {
         .map(SupplierRiskScore::getAggregate)
         .orElse(0);
     String lvl = (resp != null && resp.getRiskScore() != null && resp.getRiskScore().getLevel() != null)
-        ? resp.getRiskScore().getLevel().name() : "RED";
+        ? resp.getRiskScore().getLevel().name()
+        : "RED";
 
     List<String> reasons = new ArrayList<>();
     if (resp != null && resp.getValidationFindings() != null) {

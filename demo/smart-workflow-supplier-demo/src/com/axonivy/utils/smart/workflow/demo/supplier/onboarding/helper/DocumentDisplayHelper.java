@@ -14,14 +14,13 @@ import ch.ivyteam.ivy.environment.Ivy;
 public final class DocumentDisplayHelper {
 
   public static final String CERT_PREFIX = "CERTIFICATION:";
-  public static final String DOC_PREFIX  = "DOCUMENT:";
+  public static final String DOC_PREFIX = "DOCUMENT:";
   private static final String DEFAULT_DOCUMENT_LABEL = "Document";
   private static final String UNKNOWN_CERTIFICATION_TYPE_LABEL_FORMAT = "Unknown certification type in label lookup: %s";
   private static final String CERTIFICATE_LABEL_FORMAT = "%s Certificate";
   private static final String CERTIFICATE_SUBTITLE_FORMAT = "Upload a valid %s certificate";
   private static final String DOCUMENT_SUBTITLE_FORMAT = "Upload the required %s document";
   private static final String SCORE_WIDTH_CLASS_FORMAT = "so-w-%s";
-
 
   private DocumentDisplayHelper() {}
 
@@ -68,9 +67,9 @@ public final class DocumentDisplayHelper {
     try {
       return switch (LegalDocumentType.valueOf(typeKey)) {
         case COMMERCIAL_REGISTER -> "Company Registration Extract";
-        case SELF_DECLARATION    -> "Self-Declaration";
-        case ANNUAL_REPORT       -> "Last Annual Report";
-        default                  -> formatKeyName(typeKey);
+        case SELF_DECLARATION -> "Self-Declaration";
+        case ANNUAL_REPORT -> "Last Annual Report";
+        default -> formatKeyName(typeKey);
       };
     } catch (IllegalArgumentException ignored) {
       return formatKeyName(typeKey);
@@ -96,9 +95,9 @@ public final class DocumentDisplayHelper {
     try {
       return switch (LegalDocumentType.valueOf(typeKey)) {
         case COMMERCIAL_REGISTER -> "Official commercial register document";
-        case SELF_DECLARATION    -> "Confirm compliance with procurement policy";
-        case ANNUAL_REPORT       -> "Most recent fiscal year financial report";
-        default                  -> "";
+        case SELF_DECLARATION -> "Confirm compliance with procurement policy";
+        case ANNUAL_REPORT -> "Most recent fiscal year financial report";
+        default -> "";
       };
     } catch (IllegalArgumentException ignored) {
       return "";
@@ -112,12 +111,12 @@ public final class DocumentDisplayHelper {
   }
 
   static String formatKeyName(String name) {
-  if (name == null || name.isBlank()) {
-    return DEFAULT_DOCUMENT_LABEL;
-  }
+    if (name == null || name.isBlank()) {
+      return DEFAULT_DOCUMENT_LABEL;
+    }
 
-  return Arrays.stream(name.replace('_', ' ').split("\\s+"))
-      .map(word -> StringUtils.capitalize(word.toLowerCase()))
-      .collect(Collectors.joining(" "));
+    return Arrays.stream(name.replace('_', ' ').split("\\s+"))
+        .map(word -> StringUtils.capitalize(word.toLowerCase()))
+        .collect(Collectors.joining(" "));
   }
 }

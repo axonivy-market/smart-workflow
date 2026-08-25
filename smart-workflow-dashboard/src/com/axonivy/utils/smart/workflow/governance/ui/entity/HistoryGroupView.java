@@ -18,7 +18,9 @@ public interface HistoryGroupView {
 
   String getModelName();
 
-  default long getCaseId() { return 0L; }
+  default long getCaseId() {
+    return 0L;
+  }
 
   static HistoryGroupView of(List<AgentConversationEntry> entries) {
     return new HistoryEntryStats(entries);
@@ -26,7 +28,6 @@ public interface HistoryGroupView {
 }
 
 class HistoryEntryStats implements HistoryGroupView {
-
 
   private final List<AgentConversationEntry> entries;
 

@@ -25,16 +25,16 @@ public class HistoryAggregator {
   }
 
   private interface BucketMs {
-    long FAST   = 5_000;
+    long FAST = 5_000;
     long MEDIUM = 10_000;
-    long SLOW   = 15_000;
+    long SLOW = 15_000;
   }
 
   private interface BucketIndex {
-    int FAST   = 0;
+    int FAST = 0;
     int MEDIUM = 1;
-    int SLOW   = 2;
-    int OVER   = 3;
+    int SLOW = 2;
+    int OVER = 3;
   }
 
   private final int totalSessions;
@@ -115,18 +115,41 @@ public class HistoryAggregator {
   }
 
   private static int bucketIndex(long ms) {
-    return ms < BucketMs.FAST   ? BucketIndex.FAST
-         : ms < BucketMs.MEDIUM ? BucketIndex.MEDIUM
-         : ms < BucketMs.SLOW   ? BucketIndex.SLOW
-         : BucketIndex.OVER;
+    return ms < BucketMs.FAST ? BucketIndex.FAST
+        : ms < BucketMs.MEDIUM ? BucketIndex.MEDIUM
+            : ms < BucketMs.SLOW ? BucketIndex.SLOW
+                : BucketIndex.OVER;
   }
 
-  public int getTotalSessions()               { return totalSessions; }
-  public long getTotalTokens()                { return totalTokens; }
-  public long getAvgResponseMs()              { return avgResponseMs; }
-  public String getTopModel()                 { return topModel; }
-  public Map<LocalDate, TokenPair> getTokensByDay() { return Collections.unmodifiableMap(tokensByDay); }
-  public Map<String, Long> getCountByModel()      { return Collections.unmodifiableMap(countByModel); }
-  public Map<String, Long> getTokensByProcess()   { return Collections.unmodifiableMap(tokensByProcess); }
-  public long[] getResponseTimeBuckets()          { return responseTimeBuckets.clone(); }
+  public int getTotalSessions() {
+    return totalSessions;
+  }
+
+  public long getTotalTokens() {
+    return totalTokens;
+  }
+
+  public long getAvgResponseMs() {
+    return avgResponseMs;
+  }
+
+  public String getTopModel() {
+    return topModel;
+  }
+
+  public Map<LocalDate, TokenPair> getTokensByDay() {
+    return Collections.unmodifiableMap(tokensByDay);
+  }
+
+  public Map<String, Long> getCountByModel() {
+    return Collections.unmodifiableMap(countByModel);
+  }
+
+  public Map<String, Long> getTokensByProcess() {
+    return Collections.unmodifiableMap(tokensByProcess);
+  }
+
+  public long[] getResponseTimeBuckets() {
+    return responseTimeBuckets.clone();
+  }
 }

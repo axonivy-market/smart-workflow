@@ -40,18 +40,18 @@ class TestSupplierOnboardingProcess {
     mockResponse.setIsSupplierExisting(true);
 
     client.mock()
-      .element(BpmElement.process(TEST_PROCESS).name("AI Agent: Check duplicate supplier"))
-      .with((params, results) -> {
-        try {
-          results.set("agentResponse", mockResponse);
-        } catch (NoSuchFieldException e) {
-          throw new RuntimeException(e);
-        }
-      });
+        .element(BpmElement.process(TEST_PROCESS).name("AI Agent: Check duplicate supplier"))
+        .with((params, results) -> {
+          try {
+            results.set("agentResponse", mockResponse);
+          } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+          }
+        });
 
     var res = client.start()
-      .process(TEST_PROCESS.elementName("testDuplicateCheckAuditCapture"))
-      .execute();
+        .process(TEST_PROCESS.elementName("testDuplicateCheckAuditCapture"))
+        .execute();
     SupplierDemoTestProcessData data = res.data().last();
     assertThat(data.getAuditEntryCount()).isEqualTo(1);
   }

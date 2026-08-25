@@ -8,8 +8,7 @@ public class Address {
   private String zipCode;
   private String country;
 
-  public Address() {
-  }
+  public Address() {}
 
   public Address(String street1, String street2, String city, String state, String zipCode, String country) {
     this.street1 = street1;
@@ -19,7 +18,7 @@ public class Address {
     this.zipCode = zipCode;
     this.country = country;
   }
-  
+
   public String getStreet1() {
     return street1;
   }

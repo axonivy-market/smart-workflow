@@ -35,6 +35,7 @@ public class QueryExpander {
     InputStreamWithName(Path path) throws IOException {
       this(Files.newInputStream(path), path.getFileName().toString());
     }
+
     InputStreamWithName(byte[] bytes) {
       this(new ByteArrayInputStream(bytes), null);
     }
@@ -62,17 +63,17 @@ public class QueryExpander {
 
   public static Optional<UserMessage> expandMacroWithFileExtraction(String confKey, ProgramContext context) {
     try {
-        var template = Optional.ofNullable(context.config().get(confKey));
-        if (template.isEmpty()) {
-          return Optional.empty();
-        }
+      var template = Optional.ofNullable(context.config().get(confKey));
+      if (template.isEmpty()) {
+        return Optional.empty();
+      }
 
-        UserMessage userMessage = expandFileExpressions(
+      UserMessage userMessage = expandFileExpressions(
           template.get(),
           expr -> context.script().executeExpression(expr, Object.class),
           ContentLoader::loadFromCms);
 
-        return Optional.of(userMessage);
+      return Optional.of(userMessage);
     } catch (Exception ex) {
       Ivy.log().error(ex.getMessage(), ex);
       return Optional.empty();
@@ -131,18 +132,12 @@ public class QueryExpander {
     try {
       return switch (value) {
         case null -> null;
-        case InputStream stream
-          -> new InputStreamWithName(stream, null);
-        case Path path
-          -> new InputStreamWithName(path);
-        case File javaFile
-          -> new InputStreamWithName(javaFile.toPath());
-        case ch.ivyteam.ivy.scripting.objects.File ivyFile
-          -> new InputStreamWithName(ivyFile.getJavaFile().toPath());
-        case IDocument document
-          -> new InputStreamWithName(document.read().asStream(), document.getName());
-        case Binary binary
-          -> new InputStreamWithName(binary.toByteArray());
+        case InputStream stream -> new InputStreamWithName(stream, null);
+        case Path path -> new InputStreamWithName(path);
+        case File javaFile -> new InputStreamWithName(javaFile.toPath());
+        case ch.ivyteam.ivy.scripting.objects.File ivyFile -> new InputStreamWithName(ivyFile.getJavaFile().toPath());
+        case IDocument document -> new InputStreamWithName(document.read().asStream(), document.getName());
+        case Binary binary -> new InputStreamWithName(binary.toByteArray());
         default -> null;
       };
     } catch (IOException ex) {

@@ -8,8 +8,7 @@ public class RagMatch {
   private double score;
   private Map<String, String> metadata;
 
-  public RagMatch() {
-  }
+  public RagMatch() {}
 
   public RagMatch(String content, double score, Map<String, String> metadata) {
     this.content = content;

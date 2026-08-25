@@ -20,10 +20,21 @@ public class DashboardKpi {
     return new DashboardKpi(0, 0L, 0L, NO_DATA);
   }
 
-  public int getTotalSessions() { return totalSessions; }
-  public long getTotalTokens() { return totalTokens; }
-  public long getAvgResponseMs() { return avgResponseMs; }
-  public String getTopModel() { return topModel; }
+  public int getTotalSessions() {
+    return totalSessions;
+  }
+
+  public long getTotalTokens() {
+    return totalTokens;
+  }
+
+  public long getAvgResponseMs() {
+    return avgResponseMs;
+  }
+
+  public String getTopModel() {
+    return topModel;
+  }
 
   public String getFormattedTotalTokens() {
     return String.format("%,d", totalTokens);

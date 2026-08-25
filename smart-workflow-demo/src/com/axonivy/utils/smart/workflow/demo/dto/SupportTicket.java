@@ -31,7 +31,6 @@ public class SupportTicket {
   @Description("The request date of this support ticket. Do not fill this field")
   private String requestedDate;
 
-
   @JsonIgnore
   private Employee requestor;
 

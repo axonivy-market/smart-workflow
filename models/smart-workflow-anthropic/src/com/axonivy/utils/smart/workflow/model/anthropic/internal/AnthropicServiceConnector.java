@@ -18,9 +18,8 @@ public class AnthropicServiceConnector {
   private static final String DEFAULT_MODEL = AnthropicChatModelName.CLAUDE_HAIKU_4_5_20251001.toString();
 
   private static final Set<String> KNOWN_ALIASES = Set.of(
-    "claude-haiku-4-5", "claude-sonnet-4-5", "claude-opus-4-5", "claude-opus-4-1",
-    "claude-sonnet-4-0", "claude-opus-4-0"
-  );
+      "claude-haiku-4-5", "claude-sonnet-4-5", "claude-opus-4-5", "claude-opus-4-1",
+      "claude-sonnet-4-0", "claude-opus-4-0");
 
   public interface AnthropicConf {
     String PREFIX = "AI.Providers.Anthropic.";
@@ -40,8 +39,8 @@ public class AnthropicServiceConnector {
   private static AnthropicChatModelBuilder initBuilder(String modelName) {
     AnthropicChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
-      .modelName(modelName);
-    builder.defaultRequestParameters(request.build()); 
+        .modelName(modelName);
+    builder.defaultRequestParameters(request.build());
     return builder;
   }
 

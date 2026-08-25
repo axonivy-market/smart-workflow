@@ -19,8 +19,7 @@ public interface RequiredDocumentUploader extends DocumentUploader {
       LegalDocumentType.COMMERCIAL_REGISTER,
       LegalDocumentType.SELF_DECLARATION,
       LegalDocumentType.ANNUAL_REPORT,
-      LegalDocumentType.CERTIFICATION
-  );
+      LegalDocumentType.CERTIFICATION);
 
   default void uploadRequiredDocument(FileUploadEvent event) {
     uploadRequiredDocument(

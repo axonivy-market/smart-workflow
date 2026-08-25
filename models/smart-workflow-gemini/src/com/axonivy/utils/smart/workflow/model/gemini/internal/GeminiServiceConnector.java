@@ -31,9 +31,9 @@ public class GeminiServiceConnector {
   private static GoogleAiGeminiChatModelBuilder initBuilder(String modelName) {
     GoogleAiGeminiChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
-      .modelName(modelName)
-      .temperature(Double.valueOf(DEFAULT_TEMPERATURE));
-    builder.defaultRequestParameters(request.build()); 
+        .modelName(modelName)
+        .temperature(Double.valueOf(DEFAULT_TEMPERATURE));
+    builder.defaultRequestParameters(request.build());
     return builder;
   }
 

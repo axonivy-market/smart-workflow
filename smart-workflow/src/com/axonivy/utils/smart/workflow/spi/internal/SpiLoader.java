@@ -28,9 +28,9 @@ public class SpiLoader {
   public <T> Set<T> load(Class<T> type) {
     Map<String, T> seen = new HashMap<>();
     List<T> implementations = pmvsInScope()
-      .flatMap(p -> findImpl(p, type).stream())
-      .filter(type::isInstance)
-      .toList();
+        .flatMap(p -> findImpl(p, type).stream())
+        .filter(type::isInstance)
+        .toList();
     for (T impl : implementations) {
       seen.putIfAbsent(impl.getClass().getName(), impl);
     }

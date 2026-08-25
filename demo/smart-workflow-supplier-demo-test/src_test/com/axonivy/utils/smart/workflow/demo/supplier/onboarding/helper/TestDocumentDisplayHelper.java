@@ -12,7 +12,7 @@ import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
 public class TestDocumentDisplayHelper {
- @Test
+  @Test
   void isLegalDocumentTypeRequired_whenTypeKeyIsValid_returnExpectedValue() {
     LegalDocumentType type = LegalDocumentType.values()[0];
 

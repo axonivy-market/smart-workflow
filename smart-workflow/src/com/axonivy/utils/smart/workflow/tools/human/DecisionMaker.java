@@ -19,7 +19,7 @@ public class DecisionMaker {
     this.memoryId = memoryId;
   }
 
-  public void resolve(String decision) { 
+  public void resolve(String decision) {
     var messages = new ArrayList<>(new BusinessDataMemory().getMessages(memoryId));
     if (messages.isEmpty()) {
       throw new IllegalStateException("Found no pending ChatMemory for id: " + memoryId);
@@ -45,8 +45,8 @@ public class DecisionMaker {
         .map(ToolExecutionResultMessage::id)
         .toList();
     return toolExecutionRequests.stream()
-      .filter(r -> !results.contains(r.id()))
-      .findFirst();
+        .filter(r -> !results.contains(r.id()))
+        .findFirst();
   }
 
   private static Optional<AiMessage> findInvoke(List<ChatMessage> messages) {

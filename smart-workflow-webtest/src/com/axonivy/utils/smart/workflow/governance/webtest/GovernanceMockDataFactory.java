@@ -32,24 +32,24 @@ public class GovernanceMockDataFactory {
   }
 
   interface AgentId {
-    String OCR     = "d4ea0ad3-c023-35cf-af9d-4a8f59186649";
-    String HEADER  = "1b3556aa-5c12-3444-bbd4-13015f700a7f";
-    String ITEMS   = "5cefeb73-65af-3f21-8610-b6c40c286da0";
-    String COMPLY  = "1a2626f0-2460-30dd-90aa-9a33b75e6700";
+    String OCR = "d4ea0ad3-c023-35cf-af9d-4a8f59186649";
+    String HEADER = "1b3556aa-5c12-3444-bbd4-13015f700a7f";
+    String ITEMS = "5cefeb73-65af-3f21-8610-b6c40c286da0";
+    String COMPLY = "1a2626f0-2460-30dd-90aa-9a33b75e6700";
     String AMOUNTS = "0a443821-1732-32d2-8809-e40988fe57d0";
   }
 
   interface AgentName {
-    String OCR     = "Extract Invoice Content from Image";
-    String HEADER  = "Extract Header Info Agent";
-    String ITEMS   = "Extract Line Items Agent";
-    String COMPLY  = "Assess Compliance Agent";
+    String OCR = "Extract Invoice Content from Image";
+    String HEADER = "Extract Header Info Agent";
+    String ITEMS = "Extract Line Items Agent";
+    String COMPLY = "Assess Compliance Agent";
     String AMOUNTS = "Validate Amounts Agent";
   }
 
   interface Meta {
     String PROCESS = "Agent Pipeline Demo";
-    String MODEL   = "gpt-4.1-mini-2025-04-14";
+    String MODEL = "gpt-4.1-mini-2025-04-14";
   }
 
   enum TestEntry {
@@ -63,14 +63,14 @@ public class GovernanceMockDataFactory {
         "You are an invoice header extraction specialist.",
         "Extract header information from this invoice content.",
         """
-        {"invoiceNumber":"INV-0001-0001","invoiceDate":"January 15, 2024"}""",
+          {"invoiceNumber":"INV-0001-0001","invoiceDate":"January 15, 2024"}""",
         433, 113),
 
     CASE1_TASK1B_ITEMS(CaseName.CASE_1, TaskName.TASK_1B, AgentId.ITEMS, AgentName.ITEMS, 0,
         "You are an invoice line item extraction specialist.",
         "Extract all line items from this invoice content.",
         """
-        [{"description":"Software License","quantity":1,"unitPrice":12500.00}]""",
+          [{"description":"Software License","quantity":1,"unitPrice":12500.00}]""",
         438, 257),
 
     CASE1_TASK1B_COMPLY(CaseName.CASE_1, TaskName.TASK_1B, AgentId.COMPLY, AgentName.COMPLY, 0,
@@ -199,17 +199,17 @@ public class GovernanceMockDataFactory {
 
   private static String messages(String system, String user, String ai) {
     return """
-        [{"text":"%s","type":"SYSTEM"},\
-        {"contents":[{"text":"%s","type":"TEXT"}],"type":"USER"},\
-        {"text":"%s","toolExecutionRequests":[],"attributes":{},"type":"AI"}]"""
+      [{"text":"%s","type":"SYSTEM"},\
+      {"contents":[{"text":"%s","type":"TEXT"}],"type":"USER"},\
+      {"text":"%s","toolExecutionRequests":[],"attributes":{},"type":"AI"}]"""
         .formatted(esc(system), esc(user), esc(ai));
   }
 
   private static String tokens(int in, int out) {
     return """
-        [{"inputTokens":%d,"outputTokens":%d,"totalTokens":%d,\
-        "finishReason":"STOP","modelName":"%s",\
-        "durationMs":1000,"aiServiceMethod":"chat","toolNames":[]}]"""
+      [{"inputTokens":%d,"outputTokens":%d,"totalTokens":%d,\
+      "finishReason":"STOP","modelName":"%s",\
+      "durationMs":1000,"aiServiceMethod":"chat","toolNames":[]}]"""
         .formatted(in, out, in + out, Meta.MODEL);
   }
 

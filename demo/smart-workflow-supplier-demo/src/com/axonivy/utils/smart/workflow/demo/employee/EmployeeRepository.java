@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 public class EmployeeRepository extends AbstractMockRepository<Employee> {
 
   private static final String FIELD = "MOCK_EMPLOYEES";
-  private static final TypeReference<List<Employee>> LIST_TYPE = new TypeReference<List<Employee>>() {};
+  private static final TypeReference<List<Employee>> LIST_TYPE = new TypeReference<List<Employee>>(){};
 
   private static EmployeeRepository instance;
 
@@ -33,16 +33,16 @@ public class EmployeeRepository extends AbstractMockRepository<Employee> {
   @Override
   protected List<Employee> createMockData() {
     List<Employee> list = new ArrayList<>();
-    list.add(employee("sandra.collins", "Sandra", "Collins", null,       "ProcurementDirector", "sandra.collins@supplierco.com"));
-    list.add(employee("robert.hayes",   "Robert", "Hayes",   "DEPT-001", "DepartmentManager",   "robert.hayes@supplierco.com"));
-    list.add(employee("karen.mitchell", "Karen",  "Mitchell","DEPT-002", "DepartmentManager",   "karen.mitchell@supplierco.com"));
-    list.add(employee("james.thornton", "James",  "Thornton","DEPT-003", "DepartmentManager",   "james.thornton@supplierco.com"));
-    list.add(employee("lisa.nguyen",    "Lisa",   "Nguyen",  "DEPT-004", "DepartmentManager",   "lisa.nguyen@supplierco.com"));
-    list.add(employee("marcus.webb",    "Marcus", "Webb",    "DEPT-005", "DepartmentManager",   "marcus.webb@supplierco.com"));
-    list.add(employee("david.chen",     "David",  "Chen",    "DEPT-001", "Procurement",         "david.chen@supplierco.com"));
-    list.add(employee("emily.ross",     "Emily",  "Ross",    "DEPT-002", "Procurement",         "emily.ross@supplierco.com"));
-    list.add(employee("tom.banks",      "Tom",    "Banks",   "DEPT-003", "Procurement",         "tom.banks@supplierco.com"));
-    list.add(employee("claire.ford",    "Claire", "Ford",    "DEPT-004", "Procurement",         "claire.ford@supplierco.com"));
+    list.add(employee("sandra.collins", "Sandra", "Collins", null, "ProcurementDirector", "sandra.collins@supplierco.com"));
+    list.add(employee("robert.hayes", "Robert", "Hayes", "DEPT-001", "DepartmentManager", "robert.hayes@supplierco.com"));
+    list.add(employee("karen.mitchell", "Karen", "Mitchell", "DEPT-002", "DepartmentManager", "karen.mitchell@supplierco.com"));
+    list.add(employee("james.thornton", "James", "Thornton", "DEPT-003", "DepartmentManager", "james.thornton@supplierco.com"));
+    list.add(employee("lisa.nguyen", "Lisa", "Nguyen", "DEPT-004", "DepartmentManager", "lisa.nguyen@supplierco.com"));
+    list.add(employee("marcus.webb", "Marcus", "Webb", "DEPT-005", "DepartmentManager", "marcus.webb@supplierco.com"));
+    list.add(employee("david.chen", "David", "Chen", "DEPT-001", "Procurement", "david.chen@supplierco.com"));
+    list.add(employee("emily.ross", "Emily", "Ross", "DEPT-002", "Procurement", "emily.ross@supplierco.com"));
+    list.add(employee("tom.banks", "Tom", "Banks", "DEPT-003", "Procurement", "tom.banks@supplierco.com"));
+    list.add(employee("claire.ford", "Claire", "Ford", "DEPT-004", "Procurement", "claire.ford@supplierco.com"));
     return list;
   }
 

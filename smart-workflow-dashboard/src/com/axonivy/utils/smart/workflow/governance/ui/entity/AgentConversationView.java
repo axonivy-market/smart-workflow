@@ -23,16 +23,33 @@ public class AgentConversationView {
     this.entry = entry;
   }
 
-  public AgentConversationEntry getEntry() { return entry; }
+  public AgentConversationEntry getEntry() {
+    return entry;
+  }
 
-  public String getCaseUuid()    { return entry.getCaseUuid(); }
-  public String getTaskUuid()    { return entry.getTaskUuid(); }
-  public String getAgentId()     { return entry.getAgentId(); }
-  public String getAgentName()   { return entry.getAgentName(); }
-  public String getProcessName() { return entry.getProcessName(); }
+  public String getCaseUuid() {
+    return entry.getCaseUuid();
+  }
+
+  public String getTaskUuid() {
+    return entry.getTaskUuid();
+  }
+
+  public String getAgentId() {
+    return entry.getAgentId();
+  }
+
+  public String getAgentName() {
+    return entry.getAgentName();
+  }
+
+  public String getProcessName() {
+    return entry.getProcessName();
+  }
 
   public String getLastUpdatedText() {
-    if (entry.getLastUpdated() == null) return NO_DATE;
+    if (entry.getLastUpdated() == null)
+      return NO_DATE;
     try {
       return LocalDateTime.parse(entry.getLastUpdated())
           .format(DatePatternUtils.dateTimeFormatter());

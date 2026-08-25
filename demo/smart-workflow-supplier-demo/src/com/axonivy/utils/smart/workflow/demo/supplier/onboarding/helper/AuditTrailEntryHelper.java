@@ -17,57 +17,57 @@ import ch.ivyteam.ivy.environment.Ivy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 
-@Named(value="auditTrailHelper")
+@Named(value = "auditTrailHelper")
 @ApplicationScoped
-public class AuditTrailEntryHelper implements  Serializable {
+public class AuditTrailEntryHelper implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
   interface Bubble {
     String COMPLETED = "so-tl-bubble-completed";
-    String AGENT     = "so-tl-bubble-agent";
-    String PENDING   = "so-tl-bubble-pending";
-    String USER      = "so-tl-bubble-user";
+    String AGENT = "so-tl-bubble-agent";
+    String PENDING = "so-tl-bubble-pending";
+    String USER = "so-tl-bubble-user";
   }
 
   interface Icon {
-    String USER_CHECK      = "ti-user-check";
-    String ROBOT           = "ti-robot";
-    String SETTINGS        = "ti-settings";
-    String USER            = "ti-user";
-    String CIRCLE_CHECK    = "ti-circle-check";
-    String ALERT_TRIANGLE  = "ti-alert-triangle";
-    String CIRCLE_X        = "ti-circle-x";
+    String USER_CHECK = "ti-user-check";
+    String ROBOT = "ti-robot";
+    String SETTINGS = "ti-settings";
+    String USER = "ti-user";
+    String CIRCLE_CHECK = "ti-circle-check";
+    String ALERT_TRIANGLE = "ti-alert-triangle";
+    String CIRCLE_X = "ti-circle-x";
     String FILE_CERTIFICATE = "ti-file-certificate";
-    String MESSAGE         = "ti-message";
+    String MESSAGE = "ti-message";
   }
 
   interface Badge {
-    String GREEN  = "so-badge-green";
-    String RED    = "so-badge-red";
+    String GREEN = "so-badge-green";
+    String RED = "so-badge-red";
     String YELLOW = "so-badge-yellow";
-    String GRAY   = "so-badge-gray";
+    String GRAY = "so-badge-gray";
     String PURPLE = "so-badge-purple";
-    String BLUE   = "so-badge-blue";
+    String BLUE = "so-badge-blue";
   }
 
   interface Finding {
-    String GREEN  = "so-finding-green";
+    String GREEN = "so-finding-green";
     String YELLOW = "so-finding-yellow";
-    String RED    = "so-finding-red";
+    String RED = "so-finding-red";
   }
 
   interface LogLine {
-    String OK      = "so-log-line-ok";
+    String OK = "so-log-line-ok";
     String WARNING = "so-log-line-warning";
-    String ERROR   = "so-log-line-error";
+    String ERROR = "so-log-line-error";
   }
 
   interface Label {
-    String APPROVER            = "Approver";
-    String AGENT               = "Agent";
-    String SYSTEM              = "System";
-    String USER                = "User";
+    String APPROVER = "Approver";
+    String AGENT = "Agent";
+    String SYSTEM = "System";
+    String USER = "User";
     String RESOLUTION_DOCUMENT = "Document uploaded";
   }
 
@@ -93,9 +93,9 @@ public class AuditTrailEntryHelper implements  Serializable {
       return Bubble.USER;
     }
     return switch (entry.getActorType()) {
-      case AGENT  -> Bubble.AGENT;
+      case AGENT -> Bubble.AGENT;
       case SYSTEM -> Bubble.PENDING;
-      default     -> Bubble.USER;
+      default -> Bubble.USER;
     };
   }
 
@@ -107,9 +107,9 @@ public class AuditTrailEntryHelper implements  Serializable {
       return Icon.USER;
     }
     return switch (entry.getActorType()) {
-      case AGENT  -> Icon.ROBOT;
+      case AGENT -> Icon.ROBOT;
       case SYSTEM -> Icon.SETTINGS;
-      default     -> Icon.USER;
+      default -> Icon.USER;
     };
   }
 
@@ -121,9 +121,9 @@ public class AuditTrailEntryHelper implements  Serializable {
       return Badge.GRAY;
     }
     return switch (entry.getActorType()) {
-      case AGENT  -> Badge.PURPLE;
+      case AGENT -> Badge.PURPLE;
       case SYSTEM -> Badge.GRAY;
-      default     -> Badge.BLUE;
+      default -> Badge.BLUE;
     };
   }
 
@@ -145,10 +145,10 @@ public class AuditTrailEntryHelper implements  Serializable {
       return "";
     }
     return switch (decision) {
-      case APPROVED          -> Badge.GREEN;
-      case REJECTED          -> Badge.RED;
+      case APPROVED -> Badge.GREEN;
+      case REJECTED -> Badge.RED;
       case CHANGES_REQUESTED -> Badge.YELLOW;
-      default                -> "";
+      default -> "";
     };
   }
 
@@ -160,7 +160,7 @@ public class AuditTrailEntryHelper implements  Serializable {
     return switch (s) {
       case WARNING -> Finding.YELLOW;
       case FAILURE -> Finding.RED;
-      default      -> Finding.GREEN;
+      default -> Finding.GREEN;
     };
   }
 
@@ -172,7 +172,7 @@ public class AuditTrailEntryHelper implements  Serializable {
     return switch (s) {
       case WARNING -> Icon.ALERT_TRIANGLE;
       case FAILURE -> Icon.CIRCLE_X;
-      default      -> Icon.CIRCLE_CHECK;
+      default -> Icon.CIRCLE_CHECK;
     };
   }
 
@@ -184,7 +184,7 @@ public class AuditTrailEntryHelper implements  Serializable {
     return switch (s) {
       case WARNING -> Badge.YELLOW;
       case FAILURE -> Badge.RED;
-      default      -> Badge.GREEN;
+      default -> Badge.GREEN;
     };
   }
 
@@ -196,7 +196,7 @@ public class AuditTrailEntryHelper implements  Serializable {
     return switch (s) {
       case WARNING -> LogLine.WARNING;
       case FAILURE -> LogLine.ERROR;
-      default      -> LogLine.OK;
+      default -> LogLine.OK;
     };
   }
 

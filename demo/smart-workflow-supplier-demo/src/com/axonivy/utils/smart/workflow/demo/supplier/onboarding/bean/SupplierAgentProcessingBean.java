@@ -32,9 +32,9 @@ public class SupplierAgentProcessingBean
   private static final long serialVersionUID = 1L;
 
   public interface StepLabel {
-    String DOCUMENT_EXTRACTION    = "Document Extraction";
-    String POLICY_VALIDATION      = "Policy Validation";
-    String FINANCIAL_VALIDATION   = "Financial Validation";
+    String DOCUMENT_EXTRACTION = "Document Extraction";
+    String POLICY_VALIDATION = "Policy Validation";
+    String FINANCIAL_VALIDATION = "Financial Validation";
     String RISK_SCORE_CALCULATION = "Risk Score Calculation";
   }
 
@@ -58,8 +58,8 @@ public class SupplierAgentProcessingBean
   }
 
   public void startAnalysis() {
-    extractionResult          = null;
-    policyValidationResult    = null;
+    extractionResult = null;
+    policyValidationResult = null;
     financialValidationResult = null;
     this.agentResponse = new AgentAnalysisService().startAnalysis(
         Ivy.cms().co(CMS_AGENT_PROCESSING_DETAIL + "StepDocumentExtraction"),
@@ -138,10 +138,10 @@ public class SupplierAgentProcessingBean
       return Ivy.cms().co(CMS_AGENT_PROCESSING + "ContinueButton");
     }
     return switch (agentResponse.getRoutingDecision().toUpperCase()) {
-      case "APPROVAL"      -> Ivy.cms().co(CMS_AGENT_PROCESSING + "ContinueToApprovalButton");
+      case "APPROVAL" -> Ivy.cms().co(CMS_AGENT_PROCESSING + "ContinueToApprovalButton");
       case "CLARIFICATION" -> Ivy.cms().co(CMS_AGENT_PROCESSING + "ContinueToClarificationButton");
-      case "DECLINE"       -> Ivy.cms().co(CMS_AGENT_PROCESSING + "ViewDeclineButton");
-      default              -> Ivy.cms().co(CMS_AGENT_PROCESSING + "ContinueButton");
+      case "DECLINE" -> Ivy.cms().co(CMS_AGENT_PROCESSING + "ViewDeclineButton");
+      default -> Ivy.cms().co(CMS_AGENT_PROCESSING + "ContinueButton");
     };
   }
 
@@ -151,7 +151,7 @@ public class SupplierAgentProcessingBean
     }
     return switch (agentResponse.getRoutingDecision().toUpperCase()) {
       case "DECLINE" -> "ui-button-danger";
-      default        -> "ui-button-primary";
+      default -> "ui-button-primary";
     };
   }
 
@@ -162,8 +162,8 @@ public class SupplierAgentProcessingBean
         .map(String::toUpperCase)
         .map(decision -> switch (decision) {
           case "APPROVAL" -> "so-success-banner";
-          case "DECLINE"  -> "so-decline-banner";
-          default         -> "";
+          case "DECLINE" -> "so-decline-banner";
+          default -> "";
         })
         .orElse("");
   }
@@ -174,9 +174,9 @@ public class SupplierAgentProcessingBean
     }
     return switch (step.getStatus()) {
       case COMPLETED -> "text-green-600";
-      case RUNNING   -> "text-blue-600";
-      case FAILED    -> "text-red-600";
-      default        -> "text-color-secondary";
+      case RUNNING -> "text-blue-600";
+      case FAILED -> "text-red-600";
+      default -> "text-color-secondary";
     };
   }
 

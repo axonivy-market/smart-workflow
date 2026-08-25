@@ -30,14 +30,14 @@ import jakarta.inject.Named;
 @Named
 @ViewScoped
 public class SupplierRequestBean implements Serializable, AssistantUploadSupport<OnboardingRequest>, LogicCloseSupport,
-                                           SupplierFormSupport {
+    SupplierFormSupport {
 
   private static final long serialVersionUID = 1L;
 
-  private static final String AGENT_SUBPROCESS_SIG  = "askSupplierAssistant(String,String,String)";
-  private static final String AGENT_RESPONSE_KEY    = "aiResponse";
-  private static final String PARSE_SUBPROCESS_SIG  = "parseOnboardingRequest(String,String,java.io.InputStream)";
-  private static final String PARSE_RESULT_KEY      = "draft";
+  private static final String AGENT_SUBPROCESS_SIG = "askSupplierAssistant(String,String,String)";
+  private static final String AGENT_RESPONSE_KEY = "aiResponse";
+  private static final String PARSE_SUBPROCESS_SIG = "parseOnboardingRequest(String,String,java.io.InputStream)";
+  private static final String PARSE_RESULT_KEY = "draft";
   private OnboardingRequest request;
   private List<Department> departments = new ArrayList<>();
   private List<Urgency> urgencies = new ArrayList<>();
@@ -80,7 +80,8 @@ public class SupplierRequestBean implements Serializable, AssistantUploadSupport
     request.setStatus(OnboardingStatus.DB_CHECK);
     request.setCaseUuid(Ivy.wfCase().uuid());
     AuditTrailEntry requestEntry = OnboardingAuditEntryFactory.buildRequestAuditEntry(request);
-    if (request.getAuditTrail() == null) request.setAuditTrail(new ArrayList<>());
+    if (request.getAuditTrail() == null)
+      request.setAuditTrail(new ArrayList<>());
     request.getAuditTrail().add(requestEntry);
   }
 
