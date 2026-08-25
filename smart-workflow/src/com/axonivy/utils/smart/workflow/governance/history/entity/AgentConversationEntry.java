@@ -50,6 +50,10 @@ public class AgentConversationEntry {
   public String getAgentName() { return agentName; }
   public void setAgentName(String agentName) { this.agentName = agentName; }
 
+  public String getDisplayName() {
+    return (agentName != null && !agentName.isBlank()) ? agentName : agentId;
+  }
+
   public String getProcessName() { return processName; }
   public void setProcessName(String processName) { this.processName = processName; }
 
@@ -70,6 +74,9 @@ public class AgentConversationEntry {
   }
 
   public void setToolExecutions(List<ToolExecution> toolExecutions) {
+    if (toolExecutions == null) {
+      throw new IllegalArgumentException("toolExecutions must not be null");
+    }
     try {
       toolExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(toolExecutions);
     } catch (JsonProcessingException e) {
@@ -86,6 +93,9 @@ public class AgentConversationEntry {
   }
 
   public void setGuardrailExecutions(List<GuardrailExecution> guardrailExecutions) {
+    if (guardrailExecutions == null) {
+      throw new IllegalArgumentException("guardrailExecutions must not be null");
+    }
     try {
       guardrailExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(guardrailExecutions);
     } catch (JsonProcessingException e) {
