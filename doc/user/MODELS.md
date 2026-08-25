@@ -17,11 +17,11 @@ For the project coordinates, please align to our existing workspace:
 ```
 
 Make sure to include your project in the build by adding your provider 
-in the main [module build](../pom.xml).
+in the main [module build](../../pom.xml).
 
 ## Implementation
 
-Implement your custom [ChatModelProvider](../smart-workflow/src/com/axonivy/utils/smart/workflow/model/spi/ChatModelProvider.java) within your project.
+Implement your custom [ChatModelProvider](../../smart-workflow/src/com/axonivy/utils/smart/workflow/model/spi/ChatModelProvider.java) within your project.
 
 You need to register your implementation in a file:
 `src/META-INF/services/com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider`
@@ -45,15 +45,15 @@ Variables:
 Your custom `variables.yaml` should also be copied and listed into the README.md setup description,
 that invites users to use this provider.
 
-Furthermore, please enrich the global enumeration of available providers [variables.yaml](../smart-workflow/config/variables.yaml) to list your provider.
+Furthermore, please enrich the global enumeration of available providers [variables.yaml](../../smart-workflow/config/variables.yaml) to list your provider.
 See the enumeration called `AI.DefaultProvider`.
 
 ### Checklist
 
 - [ ] custom variables.yaml in your provider
-- [ ] list your provider in `AI.DefaultProvider` of [variables.yaml](../smart-workflow/config/variables.yaml)
-- [ ] list your model in the Model section of the product [README.md](../smart-workflow-product/README.md)
-- [ ] extend the product [build](../smart-workflow-product/pom.xml) to interpolate your variables into README.md
+- [ ] list your provider in `AI.DefaultProvider` of [variables.yaml](../../smart-workflow/config/variables.yaml)
+- [ ] list your model in the Model section of the product [README.md](../../smart-workflow-product/README.md)
+- [ ] extend the product [build](../../smart-workflow-product/pom.xml) to interpolate your variables into README.md
 
 ## File Extraction Support
 
