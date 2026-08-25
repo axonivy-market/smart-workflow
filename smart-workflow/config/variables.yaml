@@ -3,6 +3,10 @@ Variables:
   AI:
     # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama]
     DefaultProvider: ""
+    # Emergency circuit breaker.
+    CircuitBreaker:
+      # "true" stops ALL AI agent calls in this application. "false" (or blank) allows them again.
+      Enabled: "false"
     # Guardrails designed to ensure that AI operate safely ethical, and legal
     Guardrails:
       # Default input guardrails. Separated by comma. Available: PromptInjectionInputGuardrail, AiPromptInjectionInputGuardrail, PiiMaskingGuardrail

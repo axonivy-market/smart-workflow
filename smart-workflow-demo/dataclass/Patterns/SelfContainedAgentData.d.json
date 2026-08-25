@@ -20,5 +20,9 @@
   }, {
     "name" : "complianceReport",
     "comment" : "Compliance assessment with score — output of assessCompliance tool"
+  }, {
+    "name" : "isStopped",
+    "type" : "boolean",
+    "comment" : "Set to true when the agent call is stopped by the circuit breaker"
   } ]
 }

@@ -21,10 +21,12 @@
         },
         "result" : {
           "params" : [
-            { "name" : "analysisResult", "type" : "String", "desc" : "Comprehensive invoice analysis report" }
+            { "name" : "analysisResult", "type" : "String", "desc" : "Comprehensive invoice analysis report" },
+            { "name" : "isStopped", "type" : "Boolean", "desc" : "True if the agent call was stopped by the circuit breaker" }
           ],
           "map" : {
-            "result.analysisResult" : "in.analysisResult"
+            "result.analysisResult" : "in.analysisResult",
+            "result.isStopped" : "in.isStopped"
           }
         }
       },
@@ -38,7 +40,7 @@
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 568, "y" : 312 }
+        "at" : { "x" : 784, "y" : 312 }
       }
     }, {
       "id" : "f2",
@@ -48,7 +50,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are a comprehensive invoice analysis specialist. Analyze the provided invoice document using the available tools in this order: 1) extractHeaderInfo to extract invoice number, dates, and party information, 2) extractLineItems to extract all individual line items, 3) validateAmounts to verify all calculations are correct, 4) assessCompliance to check required fields and flag any issues. Compile a complete, structured analysis report combining all findings.",
-          "tools" : "[\"extractHeaderInfo\",\"extractLineItems\",\"validateAmounts\",\"assessCompliance\"]",
+          "tools" : "extractHeaderInfo,extractLineItems,validateAmounts,assessCompliance",
           "resultMapping" : "in.analysisResult",
           "query" : "Analyze this invoice document: <%=in.invoiceContent%>"
         }
@@ -57,8 +59,39 @@
         "at" : { "x" : 272, "y" : 312 },
         "size" : { "width" : 152, "height" : 62 }
       },
+      "boundaries" : [ {
+          "id" : "f26",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "Agent stopped",
+          "config" : {
+            "errorCode" : "smartworkflow:stop"
+          },
+          "visual" : {
+            "at" : { "x" : 328, "y" : 353 },
+            "labelOffset" : { "x" : -55, "y" : 25 },
+            "icon" : "res:/webContent/icons/shield.png"
+          },
+          "connect" : [
+            { "id" : "f27", "to" : "f28", "via" : [ { "x" : 344, "y" : 360 } ] }
+          ]
+        } ],
       "connect" : [
         { "id" : "f16", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f28",
+      "type" : "Script",
+      "name" : "Set isStopped flag",
+      "config" : {
+        "output" : {
+          "code" : "in.isStopped = true;"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 512, "y" : 360 }
+      },
+      "connect" : [
+        { "id" : "f29", "to" : "f1", "via" : [ { "x" : 784, "y" : 360 } ] }
       ]
     }, {
       "id" : "f3",
@@ -312,7 +345,7 @@
   "layout" : {
     "lanes" : [ {
         "name" : "Tools",
-        "offset" : 400,
+        "offset" : 424,
         "size" : 304
       } ]
   }

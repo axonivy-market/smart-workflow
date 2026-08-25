@@ -42,7 +42,9 @@ public class InputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkflo
         ? getDelegate().evaluate(message, invocationId)
         : getDelegate().evaluate(message);
     if (!result.isAllowed()) {
-      return failure(result.getReason());
+      return result.getCause()
+          .map(cause -> failure(result.getReason(), cause))
+          .orElseGet(() -> failure(result.getReason()));
     }
     return result.getRewrittenMessage().map(this::successWith).orElseGet(this::success);
   }
