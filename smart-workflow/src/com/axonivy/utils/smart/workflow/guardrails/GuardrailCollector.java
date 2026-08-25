@@ -1,12 +1,15 @@
 package com.axonivy.utils.smart.workflow.guardrails;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,6 +17,8 @@ import com.axonivy.utils.smart.workflow.guardrails.adapter.AbstractGuardrailAdap
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.entity.internal.SmartWorkflowInternalInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.entity.internal.SmartWorkflowInternalOutputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
@@ -63,6 +68,7 @@ public class GuardrailCollector {
       Function<GuardrailProvider, List<G>> providerExtractor) {
     Set<String> uniqueNames = allProviders().stream()
         .flatMap(p -> providerExtractor.apply(p).stream())
+        .filter(Predicate.not(GuardrailCollector::isInternal))
         .map(SmartWorkflowGuardrail::name)
         .collect(Collectors.toCollection(LinkedHashSet::new));
     return List.copyOf(uniqueNames);
@@ -78,26 +84,43 @@ public class GuardrailCollector {
     Set<String> requestedNames = new LinkedHashSet<>(
         (filters != null && !filters.isEmpty()) ? filters : readVariableNames(defaultVariableKey));
 
-    if (requestedNames.isEmpty()) {
-      return List.of();
-    }
+    Map<String, G> guardrailsByName = new LinkedHashMap<>();
 
-    Map<String, G> guardrailsByName = providers.stream()
-        .flatMap(p -> providerExtractor.apply(p).stream())
-        .collect(Collectors.toMap(SmartWorkflowGuardrail::name, g -> g, (existing, _) -> existing));
+    providers.stream()
+      .flatMap(p -> providerExtractor.apply(p).stream())
+      .forEach(guardrail -> guardrailsByName.putIfAbsent(guardrail.name(), guardrail));
+   
+    LinkedHashSet<String> effectiveRequestedNames = internalGuardrailNames(guardrailsByName);
+    effectiveRequestedNames.addAll(requestedNames);
 
-    return requestedNames.stream()
-        .filter(guardrailsByName::containsKey)
+    return effectiveRequestedNames.stream()
         .map(guardrailsByName::get)
+        .filter(Objects::nonNull)
         .map(adapterFactory)
-        .collect(Collectors.toList());
+        .toList();
+  }
+
+  private static <G extends SmartWorkflowGuardrail> LinkedHashSet<String> internalGuardrailNames(Map<String, G> guardrailsByName) {
+    return guardrailsByName.entrySet().stream()
+        .filter(e -> isInternal(e.getValue()))
+        .map(Map.Entry::getKey)
+        .collect(Collectors.toCollection(LinkedHashSet::new));
   }
 
   private static List<String> readVariableNames(String variableKey) {
-    var configuredValue = StringUtils.defaultString(Ivy.var().get(variableKey));
-    return Arrays.stream(StringUtils.split(configuredValue, ','))
+    var variable = Ivy.var().get(variableKey);
+
+    if(variable == null || variable.isBlank()) {
+      return List.of();
+    }
+
+    return Arrays.stream(StringUtils.split(variable, ','))
         .map(String::strip)
         .filter(StringUtils::isNotBlank)
         .collect(Collectors.toList());
+  }
+
+  private static boolean isInternal(SmartWorkflowGuardrail guardrail) {
+    return guardrail instanceof SmartWorkflowInternalInputGuardrail || guardrail instanceof SmartWorkflowInternalOutputGuardrail;
   }
 }

@@ -1,7 +1,8 @@
 package com.axonivy.utils.smart.workflow.utils;
 
-import ch.ivyteam.ivy.environment.Ivy;
 import org.apache.commons.lang3.math.NumberUtils;
+
+import ch.ivyteam.ivy.environment.Ivy;
 
 public class IvyVar {
   

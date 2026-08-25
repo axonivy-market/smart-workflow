@@ -1,0 +1,26 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "simpleName" : "ApplicationScopeData",
+  "namespace" : "com.axonivy.utils.ai",
+  "fields" : [ {
+    "name" : "invoiceStream",
+    "type" : "java.io.InputStream",
+    "comment" : "Invoice PNG loaded from CMS",
+    "modifiers" : [ ]
+  }, {
+    "name" : "invoiceContent",
+    "comment" : "Text content extracted from the invoice image by the extraction agent"
+  }, {
+    "name" : "analysisResult",
+    "comment" : "Summary and analysis produced by the SelfContainedAgent"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError",
+    "comment" : "Error caught when an agent call is stopped by the circuit breaker",
+    "modifiers" : [ ]
+  }, {
+    "name" : "isStopped",
+    "type" : "boolean",
+    "comment" : "True if the Analyze Invoice call was stopped by the circuit breaker"
+  } ]
+}
