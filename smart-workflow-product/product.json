@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.axonivy.com/market/10.0.0/product.json",
+  "$schema": "https://json-schema.axonivy.com/market/14.0.0/product.json",
   "minimumIvyVersion": "13.2.0",
   "installers": [
     {
@@ -25,48 +25,7 @@
             "type": "iar",
             "importInWorkspace": false
           },
-          {
-            "groupId": "com.axonivy.utils.ai",
-            "artifactId": "smart-workflow-openai",
-            "version": "${version}",
-            "type": "iar",
-            "importInWorkspace": true
-          },
-          {
-            "groupId": "com.axonivy.utils.ai",
-            "artifactId": "smart-workflow-ollama",
-            "version": "${version}",
-            "type": "iar",
-            "importInWorkspace": false
-          },
-          {
-            "groupId": "com.axonivy.utils.ai",
-            "artifactId": "smart-workflow-azure-openai",
-            "version": "${version}",
-            "type": "iar",
-            "importInWorkspace": false
-          },
-          {
-            "groupId": "com.axonivy.utils.ai",
-            "artifactId": "smart-workflow-gemini",
-            "version": "${version}",
-            "type": "iar",
-            "importInWorkspace": false
-          },
-          {
-            "groupId": "com.axonivy.utils.ai",
-            "artifactId": "smart-workflow-xai",
-            "version": "${version}",
-            "type": "iar",
-            "importInWorkspace": false
-          },
-          {
-            "groupId": "com.axonivy.utils.ai",
-            "artifactId": "smart-workflow-anthropic",
-            "version": "${version}",
-            "type": "iar",
-            "importInWorkspace": false
-          },
+          
           {
             "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-opensearch-rag",
@@ -95,6 +54,48 @@
             "artifactId": "smart-workflow",
             "version": "${version}",
             "type": "iar"
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-openai",
+            "version": "${version}",
+            "type": "iar",
+            "optional": false
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-ollama",
+            "version": "${version}",
+            "type": "iar",
+            "optional": true
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-azure-openai",
+            "version": "${version}",
+            "type": "iar",
+            "optional": true
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-gemini",
+            "version": "${version}",
+            "type": "iar",
+            "optional": true
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-xai",
+            "version": "${version}",
+            "type": "iar",
+            "optional": true
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-anthropic",
+            "version": "${version}",
+            "type": "iar",
+            "optional": true
           }
         ],
         "repositories": [
