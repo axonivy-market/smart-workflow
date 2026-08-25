@@ -12,13 +12,14 @@ on:
         default: true
 
 permissions:
-  actions: read
   contents: read
+  actions: read
   packages: write
 
 jobs:
   release:
-    uses: ./.github/workflows/release-dev-template.yml
+    uses: axonivy-market/github-workflows/.github/workflows/release-dev.yml@v6
     with:
       dryRun: ${{ fromJSON(github.event_name == 'schedule' && 'false' || github.event_name == 'workflow_dispatch' && github.event.inputs.dryRun || 'true') }}
+      javaVersion: 25
     secrets: inherit

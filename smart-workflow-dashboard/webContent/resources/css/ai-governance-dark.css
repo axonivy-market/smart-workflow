@@ -1,0 +1,5 @@
+body.dark {
+  --ag-row-hover-bg: var(--surface-d, rgb(84 91 103 / 50%));
+  --ag-row-highlight-bg: rgba(100, 160, 255, 0.2);
+  --widget-header-icon: var(--ivy-primary-color-white, var(--text-color));
+}

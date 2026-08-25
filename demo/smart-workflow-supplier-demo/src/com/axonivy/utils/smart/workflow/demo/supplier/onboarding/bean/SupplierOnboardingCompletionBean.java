@@ -1,9 +1,9 @@
 package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class SupplierOnboardingCompletionBean extends AbstractSupplierOnboardingReadonlyBean {
 

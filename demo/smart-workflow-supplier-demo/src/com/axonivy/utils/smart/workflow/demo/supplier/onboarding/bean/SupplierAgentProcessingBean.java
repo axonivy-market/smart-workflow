@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-
 import com.axonivy.utils.smart.workflow.demo.assistant.AgentGuidance;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult;
@@ -24,8 +20,11 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.Supplier
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.AgentAnalysisService;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class SupplierAgentProcessingBean
     implements Serializable, RiskLevelSupport, DocumentDisplaySupport, LogicCloseSupport {

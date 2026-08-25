@@ -39,7 +39,7 @@ public class OpenAiModelProvider implements ChatModelProvider {
   @Override
   public List<String> models() {
     return Stream.of(OpenAiChatModelName.values())
-        .map(OpenAiChatModelName::name)
+        .map(OpenAiChatModelName::toString)
         .toList();
   }
 

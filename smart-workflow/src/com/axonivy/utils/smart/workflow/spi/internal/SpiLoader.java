@@ -5,38 +5,43 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import ch.ivyteam.ivy.application.IProcessModelVersion;
+import ch.ivyteam.ivy.application.project.Project;
 
 public class SpiLoader {
-  private final IProcessModelVersion pmv;
+  private final Project pmv;
 
   private static final String SERVICES_LOCATION_PATTERN = "META-INF/services/%s";
   private static final String EXCEPTION_PATTERN = "Failed to read service descriptor %s";
 
-  public SpiLoader(IProcessModelVersion pmv) {
+  public SpiLoader(Project pmv) {
     this.pmv = pmv;
   }
 
   public <T> Set<T> load(Class<T> type) {
-    return pmvsInScope()
-        .flatMap(p -> findImpl(p, type).stream())
-        .filter(type::isInstance)
-        .distinct()
-        .collect(Collectors.toSet());
+    Map<String, T> seen = new HashMap<>();
+    List<T> implementations = pmvsInScope()
+      .flatMap(p -> findImpl(p, type).stream())
+      .filter(type::isInstance)
+      .toList();
+    for (T impl : implementations) {
+      seen.putIfAbsent(impl.getClass().getName(), impl);
+    }
+    return new HashSet<>(seen.values());
   }
 
-  private Stream<IProcessModelVersion> pmvsInScope() {
-    return Stream.concat(Stream.of(pmv), pmv.getAllDependentProcessModelVersions());
+  protected Stream<Project> pmvsInScope() {
+    return Stream.concat(Stream.of(pmv), pmv.allDependentProjects());
   }
 
-  private static <T> List<T> findImpl(IProcessModelVersion pmv, Class<T> type) {
+  private static <T> List<T> findImpl(Project pmv, Class<T> type) {
     ClassLoader loader = ProjectClassLoader.of(pmv);
     return findImpl(type, loader);
   }

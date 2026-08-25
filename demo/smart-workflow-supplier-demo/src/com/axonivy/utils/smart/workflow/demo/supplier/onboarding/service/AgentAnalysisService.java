@@ -11,8 +11,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import javax.faces.context.FacesContext;
-
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.RiskScoreResult;
@@ -27,6 +25,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.FindingSe
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.AgentStepHelper;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import jakarta.faces.context.FacesContext;
 
 public class AgentAnalysisService {
 

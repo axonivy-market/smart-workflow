@@ -1,9 +1,9 @@
 package com.axonivy.utils.smart.workflow.demo.mock;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import com.axonivy.utils.smart.workflow.rag.opensearch.internal.OpenSearchRestClient;
+
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Minimal REST utility for OpenSearch index management used by {@code StartDemoBean}.

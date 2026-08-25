@@ -7,10 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-
 import com.axonivy.utils.ai.SupplierOnboardingApproval.SupplierOnboardingApprovalData;
 import com.axonivy.utils.smart.workflow.demo.document.CertificationUploader;
 import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;
@@ -33,8 +29,11 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AuditEntr
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.OnboardingRequestHelper;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class SupplierOnboardingApprovalBean
     implements Serializable, CertificationUploader, RequiredDocumentUploader, RiskLevelSupport, DocumentDisplaySupport,

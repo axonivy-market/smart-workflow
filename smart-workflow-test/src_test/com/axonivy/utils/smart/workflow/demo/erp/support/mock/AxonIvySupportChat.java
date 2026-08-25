@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.demo.erp.support.mock;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;

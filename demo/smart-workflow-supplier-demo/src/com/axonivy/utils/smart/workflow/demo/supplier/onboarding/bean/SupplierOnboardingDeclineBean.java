@@ -3,13 +3,13 @@ package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean;
 import java.util.List;
 import java.util.Optional;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.AuditTrailEntry;
 
-@ManagedBean
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+
+@Named
 @ViewScoped
 public class SupplierOnboardingDeclineBean extends AbstractSupplierOnboardingReadonlyBean {
 

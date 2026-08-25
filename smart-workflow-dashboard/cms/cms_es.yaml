@@ -1,0 +1,51 @@
+Labels:
+  Common:
+    Actions: Acciones
+    Back: Volver
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        ai:
+          GovernanceDashboard:
+            GovernanceDashboard:
+              Title: Centro de Gobernanza de IA
+              HistoryTableHeader: Tabla de Historial
+              SummaryCount: '{0} casos - {1} tareas'
+              FilterBy: 'Filtrar por:'
+              FilterCasePlaceholder: Nombre, ID o descripción del caso
+              AllModels: Todos los modelos
+              AllTime: Todo el tiempo
+              Today: Hoy
+              Last7Days: Últimos 7 días
+              Last30Days: Últimos 30 días
+              NoHistoryFound: No se encontraron registros de historial.
+              ColumnCaseTaskAgent: Caso/Tarea/Agente
+              AgentLabel: 'Agente {0}'
+              ColumnLastUpdated: Última actualización
+              ColumnMessages: Mensajes
+              MessagesBadge: '{0} msgs'
+              ColumnTokens: Tokens
+              ColumnModel: Modelo
+              ViewDetails: Ver detalles
+            Analytics:
+              SectionTitle: Análisis de Uso de Tokens
+              KpiTotalSessions: Sesiones Totales
+              KpiTotalTokens: Tokens Totales
+              KpiAvgResponseTime: Tiempo de Respuesta Promedio
+              KpiTopModel: Modelo Principal
+              UnitMs: ms
+              ChartTokenTimeline: Uso de Tokens en el Tiempo
+              ChartModelDist: Distribución de Modelos
+              ChartTokenStacked: Tokens de Entrada vs Salida por Día
+              ChartTopCases: Top Procesos por Uso de Tokens
+              ChartResponseTime: Distribución del Tiempo de Respuesta
+              DatasetTotalTokens: Tokens Totales
+              DatasetInputTokens: Tokens de Entrada
+              DatasetOutputTokens: Tokens de Salida
+              DatasetSessions: Sesiones
+              BucketUnder5s: '< 5 s'
+              Bucket5to10s: '5–10 s'
+              Bucket10to15s: '10–15 s'
+              BucketOver15s: '> 15 s'
+              UnknownProcess: desconocido

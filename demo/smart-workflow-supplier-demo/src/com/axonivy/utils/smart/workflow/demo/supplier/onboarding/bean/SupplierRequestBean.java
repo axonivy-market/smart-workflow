@@ -4,11 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import com.axonivy.utils.smart.workflow.demo.assistant.AgentGuidance;
-import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.SupplierOnboardingGuidance;
 import com.axonivy.utils.smart.workflow.demo.assistant.AssistantChatMessage;
 import com.axonivy.utils.smart.workflow.demo.assistant.AssistantUploadSupport;
 import com.axonivy.utils.smart.workflow.demo.assistant.UploadedDocumentEntry;
@@ -22,13 +18,16 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.bean.interfaces.SupplierFormSupport;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.Urgency;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.SupplierOnboardingGuidance;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.OnboardingAuditEntryFactory;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.service.OnboardingRequestParser;
 import com.axonivy.utils.smart.workflow.demo.supplier.repository.SupplierRepository;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class SupplierRequestBean implements Serializable, AssistantUploadSupport<OnboardingRequest>, LogicCloseSupport,
                                            SupplierFormSupport {

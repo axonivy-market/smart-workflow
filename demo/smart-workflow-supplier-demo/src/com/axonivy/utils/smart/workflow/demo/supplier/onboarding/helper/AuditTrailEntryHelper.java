@@ -1,25 +1,27 @@
 package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper;
 
+import java.io.Serializable;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
-
-import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.AuditTrailEntry;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.ValidationFinding;
+import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.AuditTrailEntry;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalDecision;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AuditActorType;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AuditEntryType;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.FindingSeverity;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
-@ManagedBean(name = "auditTrailHelper")
+@Named(value="auditTrailHelper")
 @ApplicationScoped
-public class AuditTrailEntryHelper {
+public class AuditTrailEntryHelper implements  Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   interface Bubble {
     String COMPLETED = "so-tl-bubble-completed";

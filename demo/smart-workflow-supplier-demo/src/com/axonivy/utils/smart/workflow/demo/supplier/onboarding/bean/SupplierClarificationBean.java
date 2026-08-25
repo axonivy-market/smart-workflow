@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import com.axonivy.utils.smart.workflow.demo.document.CertificationUploader;
 import com.axonivy.utils.smart.workflow.demo.document.LegalDocument;
 import com.axonivy.utils.smart.workflow.demo.document.RequiredDocumentUploader;
@@ -26,8 +23,10 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.Onboardi
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.RiskScoreHelper;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class SupplierClarificationBean
     implements Serializable, CertificationUploader, RequiredDocumentUploader, RiskLevelSupport, DocumentDisplaySupport,

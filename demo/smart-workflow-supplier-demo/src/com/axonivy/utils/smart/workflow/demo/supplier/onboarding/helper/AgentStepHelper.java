@@ -3,12 +3,12 @@ package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent.AgentProcessingStep;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AgentStepStatus;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 public final class AgentStepHelper {
 

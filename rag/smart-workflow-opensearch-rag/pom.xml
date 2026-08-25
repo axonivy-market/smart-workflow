@@ -19,7 +19,7 @@
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>smart-workflow</artifactId>
-      <version>14.0.0-SNAPSHOT</version>
+      <version>${project.version}</version>
       <type>iar</type>
     </dependency>
   </dependencies>
@@ -44,6 +44,7 @@
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
+        <version>${project.parent.version}</version>
       </plugin>
     </plugins>
   </build>

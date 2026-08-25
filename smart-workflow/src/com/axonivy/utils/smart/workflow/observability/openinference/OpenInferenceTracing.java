@@ -207,8 +207,8 @@ public class OpenInferenceTracing implements AiListenerProvider {
     List<Attribute> attrList = attrs.entrySet().stream()
         .map(e -> Attribute.attribute(e.getKey(), e.getValue()))
         .toList();
-    var guardrailSpan = Span.open().instance(() -> new AiSpan(guardrailName, () -> attrList));
-    guardrailSpan.result(null);
-    guardrailSpan.close();
+    try (var guardrailSpan = Span.open().instance(() -> new AiSpan(guardrailName, () -> attrList))) {
+      guardrailSpan.result(null);
+    }
   }
 }

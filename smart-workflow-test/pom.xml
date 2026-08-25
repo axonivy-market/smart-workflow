@@ -29,7 +29,7 @@
     <dependency>
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit-junit5</artifactId>
-      <version>1.4.2</version>
+      <version>1.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -47,6 +47,22 @@
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>smart-workflow-demo</artifactId>
+      <version>${project.version}</version>
+      <type>iar</type>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>asm</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>jspecify</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.axonivy.utils.ai</groupId>
+      <artifactId>smart-workflow-dashboard</artifactId>
       <version>${project.version}</version>
       <type>iar</type>
       <exclusions>
@@ -125,6 +141,7 @@
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
+        <version>${project.parent.version}</version>
       </plugin>
     </plugins>
   </build>

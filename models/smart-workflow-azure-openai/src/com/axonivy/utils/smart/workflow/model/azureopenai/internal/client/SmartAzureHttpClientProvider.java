@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.model.azureopenai.internal.client;
 
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.WebTarget;
 
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpClientProvider;

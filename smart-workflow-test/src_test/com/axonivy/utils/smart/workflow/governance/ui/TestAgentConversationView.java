@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
-import com.axonivy.utils.smart.workflow.governance.history.internal.ChatHistoryJsonParser;
+import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryJsonParser;
 import com.axonivy.utils.smart.workflow.governance.ui.entity.AgentConversationView;
 
 import ch.ivyteam.ivy.environment.IvyTest;
