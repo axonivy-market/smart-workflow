@@ -20,7 +20,6 @@ import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
 import com.axonivy.utils.smart.workflow.output.DynamicAgent;
-import com.axonivy.utils.smart.workflow.output.internal.StructuredOutputAgent;
 import com.axonivy.utils.smart.workflow.tools.human.internal.HumanInTheLoop;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
@@ -31,6 +30,7 @@ import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
+import dev.langchain4j.service.AiServiceContext;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.memory.ChatMemoryService;
 import dev.langchain4j.service.tool.AiServiceTool;
@@ -46,16 +46,10 @@ public class AgentCallExecutor {
     this.context = context;
   }
 
-  interface ChatAgent extends DynamicAgent<String> {
-    @Override
-    String chat(List<Content> query);
-  }
-
   interface Variable {
     String RESULT = "result";
   }
 
-  @SuppressWarnings("unchecked")
   public void execute() {
     Optional<UserMessage> query = QueryExpander.expandMacroWithFileExtraction(Conf.QUERY, context);
     if (query.isEmpty()) {
@@ -63,13 +57,11 @@ public class AgentCallExecutor {
       return; // early abort; user is still testing with empty values
     }
 
-    Class<? extends DynamicAgent<?>> agentType = ChatAgent.class;
     var structured = execute(Conf.OUTPUT, Class.class);
-    if (structured.isPresent()) {
-      agentType = StructuredOutputAgent.agent(structured.get());
-    }
+    var aiCtxt = AiServiceContext.create(DynamicAgent.class);
+    aiCtxt.returnType = structured.orElse(String.class);
 
-    var agentBuilder = AiServices.builder(agentType);
+    AiServices<DynamicAgent<?>> agentBuilder = AiServices.builder(aiCtxt);
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
     var toolFilter = context.config().getList(Conf.TOOLS);
