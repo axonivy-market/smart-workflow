@@ -22,7 +22,7 @@ class TestRagProviders {
   void installer_promotesProvider(SmartWorkflowToolsProvider provider) throws Exception {
     var artifactIds = ProductJson.installerArtifactIds();
     assertThat(artifactIds)
-        .as("RAG provider is installable as extra market product")
+      .as("RAG provider is declared in market product installer entries")
         .contains(installerName(provider));
   }
 
