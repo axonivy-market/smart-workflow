@@ -126,7 +126,7 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
       List<ResponseMetadata> list = StringUtils.isBlank(entry.getTokenUsageJson())
           ? new ArrayList<>()
           : JsonUtils.getObjectMapper().readValue(entry.getTokenUsageJson(),
-              new TypeReference<List<ResponseMetadata>>() {});
+              new TypeReference<List<ResponseMetadata>>(){});
       list.add(metadata);
       entry.setTokenUsageJson(JsonUtils.getObjectMapper().writeValueAsString(list));
     } catch (JsonProcessingException ex) {
@@ -134,7 +134,6 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
     }
   }
 
-  
   @Override
   public void recordGuardrail(String guardrailName, String type, String result, String message, String failureMessage, Long durationMs) {
     var entry = findOrCreateEntry();

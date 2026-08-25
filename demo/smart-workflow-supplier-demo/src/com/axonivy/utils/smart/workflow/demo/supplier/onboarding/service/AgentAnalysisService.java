@@ -30,31 +30,32 @@ import jakarta.faces.context.FacesContext;
 public class AgentAnalysisService {
 
   private interface Signature {
-    String DOCUMENT_EXTRACT   = "supplierDocumentExtractAgent(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)";
-    String VALIDATE_POLICY    = "validateAgainstPolicy(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult,com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)";
+    String DOCUMENT_EXTRACT = "supplierDocumentExtractAgent(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)";
+    String VALIDATE_POLICY =
+        "validateAgainstPolicy(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult,com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest)";
     String VALIDATE_FINANCIAL = "validateFinancialPolicy(com.axonivy.utils.smart.workflow.demo.supplier.Supplier,com.axonivy.utils.smart.workflow.demo.supplier.agent.DocumentExtractionResult,String)";
-    String RISK_ASSESSMENT    = "callRiskAssessment(com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,Integer,String,String)";
+    String RISK_ASSESSMENT = "callRiskAssessment(com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,com.axonivy.utils.smart.workflow.demo.supplier.agent.PolicyValidationResult,Integer,String,String)";
   }
 
   private interface Field {
-    String SUPPLIER                    = "supplier";
-    String ONBOARDING_REQUEST          = "onboardingRequest";
-    String DOCUMENTS                   = "documents";
-    String CASE_UUID                   = "caseUuid";
-    String POLICY_RESULT               = "policyResult";
-    String FINANCIAL_RESULT            = "financialResult";
-    String ANNUAL_VOLUME_EUR           = "annualVolumeEur";
-    String SUPPLIER_ID                 = "supplierId";
-    String EXTRACTION_RESULT           = "extractionResult";
-    String POLICY_VALIDATION_RESULT    = "policyValidationResult";
+    String SUPPLIER = "supplier";
+    String ONBOARDING_REQUEST = "onboardingRequest";
+    String DOCUMENTS = "documents";
+    String CASE_UUID = "caseUuid";
+    String POLICY_RESULT = "policyResult";
+    String FINANCIAL_RESULT = "financialResult";
+    String ANNUAL_VOLUME_EUR = "annualVolumeEur";
+    String SUPPLIER_ID = "supplierId";
+    String EXTRACTION_RESULT = "extractionResult";
+    String POLICY_VALIDATION_RESULT = "policyValidationResult";
     String FINANCIAL_VALIDATION_RESULT = "financialValidationResult";
-    String RISK_SCORE_RESULT           = "riskScoreResult";
+    String RISK_SCORE_RESULT = "riskScoreResult";
   }
 
   private interface StepKey {
-    String DOCUMENT_EXTRACTION    = "DOCUMENT_EXTRACTION";
-    String POLICY_VALIDATION      = "POLICY_VALIDATION";
-    String FINANCIAL_VALIDATION   = "FINANCIAL_VALIDATION";
+    String DOCUMENT_EXTRACTION = "DOCUMENT_EXTRACTION";
+    String POLICY_VALIDATION = "POLICY_VALIDATION";
+    String FINANCIAL_VALIDATION = "FINANCIAL_VALIDATION";
     String RISK_SCORE_CALCULATION = "RISK_SCORE_CALCULATION";
   }
 
@@ -65,9 +66,9 @@ public class AgentAnalysisService {
       String step1Name, String step2Name, String step3Name, String step4Name) {
     SupplierAgentResponse response = new SupplierAgentResponse();
     List<AgentProcessingStep> steps = new ArrayList<>();
-    steps.add(AgentStepHelper.createPendingStep(StepKey.DOCUMENT_EXTRACTION,    step1Name));
-    steps.add(AgentStepHelper.createPendingStep(StepKey.POLICY_VALIDATION,      step2Name));
-    steps.add(AgentStepHelper.createPendingStep(StepKey.FINANCIAL_VALIDATION,   step3Name));
+    steps.add(AgentStepHelper.createPendingStep(StepKey.DOCUMENT_EXTRACTION, step1Name));
+    steps.add(AgentStepHelper.createPendingStep(StepKey.POLICY_VALIDATION, step2Name));
+    steps.add(AgentStepHelper.createPendingStep(StepKey.FINANCIAL_VALIDATION, step3Name));
     steps.add(AgentStepHelper.createPendingStep(StepKey.RISK_SCORE_CALCULATION, step4Name));
     response.setProcessingSteps(steps);
     return response;
@@ -112,7 +113,8 @@ public class AgentAnalysisService {
       PolicyValidationResult policyValidationResult, PolicyValidationResult financialValidationResult,
       SupplierAgentResponse agentResponse, FacesContext fc) {
     Integer annualVolumeEur = request.getExpectedAnnualVolume() != null
-        ? request.getExpectedAnnualVolume().intValue() : null;
+        ? request.getExpectedAnnualVolume().intValue()
+        : null;
     String supplierId = request.getSupplier() != null ? request.getSupplier().getSupplierId() : null;
     Map<String, Object> params = new LinkedHashMap<>();
     params.put(Field.POLICY_RESULT, policyValidationResult);
@@ -133,9 +135,10 @@ public class AgentAnalysisService {
   private void finalizeAgentResponse(
       SupplierAgentResponse agentResponse, RiskScoreResult riskScoreResult,
       PolicyValidationResult policyValidationResult, PolicyValidationResult financialValidationResult) {
-    var riskScore       = riskScoreResult.getRiskScore();
+    var riskScore = riskScoreResult.getRiskScore();
     var routingDecision = riskScoreResult.getRoutingDecision() != null
-        ? riskScoreResult.getRoutingDecision() : "CLARIFICATION";
+        ? riskScoreResult.getRoutingDecision()
+        : "CLARIFICATION";
 
     agentResponse.setRiskScore(riskScore);
     agentResponse.setRoutingDecision(routingDecision);
@@ -165,7 +168,7 @@ public class AgentAnalysisService {
         .filter(Objects::nonNull)
         .flatMap(Collection::stream)
         .filter(f -> FindingSeverity.FAILURE.equals(f.getSeverity())
-                  || FindingSeverity.WARNING.equals(f.getSeverity()))
+            || FindingSeverity.WARNING.equals(f.getSeverity()))
         .filter(f -> seen.add(f.getMessage()))
         .toList();
   }

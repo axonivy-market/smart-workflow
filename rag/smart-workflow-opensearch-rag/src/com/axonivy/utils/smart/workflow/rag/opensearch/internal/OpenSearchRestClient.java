@@ -52,7 +52,7 @@ public class OpenSearchRestClient {
     String userName = Ivy.var().get(OpenSearchConf.USER_NAME);
     String password = Ivy.var().get(OpenSearchConf.PASSWORD);
     WebTarget base = Ivy.rest().client(OPENSEARCH_CLIENT)
-      .register(new AuthFilter(apiKey, userName, password));
+        .register(new AuthFilter(apiKey, userName, password));
     return new OpenSearchRestClient(base);
   }
 
@@ -183,14 +183,14 @@ public class OpenSearchRestClient {
     private final String password;
 
     AuthFilter(String apiKey, String userName, String password) {
-      this.apiKey    = apiKey;
-      this.userName  = userName;
-      this.password  = password;
+      this.apiKey = apiKey;
+      this.userName = userName;
+      this.password = password;
     }
 
     @Override
     public void filter(ClientRequestContext context) throws IOException {
-      boolean hasApiKey    = StringUtils.isNotBlank(apiKey);
+      boolean hasApiKey = StringUtils.isNotBlank(apiKey);
       boolean hasBasicAuth = StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password);
 
       if (hasApiKey) {

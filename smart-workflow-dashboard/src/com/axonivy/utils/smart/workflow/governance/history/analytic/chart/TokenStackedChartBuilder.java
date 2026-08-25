@@ -35,7 +35,7 @@ public class TokenStackedChartBuilder extends AbstractChartBuilder<BarChart> {
       outputData.add(pair.output());
     });
 
-    BarDataset inputDataSet  = stackedTokenDataSet(String.format(ANALYTICS_CMS_PATTERN, "DatasetInputTokens"),  PALETTE.color(0), inputData);
+    BarDataset inputDataSet = stackedTokenDataSet(String.format(ANALYTICS_CMS_PATTERN, "DatasetInputTokens"), PALETTE.color(0), inputData);
     BarDataset outputDataSet = stackedTokenDataSet(String.format(ANALYTICS_CMS_PATTERN, "DatasetOutputTokens"), PALETTE.color(1), outputData);
 
     BarOptions options = new BarOptions();

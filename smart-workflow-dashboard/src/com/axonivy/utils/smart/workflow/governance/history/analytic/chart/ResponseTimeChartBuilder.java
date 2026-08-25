@@ -14,10 +14,10 @@ import software.xdev.chartjs.model.options.BarOptions;
 public class ResponseTimeChartBuilder extends AbstractChartBuilder<BarChart> {
 
   private interface BucketLabels {
-    String UNDER_5S   = String.format(ANALYTICS_CMS_PATTERN, "BucketUnder5s");
-    String FROM_5_10  = String.format(ANALYTICS_CMS_PATTERN, "Bucket5to10s");
+    String UNDER_5S = String.format(ANALYTICS_CMS_PATTERN, "BucketUnder5s");
+    String FROM_5_10 = String.format(ANALYTICS_CMS_PATTERN, "Bucket5to10s");
     String FROM_10_15 = String.format(ANALYTICS_CMS_PATTERN, "Bucket10to15s");
-    String OVER_15S   = String.format(ANALYTICS_CMS_PATTERN, "BucketOver15s");
+    String OVER_15S = String.format(ANALYTICS_CMS_PATTERN, "BucketOver15s");
   }
 
   @Override

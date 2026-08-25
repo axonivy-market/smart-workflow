@@ -49,9 +49,9 @@ public class AzureOpenAiModelProvider implements ChatModelProvider {
   @Override
   public List<String> secretsVars() {
     return VariableUtils.deploymentsVars().stream()
-      .map(var -> StringUtils.substringBeforeLast(var.name(), "."))
-      .distinct()
-      .map(var -> var + "." + AzureOpenAiConf.API_KEY_FIELD)
-      .toList();
+        .map(var -> StringUtils.substringBeforeLast(var.name(), "."))
+        .distinct()
+        .map(var -> var + "." + AzureOpenAiConf.API_KEY_FIELD)
+        .toList();
   }
 }

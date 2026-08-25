@@ -26,8 +26,7 @@ public class XAiServiceConnector {
       "grok-4-1-max",
       "grok-4-1-mini-code",
       "grok-4-1-large-code",
-      "grok-4-1-max-code"
-  );
+      "grok-4-1-max-code");
 
   public interface XAiConf {
     String PREFIX = "AI.Providers.xAI.";
@@ -57,9 +56,9 @@ public class XAiServiceConnector {
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
     OpenAiChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
-      .modelName(modelName)
-      .temperature(Double.valueOf(DEFAULT_TEMPERATURE));
-    builder.defaultRequestParameters(request.build()); 
+        .modelName(modelName)
+        .temperature(Double.valueOf(DEFAULT_TEMPERATURE));
+    builder.defaultRequestParameters(request.build());
     return builder;
   }
 
@@ -68,7 +67,7 @@ public class XAiServiceConnector {
         .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
         .logRequests(true)
         .logResponses(true);
-    var baseUrl = StringUtils.defaultIfBlank(Ivy.var().get(XAiConf.BASE_URL) , DEFAULT_BASE_URL);
+    var baseUrl = StringUtils.defaultIfBlank(Ivy.var().get(XAiConf.BASE_URL), DEFAULT_BASE_URL);
     builder.baseUrl(baseUrl);
     String key = Ivy.var().get(XAiConf.API_KEY);
     if (!key.isBlank()) {

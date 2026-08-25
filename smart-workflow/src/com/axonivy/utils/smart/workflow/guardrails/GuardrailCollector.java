@@ -87,9 +87,9 @@ public class GuardrailCollector {
     Map<String, G> guardrailsByName = new LinkedHashMap<>();
 
     providers.stream()
-      .flatMap(p -> providerExtractor.apply(p).stream())
-      .forEach(guardrail -> guardrailsByName.putIfAbsent(guardrail.name(), guardrail));
-   
+        .flatMap(p -> providerExtractor.apply(p).stream())
+        .forEach(guardrail -> guardrailsByName.putIfAbsent(guardrail.name(), guardrail));
+
     LinkedHashSet<String> effectiveRequestedNames = internalGuardrailNames(guardrailsByName);
     effectiveRequestedNames.addAll(requestedNames);
 
@@ -110,7 +110,7 @@ public class GuardrailCollector {
   private static List<String> readVariableNames(String variableKey) {
     var variable = Ivy.var().get(variableKey);
 
-    if(variable == null || variable.isBlank()) {
+    if (variable == null || variable.isBlank()) {
       return List.of();
     }
 

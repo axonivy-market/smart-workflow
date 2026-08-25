@@ -19,9 +19,17 @@ public class TaskHistoryGroup implements HistoryGroupView {
     this.stats = HistoryGroupView.of(agents);
   }
 
-  public String getTaskUuid() { return taskUuid; }
-  public List<AgentConversationEntry> getAgents() { return agents; }
-  public int getAgentCount() { return agents.size(); }
+  public String getTaskUuid() {
+    return taskUuid;
+  }
+
+  public List<AgentConversationEntry> getAgents() {
+    return agents;
+  }
+
+  public int getAgentCount() {
+    return agents.size();
+  }
 
   public String getTaskDisplayName() {
     if (taskDisplayName == null) {
@@ -38,8 +46,23 @@ public class TaskHistoryGroup implements HistoryGroupView {
         .orElse("");
   }
 
-  @Override public String getLastUpdatedText() { return stats.getLastUpdatedText(); }
-  @Override public int    getMessageCount()    { return stats.getMessageCount(); }
-  @Override public long   getTotalTokens()     { return stats.getTotalTokens(); }
-  @Override public String getModelName()       { return stats.getModelName(); }
+  @Override
+  public String getLastUpdatedText() {
+    return stats.getLastUpdatedText();
+  }
+
+  @Override
+  public int getMessageCount() {
+    return stats.getMessageCount();
+  }
+
+  @Override
+  public long getTotalTokens() {
+    return stats.getTotalTokens();
+  }
+
+  @Override
+  public String getModelName() {
+    return stats.getModelName();
+  }
 }

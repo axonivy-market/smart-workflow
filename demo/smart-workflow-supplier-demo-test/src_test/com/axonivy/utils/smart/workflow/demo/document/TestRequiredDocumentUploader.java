@@ -32,12 +32,11 @@ class TestRequiredDocumentUploader {
   @SuppressWarnings("unused")
   static Stream<Arguments> uploadScenarios() {
     return Stream.of(
-        Arguments.of("uploadRequiredDocument_whenEmptyPending_resolvesFromFileName",  "", "iso9001_cert.pdf", LegalDocumentType.ISO_9001, null),
-        Arguments.of("uploadRequiredDocument_whenCommercialRegister_setsType",        "COMMERCIAL_REGISTER", "file.pdf", LegalDocumentType.COMMERCIAL_REGISTER, null),
-        Arguments.of("uploadRequiredDocument_whenCertificationWithEnumValue_setsType","CERTIFICATION:ISO_9001", "file.pdf", LegalDocumentType.ISO_9001, null),
+        Arguments.of("uploadRequiredDocument_whenEmptyPending_resolvesFromFileName", "", "iso9001_cert.pdf", LegalDocumentType.ISO_9001, null),
+        Arguments.of("uploadRequiredDocument_whenCommercialRegister_setsType", "COMMERCIAL_REGISTER", "file.pdf", LegalDocumentType.COMMERCIAL_REGISTER, null),
+        Arguments.of("uploadRequiredDocument_whenCertificationWithEnumValue_setsType", "CERTIFICATION:ISO_9001", "file.pdf", LegalDocumentType.ISO_9001, null),
         Arguments.of("uploadRequiredDocument_whenCertificationWithFreeText_setsDesc", "CERTIFICATION:BRC Food", "file.pdf", LegalDocumentType.CERTIFICATION, "BRC Food"),
-        Arguments.of("uploadRequiredDocument_whenAnnualReportWithText_setsDesc",      "ANNUAL_REPORT:sometext", "file.pdf", LegalDocumentType.ANNUAL_REPORT, "sometext")
-    );
+        Arguments.of("uploadRequiredDocument_whenAnnualReportWithText_setsDesc", "ANNUAL_REPORT:sometext", "file.pdf", LegalDocumentType.ANNUAL_REPORT, "sometext"));
   }
 
   @Test
@@ -73,12 +72,14 @@ class TestRequiredDocumentUploader {
   }
 
   private static RequiredDocumentUploader uploaderWithDocs(LegalDocument... initialDocs) {
-    return new RequiredDocumentUploader() {
+    return new RequiredDocumentUploader(){
       private final List<LegalDocument> docs = new ArrayList<>(List.of(initialDocs));
       private String pending = null;
 
       @Override
-      public List<LegalDocument> getSupplierDocuments() { return docs; }
+      public List<LegalDocument> getSupplierDocuments() {
+        return docs;
+      }
 
       @Override
       public void setSupplierDocuments(List<LegalDocument> d) {
@@ -87,16 +88,24 @@ class TestRequiredDocumentUploader {
       }
 
       @Override
-      public String getPendingDocumentType() { return pending; }
+      public String getPendingDocumentType() {
+        return pending;
+      }
 
       @Override
-      public void setPendingDocumentType(String t) { pending = t; }
+      public void setPendingDocumentType(String t) {
+        pending = t;
+      }
 
       @Override
-      public String getObjectId() { return "test-obj"; }
+      public String getObjectId() {
+        return "test-obj";
+      }
 
       @Override
-      public LegalDocumentObjectType getObjectType() { return LegalDocumentObjectType.SUPPLIER; }
+      public LegalDocumentObjectType getObjectType() {
+        return LegalDocumentObjectType.SUPPLIER;
+      }
 
       @Override
       public LegalDocument saveDocument(LegalDocument doc) {
@@ -107,12 +116,14 @@ class TestRequiredDocumentUploader {
   }
 
   private static RequiredDocumentUploader uploaderWithPending(String pendingType) {
-    return new RequiredDocumentUploader() {
+    return new RequiredDocumentUploader(){
       private final List<LegalDocument> docs = new ArrayList<>();
       private String pending = pendingType;
 
       @Override
-      public List<LegalDocument> getSupplierDocuments() { return docs; }
+      public List<LegalDocument> getSupplierDocuments() {
+        return docs;
+      }
 
       @Override
       public void setSupplierDocuments(List<LegalDocument> d) {
@@ -121,16 +132,24 @@ class TestRequiredDocumentUploader {
       }
 
       @Override
-      public String getPendingDocumentType() { return pending; }
+      public String getPendingDocumentType() {
+        return pending;
+      }
 
       @Override
-      public void setPendingDocumentType(String t) { pending = t; }
+      public void setPendingDocumentType(String t) {
+        pending = t;
+      }
 
       @Override
-      public String getObjectId() { return "test-obj"; }
+      public String getObjectId() {
+        return "test-obj";
+      }
 
       @Override
-      public LegalDocumentObjectType getObjectType() { return LegalDocumentObjectType.SUPPLIER; }
+      public LegalDocumentObjectType getObjectType() {
+        return LegalDocumentObjectType.SUPPLIER;
+      }
 
       @Override
       public LegalDocument saveDocument(LegalDocument doc) {

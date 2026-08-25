@@ -33,9 +33,9 @@ public class OpenSearchRagTool implements SmartWorkflowTool {
     String collection = (String) args.get("collection");
     String query = (String) args.get("query");
     int maxResults = Optional.ofNullable((Integer) args.get("maxResults"))
-      .orElse(-1);
+        .orElse(-1);
     double minScore = Optional.ofNullable((Double) args.get("minScore"))
-      .orElse(Double.NaN);
+        .orElse(Double.NaN);
     return new OpenSearchRetriever().search(collection, query, maxResults, minScore);
   }
 }

@@ -12,7 +12,7 @@ import jakarta.inject.Named;
 
 @Named(value = "validationFindingHelper")
 @ApplicationScoped
-public class ValidationFindingHelper implements  Serializable {
+public class ValidationFindingHelper implements Serializable {
 
   private static final long serialVersionUID = 1L;
 

@@ -37,8 +37,8 @@ public abstract class AbstractMockRepository<T> {
       return Ivy.wf().findCase(caseUuid);
     });
     String json = Optional.ofNullable(wfCase)
-      .map(c -> c.customFields().textField(getField()).getOrNull())
-      .orElse(null);
+        .map(c -> c.customFields().textField(getField()).getOrNull())
+        .orElse(null);
     return fromJson(json);
   }
 

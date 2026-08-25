@@ -15,23 +15,23 @@ import ch.ivyteam.ivy.environment.Ivy;
 public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrail {
 
   private static final String FAILURE_MESSAGE = "The AI response was blocked because it contains sensitive data such as API keys or private keys";
-  
+
   private interface Patterns {
     Pattern SK_KEY = Pattern.compile(
         "\\bsk-(?:[a-zA-Z0-9_]+-)*[a-zA-Z0-9_]{20,}\\b");
-  
+
     Pattern AWS_KEY = Pattern.compile(
         "\\b(?:AKIA|ASIA)[0-9A-Z]{16}\\b");
-  
+
     Pattern GITHUB_TOKEN = Pattern.compile(
         "\\bgh[posr]_[a-zA-Z0-9]{36}\\b|\\bgithub_pat_[a-zA-Z0-9_]{82}\\b");
-  
+
     Pattern GOOGLE_API_KEY = Pattern.compile(
         "\\bAIza[0-9A-Za-z_-]{35}\\b");
-  
+
     Pattern XAI_KEY = Pattern.compile(
         "\\bxai-[a-zA-Z0-9]{50,}\\b");
-  
+
     Pattern PRIVATE_KEY = Pattern.compile(
         "-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----");
   }
@@ -59,10 +59,10 @@ public class SensitiveDataOutputGuardrail implements SmartWorkflowOutputGuardrai
 
   private static Set<String> loadConfiguredApiKeys() {
     var secrets = ChatModelFactory.providers().stream()
-      .flatMap(provider -> provider.secretsVars().stream())
-      .map(varName -> Ivy.var().get(varName))
-      .filter(StringUtils::isNotBlank)
-      .collect(Collectors.toSet());
+        .flatMap(provider -> provider.secretsVars().stream())
+        .map(varName -> Ivy.var().get(varName))
+        .filter(StringUtils::isNotBlank)
+        .collect(Collectors.toSet());
     return secrets;
   }
 

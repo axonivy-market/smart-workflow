@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.observability.openinference;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,7 +57,7 @@ public class OpenInferenceTracing implements AiListenerProvider {
     this.options = MessageOptions.fromIvyVar();
     this.collector = new OpenInferenceCollector(provider, model)
         .hideInputMessages(options.hideInput())
-        .hideOutputMessages(options.hideOutput()) ;
+        .hideOutputMessages(options.hideOutput());
   }
 
   public record MessageOptions(boolean hideInput, boolean hideOutput) {
@@ -81,14 +80,14 @@ public class OpenInferenceTracing implements AiListenerProvider {
       return List.of();
     }
     return List.of(
-      new InitListener(),
-      new CompletedListener(),
-      new RequestListener(),
-      new ResponseListener(),
-      new ErrorListener(),
-      new ToolListener(),
-      new InputGuardrailTracingListener(),
-      new OutputGuardrailTracingListener());
+        new InitListener(),
+        new CompletedListener(),
+        new RequestListener(),
+        new ResponseListener(),
+        new ErrorListener(),
+        new ToolListener(),
+        new InputGuardrailTracingListener(),
+        new OutputGuardrailTracingListener());
   }
 
   private class InitListener implements AiServiceStartedListener {
@@ -102,7 +101,7 @@ public class OpenInferenceTracing implements AiListenerProvider {
   }
 
   private class CompletedListener implements AiServiceCompletedListener {
-    
+
     @Override
     public void onEvent(AiServiceCompletedEvent event) {
       agentSpan.result(null);
@@ -128,14 +127,14 @@ public class OpenInferenceTracing implements AiListenerProvider {
       llmSpan.close();
 
       Optional.ofNullable(event.response().aiMessage()).stream()
-        .filter(AiMessage::hasToolExecutionRequests)
-        .flatMap(msg -> msg.toolExecutionRequests().stream()).forEachOrdered(request -> {
-          ToolCollector toolCollector = new ToolCollector(options);
-          toolCollector.onRequestExecution(request);
-          Span<Void> toolSpan = Span.open().instance(
-            () -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
-          toolExecutions.put(request.id(), new ToolExecution(toolSpan, toolCollector));
-      });
+          .filter(AiMessage::hasToolExecutionRequests)
+          .flatMap(msg -> msg.toolExecutionRequests().stream()).forEachOrdered(request -> {
+            ToolCollector toolCollector = new ToolCollector(options);
+            toolCollector.onRequestExecution(request);
+            Span<Void> toolSpan = Span.open().instance(
+                () -> new AiSpan("Tool", () -> toolCollector.getAttributes()));
+            toolExecutions.put(request.id(), new ToolExecution(toolSpan, toolCollector));
+          });
     }
   }
 
@@ -177,10 +176,11 @@ public class OpenInferenceTracing implements AiListenerProvider {
 
     @Override
     public void onEvent(InputGuardrailExecutedEvent event) {
-      String inputMessage = options.hideInput ? null : Optional.ofNullable(event.request())
-          .map(r -> r.userMessage())
-          .map(OpenInferenceCollector::textOf)
-          .orElse(null);
+      String inputMessage = options.hideInput ? null
+          : Optional.ofNullable(event.request())
+              .map(r -> r.userMessage())
+              .map(OpenInferenceCollector::textOf)
+              .orElse(null);
       String guardrailName = event.guardrailName();
       traceGuardrail(event, "INPUT", inputMessage, guardrailName);
     }
@@ -190,11 +190,12 @@ public class OpenInferenceTracing implements AiListenerProvider {
 
     @Override
     public void onEvent(OutputGuardrailExecutedEvent event) {
-      String outputMessage = options.hideOutput ? null : Optional.ofNullable(event.request())
-          .map(r -> r.responseFromLLM())
-          .map(r -> r.aiMessage())
-          .map(OpenInferenceCollector::resolveContent)
-          .orElse(null);
+      String outputMessage = options.hideOutput ? null
+          : Optional.ofNullable(event.request())
+              .map(r -> r.responseFromLLM())
+              .map(r -> r.aiMessage())
+              .map(OpenInferenceCollector::resolveContent)
+              .orElse(null);
       String guardrailName = event.guardrailName();
       traceGuardrail(event, "OUTPUT", outputMessage, guardrailName);
     }

@@ -5,8 +5,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.LogLineSe
 
 public class LogLineBuilder {
 
-  private LogLineBuilder() {
-  }
+  private LogLineBuilder() {}
 
   public static LogLine of(LogLineSeverity severity, String message) {
     return createBase(severity, message);

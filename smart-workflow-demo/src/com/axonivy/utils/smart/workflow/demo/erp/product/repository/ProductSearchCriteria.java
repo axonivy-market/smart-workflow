@@ -46,8 +46,7 @@ public class ProductSearchCriteria {
   @Description("Active status filter. Leave null if not filtering by active status.")
   private Boolean active;
 
-  public ProductSearchCriteria() {
-  }
+  public ProductSearchCriteria() {}
 
   public String getProductId() {
     return productId;
@@ -146,9 +145,9 @@ public class ProductSearchCriteria {
   }
 
   public boolean hasAnyFilter() {
-    return StringUtils.isNotBlank(productId) || StringUtils.isNotBlank(nameContains) 
-        || StringUtils.isNotBlank(descriptionContains) || category != null 
-        || StringUtils.isNotBlank(categoryId) || brand != null 
+    return StringUtils.isNotBlank(productId) || StringUtils.isNotBlank(nameContains)
+        || StringUtils.isNotBlank(descriptionContains) || category != null
+        || StringUtils.isNotBlank(categoryId) || brand != null
         || StringUtils.isNotBlank(brandId) || StringUtils.isNotBlank(unitPrice)
         || minUnitPrice != null || maxUnitPrice != null
         || active != null;

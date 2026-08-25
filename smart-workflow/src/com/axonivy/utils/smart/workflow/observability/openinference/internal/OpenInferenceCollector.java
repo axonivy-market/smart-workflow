@@ -31,7 +31,7 @@ public class OpenInferenceCollector {
 
   private String provider;
   private String model;
-  
+
   private boolean hideInput = false;
   private boolean hideOutput = false;
 

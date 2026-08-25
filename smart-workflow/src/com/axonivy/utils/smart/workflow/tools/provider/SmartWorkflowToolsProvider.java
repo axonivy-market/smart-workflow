@@ -15,7 +15,9 @@ import dev.langchain4j.service.tool.ToolProviderResult;
 
 public interface SmartWorkflowToolsProvider {
 
-  default String name() { return getClass().getSimpleName(); }
+  default String name() {
+    return getClass().getSimpleName();
+  }
 
   List<SmartWorkflowTool> getTools();
 
