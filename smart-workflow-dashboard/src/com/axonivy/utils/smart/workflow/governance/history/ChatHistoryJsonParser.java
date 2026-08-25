@@ -10,12 +10,12 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 public class ChatHistoryJsonParser {
 
-  private static final String FIELD_TOTAL_TOKENS  = "totalTokens";
-  private static final String FIELD_INPUT_TOKENS  = "inputTokens";
+  private static final String FIELD_TOTAL_TOKENS = "totalTokens";
+  private static final String FIELD_INPUT_TOKENS = "inputTokens";
   private static final String FIELD_OUTPUT_TOKENS = "outputTokens";
-  private static final String FIELD_MODEL_NAME    = "modelName";
-  private static final String FIELD_DURATION_MS   = "durationMs";
-  public static final String  UNKNOWN_MODEL       = "unknown";
+  private static final String FIELD_MODEL_NAME = "modelName";
+  private static final String FIELD_DURATION_MS = "durationMs";
+  public static final String UNKNOWN_MODEL = "unknown";
 
   private static final String PARSE_FAILURE_MESSAGE = "ChatHistoryJsonParser: failed to parse %s for caseUuid=%s: %s";
 
@@ -27,7 +27,8 @@ public class ChatHistoryJsonParser {
   private ChatHistoryJsonParser() {}
 
   public static int getMessageCount(AgentConversationEntry entry) {
-    if (entry == null || entry.getMessagesJson() == null) return -1;
+    if (entry == null || entry.getMessagesJson() == null)
+      return -1;
     try {
       JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getMessagesJson());
       return array.isArray() ? array.size() : -1;
@@ -57,8 +58,8 @@ public class ChatHistoryJsonParser {
     long durationSum = 0L;
     int durationCount = 0;
     for (JsonNode node : array) {
-      totalTokens  += longValue(node, FIELD_TOTAL_TOKENS);
-      inputTokens  += longValue(node, FIELD_INPUT_TOKENS);
+      totalTokens += longValue(node, FIELD_TOTAL_TOKENS);
+      inputTokens += longValue(node, FIELD_INPUT_TOKENS);
       outputTokens += longValue(node, FIELD_OUTPUT_TOKENS);
       JsonNode dur = node.get(FIELD_DURATION_MS);
       if (dur != null && dur.isNumber()) {
@@ -71,7 +72,8 @@ public class ChatHistoryJsonParser {
   }
 
   private static String extractModelName(JsonNode array) {
-    if (array.isEmpty()) return UNKNOWN_MODEL;
+    if (array.isEmpty())
+      return UNKNOWN_MODEL;
     JsonNode modelNode = array.get(0).get(FIELD_MODEL_NAME);
     return (modelNode != null && !modelNode.isNull()) ? modelNode.asText() : UNKNOWN_MODEL;
   }

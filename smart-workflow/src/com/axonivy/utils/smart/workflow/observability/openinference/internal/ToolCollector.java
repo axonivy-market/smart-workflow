@@ -30,8 +30,7 @@ public class ToolCollector {
         Attribute.attribute(
             SemanticConventions.TOOL_NAME, request.name()),
         Attribute.attribute(
-            SemanticConventions.TOOL_CALL_ID, request.id())
-    ));
+            SemanticConventions.TOOL_CALL_ID, request.id())));
   }
 
   public void onExecuted(ToolExecutedEvent event) {

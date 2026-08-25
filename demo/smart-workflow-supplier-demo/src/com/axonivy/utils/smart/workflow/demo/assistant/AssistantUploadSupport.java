@@ -48,8 +48,7 @@ public interface AssistantUploadSupport<T> {
     return List.of();
   }
 
-  default void setUploadedDocuments(List<UploadedDocumentEntry> docs) {
-  }
+  default void setUploadedDocuments(List<UploadedDocumentEntry> docs) {}
 
   default String getAgentSubProcessSignature() {
     return null;
@@ -67,41 +66,39 @@ public interface AssistantUploadSupport<T> {
     return null;
   }
 
-  default void setAgentUserMessage(String message) {
-  }
+  default void setAgentUserMessage(String message) {}
 
   default List<AssistantChatMessage> getAgentChatHistory() {
     return List.of();
   }
 
-  default void setAgentChatHistory(List<AssistantChatMessage> history) {
-  }
+  default void setAgentChatHistory(List<AssistantChatMessage> history) {}
 
   interface Cms {
-    String BASE              = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/";
-    String NO_FILE_UPLOADED  = BASE + "NoFileUploadedMessage";
-    String INVALID_FILE      = BASE + "InvalidFileMessage";
-    String FILE_EMPTY        = BASE + "FileEmptyMessage";
-    String FILES_QUEUED_TPL  = BASE + "FilesQueuedTemplate";
-    String FILES_READY_TPL   = BASE + "FilesReadyTemplate";
-    String FILE_READY        = BASE + "FileUploadedReadyMessage";
-    String CONFIRM_PARSE     = BASE + "ConfirmParseRequired";
-    String NO_VALUES         = BASE + "NoValuesExtracted";
-    String PARSE_SUCCESS     = BASE + "ParseSuccess";
-    String PARSE_FAILED_TPL  = BASE + "ParseFailedTemplate";
+    String BASE = "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/";
+    String NO_FILE_UPLOADED = BASE + "NoFileUploadedMessage";
+    String INVALID_FILE = BASE + "InvalidFileMessage";
+    String FILE_EMPTY = BASE + "FileEmptyMessage";
+    String FILES_QUEUED_TPL = BASE + "FilesQueuedTemplate";
+    String FILES_READY_TPL = BASE + "FilesReadyTemplate";
+    String FILE_READY = BASE + "FileUploadedReadyMessage";
+    String CONFIRM_PARSE = BASE + "ConfirmParseRequired";
+    String NO_VALUES = BASE + "NoValuesExtracted";
+    String PARSE_SUCCESS = BASE + "ParseSuccess";
+    String PARSE_FAILED_TPL = BASE + "ParseFailedTemplate";
   }
 
   interface Format {
     String DOCUMENT_SEPARATOR = "--- DOCUMENT: %s ---\n";
-    String GUIDANCE_HEADER    = "Question Handling Guidelines:\n";
-    String GUIDANCE_LINE      = "- When the user asks \"%s\": %s\n";
+    String GUIDANCE_HEADER = "Question Handling Guidelines:\n";
+    String GUIDANCE_LINE = "- When the user asks \"%s\": %s\n";
     String DEFAULT_AGENT_ERROR = "I could not process your question.";
-    String AGENT_ERROR        = "Error: %s";
+    String AGENT_ERROR = "Error: %s";
   }
 
   interface Param {
-    String QUESTION         = "question";
-    String CHAT_HISTORY     = "chatHistory";
+    String QUESTION = "question";
+    String CHAT_HISTORY = "chatHistory";
     String GUIDANCE_CONTEXT = "guidanceContext";
   }
 
@@ -126,7 +123,7 @@ public interface AssistantUploadSupport<T> {
   default void addUploadedDocument(FileUploadEvent event) {
     UploadedFile uploadedFile = event != null ? event.getFile() : null;
     String fileName = uploadedFile != null ? uploadedFile.getFileName() : null;
-    byte[] content  = uploadedFile != null ? uploadedFile.getContent()  : null;
+    byte[] content = uploadedFile != null ? uploadedFile.getContent() : null;
     addUploadedDocument(fileName, content);
   }
 

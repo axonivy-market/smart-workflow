@@ -45,7 +45,7 @@ public class ChatBean implements Serializable {
 
     public String getHtmlContent() {
       if ("assistant".equals(role) || "bot".equals(role)) {
-        
+
       }
       return content;
     }
@@ -74,7 +74,7 @@ public class ChatBean implements Serializable {
     chatHistory.add(new ChatMessage("user", userMessage));
     userMessage = "";
   }
-  
+
   public void getAnswer() {
     try {
       Map<String, Object> params = new HashMap<>();
@@ -88,10 +88,10 @@ public class ChatBean implements Serializable {
       chatHistory.add(new ChatMessage("bot", "Error: " + e.getMessage()));
     }
   }
-  
+
   private String getAllUserMessage() {
     StringBuilder builder = new StringBuilder();
-    for (ChatMessage msg:chatHistory) {
+    for (ChatMessage msg : chatHistory) {
       if (msg.getRole().equals("user")) {
         builder.append(msg.getContent()).append(". ");
       }

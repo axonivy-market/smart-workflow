@@ -27,7 +27,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 public class SupplierRepository extends AbstractMockRepository<Supplier> {
 
   private static final String FIELD = "MOCK_SUPPLIERS";
-  private static final TypeReference<List<Supplier>> LIST_TYPE = new TypeReference<List<Supplier>>() {};
+  private static final TypeReference<List<Supplier>> LIST_TYPE = new TypeReference<List<Supplier>>(){};
 
   private static SupplierRepository instance;
 
@@ -59,7 +59,7 @@ public class SupplierRepository extends AbstractMockRepository<Supplier> {
         contact("Klaus", "Holzmann", "CEO", "k.holzmann@holzmann-partner.de", "+49 40 9876543"),
         banking("DE12500105170648489890", "BELADEBEXXX", "Deutsche Bank"),
         Arrays.asList(
-            certification(LegalDocumentType.ISO_9001,  "DE-2021-00781", "2026-05-31", "iso9001_holzmann.pdf",  true),
+            certification(LegalDocumentType.ISO_9001, "DE-2021-00781", "2026-05-31", "iso9001_holzmann.pdf", true),
             certification(LegalDocumentType.ISO_14001, "DE-2021-00782", "2026-05-31", "iso14001_holzmann.pdf", true))));
 
     list.add(supplier("SUP-2021-0002", "TechVision AG", "AG", "DE345678901", "HRB 112233",
@@ -96,7 +96,7 @@ public class SupplierRepository extends AbstractMockRepository<Supplier> {
         contact("Stefan", "Klein", "CEO", "s.klein@nordelektro.de", "+49 30 6789012"),
         banking("DE75512108001245126199", "SSKMDEMM", "Stadtsparkasse"),
         Arrays.asList(
-            certification(LegalDocumentType.ISO_9001,  "DE-2020-00333", "2025-08-31", "iso9001_nordelektro.pdf",  true),
+            certification(LegalDocumentType.ISO_9001, "DE-2020-00333", "2025-08-31", "iso9001_nordelektro.pdf", true),
             certification(LegalDocumentType.ISO_27001, "DE-2020-00334", "2025-08-31", "iso27001_nordelektro.pdf", true))));
 
     list.add(supplier("SUP-2021-0005", "AlpenFloor AG", "AG", "AT678901234", "FN 123456a",
@@ -124,7 +124,7 @@ public class SupplierRepository extends AbstractMockRepository<Supplier> {
         contact("Hans", "Müller", "Director", "h.mueller@bauprofi.ch", "+41 44 9012345"),
         banking("CH5604835012345678009", "CRESCHZZ80A", "Credit Suisse"),
         Arrays.asList(
-            certification(LegalDocumentType.ISO_9001,  "CH-2019-00145", "2025-06-30", "iso9001_bauprofi.pdf",  true),
+            certification(LegalDocumentType.ISO_9001, "CH-2019-00145", "2025-06-30", "iso9001_bauprofi.pdf", true),
             certification(LegalDocumentType.ISO_14001, "CH-2019-00146", "2025-06-30", "iso14001_bauprofi.pdf", true))));
 
     list.add(supplier("SUP-2022-0008", "SafetyFirst AG", "AG", "CHE012345678", "CHE-234.567.890",
@@ -135,7 +135,7 @@ public class SupplierRepository extends AbstractMockRepository<Supplier> {
         banking("CH9300762011623852957", "UBSWCHZH80A", "UBS"),
         Arrays.asList(
             certification(LegalDocumentType.ISO_9001, "CH-2022-00512", "2025-10-31", "iso9001_safetyfirst.pdf", true),
-            certification(LegalDocumentType.GDPR_DPA, null,            null,         "gdpr_dpa_safetyfirst.pdf", true))));
+            certification(LegalDocumentType.GDPR_DPA, null, null, "gdpr_dpa_safetyfirst.pdf", true))));
 
     list.add(supplier("SUP-2021-0009", "MeasureTech GmbH", "GmbH", "DE123456780", "HRB 556677",
         "Tools & Hardware",
@@ -144,7 +144,7 @@ public class SupplierRepository extends AbstractMockRepository<Supplier> {
         contact("Frank", "Vogel", "Sales Director", "f.vogel@measuretech.de", "+49 211 1234567"),
         banking("DE68210501700012345678", "SSKMDEMMXXX", "Sparkasse"),
         Arrays.asList(
-            certification(LegalDocumentType.ISO_9001,  "DE-2021-00678", "2026-07-31", "iso9001_measuretech.pdf",  true),
+            certification(LegalDocumentType.ISO_9001, "DE-2021-00678", "2026-07-31", "iso9001_measuretech.pdf", true),
             certification(LegalDocumentType.ISO_27001, "DE-2021-00679", "2026-07-31", "iso27001_measuretech.pdf", false))));
 
     list.add(supplier("SUP-2023-0010", "ItalFloor s.r.l.", "s.r.l.", "IT234567890", "MI-2345678",
@@ -154,7 +154,7 @@ public class SupplierRepository extends AbstractMockRepository<Supplier> {
         contact("Marco", "Rossi", "Export Director", "m.rossi@italfloor.it", "+39 02 2345678"),
         banking("IT60X0542811101000000123456", "ICRAITRR", "UniCredit"),
         Arrays.asList(
-            certification(LegalDocumentType.ISO_9001,  "IT-2023-00201", "2026-02-28", "iso9001_italfloor.pdf",  true),
+            certification(LegalDocumentType.ISO_9001, "IT-2023-00201", "2026-02-28", "iso9001_italfloor.pdf", true),
             certification(LegalDocumentType.ISO_14001, "IT-2023-00202", "2026-02-28", "iso14001_italfloor.pdf", false))));
 
     return list;

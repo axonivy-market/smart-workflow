@@ -37,7 +37,7 @@ import jakarta.inject.Named;
 @ViewScoped
 public class SupplierOnboardingApprovalBean
     implements Serializable, CertificationUploader, RequiredDocumentUploader, RiskLevelSupport, DocumentDisplaySupport,
-               SupplierFormSupport, LogicCloseSupport {
+    SupplierFormSupport, LogicCloseSupport {
 
   private static final long serialVersionUID = 1L;
   private static final String ACTION_FORMAT = "%s approval decision";
@@ -81,13 +81,13 @@ public class SupplierOnboardingApprovalBean
 
   public AuditTrailEntry buildApprovalAuditEntry(ApprovalDecision decision, String comment,
       String actor, String timestamp, ApprovalStage stage) {
-        AuditTrailEntry entry = new AuditTrailEntry();
+    AuditTrailEntry entry = new AuditTrailEntry();
     entry.setTimestamp(Objects.requireNonNullElseGet(timestamp, () -> Instant.now().toString()));
     entry.setActor(actor);
     entry.setActorType(AuditActorType.USER);
     entry.setEntryType(AuditEntryType.APPROVAL);
     entry.setAction(
-    String.format(ACTION_FORMAT, stage == null ? "" : stage.name()));
+        String.format(ACTION_FORMAT, stage == null ? "" : stage.name()));
     entry.setTechnicalDetail(null);
     entry.setStage(stage);
     entry.setDecision(decision);

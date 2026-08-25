@@ -36,16 +36,20 @@ public class OnboardingRequestService {
     }
 
     if ("APPROVAL".equalsIgnoreCase(routingDecision)) {
-      if (req != null) req.setStatus(OnboardingStatus.APPROVAL_PENDING);
+      if (req != null)
+        req.setStatus(OnboardingStatus.APPROVAL_PENDING);
       return "Green path selected. Awaiting supervisor and QM/ISM approvals.";
     } else if ("CLARIFICATION".equalsIgnoreCase(routingDecision)) {
-      if (req != null) req.setStatus(OnboardingStatus.CLARIFICATION_REQUIRED);
+      if (req != null)
+        req.setStatus(OnboardingStatus.CLARIFICATION_REQUIRED);
       return "Yellow path selected. Clarification required before re-evaluation.";
     } else if ("DECLINE".equalsIgnoreCase(routingDecision)) {
-      if (req != null) req.setStatus(OnboardingStatus.DECLINED);
+      if (req != null)
+        req.setStatus(OnboardingStatus.DECLINED);
       return "Red path selected. Request prepared for decline.";
     } else {
-      if (req != null) req.setStatus(OnboardingStatus.RISK_SCORING);
+      if (req != null)
+        req.setStatus(OnboardingStatus.RISK_SCORING);
       return "Routing decision unavailable. Defaulting to risk scoring state.";
     }
   }
@@ -80,7 +84,8 @@ public class OnboardingRequestService {
     String supplierName = (req != null && req.getSupplier() != null
         && req.getSupplier().getBusinessName() != null
         && !req.getSupplier().getBusinessName().isBlank())
-        ? req.getSupplier().getBusinessName() : "Supplier";
+            ? req.getSupplier().getBusinessName()
+            : "Supplier";
     return "Supplier Onboarding Pending Approval - " + supplierName;
   }
 }

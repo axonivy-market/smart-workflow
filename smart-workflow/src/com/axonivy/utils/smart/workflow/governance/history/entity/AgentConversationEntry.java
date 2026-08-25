@@ -13,19 +13,19 @@ public class AgentConversationEntry {
   private static final String SERIALIZATION_FAILURE_MESSAGE = "AgentConversationEntry: failed to serialize %s for caseUuid=%s: %s";
 
   public record ToolExecution(
-      @JsonProperty("toolName")   String toolName,
-      @JsonProperty("arguments")  String arguments,
+      @JsonProperty("toolName") String toolName,
+      @JsonProperty("arguments") String arguments,
       @JsonProperty("resultText") String resultText,
       @JsonProperty("executedAt") String executedAt) {}
 
   public record GuardrailExecution(
-      @JsonProperty("guardrailName")  String guardrailName,
-      @JsonProperty("type")           String type,
-      @JsonProperty("result")         String result,
-      @JsonProperty("message")        String message,
+      @JsonProperty("guardrailName") String guardrailName,
+      @JsonProperty("type") String type,
+      @JsonProperty("result") String result,
+      @JsonProperty("message") String message,
       @JsonProperty("failureMessage") String failureMessage,
-      @JsonProperty("durationMs")     Long durationMs,
-      @JsonProperty("executedAt")     String executedAt) {}
+      @JsonProperty("durationMs") Long durationMs,
+      @JsonProperty("executedAt") String executedAt) {}
 
   private String caseUuid;
   private String taskUuid;
@@ -38,32 +38,77 @@ public class AgentConversationEntry {
   private String toolExecutionsJson;
   private String guardrailExecutionsJson;
 
-  public String getCaseUuid() { return caseUuid; }
-  public void setCaseUuid(String caseUuid) { this.caseUuid = caseUuid; }
+  public String getCaseUuid() {
+    return caseUuid;
+  }
 
-  public String getTaskUuid() { return taskUuid; }
-  public void setTaskUuid(String taskUuid) { this.taskUuid = taskUuid; }
+  public void setCaseUuid(String caseUuid) {
+    this.caseUuid = caseUuid;
+  }
 
-  public String getAgentId() { return agentId; }
-  public void setAgentId(String agentId) { this.agentId = agentId; }
+  public String getTaskUuid() {
+    return taskUuid;
+  }
 
-  public String getAgentName() { return agentName; }
-  public void setAgentName(String agentName) { this.agentName = agentName; }
+  public void setTaskUuid(String taskUuid) {
+    this.taskUuid = taskUuid;
+  }
 
-  public String getProcessName() { return processName; }
-  public void setProcessName(String processName) { this.processName = processName; }
+  public String getAgentId() {
+    return agentId;
+  }
 
-  public String getMessagesJson() { return messagesJson; }
-  public void setMessagesJson(String messagesJson) { this.messagesJson = messagesJson; }
+  public void setAgentId(String agentId) {
+    this.agentId = agentId;
+  }
 
-  public String getTokenUsageJson() { return tokenUsageJson; }
-  public void setTokenUsageJson(String tokenUsageJson) { this.tokenUsageJson = tokenUsageJson; }
+  public String getAgentName() {
+    return agentName;
+  }
 
-  public String getLastUpdated() { return lastUpdated; }
-  public void setLastUpdated(String lastUpdated) { this.lastUpdated = lastUpdated; }
+  public void setAgentName(String agentName) {
+    this.agentName = agentName;
+  }
 
-  public String getToolExecutionsJson() { return toolExecutionsJson; }
-  public void setToolExecutionsJson(String toolExecutionsJson) { this.toolExecutionsJson = toolExecutionsJson; }
+  public String getProcessName() {
+    return processName;
+  }
+
+  public void setProcessName(String processName) {
+    this.processName = processName;
+  }
+
+  public String getMessagesJson() {
+    return messagesJson;
+  }
+
+  public void setMessagesJson(String messagesJson) {
+    this.messagesJson = messagesJson;
+  }
+
+  public String getTokenUsageJson() {
+    return tokenUsageJson;
+  }
+
+  public void setTokenUsageJson(String tokenUsageJson) {
+    this.tokenUsageJson = tokenUsageJson;
+  }
+
+  public String getLastUpdated() {
+    return lastUpdated;
+  }
+
+  public void setLastUpdated(String lastUpdated) {
+    this.lastUpdated = lastUpdated;
+  }
+
+  public String getToolExecutionsJson() {
+    return toolExecutionsJson;
+  }
+
+  public void setToolExecutionsJson(String toolExecutionsJson) {
+    this.toolExecutionsJson = toolExecutionsJson;
+  }
 
   public List<ToolExecution> getToolExecutions() {
     return List.copyOf(JsonUtils.jsonValueToEntities(toolExecutionsJson, ToolExecution.class));
@@ -78,8 +123,13 @@ public class AgentConversationEntry {
     }
   }
 
-  public String getGuardrailExecutionsJson() { return guardrailExecutionsJson; }
-  public void setGuardrailExecutionsJson(String guardrailExecutionsJson) { this.guardrailExecutionsJson = guardrailExecutionsJson; }
+  public String getGuardrailExecutionsJson() {
+    return guardrailExecutionsJson;
+  }
+
+  public void setGuardrailExecutionsJson(String guardrailExecutionsJson) {
+    this.guardrailExecutionsJson = guardrailExecutionsJson;
+  }
 
   public List<GuardrailExecution> getGuardrailExecutions() {
     return List.copyOf(JsonUtils.jsonValueToEntities(guardrailExecutionsJson, GuardrailExecution.class));

@@ -21,8 +21,8 @@ public final class RiskScoreHelper {
     double ratio = (double) resolved / findings.size();
 
     int newFinancial = boost(originalFinancial, ratio);
-    int newPolicy    = boost(originalPolicy,    ratio);
-    int newCert      = boost(originalCert,      ratio);
+    int newPolicy = boost(originalPolicy, ratio);
+    int newCert = boost(originalCert, ratio);
     int newAggregate = (newFinancial + newPolicy + newCert) / 3;
 
     score.setFinancialStability(newFinancial);

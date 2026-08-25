@@ -20,7 +20,7 @@ public class SupplierPolicyRuleRepository extends AbstractMockRepository<Supplie
   private static final String FIELD = "MOCK_POLICY_RULES";
   private static final String ILLEGAL_ARGUMENT_MESSAGE = "SupplierPolicyRule target cannot be blank";
   private static final String NULL_ARGUMENT_MESSAGE = "SupplierPolicyRule cannot be null";
-  private static final TypeReference<List<SupplierPolicyRule>> LIST_TYPE = new TypeReference<List<SupplierPolicyRule>>() {};
+  private static final TypeReference<List<SupplierPolicyRule>> LIST_TYPE = new TypeReference<List<SupplierPolicyRule>>(){};
 
   private static SupplierPolicyRuleRepository instance;
 

@@ -21,9 +21,9 @@ public class WebSearchTool implements SmartWorkflowTool {
   @Override
   public String description() {
     return """
-        Search the web for current information using the given query.
-        Returns a list of search results with titles, URLs, and content snippets.
-        Use this tool to find up-to-date or factual information from the internet.""";
+      Search the web for current information using the given query.
+      Returns a list of search results with titles, URLs, and content snippets.
+      Use this tool to find up-to-date or factual information from the internet.""";
   }
 
   @Override

@@ -50,7 +50,7 @@ public class IvySubProcessToolExecutor {
     }
     try {
       return pCaller.call();
-    } catch(Exception ex) {
+    } catch (Exception ex) {
       if (ex.getCause() instanceof BpmError error) {
         error.setAttribute("tool.params", params);
         throw error;

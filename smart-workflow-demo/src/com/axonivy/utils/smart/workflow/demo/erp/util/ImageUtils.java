@@ -82,14 +82,14 @@ public final class ImageUtils {
     }
 
     String extension = getFileExtension(filename).toLowerCase();
-      return switch (extension) {
-          case "jpg", "jpeg" -> "image/jpeg";
-          case "png" -> "image/png";
-          case "gif" -> "image/gif";
-          case "bmp" -> "image/bmp";
-          case "webp" -> "image/webp";
-          default -> "application/octet-stream";
-      };
+    return switch (extension) {
+      case "jpg", "jpeg" -> "image/jpeg";
+      case "png" -> "image/png";
+      case "gif" -> "image/gif";
+      case "bmp" -> "image/bmp";
+      case "webp" -> "image/webp";
+      default -> "application/octet-stream";
+    };
   }
 
   public static String createDataUrl(String base64String, String filename) {

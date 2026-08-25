@@ -73,12 +73,12 @@ final class OpenSearchPayloadBuilder {
 
   private static void buildMetaNode(ObjectNode mappings, int dimension, OpenSearchIndexMeta meta) {
     mappings.putObject(Meta.META)
-    .put(Fields.DIMENSION, dimension)
-    .put(Meta.CHUNK_SIZE, meta.chunkSize())
-    .put(Meta.CHUNK_OVERLAP, meta.chunkOverlap())
-    .put(Meta.CREATED_AT, meta.createdAt())
-    .put(Meta.EMBEDDING_PROVIDER, StringUtils.defaultIfBlank(meta.embeddingProvider(), null))
-    .put(Meta.EMBEDDING_MODEL, StringUtils.defaultIfBlank(meta.embeddingModel(), null));
+        .put(Fields.DIMENSION, dimension)
+        .put(Meta.CHUNK_SIZE, meta.chunkSize())
+        .put(Meta.CHUNK_OVERLAP, meta.chunkOverlap())
+        .put(Meta.CREATED_AT, meta.createdAt())
+        .put(Meta.EMBEDDING_PROVIDER, StringUtils.defaultIfBlank(meta.embeddingProvider(), null))
+        .put(Meta.EMBEDDING_MODEL, StringUtils.defaultIfBlank(meta.embeddingModel(), null));
   }
 
   public static String buildUpdateLastIngestedBody(OpenSearchIndexMeta currentMeta) {

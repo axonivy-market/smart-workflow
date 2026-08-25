@@ -27,8 +27,7 @@ public class SupplierSearchCriteria {
   @Description("Website URL filter (exact match). Leave null if not filtering by website.")
   private String website;
 
-  public SupplierSearchCriteria() {
-  }
+  public SupplierSearchCriteria() {}
 
   public String getSupplierId() {
     return supplierId;

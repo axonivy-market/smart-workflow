@@ -5,8 +5,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskLevel
 
 public class SupplierRiskScoreBuilder {
 
-  private SupplierRiskScoreBuilder() {
-  }
+  private SupplierRiskScoreBuilder() {}
 
   public static SupplierRiskScore of(int financialStability, int policyCompliance, int certValidity) {
     SupplierRiskScore score = new SupplierRiskScore();

@@ -8,7 +8,6 @@ import dev.langchain4j.model.output.structured.Description;
 
 public class AxonIvySupportTicket {
 
-  
   @Description("Id of support ticket, it's auto-generated")
   private String id;
   @Description("Type of the support ticket. It's an enum field. Example Ivy, Portal, Market")
@@ -27,7 +26,6 @@ public class AxonIvySupportTicket {
   private String solution;
   @Description("stack trace")
   private String stackTrace;
-
 
   @JsonIgnore
   private Employee requestor;
@@ -115,5 +113,5 @@ public class AxonIvySupportTicket {
   public void setStackTrace(String stackTrace) {
     this.stackTrace = stackTrace;
   }
-  
+
 }

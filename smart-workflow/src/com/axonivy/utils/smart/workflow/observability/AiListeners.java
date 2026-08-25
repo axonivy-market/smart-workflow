@@ -13,15 +13,14 @@ public class AiListeners {
 
   public static Stream<AiServiceListener<?>> create(ListenerCtxt ctxt) {
     return providers(ctxt).stream()
-      .flatMap(provider -> provider.provide().stream());
+        .flatMap(provider -> provider.provide().stream());
   }
 
   private static List<AiListenerProvider> providers(ListenerCtxt ctxt) {
     return List.of(
-      new CustomFieldTrackingListener(), 
-      new ChatHistoryListener(ctxt.agentName()),
-      new OpenInferenceTracing(ctxt.provider().name(), ctxt.provider().model())
-    );
+        new CustomFieldTrackingListener(),
+        new ChatHistoryListener(ctxt.agentName()),
+        new OpenInferenceTracing(ctxt.provider().name(), ctxt.provider().model()));
   }
 
   public record ListenerCtxt(AiProvider provider, String agentName) {}

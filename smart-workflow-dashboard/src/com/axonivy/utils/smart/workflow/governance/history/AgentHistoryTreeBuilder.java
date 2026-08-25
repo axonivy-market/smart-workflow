@@ -14,7 +14,6 @@ import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversat
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.GuardrailExecution;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 
-
 public class AgentHistoryTreeBuilder {
 
   public record AgentNode(AgentConversationEntry chat, List<ToolExecution> tools, List<GuardrailExecution> guardrails) {}

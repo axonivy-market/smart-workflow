@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums;
 
-
 public enum OnboardingStatus {
 
   REQUEST("Initial Request"),

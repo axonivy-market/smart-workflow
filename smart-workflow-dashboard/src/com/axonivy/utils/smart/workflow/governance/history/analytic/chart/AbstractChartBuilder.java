@@ -25,12 +25,12 @@ abstract class AbstractChartBuilder<M> {
   protected static final String ANALYTICS_CMS_PATTERN = "/Dialogs/com/axonivy/utils/ai/GovernanceDashboard/Analytics/%s";
 
   interface ChartConfig {
-    int       MIN_TIMELINE_DAYS = 5;
-    int       TOP_N_PROCESSES   = 5;
-    int       BAR_THICKNESS     = 30;
-    IndexAxis AXIS_HORIZONTAL   = IndexAxis.Y;
-    String    LEGEND_RIGHT      = "right";
-    String    STACK_TOKENS      = "tokens";
+    int MIN_TIMELINE_DAYS = 5;
+    int TOP_N_PROCESSES = 5;
+    int BAR_THICKNESS = 30;
+    IndexAxis AXIS_HORIZONTAL = IndexAxis.Y;
+    String LEGEND_RIGHT = "right";
+    String STACK_TOKENS = "tokens";
   }
 
   protected BarChart barModel(List<String> labels, BarOptions options, BarDataset... datasets) {

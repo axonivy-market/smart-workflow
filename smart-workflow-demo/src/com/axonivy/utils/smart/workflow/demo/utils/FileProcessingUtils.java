@@ -18,8 +18,8 @@ public class FileProcessingUtils {
       return null;
     }
     return contentObject.map(ContentObject::values)
-                        .map(values -> values.getFirst().read().inputStream())
-                        .orElse(null);
+        .map(values -> values.getFirst().read().inputStream())
+        .orElse(null);
   }
 
   public static Binary loadBinaryFromCms(String cmsPath) {
@@ -29,8 +29,8 @@ public class FileProcessingUtils {
         return null;
       }
       try (InputStream is = contentObject.map(ContentObject::values)
-                                         .map(values -> values.getFirst().read().inputStream())
-                                         .orElse(null)) {
+          .map(values -> values.getFirst().read().inputStream())
+          .orElse(null)) {
         return new Binary(is.readAllBytes());
       }
     } catch (IOException e) {
