@@ -33,9 +33,21 @@ public class ProductJson {
 
   private static List<String> installerArtifactIds(JsonNode product) {
     return stream(product.path("installers"))
-        .flatMap(installer -> stream(installer.path("data").path("projects")))
-        .map(project -> project.path("artifactId").asText())
-        .toList();
+      .flatMap(ProductJson::installerEntries)
+      .map(entry -> entry.path("artifactId").asText())
+      .toList();
+  }
+
+  private static Stream<JsonNode> installerEntries(JsonNode installer) {
+    var data = installer.path("data");
+    switch (installer.path("id").asText()) {
+      case "maven-import":
+        return stream(data.path("projects"));
+      case "maven-dependency":
+        return stream(data.path("dependencies"));
+      default:
+        return Stream.empty();
+    }
   }
 
   private static Stream<JsonNode> stream(JsonNode node) {
