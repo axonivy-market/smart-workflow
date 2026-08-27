@@ -6,19 +6,12 @@ import java.util.Map;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
-import com.axonivy.utils.smart.workflow.utils.IvyVar;
-import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ch.ivyteam.ivy.engine.rest.service.jersey.security.csrf.DisableCsrfProtection;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.internal.Json;
 import dev.langchain4j.service.tool.AiServiceTool;
 import dev.langchain4j.service.tool.ToolProviderResult;
 import jakarta.inject.Singleton;
@@ -28,6 +21,11 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 
 @Singleton
 @DisableCsrfProtection // no X-Requested-By header
@@ -52,11 +50,11 @@ public class McpService {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   public Response handle(JsonNode request) {
-    if (!IvyVar.bool("AI.Tools.MCP.ExposeTools.Enabled")) {
-      return Response.status(Response.Status.NOT_FOUND)
-        .entity("MCP tool exposure is disabled.")
-        .build();
-    }
+    // if (!IvyVar.bool("AI.Tools.MCP.ExposeTools.Enabled")) {
+    //   return Response.status(Response.Status.NOT_FOUND)
+    //     .entity("MCP tool exposure is disabled.")
+    // .build();
+    // 
     if (request == null || !request.isObject() || !"2.0".equals(request.path("jsonrpc").asText())) {
       return jsonRpcError(null, -32600, "Invalid Request");
     }
@@ -185,7 +183,7 @@ public class McpService {
       return object().put("type", "object");
     }
     try {
-      return JsonUtils.getObjectMapper().readTree(Json.toJson(tool.parameters()));
+      return new ObjectMapper().valueToTree(tool.parameters());
     } catch (Exception ex) {
       Ivy.log().warn("Failed to serialize MCP tool schema for " + tool.name(), ex);
       return object().put("type", "object");
