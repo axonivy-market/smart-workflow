@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-fragment_6_0.xsd"
+    version="6.0">
+  <name>smart-workflow-mcp</name>
+  <servlet>
+    <servlet-name>mcpServlet</servlet-name>
+    <servlet-class>com.axonivy.utils.smart.workflow.mcp.McpServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>mcpServlet</servlet-name>
+    <url-pattern>/mcpeee</url-pattern>
+  </servlet-mapping>
+</web-fragment>
