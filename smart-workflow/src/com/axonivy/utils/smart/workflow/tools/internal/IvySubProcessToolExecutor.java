@@ -19,24 +19,25 @@ public class IvySubProcessToolExecutor {
 
   public static ToolExecutionResultMessage execute(ToolExecutionRequest execTool) {
     String name = execTool.name();
-
-    Optional<SubProcessCallStartEvent> startable = IvyToolsProcesses
+    Optional<SubProcessCallStartEvent> startable = new IvyToolsProcesses()
         .toolStarts().stream()
         .filter(start -> start.description().name().equals(name))
         .findFirst();
-
     if (startable.isEmpty()) {
       // TODO: how does Agentic error handling look like?
       return ToolExecutionResultMessage.from(execTool, "failed to execute tool; unknown ivy-process function");
     }
+    return execute(execTool, startable.get());
+  }
 
-    List<ToolParameter> toolParams = startable.get().description().in().stream()
+  public static ToolExecutionResultMessage execute(ToolExecutionRequest execTool, SubProcessCallStartEvent start) {
+    List<ToolParameter> toolParams = start.description().in().stream()
         .map((StartParameter p) -> new ToolParameter(p.name(), p.description(), p.typeName()))
         .toList();
     var parameters = new JsonProcessParameters()
         .readParams(toolParams, execTool.arguments());
 
-    SubProcessCallResult res = call(startable.get(), parameters);
+    SubProcessCallResult res = call(start, parameters);
     return ToolExecutionResultMessage.from(execTool, Json.toJson(res.asMap()));
   }
 

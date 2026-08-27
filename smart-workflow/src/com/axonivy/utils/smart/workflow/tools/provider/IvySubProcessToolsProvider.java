@@ -8,6 +8,7 @@ import com.axonivy.utils.smart.workflow.tools.internal.IvySubProcessToolExecutor
 import com.axonivy.utils.smart.workflow.tools.internal.IvySubProcessToolSpecs;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 
+import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
@@ -25,13 +26,19 @@ public class IvySubProcessToolsProvider implements ToolProvider {
 
   @Override
   public ToolProviderResult provideTools(ToolProviderRequest provide) {
-    ToolExecutor executor = (request, _) -> IvySubProcessToolExecutor.execute(request).text(); // TODO; user centric memory interpretation!
+    return getTools(new IvyToolsProcesses().toolStarts());
+  }
+
+  public ToolProviderResult getTools(List<SubProcessCallStartEvent> starts) {
     Map<ToolSpecification, ToolExecutor> tools = new HashMap<>();
-    IvyToolsProcesses.toolStarts().stream()
-        .map(IvySubProcessToolSpecs::toTool)
-        .filter(spec -> toolFilter == null || toolFilter.contains(spec.name()))
-        .forEach(spec -> tools.put(spec, executor));
+    starts.stream()
+        .filter(start -> toolFilter == null || toolFilter.contains(start.description().name()))
+        .forEach(start -> tools.put(IvySubProcessToolSpecs.toTool(start), executorFor(start)));
     return new ToolProviderResult(tools);
+  }
+
+  private static ToolExecutor executorFor(SubProcessCallStartEvent start) {
+    return (request, _) -> IvySubProcessToolExecutor.execute(request, start).text();
   }
 
 }
