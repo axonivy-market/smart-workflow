@@ -6,9 +6,9 @@ Use it when AI must go offline immediately: a provider incident, a runaway cost 
 
 It is controlled centrally by one Ivy variable, and it reports a stopped call to your processes as a dedicated BPM error so that you can define a fallback.
 
-## Configuring the Circuit Breaker
+## Configuring the circuit breaker
 
-Set the circuit breaker in `variables.yaml`:
+Set `AI.CircuitBreaker.Enabled` in the **Engine Cockpit**, under **Variables**. The variable ships with this declaration and default:
 
 ```yaml
 Variables:
@@ -20,23 +20,19 @@ Variables:
 ```
 
 | Value | Effect |
-|---|---|
-| `true`  | All agent calls in the application are stopped |
+| --- | --- |
+| `true` | All agent calls in the application are stopped |
 | `false` | Agents run normally |
 
-## Handling a Stopped Agent
+The switch can also be flipped from process code with `CircuitBreakerSignal.stopAll()` and `resumeAll()` — see [Java API](../reference/java-api.md#circuit-breaker).
 
-When the circuit breaker blocks a call, an exception is thrown with the error code `smartworkflow:stop`.
+## Handling a stopped agent
 
-You can handle it with an Error Boundary Event:
-
-1. Add an **Error Boundary Event** to your `AgenticProcessCall` element.
-2. Configure it to catch the error code `smartworkflow:stop`.
-3. Implement your fallback logic — route the case to a human, keep the process on a non-AI path, inform the user that AI is temporarily unavailable, or park the case for a retry once AI is back.
+When the circuit breaker blocks a call, an exception is thrown with the error code `smartworkflow:stop`. Catch it with an **Error Boundary Event** on the agent element and route to a fallback — a human, a non-AI path, a message that AI is temporarily unavailable, or a parked case to retry later. The full recipe is in [Error Codes](../reference/error-codes.md#catching-one).
 
 Every agent call should have such a fallback. That is the point of the circuit breaker: the business process keeps running without AI instead of failing.
 
-### Returning a Stopped Flag from a Subprocess
+### Returning a stopped flag from a subprocess
 
 When your agent lives inside a reusable callable subprocess, the caller usually has to decide what to do. Catch the error inside the subprocess and return it as a result parameter instead of letting it escape:
 
@@ -47,16 +43,11 @@ When your agent lives inside a reusable callable subprocess, the caller usually 
 
 The `SelfContainedAgent` process in the `smart-workflow-demo` project implements exactly this pattern.
 
-## Circuit Breaker Observability
+## Observability
 
-The circuit breaker takes part in guardrail observability like any other guardrail, so a stopped call is visible in both channels described in [Guardrail Observability](GUARDRAILS.md#guardrail-observability):
+The circuit breaker takes part in guardrail observability like any other guardrail, recorded under the guardrail name `CircuitBreakerGuardrail` with the stop reason as its failure message. Use it to confirm afterwards which calls were stopped and when — see [Guardrail records](observability.md#guardrail-records).
 
-- With `AI.Observability.Ivy.Enabled` set to `true`, the block is recorded in the agent conversation history under the guardrail name `CircuitBreakerGuardrail`, with the stop reason as its failure message.
-- With `AI.Observability.Openinference.Enabled` set to `true`, it produces a `GUARDRAIL` span in Arize Phoenix, so you can see in a trace exactly where AI was switched off.
-
-Use this to confirm afterwards which calls were stopped and when.
-
-## Scope and Limits
+## Scope and limits
 
 Know these boundaries before you rely on the circuit breaker:
 
@@ -68,8 +59,15 @@ Know these boundaries before you rely on the circuit breaker:
 The `ApplicationScope` process in the `smart-workflow-demo` project (`Patterns/CircuitBreaker`) is a working example with two start links:
 
 | Start | Does |
-|---|---|
+| --- | --- |
 | `runApplicationAgentsDemo` | Loads an invoice image from the CMS, extracts its content with an agent, then analyses it through the `SelfContainedAgent` subprocess |
 | `stopApplicationAgents` | Calls `CircuitBreakerSignal.stopAll()`, stopping all agent calls |
 
 Start the demo and trigger `stopApplicationAgents` while it runs to see both fallback styles: the error boundary event on the extraction agent, and the `isStopped` result flag returned by the analysis subprocess.
+
+## See also
+
+- [Error Codes](../reference/error-codes.md) — catching `smartworkflow:stop`
+- [Guardrails](guardrails.md) — the other way an agent call gets blocked
+- [Observability](observability.md) — seeing stopped calls after the fact
+- [Java API](../reference/java-api.md#circuit-breaker) — `CircuitBreakerSignal`
