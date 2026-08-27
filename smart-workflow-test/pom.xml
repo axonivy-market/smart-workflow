@@ -118,6 +118,12 @@
       <version>1.21.4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson3</artifactId>
+      <version>4.0.99-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <repositories>
     <repository>

@@ -4,3 +4,7 @@ RestClients:
     Url: '{ivy.app.baseurl}/api/aiMock'
     Features:
       - ch.ivyteam.ivy.rest.client.mapper.JsonFeature
+  smartWorkflow:
+    Url: '{ivy.app.baseurl}/api'
+    Features:
+      - ch.ivyteam.ivy.rest.client.mapper.JsonFeature
