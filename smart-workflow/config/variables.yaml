@@ -40,6 +40,14 @@ Variables:
         # Whitelist of allowed domains for web search results. Separated by comma. Example: "stackoverflow.com, github.com, docs.oracle.com"
         # If empty, all domains are allowed.
         WhitelistDomains: ""
+      MCP:
+        ExposeTools:
+          # Enable MCP tool exposure for third-party AI platforms. If empty, defaults to false.
+          # [boolean]
+          Enabled: ""
+          # Comma-separated list of tools to expose to the AI agent. Example: "whoami, weather"
+          # If empty, all tools are exposed.
+          Tools: ""
     RAG:
       # Default number of document segments returned per query.
       MaxResults: "5"
