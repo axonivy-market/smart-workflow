@@ -33,7 +33,7 @@ We provide only the **technical capability** to enable such configurations and e
 | [Circuit breaker](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/operate/circuit-breaker.md) | One switch that stops every AI call in the application |
 | [Observability](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/operate/observability.md) | Arize Phoenix tracing, Ivy conversation history for audit, and AI-usage custom fields |
 
-📘 **[Full documentation](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/README.md)** · 🚀 **[Getting Started](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/getting-started.md)**
+📘 **[Full documentation](https://github.com/axonivy-market/smart-workflow/blob/master/README.md)** · 🚀 **[Getting Started](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/getting-started.md)**
 
 ## Demo
 

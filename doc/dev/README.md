@@ -1,6 +1,6 @@
 # Developer Documentation
 
-Internal documentation for people working **on** Smart Workflow. For documentation on *using* Smart Workflow, see [doc/user](../user/README.md).
+Internal documentation for people working **on** Smart Workflow. For documentation on *using* Smart Workflow, see the [documentation index](../../README.md) in the repository root.
 
 | Guide | What it covers |
 | --- | --- |

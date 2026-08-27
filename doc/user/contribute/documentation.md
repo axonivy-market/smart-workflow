@@ -4,17 +4,17 @@ House style for `doc/user/`. Follow it when adding or editing a page, so the set
 
 ## Structure
 
-`doc/user/` is organized by what the reader is doing:
+The index lives in the repository root `README.md`. Below it, `doc/user/` is organized by what the reader is doing:
 
 | Folder | Holds |
 | --- | --- |
-| _(root)_ | The index, plus [Getting Started](../getting-started.md) and [Concepts](../concepts.md) |
+| _(root)_ | [Getting Started](../getting-started.md) and [Concepts](../concepts.md) |
 | `build/` | Making an agent do something |
 | `operate/` | Running agents safely and knowing what they did |
 | `reference/` | Look-up tables — one owner per fact |
 | `contribute/` | Extending Smart Workflow itself |
 
-Add a page to the folder matching the reader's task, and add it to [the index](../README.md). A page nothing links to does not exist.
+Add a page to the folder matching the reader's task, and list it in the [documentation index](https://github.com/axonivy-market/smart-workflow/blob/master/README.md) in the repository root. A page nothing links to does not exist.
 
 ## `doc/user/` must stay self-contained
 
@@ -83,7 +83,7 @@ One paragraph: what this is and when you need it.
 
 ## Before opening a PR
 
-- [ ] the page is linked from [the index](../README.md)
+- [ ] the page is listed in the index in the repository root `README.md`
 - [ ] no relative link leaves `doc/user/`, and every link target exists
 - [ ] no fact duplicated from a reference page
 - [ ] a **Common mistakes** section, if the topic has any
@@ -92,5 +92,5 @@ One paragraph: what this is and when you need it.
 
 ## See also
 
-- [Documentation index](../README.md) — the reading order this style serves
+- [Documentation index](https://github.com/axonivy-market/smart-workflow/blob/master/README.md) — the reading order this style serves
 - [Chat Models](models.md) — the doc updates a new provider requires
