@@ -52,42 +52,48 @@
             "artifactId": "smart-workflow-openai",
             "version": "${version}",
             "type": "iar",
-            "optional": false
+            "optional": false,
+            "requireOneOfGroup": "provider"
           },
           {
             "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-ollama",
             "version": "${version}",
             "type": "iar",
-            "optional": true
+            "optional": true,
+            "requireOneOfGroup": "provider"
           },
           {
             "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-azure-openai",
             "version": "${version}",
             "type": "iar",
-            "optional": true
+            "optional": true,
+            "requireOneOfGroup": "provider"
           },
           {
             "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-gemini",
             "version": "${version}",
             "type": "iar",
-            "optional": true
+            "optional": true,
+            "requireOneOfGroup": "provider"
           },
           {
             "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-xai",
             "version": "${version}",
             "type": "iar",
-            "optional": true
+            "optional": true,
+            "requireOneOfGroup": "test"
           },
           {
             "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-anthropic",
             "version": "${version}",
             "type": "iar",
-            "optional": true
+            "optional": true,
+            "requireOneOfGroup": "test"
           },
           {
             "groupId": "com.axonivy.utils.ai",
