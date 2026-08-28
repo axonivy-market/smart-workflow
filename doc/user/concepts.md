@@ -18,7 +18,7 @@ Nothing else. The agent has no access to your database, your process history, or
 
 The **provider** is the vendor integration — OpenAI, Anthropic and Ollama among others. The **model** is the specific model within it, like `gpt-4.1-mini` or `claude-haiku-4-5`.
 
-Both are chosen per element, and both fall back: an empty `Provider:` uses `AI.DefaultProvider`, an empty `Model:` uses that provider's `DefaultModel`. Because the choice is per element, one process can use three different providers — see [Mixing providers](build/providers.md#mixing-providers-in-one-process).
+Both are chosen per element, and both fall back: an empty `Provider` uses `AI.DefaultProvider`, an empty `Model` uses that provider's `DefaultModel`. Because the choice is per element, one process can use three different providers — see [Mixing providers](build/providers.md#mixing-providers-in-one-process).
 
 Providers are not interchangeable. Check [Provider Capabilities](reference/capabilities.md) before relying on file input or typed output.
 
@@ -35,14 +35,14 @@ Tools are *offered*, not *invoked*. The agent chooses. If you need something to 
 
 Two rules follow from how they work:
 
-- An empty `Available tools:` field means **no tools**, never "all tools".
+- An empty `Available tools` field means the agent has **no tools to use at all**.
 - Every tool you grant costs tokens in every request and gives the model another way to choose wrong. Keep lists tight.
 
 See [Defining Tools](build/tools.md).
 
 ## Structured output
 
-By default an agent returns a `String`. Set `Expect result of type:` to a class — `com.axonivy.utils.ai.Invoice.class` — and it returns an instance of that class instead: a JSON schema is derived from the class, sent to the model as a response-format constraint, and the reply is deserialized.
+By default an agent returns a `String`. Set `Expect result of type` to a class — `com.axonivy.utils.ai.Invoice.class` — and it returns an instance of that class instead: a JSON schema is derived from the class, sent to the model as a response-format constraint, and the reply is deserialized.
 
 This is what makes an agent usable in a process rather than just readable by a human. The field names you choose are what the model sees, so name them descriptively.
 
@@ -78,3 +78,4 @@ See [Variables](reference/variables.md) for the complete list.
 - [Agent Setup](build/agent-setup.md) — the element in full
 - [Agent Patterns](build/patterns.md) — arranging more than one agent
 - [Security and Data](operate/security-and-data.md) — what leaves your network
+- [Troubleshooting](troubleshooting.md) — when something does not work

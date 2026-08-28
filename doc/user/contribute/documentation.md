@@ -72,7 +72,7 @@ One paragraph: what this is and when you need it.
 ```markdown
 | Field | Value |
 | --- | --- |
-| `Map result to:` | `in.result` |
+| `Map result to` | `in.result` |
 ```
 
 **Tables** — spaced delimiter rows: `| --- | --- |`, or `| :---: |` to centre.

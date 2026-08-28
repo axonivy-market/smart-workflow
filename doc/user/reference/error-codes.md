@@ -27,22 +27,12 @@ in.result = in.error.getMessage();
 
 ## Problems without an error code
 
-Not every problem raises a BPM error. These are the cases where an agent can finish without having answered, and the log line that identifies each one:
-
-| Symptom | Cause | Log line |
-| --- | --- | --- |
-| The agent never ran | The user message was blank, or expanding it threw | `Agent call was skipped, since there was no user query` |
-| The target field stayed empty | `Map result to:` failed, usually a type mismatch | `Failed to map result to <expression>` |
-| An expression appears verbatim in the reply | An unresolvable `<%=...%>` is inserted as its own raw text | _(none)_ |
-| The document was ignored | A CMS path that does not exist is dropped from the message | _(none)_ |
-| The whole call was skipped after adding a file | An unsupported CMS file extension emptied the user message | `Agent call was skipped, since there was no user query` |
-| Structured output came back unconstrained | Gemini does not support schemas; Ollama drops them when tools are present | Gemini logs an error; Ollama is silent |
-| The agent ignored a tool | No tools were selected — empty means none | _(none)_ |
+Not every problem raises a BPM error — an agent can finish without having answered, leaving only a log line behind. Those cases are collected in [Troubleshooting](../troubleshooting.md#the-agent-did-not-answer).
 
 `DecisionMaker.resolve` is the exception among the human-in-the-loop paths: it throws `IllegalStateException` with `Found no pending ChatMemory for id`, `Found no pending AiMessage for id`, or `Found no pending ToolExecutionRequest for id`. Those messages are diagnostics, not BPM errors, and cannot be caught with a boundary event.
 
 ## See also
 
-- [Agent Setup](../build/agent-setup.md#when-an-agent-does-not-respond) — diagnosing an agent that did not answer
+- [Troubleshooting](../troubleshooting.md) — diagnosing an agent that did not answer
 - [Guardrails](../operate/guardrails.md) — what blocks a message
 - [Circuit Breaker](../operate/circuit-breaker.md) — the application-wide stop switch

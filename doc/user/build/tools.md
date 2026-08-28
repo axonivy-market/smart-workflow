@@ -34,9 +34,9 @@ That makes the input parameter descriptions the highest-leverage text you write.
 
 ### Selecting tools on the agent
 
-Tools are discovered globally but granted per agent, via the `Available tools:` picker in the element's **Tools** group.
+Tools are discovered globally but granted per agent, via the `Available tools` picker in the element's **Tools** group.
 
-> **Important:** An empty `Available tools:` field grants the agent **no tools**. It does not mean "all tools available". This is the usual reason an agent explains what it would do instead of doing it.
+> **Important:** An empty `Available tools` field means the agent has **no tools to use at all**. This is the usual reason an agent explains what it would do instead of doing it.
 
 Keep the list tight. Every tool you grant costs tokens in the request and gives the model one more way to pick wrong.
 
@@ -146,7 +146,7 @@ Agents select this tool automatically when they need up-to-date or factual infor
 
 **Search engine**: DuckDuckGo is the shipped default and the only built-in engine. Custom engines can be plugged in by implementing [`SmartWebSearchEngine`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow/src/com/axonivy/utils/smart/workflow/tools/web/SmartWebSearchEngine.java) and registering a [`SmartWebSearchEngineProvider`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow/src/com/axonivy/utils/smart/workflow/tools/web/SmartWebSearchEngineProvider.java) via SPI. Engine names are matched case-insensitively.
 
-**Using the tool in a process**: select `webSearch` in the `Available tools:` picker of the agent element.
+**Using the tool in a process**: select `webSearch` in the `Available tools` picker of the agent element.
 
 Agents do not search unless the task calls for it, and a vague system message tends to produce an answer from training data instead. If you want the agent to look things up, say so — and if you want citations, ask for the source URLs explicitly, since they are in the result but the model will not volunteer them.
 
@@ -157,7 +157,7 @@ See the [`WebSearchDemo`](https://github.com/axonivy-market/smart-workflow/blob/
 
 ## Common mistakes
 
-- **Leaving `Available tools:` empty.** The agent gets no tools. This is the usual reason an agent explains what it would do instead of doing it.
+- **Leaving `Available tools` empty.** The agent gets no tools. This is the usual reason an agent explains what it would do instead of doing it.
 - **A parameter with no description.** The description is the whole contract — an undescribed `id` is a guess.
 - **Documenting the result parameters.** Their descriptions never reach the model. Only input parameters and the `CallSubStart` description do.
 - **Forgetting the `tool` tag** on the `CallSubStart`, so the tool never appears in the picker.

@@ -234,7 +234,7 @@ Default guardrails can be set globally in the Engine Cockpit, under `AI.Guardrai
 
 This demo shows how to implement and register a domain-specific business rule as a reusable custom guardrail. A company policy requires that agents never mention competitor products. The `BlockCompetitorMentionGuardrail` enforces this rule in one place — once registered, it can be added to any agent by name without touching individual system prompts.
 
-Developers implement `SmartWorkflowInputGuardrail`, expose it through a `GuardrailProvider`, and register the provider via SPI. The guardrail name then appears automatically in the agent's `Input guardrails:` picker. To apply it to every agent, add it to `AI.Guardrails.DefaultInput` in the Engine Cockpit.
+Developers implement `SmartWorkflowInputGuardrail`, expose it through a `GuardrailProvider`, and register the provider via SPI. The guardrail name then appears automatically in the agent's `Input guardrails` picker. To apply it to every agent, add it to `AI.Guardrails.DefaultInput` in the Engine Cockpit.
 
 <details>
 <summary><strong>Demo flow</strong></summary>
@@ -403,9 +403,9 @@ Example Configuration:
 
 ### Defining an AI agent
 
-Create a program element backed by the `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java bean. Its `Configuration` tab has five groups: **Message** for the system and user messages, **Tools** for what the agent may call, **Guardrails** for input and output validation, **Model** for the provider and model, and **Output** for the result type and where it is written.
+Add an **AgenticProcessCall** element from **Extension > Program Elements** in the Designer. Its `Configuration` tab has five groups: **Message** for the system and user messages, **Tools** for what the agent may call, **Guardrails** for input and output validation, **Model** for the provider and model, and **Output** for the result type and where it is written.
 
-Two behaviours surprise people, and they are opposites: an empty `Available tools:` field grants the agent **no** tools, while empty guardrail fields **inherit** the application defaults.
+Two behaviours surprise people, and they are opposites: an empty `Available tools` field grants the agent **no** tools, while empty guardrail fields **inherit** the application defaults.
 
 For the complete field reference — including structured output, screenshots of each group, and the failure modes worth knowing about — see [Agent Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/agent-setup.md).
 

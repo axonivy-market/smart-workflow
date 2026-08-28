@@ -6,7 +6,7 @@ Let AI Agent elements drive your dynamic processes.
 
 Smart Workflow adds an **AI agent** to Axon Ivy as a process element. Give it instructions, a set of your own callable sub-processes as tools, and a model — it reads natural language, decides what to call, and writes a typed Java object back into your process data. Several model providers, from hosted APIs to a model running on your own hardware.
 
-**New here?** [Getting Started](doc/user/getting-started.md) takes you from installation to a working agent in about fifteen minutes. [Concepts](doc/user/concepts.md) explains the vocabulary and the limits worth knowing early.
+**New here?** [Getting Started](doc/user/getting-started.md) takes you from installation to a working agent in about fifteen minutes. [Concepts](doc/user/concepts.md) explains the vocabulary and the limits worth knowing early. If something is not working, start from [Troubleshooting](doc/user/troubleshooting.md).
 
 ## Build
 

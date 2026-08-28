@@ -59,8 +59,8 @@ The tool's input parameter carries the question to the human, and its declared r
 
 ### 3. Configure the agent element
 
-- Select your tool under `Available tools:`.
-- In `System message:`, tell the agent when to use it. Models do not pause on their own; if the instruction is vague they will answer instead of asking.
+- Select your tool under `Available tools`.
+- In `System message`, tell the agent when to use it. Models do not pause on their own; if the instruction is vague they will answer instead of asking.
 - Attach an **Error Boundary Event** with your error code, mapping the attached question onto a data field:
 
 ```java

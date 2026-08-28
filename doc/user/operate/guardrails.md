@@ -78,8 +78,8 @@ It implements both interfaces and is stateful, so it must appear in **both** lis
 
 | Field | Value |
 | --- | --- |
-| `Input guardrails:` | `PiiMaskingGuardrail` |
-| `Output guardrails:` | `PiiMaskingGuardrail` |
+| `Input guardrails` | `PiiMaskingGuardrail` |
+| `Output guardrails` | `PiiMaskingGuardrail` |
 
 > **Important:** Registering it in only one list is worse than not registering it at all.
 >
@@ -142,7 +142,7 @@ Variables:
 
 ## Using guardrails in agents
 
-The `AgenticProcessCall` element has a **Guardrails** group with two pickers, `Input guardrails:` and `Output guardrails:`, listing every registered guardrail.
+The `AgenticProcessCall` element has a **Guardrails** group with two pickers, `Input guardrails` and `Output guardrails`, listing every registered guardrail.
 
 If a list is left empty, the agent falls back to the defaults from `variables.yaml`. Empty therefore does **not** mean unguarded — an agent with blank fields still runs whatever the application configured. This catches people out in tests especially, where a global input guardrail can reject fixture data.
 

@@ -124,7 +124,7 @@ com.example.guardrails.MyGuardrailProvider
 
 ## 4. Use it
 
-The guardrail's `name()` — the simple class name unless you override it — now appears in the `Input guardrails:` or `Output guardrails:` picker on any agent element. To apply it everywhere, add the name to `AI.Guardrails.DefaultInput` or `AI.Guardrails.DefaultOutput` in `variables.yaml`.
+The guardrail's `name()` — the simple class name unless you override it — now appears in the `Input guardrails` or `Output guardrails` picker on any agent element. To apply it everywhere, add the name to `AI.Guardrails.DefaultInput` or `AI.Guardrails.DefaultOutput` in `variables.yaml`.
 
 ## Common mistakes
 

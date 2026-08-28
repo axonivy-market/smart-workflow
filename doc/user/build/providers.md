@@ -153,14 +153,14 @@ Every `AgenticProcessCall` element has a **Model** group with two fields:
 
 | Field | Widget | Notes |
 | --- | --- | --- |
-| `Provider:` | picker | One of the installed providers. Empty means fall back to `AI.DefaultProvider`. |
-| `Model:` | script | An IvyScript expression returning a `String`, so the value must be **quoted**: `"gpt-4o"`. Empty means fall back to that provider's `DefaultModel`. |
+| `Provider` | picker | One of the installed providers. Empty means fall back to `AI.DefaultProvider`. |
+| `Model` | script | An IvyScript expression returning a `String`, so the value must be **quoted**: `"gpt-4o"`. Empty means fall back to that provider's `DefaultModel`. |
 
-`Model:` being a script field is easy to get wrong — a bare `gpt-4o` does not compile. It also means the model can be computed at runtime, e.g. `in.selectedModel`.
+`Model` being a script field is easy to get wrong — a bare `gpt-4o` does not compile. It also means the model can be computed at runtime, e.g. `in.selectedModel`.
 
 Provider resolution runs in this order:
 
-1. the element's `Provider:` field
+1. the element's `Provider` field
 2. `AI.DefaultProvider`
 3. `OpenAI`, as a hard-coded last resort
 
@@ -182,7 +182,7 @@ The point is that you are not locked into one vendor per application: spend capa
 
 ## Common mistakes
 
-- **An unquoted model name.** `Model:` is a script field; a bare `gpt-4o` does not compile.
+- **An unquoted model name.** `Model` is a script field; a bare `gpt-4o` does not compile.
 - **Assuming a blank `DefaultProvider` breaks the application.** It falls back to `OpenAI`, so a misconfigured application can silently use a provider you did not intend.
 - **Selecting several providers in the picker.** Only the first is used, with a warning in the log.
 - **Choosing a provider before checking its capabilities.** Gemini cannot do structured output, xAI and Ollama cannot read PDFs, and only OpenAI and Ollama can embed. Nothing warns you until the provider rejects the request.

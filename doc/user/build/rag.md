@@ -54,7 +54,7 @@ Semantic search tool available to Smart Workflow agents. The agent calls this to
 
 ### Wiring the tool to an agent
 
-Select `openSearchSearch` in the agent's `Available tools:` picker, then **tell the agent which collection to use in the system message**. The `collection` parameter is required and has no default, so an agent that is not told the index name cannot search — this is the most common reason a RAG agent answers from training data instead of your documents.
+Select `openSearchSearch` in the agent's `Available tools` picker, then **tell the agent which collection to use in the system message**. The `collection` parameter is required and has no default, so an agent that is not told the index name cannot search — this is the most common reason a RAG agent answers from training data instead of your documents.
 
 The demo does it by interpolating the index name:
 

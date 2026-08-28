@@ -42,9 +42,9 @@ Fill in three fields and leave everything else empty:
 
 | Group | Field | Value |
 | --- | --- | --- |
-| Message | `System message:` | `You are a helpful assistant. Answer in one short sentence.` |
-| Message | `User message:` | `<%=in.question%>` |
-| Output | `Map result to:` | `in.answer` |
+| Message | `System message` | `You are a helpful assistant. Answer in one short sentence.` |
+| Message | `User message` | `<%=in.question%>` |
+| Output | `Map result to` | `in.answer` |
 
 Add `question` and `answer` as `String` fields to the process data class, and put a Script step before the element that sets `in.question` to something — `"What is Axon Ivy?"` will do.
 
@@ -58,7 +58,7 @@ Start the process. The agent sends your question to the model and writes the rep
 Axon Ivy is a low-code platform for designing, automating and running business processes.
 ```
 
-That is a working AI agent — three fields and no code. From here it is the same element throughout: add tools and it can act on your processes, set `Expect result of type:` to a class such as `com.axonivy.utils.ai.Invoice.class` and it returns a typed Java object instead of a string.
+That is a working AI agent — three fields and no code. From here it is the same element throughout: add tools and it can act on your processes, set `Expect result of type` to a class such as `com.axonivy.utils.ai.Invoice.class` and it returns a typed Java object instead of a string.
 
 ## Common mistakes
 
@@ -67,12 +67,12 @@ A few things are easy to get wrong the first time. If your agent does not answer
 | Symptom | Cause |
 | --- | --- |
 | No call was made at all | The user message expanded to nothing. Look for `Agent call was skipped, since there was no user query` in the log. |
-| `in.answer` is empty but the log shows a call | `Map result to:` failed, usually a type mismatch. Look for `Failed to map result to`. |
+| `in.answer` is empty but the log shows a call | `Map result to` failed, usually a type mismatch. Look for `Failed to map result to`. |
 | The reply contains `<%=in.question%>` literally | The expression could not be resolved — check the field name on the data class. |
 | An error about an unknown provider | `AI.DefaultProvider` does not match an installed provider project. |
 | An authentication error from the provider | The key is wrong, or was never set in the Engine Cockpit. |
 
-[Error Codes](reference/error-codes.md#problems-without-an-error-code) pairs each symptom with the log line that identifies it.
+[Troubleshooting](troubleshooting.md) covers the rest, with the log line that identifies each one.
 
 ## Where to go next
 
