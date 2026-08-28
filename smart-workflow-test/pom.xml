@@ -15,11 +15,35 @@
     <dependency>
       <groupId>com.axonivy.ivy.api</groupId>
       <artifactId>ivy-api</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>jackson-databind</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-jakarta-rs-json-provider</artifactId>
+          <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.axonivy.ivy.api.test</groupId>
       <artifactId>ivy-test-api</artifactId>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>jackson-databind</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-jakarta-rs-json-provider</artifactId>
+          <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-dataformat-yaml</artifactId>
+          <groupId>com.fasterxml.jackson.dataformat</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
