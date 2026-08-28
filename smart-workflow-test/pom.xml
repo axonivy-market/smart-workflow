@@ -17,10 +17,6 @@
       <artifactId>ivy-api</artifactId>
       <exclusions>
         <exclusion>
-          <artifactId>jackson-databind</artifactId>
-          <groupId>com.fasterxml.jackson.core</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>jackson-jakarta-rs-json-provider</artifactId>
           <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
         </exclusion>
@@ -32,16 +28,12 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>jackson-databind</artifactId>
-          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jersey-media-json-jackson</artifactId>
+          <groupId>org.glassfish.jersey.media</groupId>
         </exclusion>
         <exclusion>
           <artifactId>jackson-jakarta-rs-json-provider</artifactId>
           <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jackson-dataformat-yaml</artifactId>
-          <groupId>com.fasterxml.jackson.dataformat</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -141,6 +133,11 @@
       <artifactId>ollama</artifactId>
       <version>1.21.4</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson3</artifactId>
+      <version>4.0.99-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <repositories>
