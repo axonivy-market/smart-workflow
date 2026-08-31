@@ -78,8 +78,7 @@ public class AgentEditor {
 
   private List<SelectItem> toolList() {
     try {
-      var ivyTools = IvyToolsProcesses
-          .toolStarts().stream()
+      var ivyTools = new IvyToolsProcesses().toolStarts().stream()
           .map(SubProcessCallStartEvent::description)
           .map(AgentEditor::toItem);
       return Stream.concat(ivyTools, javaToolNames()).toList();

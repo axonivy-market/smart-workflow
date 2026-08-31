@@ -13,7 +13,7 @@ import dev.langchain4j.agent.tool.ToolSpecification.Builder;
 public class IvySubProcessToolSpecs {
 
   public static List<ToolSpecification> find() {
-    return IvyToolsProcesses.toolStarts().stream()
+    return new IvyToolsProcesses().toolStarts().stream()
         .map(IvySubProcessToolSpecs::toTool)
         .toList();
   }
@@ -29,7 +29,8 @@ public class IvySubProcessToolSpecs {
     List<ToolParameter> toolParams = method.in().stream()
         .map(p -> new ToolParameter(p.name(), p.description(), p.typeName()))
         .toList();
-    var params = new JsonToolParamBuilder().toParams(toolParams);
+    ClassLoader tcl = Thread.currentThread().getContextClassLoader();
+    var params = new JsonToolParamBuilder(tcl).toParams(toolParams);
     builder.parameters(params);
 
     return builder.build();
