@@ -19,7 +19,8 @@
     "modifiers" : [ ]
   }, {
     "name" : "supportTicket",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
+      "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
+      "modifiers" : [ ]
   }, {
     "name" : "instructions",
     "type" : "List<String>",
@@ -32,7 +33,8 @@
     "modifiers" : [ ]
   }, {
     "name" : "secondTaskInfo",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo"
+      "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo",
+      "modifiers" : [ ]
   }, {
     "name" : "aiApproval",
     "type" : "com.axonivy.utils.smart.workflow.demo.dto.AiApprovalDecision",

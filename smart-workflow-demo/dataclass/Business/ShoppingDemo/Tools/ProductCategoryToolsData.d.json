@@ -4,13 +4,16 @@
   "namespace" : "Business.ShoppingDemo.Tools",
   "fields" : [ {
     "name" : "searchCriteria",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategorySearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategorySearchCriteria",
+    "modifiers" : [ ]
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "category",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory",
+    "modifiers" : [ ]
   }, {
     "name" : "message"
   }, {

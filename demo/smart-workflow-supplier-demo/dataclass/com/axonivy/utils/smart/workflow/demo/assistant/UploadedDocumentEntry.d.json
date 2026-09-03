@@ -6,6 +6,7 @@
     "name" : "fileName"
   }, {
     "name" : "data",
-    "type" : "byte[]"
+      "type" : "byte[]",
+      "modifiers" : [ ]
   } ]
 }

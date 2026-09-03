@@ -6,9 +6,11 @@
     "name" : "productInfo"
   }, {
     "name" : "result",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse"
+     "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse",
+     "modifiers" : [ ]
   }, {
     "name" : "action",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction"
+     "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction",
+     "modifiers" : [ ]
   } ]
 }

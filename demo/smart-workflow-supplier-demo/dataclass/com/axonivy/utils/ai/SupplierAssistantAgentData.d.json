@@ -35,6 +35,7 @@
   }, {
     "name" : "inputStream",
     "type" : "java.io.InputStream",
-    "comment" : "Uploaded PDF document stream for OCR"
+    "comment" : "Uploaded PDF document stream for OCR",
+    "modifiers" : [ ]
   } ]
 }

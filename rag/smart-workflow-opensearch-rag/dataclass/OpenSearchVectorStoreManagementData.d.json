@@ -10,6 +10,7 @@
     "type" : "java.util.List<String>"
   }, {
     "name" : "result",
-    "type" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult"
+    "type" : "com.axonivy.utils.smart.workflow.rag.pipeline.RagResult",
+    "modifiers" : [ ]
   } ]
 }

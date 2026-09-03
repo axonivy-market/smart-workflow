@@ -22,7 +22,8 @@
   }, {
     "name" : "neededByDate",
     "type" : "java.time.LocalDate",
-    "comment" : "Date by which the supplier is needed, format yyyy-MM-dd"
+    "comment" : "Date by which the supplier is needed, format yyyy-MM-dd",
+    "modifiers" : [ ]
   }, {
     "name" : "additionalNotes",
     "comment" : "Additional context or notes for the procurement or QM team"
@@ -37,7 +38,8 @@
   }, {
     "name" : "status",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.OnboardingStatus",
-    "comment" : "Current status of the onboarding workflow"
+    "comment" : "Current status of the onboarding workflow",
+    "modifiers" : [ ]
   }, {
     "name" : "matchedSuppliers",
     "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.Supplier>",

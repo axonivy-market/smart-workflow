@@ -4,12 +4,15 @@
   "namespace" : "Business.ShoppingDemo.Tools",
   "fields" : [ {
     "name" : "searchCriteria",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria",
+    "modifiers" : [ ]
   }, {
     "name" : "brand",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand",
+    "modifiers" : [ ]
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse",
+    "modifiers" : [ ]
   } ]
 }
