@@ -1,22 +1,22 @@
 # Model Providers
 
-Smart Workflow ships with several model providers. You choose one globally and can override it on any individual agent, without code changes.
+Smart Workflow ships a connector for each supported model provider — you bring the API key, or your own Ollama instance. Choose a provider globally, and override it on any individual agent, without code changes.
 
 This page is about *using* a provider. To *contribute* a new one, see the [Chat Models](../contribute/models.md) contribution guideline.
 
-## Choosing a provider
+## Supported providers
 
-The built-in providers span the three ways AI models are typically consumed, and the trade-offs differ more than the models do.
+Smart Workflow connects to a wide range of LLM platforms, so you can use whichever fits your project — and switch later without changing a line of code.
 
-**Self-hosted** — you run an open-source model on your own hardware. Complete data privacy, no per-query cost, works offline, fully tunable. In exchange you buy or rent GPUs and operate the servers yourself. `Ollama` covers this case.
+- **Hosted cloud APIs** — `OpenAI`, `Gemini`, `Anthropic` and `xAI`.
+- **Enterprise platform** — `Azure OpenAI`.
+- **Self-hosted** — `Ollama`, running on your own hardware.
 
-**Managed platform** — you reach models through a cloud platform that adds enterprise security, monitoring, evaluation, and governance on top. One integration serves several models and billing is centralized, at the price of extra moving parts, platform fees, and closer coupling to one cloud vendor. `Azure OpenAI` covers this case.
-
-**Direct cloud API** — you call a vendor's proprietary models and pay per token. The fastest route to the most capable models with no hardware to manage, but your data leaves your network and cost scales with use. `OpenAI`, `Gemini`, `Anthropic`, and `xAI` cover this case.
+Each agent can use a different provider and model, giving you the flexibility to pick the right one for each task — see [Mixing providers in one process](#mixing-providers-in-one-process).
 
 ## Capabilities
 
-Providers are not interchangeable. Before committing to one, check what it supports:
+They differ in what they support, so it is worth a look before you pick one:
 
 | Provider | Category | PNG / JPEG | PDF | Structured output | Embedding |
 | --- | --- | :---: | :---: | :---: | :---: |
@@ -29,9 +29,11 @@ Providers are not interchangeable. Before committing to one, check what it suppo
 
 Model lists, the per-provider caveats, and the reasons behind each `—` are in [Provider Capabilities](../reference/capabilities.md). Read it before relying on file extraction or structured output: nothing is checked locally, so an unsupported combination fails at the provider with the provider's own error message.
 
+> **Note:** The asterisk on Ollama is worth knowing before you design around it — structured output and tools cannot be used in the same request. [Troubleshooting](../troubleshooting.md#the-agent-answered-but-not-as-expected) explains what happens and how to work around it.
+
 ## Global configuration
 
-Set the default provider once for the whole application, in the **Engine Cockpit** under **Variables**. Every agent uses it unless it overrides it.
+`AI.DefaultProvider` sets the provider for the whole application. Set it in the **Engine Cockpit**, under **Variables**.
 
 ```yaml
 Variables:
@@ -40,7 +42,7 @@ Variables:
     DefaultProvider: "OpenAI"
 ```
 
-Each provider contributes its own variables under `AI.Providers`, shipped with the corresponding `models/smart-workflow-*` project — you set their values in the Engine Cockpit, you do not add the variables yourself. Every provider accepts `BaseUrl` (leave empty for the vendor default) and names its model variable **`DefaultModel`** — the model used when an agent does not specify one.
+Each provider contributes its own variables under `AI.Providers`, shipped with the corresponding `models/smart-workflow-*` project.
 
 ### OpenAI
 
@@ -120,8 +122,6 @@ Variables:
         DefaultModel: "grok-4-1-fast"
 ```
 
-A model name outside the enum still works, but logs `Unknown xAI model ... Compatibility not guaranteed`.
-
 ### Ollama
 
 No API key, since the instance is yours.
@@ -141,11 +141,11 @@ Variables:
 
 ### Handling API keys
 
-Variables marked `#[password]` are secrets: encrypted at rest, decrypted only at runtime. Never type a real key into `variables.yaml`.
+Always enter API keys in the **Engine Cockpit**, under **Variables** — for example `AI.Providers.OpenAI.APIKey`. The Cockpit encrypts the value as you save it, so the key is never stored in plain text.
 
-The `${decrypt:}` placeholder is what ships, and it is what you keep in source control. Set the real value after deployment in the Engine Cockpit, under your application's variables — for example `AI.Providers.OpenAI.APIKey` — where the Engine encrypts it on entry.
+Do not open `variables.yaml` in a text editor to set a key. A key typed there stays readable and ends up in source control. The file ships with the `${decrypt:}` placeholder, and that is what should stay in it.
 
-> **Note:** Variables are read on each agent call, not cached at startup. Changing a provider or key in the Engine Cockpit takes effect on the next call, with no restart.
+> **Note:** Keys are read on each agent call, so a key you add or rotate in the Cockpit takes effect on the next call, with no restart.
 
 ## Per-agent override
 
@@ -158,15 +158,7 @@ Every `AgenticProcessCall` element has a **Model** group with two fields:
 
 `Model` being a script field is easy to get wrong — a bare `gpt-4o` does not compile. It also means the model can be computed at runtime, e.g. `in.selectedModel`.
 
-Provider resolution runs in this order:
-
-1. the element's `Provider` field
-2. `AI.DefaultProvider`
-3. `OpenAI`, as a hard-coded last resort
-
-Because of step 3, an application with a blank `DefaultProvider` still works as long as `smart-workflow-openai` is installed. An unresolvable name fails with `Unknown model provider <name>`.
-
-Selecting more than one provider in the picker is not supported; the first is used and a warning is logged.
+By default, an agent uses the provider set in `AI.DefaultProvider`. Selecting a `Provider` on the element overrides this for that agent only. If the selected provider cannot be found — most often because its connector project is not installed — the agent call fails with `Unknown model provider <name>`.
 
 ### Mixing providers in one process
 
@@ -183,8 +175,6 @@ The point is that you are not locked into one vendor per application: spend capa
 ## Common mistakes
 
 - **An unquoted model name.** `Model` is a script field; a bare `gpt-4o` does not compile.
-- **Assuming a blank `DefaultProvider` breaks the application.** It falls back to `OpenAI`, so a misconfigured application can silently use a provider you did not intend.
-- **Selecting several providers in the picker.** Only the first is used, with a warning in the log.
 - **Choosing a provider before checking its capabilities.** Gemini cannot do structured output, xAI and Ollama cannot read PDFs, and only OpenAI and Ollama can embed. Nothing warns you until the provider rejects the request.
 - **Committing a real API key.** Ship `${decrypt:}` and set the value in the Engine Cockpit.
 

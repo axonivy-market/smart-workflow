@@ -63,9 +63,9 @@ How each provider constrains the response to a schema. See [Agent Setup](../buil
 
 Two of these differ in ways that change how you design a process:
 
-> **Gemini has no structured output.** Requesting it does not fail. Smart Workflow logs an error, builds the model without the schema capability, and LangChain4j falls back to asking for the shape in the prompt and parsing the reply. Treat it as best-effort and prefer plain text output on Gemini.
+**Gemini** — no structured output at all. Requesting it does not fail: Smart Workflow logs an error, builds the model without the schema capability, and falls back to asking for the shape in the prompt and parsing the reply. Treat it as best-effort, and prefer plain text output on Gemini.
 
-> **Ollama drops the schema as soon as an agent has tools.** Structured output and tools are mutually exclusive on Ollama, and the schema is dropped **silently** — an agent configured with both gets tools and unconstrained text. Split the work across two agents if you need both.
+**Ollama** — the schema is dropped as soon as an agent has tools, because the two cannot go in the same request. It is dropped **silently**, so an agent configured with both gets its tools and unconstrained text. Split the work across two agents if you need both.
 
 **Anthropic** — the capability is applied for every model in the list above, including the 4.0 generation. Smart Workflow imposes no version gate; newer models are simply more reliable at producing schema-valid output.
 

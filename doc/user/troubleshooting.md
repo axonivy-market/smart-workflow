@@ -24,6 +24,8 @@ In rough order of how often it is the cause:
 5. **It never pauses for a human.** The system message does not tell it to ask, so the model decides it can answer alone. See [Human in the Loop](build/human-in-the-loop.md#common-mistakes).
 6. **It behaves as though it never saw your document.** A file can be dropped from the message without a log entry — a CMS path that does not exist, or a `Path`, `File` or `IDocument` whose name has no `.png`, `.jpg`, `.jpeg` or `.pdf` extension. Check what the expression actually resolves to before suspecting the prompt. See [File Extraction](build/file-extraction.md#common-mistakes).
 7. **The provider cannot read that file type.** Nothing is checked locally, so the request reaches the provider and fails there. See [Provider Capabilities](reference/capabilities.md#file-extraction).
+8. **The agent cannot return a list.** A bare collection is not a supported output type, so setting `Expect result of type` to a list does not work. Declare a class with the list as one of its fields and use that class instead. See [Structured output](build/agent-setup.md#structured-output).
+9. **On Ollama, a typed result came back as plain text.** The Ollama API cannot accept a JSON schema and tools in the same request, so when an agent has both, Smart Workflow keeps the tools and leaves the schema off. The agent still calls its tools and still answers — the reply is just not schema-constrained. Split the work across two agents if you need both, or use a provider that supports them together. See [Provider Capabilities](reference/capabilities.md#structured-output).
 
 ## Messages and expressions
 

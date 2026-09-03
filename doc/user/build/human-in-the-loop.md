@@ -16,7 +16,7 @@ Three framework pieces make this work, and one convention ties them together.
 | `DecisionMaker` | Public API. Writes the human's answer into the suspended conversation as the pending tool's result. |
 | Error boundary event | Catches the error your tool threw and gets you to a user task. |
 
-Under the hood, when a tool throws, the agent's messages are persisted to Ivy Business Data keyed by the LangChain4j invocation id, and that id is written to `aiMemoryId`. On the next entry to the element the messages are read back and the conversation continues. On successful completion, the stored messages **and** the `aiMemoryId` value are both cleared.
+Under the hood, when a tool throws, the agent's messages are persisted to Ivy Business Data keyed by the invocation id, and that id is written to `aiMemoryId`. On the next entry to the element the messages are read back and the conversation continues. On successful completion, the stored messages **and** the `aiMemoryId` value are both cleared.
 
 ### About `aiMemoryId`
 

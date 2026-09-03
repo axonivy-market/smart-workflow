@@ -10,7 +10,7 @@ Variables marked 🔒 are secrets: declare them as `${decrypt:}` in source contr
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `AI.DefaultProvider` | _(empty)_ | Provider used by agents that do not name one. Empty falls back to `OpenAI`. One of `OpenAI`, `AzureOpenAI`, `Gemini`, `xAI`, `Anthropic`, `Ollama`. |
+| `AI.DefaultProvider` | _(empty)_ | Provider used by agents that do not name one. One of `OpenAI`, `AzureOpenAI`, `Gemini`, `xAI`, `Anthropic`, `Ollama`. |
 | `AI.CircuitBreaker.Enabled` | `"false"` | `"true"` stops **every** agent call in the application. See [Circuit Breaker](../operate/circuit-breaker.md). |
 
 ## Providers

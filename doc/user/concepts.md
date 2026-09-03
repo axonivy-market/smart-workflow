@@ -20,7 +20,7 @@ The **provider** is the vendor integration — OpenAI, Anthropic and Ollama amon
 
 Both are chosen per element, and both fall back: an empty `Provider` uses `AI.DefaultProvider`, an empty `Model` uses that provider's `DefaultModel`. Because the choice is per element, one process can use three different providers — see [Mixing providers](build/providers.md#mixing-providers-in-one-process).
 
-Providers are not interchangeable. Check [Provider Capabilities](reference/capabilities.md) before relying on file input or typed output.
+They differ in what they support — check [Provider Capabilities](reference/capabilities.md) before relying on file input or typed output.
 
 ## Tools
 

@@ -31,7 +31,7 @@ Implement the single-argument `evaluate` for a stateless check. Override the two
 | `allow()` | Pass the message through unchanged. |
 | `allowWithRewrite(String)` | Pass through, replacing the message with your version. Use for redaction or normalization rather than rejection. |
 | `block(String reason)` | Reject, with the reason surfaced in the BPM error. |
-| `block(String reason, Throwable cause)` | Reject, attaching a cause. The cause travels through the LangChain4j guardrail exception, letting callers distinguish *which* guardrail blocked without inspecting the reason text. |
+| `block(String reason, Throwable cause)` | Reject, attaching a cause. The cause travels through the guardrail exception, letting callers distinguish *which* guardrail blocked without inspecting the reason text. |
 
 ## 1. Write the guardrail
 

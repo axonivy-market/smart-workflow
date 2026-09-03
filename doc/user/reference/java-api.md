@@ -63,7 +63,7 @@ Implement the single-argument form for a stateless check. Override the two-argum
 | `allow()` | Pass the message through unchanged. |
 | `allowWithRewrite(String)` | Pass through, replacing the message. Use for redaction or normalization rather than rejection. |
 | `block(String reason)` | Reject; the reason surfaces in the BPM error. |
-| `block(String reason, Throwable cause)` | Reject with a typed cause. The cause travels through the LangChain4j guardrail exception, letting a caller tell *which* guardrail blocked without parsing the message. |
+| `block(String reason, Throwable cause)` | Reject with a typed cause. The cause travels through the guardrail exception, letting a caller tell *which* guardrail blocked without parsing the message. |
 
 **`guardrails.provider.GuardrailProvider`** — registers custom guardrails, via `src/META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`.
 

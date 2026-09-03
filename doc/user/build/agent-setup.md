@@ -14,16 +14,11 @@ The editor is organized in five groups.
 
 ### Message
 
-| Field | Purpose |
-| --- | --- |
-| `System message` | The agent's standing instructions — who it is, what it must do, what format to produce. |
-| `User message` | The data to reason over on this call. |
-
 ![The Message group of the agent element](../img/agent-message-configurations.png)
 
 Both fields are multi-line, and both accept `<%=...%>` to inject process data. Anything you can reach from IvyScript can go into either message.
 
-A good system message is specific: the model knows nothing about your business, so state what to do, what to leave out, and what shape to return. Use `<%=...%>` for anything that should not be hard-coded into the element — company policy, the current department, an approval threshold:
+**`System message`** holds the agent's standing instructions — who it is, what it must do, what format to produce. Be specific: the model knows nothing about your business, so state what to do, what to leave out, and what shape to return. Use `<%=...%>` for anything that should not be hard-coded into the element, such as company policy, the current department, or an approval threshold:
 
 ```text
 You are a purchase request assistant for <%=in.companyName%>.
@@ -36,18 +31,15 @@ Anything above that must go to a human approver.
 Return a single sentence with the decision and the reason, and nothing else.
 ```
 
-Where those values come from is up to the process — a CMS entry, an Ivy variable, a read from an earlier step. A policy change then updates one source instead of every agent in the application.
+Where those values come from is up to the process — a CMS entry, an Ivy variable, a read from an earlier step. A policy change then updates one source instead of every agent in the application. Note that files are not handled in this field: every expression becomes text.
 
-The user message is usually a straight reference to a process data field:
+**`User message`** holds the data to reason over on this call, usually a straight reference to a process data field:
 
 ```text
 <%=in.invoiceText%>
 ```
 
-The two fields differ in one way, and it only matters for files:
-
-- **User message** — an expression that resolves to a file becomes image or PDF content. This is the field that supports [file extraction](file-extraction.md).
-- **System message** — every expression becomes text. Files are not handled here.
+This is also the field that supports [file extraction](file-extraction.md) — an expression resolving to a file becomes image or PDF content.
 
 If you run into trouble crafting these messages, [Messages and expressions](../troubleshooting.md#messages-and-expressions) covers what usually causes it.
 
@@ -73,54 +65,31 @@ See [Guardrails](../operate/guardrails.md).
 
 ### Model
 
-| Field | Notes |
-| --- | --- |
-| `Provider` | Empty falls back to `AI.DefaultProvider`. |
-| `Model` | A script field returning `String`, so quote it: `"gpt-4o"`. Empty falls back to the provider's `DefaultModel`. |
+**`Provider`** selects which model provider this agent calls. Leave it empty to use the application's provider from `AI.DefaultProvider`; set it when one agent needs something different, such as a self-hosted model for a step handling sensitive data.
 
-`Model` being a script field is easy to trip over — a bare `gpt-4o` will not compile. See [Model Providers](providers.md#per-agent-override) for the full resolution order and per-provider model names.
+**`Model`** selects which of that provider's models to use. Leave it empty for the provider's default model. This is a script field, so the value must be quoted: `"gpt-4o"` — a bare `gpt-4o` will not compile. See [Model Providers](providers.md#per-agent-override) for the resolution order and per-provider model names.
 
 ### Output
 
-| Field | Notes |
-| --- | --- |
-| `Expect result of type` | A script field returning a `Class`. Leave empty for a plain `String`. |
-| `Map result to` | Where the result is written, e.g. `in.summary`. |
-
 ![The Output group of the agent element](../img/agent-other-configurations.png)
 
-By default an agent returns plain text, and no output configuration is needed at all. Setting `Map result to` to `in.summary` writes the response into the `summary` field of the process data — a `String`, ready to display, log, or pass on. No parsing, no casting.
+**`Expect result of type`** declares the type the agent should return. Leave it empty for plain text, which is what most agents need and requires no output configuration at all. To get a typed Java object instead, set it to a class such as `com.axonivy.utils.ai.Invoice.class` — see [Structured output](#structured-output).
+
+**`Map result to`** is where the result is written, for example `in.summary`. The response lands in that process data field ready to display, log, or pass on — no parsing, no casting.
 
 If the mapped field stays empty after a run, [Troubleshooting](../troubleshooting.md#the-agent-did-not-answer) covers the usual cause.
 
 ## Structured output
 
-To get a typed object instead of a string, set `Expect result of type` to the class you want back:
+An agent returns text by default. To get a typed Java object instead, set `Expect result of type` to the class you want back:
 
 ```java
 com.axonivy.utils.ai.Invoice.class
 ```
 
-LangChain4j derives a JSON schema from the class, sends it to the model as a response-format constraint, and deserializes the reply into an instance. The rest of the process then reads typed fields directly:
+Smart Workflow derives a JSON schema from that class, sends it to the model as a response-format constraint, and deserializes the reply into an instance. Because the schema comes from the class, your field names are what the model sees, so name them the way you would describe them, since a clear `invoiceNumber` is worth more than a line of prompt. Any Ivy data class or plain Java class works, provided it is on the runtime classpath; a bare collection is not valid, so to return a list, declare a class with the list as one of its fields.
 
-```java
-in.result.invoiceNumber
-in.result.totalAmount
-```
-
-Field names are what the model sees, so name them the way you would describe them: `invoiceNumber`, `totalAmount`, `invoiceDate`. A clear name is worth more than a line of prompt.
-
-The field is a script expression that must evaluate to a `java.lang.Class`. `MyClass.class` is the usual way to write that, but any expression returning a `Class` works — including a variable, which is how the Portal bridge passes a caller-chosen type:
-
-```java
-in.resultType
-```
-
-> **Important:** A bare collection is not a supported output type. To return a list, wrap it in a composite object that has the list as a field.
-
-Both Ivy data classes and plain Java classes work, as long as the class is on the runtime classpath.
-
-Structured output is the one area where providers differ enough to change your design — Gemini does not support it at all, and Ollama drops the schema when the agent also has tools. Check [Provider Capabilities](../reference/capabilities.md#structured-output) before you rely on it.
+Check the structured output support of your provider in [Provider Capabilities](../reference/capabilities.md#structured-output).
 
 ## Example
 

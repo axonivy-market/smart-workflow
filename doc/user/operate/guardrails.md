@@ -169,7 +169,7 @@ Every guardrail execution is recorded, in both channels: the Ivy conversation hi
 
 - **Assuming blank means unguarded.** Blank inherits `AI.Guardrails.Default*`. This is the reverse of the tools field, where blank means none.
 - **Registering `PiiMaskingGuardrail` on one side only.** Worse than not registering it — see above.
-- **Matching on the error message.** Branch on the error code; the message is wrapped by LangChain4j and is not a stable contract.
+- **Matching on the error message.** Branch on the error code; the message is wrapped by Smart Workflow and is not a stable contract.
 - **Expecting an output guardrail to retry.** It does not. A false positive costs the whole call.
 - **Paying for the LLM classifier on every message.** Pin a cheap model and raise `MinLength` once you know your traffic.
 

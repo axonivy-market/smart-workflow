@@ -23,7 +23,7 @@ A minimal handler reads the reason off the error:
 in.result = in.error.getMessage();
 ```
 
-> **Important:** Branch on the **error code**, never on the message text. For guardrail violations the message comes from the guardrail's own reason string wrapped by LangChain4j — the wrapper names the internal adapter class rather than your guardrail, and the format is not part of the public contract. Treat the message as human-readable detail only.
+> **Important:** Branch on the **error code**, never on the message text. For guardrail violations the message comes from the guardrail's own reason string, wrapped by Smart Workflow — the wrapper names an internal adapter class rather than your guardrail, and the format is not part of the public contract. Treat the message as human-readable detail only.
 
 ## Problems without an error code
 
