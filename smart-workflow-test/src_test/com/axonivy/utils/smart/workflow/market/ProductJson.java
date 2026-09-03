@@ -8,7 +8,8 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.databind.JsonNode;
+
+import tools.jackson.databind.JsonNode;
 
 public class ProductJson {
 
@@ -23,7 +24,7 @@ public class ProductJson {
       var where = ProductJson.class.getResource("/").toURI();
       var repo = Path.of(where).getParent().getParent().getParent();
       var product = repo.resolve("smart-workflow-product").resolve("product.json");
-      try(var in = Files.newInputStream(product, StandardOpenOption.READ)){
+      try (var in = Files.newInputStream(product, StandardOpenOption.READ)) {
         return JsonUtils.getObjectMapper().readTree(in);
       }
     } catch (Exception e) {
@@ -33,14 +34,14 @@ public class ProductJson {
 
   private static List<String> installerArtifactIds(JsonNode product) {
     return stream(product.path("installers"))
-      .flatMap(ProductJson::installerEntries)
-      .map(entry -> entry.path("artifactId").asText())
-      .toList();
+        .flatMap(ProductJson::installerEntries)
+        .map(entry -> entry.path("artifactId").asString())
+        .toList();
   }
 
   private static Stream<JsonNode> installerEntries(JsonNode installer) {
     var data = installer.path("data");
-    switch (installer.path("id").asText()) {
+    switch (installer.path("id").asString()) {
       case "maven-import":
         return stream(data.path("projects"));
       case "maven-dependency":

@@ -20,9 +20,9 @@ import com.axonivy.utils.smart.workflow.demo.supplier.SupplierContact;
 import com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import tools.jackson.core.type.TypeReference;
 
 public class SupplierRepository extends AbstractMockRepository<Supplier> {
 

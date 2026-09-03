@@ -1,20 +1,21 @@
 package com.axonivy.utils.smart.workflow.utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ch.ivyteam.ivy.environment.Ivy;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public final class JsonUtils {
 
   static final ObjectMapper objectMapper =
-      new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+      JsonMapper.builderWithJackson2Defaults()
+          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+          .build();
 
   public static ObjectMapper getObjectMapper() {
     return objectMapper;
@@ -27,7 +28,7 @@ public final class JsonUtils {
     try {
       return getObjectMapper().readValue(jsonValue,
           getObjectMapper().getTypeFactory().constructCollectionType(List.class, classType));
-    } catch (IOException e) {
+    } catch (Exception e) {
       Ivy.log().error("Failed to convert JSON to entities: " + e);
     }
     return new ArrayList<T>();

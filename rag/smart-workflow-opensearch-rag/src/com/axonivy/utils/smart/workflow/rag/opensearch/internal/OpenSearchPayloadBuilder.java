@@ -9,10 +9,6 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
@@ -20,6 +16,9 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 final class OpenSearchPayloadBuilder {
 
@@ -151,7 +150,7 @@ final class OpenSearchPayloadBuilder {
     return root.toString();
   }
 
-  public static EmbeddingSearchResult<TextSegment> parseSearchResponse(String json, double minScore) throws JsonProcessingException {
+  public static EmbeddingSearchResult<TextSegment> parseSearchResponse(String json, double minScore) throws Exception {
     JsonNode root = JsonUtils.getObjectMapper().readTree(json);
     JsonNode hits = root.path(Fields.HITS).path(Fields.HITS);
 
@@ -161,31 +160,31 @@ final class OpenSearchPayloadBuilder {
       if (score < minScore) {
         continue;
       }
-      String text = hit.path(Fields.SOURCE).path(Fields.TEXT).asText("");
+      String text = hit.path(Fields.SOURCE).path(Fields.TEXT).asString("");
       Metadata metadata = new Metadata();
       for (var field : hit.path(Fields.SOURCE).path(Fields.METADATA).properties()) {
-        metadata.put(field.getKey(), field.getValue().asText());
+        metadata.put(field.getKey(), field.getValue().asString());
       }
       TextSegment segment = TextSegment.from(text, metadata);
-      String id = hit.path(Fields.ID).asText(UUID.randomUUID().toString());
+      String id = hit.path(Fields.ID).asString(UUID.randomUUID().toString());
       matches.add(new EmbeddingMatch<>(score, id, null, segment));
     }
     return new EmbeddingSearchResult<>(matches);
   }
 
-  public static OpenSearchIndexMeta parseIndexMeta(String json) throws JsonProcessingException {
+  public static OpenSearchIndexMeta parseIndexMeta(String json) throws Exception {
     JsonNode root = JsonUtils.getObjectMapper().readTree(json);
     if (!root.properties().iterator().hasNext()) {
       throw new IllegalStateException("Unexpected empty response when parsing index meta: " + json);
     }
-    JsonNode meta = root.elements().next().path("mappings").path(Meta.META);
+    JsonNode meta = root.path("mappings").path(Meta.META);
     return new OpenSearchIndexMeta(
-        meta.path(Meta.EMBEDDING_PROVIDER).asText(null),
-        meta.path(Meta.EMBEDDING_MODEL).asText(null),
+        meta.path(Meta.EMBEDDING_PROVIDER).asString(null),
+        meta.path(Meta.EMBEDDING_MODEL).asString(null),
         meta.path(Meta.CHUNK_SIZE).asInt(0),
         meta.path(Meta.CHUNK_OVERLAP).asInt(0),
-        meta.path(Meta.CREATED_AT).asText(null),
-        meta.path(Meta.LAST_INGESTED_AT).asText(null));
+        meta.path(Meta.CREATED_AT).asString(null),
+        meta.path(Meta.LAST_INGESTED_AT).asString(null));
   }
 
   public static String buildListDocumentsBody(int size) {
@@ -198,7 +197,7 @@ final class OpenSearchPayloadBuilder {
     return root.toString();
   }
 
-  public static Optional<String> parseBulkError(String responseBody) throws JsonProcessingException {
+  public static Optional<String> parseBulkError(String responseBody) throws Exception {
     JsonNode root = JsonUtils.getObjectMapper().readTree(responseBody);
     if (!root.path(Bulk.ERRORS).asBoolean(false)) {
       return Optional.empty();
