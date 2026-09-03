@@ -12,6 +12,7 @@
     "modifiers" : [ ]
   }, {
     "name" : "ticket",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
+     "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
+     "modifiers" : [ ]
   } ]
 }

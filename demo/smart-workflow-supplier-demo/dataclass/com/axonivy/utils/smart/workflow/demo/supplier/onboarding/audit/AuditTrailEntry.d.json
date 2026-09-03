@@ -11,7 +11,8 @@
   }, {
     "name" : "actorType",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AuditActorType",
-    "comment" : "Actor type such as USER, AGENT, SYSTEM"
+      "comment" : "Actor type such as USER, AGENT, SYSTEM",
+      "modifiers" : [ ]
   }, {
     "name" : "action",
     "comment" : "Functional action summary shown to users"
@@ -23,10 +24,12 @@
     "type" : "java.util.List<String>"
   }, {
     "name" : "decision",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalDecision"
+      "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalDecision",
+      "modifiers" : [ ]
   }, {
     "name" : "stage",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalStage"
+      "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalStage",
+      "modifiers" : [ ]
   }, {
     "name" : "comment"
   }, {
@@ -34,7 +37,8 @@
     "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.ResolvedClarificationItem>"
   }, {
     "name" : "entryType",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AuditEntryType"
+     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AuditEntryType",
+     "modifiers" : [ ]
   }, {
     "name" : "requestSummaryLines",
     "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.RequestSummaryLine>"

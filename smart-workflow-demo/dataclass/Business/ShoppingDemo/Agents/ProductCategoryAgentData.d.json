@@ -4,11 +4,13 @@
   "namespace" : "Business.ShoppingDemo.Agents",
   "fields" : [ {
     "name" : "category",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory"
+      "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory",
+      "modifiers" : [ ]
   }, {
     "name" : "instructions"
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryAgentResponse"
+     "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryAgentResponse",
+     "modifiers" : [ ]
   } ]
 }

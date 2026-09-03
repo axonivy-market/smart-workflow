@@ -4,10 +4,12 @@
   "namespace" : "Business.ShoppingDemo.Agents",
   "fields" : [ {
     "name" : "brand",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand"
+      "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand",
+      "modifiers" : [ ]
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse"
+      "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse",
+      "modifiers" : [ ]
   }, {
     "name" : "instructions"
   } ]

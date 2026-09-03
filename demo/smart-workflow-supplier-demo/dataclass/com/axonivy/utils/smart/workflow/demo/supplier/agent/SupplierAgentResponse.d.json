@@ -5,7 +5,8 @@
   "fields" : [ {
     "name" : "status",
     "type" : "com.axonivy.utils.smart.workflow.demo.enums.Status",
-    "comment" : "Status of the action"
+    "comment" : "Status of the action",
+    "modifiers" : [ ]
   }, {
     "name" : "feedback",
     "comment" : "Feedback after running an action"
