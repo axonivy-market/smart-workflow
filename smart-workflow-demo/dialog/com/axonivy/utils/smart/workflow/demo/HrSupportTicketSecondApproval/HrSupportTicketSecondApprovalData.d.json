@@ -3,15 +3,19 @@
   "simpleName" : "HrSupportTicketSecondApprovalData",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.HrSupportTicketSecondApproval",
   "fields" : [ {
-    "name" : "supportTicketId"
+    "name" : "supportTicketId",
+    "modifiers" : [ ]
   }, {
     "name" : "supportTicket",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
+    "modifiers" : [ ]
   }, {
     "name" : "requestor",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee",
+    "modifiers" : [ ]
   }, {
     "name" : "firstApprover",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee",
+    "modifiers" : [ ]
   } ]
 }

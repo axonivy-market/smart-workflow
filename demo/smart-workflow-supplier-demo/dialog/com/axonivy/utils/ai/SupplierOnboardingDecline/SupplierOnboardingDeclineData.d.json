@@ -4,12 +4,15 @@
   "namespace" : "com.axonivy.utils.ai.SupplierOnboardingDecline",
   "fields" : [ {
     "name" : "request",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest",
+    "modifiers" : [ ]
   }, {
     "name" : "agentResponse",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "notificationRecords",
-    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.NotificationRecord>"
+    "type" : "java.util.List<com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.NotificationRecord>",
+    "modifiers" : [ ]
   } ]
 }
