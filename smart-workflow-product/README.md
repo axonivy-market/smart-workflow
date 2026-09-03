@@ -1,5 +1,7 @@
 # Smart Workflow
 
+*[Deutsche Version](README_DE.md)*
+
 **Smart Workflow** brings AI directly into Axon Ivy, so developers can build, run, and improve AI agents inside existing Axon processes. It lets business workflows leverage large language models to understand natural language, make autonomous decisions, and adapt to changing requirements — all without heavy architectural changes.
 
 Key benefits of Smart Workflow:
@@ -16,6 +18,22 @@ Key benefits of Smart Workflow:
 The **user is solely responsible** for the configuration, deployment, and operation of the AI and its associated agents. Any decisions, actions, or outcomes resulting from the use of this connector are entirely the responsibility of the user.
 
 We provide only the **technical capability** to enable such configurations and expressly disclaim any liability for misuse, misconfiguration, or unintended consequences arising from its use. By using this connector, you acknowledge and accept these limitations.
+
+## Features
+
+| Feature | What it gives you |
+| --- | --- |
+| [AI agent element](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/agent-setup.md) | `AgenticProcessCall` — an agent as a process step, returning text or a typed Java object |
+| [Model providers](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md) | Hosted APIs, an enterprise platform, or a model on your own hardware — chosen globally or per agent |
+| [Tools](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/tools.md) | Any callable sub-process becomes a tool the agent can invoke, plus Java tools and a built-in `webSearch` |
+| [File extraction](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/file-extraction.md) | Read invoices, forms and scans directly from PDF and image files |
+| [RAG](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/rag.md) | Ground answers in your own documents with OpenSearch vector search |
+| [Human in the loop](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/human-in-the-loop.md) | Suspend an agent mid-run for a human decision as an Ivy task, then resume it |
+| [Guardrails](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/guardrails.md) | Prompt-injection defence, credential-leak blocking, and PII masking for GDPR-sensitive data |
+| [Circuit breaker](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/circuit-breaker.md) | One switch that stops every AI call in the application |
+| [Observability](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/observability.md) | Arize Phoenix tracing, Ivy conversation history for audit, and AI-usage custom fields |
+
+📘 **[Full documentation](https://github.com/axonivy-market/smart-workflow/blob/master/README.md)** · 🚀 **[Getting Started](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/getting-started.md)**
 
 ## Demo
 
@@ -75,7 +93,7 @@ This response is mapped to the `AxonIvySupportResponse` object and can be used d
 <details>
 <summary><strong>How to Run the Demo</strong></summary>
 
-1. Ensure you have completed the [Configurations](#configurations) section.
+1. Ensure you have completed the [Setup](#setup) section.
 2. Start **Axon Ivy Support** process with a support question and username.
 3. Review the agent's response, which includes classification, task creation (if needed), and a summary.
 
@@ -180,7 +198,7 @@ To extract from a file, include the file content in the agent's user message. Th
 
 </details>
 
-Not all providers support multimodal input — see the [Models Contribution Guideline](../doc/user/MODELS.md#file-extraction-support) for supported providers and file types.
+Not all providers support multimodal input — see [Provider Capabilities](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/reference/capabilities.md#file-extraction) for supported providers and file types.
 
 ---
 
@@ -188,12 +206,12 @@ Not all providers support multimodal input — see the [Models Contribution Guid
 
 This demo shows how built-in Smart Workflow guardrails protect AI agents from prompt injection attacks and prevent sensitive data from leaking in AI responses. Without protection, a malicious user can craft a message that overrides the system prompt or tricks the agent into revealing internal data.
 
-Two defense layers are configured in the agent's `inputGuardrails` / `outputGuardrails` fields:
+Two defence layers are configured in the agent's guardrail pickers:
 
 - `PromptInjectionInputGuardrail` — inspects user input before it reaches the AI model and blocks known injection patterns
 - `SensitiveDataOutputGuardrail` — scans the AI response before it is returned and blocks output containing API keys or private keys
 
-Default guardrails can be set globally in `variables.yaml` under `AI.Guardrails.DefaultInput` and `AI.Guardrails.DefaultOutput` — any agent without explicit guardrails inherits these defaults.
+Default guardrails can be set globally in the Engine Cockpit, under `AI.Guardrails.DefaultInput` and `AI.Guardrails.DefaultOutput` — any agent without explicit guardrails inherits these defaults.
 
 <details>
 <summary><strong>Demo flow</strong></summary>
@@ -216,7 +234,7 @@ Default guardrails can be set globally in `variables.yaml` under `AI.Guardrails.
 
 This demo shows how to implement and register a domain-specific business rule as a reusable custom guardrail. A company policy requires that agents never mention competitor products. The `BlockCompetitorMentionGuardrail` enforces this rule in one place — once registered, it can be added to any agent by name without touching individual system prompts.
 
-Developers implement `SmartWorkflowInputGuardrail`, expose it through a `GuardrailProvider`, and register the provider in `META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`. The guardrail name then appears automatically in the Available Input Guardrails list. Each agent opts in via `inputGuardrails: ["BlockCompetitorMentionGuardrail"]`; to apply it to every agent, add it to `AI.Guardrails.DefaultInput` in `variables.yaml`.
+Developers implement `SmartWorkflowInputGuardrail`, expose it through a `GuardrailProvider`, and register the provider via SPI. The guardrail name then appears automatically in the agent's `Input guardrails` picker. To apply it to every agent, add it to `AI.Guardrails.DefaultInput` in the Engine Cockpit.
 
 <details>
 <summary><strong>Demo flow</strong></summary>
@@ -235,47 +253,33 @@ Developers implement `SmartWorkflowInputGuardrail`, expose it through a `Guardra
 
 </details>
 
+See [Writing a custom guardrail](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/guardrails.md#writing-a-custom-guardrail) for the step-by-step guide.
+
 ---
 
-## Best Practices
+### Agent Patterns
 
-The demos below illustrate **best practices** for structuring Axon Ivy agents and tools with Smart Workflow. Three complementary patterns are shown: one for tightly scoping an agent's tool access, one for linear task-based orchestration, and one for feature-grouped tool reuse.
+The demo project also illustrates three ways to structure agents and tools in a larger application: a linear **Agent Pipeline**, a **Self-Contained Agent** with co-located tools, and **Feature-Grouped** agents that share tools across a business domain.
 
-### Agent Pipeline
-
-A linear chain of agents where each one processes an input and passes the result to the next stage. Best practice: assign a dedicated task to each agent so that execution is tracked, resumable, and visible in the task history.
-
-See the **Agent Pipeline Demo** process in `smart-workflow-demo`.
-
-### Self-Contained Agent with Co-located Tools
-
-The agent and its tools are self-contained in one file with no cross-process references, making the full capability easy to ship and expose as a single callable interface.
-
-See the **Self-Contained Agent** process in `smart-workflow-demo`.
-
-### Feature-Grouped Agents and Tools
-
-This pattern shows how to organize agents and tools by business domain when tools need to be shared across multiple agents. Rather than bundling everything inside a single callable, each agent and each tool group lives in its own process file under a common feature folder — making the domain boundary explicit and allowing tool reuse.
-
-See the **Shopping Demo** process in `smart-workflow-demo`.
+See [Agent Patterns](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/patterns.md).
 
 ## Setup
 
-To start your AI initiative, we need to define the Models and Tools in advance.
+To start your AI initiative, define the Models and Tools in advance. For a step-by-step walkthrough from installation to a working agent, follow [Getting Started](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/getting-started.md).
 
 ### Models
 
-Smart Workflow isn't bound to a specific AI vendor. 
+Smart Workflow isn't bound to a specific AI vendor.
 You can select your preferred model providers at installation time.
 
-After installation, please choose your default model provider
+After installation, please choose your default model provider.
 
-The selection of your provider is done with the variable `AI.DefaultProvider`. 
+The selection of your provider is done with the variable `AI.DefaultProvider`, set in the Engine Cockpit under **Variables**.
 Furthermore, most model providers need an ApiKey or another unique identifier.
 Check your provider below, to see which variables need to be set in addition.
 
 To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
-When contributing, make sure to follow the [Models Contribution Guideline](../doc/user/MODELS.md) to keep your provider aligned with the Smart Workflow ecosystem.
+When contributing, make sure to follow the [Contributing a provider](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#contributing-a-provider) to keep your provider aligned with the Smart Workflow ecosystem.
 
 ```yaml
 @variables.yaml@
@@ -358,7 +362,7 @@ Example Configuration:
 <summary>Anthropic setup instructions</summary>
 Claude models (including Claude Opus, Sonnet and Haiku) from Anthropic are supported. Import the `smart-workflow-anthropic` project, configure your API key to get started.
 
-> **Note:** Structured outputs are only supported on Claude Opus 4.6, Claude Sonnet 4.6, Claude Sonnet 4.5, Claude Opus 4.5, and Claude Haiku 4.5. Older models (e.g., Claude Sonnet 4, Claude Opus 4) do not support this feature.
+> **Note:** Structured output is enabled for every Claude model Smart Workflow lists — there is no version gate. Newer models (Claude Opus 4.6, Sonnet 4.6, Opus 4.5, Sonnet 4.5, Haiku 4.5) are more reliable at producing schema-valid output than the 4.0 generation.
 
 ```yaml
 @variables.anthropic@
@@ -381,7 +385,7 @@ Ollama lets you run open-source models (Llama, Gemma, Qwen, Mistral, ...) locall
 
 Configure the `BaseUrl` of your Ollama server (defaults to `http://localhost:11434`) and the `DefaultModel`. No API key is required.
 
-> **Note:** Structured output support depends on the underlying model. Recent models (Llama 3.1+, Gemma 3, Qwen 3, Mistral Nemo, ...) can return JSON-schema-constrained responses on Ollama 0.3.0+. Older or smaller models may return free-form text and break structured extraction.
+> **Note:** On Ollama, structured output and tools are mutually exclusive — when an agent has both, the schema is dropped silently. Structured output also depends on the underlying model: recent models (Llama 3.1+, Gemma 3, Qwen 3, Mistral Nemo, ...) handle JSON-schema-constrained responses on Ollama 0.3.0+, while older or smaller models may return free-form text.
 
 > **Note on embeddings:** Pull a dedicated embedding model such as `nomic-embed-text` or `mxbai-embed-large` and set it as `DefaultEmbeddingModel` to use the RAG features with Ollama.
 
@@ -397,26 +401,32 @@ Example Configuration:
 
 </details>
 
-### File Extraction
+### Defining an AI agent
 
-Axon Ivy Smart Workflow supports extracting content from PDF and image files (PNG, JPG, and JPEG) using multimodal LLMs.
-This allows AI agents to read and reason over uploaded documents and images directly within your workflows.
+Add an **AgenticProcessCall** element from **Extension > Program Elements** in the Designer. Its `Configuration` tab has five groups: **Message** for the system and user messages, **Tools** for what the agent may call, **Guardrails** for input and output validation, **Model** for the provider and model, and **Output** for the result type and where it is written.
 
-Not all providers and models support multimodal input.
-Refer to the [Models Contribution Guideline](../doc/user/MODELS.md#file-extraction-support) for the full list of supported providers and file types.
+Two behaviours surprise people, and they are opposites: an empty `Available tools` field grants the agent **no** tools, while empty guardrail fields **inherit** the application defaults.
+
+For the complete field reference — including structured output, screenshots of each group, and the failure modes worth knowing about — see [Agent Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/agent-setup.md).
+
+### Defining tools
+
+AI agents require tools to perform tasks. Smart Workflow supports two kinds: **Callable Process Tools** (any callable sub-process tagged `tool`) and **Java Tools** (implement `SmartWorkflowTool` and register via SPI). Callable processes are the recommended route — they give the agent full access to the process designer.
+
+For step-by-step instructions on creating both tool types, see [Defining Tools](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/tools.md).
 
 ### Guardrails
 
-Guardrails protect AI agents by validating user input before it reaches the model and by checking model outputs before they are used. Smart Workflow includes the following built-in guardrails:
+Guardrails validate user input before it reaches the model and check model output before it is used. Four are built in:
 
 | Guardrail | Type | Description |
-|-----------|------|-------------|
-| `PromptInjectionInputGuardrail` | Input | Blocks common prompt injection attacks |
-| `SensitiveDataOutputGuardrail` | Output | Blocks responses containing API keys or private keys |
+| --- | --- | --- |
+| `PromptInjectionInputGuardrail` | Input | Blocks common prompt injection attacks using regex patterns. No LLM cost. |
+| `AiPromptInjectionInputGuardrail` | Input | LLM classifier that also catches roleplay jailbreaks, authority spoofing and narrative payloads. |
+| `SensitiveDataOutputGuardrail` | Output | Blocks responses that leak credentials. |
+| `PiiMaskingGuardrail` | Input **and** Output | Masks personal data before it reaches the model and restores it in the response. For GDPR and similar regimes. |
 
-#### Configuring Default Guardrails
-
-Set default guardrails in `variables.yaml`:
+Select them per agent in the element's guardrail pickers, or set application-wide defaults in the Engine Cockpit:
 
 ```yaml
 Variables:
@@ -427,64 +437,10 @@ Variables:
       DefaultOutput: SensitiveDataOutputGuardrail
 ```
 
-#### Using Guardrails in Agents
+An agent that specifies no guardrails inherits these defaults. Smart Workflow also lets you implement custom guardrails and handle guardrail errors — see [Guardrails](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/guardrails.md).
 
-In the agent configuration, specify guardrails as a String array:
+### File extraction
 
-```java
-// Input guardrails
-["PromptInjectionInputGuardrail", "MyCustomInputGuardrail"]
+Smart Workflow supports extracting content from PDF and image files (PNG, JPG, JPEG) using multimodal LLMs, so agents can read and reason over uploaded documents directly within your workflows. Reference the file in the agent's user message and the result maps to a typed Java class.
 
-// Output guardrails
-["SensitiveDataOutputGuardrail", "MyCustomOutputGuardrail"]
-```
-
-If no guardrails are specified, the agent uses the default guardrails from `variables.yaml`.
-
-Smart Workflow also lets you implement custom guardrails and handle guardrail errors. For more details, see the [Guardrails Guideline](../doc/user/GUARDRAILS.md).
-
-### Defining Tools
-
-To function effectively, AI agents require tools to perform tasks. Smart Workflow supports two kinds of tools: **Callable Process Tools** (any tagged callable sub-process) and **Java Tools** (implement `SmartWorkflowTool` and register via SPI).
-
-For step-by-step instructions on creating both tool types, see the [Tools Guide](../doc/user/TOOLS.md).
-
-### Defining AI agent
-
-To define an AI agent, create a program element backed by the `com.axonivy.utils.smart.workflow.AgenticProcessCall` Java bean. In the `Configuration` tab, you can access and customize detailed settings for your AI agent.
-
-#### Message
-
-In the `Message` section, you can specify the user message and system message for the agent. By allowing code injection directly into these fields, Smart Workflow offers a convenient way for developers to define messages before they are sent to the AI service.
-
-![Message configurations](img/agent-message-configurations.png)
-
-#### Tools
-
-Below the `Messages` section is the `Tools` section, where you can define the set of tools the agent should use as a String array. For example:
-
-```java
-["findProduct","createProduct","checkProductDependencies", "createProductSearchCriteria"]
-```
-
-By default, if no tools are specified, Smart Workflow assumes the agent can use all available tools. Therefore, it is recommended to define a specific set of tools for each agent to improve response speed and prevent the use of inappropriate tools.
-
-#### Model
-
-Not all AI agents are created equal. 
-In Axon Ivy, we recognize that AI agents handle tasks of varying complexity. 
-Some agents perform simple tasks, such as creating leave requests or gathering user information, 
-while others must search databases for products and evaluate dependencies like suppliers and brands. 
-Therefore, Smart Workflow allows developers to select the underlying AI model based on the use case.
-
-To do this, simply enter the desired AI model in the `Model` section. 
-By default, if no model is specified, Smart Workflow uses the model defined in the variable `AI.OpenAI.Model`.
-
-#### Output
-
-For enterprise-level AI applications, it is common to require the AI agent’s result in the form of a usable object.
-To address this need, the Smart Workflow AI agent can produce output as a Java object, ready to be used directly by Axon Ivy processes.
-
-You can easily configure this by specifying both the expected result type and the target object to map the result to in the `Output` section.
-
-![Other configurations](img/agent-other-configurations.png)
+Not all providers and models support multimodal input — see [Provider Capabilities](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/reference/capabilities.md#file-extraction) and [File Extraction](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/file-extraction.md).
