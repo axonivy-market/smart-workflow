@@ -2,6 +2,7 @@ package com.axonivy.utils.ai.mock;
 
 import java.util.function.Function;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -10,12 +11,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.swagger.v3.oas.annotations.Hidden;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 @Path(MockOpenAI.PATH_SUFFIX)
 @PermitAll // allow unauthenticated calls
@@ -44,7 +41,7 @@ public class MockOpenAI {
   public static JsonNode json(String raw) {
     try {
       return MAPPER.readTree(raw);
-    } catch (JsonProcessingException ex) {
+    } catch (Exception ex) {
       throw new RuntimeException("Failed to parse JSON from string: " + raw, ex);
     }
   }
