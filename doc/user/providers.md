@@ -147,20 +147,15 @@ Do not open `variables.yaml` in a text editor to set a key. A key typed there st
 
 > **Note:** Keys are read on each agent call, so a key you add or rotate in the Cockpit takes effect on the next call, with no restart.
 
-## Per-agent override
+## Setting a provider and model for one agent
 
-Every `AgenticProcessCall` element has a **Model** group with two fields:
+Every `AgenticProcessCall` element has a **Model** group with two fields. By default an agent uses the application's provider and that provider's default model, so both can stay empty — set them when one agent needs something different.
 
-| Field | Widget | Notes |
-| --- | --- | --- |
-| `Provider` | picker | One of the installed providers. Empty means fall back to `AI.DefaultProvider`. |
-| `Model` | script | An IvyScript expression returning a `String`, so the value must be **quoted**: `"gpt-4o"`. Empty means fall back to that provider's `DefaultModel`. |
+**`Provider`** selects which model provider this agent calls. Leave it empty to use `AI.DefaultProvider`; set it when one agent needs something the others do not, such as a self-hosted model for a step handling sensitive data. Selecting a provider here overrides the default for that agent only. If the provider cannot be found — most often because its connector project is not installed — the agent call fails with `Unknown model provider <name>`.
 
-`Model` being a script field is easy to get wrong — a bare `gpt-4o` does not compile. It also means the model can be computed at runtime, e.g. `in.selectedModel`.
+**`Model`** selects which of that provider's models to use. Leave it empty for the provider's `DefaultModel`. This is a script field, so the value must be quoted: `"gpt-4o"` — a bare `gpt-4o` will not compile. Being a script field also means the model can be computed at runtime, for example `in.selectedModel`.
 
-By default, an agent uses the provider set in `AI.DefaultProvider`. Selecting a `Provider` on the element overrides this for that agent only. If the selected provider cannot be found — most often because its connector project is not installed — the agent call fails with `Unknown model provider <name>`.
-
-### Mixing providers in one process
+## Mixing providers in one process
 
 Since the choice is per element, a single process can route each step to whatever fits it. A three-step invoice flow might use:
 

@@ -65,9 +65,9 @@ See [Guardrails](guardrails.md).
 
 ### Model
 
-**`Provider`** selects which model provider this agent calls. Leave it empty to use the application's provider from `AI.DefaultProvider`; set it when one agent needs something different, such as a self-hosted model for a step handling sensitive data.
+`Provider` and `Model` decide which model answers this agent. Both are optional — leave them empty and the agent uses the application's default provider and that provider's default model.
 
-**`Model`** selects which of that provider's models to use. Leave it empty for the provider's default model. This is a script field, so the value must be quoted: `"gpt-4o"` — a bare `gpt-4o` will not compile. See [Model Providers](providers.md#per-agent-override) for the resolution order and per-provider model names.
+Set them when one agent needs something different, such as a cheaper model for a trivial step. See [Setting a provider and model for one agent](providers.md#setting-a-provider-and-model-for-one-agent) for the values these fields accept and how they are resolved.
 
 ### Output
 
