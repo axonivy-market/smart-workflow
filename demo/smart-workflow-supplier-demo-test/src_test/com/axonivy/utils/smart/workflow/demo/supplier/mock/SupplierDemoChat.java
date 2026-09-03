@@ -1,10 +1,8 @@
 package com.axonivy.utils.smart.workflow.demo.supplier.mock;
 
-import jakarta.ws.rs.core.Response;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
 import ch.ivyteam.test.resource.ResourceResponder;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
 
 public class SupplierDemoChat {
 

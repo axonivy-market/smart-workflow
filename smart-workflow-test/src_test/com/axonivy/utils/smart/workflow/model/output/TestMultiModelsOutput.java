@@ -1,8 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.output;
 
-import jakarta.ws.rs.core.Response;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -15,8 +14,6 @@ import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.test.Person;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
@@ -25,6 +22,9 @@ import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
 @RestResourceTest
 public class TestMultiModelsOutput {
@@ -65,7 +65,7 @@ public class TestMultiModelsOutput {
   private Response multiModel(JsonNode request, ResourceResponder responder) {
     var messages = (ArrayNode) request.get("messages");
     if (messages.size() == 2) {
-      if ("Only generate the genre field".equals(messages.get(0).get("content").asText())) {
+      if ("Only generate the genre field".equals(messages.get(0).get("content").asString())) {
         return responder.send("response2.json");
       }
       return responder.send("response1.json");
