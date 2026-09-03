@@ -14,7 +14,7 @@ Observability is configured at **application level** and applies to every agent 
 
 Arize Phoenix is a tracing platform that collects Agent metrics from the Axon Ivy Engine. It provides a rich user-interface to oversee interactions of the users with AI Models, Tool calls, Token costs and more. In addition, it allows you to re-play real requests with alternative models or prompts.
 
-![arize-tool-call](../img/arize_toolCall.png)
+![arize-tool-call](img/arize_toolCall.png)
 
 ### Setup
 
@@ -57,7 +57,7 @@ Arize Phoenix is a tracing platform that collects Agent metrics from the Axon Iv
 4. Set the variable `AI.Observability.Openinference.Enabled` to `true` in the Engine Cockpit, under **Variables**.
 5. Run an AI assisted process in smart-workflow-demo
 
-![Arize Phoenix receiving traces from the VS Code engine](../img/arize_vsc-engine.png)
+![Arize Phoenix receiving traces from the VS Code engine](img/arize_vsc-engine.png)
 
 #### Dev container
 
@@ -71,7 +71,7 @@ To query costs, models or prompts from past AI assistant runs open Arize Phoenix
 2. Enter filter condition `span_kind == 'LLM'`
 3. Switch from `Root Spans` to `All` next to the filter bar
 
-![Filtering LLM spans in Arize Phoenix](../img/arize_filterLLM.png)
+![Filtering LLM spans in Arize Phoenix](img/arize_filterLLM.png)
 
 #### Filters
 
@@ -173,4 +173,4 @@ This is the one observability channel that is **on by default**. To disable it, 
 - [Guardrails](guardrails.md) — what produces the guardrail records above
 - [Circuit Breaker](circuit-breaker.md) — confirming afterwards which calls were stopped
 - [Security and Data](security-and-data.md) — what these records mean for retention
-- [Variables](../reference/variables.md) — every observability switch
+- [Variables](reference/variables.md) — every observability switch

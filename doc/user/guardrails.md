@@ -157,13 +157,139 @@ A blocked message becomes a BPM error. Which code you get depends on which side 
 | `smartworkflow:guardrail:input:violation` | An input guardrail blocked the user message. |
 | `smartworkflow:guardrail:output:violation` | An output guardrail blocked the model's response. |
 
-Catch either with an **Error Boundary Event** on the agent element — the full recipe, and every other code Smart Workflow raises, is in [Error Codes](../reference/error-codes.md).
+Catch either with an **Error Boundary Event** on the agent element — the full recipe, and every other code Smart Workflow raises, is in [Error Codes](reference/error-codes.md).
 
 > **Note:** Output guardrails do not retry. The first failure discards the response — there is no second attempt with a re-prompt, so an output guardrail that blocks legitimate answers costs you the whole call.
 
 ## Observability
 
 Every guardrail execution is recorded, in both channels: the Ivy conversation history when `AI.Observability.Ivy.Enabled` is on, and a dedicated `GUARDRAIL` span in Arize Phoenix when `AI.Observability.Openinference.Enabled` is on. The full record and span layouts are in [Observability](observability.md#guardrail-records).
+
+## Writing a custom guardrail
+
+Beyond the built-ins, you can implement your own — a domain rule, a compliance check, a redaction pass. A custom guardrail is a Java class discovered through SPI; once registered, its name appears in the pickers like any built-in. The `BlockCompetitorMentionGuardrail` in the demo project is a complete worked example: a company policy that agents must never mention competitor products, enforced in one place instead of in every system prompt.
+
+### The contract
+
+Input and output guardrails share one interface; the two sub-interfaces are markers that only say which list a guardrail belongs in.
+
+```java
+public interface SmartWorkflowGuardrail {
+  GuardrailResult evaluate(String message);
+
+  default GuardrailResult evaluate(String message, String invocationId) {
+    return evaluate(message);
+  }
+
+  default String name() {
+    return getClass().getSimpleName();
+  }
+}
+```
+
+Implement the single-argument `evaluate` for a stateless check. Override the two-argument form only if you need to correlate the input and output halves of the same agent call — that is how `PiiMaskingGuardrail` pairs its masking with its restoration.
+
+`GuardrailResult` offers four outcomes:
+
+| Factory | Effect |
+| --- | --- |
+| `allow()` | Pass the message through unchanged. |
+| `allowWithRewrite(String)` | Pass through, replacing the message with your version. Use for redaction or normalization rather than rejection. |
+| `block(String reason)` | Reject, with the reason surfaced in the BPM error. |
+| `block(String reason, Throwable cause)` | Reject, attaching a cause. The cause travels through the guardrail exception, letting callers distinguish *which* guardrail blocked without inspecting the reason text. |
+
+### 1. Write the guardrail
+
+An input guardrail implements `SmartWorkflowInputGuardrail`:
+
+```java
+package com.example.guardrails;
+
+import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
+
+public class MyCustomInputGuardrail implements SmartWorkflowInputGuardrail {
+
+  @Override
+  public GuardrailResult evaluate(String message) {
+    if (containsBadContent(message)) {
+      return GuardrailResult.block("Message contains bad content");
+    }
+    return GuardrailResult.allow();
+  }
+
+  private boolean containsBadContent(String message) {
+    // Your validation logic
+    return false;
+  }
+}
+```
+
+An output guardrail is the same shape against `SmartWorkflowOutputGuardrail`:
+
+```java
+package com.example.guardrails;
+
+import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
+
+public class MyCustomOutputGuardrail implements SmartWorkflowOutputGuardrail {
+
+  @Override
+  public GuardrailResult evaluate(String message) {
+    if (containsSensitiveData(message)) {
+      return GuardrailResult.block("Response contains sensitive data");
+    }
+    return GuardrailResult.allow();
+  }
+
+  private boolean containsSensitiveData(String message) {
+    // Your validation logic
+    return false;
+  }
+}
+```
+
+### 2. Group them in a provider
+
+```java
+package com.example.guardrails;
+
+import java.util.List;
+
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
+
+public class MyGuardrailProvider implements GuardrailProvider {
+
+  @Override
+  public List<SmartWorkflowInputGuardrail> getInputGuardrails() {
+    return List.of(new MyCustomInputGuardrail());
+  }
+
+  @Override
+  public List<SmartWorkflowOutputGuardrail> getOutputGuardrails() {
+    return List.of(new MyCustomOutputGuardrail());
+  }
+}
+```
+
+### 3. Register the provider via SPI
+
+Create `src/META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`:
+
+```text
+com.example.guardrails.MyGuardrailProvider
+```
+
+> **Important:** This registration is required. Without a registered `GuardrailProvider`, Smart Workflow never discovers your guardrails and they do not appear in the pickers.
+
+> **Note:** Only the **first line** of a services file is read. To register two providers, use two files — a second class name in the same file is silently ignored.
+
+### 4. Use it
+
+The guardrail's `name()` — the simple class name unless you override it — now appears in the `Input guardrails` or `Output guardrails` picker on any agent element. To apply it everywhere, add the name to `AI.Guardrails.DefaultInput` or `AI.Guardrails.DefaultOutput` in the Engine Cockpit.
 
 ## Common mistakes
 
@@ -172,13 +298,14 @@ Every guardrail execution is recorded, in both channels: the Ivy conversation hi
 - **Matching on the error message.** Branch on the error code; the message is wrapped by Smart Workflow and is not a stable contract.
 - **Expecting an output guardrail to retry.** It does not. A false positive costs the whole call.
 - **Paying for the LLM classifier on every message.** Pin a cheap model and raise `MinLength` once you know your traffic.
+- **Writing a custom guardrail and forgetting the SPI registration.** The class compiles, the guardrail never runs, and nothing warns you. This is the usual cause.
+- **Holding state in a guardrail instance.** The instance is shared across all agents and concurrent calls. If you need per-call state, key it on the `invocationId` from the two-argument `evaluate`.
 
 ## See also
 
-- [Agent Setup](../build/agent-setup.md) — where guardrails are configured on the element
-- [Custom Guardrails](../contribute/guardrails-spi.md) — implementing and registering your own
+- [Agent Setup](agent-setup.md) — where guardrails are configured on the element
 - [Observability](observability.md) — viewing guardrail records and spans
-- [Error Codes](../reference/error-codes.md) — handling a violation
+- [Error Codes](reference/error-codes.md) — handling a violation
 - [Security and Data](security-and-data.md) — what leaves your network
 
 For working examples, see the [`GuardrailDemo`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/process/Features/GuardrailDemo.p.json) process, which has separate start links for the prompt-injection, sensitive-data, PII-masking, and custom-guardrail paths.

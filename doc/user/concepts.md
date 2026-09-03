@@ -18,7 +18,7 @@ Nothing else. The agent has no access to your database, your process history, or
 
 The **provider** is the vendor integration — OpenAI, Anthropic and Ollama among others. The **model** is the specific model within it, like `gpt-4.1-mini` or `claude-haiku-4-5`.
 
-Both are chosen per element, and both fall back: an empty `Provider` uses `AI.DefaultProvider`, an empty `Model` uses that provider's `DefaultModel`. Because the choice is per element, one process can use three different providers — see [Mixing providers](build/providers.md#mixing-providers-in-one-process).
+Both are chosen per element, and both fall back: an empty `Provider` uses `AI.DefaultProvider`, an empty `Model` uses that provider's `DefaultModel`. Because the choice is per element, one process can use three different providers — see [Mixing providers](providers.md#mixing-providers-in-one-process).
 
 They differ in what they support — check [Provider Capabilities](reference/capabilities.md) before relying on file input or typed output.
 
@@ -38,7 +38,7 @@ Two rules follow from how they work:
 - An empty `Available tools` field means the agent has **no tools to use at all**.
 - Every tool you grant costs tokens in every request and gives the model another way to choose wrong. Keep lists tight.
 
-See [Defining Tools](build/tools.md).
+See [Defining Tools](tools.md).
 
 ## Structured output
 
@@ -54,7 +54,7 @@ A **guardrail** inspects a message and allows, rewrites, or blocks it. Input gua
 
 Leaving the guardrail fields empty does **not** mean the agent has no guardrails. It uses the default guardrails set for the application. This is the opposite of the tools field, where empty means no tools at all.
 
-See [Guardrails](operate/guardrails.md).
+See [Guardrails](guardrails.md).
 
 ## Memory
 
@@ -62,7 +62,7 @@ Each agent call is self-contained. The agent works from its system message, its 
 
 Within a call, the agent keeps the full conversation and remembers its own tool results while it works. That message list grows with each tool call and has no cap, so watch the cost on long tool loops.
 
-To let an agent continue a conversation in a later call — for example when a person has to answer something before it can finish — use the `aiMemoryId` process data field. See [Human in the Loop](build/human-in-the-loop.md) for how it works and when to reach for it.
+To let an agent continue a conversation in a later call — for example when a person has to answer something before it can finish — use the `aiMemoryId` process data field. See [Human in the Loop](human-in-the-loop.md) for how it works and when to reach for it.
 
 ## Configuration
 
@@ -75,7 +75,7 @@ See [Variables](reference/variables.md) for the complete list.
 ## See also
 
 - [Getting Started](getting-started.md) — build your first agent
-- [Agent Setup](build/agent-setup.md) — the element in full
-- [Agent Patterns](build/patterns.md) — arranging more than one agent
-- [Security and Data](operate/security-and-data.md) — what leaves your network
+- [Agent Setup](agent-setup.md) — the element in full
+- [Agent Patterns](patterns.md) — arranging more than one agent
+- [Security and Data](security-and-data.md) — what leaves your network
 - [Troubleshooting](troubleshooting.md) — when something does not work

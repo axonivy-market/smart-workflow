@@ -23,15 +23,15 @@ We provide only the **technical capability** to enable such configurations and e
 
 | Feature | What it gives you |
 | --- | --- |
-| [AI agent element](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/agent-setup.md) | `AgenticProcessCall` — an agent as a process step, returning text or a typed Java object |
-| [Model providers](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/providers.md) | Hosted APIs, an enterprise platform, or a model on your own hardware — chosen globally or per agent |
-| [Tools](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/tools.md) | Any callable sub-process becomes a tool the agent can invoke, plus Java tools and a built-in `webSearch` |
-| [File extraction](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/file-extraction.md) | Read invoices, forms and scans directly from PDF and image files |
-| [RAG](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/rag.md) | Ground answers in your own documents with OpenSearch vector search |
-| [Human in the loop](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/human-in-the-loop.md) | Suspend an agent mid-run for a human decision as an Ivy task, then resume it |
-| [Guardrails](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/operate/guardrails.md) | Prompt-injection defence, credential-leak blocking, and PII masking for GDPR-sensitive data |
-| [Circuit breaker](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/operate/circuit-breaker.md) | One switch that stops every AI call in the application |
-| [Observability](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/operate/observability.md) | Arize Phoenix tracing, Ivy conversation history for audit, and AI-usage custom fields |
+| [AI agent element](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/agent-setup.md) | `AgenticProcessCall` — an agent as a process step, returning text or a typed Java object |
+| [Model providers](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md) | Hosted APIs, an enterprise platform, or a model on your own hardware — chosen globally or per agent |
+| [Tools](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/tools.md) | Any callable sub-process becomes a tool the agent can invoke, plus Java tools and a built-in `webSearch` |
+| [File extraction](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/file-extraction.md) | Read invoices, forms and scans directly from PDF and image files |
+| [RAG](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/rag.md) | Ground answers in your own documents with OpenSearch vector search |
+| [Human in the loop](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/human-in-the-loop.md) | Suspend an agent mid-run for a human decision as an Ivy task, then resume it |
+| [Guardrails](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/guardrails.md) | Prompt-injection defence, credential-leak blocking, and PII masking for GDPR-sensitive data |
+| [Circuit breaker](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/circuit-breaker.md) | One switch that stops every AI call in the application |
+| [Observability](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/observability.md) | Arize Phoenix tracing, Ivy conversation history for audit, and AI-usage custom fields |
 
 📘 **[Full documentation](https://github.com/axonivy-market/smart-workflow/blob/master/README.md)** · 🚀 **[Getting Started](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/getting-started.md)**
 
@@ -253,7 +253,7 @@ Developers implement `SmartWorkflowInputGuardrail`, expose it through a `Guardra
 
 </details>
 
-See [Custom Guardrails](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/contribute/guardrails-spi.md) for the step-by-step guide.
+See [Writing a custom guardrail](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/guardrails.md#writing-a-custom-guardrail) for the step-by-step guide.
 
 ---
 
@@ -261,7 +261,7 @@ See [Custom Guardrails](https://github.com/axonivy-market/smart-workflow/blob/ma
 
 The demo project also illustrates three ways to structure agents and tools in a larger application: a linear **Agent Pipeline**, a **Self-Contained Agent** with co-located tools, and **Feature-Grouped** agents that share tools across a business domain.
 
-See [Agent Patterns](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/patterns.md).
+See [Agent Patterns](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/patterns.md).
 
 ## Setup
 
@@ -279,7 +279,7 @@ Furthermore, most model providers need an ApiKey or another unique identifier.
 Check your provider below, to see which variables need to be set in addition.
 
 To request support for additional AI model providers, please open an issue or submit a pull request on GitHub.
-When contributing, make sure to follow the [Models Contribution Guideline](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/contribute/models.md) to keep your provider aligned with the Smart Workflow ecosystem.
+When contributing, make sure to follow the [Contributing a provider](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#contributing-a-provider) to keep your provider aligned with the Smart Workflow ecosystem.
 
 ```yaml
 @variables.yaml@
@@ -407,13 +407,13 @@ Add an **AgenticProcessCall** element from **Extension > Program Elements** in t
 
 Two behaviours surprise people, and they are opposites: an empty `Available tools` field grants the agent **no** tools, while empty guardrail fields **inherit** the application defaults.
 
-For the complete field reference — including structured output, screenshots of each group, and the failure modes worth knowing about — see [Agent Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/agent-setup.md).
+For the complete field reference — including structured output, screenshots of each group, and the failure modes worth knowing about — see [Agent Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/agent-setup.md).
 
 ### Defining tools
 
 AI agents require tools to perform tasks. Smart Workflow supports two kinds: **Callable Process Tools** (any callable sub-process tagged `tool`) and **Java Tools** (implement `SmartWorkflowTool` and register via SPI). Callable processes are the recommended route — they give the agent full access to the process designer.
 
-For step-by-step instructions on creating both tool types, see [Defining Tools](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/tools.md).
+For step-by-step instructions on creating both tool types, see [Defining Tools](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/tools.md).
 
 ### Guardrails
 
@@ -437,10 +437,10 @@ Variables:
       DefaultOutput: SensitiveDataOutputGuardrail
 ```
 
-An agent that specifies no guardrails inherits these defaults. Smart Workflow also lets you implement custom guardrails and handle guardrail errors — see [Guardrails](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/operate/guardrails.md).
+An agent that specifies no guardrails inherits these defaults. Smart Workflow also lets you implement custom guardrails and handle guardrail errors — see [Guardrails](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/guardrails.md).
 
 ### File extraction
 
 Smart Workflow supports extracting content from PDF and image files (PNG, JPG, JPEG) using multimodal LLMs, so agents can read and reason over uploaded documents directly within your workflows. Reference the file in the agent's user message and the result maps to a typed Java class.
 
-Not all providers and models support multimodal input — see [Provider Capabilities](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/reference/capabilities.md#file-extraction) and [File Extraction](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/build/file-extraction.md).
+Not all providers and models support multimodal input — see [Provider Capabilities](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/reference/capabilities.md#file-extraction) and [File Extraction](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/file-extraction.md).

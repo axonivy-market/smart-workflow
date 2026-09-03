@@ -24,11 +24,21 @@ Variables:
 | `true` | All agent calls in the application are stopped |
 | `false` | Agents run normally |
 
-The switch can also be flipped from process code with `CircuitBreakerSignal.stopAll()` and `resumeAll()` — see [Java API](../reference/java-api.md#circuit-breaker).
+The switch can also be flipped from process code. `com.axonivy.utils.smart.workflow.guardrails.circuitbreaker.CircuitBreakerSignal` writes the same variable, so it takes effect application-wide on the next agent call:
+
+```java
+public interface CircuitBreakerSignal {
+  Optional<String> stopReason();
+
+  static CircuitBreakerSignal defaultSignal();
+  static void stopAll();
+  static void resumeAll();
+}
+```
 
 ## Handling a stopped agent
 
-When the circuit breaker blocks a call, an exception is thrown with the error code `smartworkflow:stop`. Catch it with an **Error Boundary Event** on the agent element and route to a fallback — a human, a non-AI path, a message that AI is temporarily unavailable, or a parked case to retry later. The full recipe is in [Error Codes](../reference/error-codes.md#catching-one).
+When the circuit breaker blocks a call, an exception is thrown with the error code `smartworkflow:stop`. Catch it with an **Error Boundary Event** on the agent element and route to a fallback — a human, a non-AI path, a message that AI is temporarily unavailable, or a parked case to retry later. The full recipe is in [Error Codes](reference/error-codes.md#catching-one).
 
 Every agent call should have such a fallback. That is the point of the circuit breaker: the business process keeps running without AI instead of failing.
 
@@ -67,7 +77,6 @@ Start the demo and trigger `stopApplicationAgents` while it runs to see both fal
 
 ## See also
 
-- [Error Codes](../reference/error-codes.md) — catching `smartworkflow:stop`
+- [Error Codes](reference/error-codes.md) — catching `smartworkflow:stop`
 - [Guardrails](guardrails.md) — the other way an agent call gets blocked
 - [Observability](observability.md) — seeing stopped calls after the fact
-- [Java API](../reference/java-api.md#circuit-breaker) — `CircuitBreakerSignal`

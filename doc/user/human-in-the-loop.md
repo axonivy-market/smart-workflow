@@ -83,7 +83,22 @@ new DecisionMaker(in.aiMemoryId).resolve(result.first.title);
 
 This appends the answer to the suspended conversation as the result of the pending tool call, so when the agent resumes, the tool it was waiting on has returned.
 
-> **Important:** `resolve` throws `IllegalStateException` when it cannot find what it needs — `Found no pending ChatMemory for id`, `Found no pending AiMessage for id`, or `Found no pending ToolExecutionRequest for id`. It does not fail quietly, so these messages are your first diagnostic. What *does* fail quietly is writing `aiMemoryId` itself: if the field is missing from the data class, the framework swallows the error and the id is simply never stored, which produces the first of those three messages later.
+`com.axonivy.utils.smart.workflow.tools.human.DecisionMaker` has just two members:
+
+```java
+public class DecisionMaker {
+  public DecisionMaker(String memoryId);
+  public void resolve(String decision);
+}
+```
+
+> **Important:** `resolve` does not fail quietly — it throws `IllegalStateException`, and which message you get tells you where the chain broke:
+>
+> - `Found no pending ChatMemory for id` — no suspended conversation under that id, usually because `aiMemoryId` was never stored
+> - `Found no pending AiMessage for id` — the stored conversation has no message with tool calls
+> - `Found no pending ToolExecutionRequest for id` — every tool call in that conversation is already answered
+>
+> What *does* fail quietly is writing `aiMemoryId` itself: if the field is missing from the data class, the framework swallows the error and the id is never stored — which produces the first of those three messages later.
 
 Each `resolve` call answers exactly **one** pending tool request. An agent that fires several human-input tool calls in one turn is not supported.
 
@@ -109,10 +124,10 @@ See [Hibernation.p.json](https://github.com/axonivy-market/smart-workflow/blob/m
 - **The user task does not loop back to the same agent element.** The agent never resumes.
 - **The `tool` tag is missing** from the `CallSubStart`, so the agent cannot see the tool and answers the question itself.
 - **The system message does not tell the agent to ask.** The most common cause of "it never pauses".
-- **Expecting the boundary event to catch a guardrail or circuit-breaker error.** Those have their own codes; see [Guardrails](../operate/guardrails.md) and [Circuit Breaker](../operate/circuit-breaker.md).
+- **Expecting the boundary event to catch a guardrail or circuit-breaker error.** Those have their own codes; see [Guardrails](guardrails.md) and [Circuit Breaker](circuit-breaker.md).
 
 ## See also
 
 - [Agent Setup](agent-setup.md) — the element's fields
 - [Defining Tools](tools.md) — writing the callable tool
-- [Circuit Breaker](../operate/circuit-breaker.md) — a different way to stop an agent
+- [Circuit Breaker](circuit-breaker.md) — a different way to stop an agent

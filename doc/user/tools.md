@@ -15,7 +15,7 @@ You can turn any callable subprocess into a tool by simply adding the `tool` tag
 2. Add the tag `tool` to the `CallSubStart`.
 3. Write a clear `description` — this is what the agent reads to decide whether to call the tool.
 
-![Tool configurations](../img/tool-configurations.png)
+![Tool configurations](img/tool-configurations.png)
 
 Discovery covers the current project **and all required projects**, so a tool defined in a shared base project is available to agents in every project that depends on it.
 
@@ -44,6 +44,28 @@ Keep the list tight. Every tool you grant costs tokens in the request and gives 
 ## Java tools
 
 For advanced use cases, tool logic can also be implemented directly in Java. This is rarely needed — prefer callable processes whenever possible. Consider Java Tools only when the logic has no workflow steps and is better expressed as a plain Java class.
+
+Two interfaces are involved, both under `com.axonivy.utils.smart.workflow.tools.provider`:
+
+```java
+public interface SmartWorkflowTool {
+  record ToolParameter(String name, String description, String type) {}
+
+  String description();
+  List<ToolParameter> parameters();
+  Object execute(Map<String, Object> args);
+
+  default String name() { return getClass().getSimpleName(); }
+}
+
+public interface SmartWorkflowToolsProvider {
+  List<SmartWorkflowTool> getTools();
+
+  default String name() { return getClass().getSimpleName(); }
+}
+```
+
+`description()` and each parameter's name, type and description are what the model sees. Arguments are deserialized into the declared type automatically, and whatever you return is serialized back to the agent as JSON.
 
 ### Step 1 — Implement `SmartWorkflowTool`
 
@@ -167,7 +189,6 @@ See the [`WebSearchDemo`](https://github.com/axonivy-market/smart-workflow/blob/
 ## See also
 
 - [Agent Setup](agent-setup.md) — selecting tools on the agent element
-- [Java API](../reference/java-api.md#tools) — `SmartWorkflowTool` and `SmartWorkflowToolsProvider` reference
 - [Human in the Loop](human-in-the-loop.md) — a tool that suspends the agent for a human decision
 - [RAG](rag.md) — the built-in `openSearchSearch` retrieval tool
-- [Variables](../reference/variables.md#web-search) — configuring `webSearch`
+- [Variables](reference/variables.md#web-search) — configuring `webSearch`

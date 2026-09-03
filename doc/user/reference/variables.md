@@ -11,7 +11,7 @@ Variables marked 🔒 are secrets: declare them as `${decrypt:}` in source contr
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `AI.DefaultProvider` | _(empty)_ | Provider used by agents that do not name one. One of `OpenAI`, `AzureOpenAI`, `Gemini`, `xAI`, `Anthropic`, `Ollama`. |
-| `AI.CircuitBreaker.Enabled` | `"false"` | `"true"` stops **every** agent call in the application. See [Circuit Breaker](../operate/circuit-breaker.md). |
+| `AI.CircuitBreaker.Enabled` | `"false"` | `"true"` stops **every** agent call in the application. See [Circuit Breaker](../circuit-breaker.md). |
 
 ## Providers
 
@@ -41,7 +41,7 @@ Each provider ships its own block with the corresponding `models/smart-workflow-
 | `AI.Providers.Ollama.DefaultEmbeddingModel` | | e.g. `nomic-embed-text`, `mxbai-embed-large`. |
 | `AI.Providers.Ollama.TimeoutSeconds` | `"300"` | Local Ollama on CPU can need minutes for large models or cold starts. |
 
-Full YAML blocks for each provider are in [Model Providers](../build/providers.md#global-configuration).
+Full YAML blocks for each provider are in [Model Providers](../providers.md#global-configuration).
 
 ## Guardrails
 
@@ -54,7 +54,7 @@ Full YAML blocks for each provider are in [Model Providers](../build/providers.m
 | `AI.Guardrails.PromptInjection.Classifier.SystemPrompt` | _(empty)_ | Custom classifier prompt. Must instruct the model to reply only `YES` or `NO`. |
 | `AI.Guardrails.PromptInjection.Classifier.MinLength` | `"0"` | Skip the LLM call for messages shorter than this many characters. `0` evaluates everything. |
 
-> **Important:** An agent with **empty** guardrail fields is not unguarded — it inherits these defaults. Contrast with tools, where empty means none. See [Guardrails](../operate/guardrails.md#using-guardrails-in-agents).
+> **Important:** An agent with **empty** guardrail fields is not unguarded — it inherits these defaults. Contrast with tools, where empty means none. See [Guardrails](../guardrails.md#using-guardrails-in-agents).
 
 ## Web search
 
@@ -99,4 +99,4 @@ Shipped by `smart-workflow` (retrieval defaults) and `smart-workflow-opensearch-
 
 - [Provider Capabilities](capabilities.md) — what each provider supports
 - [Error Codes](error-codes.md) — the BPM errors Smart Workflow raises
-- [Security and Data](../operate/security-and-data.md) — how keys and prompts are handled
+- [Security and Data](../security-and-data.md) — how keys and prompts are handled

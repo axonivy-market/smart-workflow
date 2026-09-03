@@ -2,7 +2,7 @@
 
 Our Smart Workflow development environment is accessible via a Dev Container.
 The container removes the complexity of setting up your workspace and
-provides sidecar services like [RAG](../user/build/rag.md) (OpenSearch) or [Tracing](../user/operate/observability.md) via third-party tools.
+provides sidecar services like [RAG](../user/rag.md) (OpenSearch) or [Tracing](../user/observability.md) via third-party tools.
 
 Therefore, the Dev Container is perfect for:
 - new users that want to explore the full capabilities of Smart Workflow
@@ -58,8 +58,8 @@ The Dev Container starts these services automatically:
 | Service | Image | Port | Purpose |
 |---|---|---|---|
 | `workspace` | `mcr.microsoft.com/devcontainers/base:trixie` | – | Your VS Code workspace with Java, Maven, and the Axon Ivy engine. |
-| `phoenix` | `arizephoenix/phoenix:nightly` | `6006` | OpenInference tracing UI — see [Tracing](../user/operate/observability.md). |
-| `opensearch` | `opensearchproject/opensearch:2.11.0` | `9200` | Vector store for [RAG](../user/build/rag.md). Started with security disabled and `discovery.type=single-node` for local development only. |
+| `phoenix` | `arizephoenix/phoenix:nightly` | `6006` | OpenInference tracing UI — see [Tracing](../user/observability.md). |
+| `opensearch` | `opensearchproject/opensearch:2.11.0` | `9200` | Vector store for [RAG](../user/rag.md). Started with security disabled and `discovery.type=single-node` for local development only. |
 
 
 > **Note:** OpenSearch memory is capped at 512 MB

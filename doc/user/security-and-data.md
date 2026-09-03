@@ -14,9 +14,9 @@ For each agent call, Smart Workflow sends to the configured provider:
 | Tool results | Whatever your tool returned, serialized as JSON, is sent back to the model on the next turn. |
 | File content | Images and PDFs base64-encoded in full. PDFs are **not** parsed locally — the raw document goes to the provider. |
 
-The exceptions are self-hosted and platform providers: with **Ollama** the model runs on your own hardware and nothing leaves your network; with **Azure OpenAI** the data stays inside your Azure tenancy under your own resource. Everything else is a direct cloud API. See [Provider Capabilities](../reference/capabilities.md).
+The exceptions are self-hosted and platform providers: with **Ollama** the model runs on your own hardware and nothing leaves your network; with **Azure OpenAI** the data stays inside your Azure tenancy under your own resource. Everything else is a direct cloud API. See [Provider Capabilities](reference/capabilities.md).
 
-Because the provider is chosen per element, you can route a single process across all three — sensitive steps to Ollama, the rest to a cloud model. See [Mixing providers in one process](../build/providers.md#mixing-providers-in-one-process).
+Because the provider is chosen per element, you can route a single process across all three — sensitive steps to Ollama, the rest to a cloud model. See [Mixing providers in one process](providers.md#mixing-providers-in-one-process).
 
 ## API keys
 
@@ -27,7 +27,7 @@ Every provider key is declared `#[password]` in `variables.yaml`, which means it
 - Keys are read on each call, so rotating one takes effect immediately with no restart.
 - `SensitiveDataOutputGuardrail` blocks a response that leaks a credential — both your own configured keys and anything matching a known key format. It is not enabled by default; add it to `AI.Guardrails.DefaultOutput`.
 
-The full list of secret variables is marked 🔒 in [Variables](../reference/variables.md).
+The full list of secret variables is marked 🔒 in [Variables](reference/variables.md).
 
 ## Keeping personal data out of the model
 
@@ -45,7 +45,7 @@ Three stores can retain prompt and response content. All three are off or narrow
 | --- | --- | --- | --- |
 | Ivy conversation history | `AI.Observability.Ivy.Enabled` (off) | Full prompts, responses, tool arguments, guardrail evaluations | The Ivy repository, against the Case and Task |
 | Arize Phoenix traces | `AI.Observability.Openinference.Enabled` (off) | Full prompts and responses, plus timing, cost and model metadata | Your Phoenix instance, over OTLP |
-| Suspended conversations | none — automatic | The agent's message list while a [human-in-the-loop](../build/human-in-the-loop.md) task is pending | Ivy Business Data, keyed by `aiMemoryId` |
+| Suspended conversations | none — automatic | The agent's message list while a [human-in-the-loop](human-in-the-loop.md) task is pending | Ivy Business Data, keyed by `aiMemoryId` |
 
 The Ivy conversation history is a **durable audit record** — that is its purpose. Treat retention as a policy decision, and prefer masking the data on the way in over redacting the record afterwards.
 
@@ -75,7 +75,7 @@ It does **not** cancel a call already in flight, and it is all-or-nothing for th
 
 Cost is a security concern when it is unbounded. Smart Workflow enforces no spend limit of its own, so the controls are:
 
-- **Model choice per agent.** A cheap model on a trivial step is the single largest lever. See [Mixing providers in one process](../build/providers.md#mixing-providers-in-one-process).
+- **Model choice per agent.** A cheap model on a trivial step is the single largest lever. See [Mixing providers in one process](providers.md#mixing-providers-in-one-process).
 - **Tool list length.** Every tool granted to an agent costs tokens in every request. Keep the list tight.
 - **`AiPromptInjectionInputGuardrail` costs one extra LLM call per message.** Pin a cheap classifier model and raise `MinLength`.
 - **Images are always sent at `DetailLevel.HIGH`.** Relevant when processing documents in bulk.
@@ -97,5 +97,5 @@ Worth stating plainly in a review:
 - [Guardrails](guardrails.md) — input and output validation
 - [Observability](observability.md) — what is recorded and where
 - [Circuit Breaker](circuit-breaker.md) — the stop switch
-- [Variables](../reference/variables.md) — every setting, with secrets marked
-- [Model Providers](../build/providers.md) — self-hosted, platform and direct-API options
+- [Variables](reference/variables.md) — every setting, with secrets marked
+- [Model Providers](providers.md) — self-hosted, platform and direct-API options

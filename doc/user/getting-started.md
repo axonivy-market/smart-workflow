@@ -2,7 +2,7 @@
 
 From nothing to a working AI agent in a process. Around fifteen minutes, most of it waiting for Maven.
 
-**You need:** an Axon Ivy Designer on **14.0.0**, and an API key from one model provider. OpenAI is the default and the quickest to start with; if you would rather run a model on your own hardware and skip the key entirely, jump to [Ollama](build/providers.md#ollama).
+**You need:** an Axon Ivy Designer on **14.0.0**, and an API key from one model provider. OpenAI is the default and the quickest to start with; if you would rather run a model on your own hardware and skip the key entirely, jump to [Ollama](providers.md#ollama).
 
 ## 1. Install from the Market
 
@@ -14,8 +14,8 @@ Install **Smart Workflow** from the Axon Ivy Market. The installer adds two thin
 | --- | --- |
 | `smart-workflow` | The core. Always installed. |
 | `smart-workflow-openai` | Connects to OpenAI. Installed by default. |
-| `smart-workflow-anthropic` and the other connector projects | Optional — select the ones you want during installation. See [Model Providers](build/providers.md). |
-| `smart-workflow-opensearch-rag` | Optional. Needed only for [RAG](build/rag.md). |
+| `smart-workflow-anthropic` and the other connector projects | Optional — select the ones you want during installation. See [Model Providers](providers.md). |
+| `smart-workflow-opensearch-rag` | Optional. Needed only for [RAG](rag.md). |
 
 **Demo projects** — imported into the workspace so you have something to read: `smart-workflow-demo` and `smart-workflow-supplier-demo`.
 
@@ -80,9 +80,9 @@ You now have an agent that talks. To make it *do* something:
 
 | Next | Why |
 | --- | --- |
-| [Defining Tools](build/tools.md) | Let the agent call your processes. This is the step that turns a chatbot into a workflow participant. |
-| [Agent Setup](build/agent-setup.md) | The full field reference, including typed output instead of a string. |
-| [Guardrails](operate/guardrails.md) | Before anything faces real users. |
+| [Defining Tools](tools.md) | Let the agent call your processes. This is the step that turns a chatbot into a workflow participant. |
+| [Agent Setup](agent-setup.md) | The full field reference, including typed output instead of a string. |
+| [Guardrails](guardrails.md) | Before anything faces real users. |
 | [Concepts](concepts.md) | The vocabulary, and the limits worth knowing early. |
 
-The `smart-workflow-demo` project in your workspace has a working example of each feature, and [Agent Patterns](build/patterns.md) covers how to arrange several agents once one is not enough.
+The `smart-workflow-demo` project in your workspace has a working example of each feature, and [Agent Patterns](patterns.md) covers how to arrange several agents once one is not enough.

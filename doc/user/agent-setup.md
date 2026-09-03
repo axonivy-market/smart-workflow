@@ -6,7 +6,7 @@ Add it from **Extension > Program Elements** in the Designer, then double-click 
 
 ## Prerequisites
 
-An agent needs a model provider and a key before it can run — at minimum `AI.DefaultProvider` and that provider's `APIKey`. See [Model Providers](providers.md) for every provider's configuration block and how keys are handled, or [Getting Started](../getting-started.md) if you have not set one up yet.
+An agent needs a model provider and a key before it can run — at minimum `AI.DefaultProvider` and that provider's `APIKey`. See [Model Providers](providers.md) for every provider's configuration block and how keys are handled, or [Getting Started](getting-started.md) if you have not set one up yet.
 
 ## Element configuration
 
@@ -14,7 +14,7 @@ The editor is organized in five groups.
 
 ### Message
 
-![The Message group of the agent element](../img/agent-message-configurations.png)
+![The Message group of the agent element](img/agent-message-configurations.png)
 
 Both fields are multi-line, and both accept `<%=...%>` to inject process data. Anything you can reach from IvyScript can go into either message.
 
@@ -41,7 +41,7 @@ Where those values come from is up to the process — a CMS entry, an Ivy variab
 
 This is also the field that supports [file extraction](file-extraction.md) — an expression resolving to a file becomes image or PDF content.
 
-If you run into trouble crafting these messages, [Messages and expressions](../troubleshooting.md#messages-and-expressions) covers what usually causes it.
+If you run into trouble crafting these messages, [Messages and expressions](troubleshooting.md#messages-and-expressions) covers what usually causes it.
 
 ### Tools
 
@@ -61,7 +61,7 @@ To give one agent a different set, select them in these pickers; what you select
 
 > **Note:** Because empty means "use the defaults" rather than "no guardrails", an agent you never configured still runs whatever the application set. Worth remembering in tests, where a global input guardrail can reject fixture data.
 
-See [Guardrails](../operate/guardrails.md).
+See [Guardrails](guardrails.md).
 
 ### Model
 
@@ -71,13 +71,13 @@ See [Guardrails](../operate/guardrails.md).
 
 ### Output
 
-![The Output group of the agent element](../img/agent-other-configurations.png)
+![The Output group of the agent element](img/agent-other-configurations.png)
 
 **`Expect result of type`** declares the type the agent should return. Leave it empty for plain text, which is what most agents need and requires no output configuration at all. To get a typed Java object instead, set it to a class such as `com.axonivy.utils.ai.Invoice.class` — see [Structured output](#structured-output).
 
 **`Map result to`** is where the result is written, for example `in.summary`. The response lands in that process data field ready to display, log, or pass on — no parsing, no casting.
 
-If the mapped field stays empty after a run, [Troubleshooting](../troubleshooting.md#the-agent-did-not-answer) covers the usual cause.
+If the mapped field stays empty after a run, [Troubleshooting](troubleshooting.md#the-agent-did-not-answer) covers the usual cause.
 
 ## Structured output
 
@@ -89,7 +89,7 @@ com.axonivy.utils.ai.Invoice.class
 
 Smart Workflow derives a JSON schema from that class, sends it to the model as a response-format constraint, and deserializes the reply into an instance. Because the schema comes from the class, your field names are what the model sees, so name them the way you would describe them, since a clear `invoiceNumber` is worth more than a line of prompt. Any Ivy data class or plain Java class works, provided it is on the runtime classpath; a bare collection is not valid, so to return a list, declare a class with the list as one of its fields.
 
-Check the structured output support of your provider in [Provider Capabilities](../reference/capabilities.md#structured-output).
+Check the structured output support of your provider in [Provider Capabilities](reference/capabilities.md#structured-output).
 
 ## Example
 
@@ -114,12 +114,22 @@ To turn the same agent into a typed extractor, set `Expect result of type` to `c
 
 For working implementations, see the [demo processes](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/process/) — `AgentDemo/SupportAgent.p.json` for a tool-using agent and `Features/FileExtractionDemo.p.json` for typed extraction.
 
+## Calling an agent from a subprocess
+
+Smart Workflow also exposes an agent as a callable subprocess, used by Axon Ivy Portal features:
+
+```text
+Portal/SmartWorkflowAgent:invokeAgent(String,String,List<String>,Class)
+```
+
+The arguments are the system message, the user message, the list of tool names, and the expected result type. Refer to the Axon Ivy Portal documentation for how Portal uses it.
+
 ## See also
 
 - [Model Providers](providers.md) — choosing and configuring a provider
 - [Defining Tools](tools.md) — giving an agent something to do
-- [Guardrails](../operate/guardrails.md) — validating input and output
+- [Guardrails](guardrails.md) — validating input and output
 - [File Extraction](file-extraction.md) — images and PDFs as input
 - [Human in the Loop](human-in-the-loop.md) — suspending an agent for a human decision
 - [Agent Patterns](patterns.md) — structuring several agents in one process
-- [Troubleshooting](../troubleshooting.md) — when an agent does not answer, or answers wrongly
+- [Troubleshooting](troubleshooting.md) — when an agent does not answer, or answers wrongly

@@ -4,23 +4,23 @@ House style for `doc/user/`. Follow it when adding or editing a page, so the set
 
 ## Structure
 
-The index lives in the repository root `README.md`. Below it, `doc/user/` is organized by what the reader is doing:
+**One feature, one file.** Each feature has a single page at the root of `doc/user/` covering everything about it — how to configure it, its variables, its Java interfaces, its failure modes. A change to a feature should be a single-file edit.
 
-| Folder | Holds |
+| Location | Holds |
 | --- | --- |
-| _(root)_ | [Getting Started](../getting-started.md) and [Concepts](../concepts.md) |
-| `build/` | Making an agent do something |
-| `operate/` | Running agents safely and knowing what they did |
-| `reference/` | Look-up tables — one owner per fact |
-| `contribute/` | Extending Smart Workflow itself |
+| _(root)_ | One page per feature, plus [Getting Started](../getting-started.md), [Concepts](../concepts.md) and [Troubleshooting](../troubleshooting.md) |
+| `reference/` | Only what **several** features read — the capability matrix, the variables table, the error codes |
+| `contribute/` | Repo process rather than product features: demos, this page |
 
-Add a page to the folder matching the reader's task, and list it in the [documentation index](https://github.com/axonivy-market/smart-workflow/blob/master/README.md) in the repository root. A page nothing links to does not exist.
+Do not create a second page for one feature. If a feature has a contributor-facing part — writing a custom guardrail, adding a provider — it becomes a section of that feature's page, not a separate file. Splitting a feature across files is what makes it stale: the copy someone forgets is always the one still being read.
+
+List every new page in the [documentation index](https://github.com/axonivy-market/smart-workflow/blob/master/README.md) in the repository root. A page nothing links to does not exist.
 
 ## `doc/user/` must stay self-contained
 
 This folder is the published documentation set — an external doc tool builds it on its own. A relative link that leaves it resolves inside the repository and breaks in the generated site.
 
-- Links **inside** `doc/user/` are relative: `../reference/variables.md`, `agent-setup.md`.
+- Links **inside** `doc/user/` are relative: `reference/variables.md` from a feature page, `../agent-setup.md` from `reference/`.
 - Links to **anything else** — source files, demo processes, `pom.xml`, `doc/dev/` — are absolute:
   `https://github.com/axonivy-market/smart-workflow/blob/master/…`
 - Images live in `doc/user/img/` and are never referenced from outside the folder.
@@ -36,8 +36,8 @@ Before writing a fact down, check whether a reference page already owns it:
 | What a provider supports | [Provider Capabilities](../reference/capabilities.md) |
 | Any `AI.*` variable | [Variables](../reference/variables.md) |
 | Any error code, and the problems that raise none | [Error Codes](../reference/error-codes.md) |
-| Any public Java type | [Java API](../reference/java-api.md) |
-| Agent element field semantics | [Agent Setup](../build/agent-setup.md) |
+| Agent element field semantics | [Agent Setup](../agent-setup.md) |
+| Any public Java type | the page for the feature it belongs to |
 
 If it has an owner, **link — do not restate**. Duplicated facts drift, and the copy that goes stale is never the one you are reading.
 
@@ -85,7 +85,7 @@ One paragraph: what this is and when you need it.
 
 - [ ] the page is listed in the index in the repository root `README.md`
 - [ ] no relative link leaves `doc/user/`, and every link target exists
-- [ ] no fact duplicated from a reference page
+- [ ] no fact duplicated from a reference page, and nothing about this feature left on another page
 - [ ] a **Common mistakes** section, if the topic has any
 - [ ] headings sentence-cased, levels unskipped
 - [ ] `README_DE.md` is a translation of an older revision — do not sync it by hand
@@ -93,4 +93,4 @@ One paragraph: what this is and when you need it.
 ## See also
 
 - [Documentation index](https://github.com/axonivy-market/smart-workflow/blob/master/README.md) — the reading order this style serves
-- [Chat Models](models.md) — the doc updates a new provider requires
+- [Contributing a provider](../providers.md#contributing-a-provider) — the doc updates a new provider requires

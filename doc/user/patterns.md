@@ -22,7 +22,7 @@ The agent and the tools it uses live in one process file, with no cross-process 
 
 Use it when a capability should ship as a single unit — one callable interface in, one result out, nothing else in the project needs to know how it works. It is the easiest pattern to move between projects and the easiest to reason about, because the whole capability is visible on one canvas.
 
-This is also the pattern that pairs with returning a stopped flag rather than letting an error escape: the caller gets a result object, never an exception. See [Returning a stopped flag from a subprocess](../operate/circuit-breaker.md#returning-a-stopped-flag-from-a-subprocess).
+This is also the pattern that pairs with returning a stopped flag rather than letting an error escape: the caller gets a result object, never an exception. See [Returning a stopped flag from a subprocess](circuit-breaker.md#returning-a-stopped-flag-from-a-subprocess).
 
 See the **Self-Contained Agent** process in `smart-workflow-demo`.
 
@@ -48,11 +48,11 @@ See the **Shopping Demo** process in `smart-workflow-demo`.
 Two rules apply whichever you pick:
 
 - **Keep each agent's tool list tight.** Every granted tool costs tokens in every request and gives the model another way to choose wrong.
-- **Give every agent call a fallback.** A provider incident or a [circuit breaker](../operate/circuit-breaker.md) stop should route the process onto a non-AI path, not fail it.
+- **Give every agent call a fallback.** A provider incident or a [circuit breaker](circuit-breaker.md) stop should route the process onto a non-AI path, not fail it.
 
 ## See also
 
 - [Agent Setup](agent-setup.md) — configuring a single agent
 - [Defining Tools](tools.md) — what a tool is and how it is discovered
 - [Human in the Loop](human-in-the-loop.md) — suspending a pattern for a human decision
-- [Circuit Breaker](../operate/circuit-breaker.md) — fallbacks when AI is switched off
+- [Circuit Breaker](circuit-breaker.md) — fallbacks when AI is switched off

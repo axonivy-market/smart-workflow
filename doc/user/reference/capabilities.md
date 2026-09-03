@@ -32,7 +32,7 @@ Embedding models: OpenAI offers `text-embedding-3-small`, `text-embedding-3-larg
 
 ## File extraction
 
-Supported input formats are PNG, JPG, JPEG and PDF. See [File Extraction](../build/file-extraction.md) for how to pass a file to an agent.
+Supported input formats are PNG, JPG, JPEG and PDF. See [File Extraction](../file-extraction.md) for how to pass a file to an agent.
 
 **Azure OpenAI** — capability depends on the underlying model of your deployment, not the deployment name. Make sure the deployment uses a vision-capable model.
 
@@ -50,7 +50,7 @@ Images are always sent at `DetailLevel.HIGH`, which costs more tokens than a low
 
 ## Structured output
 
-How each provider constrains the response to a schema. See [Agent Setup](../build/agent-setup.md#structured-output) for how to request it.
+How each provider constrains the response to a schema. See [Agent Setup](../agent-setup.md#structured-output) for how to request it.
 
 | Provider | Supported | Mechanism |
 | --- | :---: | --- |
@@ -71,10 +71,10 @@ Two of these differ in ways that change how you design a process:
 
 ## Embedding
 
-Embedding support matters only for [RAG](../build/rag.md), where `AI.RAG.EmbeddingModel.Provider` accepts only a provider whose Embedding column is ticked — currently **OpenAI** and **Ollama**.
+Embedding support matters only for [RAG](../rag.md), where `AI.RAG.EmbeddingModel.Provider` accepts only a provider whose Embedding column is ticked — currently **OpenAI** and **Ollama**.
 
 ## See also
 
-- [Model Providers](../build/providers.md) — choosing and configuring a provider
+- [Model Providers](../providers.md) — choosing and configuring a provider
 - [Variables](variables.md) — every `AI.*` setting
-- [Chat Models](../contribute/models.md) — contributing a new provider, and keeping this page current
+- [Contributing a provider](../providers.md#contributing-a-provider) — adding a provider, and keeping this page current

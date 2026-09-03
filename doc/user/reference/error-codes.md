@@ -4,10 +4,10 @@ Every BPM error Smart Workflow can raise on an `AgenticProcessCall` element. The
 
 | Error code | Raised when | Handled in |
 | --- | --- | --- |
-| `smartworkflow:guardrail:input:violation` | An input guardrail blocked the user message before it reached the model. | [Guardrails](../operate/guardrails.md#handling-guardrail-errors) |
-| `smartworkflow:guardrail:output:violation` | An output guardrail blocked the model's response. | [Guardrails](../operate/guardrails.md#handling-guardrail-errors) |
-| `smartworkflow:stop` | The circuit breaker is on; the call was refused. | [Circuit Breaker](../operate/circuit-breaker.md#handling-a-stopped-agent) |
-| _your own code_ | A [human-in-the-loop](../build/human-in-the-loop.md) tool threw a `BpmError` to suspend the agent. The framework requires only that a `BpmError` propagates — **you choose the code**. The demo uses `human:decision`. | [Human in the Loop](../build/human-in-the-loop.md) |
+| `smartworkflow:guardrail:input:violation` | An input guardrail blocked the user message before it reached the model. | [Guardrails](../guardrails.md#handling-guardrail-errors) |
+| `smartworkflow:guardrail:output:violation` | An output guardrail blocked the model's response. | [Guardrails](../guardrails.md#handling-guardrail-errors) |
+| `smartworkflow:stop` | The circuit breaker is on; the call was refused. | [Circuit Breaker](../circuit-breaker.md#handling-a-stopped-agent) |
+| _your own code_ | A [human-in-the-loop](../human-in-the-loop.md) tool threw a `BpmError` to suspend the agent. The framework requires only that a `BpmError` propagates — **you choose the code**. The demo uses `human:decision`. | [Human in the Loop](../human-in-the-loop.md) |
 
 ## Catching one
 
@@ -34,5 +34,5 @@ Not every problem raises a BPM error — an agent can finish without having answ
 ## See also
 
 - [Troubleshooting](../troubleshooting.md) — diagnosing an agent that did not answer
-- [Guardrails](../operate/guardrails.md) — what blocks a message
-- [Circuit Breaker](../operate/circuit-breaker.md) — the application-wide stop switch
+- [Guardrails](../guardrails.md) — what blocks a message
+- [Circuit Breaker](../circuit-breaker.md) — the application-wide stop switch

@@ -13,7 +13,7 @@ There is no separate "file" field. File extraction is driven entirely by what th
 
 Anything else is not converted to model content. Images are always sent at `DetailLevel.HIGH`, which costs more tokens than a low-detail request — relevant when you process documents in bulk.
 
-Whether a given provider can actually accept an image or a PDF is a separate question. See the [file extraction support matrix](../reference/capabilities.md#file-extraction).
+Whether a given provider can actually accept an image or a PDF is a separate question. See the [file extraction support matrix](reference/capabilities.md#file-extraction).
 
 > **Important:** Smart Workflow does not check provider capability before sending. It builds the image or PDF content unconditionally, so an unsupported combination fails at the provider, not locally, and the error text comes from the provider's API.
 
@@ -112,7 +112,7 @@ For a working implementation, see the `FileExtractionDemo` process in the [`File
 
 ## Common mistakes
 
-- **Provider cannot do vision or PDF.** Check the [support matrix](../reference/capabilities.md#file-extraction) first. Nothing warns you locally; the request reaches the provider and fails there. xAI and Ollama have no PDF support — convert to images first.
+- **Provider cannot do vision or PDF.** Check the [support matrix](reference/capabilities.md#file-extraction) first. Nothing warns you locally; the request reaches the provider and fails there. xAI and Ollama have no PDF support — convert to images first.
 - **Expecting local PDF parsing.** The provider reads the PDF, so PDF quality and page limits are the provider's, not ours.
 - **A wrong CMS path.** Nothing fails loudly. If the model answers as though it never saw the document, verify the path before suspecting the prompt.
 - **An unexpected file extension in the CMS.** A `.tiff` or `.docx` object does not merely get skipped — it takes the whole agent call down with it, silently.
@@ -122,4 +122,4 @@ For a working implementation, see the `FileExtractionDemo` process in the [`File
 
 - [Agent Setup](agent-setup.md) — the element's fields, and structured output
 - [Model Providers](providers.md) — choosing a provider that supports your document types
-- [Provider Capabilities](../reference/capabilities.md) — the per-provider support matrix
+- [Provider Capabilities](reference/capabilities.md) — the per-provider support matrix

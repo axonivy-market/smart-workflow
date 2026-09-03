@@ -97,7 +97,7 @@ Variables:
 
 > **Note:** `ChunkSize` and `ChunkOverlap` are counted in **characters**, not tokens, despite what the comments in `variables.yaml` say. Documents are split with a recursive splitter that works on character counts.
 
-Only providers that support embedding are valid for `EmbeddingModel.Provider` — currently OpenAI and Ollama. See the [Provider Capabilities](../reference/capabilities.md#embedding).
+Only providers that support embedding are valid for `EmbeddingModel.Provider` — currently OpenAI and Ollama. See the [Provider Capabilities](reference/capabilities.md#embedding).
 
 The OpenSearch connection itself is configured separately, in the `smart-workflow-opensearch-rag` module: `AI.RAG.OpenSearch.Url`, plus `ApiKey` or `UserName`/`Password` for authentication, and `TrustSelfSignedCertificates`.
 
@@ -136,5 +136,5 @@ AI.RAG.OpenSearch.Url        = https://my-opensearch.us-east-1.es.amazonaws.com
 
 - [Agent Setup](agent-setup.md) — configuring the agent that answers
 - [Defining Tools](tools.md) — how tools are selected and described
-- [Provider Capabilities](../reference/capabilities.md#embedding) — which providers support embedding
-- [Variables](../reference/variables.md#rag) — every `AI.RAG.*` setting
+- [Provider Capabilities](reference/capabilities.md#embedding) — which providers support embedding
+- [Variables](reference/variables.md#rag) — every `AI.RAG.*` setting
