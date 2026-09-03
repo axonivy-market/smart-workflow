@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
@@ -15,14 +16,13 @@ import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecor
 import com.axonivy.utils.smart.workflow.governance.history.recorder.ToolExecutionRecorder;
 import com.axonivy.utils.smart.workflow.governance.history.storage.HistoryStorage;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageSerializer;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.node.ObjectNode;
 
 public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionRecorder, GuardrailExecutionRecorder {
 
@@ -115,7 +115,7 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
         }
       });
       return JsonUtils.getObjectMapper().writeValueAsString(root);
-    } catch (JsonProcessingException ex) {
+    } catch (Exception ex) {
       Ivy.log().warn("Failed to strip base64 from messages JSON", ex);
       return messagesJson;
     }
@@ -129,7 +129,7 @@ public class ChatHistoryRepository implements HistoryRecorder, ToolExecutionReco
               new TypeReference<List<ResponseMetadata>>(){});
       list.add(metadata);
       entry.setTokenUsageJson(JsonUtils.getObjectMapper().writeValueAsString(list));
-    } catch (JsonProcessingException ex) {
+    } catch (Exception ex) {
       Ivy.log().warn("Failed to persist token usage metadata", ex);
     }
   }

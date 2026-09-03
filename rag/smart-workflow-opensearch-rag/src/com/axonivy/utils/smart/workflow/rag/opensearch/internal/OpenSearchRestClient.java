@@ -5,23 +5,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
-import jakarta.ws.rs.client.ClientRequestContext;
-import jakarta.ws.rs.client.ClientRequestFilter;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.rag.pipeline.internal.OpenSearchConf;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 public class OpenSearchRestClient {
 
@@ -119,7 +117,7 @@ public class OpenSearchRestClient {
       try {
         OpenSearchPayloadBuilder.parseBulkError(responseBody)
             .ifPresent(error -> Ivy.log().warn(String.format(Errors.BULK_PARTIAL, error)));
-      } catch (JsonProcessingException ex) {
+      } catch (Exception ex) {
         Ivy.log().warn("Could not parse OpenSearch bulk response", ex);
       }
     }
@@ -140,7 +138,7 @@ public class OpenSearchRestClient {
       String responseBody = requireSuccessful(response, Errors.SEARCH_FAILED, indexName);
       try {
         return OpenSearchPayloadBuilder.parseSearchResponse(responseBody, request.minScore());
-      } catch (JsonProcessingException ex) {
+      } catch (Exception ex) {
         throw new IllegalStateException("Failed to parse OpenSearch search response", ex);
       }
     }
@@ -152,7 +150,7 @@ public class OpenSearchRestClient {
       String body = requireSuccessful(response, Errors.GET_INDEX_META, indexName);
       try {
         return OpenSearchPayloadBuilder.parseIndexMeta(body);
-      } catch (JsonProcessingException ex) {
+      } catch (Exception ex) {
         throw new IllegalStateException("Failed to parse index mapping response", ex);
       }
     }
@@ -166,7 +164,7 @@ public class OpenSearchRestClient {
       String responseBody = requireSuccessful(response, Errors.LIST_DOCUMENTS, indexName);
       try {
         return OpenSearchPayloadBuilder.parseSearchResponse(responseBody, NO_MIN_SCORE);
-      } catch (JsonProcessingException ex) {
+      } catch (Exception ex) {
         throw new IllegalStateException("Failed to parse OpenSearch list documents response", ex);
       }
     }
