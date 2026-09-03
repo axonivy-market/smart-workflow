@@ -4,11 +4,14 @@
   "namespace" : "com.axonivy.utils.ai.SupplierAgentProcessing",
   "fields" : [ {
     "name" : "request",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest",
+    "modifiers" : [ ]
   }, {
     "name" : "agentResponse",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse",
+    "modifiers" : [ ]
   }, {
-    "name" : "routingDecision"
+    "name" : "routingDecision",
+    "modifiers" : [ ]
   } ]
 }

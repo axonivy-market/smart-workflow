@@ -4,24 +4,32 @@
   "namespace" : "com.axonivy.utils.ai.SupplierOnboardingApproval",
   "fields" : [ {
     "name" : "request",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest",
+    "modifiers" : [ ]
   }, {
     "name" : "agentResponse",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "approvalStage",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalStage"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalStage",
+    "modifiers" : [ ]
   }, {
     "name" : "approvalDecision",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalDecision"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.ApprovalDecision",
+    "modifiers" : [ ]
   }, {
-    "name" : "approvalComment"
+    "name" : "approvalComment",
+    "modifiers" : [ ]
   }, {
-    "name" : "approvalActor"
+    "name" : "approvalActor",
+    "modifiers" : [ ]
   }, {
-    "name" : "approvalAt"
+    "name" : "approvalAt",
+    "modifiers" : [ ]
   }, {
     "name" : "auditEntry",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.AuditTrailEntry"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.AuditTrailEntry",
+    "modifiers" : [ ]
   } ]
 }
