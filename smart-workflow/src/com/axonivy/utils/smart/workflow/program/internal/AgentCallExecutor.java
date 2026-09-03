@@ -30,6 +30,10 @@ import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.InputGuardrailException;
 import dev.langchain4j.guardrail.OutputGuardrailException;
+import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.router.ChatModelWrapper;
+import dev.langchain4j.model.router.ModelRouter;
+import dev.langchain4j.model.router.ModelRoutingStrategy;
 import dev.langchain4j.service.AiServiceContext;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.memory.ChatMemoryService;
@@ -65,6 +69,8 @@ public class AgentCallExecutor {
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
     var toolFilter = context.config().getList(Conf.TOOLS);
+
+
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
     configureToolProvider(agentBuilder, toolFilter);
     configureGuardrails(agentBuilder);
@@ -136,7 +142,20 @@ public class AgentCallExecutor {
         .structuredOutput(structured)
         .hasTools(toolFilter != null && !toolFilter.isEmpty());
     var chatModel = provider.setup(modelOptions);
-    agentBuilder.chatModel(chatModel);
+
+    var routed = ModelRouter.builder().addRoutes(chatModel)
+    .defaultRoute(chatModel)
+    .routingStrategy(new ModelRoutingStrategy() {
+      @Override
+      public ChatModelWrapper route(List<ChatModelWrapper> availableModels, ChatRequest chatRequest) {
+        // any selection logic... 
+        return availableModels.stream().findFirst()
+          .orElseThrow(() -> new RuntimeException("No model available for request: " + chatRequest));
+      }
+    })
+    .build();
+
+    agentBuilder.chatModel(routed);
     var modelName = chatModel.defaultRequestParameters().modelName();
     AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName), agentName))
         .forEach(agentBuilder::registerListener);
