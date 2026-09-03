@@ -4,23 +4,30 @@
   "namespace" : "com.axonivy.utils.ai.SupplierClarification",
   "fields" : [ {
     "name" : "request",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest",
+    "modifiers" : [ ]
   }, {
     "name" : "agentResponse",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.agent.SupplierAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "clarificationCycle",
-    "type" : "int"
+    "type" : "int",
+    "modifiers" : [ ]
   }, {
     "name" : "maxRetries",
-    "type" : "int"
+    "type" : "int",
+    "modifiers" : [ ]
   }, {
-    "name" : "additionalNotes"
+    "name" : "additionalNotes",
+    "modifiers" : [ ]
   }, {
     "name" : "escalateToQmIsm",
-    "type" : "Boolean"
+    "type" : "Boolean",
+    "modifiers" : [ ]
   }, {
     "name" : "withdraw",
-    "type" : "Boolean"
+    "type" : "Boolean",
+    "modifiers" : [ ]
   } ]
 }

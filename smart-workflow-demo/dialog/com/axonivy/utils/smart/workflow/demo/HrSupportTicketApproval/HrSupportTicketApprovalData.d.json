@@ -4,11 +4,14 @@
   "namespace" : "com.axonivy.utils.smart.workflow.demo.HrSupportTicketApproval",
   "fields" : [ {
     "name" : "supportTicket",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
+    "modifiers" : [ ]
   }, {
     "name" : "requestor",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee",
+    "modifiers" : [ ]
   }, {
-    "name" : "supportTicketId"
+    "name" : "supportTicketId",
+    "modifiers" : [ ]
   } ]
 }

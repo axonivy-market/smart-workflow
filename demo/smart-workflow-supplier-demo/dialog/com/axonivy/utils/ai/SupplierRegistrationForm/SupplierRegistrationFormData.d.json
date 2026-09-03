@@ -4,6 +4,7 @@
   "namespace" : "com.axonivy.utils.ai.SupplierRegistrationForm",
   "fields" : [ {
     "name" : "request",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest",
+    "modifiers" : [ ]
   } ]
 }

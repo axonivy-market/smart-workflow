@@ -4,12 +4,15 @@
   "namespace" : "com.axonivy.utils.smart.workflow.demo.HumanDecision",
   "fields" : [ {
     "name" : "decision",
-    "type" : "com.axonivy.utils.smart.workflow.human.HumanDecision"
+    "type" : "com.axonivy.utils.smart.workflow.human.HumanDecision",
+    "modifiers" : [ ]
   }, {
     "name" : "chosen",
-    "type" : "List<com.axonivy.utils.smart.workflow.human.Choice>"
+    "type" : "List<com.axonivy.utils.smart.workflow.human.Choice>",
+    "modifiers" : [ ]
   }, {
     "name" : "choice",
-    "type" : "com.axonivy.utils.smart.workflow.human.Choice"
+    "type" : "com.axonivy.utils.smart.workflow.human.Choice",
+    "modifiers" : [ ]
   } ]
 }

@@ -3,6 +3,7 @@
   "simpleName" : "GovernanceDashboardData",
   "namespace" : "com.axonivy.utils.ai.GovernanceDashboard",
   "fields" : [ {
-    "name" : "selectedCaseUuid"
+    "name" : "selectedCaseUuid",
+    "modifiers" : [ ]
   } ]
 }
