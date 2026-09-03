@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
@@ -117,7 +116,7 @@ public class AgentConversationEntry {
   public void setToolExecutions(List<ToolExecution> toolExecutions) {
     try {
       toolExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(toolExecutions);
-    } catch (JsonProcessingException e) {
+    } catch (Exception e) {
       logSerializationFailure("toolExecutions", e);
       toolExecutionsJson = null;
     }
@@ -138,13 +137,13 @@ public class AgentConversationEntry {
   public void setGuardrailExecutions(List<GuardrailExecution> guardrailExecutions) {
     try {
       guardrailExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(guardrailExecutions);
-    } catch (JsonProcessingException e) {
+    } catch (Exception e) {
       logSerializationFailure("guardrailExecutions", e);
       guardrailExecutionsJson = null;
     }
   }
 
-  private void logSerializationFailure(String field, JsonProcessingException e) {
+  private void logSerializationFailure(String field, Exception e) {
     Ivy.log().warn(String.format(SERIALIZATION_FAILURE_MESSAGE, field, caseUuid, e.getMessage()));
   }
 }

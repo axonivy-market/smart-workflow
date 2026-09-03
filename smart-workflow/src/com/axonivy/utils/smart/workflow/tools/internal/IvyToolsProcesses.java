@@ -8,9 +8,16 @@ import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 
 public class IvyToolsProcesses {
 
-  public static List<SubProcessCallStartEvent> toolStarts() {
+  private SearchScope scope = SearchScope.PROJECT_AND_ALL_REQUIRED;
+
+  public IvyToolsProcesses scope(SearchScope scope) {
+    this.scope = scope;
+    return this;
+  }
+
+  public List<SubProcessCallStartEvent> toolStarts() {
     return SubProcessCallStartEvent.find(SubProcessSearchFilter.create()
-        .setSearchScope(SearchScope.PROJECT_AND_ALL_REQUIRED)
+        .setSearchScope(scope)
         .taggedAs("tool")
         .toFilter());
   }

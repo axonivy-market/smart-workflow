@@ -3,12 +3,11 @@ package com.axonivy.utils.smart.workflow.tools.subprocess.provider;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import jakarta.ws.rs.core.Response;
-
 import org.apache.commons.io.IOUtils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
 class SubProcessToolsProviderChat {
 
@@ -24,12 +23,12 @@ class SubProcessToolsProviderChat {
         return Response.ok().entity(load("response2.json")).build();
       }
 
-      if (messages.size() == 1 && current.get("content").textValue()
+      if (messages.size() == 1 && current.get("content").stringValue()
           .equals("Help me, my computer is beeping, it started after opening AxonIvy Portal.")) {
         return Response.ok().entity(load("response3.json")).build();
       }
       if (messages.size() == 2
-          && current.get("content").textValue().equals("Computer is beeping after opening AxonIvy Portal.")) {
+          && current.get("content").stringValue().equals("Computer is beeping after opening AxonIvy Portal.")) {
         return Response.ok().entity(load("response4.json")).build();
       }
       if (current.toString().contains("tool_call_id")) {

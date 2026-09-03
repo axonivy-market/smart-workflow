@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.demo.AbstractMockRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
+
+import tools.jackson.core.type.TypeReference;
 
 public class DepartmentRepository extends AbstractMockRepository<Department> {
 

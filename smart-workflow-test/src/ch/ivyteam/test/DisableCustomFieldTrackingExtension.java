@@ -3,7 +3,7 @@ package ch.ivyteam.test;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-import ch.ivyteam.ivy.server.internal.test.AppFixtureJu5Context;
+import ch.ivyteam.ivy.environment.impl.test.AppFixtureJu5Context;
 
 /**
  * Disables CustomFieldTrackingListener for all {@link RestResourceTest} tests by default.

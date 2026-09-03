@@ -1,12 +1,10 @@
 package com.axonivy.utils.smart.workflow.governance.history;
 
-import java.io.IOException;
-
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import tools.jackson.databind.JsonNode;
 
 public class ChatHistoryJsonParser {
 
@@ -32,7 +30,7 @@ public class ChatHistoryJsonParser {
     try {
       JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getMessagesJson());
       return array.isArray() ? array.size() : -1;
-    } catch (IOException e) {
+    } catch (Exception e) {
       Ivy.log().warn(String.format(PARSE_FAILURE_MESSAGE,
           "messagesJson", entry.getCaseUuid(), e.getMessage()));
       return -1;
@@ -46,7 +44,7 @@ public class ChatHistoryJsonParser {
     try {
       JsonNode array = JsonUtils.getObjectMapper().readTree(entry.getTokenUsageJson());
       return array.isArray() ? aggregateTokenUsage(array) : TokenUsage.EMPTY;
-    } catch (IOException e) {
+    } catch (Exception e) {
       Ivy.log().warn(String.format(PARSE_FAILURE_MESSAGE,
           "tokenUsageJson", entry.getCaseUuid(), e.getMessage()));
       return TokenUsage.EMPTY;
@@ -75,7 +73,7 @@ public class ChatHistoryJsonParser {
     if (array.isEmpty())
       return UNKNOWN_MODEL;
     JsonNode modelNode = array.get(0).get(FIELD_MODEL_NAME);
-    return (modelNode != null && !modelNode.isNull()) ? modelNode.asText() : UNKNOWN_MODEL;
+    return (modelNode != null && !modelNode.isNull()) ? modelNode.asString() : UNKNOWN_MODEL;
   }
 
   public static long getTotalTokens(AgentConversationEntry entry) {
