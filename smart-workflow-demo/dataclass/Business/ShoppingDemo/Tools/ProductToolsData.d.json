@@ -4,30 +4,39 @@
   "namespace" : "Business.ShoppingDemo.Tools",
   "fields" : [ {
     "name" : "product",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.Product"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.Product",
+    "modifiers" : [ ]
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "productSearchCriteria",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.repository.ProductSearchCriteria",
+    "modifiers" : [ ]
   }, {
     "name" : "supplierResponse",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "supplierSearchCriteria",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.repository.SupplierSearchCriteria",
+    "modifiers" : [ ]
   }, {
     "name" : "categorySearchCriteria",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategorySearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategorySearchCriteria",
+    "modifiers" : [ ]
   }, {
     "name" : "brandSearchCriteria",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria",
+    "modifiers" : [ ]
   }, {
     "name" : "productCategoryResponse",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategoryAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "brandResponse",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse",
+    "modifiers" : [ ]
   } ]
 }

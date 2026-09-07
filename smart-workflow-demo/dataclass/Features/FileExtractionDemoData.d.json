@@ -4,7 +4,8 @@
   "namespace" : "Features",
   "fields" : [ {
     "name" : "firstInvoice",
-    "type" : "java.io.File"
+    "type" : "java.io.File",
+    "modifiers" : [ ]
   }, {
     "name" : "invoiceList",
     "type" : "com.axonivy.utils.ai.InvoiceList"
@@ -12,16 +13,19 @@
     "name" : "text"
   }, {
     "name" : "secondInvoice",
-    "type" : "java.io.File"
+    "type" : "java.io.File",
+    "modifiers" : [ ]
   }, {
     "name" : "pdfAsPath",
-    "type" : "java.nio.file.Path"
+    "type" : "java.nio.file.Path",
+    "modifiers" : [ ]
   }, {
     "name" : "pdfAsIvyFile",
     "type" : "ch.ivyteam.ivy.scripting.objects.File"
   }, {
     "name" : "firstStream",
-    "type" : "java.io.InputStream"
+    "type" : "java.io.InputStream",
+    "modifiers" : [ ]
   }, {
     "name" : "secondBinary",
     "type" : "ch.ivyteam.ivy.scripting.objects.Binary"

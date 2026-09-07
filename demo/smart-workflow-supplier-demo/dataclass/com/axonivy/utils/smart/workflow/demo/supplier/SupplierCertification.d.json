@@ -5,7 +5,8 @@
   "fields" : [ {
     "name" : "type",
     "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
-    "comment" : "Type of certification"
+    "comment" : "Type of certification",
+    "modifiers" : [ ]
   }, {
     "name" : "certNumber",
     "comment" : "Certificate number"
