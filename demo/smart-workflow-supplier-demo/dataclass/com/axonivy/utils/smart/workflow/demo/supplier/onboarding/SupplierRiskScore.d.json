@@ -21,6 +21,7 @@
   }, {
     "name" : "level",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskLevel",
-    "comment" : "Risk level based on aggregate score"
+    "comment" : "Risk level based on aggregate score",
+    "modifiers" : [ ]
   } ]
 }

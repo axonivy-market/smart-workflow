@@ -8,7 +8,8 @@
   }, {
     "name" : "documentType",
     "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
-    "comment" : "Document type matching LegalDocumentType enum"
+    "comment" : "Document type matching LegalDocumentType enum",
+    "modifiers" : [ ]
   }, {
     "name" : "extractedFieldsSummary",
     "comment" : "Comma-separated summary of key extracted fields"

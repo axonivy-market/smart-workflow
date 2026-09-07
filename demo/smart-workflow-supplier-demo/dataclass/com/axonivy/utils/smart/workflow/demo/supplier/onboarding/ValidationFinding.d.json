@@ -5,7 +5,8 @@
   "fields" : [ {
     "name" : "severity",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.FindingSeverity",
-    "comment" : "Finding severity: PASSED, WARNING, or FAILURE"
+    "comment" : "Finding severity: PASSED, WARNING, or FAILURE",
+    "modifiers" : [ ]
   }, {
     "name" : "message",
     "comment" : "Description of the finding"
@@ -22,11 +23,13 @@
   }, {
     "name" : "riskType",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskType",
-    "comment" : "The type of risk this finding relates to: FINANCIAL_STABILITY, POLICY_COMPLIANCE, or CERTIFICATION_VALIDITY"
+    "comment" : "The type of risk this finding relates to: FINANCIAL_STABILITY, POLICY_COMPLIANCE, or CERTIFICATION_VALIDITY",
+    "modifiers" : [ ]
   }, {
     "name" : "riskKind",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskKind",
-    "comment" : "The kind of check that produced this finding: MISSING_DOC or AI_VALIDATION"
+    "comment" : "The kind of check that produced this finding: MISSING_DOC or AI_VALIDATION",
+    "modifiers" : [ ]
   }, {
     "name" : "resolved",
     "type" : "Boolean"
