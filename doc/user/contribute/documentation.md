@@ -43,7 +43,7 @@ If it has an owner, **link — do not restate**. Duplicated facts drift, and the
 
 ## Page template
 
-```text
+```
 # <Noun or task>
 
 One paragraph: what this is and when you need it.
@@ -79,7 +79,7 @@ One paragraph: what this is and when you need it.
 
 **Callouts** — `> **Important:**` for something that will bite the reader, `> **Note:**` for an aside. Use them sparingly; a page of callouts has no emphasis at all.
 
-**Code blocks** — always tagged with a language (`yaml`, `java`, `text`, `markdown`). Untagged fences fail markdownlint.
+**Code blocks** — tag them with a language where one applies (`yaml`, `java`, `xml`, `json`). Leave the fence bare for plain text such as prompts and log lines; some renderers try to interpret a `text` tag and fail on it.
 
 ## Before opening a PR
 

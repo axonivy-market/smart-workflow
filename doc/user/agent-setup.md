@@ -20,7 +20,7 @@ Both fields are multi-line, and both accept `<%=...%>` to inject process data. A
 
 **`System message`** holds the agent's standing instructions — who it is, what it must do, what format to produce. Be specific: the model knows nothing about your business, so state what to do, what to leave out, and what shape to return. Use `<%=...%>` for anything that should not be hard-coded into the element, such as company policy, the current department, or an approval threshold:
 
-```text
+```
 You are a purchase request assistant for <%=in.companyName%>.
 
 Follow these company policies at all times:
@@ -35,7 +35,7 @@ Where those values come from is up to the process — a CMS entry, an Ivy variab
 
 **`User message`** holds the data to reason over on this call, usually a straight reference to a process data field:
 
-```text
+```
 <%=in.invoiceText%>
 ```
 
@@ -87,7 +87,9 @@ An agent returns text by default. To get a typed Java object instead, set `Expec
 com.axonivy.utils.ai.Invoice.class
 ```
 
-Smart Workflow derives a JSON schema from that class, sends it to the model as a response-format constraint, and deserializes the reply into an instance. Because the schema comes from the class, your field names are what the model sees, so name them the way you would describe them, since a clear `invoiceNumber` is worth more than a line of prompt. Any Ivy data class or plain Java class works, provided it is on the runtime classpath; a bare collection is not valid, so to return a list, declare a class with the list as one of its fields.
+Smart Workflow derives a JSON schema from that class, sends it to the model as a response-format constraint, and deserializes the reply into an instance. Any Ivy data class or plain Java class works, provided it is on the runtime classpath; a bare collection is not valid, so to return a list, declare a class with the list as one of its fields.
+
+Because the schema comes from the class, the model already has your field names and their types — so there is no need to list them in the system message. Name the fields the way you would describe them, and spend the system message on what the schema cannot express: what a field means, how to choose between candidates, and when to leave one empty.
 
 Check the structured output support of your provider in [Provider Capabilities](reference/capabilities.md#structured-output).
 
@@ -97,7 +99,7 @@ A minimal text agent, start to finish:
 
 **System message:**
 
-```text
+```
 You are an invoice summary agent.
 Read the invoice text and return a single sentence containing
 the invoice number, supplier name, total amount, and due date.
@@ -110,7 +112,7 @@ Do not add any other commentary.
 | `Expect result of type` | _(empty — plain `String`)_ |
 | `Map result to` | `in.summary` |
 
-To turn the same agent into a typed extractor, set `Expect result of type` to `com.axonivy.utils.ai.Invoice.class` and describe the fields in the system message. [File Extraction](file-extraction.md#example) has that version in full, reading the invoice from a document rather than from text.
+To turn the same agent into a typed extractor, set `Expect result of type` to `com.axonivy.utils.ai.Invoice.class` and use the system message for the field meanings and constraints the class cannot carry. [File Extraction](file-extraction.md#example) has that version in full, reading the invoice from a document rather than from text.
 
 For working implementations, see the [demo processes](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/process/) — `AgentDemo/SupportAgent.p.json` for a tool-using agent and `Features/FileExtractionDemo.p.json` for typed extraction.
 
@@ -118,7 +120,7 @@ For working implementations, see the [demo processes](https://github.com/axonivy
 
 Smart Workflow also exposes an agent as a callable subprocess, used by Axon Ivy Portal features:
 
-```text
+```
 Portal/SmartWorkflowAgent:invokeAgent(String,String,List<String>,Class)
 ```
 

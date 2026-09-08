@@ -58,7 +58,7 @@ Select `openSearchSearch` in the agent's `Available tools` picker, then **tell t
 
 The demo does it by interpolating the index name:
 
-```text
+```
 You are a RAG (Retrieval-Augmented Generation) assistant.
 You MUST always call the openSearchSearch tool before answering any question.
 Use the collection <%=in.indexName%>.

@@ -54,7 +54,7 @@ That is a complete agent. No provider or model needs naming: both fall back to w
 
 Start the process. The agent sends your question to the model and writes the reply straight into `in.answer`:
 
-```text
+```
 Axon Ivy is a low-code platform for designing, automating and running business processes.
 ```
 

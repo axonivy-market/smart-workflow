@@ -46,8 +46,6 @@ Supported input formats are PNG, JPG, JPEG and PDF. See [File Extraction](../fil
 
 File content is base64-encoded before being sent. Smart Workflow enforces **no size cap of its own**, so the provider's own request limit is the only bound — and it is the provider that rejects an oversized request. Keep files within the limits published by your provider; base64 adds roughly one third to the raw byte count.
 
-Images are always sent at `DetailLevel.HIGH`, which costs more tokens than a low-detail request. This matters when processing documents in bulk.
-
 ## Structured output
 
 How each provider constrains the response to a schema. See [Agent Setup](../agent-setup.md#structured-output) for how to request it.

@@ -78,7 +78,7 @@ Cost is a security concern when it is unbounded. Smart Workflow enforces no spen
 - **Model choice per agent.** A cheap model on a trivial step is the single largest lever. See [Mixing providers in one process](providers.md#mixing-providers-in-one-process).
 - **Tool list length.** Every tool granted to an agent costs tokens in every request. Keep the list tight.
 - **`AiPromptInjectionInputGuardrail` costs one extra LLM call per message.** Pin a cheap classifier model and raise `MinLength`.
-- **Images are always sent at `DetailLevel.HIGH`.** Relevant when processing documents in bulk.
+- **Image and PDF input costs more than text.** A document is a much larger request than a prompt, so watch the bill when processing them in bulk.
 - **The in-call message list is uncapped.** A long tool loop grows the context on every turn, and there is no variable to limit it.
 - **Arize Phoenix reports token cost per call**, which is the practical way to find out what you are actually spending. See [Observability](observability.md#querying).
 
