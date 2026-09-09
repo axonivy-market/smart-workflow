@@ -16,7 +16,7 @@ Three framework pieces make this work, and one convention ties them together.
 | `DecisionMaker` | Public API. Writes the human's answer into the suspended conversation as the pending tool's result. |
 | Error boundary event | Catches the error your tool threw and gets you to a user task. |
 
-Under the hood, when a tool throws, the agent's messages are persisted to Ivy Business Data keyed by the invocation id, and that id is written to `aiMemoryId`. On the next entry to the element the messages are read back and the conversation continues. On successful completion, the stored messages **and** the `aiMemoryId` value are both cleared.
+The suspended conversation is stored under `aiMemoryId` and read back the next time the flow enters the element. Once the agent completes, both the stored conversation and the `aiMemoryId` value are cleared.
 
 ### About `aiMemoryId`
 
@@ -31,11 +31,11 @@ The field name is a hard-coded convention: add a `String` field called exactly `
 
 Two things about it are easy to get wrong:
 
-> **Important:** `aiMemoryId` is a suspend/resume handle, not a conversation history feature. It is written **only** when a tool throws a `BpmError`, and it is erased as soon as the agent completes normally. It is not a way to give an agent memory of past interactions.
+> **Important:** `aiMemoryId` is a suspend/resume handle, not a conversation history feature. Smart Workflow fills it in and clears it again on its own, so it is not a way to give an agent memory of past interactions.
 >
-> **Do not pre-populate it.** While `aiMemoryId` holds a value the element behaves as a *resumed* call: the user message is replaced with `continue with my selection from the tool` and the system message is skipped entirely, because both are expected to come from the restored conversation. Setting the field by hand to "continue a chat" therefore discards the query you meant to send.
+> **Do not set it yourself.** An agent that starts with a value in `aiMemoryId` treats the call as a resumption: your system message and user message are both ignored, so the question you meant to ask is never sent.
 
-There is no cross-call conversation memory in Smart Workflow today. Within a single agent call the message list grows unboundedly and there is no variable to cap it; across calls, nothing is retained unless a suspension is in progress.
+Apart from a suspension, each agent call is self-contained: it starts fresh from your system and user messages, which keeps every run predictable and repeatable. [Concepts](concepts.md#memory) covers what an agent does and does not carry between calls.
 
 ## Building it
 
@@ -51,19 +51,20 @@ Create a callable sub-process, tag its `CallSubStart` with `tool`, and end it in
 error.setAttribute("decision", in.decision);
 ```
 
-The error code is **yours to choose** — the demo uses `human:decision`, but nothing in the framework knows that string. All the framework requires is that a `BpmError` propagates out of the tool. Pick a code and use it consistently in the boundary event.
+The error code is **yours to choose**; all Smart Workflow requires is that a `BpmError` propagates out of the tool. Give each agent its own code rather than sharing one — name it after the agent, such as `invoiceAgent:waiting` or `supplierAgent:waiting`. A dedicated code keeps each boundary event catching only its own agent's question, so two agents that both ask for a decision never resume each other.
 
-The tool's input parameter carries the question to the human, and its declared result is what the agent expects back. In the demo the input is a `HumanDecision` (a question plus a list of options) and the result is the selected `Choice`.
-
-> **Note:** `com.axonivy.utils.smart.workflow.human.HumanDecision` and `Choice` look like framework classes because of the package, but they are Ivy **data classes in the demo project**. There is no framework type for the question shape — define whatever suits your case.
+The tool's input parameter carries the question to the human, and its declared result is what the agent expects back. Both shapes are yours to define. Smart Workflow has no type of its own for the question.
 
 ### 3. Configure the agent element
 
+In the agent element's **Configuration** tab:
+
 - Select your tool under `Available tools`.
 - In `System message`, tell the agent when to use it. Models do not pause on their own; if the instruction is vague they will answer instead of asking.
-- Attach an **Error Boundary Event** with your error code, mapping the attached question onto a data field:
 
-```java
+Then attach an **Error Boundary Event** to the agent element. On the boundary event, set your error code in the **Error** tab, and map the attached question onto a data field in the **Output** tab:
+
+```
 out.decision = error.getAttribute("decision") as com.axonivy.utils.smart.workflow.human.HumanDecision
 ```
 
@@ -83,22 +84,9 @@ new DecisionMaker(in.aiMemoryId).resolve(result.first.title);
 
 This appends the answer to the suspended conversation as the result of the pending tool call, so when the agent resumes, the tool it was waiting on has returned.
 
-`com.axonivy.utils.smart.workflow.tools.human.DecisionMaker` has just two members:
+Smart Workflow never calls `resolve` for you — the boundary event and the return edge only get the flow back to the agent. Without this line the agent resumes to find its tool call still unanswered.
 
-```java
-public class DecisionMaker {
-  public DecisionMaker(String memoryId);
-  public void resolve(String decision);
-}
-```
-
-> **Important:** `resolve` does not fail quietly — it throws `IllegalStateException`, and which message you get tells you where the chain broke:
->
-> - `Found no pending ChatMemory for id` — no suspended conversation under that id, usually because `aiMemoryId` was never stored
-> - `Found no pending AiMessage for id` — the stored conversation has no message with tool calls
-> - `Found no pending ToolExecutionRequest for id` — every tool call in that conversation is already answered
->
-> What *does* fail quietly is writing `aiMemoryId` itself: if the field is missing from the data class, the framework swallows the error and the id is never stored — which produces the first of those three messages later.
+> **Important:** `resolve` does not fail quietly; it throws `IllegalStateException` naming which part of the chain is missing. [Error Codes](reference/error-codes.md#problems-without-an-error-code) lists the three messages and what each one means. What *does* fail quietly is writing `aiMemoryId` itself: if the field is missing from the data class, the framework swallows the error and the id is never stored.
 
 Each `resolve` call answers exactly **one** pending tool request. An agent that fires several human-input tool calls in one turn is not supported.
 
@@ -119,12 +107,12 @@ See [Hibernation.p.json](https://github.com/axonivy-market/smart-workflow/blob/m
 
 ## Common mistakes
 
-- **No `aiMemoryId` field.** The id is never stored — the framework ignores the failure — and `resolve` later reports no pending memory.
-- **Pre-setting `aiMemoryId`.** Replaces your user message and drops your system message. Leave it to the framework.
-- **The user task does not loop back to the same agent element.** The agent never resumes.
-- **The `tool` tag is missing** from the `CallSubStart`, so the agent cannot see the tool and answers the question itself.
-- **The system message does not tell the agent to ask.** The most common cause of "it never pauses".
-- **Expecting the boundary event to catch a guardrail or circuit-breaker error.** Those have their own codes; see [Guardrails](guardrails.md) and [Circuit Breaker](circuit-breaker.md).
+- No `aiMemoryId` field. The id is never stored — the framework ignores the failure — and `resolve` later reports no pending memory.
+- Pre-setting `aiMemoryId`. Replaces your user message and drops your system message. Leave it to the framework.
+- The user task does not loop back to the same agent element. The agent never resumes.
+- The `tool` tag is missing from the `CallSubStart`, so the agent cannot see the tool and answers the question itself.
+- The system message does not tell the agent to ask. The most common cause of "it never pauses".
+- Expecting the boundary event to catch a guardrail or circuit-breaker error. Those have their own codes; see [Guardrails](guardrails.md) and [Circuit Breaker](circuit-breaker.md).
 
 ## See also
 

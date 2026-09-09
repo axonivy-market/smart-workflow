@@ -78,11 +78,11 @@ For a working implementation, see the `FileExtractionDemo` process in the [`File
 
 ## Common mistakes
 
-- **Provider cannot do vision or PDF.** Check the [support matrix](reference/capabilities.md#file-extraction) first. Nothing warns you locally; the request reaches the provider and fails there. xAI and Ollama have no PDF support — convert to images first.
-- **Expecting local PDF parsing.** The provider reads the PDF, so PDF quality and page limits are the provider's, not ours.
-- **A wrong CMS path.** Nothing fails loudly. If the model answers as though it never saw the document, verify the path before suspecting the prompt.
-- **An unexpected file extension in the CMS.** A `.tiff` or `.docx` object does not merely get skipped — it takes the whole agent call down with it, silently.
-- **A filename without a recognised extension.** A `Path`, `File` or `IDocument` whose name does not end in `.png`, `.jpg`, `.jpeg` or `.pdf` is dropped from the message with no log entry. `InputStream` and `Binary` are exempt — they have no filename, so their content is inspected instead.
+- Provider cannot do vision or PDF. Check the [support matrix](reference/capabilities.md#file-extraction) first. Nothing warns you locally; the request reaches the provider and fails there. xAI and Ollama have no PDF support — convert to images first.
+- Expecting local PDF parsing. The provider reads the PDF, so PDF quality and page limits are the provider's, not ours.
+- A wrong CMS path. Nothing fails loudly. If the model answers as though it never saw the document, verify the path before suspecting the prompt.
+- An unexpected file extension in the CMS. A `.tiff` or `.docx` object does not merely get skipped — it takes the whole agent call down with it, silently.
+- A filename without a recognised extension. A `Path`, `File` or `IDocument` whose name does not end in `.png`, `.jpg`, `.jpeg` or `.pdf` is dropped from the message with no log entry. `InputStream` and `Binary` are exempt — they have no filename, so their content is inspected instead.
 
 If a document does not seem to reach the model, [Troubleshooting](troubleshooting.md#the-agent-answered-but-not-as-expected) works back from the symptom instead.
 

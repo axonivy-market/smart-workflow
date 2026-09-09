@@ -253,9 +253,9 @@ We expect all providers to work the same way, so no extra demonstration process 
 
 ## Common mistakes
 
-- **An unquoted model name.** `Model` is a script field; a bare `gpt-4o` does not compile.
-- **Choosing a provider before checking its capabilities.** Gemini cannot do structured output, xAI and Ollama cannot read PDFs, and only OpenAI and Ollama can embed. Nothing warns you until the provider rejects the request.
-- **Committing a real API key.** Ship `${decrypt:}` and set the value in the Engine Cockpit.
+- An unquoted model name. `Model` is a script field; a bare `gpt-4o` does not compile.
+- Choosing a provider before checking its capabilities. Gemini cannot do structured output, xAI and Ollama cannot read PDFs, and only OpenAI and Ollama can embed. Nothing warns you until the provider rejects the request.
+- Committing a real API key. Ship `${decrypt:}` and set the value in the Engine Cockpit.
 
 ## See also
 

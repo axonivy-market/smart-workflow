@@ -126,11 +126,11 @@ AI.RAG.OpenSearch.Url        = https://my-opensearch.us-east-1.es.amazonaws.com
 
 ## Common mistakes
 
-- **Not telling the agent the collection name.** `collection` is required and has no default. This is the most common reason a RAG agent answers from training data instead of your documents.
-- **Not instructing the agent to always search.** Models answer directly when they think they know. Say "you MUST always call the tool" and say not to fall back on training data.
-- **An embedding provider that cannot embed.** `AI.RAG.EmbeddingModel.Provider` accepts only OpenAI or Ollama.
-- **Changing `ChunkSize` and expecting existing documents to change.** Both chunking variables apply at ingestion time only; re-index to take effect.
-- **Asking the agent to cite source documents.** Every ingested segment is tagged `inline`, so per-document provenance is not available from segment metadata.
+- Not telling the agent the collection name. `collection` is required and has no default. This is the most common reason a RAG agent answers from training data instead of your documents.
+- Not instructing the agent to always search. Models answer directly when they think they know. Say "you MUST always call the tool" and say not to fall back on training data.
+- An embedding provider that cannot embed. `AI.RAG.EmbeddingModel.Provider` accepts only OpenAI or Ollama.
+- Changing `ChunkSize` and expecting existing documents to change. Both chunking variables apply at ingestion time only; re-index to take effect.
+- Asking the agent to cite source documents. Every ingested segment is tagged `inline`, so per-document provenance is not available from segment metadata.
 
 ## See also
 

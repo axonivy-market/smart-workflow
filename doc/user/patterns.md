@@ -47,8 +47,8 @@ See the **Shopping Demo** process in `smart-workflow-demo`.
 
 Two rules apply whichever you pick:
 
-- **Keep each agent's tool list tight.** Every granted tool costs tokens in every request and gives the model another way to choose wrong.
-- **Give every agent call a fallback.** A provider incident or a [circuit breaker](circuit-breaker.md) stop should route the process onto a non-AI path, not fail it.
+- Keep each agent's tool list tight. Every granted tool costs tokens in every request and gives the model another way to choose wrong.
+- Give every agent call a fallback. A provider incident or a [circuit breaker](circuit-breaker.md) stop should route the process onto a non-AI path, not fail it.
 
 ## See also
 

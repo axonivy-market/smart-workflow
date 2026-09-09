@@ -293,13 +293,13 @@ The guardrail's `name()` — the simple class name unless you override it — no
 
 ## Common mistakes
 
-- **Assuming blank means unguarded.** Blank inherits `AI.Guardrails.Default*`. This is the reverse of the tools field, where blank means none.
-- **Registering `PiiMaskingGuardrail` on one side only.** Worse than not registering it — see above.
-- **Matching on the error message.** Branch on the error code; the message is wrapped by Smart Workflow and is not a stable contract.
-- **Expecting an output guardrail to retry.** It does not. A false positive costs the whole call.
-- **Paying for the LLM classifier on every message.** Pin a cheap model and raise `MinLength` once you know your traffic.
-- **Writing a custom guardrail and forgetting the SPI registration.** The class compiles, the guardrail never runs, and nothing warns you. This is the usual cause.
-- **Holding state in a guardrail instance.** The instance is shared across all agents and concurrent calls. If you need per-call state, key it on the `invocationId` from the two-argument `evaluate`.
+- Assuming blank means unguarded. Blank inherits `AI.Guardrails.Default*`. This is the reverse of the tools field, where blank means none.
+- Registering `PiiMaskingGuardrail` on one side only. Worse than not registering it — see above.
+- Matching on the error message. Branch on the error code; the message is wrapped by Smart Workflow and is not a stable contract.
+- Expecting an output guardrail to retry. It does not. A false positive costs the whole call.
+- Paying for the LLM classifier on every message. Pin a cheap model and raise `MinLength` once you know your traffic.
+- Writing a custom guardrail and forgetting the SPI registration. The class compiles, the guardrail never runs, and nothing warns you. This is the usual cause.
+- Holding state in a guardrail instance. The instance is shared across all agents and concurrent calls. If you need per-call state, key it on the `invocationId` from the two-argument `evaluate`.
 
 ## See also
 

@@ -61,8 +61,8 @@ The circuit breaker takes part in guardrail observability like any other guardra
 
 Know these boundaries before you rely on the circuit breaker:
 
-- **A call already in flight is not cancelled.** The breaker takes effect at the guardrail boundaries around the LLM call. A request that already reached the provider finishes its exchange — including a long tool loop or a large response — and is stopped when its output is evaluated. Tokens for that call are still spent.
-- **It is all or nothing, for the whole application.** You cannot stop only one agent, only one user's sessions, or only calls that have been running for a long time. Every agent in the application is affected.
+- A call already in flight is not cancelled. The breaker takes effect at the guardrail boundaries around the LLM call. A request that already reached the provider finishes its exchange — including a long tool loop or a large response — and is stopped when its output is evaluated. Tokens for that call are still spent.
+- It is all or nothing, for the whole application. You cannot stop only one agent, only one user's sessions, or only calls that have been running for a long time. Every agent in the application is affected.
 
 ## Demo
 

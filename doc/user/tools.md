@@ -83,12 +83,12 @@ See the [`WebSearchDemo`](https://github.com/axonivy-market/smart-workflow/blob/
 
 ## Common mistakes
 
-- **Leaving `Available tools` empty.** The agent gets no tools. This is the usual reason an agent explains what it would do instead of doing it.
-- **A parameter with no description.** The description is the whole contract — an undescribed `id` is a guess.
-- **Documenting the result parameters.** Their descriptions never reach the model. Only input parameters and the `CallSubStart` description do.
-- **Forgetting the `tool` tag** on the `CallSubStart`, so the tool never appears in the picker.
-- **Two providers in one SPI services file.** Only the first line is read; use two files.
-- **Granting every tool you have.** Each one costs tokens in every request and gives the model another way to choose wrong.
+- Leaving `Available tools` empty. The agent gets no tools. This is the usual reason an agent explains what it would do instead of doing it.
+- A parameter with no description. The description is the whole contract — an undescribed `id` is a guess.
+- Documenting the result parameters. Their descriptions never reach the model. Only input parameters and the `CallSubStart` description do.
+- Forgetting the `tool` tag on the `CallSubStart`, so the tool never appears in the picker.
+- Two providers in one SPI services file. Only the first line is read; use two files.
+- Granting every tool you have. Each one costs tokens in every request and gives the model another way to choose wrong.
 
 ## See also
 
