@@ -25,7 +25,15 @@ In rough order of how often it is the cause:
 6. **It behaves as though it never saw your document.** A file can be dropped from the message without a log entry — a CMS path that does not exist, or a `Path`, `File` or `IDocument` whose name has no `.png`, `.jpg`, `.jpeg` or `.pdf` extension. Check what the expression actually resolves to before suspecting the prompt. See [File Extraction](file-extraction.md#common-mistakes).
 7. **The provider cannot read that file type.** Nothing is checked locally, so the request reaches the provider and fails there. See [Provider Capabilities](reference/capabilities.md#file-extraction).
 8. **The agent cannot return a list.** A bare collection is not a supported output type, so setting `Expect result of type` to a list does not work. Declare a class with the list as one of its fields and use that class instead. See [Structured output](agent-setup.md#structured-output).
-9. **On Ollama, a typed result came back as plain text.** The Ollama API cannot accept a JSON schema and tools in the same request, so when an agent has both, Smart Workflow keeps the tools and leaves the schema off. The agent still calls its tools and still answers — the reply is just not schema-constrained. Split the work across two agents if you need both, or use a provider that supports them together. See [Provider Capabilities](reference/capabilities.md#structured-output).
+9. **A masked value was not restored in the reply.** `PiiMaskingGuardrail` puts a value back by finding its exact placeholder in the response, so if the model paraphrases it — writing "the email address" instead of `<EMAIL_9f2c41ab77de>` — there is nothing to put back. Older or smaller models do this more often, since they are quicker to rewrite text they do not recognise, so moving the agent to a newer model is often the fastest fix. A short line in the system message helps too:
+
+   ```
+   Values formatted as <TYPE_hash> are anonymized placeholders — the original sensitive data
+   was removed before reaching you. Treat each placeholder as an opaque token and echo it back as-is.
+   ```
+
+   If neither helps, consider whether this agent needs masking at all — without the guardrail its messages reach the provider unmasked, so this is a choice for an agent that does not handle personal data. See [PII masking](guardrails.md#pii-masking).
+10. **On Ollama, a typed result came back as plain text.** The Ollama API cannot accept a JSON schema and tools in the same request, so when an agent has both, Smart Workflow keeps the tools and leaves the schema off. The agent still calls its tools and still answers — the reply is just not schema-constrained. Split the work across two agents if you need both, or use a provider that supports them together. See [Provider Capabilities](reference/capabilities.md#structured-output).
 
 ## Messages and expressions
 

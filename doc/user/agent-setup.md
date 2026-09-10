@@ -53,15 +53,9 @@ See [Defining Tools](tools.md) for writing tools and for how their descriptions 
 
 ### Guardrails
 
-`Input guardrails` and `Output guardrails` are pickers over the registered guardrails.
+`Input guardrails` and `Output guardrails` decide what validates this agent's input and output. Both are optional — leave them empty and the agent uses the guardrails configured for the application.
 
-By default, Smart Workflow applies the guardrails configured for the application — `AI.Guardrails.DefaultInput` and `AI.Guardrails.DefaultOutput`. Every agent is protected without anything being set on the element.
-
-To give one agent a different set, select them in these pickers; what you select replaces the defaults for that agent. Leave the fields empty to keep the application defaults.
-
-> **Note:** Because empty means "use the defaults" rather than "no guardrails", an agent you never configured still runs whatever the application set. Worth remembering in tests, where a global input guardrail can reject fixture data.
-
-See [Guardrails](guardrails.md).
+Note that empty means "use the defaults", not "no guardrails". See [Using guardrails in agents](guardrails.md#using-guardrails-in-agents) for selecting a different set, and [Guardrails](guardrails.md) for what each one does.
 
 ### Model
 
