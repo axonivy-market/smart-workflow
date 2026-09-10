@@ -77,5 +77,4 @@ See [Variables](reference/variables.md) for the complete list.
 - [Getting Started](getting-started.md) — build your first agent
 - [Agent Setup](agent-setup.md) — the element in full
 - [Agent Patterns](patterns.md) — arranging more than one agent
-- [Security and Data](security-and-data.md) — what leaves your network
 - [Troubleshooting](troubleshooting.md) — when something does not work

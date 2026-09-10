@@ -2,13 +2,51 @@
 
 In AI-assisted adaptive process initiatives, it's crucial to observe execution paths of the AI agents. With observation tools you remain in control of spent costs, used models and processed data.
 
-Observability is configured at **application level** and applies to every agent automatically — there is nothing to enable per element and no code to write. Smart Workflow offers three independent channels, each with its own switch:
+Observability is configured at **application level** and applies to every agent automatically, so you do not need to configure your agents or write additional code. Smart Workflow offers three independent channels:
 
-| Channel | Variable | Default |
-| --- | --- | --- |
-| [Arize Phoenix tracing](#tracing-with-arize-phoenix) | `AI.Observability.Openinference.Enabled` | off |
-| [Ivy conversation history](#conversation-history-in-ivy) | `AI.Observability.Ivy.Enabled` | off |
-| [AI-assisted custom fields](#ai-assisted-custom-fields) | `AI.Observability.CustomFields.Enabled` | on |
+| Channel | Answers | Variable | Default |
+| --- | --- | --- | --- |
+| [AI-assisted marker](#marking-ai-assisted-cases) | Did AI take part in this Case or Task? | `AI.Observability.CustomFields.Enabled` | on |
+| [Conversations in Ivy](#recording-conversations-in-ivy) | What did each agent say, call and block? | `AI.Observability.Ivy.Enabled` | off |
+| [Arize Phoenix tracing](#tracing-with-arize-phoenix) | What happened inside each call — prompts, tools, tokens, cost? | `AI.Observability.Openinference.Enabled` | off |
+
+They work well together: the marker tells you which Cases involved AI at all, and the other two tell you what happened inside them.
+
+## Marking AI-assisted cases
+
+Smart Workflow automatically marks Cases and Tasks with a custom field when an AI agent is invoked during their execution. This provides a lightweight, built-in way to track AI usage directly on workflow entities without requiring an external tracing platform.
+
+| Field key | Type | Label | Scope |
+| --- | --- | --- | --- |
+| `aiAssisted` | STRING | AI-assisted | Task, Case |
+
+The field is set to `SMART_WORKFLOW` when the AI agent is used within the context of a Task or Case.
+
+This is the one observability channel that is **on by default**. To disable it, set `AI.Observability.CustomFields.Enabled` to `false` in the Engine Cockpit.
+
+## Recording conversations in Ivy
+
+Independently of Arize Phoenix, Smart Workflow can record every agent conversation into the Ivy repository for governance audit. This needs no external platform — the records are queryable from Ivy itself and are visible in the agent history tree.
+
+Enable it in the **Engine Cockpit**, under **Variables**:
+
+```yaml
+Variables:
+  AI:
+    Observability:
+      Ivy:
+        # Enable chat history recording for governance audit.
+        Enabled: "true"
+```
+
+Each conversation is recorded against the current Case and Task, under the agent's element name, and captures four kinds of entry:
+
+- **Agent responses** — what the model returned
+- **Tool executions** — which tools ran, with their arguments and results
+- **Input guardrail** evaluations
+- **Output guardrail** evaluations
+
+> **Note:** This is a durable audit record of prompts, responses and tool arguments. Treat it as such when deciding retention, and prefer [PII masking](guardrails.md#pii-masking) over redaction after the fact.
 
 ## Tracing with Arize Phoenix
 
@@ -87,7 +125,7 @@ If you like to dig deeper, note that it's possible to track AI interactions over
 
 #### Redacting message content
 
-Traces include the full prompt and response by default. Where that is too sensitive to export, suppress either side while keeping the timing, cost and model metadata:
+Traces include the full prompt and response by default. Where that is too sensitive to export, you can leave either of them out:
 
 ```yaml
 Variables:
@@ -99,31 +137,7 @@ Variables:
         HideOutputMessages: "true"
 ```
 
-This is a coarser tool than [PII masking](guardrails.md#pii-masking): it removes the content from the trace rather than from the model request.
-
-## Conversation history in Ivy
-
-Independently of Arize Phoenix, Smart Workflow can record every agent conversation into the Ivy repository for governance audit. This needs no external platform — the records are queryable from Ivy itself and are visible in the agent history tree.
-
-Enable it in the **Engine Cockpit**, under **Variables**:
-
-```yaml
-Variables:
-  AI:
-    Observability:
-      Ivy:
-        # Enable chat history recording for governance audit.
-        Enabled: "true"
-```
-
-Each conversation is recorded against the current Case and Task, under the agent's element name, and captures four kinds of entry:
-
-- **Agent responses** — what the model returned
-- **Tool executions** — which tools ran, with their arguments and results
-- **Input guardrail** evaluations
-- **Output guardrail** evaluations
-
-> **Note:** This is a durable audit record of prompts, responses and tool arguments. Treat it as such when deciding retention, and prefer [PII masking](guardrails.md#pii-masking) over redaction after the fact. See [Security and Data](security-and-data.md).
+If you want to keep the system and user messages out of the trace, set `HideInputMessages`. If you want to leave out the model's reply, along with any tool calls it asked for, set `HideOutputMessages`. You can use one or both — the rest of the span is unchanged either way, so the model name, the token counts and the Case and Task ids are still recorded.
 
 ## Guardrail records
 
@@ -156,21 +170,8 @@ Guardrail executions appear in both channels, with their own fields.
 
 The [circuit breaker](circuit-breaker.md) participates in this like any other guardrail: a stopped call is recorded under the guardrail name `CircuitBreakerGuardrail`, with the stop reason as its failure message.
 
-## AI-assisted custom fields
-
-Smart Workflow automatically marks Cases and Tasks with a custom field when an AI agent is invoked during their execution. This provides a lightweight, built-in way to track AI usage directly on workflow entities without requiring an external tracing platform.
-
-| Field key | Type | Label | Scope |
-| --- | --- | --- | --- |
-| `aiAssisted` | STRING | AI-assisted | Task, Case |
-
-The field is set to `SMART_WORKFLOW` when the AI agent is used within the context of a Task or Case.
-
-This is the one observability channel that is **on by default**. To disable it, set `AI.Observability.CustomFields.Enabled` to `false` in the Engine Cockpit.
-
 ## See also
 
 - [Guardrails](guardrails.md) — what produces the guardrail records above
 - [Circuit Breaker](circuit-breaker.md) — confirming afterwards which calls were stopped
-- [Security and Data](security-and-data.md) — what these records mean for retention
 - [Variables](reference/variables.md) — every observability switch

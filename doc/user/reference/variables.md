@@ -99,4 +99,3 @@ Shipped by `smart-workflow` (retrieval defaults) and `smart-workflow-opensearch-
 
 - [Provider Capabilities](capabilities.md) — what each provider supports
 - [Error Codes](error-codes.md) — the BPM errors Smart Workflow raises
-- [Security and Data](../security-and-data.md) — how keys and prompts are handled

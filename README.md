@@ -31,7 +31,6 @@ Running agents safely, and knowing what they did.
 | [Guardrails](doc/user/guardrails.md) | Prompt-injection defence, sensitive-data blocking, and PII masking |
 | [Circuit Breaker](doc/user/circuit-breaker.md) | The application-wide switch that stops all AI calls |
 | [Observability](doc/user/observability.md) | Arize Phoenix tracing, Ivy conversation history, and AI-assisted custom fields |
-| [Security and Data](doc/user/security-and-data.md) | What leaves your network, what is stored, and for how long |
 
 ## Reference
 

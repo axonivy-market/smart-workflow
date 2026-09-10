@@ -136,7 +136,7 @@ If a masked value does not come back in the response, [Troubleshooting](troubles
 
 The guardrail instance is shared across all agents, so concurrent agent calls are not isolated from each other.
 
-And masking is a risk reduction, not a privacy guarantee — session identifiers, metadata, and contextual detail can still identify a person. Pair it with data minimization; see [Security and Data](security-and-data.md).
+And masking is a risk reduction, not a privacy guarantee — session identifiers, metadata, and contextual detail can still identify a person. Pair it with data minimization: send an agent only the fields it needs for the task, and there is far less personal data in the message to begin with.
 
 For a working example, see the `piiMaskingGuardrailDemo` start in the [`GuardrailDemo`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/process/Features/GuardrailDemo.p.json) process.
 
@@ -193,6 +193,5 @@ Once registered, the guardrail's `name()` — the simple class name unless you o
 - [Agent Setup](agent-setup.md) — where guardrails are configured on the element
 - [Observability](observability.md) — viewing guardrail records and spans
 - [Error Codes](reference/error-codes.md) — handling a violation
-- [Security and Data](security-and-data.md) — what leaves your network
 
 For working examples, see the [`GuardrailDemo`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/process/Features/GuardrailDemo.p.json) process, which has separate start links for the prompt-injection, sensitive-data, PII-masking, and custom-guardrail paths.

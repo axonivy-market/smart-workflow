@@ -1,6 +1,6 @@
 # Writing Documentation
 
-House style for `doc/user/`. Follow it when adding or editing a page, so the set reads as one document rather than fourteen.
+House style for `doc/user/`. Follow it when adding or editing a page, so the set reads as one document rather than a pile of separate pages.
 
 ## Structure
 
