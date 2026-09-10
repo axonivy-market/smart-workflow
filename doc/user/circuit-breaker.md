@@ -4,7 +4,7 @@ The circuit breaker is an application-wide kill switch for AI. When it is on, Sm
 
 Use it when AI must go offline immediately: a provider incident, a runaway cost situation, a leaked prompt, or a compliance hold.
 
-It is controlled centrally by one Ivy variable, and it reports a stopped call to your processes as a dedicated BPM error so that you can define a fallback.
+It is controlled centrally by one Ivy variable, and it reports a stopped call to your processes as a dedicated BPM error so that you can define fallback routes for your business processes.
 
 ## Configuring the circuit breaker
 
@@ -38,7 +38,7 @@ public interface CircuitBreakerSignal {
 
 ## Handling a stopped agent
 
-When the circuit breaker blocks a call, an exception is thrown with the error code `smartworkflow:stop`. Catch it with an **Error Boundary Event** on the agent element and route to a fallback — a human, a non-AI path, a message that AI is temporarily unavailable, or a parked case to retry later. The full recipe is in [Error Codes](reference/error-codes.md#catching-one).
+When the circuit breaker stops a call, Smart Workflow raises the error code `smartworkflow:stop`. Catch it with an **Error Boundary Event** on the agent element, and from there the fallback is an ordinary part of your process — hand the work to a person, take a non-AI path, tell the user that AI is briefly unavailable, or park the case and pick it up later. Anything you can model in the process designer is open to you, so the fallback can be as simple or as complete as the business needs. The full recipe is in [Error Codes](reference/error-codes.md#catching-one).
 
 Every agent call should have such a fallback. That is the point of the circuit breaker: the business process keeps running without AI instead of failing.
 
@@ -61,8 +61,8 @@ The circuit breaker takes part in guardrail observability like any other guardra
 
 Know these boundaries before you rely on the circuit breaker:
 
-- A call already in flight is not cancelled. The breaker takes effect at the guardrail boundaries around the LLM call. A request that already reached the provider finishes its exchange — including a long tool loop or a large response — and is stopped when its output is evaluated. Tokens for that call are still spent.
-- It is all or nothing, for the whole application. You cannot stop only one agent, only one user's sessions, or only calls that have been running for a long time. Every agent in the application is affected.
+- A LLM call already in flight cannot be cancelled. The breaker takes effect at the guardrail boundaries around the LLM call. A request that already reached the provider finishes its exchange — including a long tool loop or a large response — and is stopped when its output is evaluated. Tokens for that call are still spent.
+- It applies to the whole application. Every agent is affected while the switch is on.
 
 ## Demo
 
