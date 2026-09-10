@@ -10,9 +10,12 @@ A linear chain: each agent processes an input and hands its result to the next s
 
 Use it when the work decomposes into ordered steps that each need a different instruction — extract, then classify, then summarize. Splitting one long prompt into three short ones almost always beats a single agent asked to do everything, because each step gets a focused system message and a result you can inspect.
 
-**Give each agent its own task.** That is what makes the run tracked, resumable, and visible in the task history — and it is what lets a failed step be retried without re-running the whole chain.
+Give each agent its own task, and you get:
 
-A pipeline is also where [mixing providers](providers.md#mixing-providers-in-one-process) pays off: spend on the step where accuracy is critical, use a cheap model for the trivial classification, keep the sensitive step on hardware you own.
+- Visibility — each step has its own entry in the task history, its own conversation record and its own trace, so you can see what it received and returned instead of reading one long exchange.
+- The right model per step — a strong reasoning model where the decision is hard, a vision-capable one for reading documents, a cheap one for a simple classification. See [mixing providers](providers.md#mixing-providers-in-one-process).
+- Guardrails per step — each agent validates what that step actually needs.
+- Failure isolation — a guardrail violation or a [circuit breaker](circuit-breaker.md) stop lands on one element, so you can retry it or route it to a fallback while the work already finished stays in your process data.
 
 See the **Agent Pipeline Demo** process in `smart-workflow-demo`.
 
@@ -20,9 +23,14 @@ See the **Agent Pipeline Demo** process in `smart-workflow-demo`.
 
 The agent and the tools it uses live in one process file, with no cross-process references.
 
-Use it when a capability should ship as a single unit — one callable interface in, one result out, nothing else in the project needs to know how it works. It is the easiest pattern to move between projects and the easiest to reason about, because the whole capability is visible on one canvas.
+Use it when a capability should ship as a single unit — one callable interface in, one result out, nothing else in the project needs to know how it works.
 
-This is also the pattern that pairs with returning a stopped flag rather than letting an error escape: the caller gets a result object, never an exception. See [Returning a stopped flag from a subprocess](circuit-breaker.md#returning-a-stopped-flag-from-a-subprocess).
+Keep the agent and its tools in one callable process file, and you get:
+
+- Portability — the whole capability is one file, so moving it into another project takes nothing else with it.
+- Readability — the agent, its tools and their wiring are visible together, so you can follow what the capability does without opening anything else.
+- A clean contract — callers see one callable, and a change inside stays inside.
+- Errors that do not escape — catch a guardrail violation or a [circuit breaker](circuit-breaker.md) stop inside the process and return a flag instead, so the caller gets a result object rather than an exception. See [Returning a stopped flag from a subprocess](circuit-breaker.md#returning-a-stopped-flag-from-a-subprocess).
 
 See the **Self-Contained Agent** process in `smart-workflow-demo`.
 

@@ -2,36 +2,18 @@
 
 Retrieval-Augmented Generation (RAG) enhances AI responses in Axon Ivy Smart Workflow by grounding them in your own documents and knowledge bases. Instead of relying solely on the LLM's training data, RAG retrieves relevant content from a vector store and includes it as context — producing answers that are accurate, verifiable, and specific to your organization.
 
-The workflow is straightforward:
+Once your documents are indexed in a vector store, the workflow is straightforward:
 
-1. **Ingest** — Split your documents into chunks, generate embeddings, and store them in a vector store.
-2. **Search** — When a question arrives, embed the query, find the most similar chunks, and return them.
-3. **Answer** — The LLM receives the retrieved chunks as context and generates a grounded response.
+1. **Search** — When a question arrives, embed the query, find the most similar chunks, and return them.
+2. **Answer** — The LLM receives the retrieved chunks as context and generates a grounded response.
 
-Smart Workflow provides callable subprocesses and AI tools that handle steps 1 and 2. Step 3 is handled by the `AgenticProcessCall` element, which orchestrates the LLM and tool calls automatically.
+Smart Workflow provides the AI tool that handles the search, and the `AgenticProcessCall` element orchestrates the LLM and tool calls automatically.
 
 ## OpenSearch
 
 [OpenSearch](https://opensearch.org/) is a scalable, open-source search and analytics engine that supports k-NN vector search — making it a natural fit for RAG workloads.
 
-The `smart-workflow-opensearch-rag` module provides a callable subprocess for setup and an AI tool that an agent can invoke at runtime.
-
-### Callable: `createVectorStore`
-
-Use this callable subprocess to create an OpenSearch index and ingest documents before the agent runs.
-
-**Input parameters**
-
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `collection` | String | Index name to ingest into. |
-| `sources` | List\<String\> | Plain text documents to index. |
-
-**Result**
-
-| Parameter | Description |
-| --- | --- |
-| `result` | Ingestion result. `answer` contains the number of indexed segments; `error` contains failure details if something went wrong. |
+The `smart-workflow-opensearch-rag` module provides an AI tool that an agent can invoke at runtime.
 
 ### Tool: `openSearchSearch`
 
@@ -71,7 +53,7 @@ Two things in that prompt are doing real work beyond the collection name: an exp
 
 ### Configuration
 
-Retrieval and chunking defaults are set in the **Engine Cockpit**, under **Variables**:
+Retrieval defaults are set in the **Engine Cockpit**, under **Variables**:
 
 ```yaml
 Variables:
@@ -81,8 +63,6 @@ Variables:
       MaxResults: "5"
       # Cosine similarity threshold (0.0 - 1.0). Segments below this score are excluded.
       MinScore: "0.6"
-      ChunkSize: "300"
-      ChunkOverlap: "20"
       EmbeddingModel:
         # When blank, falls back to AI.DefaultProvider. Must support embedding.
         Provider: ""
@@ -93,19 +73,15 @@ Variables:
         ApiKey: ${decrypt:}
 ```
 
-`MaxResults` and `MinScore` are defaults that the agent can override per call, since both are tool parameters. `ChunkSize` and `ChunkOverlap` apply at ingestion time only — changing them has no effect on documents already indexed.
-
-> **Note:** `ChunkSize` and `ChunkOverlap` are counted in **characters**, not tokens, despite what the comments in `variables.yaml` say. Documents are split with a recursive splitter that works on character counts.
+`MaxResults` and `MinScore` are defaults that the agent can override per call, since both are tool parameters. The embedding model is used to turn the question into a vector, so it must match the one your documents were indexed with.
 
 Only providers that support embedding are valid for `EmbeddingModel.Provider` — currently OpenAI and Ollama. See the [Provider Capabilities](reference/capabilities.md#embedding).
 
 The OpenSearch connection itself is configured separately, in the `smart-workflow-opensearch-rag` module: `AI.RAG.OpenSearch.Url`, plus `ApiKey` or `UserName`/`Password` for authentication, and `TrustSelfSignedCertificates`.
 
-> **Note:** All ingested segments are tagged with the source metadata value `inline`, regardless of which document they came from. Per-document provenance is not retained at this layer, so an instruction to "cite the source document" cannot be satisfied from segment metadata alone.
-
 ### Demo
 
-The `RagChatBotDemo` process in `smart-workflow-demo` is an interactive four-step wizard that demonstrates a complete RAG pipeline:
+The `RagChatBotDemo` process in `smart-workflow-demo` is an interactive four-step wizard that demonstrates a complete RAG pipeline, indexing included so you can try it end to end without an existing vector store:
 
 1. **Configuration** — Review the OpenSearch server URL, authentication type, and embedding model settings loaded from Ivy variables. Test the connection before proceeding.
 2. **Upload & Embed** — Enter an index name, upload `.txt` or `.md` files, and embed the documents into OpenSearch as searchable vector chunks.
@@ -129,8 +105,7 @@ AI.RAG.OpenSearch.Url        = https://my-opensearch.us-east-1.es.amazonaws.com
 - Not telling the agent the collection name. `collection` is required and has no default. This is the most common reason a RAG agent answers from training data instead of your documents.
 - Not instructing the agent to always search. Models answer directly when they think they know. Say "you MUST always call the tool" and say not to fall back on training data.
 - An embedding provider that cannot embed. `AI.RAG.EmbeddingModel.Provider` accepts only OpenAI or Ollama.
-- Changing `ChunkSize` and expecting existing documents to change. Both chunking variables apply at ingestion time only; re-index to take effect.
-- Asking the agent to cite source documents. Every ingested segment is tagged `inline`, so per-document provenance is not available from segment metadata.
+- A different embedding model than the documents were indexed with. The query vector and the stored vectors have to come from the same model, or nothing matches.
 
 ## See also
 
