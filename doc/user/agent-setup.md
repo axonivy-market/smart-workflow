@@ -1,0 +1,127 @@
+# Agent Setup
+
+`AgenticProcessCall` is the process element that puts an AI agent step inside a process. You declare what to ask, what data to pass in, and where the answer goes; the element handles the model call.
+
+Add it from **Extension > Program Elements** in the Designer, then double-click to configure.
+
+## Prerequisites
+
+An agent needs a model provider and a key before it can run — at minimum `AI.DefaultProvider` and that provider's `APIKey`. See [Model Providers](providers.md) for every provider's configuration block and how keys are handled, or [Getting Started](getting-started.md) if you have not set one up yet.
+
+## Element configuration
+
+The editor is organized in five groups.
+
+### Message
+
+![The Message group of the agent element](img/agent-message-configurations.png)
+
+Both fields are multi-line, and both accept `<%=...%>` to inject process data. Anything you can reach from IvyScript can go into either message.
+
+**`System message`** holds the agent's standing instructions — who it is, what it must do, what format to produce. Be specific: the model knows nothing about your business, so state what to do, what to leave out, and what shape to return. Use `<%=...%>` for anything that should not be hard-coded into the element, such as company policy, the current department, or an approval threshold:
+
+```
+You are a purchase request assistant for <%=in.companyName%>.
+
+Follow these company policies at all times:
+<%=in.policyText%>
+
+Approve requests below <%=in.autoApproveLimit%> without asking.
+Anything above that must go to a human approver.
+Return a single sentence with the decision and the reason, and nothing else.
+```
+
+Where those values come from is up to the process — a CMS entry, an Ivy variable, a read from an earlier step. A policy change then updates one source instead of every agent in the application. Note that files are not handled in this field: every expression becomes text.
+
+**`User message`** holds the data to reason over on this call, usually a straight reference to a process data field:
+
+```
+<%=in.invoiceText%>
+```
+
+This is also the field that supports [file extraction](file-extraction.md) — an expression resolving to a file becomes image or PDF content.
+
+If you run into trouble crafting these messages, [Messages and expressions](troubleshooting.md#messages-and-expressions) covers what usually causes it.
+
+### Tools
+
+`Available tools` lists the tools an agent can use — both callable sub-processes tagged `tool` and Java tools.
+
+> **Important:** An empty `Available tools` field means the agent has **no tools to use at all**. If your agent ignores a tool you expected it to call, check that the tool is actually selected here.
+
+See [Defining Tools](tools.md) for writing tools and for how their descriptions reach the model.
+
+### Guardrails
+
+`Input guardrails` and `Output guardrails` decide what validates this agent's input and output. Both are optional — leave them empty and the agent uses the guardrails configured for the application.
+
+Note that empty means "use the defaults", not "no guardrails". See [Using guardrails in agents](guardrails.md#using-guardrails-in-agents) for selecting a different set, and [Guardrails](guardrails.md) for what each one does.
+
+### Model
+
+`Provider` and `Model` decide which model answers this agent. Both are optional — leave them empty and the agent uses the application's default provider and that provider's default model.
+
+Set them when one agent needs something different, such as a cheaper model for a trivial step. See [Setting a provider and model for one agent](providers.md#setting-a-provider-and-model-for-one-agent) for the values these fields accept and how they are resolved.
+
+### Output
+
+![The Output group of the agent element](img/agent-other-configurations.png)
+
+**`Expect result of type`** declares the type the agent should return. Leave it empty for plain text, which is what most agents need and requires no output configuration at all. To get a typed Java object instead, set it to a class such as `com.axonivy.utils.ai.Invoice.class` — see [Structured output](#structured-output).
+
+**`Map result to`** is where the result is written, for example `in.summary`. The response lands in that process data field ready to display, log, or pass on — no parsing, no casting.
+
+If the mapped field stays empty after a run, [Troubleshooting](troubleshooting.md#the-agent-did-not-answer) covers the usual cause.
+
+## Structured output
+
+An agent returns text by default. To get a typed Java object instead, set `Expect result of type` to the class you want back:
+
+```java
+com.axonivy.utils.ai.Invoice.class
+```
+
+Smart Workflow derives a JSON schema from that class, sends it to the model as a response-format constraint, and deserializes the reply into an instance. Any Ivy data class or plain Java class works, provided it is on the runtime classpath; a bare collection is not valid, so to return a list, declare a class with the list as one of its fields.
+
+Because the schema comes from the class, the model already has your field names and their types — so there is no need to list them in the system message. Name the fields the way you would describe them, and spend the system message on what the schema cannot express: what a field means, how to choose between candidates, and when to leave one empty.
+
+Check the structured output support of your provider in [Provider Capabilities](reference/capabilities.md#structured-output).
+
+## Example
+
+A minimal text agent, start to finish:
+
+**System message:**
+
+```
+You are an invoice summary agent.
+Read the invoice text and return a single sentence containing
+the invoice number, supplier name, total amount, and due date.
+Do not add any other commentary.
+```
+
+| Field | Value |
+| --- | --- |
+| `User message` | `<%=in.invoiceText%>` |
+| `Expect result of type` | _(empty — plain `String`)_ |
+| `Map result to` | `in.summary` |
+
+To turn the same agent into a typed extractor, set `Expect result of type` to `com.axonivy.utils.ai.Invoice.class` and use the system message for the field meanings and constraints the class cannot carry. [File Extraction](file-extraction.md#example) has that version in full, reading the invoice from a document rather than from text.
+
+For working implementations, see the [demo processes](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/process/) — `AgentDemo/SupportAgent.p.json` for a tool-using agent and `Features/FileExtractionDemo.p.json` for typed extraction.
+
+## Calling an agent from another process
+
+An agent element does not have to sit in the process that needs it. Put it in a callable subprocess, give that subprocess the input and result parameters you want, and any process in any project that depends on yours can call it like any other callable.
+
+That is the usual way to share one agent across an application — and the same shape [Agent Patterns](patterns.md#self-contained-agent-with-co-located-tools) calls a self-contained agent, where the agent and its tools ship as a single unit behind one callable interface.
+
+## See also
+
+- [Model Providers](providers.md) — choosing and configuring a provider
+- [Defining Tools](tools.md) — giving an agent something to do
+- [Guardrails](guardrails.md) — validating input and output
+- [File Extraction](file-extraction.md) — images and PDFs as input
+- [Human in the Loop](human-in-the-loop.md) — suspending an agent for a human decision
+- [Agent Patterns](patterns.md) — structuring several agents in one process
+- [Troubleshooting](troubleshooting.md) — when an agent does not answer, or answers wrongly
