@@ -75,4 +75,4 @@ Embedding support matters only for [RAG](../rag.md), where `AI.RAG.EmbeddingMode
 
 - [Model Providers](../providers.md) — choosing and configuring a provider
 - [Variables](variables.md) — every `AI.*` setting
-- [Contributing a provider](../providers.md#contributing-a-provider) — adding a provider, and keeping this page current
+- [Adding a model provider](https://github.com/axonivy-market/smart-workflow/blob/master/doc/dev/EXTENDING.md#adding-a-model-provider) — adding a provider, and keeping this page current

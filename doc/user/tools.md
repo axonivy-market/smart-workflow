@@ -2,7 +2,6 @@
 
 AI agents in Smart Workflow use tools to take action. A tool is a named, callable unit of logic that the agent discovers, selects, and invokes at runtime. Smart Workflow supports two kinds of tools.
 
-
 ## Callable process tools
 
 We strongly encourage using callable subprocesses as tools. This approach aligns naturally with how Ivy developers already work and provides full access to the power of the process designer—such as error handling, dialogs, subprocess calls, and other Axon Ivy capabilities.
@@ -40,18 +39,11 @@ Tools are discovered globally but granted per agent, via the `Available tools` p
 
 Keep the list tight. Every tool you grant costs tokens in the request and gives the model one more way to pick wrong.
 
-
 ## Java tools
 
 Tool logic can also be implemented in Java. This is rarely needed — prefer callable processes whenever possible, and reach for Java only when the logic has no workflow steps and is better expressed as a plain class.
 
-A Java tool implements `SmartWorkflowTool` — a description, its input parameters, and an `execute` method — and is exposed through a `SmartWorkflowToolsProvider` registered via SPI, both under `com.axonivy.utils.smart.workflow.tools.provider`.
-
-The easiest way in is to look at [`TaxCalculatorTool`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/src/com/axonivy/utils/smart/workflow/demo/tool/TaxCalculatorTool.java) in the demo project. It takes a structured `Invoice` object, returns per-item tax calculations, and is registered in [`DemoToolProvider`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/src/com/axonivy/utils/smart/workflow/demo/tool/DemoToolProvider.java) — a complete example you can adapt to your own case.
-
-A few things are handy to know as you do. Conversion runs in both directions for you: arguments are deserialized into the declared type, and whatever you return is serialized back to the agent as JSON, custom types included. The `name()` method is optional and defaults to the simple class name, so you only need it when the agent-facing name should differ. And because only the first line of an SPI services file is read, two providers need two separate files.
-
-Providers are resolved on each agent call, so a newly registered tool appears without a restart.
+A Java tool appears in the `Available tools` picker alongside process tools, and an agent calls it the same way. Writing one is covered in [Writing a Java tool](https://github.com/axonivy-market/smart-workflow/blob/master/doc/dev/EXTENDING.md#writing-a-java-tool).
 
 ## Built-in tools
 
@@ -66,11 +58,11 @@ Agents select this tool automatically when they need up-to-date or factual infor
 
 | Variable | Purpose | Default |
 | --- | --- | --- |
-| `AI.Tool.WebSearch.Engine` | Name of the search engine to use. Must match the `name()` of a registered `SmartWebSearchEngine`. If empty, the first available engine is used. | `duckduckgo` |
+| `AI.Tool.WebSearch.Engine` | Name of the search engine to use. If empty, the first available engine is used. | `duckduckgo` |
 | `AI.Tool.WebSearch.MaxResults` | Maximum number of search results returned per query. Empty falls back to `5`. | _(empty)_ |
 | `AI.Tool.WebSearch.WhitelistDomains` | Comma-separated list of allowed domains (e.g. `stackoverflow.com, github.com`). If empty, all domains are allowed. | _(empty)_ |
 
-**Search engine**: DuckDuckGo is the shipped default and the only built-in engine. Custom engines can be plugged in by implementing [`SmartWebSearchEngine`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow/src/com/axonivy/utils/smart/workflow/tools/web/SmartWebSearchEngine.java) and registering a [`SmartWebSearchEngineProvider`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow/src/com/axonivy/utils/smart/workflow/tools/web/SmartWebSearchEngineProvider.java) via SPI. Engine names are matched case-insensitively.
+**Search engine**: DuckDuckGo is the shipped default. You can also plug in an engine of your own — see [Writing a web search engine](https://github.com/axonivy-market/smart-workflow/blob/master/doc/dev/EXTENDING.md#writing-a-web-search-engine).
 
 **Using the tool in a process**: select `webSearch` in the `Available tools` picker of the agent element.
 
@@ -80,14 +72,12 @@ Agents do not search unless the task calls for it, and a vague system message te
 
 See the [`WebSearchDemo`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/process/Features/WebSearchDemo.p.json) process for a complete example.
 
-
 ## Common mistakes
 
 - Leaving `Available tools` empty. The agent gets no tools. This is the usual reason an agent explains what it would do instead of doing it.
-- A parameter with no description. The description is the whole contract — an undescribed `id` is a guess.
+- A parameter with no description. The description is the whole contract — an `id` with nothing said about it is a guess.
 - Documenting the result parameters. Their descriptions never reach the model. Only input parameters and the `CallSubStart` description do.
 - Forgetting the `tool` tag on the `CallSubStart`, so the tool never appears in the picker.
-- Two providers in one SPI services file. Only the first line is read; use two files.
 - Granting every tool you have. Each one costs tokens in every request and gives the model another way to choose wrong.
 
 ## See also

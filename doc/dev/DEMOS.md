@@ -54,5 +54,5 @@ Demo tests are not part of the regular CI build. Run them on demand:
 
 ## See also
 
-- [Agent Patterns](../patterns.md) — the patterns the demos illustrate
-- [Contributing a provider](../providers.md#contributing-a-provider) — adding a model provider
+- [Agent Patterns](../user/patterns.md) — the patterns the demos illustrate
+- [Extending Smart Workflow](EXTENDING.md) — adding a model provider, guardrail or Java tool

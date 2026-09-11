@@ -159,24 +159,9 @@ Every guardrail execution is recorded, in both channels: the Ivy conversation hi
 
 ## Writing a custom guardrail
 
-Beyond the built-ins, you can implement your own — a domain rule, a compliance check, a redaction pass. A custom guardrail is a Java class discovered through SPI; once registered, you can use it exactly like a built-in — select it in the pickers of an agent, or name it in the application-wide variables.
+The built-ins are not the limit. You can write a guardrail of your own in Java — a domain rule, a compliance check, a redaction pass — and once it is registered you use it exactly like a built-in: select it in the pickers of an agent, or name it in the application-wide variables.
 
-The easiest way in is `BlockCompetitorMentionGuardrail` in the demo project, together with the `DemoGuardrailProvider` that exposes it and the SPI file that registers the provider.
-
-Implement `SmartWorkflowInputGuardrail` or `SmartWorkflowOutputGuardrail` depending on which picker the guardrail should appear in, or both if it belongs in both. Its `evaluate` method returns one of four outcomes:
-
-| Factory | Effect |
-| --- | --- |
-| `allow()` | Pass the message through unchanged. |
-| `allowWithRewrite(String)` | Pass through, replacing the message with your version. Use for redaction or normalization rather than rejection. |
-| `block(String reason)` | Reject, with the reason surfaced in the BPM error. |
-| `block(String reason, Throwable cause)` | Reject, attaching a cause so callers can tell *which* guardrail blocked without inspecting the reason text. |
-
-The single-argument `evaluate` is enough for a stateless check. There is also a two-argument form taking an invocation id, for the rare case where a guardrail needs to correlate the input and output halves of the same agent call — that is how `PiiMaskingGuardrail` pairs its masking with its restoration.
-
-> **Important:** SPI registration is required. Expose your guardrails through a `GuardrailProvider` and name that class in `src/META-INF/services/com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider`. Without it, Smart Workflow never discovers them and they never appear in the pickers. Only the first line of a services file is read, so two providers need two files.
-
-Once registered, the guardrail's `name()` — the simple class name unless you override it — appears in the pickers on any agent element. To apply it everywhere, add the name to `AI.Guardrails.DefaultInput` or `AI.Guardrails.DefaultOutput` in the Engine Cockpit.
+The step-by-step guide is in [Writing a custom guardrail](https://github.com/axonivy-market/smart-workflow/blob/master/doc/dev/EXTENDING.md#writing-a-custom-guardrail).
 
 ## Common mistakes
 
@@ -185,8 +170,6 @@ Once registered, the guardrail's `name()` — the simple class name unless you o
 - Matching on the error message. Branch on the error code; the message is wrapped by Smart Workflow and is not a stable contract.
 - Expecting an output guardrail to retry. It does not. A false positive costs the whole call.
 - Paying for the LLM classifier on every message. Pin a cheap model and raise `MinLength` once you know your traffic.
-- Writing a custom guardrail and forgetting the SPI registration. The class compiles, the guardrail never runs, and nothing warns you.
-- Holding state in a guardrail instance. The instance is shared across all agents and concurrent calls. If you need per-call state, key it on the invocation id from the two-argument `evaluate`.
 
 ## See also
 

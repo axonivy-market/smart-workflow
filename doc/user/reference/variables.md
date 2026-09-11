@@ -60,7 +60,7 @@ Full YAML blocks for each provider are in [Model Providers](../providers.md#glob
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `AI.Tool.WebSearch.Engine` | `duckduckgo` | Must match the `name()` of a registered `SmartWebSearchEngine`. Empty uses the first available engine. |
+| `AI.Tool.WebSearch.Engine` | `duckduckgo` | Name of the search engine to use. Empty uses the first available engine. |
 | `AI.Tool.WebSearch.MaxResults` | _(empty)_ | Results per query. Empty falls back to `5`. |
 | `AI.Tool.WebSearch.WhitelistDomains` | _(empty)_ | Comma-separated allowed domains. Empty allows all. |
 

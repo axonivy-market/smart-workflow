@@ -27,7 +27,7 @@ They differ in what they support — check [Provider Capabilities](reference/cap
 A **tool** is something the agent can decide to call. Two kinds exist:
 
 - a **callable sub-process** tagged `tool` — the normal case, and the one that gives you the whole process designer
-- a **Java class** implementing `SmartWorkflowTool`, registered via SPI — for logic with no workflow steps
+- a **Java class** — for logic with no workflow steps
 
 The model never sees your implementation. It sees the tool's description and its input parameter names, types and descriptions, and decides from those alone whether to call it. That makes those descriptions the highest-leverage text in the whole system.
 

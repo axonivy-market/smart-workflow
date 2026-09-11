@@ -45,7 +45,7 @@ If you run into trouble crafting these messages, [Messages and expressions](trou
 
 ### Tools
 
-`Available tools` lists the tools an agent can use — both callable sub-processes tagged `tool` and Java tools registered via SPI.
+`Available tools` lists the tools an agent can use — both callable sub-processes tagged `tool` and Java tools.
 
 > **Important:** An empty `Available tools` field means the agent has **no tools to use at all**. If your agent ignores a tool you expected it to call, check that the tool is actually selected here.
 
@@ -110,15 +110,11 @@ To turn the same agent into a typed extractor, set `Expect result of type` to `c
 
 For working implementations, see the [demo processes](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-demo/process/) — `AgentDemo/SupportAgent.p.json` for a tool-using agent and `Features/FileExtractionDemo.p.json` for typed extraction.
 
-## Calling an agent from a subprocess
+## Calling an agent from another process
 
-Smart Workflow also exposes an agent as a callable subprocess, used by Axon Ivy Portal features:
+An agent element does not have to sit in the process that needs it. Put it in a callable subprocess, give that subprocess the input and result parameters you want, and any process in any project that depends on yours can call it like any other callable.
 
-```
-Portal/SmartWorkflowAgent:invokeAgent(String,String,List<String>,Class)
-```
-
-The arguments are the system message, the user message, the list of tool names, and the expected result type. Refer to the Axon Ivy Portal documentation for how Portal uses it.
+That is the usual way to share one agent across an application — and the same shape [Agent Patterns](patterns.md#self-contained-agent-with-co-located-tools) calls a self-contained agent, where the agent and its tools ship as a single unit behind one callable interface.
 
 ## See also
 

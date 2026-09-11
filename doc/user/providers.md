@@ -2,7 +2,7 @@
 
 Smart Workflow ships a connector for each supported model provider — you bring the API key, or your own Ollama instance. Choose a provider globally, and override it on any individual agent, without code changes.
 
-To add support for a new provider, see [Contributing a provider](#contributing-a-provider) below.
+Missing your preferred vendor? A provider is an Ivy project you can contribute — see [Adding a model provider](https://github.com/axonivy-market/smart-workflow/blob/master/doc/dev/EXTENDING.md#adding-a-model-provider).
 
 ## Supported providers
 
@@ -166,90 +166,6 @@ Since the choice is per element, a single process can route each step to whateve
 | Check supplier risk | `Ollama` / `"llama3.2"` | Supplier names are sensitive business intelligence that must not leave the network. A self-hosted model keeps the data on-premise. |
 
 The point is that you are not locked into one vendor per application: spend capability where accuracy is non-negotiable, drop to a cheap model where the task is trivial, and keep sensitive data on hardware you own — all by changing two fields.
-
-## Contributing a provider
-
-Each supported provider is an Ivy project under `models/` that supplies a `ChatModelProvider`. We are open to supporting more chat models from any vendor — if you miss your preferred one, contribute it to this space.
-
-### Project setup
-
-Create a directory `models/smart-workflow-PROVIDER`, replacing PROVIDER with your concrete vendor. Align the project coordinates with the existing workspace:
-
-```xml
-  <groupId>com.axonivy.utils.ai</groupId>
-  <artifactId>smart-workflow-PROVIDER</artifactId>
-  <packaging>iar</packaging>
-```
-
-Include the project in the build by adding your provider to the [main module build](https://github.com/axonivy-market/smart-workflow/blob/master/pom.xml).
-
-### Implementation
-
-Implement [`ChatModelProvider`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow/src/com/axonivy/utils/smart/workflow/model/spi/ChatModelProvider.java) within your project:
-
-```java
-public interface ChatModelProvider {
-  String name();
-  ChatModel setup(ModelOptions options);
-  List<String> models();
-  List<String> secretsVars();
-
-  default boolean supportsEmbedding() { return false; }
-  default Optional<EmbeddingModel> setupEmbedding(EmbeddingModelOptions options);
-  default String resolveEmbeddingModelName(EmbeddingModelOptions options);
-}
-```
-
-`ModelOptions` is a record carrying `modelName`, `structuredOutput`, `hasTools` and `listeners`, built fluently from `ModelOptions.options()`. `hasTools` is what lets a provider decide whether a schema can be applied — Ollama uses it to drop structured output when tools are present.
-
-Register your implementation in `src/META-INF/services/com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider`. The file must contain a single line stating your implementation type name.
-
-Two parts of `ModelOptions` decide how your provider behaves in edge cases, and both belong in [Provider Capabilities](reference/capabilities.md):
-
-- `structuredOutput()` — whether to apply a JSON schema. If your vendor cannot, log an error and build the model without it rather than failing the call.
-- `hasTools()` — whether the agent also has tools. Ollama uses this to drop the schema, since the two are mutually exclusive there.
-
-### Variables
-
-Every provider has its own set of variables. Contribute yours under `Variables.AI.Providers.PROVIDER`:
-
-```yaml
-Variables:
-  AI:
-    Providers:
-      PROVIDER:
-        #[password]
-        APIKey: ${decrypt:}
-        ...
-```
-
-Also add your provider to the global enumeration in [`smart-workflow/config/variables.yaml`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow/config/variables.yaml), under `AI.DefaultProvider`.
-
-### Libraries
-
-Smart Workflow providers are built on the existing LangChain4j providers. Exclude any dependency from your `pom.xml` that is already part of smart-workflow — classically `langchain4j-core` and `langchain4j-http-client`.
-
-### Testing
-
-Tests for your model provider go in the common `smart-workflow-test` project, with provider-specific functionality under `src_test/com/axonivy/utils/smart/workflow/model/PROVIDER`. It is fine to add a dependency from the common test project to your new model provider.
-
-### Demo
-
-We expect all providers to work the same way, so no extra demonstration process is needed. **Do not** add dependencies to additional model providers to the `smart-workflow-demo` project.
-
-### Checklist
-
-- [ ] `ChatModelProvider` implemented and registered via SPI
-- [ ] custom `variables.yaml` in your provider project
-- [ ] provider listed in `AI.DefaultProvider` of [`smart-workflow/config/variables.yaml`](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow/config/variables.yaml)
-- [ ] project added to the [main module build](https://github.com/axonivy-market/smart-workflow/blob/master/pom.xml)
-- [ ] models, file-extraction support and structured-output behaviour documented in [Provider Capabilities](reference/capabilities.md) — including any condition under which the schema is dropped
-- [ ] provider configuration block added to [Model Providers](providers.md#global-configuration)
-- [ ] variables listed in [Variables](reference/variables.md#providers)
-- [ ] setup section added to the product [README.md](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-product/README.md), with the product [build](https://github.com/axonivy-market/smart-workflow/blob/master/smart-workflow-product/pom.xml) extended to interpolate your `@variables.PROVIDER@` token
-- [ ] tests in `smart-workflow-test`
-
-> **Important:** [Provider Capabilities](reference/capabilities.md) is curated knowledge, not an enforced contract — nothing checks a capability before a request is sent. It is the only place a user can find out what your provider supports, so keep it honest.
 
 ## Common mistakes
 

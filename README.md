@@ -44,16 +44,17 @@ Look-up tables. Each fact lives here once; the guides link to it.
 
 ## Contribute
 
-Extending Smart Workflow itself.
+Extending Smart Workflow itself. These live in [doc/dev/](doc/dev/README.md), alongside the dev container, testing and release guides.
 
 | Guide | What it covers |
 | --- | --- |
-| [Contributing a provider](doc/user/providers.md#contributing-a-provider) | Adding support for a new model provider |
-| [Writing a custom guardrail](doc/user/guardrails.md#writing-a-custom-guardrail) | Implementing and registering your own guardrail |
-| [Demo Projects](doc/user/contribute/demo.md) | The `demo/` folder convention and how to add a demo |
-| [Writing Documentation](doc/user/contribute/documentation.md) | House style for these pages |
+| [Adding a model provider](doc/dev/EXTENDING.md#adding-a-model-provider) | Adding support for a new model provider |
+| [Writing a custom guardrail](doc/dev/EXTENDING.md#writing-a-custom-guardrail) | Implementing and registering your own guardrail |
+| [Writing a Java tool](doc/dev/EXTENDING.md#writing-a-java-tool) | A tool as a Java class rather than a callable sub-process |
+| [Demo Projects](doc/dev/DEMOS.md) | The `demo/` folder convention and how to add a demo |
+| [Writing Documentation](doc/dev/DOCUMENTATION.md) | House style for these pages |
 
 ## Also
 
-- 🛒️ [Market product page](smart-workflow-product/README.md) — what ships, the demos, and provider setup
+- 🛒️ [Market product page](smart-workflow-product/README.md) — what ships, and the demos
 - 🔧 [Developer docs](doc/dev/README.md) — dev container, testing and releasing, for working *on* Smart Workflow
