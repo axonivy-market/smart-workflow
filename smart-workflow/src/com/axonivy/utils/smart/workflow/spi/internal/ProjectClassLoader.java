@@ -9,7 +9,7 @@ public class ProjectClassLoader {
   }
 
   public static ClassLoader of(Project pmv) {
-    return ch.ivyteam.ivy.java.project.ProjectClassLoader.of(pmv);
+    return Thread.currentThread().getContextClassLoader();
   }
 
 }
