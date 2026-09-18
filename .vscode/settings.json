@@ -8,5 +8,7 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
-  }
+  },
+  "axonivy.engine.releaseTrain": "nightly",
+  "java.compile.nullAnalysis.mode": "disabled"
 }
