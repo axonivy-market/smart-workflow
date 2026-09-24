@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.axonivy.com/market/14.0.0/product.json",
-  "minimumIvyVersion": "13.2.0",
+  "minimumIvyVersion": "14.0.0",
   "installers": [
     {
       "id": "maven-import",
@@ -85,7 +85,7 @@
             "version": "${version}",
             "type": "iar",
             "optional": true,
-            "requireOneOfGroup": "test"
+            "requireOneOfGroup": "provider"
           },
           {
             "groupId": "com.axonivy.utils.ai",
@@ -93,7 +93,7 @@
             "version": "${version}",
             "type": "iar",
             "optional": true,
-            "requireOneOfGroup": "test"
+            "requireOneOfGroup": "provider"
           },
           {
             "groupId": "com.axonivy.utils.ai",
