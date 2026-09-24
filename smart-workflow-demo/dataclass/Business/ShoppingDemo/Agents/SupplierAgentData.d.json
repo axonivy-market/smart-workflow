@@ -1,15 +1,15 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "SupplierAgentData",
   "namespace" : "Business.ShoppingDemo.Agents",
   "fields" : [ {
     "name" : "supplier",
-      "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier",
-      "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier",
+    "modifiers" : [ ]
   }, {
     "name" : "response",
-      "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
-      "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.agent.SupplierAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "instructions"
   } ]
