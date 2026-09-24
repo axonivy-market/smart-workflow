@@ -1,14 +1,14 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "AxonIvySupportData",
   "namespace" : "Business",
   "fields" : [ {
     "name" : "supportTicket",
-     "type" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket",
-     "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket",
+    "modifiers" : [ ]
   }, {
     "name" : "taskInfo",
-     "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo",
-     "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo",
+    "modifiers" : [ ]
   } ]
 }

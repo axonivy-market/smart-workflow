@@ -1,16 +1,16 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "ProductAgentData",
   "namespace" : "Business.ShoppingDemo.Agents",
   "fields" : [ {
     "name" : "productInfo"
   }, {
     "name" : "result",
-     "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse",
-     "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse",
+    "modifiers" : [ ]
   }, {
     "name" : "action",
-     "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction",
-     "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentAction",
+    "modifiers" : [ ]
   } ]
 }

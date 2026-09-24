@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "SupportAgentData",
   "namespace" : "AgentDemo",
   "fields" : [ {
@@ -19,8 +19,8 @@
     "modifiers" : [ ]
   }, {
     "name" : "supportTicket",
-      "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
-      "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
+    "modifiers" : [ ]
   }, {
     "name" : "instructions",
     "type" : "List<String>",
@@ -33,8 +33,8 @@
     "modifiers" : [ ]
   }, {
     "name" : "secondTaskInfo",
-      "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo",
-      "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo",
+    "modifiers" : [ ]
   }, {
     "name" : "aiApproval",
     "type" : "com.axonivy.utils.smart.workflow.demo.dto.AiApprovalDecision",
