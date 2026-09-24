@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "OnboardingRequest",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding",
   "annotations" : [ "@com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)" ],
