@@ -1,9 +1,11 @@
-smartworkflow, Agentic, multimodal, langchain, 
-azureopenai, openinference, arizephoenix, javaagent, 
+smartworkflow, Agentic, multimodal, langchain,
+azureopenai, openinference, arizephoenix, javaagent,
 Dotel, DOPEN,
 stackoverflow, duckduckgo, opensearch
 Pii, Ollama, testcontainers, llava, nomic, mxbai, gemma, qwen, mistral, nemo
 opensearchproject, trixie, devcontainers, Ddev
 IBAN, Iban
-chatbots, roleplay, defence, Customising, behaviour
+chatbots, roleplay, defence, Customising, customise, behaviour, behaviours, recognise, recognised
 facelets
+axonivy, circuitbreaker, fasterxml, runbook
+CCPA, Luhn
