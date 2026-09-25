@@ -89,10 +89,10 @@
       <groupId>com.axonivy.ivy.api.restricted</groupId>
       <artifactId>ivy-trace-api</artifactId>
     </dependency>
-    <dependency>
+    <!-- <dependency>
       <groupId>com.axonivy.ivy.api.extension</groupId>
       <artifactId>ivy-java-extension-api</artifactId>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
