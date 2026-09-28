@@ -12,7 +12,12 @@ on:
         type: string
         required: false
         default: dev
-        description: ivy engine permalink (e.g. sprint, nightly, dev)
+        description: ivy engine permalink (e.g. milestone, nightly, dev, 14.0.0-m33, ...)
+      ivyProjectParent:
+        type: string
+        required: false
+        default: ''
+        description: ivy-project-parent version to use for module poms (e.g. 14.0.0-m33-SNAPSHOT)
 
 permissions:
   contents: write
@@ -23,5 +28,9 @@ jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/release.yml@v6
     with:
-      mvnArgs: -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }} -Divy.engine.download.url=https://dev.axonivy.com/permalink/${{ inputs.ivyVersion }}/axonivy-engine.zip
+      mvnArgs: >-
+        -DignoreSnapshots=true
+        -DreleaseVersion=${{ inputs.releaseVersion }}
+        -Divy.engine.download.url=https://dev.axonivy.com/permalink/${{ inputs.ivyVersion }}/axonivy-engine.zip
+        ${{ inputs.ivyProjectParent != '' && format('-DpreparationGoals="org.codehaus.mojo:versions-maven-plugin:2.21.0:update-parent -DparentVersion={0} -DskipResolution=true -DgenerateBackupPoms=false clean verify" -DcompletionGoals="org.codehaus.mojo:versions-maven-plugin:2.21.0:update-parent -DparentVersion=14.0.0-SNAPSHOT -DskipResolution=true -DgenerateBackupPoms=false"', inputs.ivyProjectParent) || '' }}
       javaVersion: 25
