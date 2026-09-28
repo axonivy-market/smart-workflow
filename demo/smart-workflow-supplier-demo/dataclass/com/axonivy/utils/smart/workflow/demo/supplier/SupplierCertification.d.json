@@ -1,11 +1,12 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "SupplierCertification",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier",
   "fields" : [ {
     "name" : "type",
     "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
-    "comment" : "Type of certification"
+    "comment" : "Type of certification",
+    "modifiers" : [ ]
   }, {
     "name" : "certNumber",
     "comment" : "Certificate number"

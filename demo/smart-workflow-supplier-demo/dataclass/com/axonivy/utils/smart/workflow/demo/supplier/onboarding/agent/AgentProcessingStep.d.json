@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "AgentProcessingStep",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.agent",
   "fields" : [ {
@@ -10,7 +10,8 @@
   }, {
     "name" : "status",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.AgentStepStatus",
-    "comment" : "Current status of this processing step: PENDING, RUNNING, COMPLETED, or FAILED"
+    "comment" : "Current status of this processing step: PENDING, RUNNING, COMPLETED, or FAILED",
+    "modifiers" : [ ]
   }, {
     "name" : "startedAt",
     "type" : "Long",

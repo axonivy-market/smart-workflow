@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "SupplierPolicyRule",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.supplier",
   "fields" : [ {
@@ -19,12 +19,15 @@
   }, {
     "name" : "ruleType",
     "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RuleType",
-    "comment" : "The type of rule, e.g. policy rule or financial rule"
+    "comment" : "The type of rule, e.g. policy rule or financial rule",
+    "modifiers" : [ ]
   }, {
     "name" : "legalDocumentType",
-    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType"
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
+    "modifiers" : [ ]
   }, {
     "name" : "certificationType",
-    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType"
+    "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
+    "modifiers" : [ ]
   } ]
 }
