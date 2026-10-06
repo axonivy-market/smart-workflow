@@ -2,6 +2,38 @@
 
 The vocabulary Smart Workflow uses, what each piece actually is, and the limits worth knowing before you design around them.
 
+## AI models and messages
+
+A **large language model (LLM)** is an AI model trained on large amounts of data to understand and generate language. It can perform tasks such as answering questions, summarizing documents, and extracting information.
+
+You give the model instructions and information, and it generates a response. In Smart Workflow, you provide these through two fields:
+
+| Field | Purpose | Example |
+| --- | --- | --- |
+| **System message** | Defines how the agent should behave and the rules it should follow. | `You are a helpful assistant. Answer in one short sentence.` |
+| **User message** | Provides the task and the data for this call. It can contain text or values from process data. | `<%=in.question%>` |
+
+## Prompt
+
+A **prompt** is the input used to guide the model's response. People often use this term for a single instruction, but a model request can contain several messages. Your system message and user message are both part of that input.
+
+For example, if the variable `in.question` contains `What is Axon Ivy?`, Smart Workflow sends that question together with the system instructions to the model.
+
+The model has general knowledge from its training, but it does not automatically know your application data or current business information. Supply the information it needs through messages, tools, or conversation memory.
+
+## Context and tokens
+
+**Context** is the information available to the model when it generates a response. It can include your messages, tool definitions, tool results, chat messages, and supported files.
+
+Models process text in small units called **tokens**. A token can be a word, part of a word, or punctuation. Tokens are not the same as characters or words.
+
+Tokens matter for two reasons:
+
+- **Capacity:** a model's **context window** limits how much tokens it can handle in one request.
+- **Cost:** many providers charge based on the number of input and output tokens processed.
+
+Long messages, large documents, and repeated tool calls can increase token usage. Include the information needed for the task, and avoid sending unrelated data.
+
 ## The agent
 
 An **agent** is a single `AgenticProcessCall` element in a process. It is not a long-running service or a persistent assistant — it is one step that makes one model call (or several, if tools are involved) and writes a result into process data.
@@ -63,6 +95,32 @@ Each agent call is self-contained. The agent works from its system message, its 
 Within a call, the agent keeps the full conversation and remembers its own tool results while it works. That message list grows with each tool call and has no cap, so watch the cost on long tool loops.
 
 To let an agent continue a conversation in a later call — for example when a person has to answer something before it can finish — use the `aiMemoryId` process data field. See [Human in the Loop](human-in-the-loop.md) for how it works and when to reach for it.
+
+## Human in the loop
+
+**Human in the loop** means involving a person during an otherwise automated workflow. A person might provide missing information, review an AI-generated result, or approve an action before it is executed.
+
+For example, an agent could prepare a purchase request, then the process could wait for a person to review it before submitting the order.
+
+Use process steps to enforce required human approval. An instruction asking the agent to seek approval is not a substitute for an approval step in the workflow.
+
+If the agent needs to continue its conversation after the person's response, memory can carry the earlier context into the next call.
+
+See [Human in the Loop](human-in-the-loop.md).
+
+## Retrieval-augmented generation (RAG)
+
+**Retrieval-augmented generation (RAG)** means retrieving relevant information from a source and supplying it to the model to help generate an answer.
+
+For example, to answer a question about company leave policies, a workflow can:
+
+1. Search the company's policy documents for relevant sections.
+2. Provide those sections and the question to the model.
+3. Ask the model to answer using the supplied information.
+
+Retrieval can happen in a process step before the agent runs, or through a tool the agent can call. RAG does not retrain the model; it adds information to the current context.
+
+RAG is useful for private or frequently changing information that the model may not know. Its reliability depends on finding the right sources and using them correctly. Retrieved content also consumes context space, so provide relevant passages rather than unrelated documents.
 
 ## Configuration
 
