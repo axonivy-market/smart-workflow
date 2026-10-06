@@ -15,9 +15,9 @@ Key benefits of Smart Workflow:
 
 **Disclaimer**
 
-The **user is solely responsible** for the configuration, deployment, and operation of the AI and its associated agents. Any decisions, actions, or outcomes resulting from the use of this connector are entirely the responsibility of the user.
+Smart Workflow uses AI to process information, generate responses, make decisions, and take actions automatically, depending on the workflow configuration. AI outputs and decisions may be inaccurate or incomplete. Users are responsible for configuring, deploying, and operating the system and its agents, and for reviewing their outputs and outcomes.
 
-We provide only the **technical capability** to enable such configurations and expressly disclaim any liability for misuse, misconfiguration, or unintended consequences arising from its use. By using this connector, you acknowledge and accept these limitations.
+We provide the technical capabilities to enable these workflows. To the extent permitted by applicable law, we disclaim liability for misuse, misconfiguration, or unintended consequences arising from their use.
 
 ## Features
 

@@ -9,6 +9,6 @@
       "source.organizeImports": "explicit"
     }
   },
-  "axonivy.engine.releaseTrain": "nightly",
+  "axonivy.engine.releaseTrain": "nightly-14",
   "java.compile.nullAnalysis.mode": "disabled"
 }
