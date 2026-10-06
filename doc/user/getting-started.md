@@ -20,36 +20,55 @@ Install **Smart Workflow** from the Axon Ivy Market. The installer adds two thin
 
 **Demo projects** — imported into the workspace so you have something to read: `smart-workflow-demo` and `smart-workflow-supplier-demo`.
 
-You can add an optional provider later by installing the product again and selecting it, or by adding the dependency by hand. Each provider is a separate project so you only ship what you use.
-
 ## 2. Configure a provider
 
-Smart Workflow is configured through Ivy variables, and the **Engine Cockpit** is where you set them. Open it, go to **Variables**, select your application, and set two values:
+Configure Smart Workflow using Ivy variables. These variables are already defined in the installed provider project. You only need to set their values:
 
 | Variable | Value |
 | --- | --- |
 | `AI.DefaultProvider` | `OpenAI` |
 | `AI.Providers.OpenAI.APIKey` | your API key |
 
-The Engine Cockpit encrypts every API key on entry, so keys are never stored in plain text.
-
-The variables themselves ship with the provider projects you installed — you do not add them, only set their values. [Variables](reference/variables.md) lists every one.
+[Variables](reference/variables.md) lists every one.
 
 ## 3. Add an agent to a process
 
-In a process, add an **AgenticProcessCall** element from **Extension > Program Elements**, then double-click it.
+In this example, the agent receives a question and saves its answer to the process data.
 
-Fill in three fields and leave everything else empty:
+### Prepare the process data
+
+Add these two fields to your process data class:
+
+| Field | Type | Purpose |
+| --- | --- | --- |
+| `question` | `String` | The question to ask the agent |
+| `answer` | `String` | The answer returned by the agent |
+
+Add a **Script** step to your process and set the question:
+
+```java
+in.question = "What is Axon Ivy?";
+```
+
+### Configure the agent
+
+After the Script step, add an **AgenticProcessCall** element from **Extension > Program Elements**. Double-click it to open its configuration.
+
+Fill in these three fields:
 
 | Group | Field | Value |
 | --- | --- | --- |
-| Message | `System message` | `You are a helpful assistant. Answer in one short sentence.` |
-| Message | `User message` | `<%=in.question%>` |
-| Output | `Map result to` | `in.answer` |
+| Message | System message | `You are a helpful assistant. Answer in one short sentence.` |
+| Message | User message | `<%=in.question%>` |
+| Output | Map result to | `in.answer` |
 
-Add `question` and `answer` as `String` fields to the process data class, and put a Script step before the element that sets `in.question` to something — `"What is Axon Ivy?"` will do.
+The **System message** tells the agent how to respond. The **User message** reads the question from your process data. **Map result to** saves the agent’s response in `answer`.
 
-That is a complete agent. No provider or model needs naming: both fall back to what you configured in step 2, and with no output type the result is plain text.
+Keep the other settings at their defaults. The agent uses the provider and model configured in step 2 and returns its answer as plain text.
+
+### Run the process
+
+Smart Workflow sends the system message (the instructions) and the user message (your question) to the configured AI model. The model generates a response, which Smart Workflow stores in `in.answer`. The next steps in your process can then use this answer.
 
 ## 4. Run it
 
