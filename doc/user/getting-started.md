@@ -16,6 +16,7 @@ Install **Smart Workflow** from the Axon Ivy Market. The installer adds two thin
 | `smart-workflow-openai` | Connects to OpenAI. Installed by default. |
 | `smart-workflow-anthropic` and the other connector projects | Optional — select the ones you want during installation. See [Model Providers](providers.md). |
 | `smart-workflow-opensearch-rag` | Optional. Needed only for [RAG](rag.md). |
+| `smart-workflow-dashboard` | Optional. The governance dashboard — see [Observability](observability.md). |
 
 **Demo projects** — imported into the workspace so you have something to read: `smart-workflow-demo` and `smart-workflow-supplier-demo`.
 
