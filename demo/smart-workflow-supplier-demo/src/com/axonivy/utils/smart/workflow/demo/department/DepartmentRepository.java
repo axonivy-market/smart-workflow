@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.demo.AbstractMockRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
+
+import tools.jackson.core.type.TypeReference;
 
 public class DepartmentRepository extends AbstractMockRepository<Department> {
 
   private static final String FIELD = "MOCK_DEPARTMENTS";
-  private static final TypeReference<List<Department>> LIST_TYPE = new TypeReference<List<Department>>() {};
+  private static final TypeReference<List<Department>> LIST_TYPE = new TypeReference<List<Department>>(){};
 
   private static DepartmentRepository instance;
 
@@ -33,11 +34,11 @@ public class DepartmentRepository extends AbstractMockRepository<Department> {
   @Override
   protected List<Department> createMockData() {
     List<Department> list = new ArrayList<>();
-    list.add(department("DEPT-001", "Lumber & Building Materials", "robert.hayes",   "sandra.collins"));
-    list.add(department("DEPT-002", "Electrical & Plumbing",       "karen.mitchell", "sandra.collins"));
-    list.add(department("DEPT-003", "Tools & Hardware",            "james.thornton", "sandra.collins"));
-    list.add(department("DEPT-004", "Flooring & Decor",            "lisa.nguyen",    "sandra.collins"));
-    list.add(department("DEPT-005", "Garden & Outdoor Living",     "marcus.webb",    "sandra.collins"));
+    list.add(department("DEPT-001", "Lumber & Building Materials", "robert.hayes", "sandra.collins"));
+    list.add(department("DEPT-002", "Electrical & Plumbing", "karen.mitchell", "sandra.collins"));
+    list.add(department("DEPT-003", "Tools & Hardware", "james.thornton", "sandra.collins"));
+    list.add(department("DEPT-004", "Flooring & Decor", "lisa.nguyen", "sandra.collins"));
+    list.add(department("DEPT-005", "Garden & Outdoor Living", "marcus.webb", "sandra.collins"));
     return list;
   }
 

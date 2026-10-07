@@ -13,14 +13,15 @@ import com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType;
 import com.axonivy.utils.smart.workflow.demo.mock.MockRules;
 import com.axonivy.utils.smart.workflow.demo.supplier.SupplierPolicyRule;
 import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RuleType;
-import com.fasterxml.jackson.core.type.TypeReference;
+
+import tools.jackson.core.type.TypeReference;
 
 public class SupplierPolicyRuleRepository extends AbstractMockRepository<SupplierPolicyRule> {
 
   private static final String FIELD = "MOCK_POLICY_RULES";
   private static final String ILLEGAL_ARGUMENT_MESSAGE = "SupplierPolicyRule target cannot be blank";
   private static final String NULL_ARGUMENT_MESSAGE = "SupplierPolicyRule cannot be null";
-  private static final TypeReference<List<SupplierPolicyRule>> LIST_TYPE = new TypeReference<List<SupplierPolicyRule>>() {};
+  private static final TypeReference<List<SupplierPolicyRule>> LIST_TYPE = new TypeReference<List<SupplierPolicyRule>>(){};
 
   private static SupplierPolicyRuleRepository instance;
 

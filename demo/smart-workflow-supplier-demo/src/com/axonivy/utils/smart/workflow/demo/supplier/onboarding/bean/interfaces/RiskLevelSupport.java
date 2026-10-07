@@ -20,8 +20,8 @@ public interface RiskLevelSupport extends AgentResultView {
     RiskLevel level = getRiskLevel();
     return switch (level) {
       case GREEN -> "so-agent-decision-green";
-      case RED   -> "so-agent-decision-red";
-      default    -> "so-agent-decision-yellow";
+      case RED -> "so-agent-decision-red";
+      default -> "so-agent-decision-yellow";
     };
   }
 
@@ -29,33 +29,33 @@ public interface RiskLevelSupport extends AgentResultView {
     RiskLevel level = getRiskLevel();
     return switch (level) {
       case GREEN -> "so-score-circle-green";
-      case RED   -> "so-score-circle-red";
-      default    -> "so-score-circle-yellow";
+      case RED -> "so-score-circle-red";
+      default -> "so-score-circle-yellow";
     };
   }
 
   default String getBannerModifierClass() {
     return switch (getRiskLevel()) {
       case GREEN -> "so-success-banner";
-      case RED   -> "so-decline-banner";
-      default    -> "";
+      case RED -> "so-decline-banner";
+      default -> "";
     };
   }
 
   default String getBannerBadgeClass() {
     return switch (getRiskLevel()) {
       case GREEN -> "so-badge-green";
-      case RED   -> "so-badge-red";
-      default    -> "so-badge-yellow";
+      case RED -> "so-badge-red";
+      default -> "so-badge-yellow";
     };
   }
 
   default String getThresholdLabel() {
     RiskLevel level = getRiskLevel();
     return switch (level) {
-      case GREEN  -> Ivy.cms().co(CMS_AGENT_PROCESSING_DETAIL + "ThresholdGreen");
+      case GREEN -> Ivy.cms().co(CMS_AGENT_PROCESSING_DETAIL + "ThresholdGreen");
       case YELLOW -> Ivy.cms().co(CMS_AGENT_PROCESSING_DETAIL + "ThresholdYellow");
-      default     -> Ivy.cms().co(CMS_AGENT_PROCESSING_DETAIL + "ThresholdRed");
+      default -> Ivy.cms().co(CMS_AGENT_PROCESSING_DETAIL + "ThresholdRed");
     };
   }
 }

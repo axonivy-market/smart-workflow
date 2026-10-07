@@ -31,12 +31,12 @@ public class UsageAnalyticBean implements Serializable {
 
   private static final int ANALYTICS_LOOKBACK_DAYS = 6;
 
-  private final HistoryStorage storage                        = new IvyRepoHistoryStorage();
+  private final HistoryStorage storage = new IvyRepoHistoryStorage();
   private final TokenTimelineChartBuilder tokenTimelineBuilder = new TokenTimelineChartBuilder();
-  private final ModelDistributionChartBuilder modelDistBuilder      = new ModelDistributionChartBuilder();
-  private final TokenStackedChartBuilder tokenStackedBuilder        = new TokenStackedChartBuilder();
-  private final TopCasesChartBuilder topCasesBuilder                = new TopCasesChartBuilder();
-  private final ResponseTimeChartBuilder responseTimeBuilder        = new ResponseTimeChartBuilder();
+  private final ModelDistributionChartBuilder modelDistBuilder = new ModelDistributionChartBuilder();
+  private final TokenStackedChartBuilder tokenStackedBuilder = new TokenStackedChartBuilder();
+  private final TopCasesChartBuilder topCasesBuilder = new TopCasesChartBuilder();
+  private final ResponseTimeChartBuilder responseTimeBuilder = new ResponseTimeChartBuilder();
 
   private boolean loaded = false;
 
@@ -59,21 +59,40 @@ public class UsageAnalyticBean implements Serializable {
 
     HistoryAggregator stats = HistoryAggregator.of(current);
     kpi = new DashboardKpi(stats.getTotalSessions(), stats.getTotalTokens(), stats.getAvgResponseMs(), stats.getTopModel());
-    tokenTimelineChart     = tokenTimelineBuilder.build(stats);
+    tokenTimelineChart = tokenTimelineBuilder.build(stats);
     modelDistributionChart = modelDistBuilder.build(stats);
-    tokenStackedChart      = tokenStackedBuilder.build(stats);
-    topCasesChart          = topCasesBuilder.build(stats);
-    responseTimeChart      = responseTimeBuilder.build(stats);
+    tokenStackedChart = tokenStackedBuilder.build(stats);
+    topCasesChart = topCasesBuilder.build(stats);
+    responseTimeChart = responseTimeBuilder.build(stats);
   }
 
-  public boolean isLoaded() { return loaded; }
-  public DashboardKpi getKpi() { return kpi; }
+  public boolean isLoaded() {
+    return loaded;
+  }
 
-  public String getTokenTimelineChart() { return toJson(tokenTimelineChart); }
-  public String getModelDistributionChart() { return toJson(modelDistributionChart); }
-  public String getTokenStackedChart() { return toJson(tokenStackedChart); }
-  public String getTopCasesChart() { return toJson(topCasesChart); }
-  public String getResponseTimeChart() { return toJson(responseTimeChart); }
+  public DashboardKpi getKpi() {
+    return kpi;
+  }
+
+  public String getTokenTimelineChart() {
+    return toJson(tokenTimelineChart);
+  }
+
+  public String getModelDistributionChart() {
+    return toJson(modelDistributionChart);
+  }
+
+  public String getTokenStackedChart() {
+    return toJson(tokenStackedChart);
+  }
+
+  public String getTopCasesChart() {
+    return toJson(topCasesChart);
+  }
+
+  public String getResponseTimeChart() {
+    return toJson(responseTimeChart);
+  }
 
   private static String toJson(Chart<?, ?, ?> model) {
     return model == null ? null : model.toJson();

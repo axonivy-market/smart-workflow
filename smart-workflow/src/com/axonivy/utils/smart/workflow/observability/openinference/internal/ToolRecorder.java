@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.arize.semconv.trace.SemanticConventions;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
@@ -44,7 +43,7 @@ class ToolRecorder {
             SemanticConventions.LLM_TOOLS + "." + idx + "."
                 + SemanticConventions.TOOL_JSON_SCHEMA,
             OpenInferenceCollector.objectMapper.writeValueAsString(toolSchemaMap));
-      } catch (JsonProcessingException ex) {
+      } catch (Exception ex) {
         Ivy.log().warn("Failed to serialize tool specification at index " + idx, ex);
       }
     }

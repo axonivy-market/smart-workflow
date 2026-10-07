@@ -2,8 +2,6 @@ package com.axonivy.utils.smart.workflow.hibernate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +10,6 @@ import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.human.HumanDecision;
 import com.axonivy.utils.smart.workflow.memory.store.BusinessDataMemory;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import Patterns.HumanInTheLoop.HibernationData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
@@ -23,6 +20,8 @@ import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageType;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
 
 @RestResourceTest
 public class TestHumanInTheLoop {
@@ -85,9 +84,9 @@ public class TestHumanInTheLoop {
       return responder.send("humanTool-r1.json");
     }
     var humanToolResult = messages.get(3);
-    assertThat(humanToolResult.get("role").asText())
+    assertThat(humanToolResult.get("role").asString())
         .isEqualTo("tool");
-    assertThat(humanToolResult.get("content").asText())
+    assertThat(humanToolResult.get("content").asString())
         .isEqualTo("Chocolate");
     return responder.send("humanTool-r2.json");
   }

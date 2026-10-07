@@ -1,7 +1,7 @@
 package com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums;
 
 public enum FindingSeverity {
-  PASSED (0),
+  PASSED(0),
   WARNING(1),
   FAILURE(2);
 
@@ -11,5 +11,7 @@ public enum FindingSeverity {
     this.rank = rank;
   }
 
-  public int getRank() { return rank; }
+  public int getRank() {
+    return rank;
+  }
 }

@@ -17,30 +17,30 @@ class TestClarificationProblemTypeBuilder {
   void resolve_documentTypeKeyOrMissingDocKind_returnsDocument() {
     assertThat(ClarificationProblemTypeBuilder.resolve(
         "CERTIFICATION:ISO_9001", null, null, null))
-        .isEqualTo(ClarificationProblemType.DOCUMENT);
+            .isEqualTo(ClarificationProblemType.DOCUMENT);
     assertThat(ClarificationProblemTypeBuilder.resolve(
         null, RiskKind.MISSING_DOC, null, null))
-        .isEqualTo(ClarificationProblemType.DOCUMENT);
+            .isEqualTo(ClarificationProblemType.DOCUMENT);
   }
 
   @Test
   void resolve_duplicateKeyword_inSourceOrMessage_returnsDuplicate() {
     assertThat(ClarificationProblemTypeBuilder.resolve(
         null, RiskKind.AI_VALIDATION, "ERP Duplicate Check", null))
-        .isEqualTo(ClarificationProblemType.DUPLICATE);
+            .isEqualTo(ClarificationProblemType.DUPLICATE);
     assertThat(ClarificationProblemTypeBuilder.resolve(
         null, RiskKind.AI_VALIDATION, null, "Possible ERP duplicate found"))
-        .isEqualTo(ClarificationProblemType.DUPLICATE);
+            .isEqualTo(ClarificationProblemType.DUPLICATE);
     assertThat(ClarificationProblemTypeBuilder.resolve(
         null, RiskKind.AI_VALIDATION, "DUPLICATE ENTRY", null))
-        .isEqualTo(ClarificationProblemType.DUPLICATE);
+            .isEqualTo(ClarificationProblemType.DUPLICATE);
   }
 
   @Test
   void resolve_noMatch_returnsOther() {
     assertThat(ClarificationProblemTypeBuilder.resolve(
         null, RiskKind.AI_VALIDATION, "VAT Validation", "VAT format invalid"))
-        .isEqualTo(ClarificationProblemType.OTHER);
+            .isEqualTo(ClarificationProblemType.OTHER);
     assertThat(ClarificationProblemTypeBuilder.resolve(null, null, null, null))
         .isEqualTo(ClarificationProblemType.OTHER);
   }

@@ -40,7 +40,7 @@ public final class VariableUtils {
         .toList();
   }
 
-  public static List<Variable> deploymentsVars(){
+  public static List<Variable> deploymentsVars() {
     return Ivy.var().all().stream()
         .filter(variable -> variable.name().startsWith(AzureOpenAiConf.DEPLOYMENTS))
         .filter(variable -> !variable.name().equals(AzureOpenAiConf.DEPLOYMENTS))
@@ -53,8 +53,8 @@ public final class VariableUtils {
     }
 
     return getDeployments().stream()
-      .filter(deployment -> deploymentName.equals(deployment.getName()))
-      .findFirst()
-      .orElse(null);
+        .filter(deployment -> deploymentName.equals(deployment.getName()))
+        .findFirst()
+        .orElse(null);
   }
 }

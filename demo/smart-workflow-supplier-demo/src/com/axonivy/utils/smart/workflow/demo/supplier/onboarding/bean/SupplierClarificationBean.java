@@ -30,7 +30,7 @@ import jakarta.inject.Named;
 @ViewScoped
 public class SupplierClarificationBean
     implements Serializable, CertificationUploader, RequiredDocumentUploader, RiskLevelSupport, DocumentDisplaySupport,
-               SupplierFormSupport {
+    SupplierFormSupport {
 
   private static final long serialVersionUID = 1L;
 
@@ -114,9 +114,9 @@ public class SupplierClarificationBean
 
   public String getBannerBadgeLabel() {
     return switch (getRiskLevel()) {
-      case GREEN -> Ivy.cms().co(CMS_COMPLETION    + "RiskScoreBadge");
-      case RED   -> Ivy.cms().co(CMS_DECLINE       + "RiskScoreBadge");
-      default    -> Ivy.cms().co(CMS_CLARIFICATION + "RiskScoreBadge");
+      case GREEN -> Ivy.cms().co(CMS_COMPLETION + "RiskScoreBadge");
+      case RED -> Ivy.cms().co(CMS_DECLINE + "RiskScoreBadge");
+      default -> Ivy.cms().co(CMS_CLARIFICATION + "RiskScoreBadge");
     };
   }
 
@@ -195,8 +195,8 @@ public class SupplierClarificationBean
     }
     SupplierRiskScore rs = agentResponse.getRiskScore();
     originalFinancialStability = Optional.ofNullable(rs.getFinancialStability()).orElse(0);
-    originalPolicyCompliance   = Optional.ofNullable(rs.getPolicyCompliance()).orElse(0);
-    originalCertValidity       = Optional.ofNullable(rs.getCertValidity()).orElse(0);
+    originalPolicyCompliance = Optional.ofNullable(rs.getPolicyCompliance()).orElse(0);
+    originalCertValidity = Optional.ofNullable(rs.getCertValidity()).orElse(0);
   }
 
   private static List<ValidationFinding> filterNonPassedFindings(List<ValidationFinding> findings) {

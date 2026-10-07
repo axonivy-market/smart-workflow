@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.tools.internal;
 
+import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,11 @@ import org.apache.log4j.Logger;
 import com.axonivy.utils.smart.workflow.spi.internal.ProjectClassLoader;
 import com.axonivy.utils.smart.workflow.tools.internal.QualifiedTypeLoader.QType;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ivyteam.api.API;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 public class JsonProcessParameters {
 
@@ -37,7 +38,7 @@ public class JsonProcessParameters {
         return Map.of();
       }
       return toParams(parameters, MAPPER.readTree(rawJsonArgs));
-    } catch (JsonProcessingException ex) {
+    } catch (Exception ex) {
       LOGGER.error("Failed to create parameters from " + rawJsonArgs, ex);
       return Map.of();
     }
@@ -56,7 +57,13 @@ public class JsonProcessParameters {
       if (jArg == null) {
         return null;
       }
-      return MAPPER.reader().forType(typed).readValue(jArg);
+      var typeRef = new TypeReference<>(){
+        @Override
+        public Type getType() {
+          return typed;
+        }
+      };
+      return MAPPER.reader().forType(typeRef).readValue(jArg);
     } catch (Exception ex) {
       LOGGER.error("Failed to load value of variable " + parameter, ex);
       return null;

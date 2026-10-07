@@ -18,8 +18,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.Urgency;
 
 public class OnboardingRequestParser {
 
-  private OnboardingRequestParser() {
-  }
+  private OnboardingRequestParser() {}
 
   public static void applyDraft(OnboardingRequest request, OnboardingRequest draft) {
     if (request == null || draft == null) {

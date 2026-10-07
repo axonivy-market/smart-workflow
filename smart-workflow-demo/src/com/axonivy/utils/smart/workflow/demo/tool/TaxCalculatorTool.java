@@ -10,10 +10,10 @@ import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool;
 public class TaxCalculatorTool implements SmartWorkflowTool {
 
   private static final String TAX_LINE_FORMAT = "%s: $%.2f @ %d%% tax = $%.2f%n";
-  private static final String[] ELECTRONICS_KEYWORDS = {"laptop","macbook","computer","phone","television","tv","monitor","tablet","electronics","samsung","apple","dell","lenovo"};
-  private static final String[] FOOD_KEYWORDS = {"coffee","food","drink","beverage","meal","snack","grocery"};
-  private static final String[] LUXURY_KEYWORDS = {"rolex","luxury","diamond","gold","jewel","watch","premium"};
-  private static final String[] SERVICE_KEYWORDS = {"service","consulting","consultation","legal","accounting","support"};
+  private static final String[] ELECTRONICS_KEYWORDS = {"laptop", "macbook", "computer", "phone", "television", "tv", "monitor", "tablet", "electronics", "samsung", "apple", "dell", "lenovo"};
+  private static final String[] FOOD_KEYWORDS = {"coffee", "food", "drink", "beverage", "meal", "snack", "grocery"};
+  private static final String[] LUXURY_KEYWORDS = {"rolex", "luxury", "diamond", "gold", "jewel", "watch", "premium"};
+  private static final String[] SERVICE_KEYWORDS = {"service", "consulting", "consultation", "legal", "accounting", "support"};
 
   public record TaxCalculationResult(double totalTax, double effectiveTaxRate, double totalWithTax, String breakdown) {}
 
@@ -25,10 +25,10 @@ public class TaxCalculatorTool implements SmartWorkflowTool {
   @Override
   public String description() {
     return """
-        Calculate tax for invoice items based on their descriptions and amounts.
-        Classifies each item into a tax category and applies the appropriate rate:
-        electronics 10%, food/beverage 5%, luxury goods 20%, services 8%, other 10%.
-        Returns the total tax, effective tax rate, total amount with tax, and a per-item breakdown.""";
+      Calculate tax for invoice items based on their descriptions and amounts.
+      Classifies each item into a tax category and applies the appropriate rate:
+      electronics 10%, food/beverage 5%, luxury goods 20%, services 8%, other 10%.
+      Returns the total tax, effective tax rate, total amount with tax, and a per-item breakdown.""";
   }
 
   @Override
@@ -71,7 +71,7 @@ public class TaxCalculatorTool implements SmartWorkflowTool {
     return switch (lower) {
       case String text when containsAny(text, ELECTRONICS_KEYWORDS) -> 0.10;
       case String text when containsAny(text, FOOD_KEYWORDS) -> 0.05;
-      case String text when containsAny(text, LUXURY_KEYWORDS)  -> 0.20;
+      case String text when containsAny(text, LUXURY_KEYWORDS) -> 0.20;
       case String text when containsAny(text, SERVICE_KEYWORDS) -> 0.08;
       default -> 0.10;
     };

@@ -13,8 +13,7 @@ public final class SpiProject {
   }
 
   public static Project getSmartWorkflowPmv() {
-    Predicate<Project> smartWorkflow = pmv -> 
-      SmartWorkflow.LIBRARY_ID.equals(pmv.mavenCoordinates().id());
+    Predicate<Project> smartWorkflow = pmv -> SmartWorkflow.LIBRARY_ID.equals(pmv.mavenCoordinates().id());
     var current = Project.current();
     if (smartWorkflow.test(current)) {
       return current;

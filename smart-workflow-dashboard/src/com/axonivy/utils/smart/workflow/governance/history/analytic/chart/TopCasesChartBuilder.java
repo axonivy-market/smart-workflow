@@ -41,7 +41,7 @@ public class TopCasesChartBuilder extends AbstractChartBuilder<BarChart> {
 
   private List<Map.Entry<String, Long>> topCasesEntries(HistoryAggregator aggregator) {
     return aggregator.getTokensByProcess().entrySet().stream()
-        .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+        .sorted(Map.Entry.<String, Long> comparingByValue().reversed())
         .limit(ChartConfig.TOP_N_PROCESSES)
         .toList();
   }

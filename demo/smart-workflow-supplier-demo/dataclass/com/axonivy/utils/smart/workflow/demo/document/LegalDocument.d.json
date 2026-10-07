@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "LegalDocument",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.document",
   "fields" : [ {
@@ -11,18 +11,21 @@
   }, {
     "name" : "objectType",
     "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentObjectType",
-    "comment" : "Type of the owning object"
+    "comment" : "Type of the owning object",
+    "modifiers" : [ ]
   }, {
     "name" : "documentType",
     "type" : "com.axonivy.utils.smart.workflow.demo.document.enums.LegalDocumentType",
-    "comment" : "Category of the legal document"
+    "comment" : "Category of the legal document",
+    "modifiers" : [ ]
   }, {
     "name" : "fileName",
     "comment" : "Original file name"
   }, {
     "name" : "fileContent",
     "type" : "byte[]",
-    "comment" : "Raw file bytes"
+    "comment" : "Raw file bytes",
+    "modifiers" : [ ]
   }, {
     "name" : "uploadedAt",
     "comment" : "ISO-8601 timestamp of upload"

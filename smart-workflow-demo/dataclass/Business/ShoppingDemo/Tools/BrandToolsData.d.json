@@ -1,15 +1,18 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "BrandToolsData",
   "namespace" : "Business.ShoppingDemo.Tools",
   "fields" : [ {
     "name" : "searchCriteria",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.repository.BrandSearchCriteria",
+    "modifiers" : [ ]
   }, {
     "name" : "brand",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.model.Brand",
+    "modifiers" : [ ]
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse"
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.brand.agent.BrandAgentResponse",
+    "modifiers" : [ ]
   } ]
 }

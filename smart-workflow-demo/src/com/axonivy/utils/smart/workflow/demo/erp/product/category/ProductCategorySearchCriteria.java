@@ -16,8 +16,7 @@ public class ProductCategorySearchCriteria {
   @Description("Category description filter (case-insensitive partial match). Leave null if not filtering by description.")
   private String descriptionContains;
 
-  public ProductCategorySearchCriteria() {
-  }
+  public ProductCategorySearchCriteria() {}
 
   public String getCategoryId() {
     return categoryId;

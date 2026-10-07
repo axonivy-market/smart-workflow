@@ -27,9 +27,9 @@ public class AgentConfigMigrator implements ProgramConfigMigrator {
     toComma(latest, "inputGuardrails");
     toComma(latest, "outputGuardrails");
     Optional.ofNullable(config.get("provider"))
-      .filter(Predicate.not(String::isBlank))
-      .map(provider -> StringUtils.substringBetween(provider, "\""))
-      .ifPresent(newProvider -> latest.put("provider", newProvider));
+        .filter(Predicate.not(String::isBlank))
+        .map(provider -> StringUtils.substringBetween(provider, "\""))
+        .ifPresent(newProvider -> latest.put("provider", newProvider));
     return latest;
   }
 

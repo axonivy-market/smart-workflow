@@ -48,7 +48,9 @@ public class OutputGuardrailAdapter extends AbstractGuardrailAdapter<SmartWorkfl
         ? getDelegate().evaluate(message, invocationId)
         : getDelegate().evaluate(message);
     if (!result.isAllowed()) {
-      return fatal(result.getReason());
+      return result.getCause()
+          .map(cause -> fatal(result.getReason(), cause))
+          .orElseGet(() -> fatal(result.getReason()));
     }
     return result.getRewrittenMessage().map(this::successWith).orElseGet(this::success);
   }

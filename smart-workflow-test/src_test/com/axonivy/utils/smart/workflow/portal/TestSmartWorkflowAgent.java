@@ -1,8 +1,7 @@
 package com.axonivy.utils.smart.workflow.portal;
 
-import jakarta.ws.rs.core.Response;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import Features.SmartWorkflowAgentDemoData;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
@@ -20,6 +18,8 @@ import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
 
 @RestResourceTest
 class TestSmartWorkflowAgent {

@@ -21,7 +21,7 @@ import dev.langchain4j.observability.api.listener.AiServiceStartedListener;
 import dev.langchain4j.service.memory.ChatMemoryService;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 
-public class HumanInTheLoop implements AiListenerProvider{
+public class HumanInTheLoop implements AiListenerProvider {
 
   public final IdStore memoryId;
   public final ChatMemoryStore store;
@@ -34,10 +34,9 @@ public class HumanInTheLoop implements AiListenerProvider{
   @Override
   public List<AiServiceListener<?>> provide() {
     return List.of(
-      new InitListener(), 
-      new ErrorListener(), 
-      new CompletedListener()
-    );
+        new InitListener(),
+        new ErrorListener(),
+        new CompletedListener());
   }
 
   public List<Content> userMessage(List<Content> userInput) {
@@ -57,7 +56,7 @@ public class HumanInTheLoop implements AiListenerProvider{
       memoryId.id().map(new BusinessDataMemory()::getMessages).ifPresent(msgs -> store.updateMessages(
           ChatMemoryService.DEFAULT, msgs)); // inject from human-in-the-loop
     }
-  } 
+  }
 
   private class ErrorListener implements AiServiceErrorListener {
     @Override
@@ -83,4 +82,3 @@ public class HumanInTheLoop implements AiListenerProvider{
   }
 
 }
-

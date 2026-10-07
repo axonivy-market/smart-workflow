@@ -75,7 +75,7 @@ class TestChatModelProviders {
     var provider = ChatModelFactory.create(providerName).orElseThrow();
     var artifactIds = ProductJson.installerArtifactIds();
     assertThat(artifactIds)
-      .as("provider is installable as extra market product")
+      .as("provider is declared in market product installer entries")
       .contains(installerName(provider));
   }
 

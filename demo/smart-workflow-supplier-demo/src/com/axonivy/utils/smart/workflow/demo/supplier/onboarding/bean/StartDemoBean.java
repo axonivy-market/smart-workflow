@@ -40,54 +40,64 @@ public class StartDemoBean implements Serializable {
   private static final long serialVersionUID = 1L;
 
   public enum StepStatus {
-    PENDING   ("so-checklist-item pending so-tl-item",   "so-tl-bubble so-tl-bubble-pending",   "ti ti-clock"),
-    RUNNING   ("so-checklist-item running so-tl-item",   "so-tl-bubble so-tl-bubble-running",   "ti ti-loader so-spin"),
-    COMPLETED ("so-checklist-item completed so-tl-item", "so-tl-bubble so-tl-bubble-completed", "ti ti-circle-check"),
-    FAILED    ("so-checklist-item failed so-tl-item",    "so-tl-bubble so-tl-bubble-failed",    "ti ti-circle-x"),
-    WARNING   ("so-checklist-item warning so-tl-item",   "so-tl-bubble so-tl-bubble-warning",   "ti ti-alert-triangle");
+    PENDING("so-checklist-item pending so-tl-item", "so-tl-bubble so-tl-bubble-pending", "ti ti-clock"),
+    RUNNING("so-checklist-item running so-tl-item", "so-tl-bubble so-tl-bubble-running", "ti ti-loader so-spin"),
+    COMPLETED("so-checklist-item completed so-tl-item", "so-tl-bubble so-tl-bubble-completed", "ti ti-circle-check"),
+    FAILED("so-checklist-item failed so-tl-item", "so-tl-bubble so-tl-bubble-failed", "ti ti-circle-x"),
+    WARNING("so-checklist-item warning so-tl-item", "so-tl-bubble so-tl-bubble-warning", "ti ti-alert-triangle");
 
     private final String stepClass;
     private final String bubbleClass;
     private final String statusIcon;
 
     StepStatus(String stepClass, String bubbleClass, String statusIcon) {
-      this.stepClass   = stepClass;
+      this.stepClass = stepClass;
       this.bubbleClass = bubbleClass;
-      this.statusIcon  = statusIcon;
+      this.statusIcon = statusIcon;
     }
 
-    public String getStepClass()   { return stepClass; }
-    public String getBubbleClass() { return bubbleClass; }
-    public String getStatusIcon()  { return statusIcon; }
+    public String getStepClass() {
+      return stepClass;
+    }
+
+    public String getBubbleClass() {
+      return bubbleClass;
+    }
+
+    public String getStatusIcon() {
+      return statusIcon;
+    }
   }
 
-  private static final String ROLE_PROCUREMENT       = "Procurement";
-  private static final String ZIP_FILE_NAME          = "Demo-Documents.zip";
-  private static final String ZIP_CONTENT_TYPE       = "application/zip";
-  private static final String LOG_INDEX_DELETED      = "Deleted existing vector store index '%s' before re-ingestion.";
-  private static final String LOG_CHUNK_INGESTED     = "Ingested policy chunk %d/%d into '%s'.";
-  private static final String LOG_CMS_NOT_FOUND      = "CMS file not found: %s";
+  private static final String ROLE_PROCUREMENT = "Procurement";
+  private static final String ZIP_FILE_NAME = "Demo-Documents.zip";
+  private static final String ZIP_CONTENT_TYPE = "application/zip";
+  private static final String LOG_INDEX_DELETED = "Deleted existing vector store index '%s' before re-ingestion.";
+  private static final String LOG_CHUNK_INGESTED = "Ingested policy chunk %d/%d into '%s'.";
+  private static final String LOG_CMS_NOT_FOUND = "CMS file not found: %s";
 
   private enum DemoDoc {
-    OFFER_LETTER                  ("OfferLetter.pdf",                      "/Files/ERP/DemoCompany/OfferLetter"),
-    ISO9001_QUALITY_MANAGEMENT    ("ISO9001_QualityManagement.pdf",        "/Files/ERP/DemoCompany/Certifications/ISO9001"),
-    ISO14001_ENVIRONMENTAL        ("ISO14001_EnvironmentalManagement.pdf", "/Files/ERP/DemoCompany/Certifications/ISO14001"),
-    ISO27001_INFORMATION_SECURITY ("ISO27001_InformationSecurity.pdf",     "/Files/ERP/DemoCompany/Certifications/ISO27001"),
-    GDPR_DATA_PROCESSING          ("GDPR_DataProcessingAgreement.pdf",     "/Files/ERP/DemoCompany/Certifications/GDPR"),
-    COMPANY_REGISTRATION          ("Company_Registration_Extract.pdf",     "/Files/ERP/DemoCompany/LegalDocuments/CommercialRegister"),
-    SELF_DECLARATION              ("Self_Declaration.pdf",                 "/Files/ERP/DemoCompany/LegalDocuments/SelfDeclaration"),
-    ANNUAL_REPORT                 ("Annual_Report.pdf",                    "/Files/ERP/DemoCompany/LegalDocuments/AnnualReport"),
-    BANKING_STATEMENT             ("Banking_Statement.pdf",                "/Files/ERP/DemoCompany/LegalDocuments/BankingStatement");
+    OFFER_LETTER("OfferLetter.pdf", "/Files/ERP/DemoCompany/OfferLetter"),
+    ISO9001_QUALITY_MANAGEMENT("ISO9001_QualityManagement.pdf", "/Files/ERP/DemoCompany/Certifications/ISO9001"),
+    ISO14001_ENVIRONMENTAL("ISO14001_EnvironmentalManagement.pdf", "/Files/ERP/DemoCompany/Certifications/ISO14001"),
+    ISO27001_INFORMATION_SECURITY("ISO27001_InformationSecurity.pdf", "/Files/ERP/DemoCompany/Certifications/ISO27001"),
+    GDPR_DATA_PROCESSING("GDPR_DataProcessingAgreement.pdf", "/Files/ERP/DemoCompany/Certifications/GDPR"),
+    COMPANY_REGISTRATION("Company_Registration_Extract.pdf", "/Files/ERP/DemoCompany/LegalDocuments/CommercialRegister"),
+    SELF_DECLARATION("Self_Declaration.pdf", "/Files/ERP/DemoCompany/LegalDocuments/SelfDeclaration"),
+    ANNUAL_REPORT("Annual_Report.pdf", "/Files/ERP/DemoCompany/LegalDocuments/AnnualReport"),
+    BANKING_STATEMENT("Banking_Statement.pdf", "/Files/ERP/DemoCompany/LegalDocuments/BankingStatement");
 
     private final String fileName;
     private final String cmsPath;
 
     DemoDoc(String fileName, String cmsPath) {
       this.fileName = fileName;
-      this.cmsPath  = cmsPath;
+      this.cmsPath = cmsPath;
     }
 
-    String getFileName() { return fileName; }
+    String getFileName() {
+      return fileName;
+    }
 
     ContentObjectValue getCms() {
       return loadFromCms(cmsPath);
@@ -111,18 +121,23 @@ public class StartDemoBean implements Serializable {
 
     KnowledgeChunkItem(String title, String body) {
       this.title = title;
-      this.body  = body;
+      this.body = body;
     }
 
-    public String getTitle() { return title; }
-    public String getBody()  { return body; }
+    public String getTitle() {
+      return title;
+    }
+
+    public String getBody() {
+      return body;
+    }
   }
 
   @PostConstruct
   public void init() {
     knowledgeChunks = buildKnowledgeChunks();
     complianceRules = buildComplianceRules();
-    financialRules  = buildFinancialRules();
+    financialRules = buildFinancialRules();
     if (isDataAlreadyGenerated()) {
       generationDone = true;
     }
@@ -133,8 +148,9 @@ public class StartDemoBean implements Serializable {
     for (String chunk : SupplierOnboardingKnowledge.getAll()) {
       int nl = chunk.indexOf('\n');
       String title = nl > 0 ? chunk.substring(0, nl) : chunk;
-      if (title.endsWith(":")) title = title.substring(0, title.length() - 1);
-      String body  = nl > 0 ? chunk.substring(nl + 1) : "";
+      if (title.endsWith(":"))
+        title = title.substring(0, title.length() - 1);
+      String body = nl > 0 ? chunk.substring(nl + 1) : "";
       items.add(new KnowledgeChunkItem(title, body));
     }
     return items;
@@ -170,9 +186,9 @@ public class StartDemoBean implements Serializable {
   public boolean isDataAlreadyGenerated() {
     String caseUuid = Ivy.wfCase().uuid();
     var rules = SupplierPolicyRuleRepository.getInstance().findAll(caseUuid);
-    boolean hasPolicyRules    = rules.stream().anyMatch(r -> r.getRuleType() == RuleType.POLICY);
+    boolean hasPolicyRules = rules.stream().anyMatch(r -> r.getRuleType() == RuleType.POLICY);
     boolean hasFinancialRules = rules.stream().anyMatch(r -> r.getRuleType() == RuleType.FINANCIAL);
-    boolean hasSuppliers      = !SupplierRepository.getInstance().findAll(caseUuid).isEmpty();
+    boolean hasSuppliers = !SupplierRepository.getInstance().findAll(caseUuid).isEmpty();
     return hasPolicyRules && hasFinancialRules && hasSuppliers;
   }
 
@@ -243,9 +259,9 @@ public class StartDemoBean implements Serializable {
       return null;
     }
     return contentObject.map(ContentObject::values)
-                        .filter(values -> !values.isEmpty())
-                        .map(List::getFirst)
-                        .orElse(null);
+        .filter(values -> !values.isEmpty())
+        .map(List::getFirst)
+        .orElse(null);
   }
 
   public StreamedContent downloadAllDocuments() {
@@ -288,12 +304,35 @@ public class StartDemoBean implements Serializable {
         .anyMatch(r -> ROLE_PROCUREMENT.equals(r.getName()));
   }
 
-  public StepStatus getStep1Status() { return step1Status; }
-  public StepStatus getStep2Status() { return step2Status; }
-  public StepStatus getStep3Status() { return step3Status; }
-  public boolean isGenerationStarted() { return generationStarted; }
-  public boolean isGenerationDone() { return generationDone; }
-  public List<KnowledgeChunkItem> getKnowledgeChunks() { return knowledgeChunks; }
-  public List<SupplierPolicyRule> getComplianceRules() { return complianceRules; }
-  public List<SupplierPolicyRule> getFinancialRules()  { return financialRules; }
+  public StepStatus getStep1Status() {
+    return step1Status;
+  }
+
+  public StepStatus getStep2Status() {
+    return step2Status;
+  }
+
+  public StepStatus getStep3Status() {
+    return step3Status;
+  }
+
+  public boolean isGenerationStarted() {
+    return generationStarted;
+  }
+
+  public boolean isGenerationDone() {
+    return generationDone;
+  }
+
+  public List<KnowledgeChunkItem> getKnowledgeChunks() {
+    return knowledgeChunks;
+  }
+
+  public List<SupplierPolicyRule> getComplianceRules() {
+    return complianceRules;
+  }
+
+  public List<SupplierPolicyRule> getFinancialRules() {
+    return financialRules;
+  }
 }

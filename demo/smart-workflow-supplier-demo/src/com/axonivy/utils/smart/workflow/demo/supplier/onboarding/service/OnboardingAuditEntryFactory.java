@@ -57,7 +57,8 @@ public class OnboardingAuditEntryFactory {
     List<String> names = new ArrayList<>();
     if (req != null && req.getMatchedSuppliers() != null) {
       for (com.axonivy.utils.smart.workflow.demo.supplier.Supplier s : req.getMatchedSuppliers()) {
-        if (s.getBusinessName() != null) names.add(s.getBusinessName());
+        if (s.getBusinessName() != null)
+          names.add(s.getBusinessName());
       }
     }
     AuditTrailEntry entry = new AuditTrailEntry();
@@ -66,7 +67,8 @@ public class OnboardingAuditEntryFactory {
     entry.setActorType(AuditActorType.AGENT);
     entry.setEntryType(AuditEntryType.DUPLICATE_CHECK);
     entry.setAction(String.format(ACTION_DUPLICATE_CHECK_FORMAT, count));
-    if (!names.isEmpty()) entry.setMatchedSupplierNames(names);
+    if (!names.isEmpty())
+      entry.setMatchedSupplierNames(names);
     return entry;
   }
 
@@ -97,14 +99,16 @@ public class OnboardingAuditEntryFactory {
   public static AuditTrailEntry buildAgentAnalysisAuditEntry(OnboardingRequest req, SupplierAgentResponse resp) {
     String now = Instant.now().toString();
     int agg = Optional.of(resp)
-      .map(SupplierAgentResponse::getRiskScore)
-      .map(SupplierRiskScore::getAggregate)
-      .orElse(0);
+        .map(SupplierAgentResponse::getRiskScore)
+        .map(SupplierRiskScore::getAggregate)
+        .orElse(0);
     String lvl = (resp != null && resp.getRiskScore() != null
         && resp.getRiskScore().getLevel() != null)
-        ? resp.getRiskScore().getLevel().name() : UNKNOWN;
+            ? resp.getRiskScore().getLevel().name()
+            : UNKNOWN;
     String routing = (resp != null && resp.getRoutingDecision() != null)
-        ? resp.getRoutingDecision().toUpperCase() : UNKNOWN;
+        ? resp.getRoutingDecision().toUpperCase()
+        : UNKNOWN;
 
     AuditTrailEntry entry = new AuditTrailEntry();
     entry.setTimestamp(now);

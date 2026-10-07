@@ -24,8 +24,7 @@ public class DocumentExtractionService {
   private static final String EXTRACTION_FAIL_LOG_PREFIX = "Extraction failed: ";
   private static final String NO_DOCUMENTS_MSG = "No documents found.";
 
-  private DocumentExtractionService() {
-  }
+  private DocumentExtractionService() {}
 
   public static List<LegalDocument> loadDocuments(List<LegalDocument> documents) {
     return documents != null ? documents : new ArrayList<>();
@@ -63,7 +62,7 @@ public class DocumentExtractionService {
     }
     if (single.getDocumentSummaries() != null) {
       single.getDocumentSummaries().forEach(doc -> {
-          doc.setDocumentType(original.getDocumentType());
+        doc.setDocumentType(original.getDocumentType());
       });
       if (aggregate.getDocumentSummaries() == null) {
         aggregate.setDocumentSummaries(new ArrayList<>());

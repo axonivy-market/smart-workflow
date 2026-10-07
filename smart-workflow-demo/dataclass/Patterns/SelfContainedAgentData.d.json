@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "SelfContainedAgentData",
   "namespace" : "Patterns",
   "fields" : [ {
@@ -20,5 +20,9 @@
   }, {
     "name" : "complianceReport",
     "comment" : "Compliance assessment with score — output of assessCompliance tool"
+  }, {
+    "name" : "isStopped",
+    "type" : "boolean",
+    "comment" : "Set to true when the agent call is stopped by the circuit breaker"
   } ]
 }

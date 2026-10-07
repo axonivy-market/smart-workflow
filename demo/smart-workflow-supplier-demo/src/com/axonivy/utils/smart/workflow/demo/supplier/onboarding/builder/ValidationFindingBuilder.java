@@ -7,8 +7,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.Validatio
 
 public class ValidationFindingBuilder {
 
-  private ValidationFindingBuilder() {
-  }
+  private ValidationFindingBuilder() {}
 
   public static ValidationFinding of(FindingSeverity severity, String message, String source, RiskType riskType) {
     return createBase(severity, message, source, riskType);

@@ -29,16 +29,16 @@ public class AzureOpenAiServiceConnector {
   private static AzureOpenAiChatModel.Builder initBuilder(String deploymentName) {
     String endpoint = StringUtils.stripEnd(Ivy.var().get(AzureOpenAiConf.ENDPOINT), "/");
     var builder = AzureOpenAiChatModel.builder()
-      .endpoint(endpoint)
-      .httpClientProvider(new SmartAzureHttpClientProvider())
-      .logRequestsAndResponses(true);
+        .endpoint(endpoint)
+        .httpClientProvider(new SmartAzureHttpClientProvider())
+        .logRequestsAndResponses(true);
 
     // TODO as pure test variable
     if (StringUtils.isBlank(deploymentName)) {
       return builder
-        .customHeaders(Map.of("X-Requested-By", "ivy"))
-        .deploymentName("test")
-        .apiKey("test");
+          .customHeaders(Map.of("X-Requested-By", "ivy"))
+          .deploymentName("test")
+          .apiKey("test");
     }
 
     var deployment = VariableUtils.getDeploymentByName(deploymentName);
@@ -47,13 +47,13 @@ public class AzureOpenAiServiceConnector {
     }
 
     builder
-      .deploymentName(deployment.getName())
-      .apiKey(deployment.getApiKey());
+        .deploymentName(deployment.getName())
+        .apiKey(deployment.getApiKey());
     var request = ChatRequestParameters.builder()
-      .modelName(deployment.getModel());
+        .modelName(deployment.getModel());
     temperature(deployment.getModel())
-      .ifPresent(request::temperature);
-    builder.defaultRequestParameters(request.build()); 
+        .ifPresent(request::temperature);
+    builder.defaultRequestParameters(request.build());
 
     return builder;
   }

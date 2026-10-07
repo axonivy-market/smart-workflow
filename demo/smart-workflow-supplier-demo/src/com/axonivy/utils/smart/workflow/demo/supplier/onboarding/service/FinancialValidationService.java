@@ -22,8 +22,7 @@ public class FinancialValidationService {
   private static final String ALL_CHECKS_PASSED = "All financial checks passed.";
   private static final String FINDING_SUMMARY_FORMAT = "[%s] %s\n";
 
-  private FinancialValidationService() {
-  }
+  private FinancialValidationService() {}
 
   public static List<SupplierPolicyRule> loadFinancialRules(String caseUuid) {
     return ValidationUtils.loadRulesByType(RuleType.FINANCIAL, caseUuid);

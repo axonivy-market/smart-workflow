@@ -24,8 +24,7 @@ public class BrandSearchCriteria {
   @Description("Supplier associated with this brand. Leave null if not filtering by supplier.")
   private Supplier supplier;
 
-  public BrandSearchCriteria() {
-  }
+  public BrandSearchCriteria() {}
 
   public String getBrandId() {
     return brandId;

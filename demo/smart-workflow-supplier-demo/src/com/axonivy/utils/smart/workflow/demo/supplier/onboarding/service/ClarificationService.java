@@ -54,7 +54,7 @@ public class ClarificationService {
 
   private static void proceedAuditTrail(OnboardingRequest request, ClarificationRetryResult retry) {
     if (request.getAuditTrail() == null) {
-        request.setAuditTrail(new ArrayList<>());
+      request.setAuditTrail(new ArrayList<>());
     }
     request.getAuditTrail().add(retry.auditEntry());
   }
@@ -98,9 +98,9 @@ public class ClarificationService {
       for (ValidationFinding f : findings) {
         if (Boolean.TRUE.equals(f.getResolved())) {
           String resolutionType = ClarificationProblemTypeBuilder.resolve(
-                  f.getDocumentTypeKey(), f.getRiskKind(), f.getSource(), f.getMessage())
-              == ClarificationProblemType.DOCUMENT
-              ? "Document uploaded" : "Explanation provided";
+              f.getDocumentTypeKey(), f.getRiskKind(), f.getSource(), f.getMessage()) == ClarificationProblemType.DOCUMENT
+                  ? "Document uploaded"
+                  : "Explanation provided";
           ResolvedClarificationItem rci = new ResolvedClarificationItem();
           rci.setProblem(f.getMessage());
           rci.setResolutionType(resolutionType);

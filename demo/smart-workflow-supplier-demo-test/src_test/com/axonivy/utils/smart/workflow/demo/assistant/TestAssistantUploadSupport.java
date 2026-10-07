@@ -146,12 +146,12 @@ class TestAssistantUploadSupport {
 
   @Test
   void resetAssistantState_clearsAllFields() {
-    bean.uploadedFileName     = "file.txt";
-    bean.uploadedContent      = "some content";
+    bean.uploadedFileName = "file.txt";
+    bean.uploadedContent = "some content";
     bean.awaitingConfirmation = Boolean.TRUE;
-    bean.parseFeedback        = "some feedback";
-    bean.parsedDraft          = "draft value";
-    bean.agentUserMessage     = "pending question";
+    bean.parseFeedback = "some feedback";
+    bean.parsedDraft = "draft value";
+    bean.agentUserMessage = "pending question";
     bean.uploadedDocuments.add(doc("file.txt", "data"));
     bean.agentChatHistory.add(new AssistantChatMessage());
 
@@ -194,22 +194,87 @@ class TestAssistantUploadSupport {
     List<AgentGuidance> guidance = new ArrayList<>();
     List<AssistantChatMessage> agentChatHistory = new ArrayList<>();
 
-    @Override public String getFormData()                             { return null; }
-    @Override public String getParseSubProcessSignature()             { return null; }
-    @Override public String getParsedResultKey()                      { return null; }
-    @Override public void applyParsedDraft(String draft)              {}
-    @Override public void setAssistantParsedDraft(String draft)       { this.parsedDraft = draft; }
-    @Override public String getAssistantUploadedContent()             { return uploadedContent; }
-    @Override public void setAssistantUploadedFileName(String n)      { this.uploadedFileName = n; }
-    @Override public void setAssistantUploadedContent(String c)       { this.uploadedContent = c; }
-    @Override public void setAssistantAwaitingConfirmation(Boolean v)  { this.awaitingConfirmation = v; }
-    @Override public void setAssistantParseFeedback(String f)         { this.parseFeedback = f; }
-    @Override public List<UploadedDocumentEntry> getUploadedDocuments()             { return uploadedDocuments; }
-    @Override public void setUploadedDocuments(List<UploadedDocumentEntry> d)       { this.uploadedDocuments = d; }
-    @Override public List<AgentGuidance> getAgentGuidance()           { return guidance; }
-    @Override public String getAgentUserMessage()                     { return agentUserMessage; }
-    @Override public void setAgentUserMessage(String m)               { this.agentUserMessage = m; }
-    @Override public List<AssistantChatMessage> getAgentChatHistory()             { return agentChatHistory; }
-    @Override public void setAgentChatHistory(List<AssistantChatMessage> h)       { this.agentChatHistory = h; }
+    @Override
+    public String getFormData() {
+      return null;
+    }
+
+    @Override
+    public String getParseSubProcessSignature() {
+      return null;
+    }
+
+    @Override
+    public String getParsedResultKey() {
+      return null;
+    }
+
+    @Override
+    public void applyParsedDraft(String draft) {}
+
+    @Override
+    public void setAssistantParsedDraft(String draft) {
+      this.parsedDraft = draft;
+    }
+
+    @Override
+    public String getAssistantUploadedContent() {
+      return uploadedContent;
+    }
+
+    @Override
+    public void setAssistantUploadedFileName(String n) {
+      this.uploadedFileName = n;
+    }
+
+    @Override
+    public void setAssistantUploadedContent(String c) {
+      this.uploadedContent = c;
+    }
+
+    @Override
+    public void setAssistantAwaitingConfirmation(Boolean v) {
+      this.awaitingConfirmation = v;
+    }
+
+    @Override
+    public void setAssistantParseFeedback(String f) {
+      this.parseFeedback = f;
+    }
+
+    @Override
+    public List<UploadedDocumentEntry> getUploadedDocuments() {
+      return uploadedDocuments;
+    }
+
+    @Override
+    public void setUploadedDocuments(List<UploadedDocumentEntry> d) {
+      this.uploadedDocuments = d;
+    }
+
+    @Override
+    public List<AgentGuidance> getAgentGuidance() {
+      return guidance;
+    }
+
+    @Override
+    public String getAgentUserMessage() {
+      return agentUserMessage;
+    }
+
+    @Override
+    public void setAgentUserMessage(String m) {
+      this.agentUserMessage = m;
+    }
+
+    @Override
+    public List<AssistantChatMessage> getAgentChatHistory() {
+      return agentChatHistory;
+    }
+
+    @Override
+    public void setAgentChatHistory(List<AssistantChatMessage> h) {
+      this.agentChatHistory = h;
+    }
   }
 }

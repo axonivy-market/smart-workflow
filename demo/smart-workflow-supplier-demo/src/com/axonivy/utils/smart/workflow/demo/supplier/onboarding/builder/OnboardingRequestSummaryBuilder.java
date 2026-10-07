@@ -12,23 +12,22 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.audit.RequestSu
 public class OnboardingRequestSummaryBuilder {
 
   interface SummaryLabels {
-    String LABEL_REQUESTED_BY      = "Requested by";
-    String LABEL_DEPARTMENT        = "Department";
-    String LABEL_SUPPLIER          = "Supplier";
-    String LABEL_LOCATION          = "Location";
+    String LABEL_REQUESTED_BY = "Requested by";
+    String LABEL_DEPARTMENT = "Department";
+    String LABEL_SUPPLIER = "Supplier";
+    String LABEL_LOCATION = "Location";
     String LABEL_PRODUCTS_SERVICES = "Products / services";
-    String LABEL_ANNUAL_VOLUME     = "Annual volume";
-    String LABEL_URGENCY           = "Urgency";
-    String LABEL_NEEDED_BY         = "Needed by";
-    String LABEL_NOTES             = "Notes";
+    String LABEL_ANNUAL_VOLUME = "Annual volume";
+    String LABEL_URGENCY = "Urgency";
+    String LABEL_NEEDED_BY = "Needed by";
+    String LABEL_NOTES = "Notes";
 
-    String FORMAT_ANNUAL_VOLUME   = "EUR %.0f";
-    String VAT_SEPARATOR          = " · VAT ";
+    String FORMAT_ANNUAL_VOLUME = "EUR %.0f";
+    String VAT_SEPARATOR = " · VAT ";
     String ADDRESS_PART_SEPARATOR = ", ";
   }
 
-  private OnboardingRequestSummaryBuilder() {
-  }
+  private OnboardingRequestSummaryBuilder() {}
 
   public static List<RequestSummaryLine> build(OnboardingRequest request) {
     return Stream.of(
@@ -45,7 +44,7 @@ public class OnboardingRequestSummaryBuilder {
         line(SummaryLabels.LABEL_DEPARTMENT, request.getDepartment()),
         line(SummaryLabels.LABEL_PRODUCTS_SERVICES, request.getProductsServicesNeeded()),
         request.getExpectedAnnualVolume() == null
-            ? Stream.<RequestSummaryLine>empty()
+            ? Stream.<RequestSummaryLine> empty()
             : line(SummaryLabels.LABEL_ANNUAL_VOLUME,
                 String.format(SummaryLabels.FORMAT_ANNUAL_VOLUME, request.getExpectedAnnualVolume())),
         line(SummaryLabels.LABEL_URGENCY, request.getUrgency()),

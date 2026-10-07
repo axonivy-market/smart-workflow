@@ -42,8 +42,7 @@ public class RiskAssessmentService {
   private static final Pattern CERT_EXPIRY_DATE_PATTERN = Pattern.compile(
       "valid[- ]until[:\\s]+([0-9]{4}-[0-9]{2}-[0-9]{2})", Pattern.CASE_INSENSITIVE);
 
-  private RiskAssessmentService() {
-  }
+  private RiskAssessmentService() {}
 
   public static AgentProcessingStep startRiskStep() {
     AgentProcessingStep step = new AgentProcessingStep();
@@ -138,7 +137,8 @@ public class RiskAssessmentService {
   private static int computeCertValidityScore(PolicyValidationResult policyResult,
       Integer annualVolumeEur, String caseUuid) {
     List<ValidationFinding> findings = policyResult != null && policyResult.getFindings() != null
-        ? policyResult.getFindings() : Collections.emptyList();
+        ? policyResult.getFindings()
+        : Collections.emptyList();
     Map<String, Integer> certRules = loadCertValidityRuleScores(caseUuid);
 
     int score = 100;
@@ -170,12 +170,8 @@ public class RiskAssessmentService {
   }
 
   private static boolean hasFailureFindingForKey(List<ValidationFinding> findings, LegalDocumentType key) {
-    return findings.stream().anyMatch(f ->
-        f.getSeverity() == FindingSeverity.FAILURE && (
-            (f.getSource() != null && f.getSource().toUpperCase().contains(key.name())) ||
-            (f.getDocumentTypeKey() != null && f.getDocumentTypeKey().toUpperCase().contains(key.name()))
-        )
-    );
+    return findings.stream().anyMatch(f -> f.getSeverity() == FindingSeverity.FAILURE && ((f.getSource() != null && f.getSource().toUpperCase().contains(key.name())) ||
+        (f.getDocumentTypeKey() != null && f.getDocumentTypeKey().toUpperCase().contains(key.name()))));
   }
 
   private static int computeCertExpiryDeduction(List<ValidationFinding> findings,
@@ -196,8 +192,7 @@ public class RiskAssessmentService {
           } else if (!validUntil.isAfter(soonThreshold)) {
             deduction += soonDeduction;
           }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
       }
     }
     return deduction;

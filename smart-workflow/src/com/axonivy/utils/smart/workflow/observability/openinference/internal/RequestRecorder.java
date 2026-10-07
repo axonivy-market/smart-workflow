@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.arize.semconv.trace.SemanticConventions;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.data.message.AiMessage;
@@ -72,7 +71,7 @@ class RequestRecorder {
     try {
       attributes.put(SemanticConventions.LLM_INVOCATION_PARAMETERS,
           OpenInferenceCollector.objectMapper.writeValueAsString(invocationParams));
-    } catch (JsonProcessingException ex) {
+    } catch (Exception ex) {
       Ivy.log().warn("Failed to serialize invocation parameters", ex);
     }
   }

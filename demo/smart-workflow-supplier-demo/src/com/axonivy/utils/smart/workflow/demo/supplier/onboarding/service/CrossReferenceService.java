@@ -43,11 +43,9 @@ public class CrossReferenceService {
       "BE", "BE0[0-9]{9}",
       "PL", "PL[0-9]{10}",
       "ES", "ES[A-Z][0-9]{7}[A-Z0-9]",
-      "GB", "GB[0-9]{9}"
-  );
+      "GB", "GB[0-9]{9}");
 
-  private CrossReferenceService() {
-  }
+  private CrossReferenceService() {}
 
   public static AgentProcessingStep startCrossReferenceStep() {
     AgentProcessingStep step = new AgentProcessingStep();
@@ -131,7 +129,7 @@ public class CrossReferenceService {
       boolean valid = DE_REGISTER_PATTERN.matcher(cleaned).matches();
       return ValidationFindingBuilder.of(
           valid ? ValidationFindingType.COMPANY_REGISTER_VALID_DE
-                : ValidationFindingType.COMPANY_REGISTER_FORMAT_INVALID_DE,
+              : ValidationFindingType.COMPANY_REGISTER_FORMAT_INVALID_DE,
           registerNo);
     }
     return ValidationFindingBuilder.of(ValidationFindingType.COMPANY_REGISTER_VALID, registerNo);

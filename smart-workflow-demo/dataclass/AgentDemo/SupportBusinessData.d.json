@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
   "simpleName" : "SupportBusinessData",
   "namespace" : "AgentDemo",
   "fields" : [ {
@@ -12,6 +12,7 @@
     "modifiers" : [ ]
   }, {
     "name" : "ticket",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
+    "modifiers" : [ ]
   } ]
 }

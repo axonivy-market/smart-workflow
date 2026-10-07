@@ -7,12 +7,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
+import tools.jackson.databind.JsonNode;
 
 public class TestOpenSearchPayloadBuilder {
 
@@ -26,21 +26,21 @@ public class TestOpenSearchPayloadBuilder {
     JsonNode root = JsonUtils.getObjectMapper().readTree(json);
 
     assertThat(root.at("/settings/index.knn").asBoolean()).isTrue();
-    assertThat(root.at("/mappings/properties/vector/type").asText())
+    assertThat(root.at("/mappings/properties/vector/type").asString())
         .isEqualTo("knn_vector");
     assertThat(root.at("/mappings/properties/vector/dimension").asInt())
         .isEqualTo(DIMENSION);
-    assertThat(root.at("/mappings/properties/text/type").asText())
+    assertThat(root.at("/mappings/properties/text/type").asString())
         .isEqualTo("text");
-    assertThat(root.at("/mappings/properties/metadata/type").asText())
+    assertThat(root.at("/mappings/properties/metadata/type").asString())
         .isEqualTo("object");
 
     JsonNode meta = root.at("/mappings/_meta");
     assertThat(meta.get("chunkSize").asInt()).isEqualTo(300);
     assertThat(meta.get("chunkOverlap").asInt()).isEqualTo(20);
-    assertThat(meta.get("createdAt").asText()).isNotBlank();
-    assertThat(meta.get("embeddingProvider").asText()).isEqualTo("openai");
-    assertThat(meta.get("embeddingModel").asText()).isEqualTo("text-embedding-3-small");
+    assertThat(meta.get("createdAt").asString()).isNotBlank();
+    assertThat(meta.get("embeddingProvider").asString()).isEqualTo("openai");
+    assertThat(meta.get("embeddingModel").asString()).isEqualTo("text-embedding-3-small");
     assertThat(meta.get("dimension").asInt()).isEqualTo(DIMENSION);
   }
 
@@ -57,8 +57,8 @@ public class TestOpenSearchPayloadBuilder {
   @Test
   void buildBulkNdjsonTwoEmbeddingsFourLines() {
     List<Embedding> embeddings = List.of(
-        Embedding.from(new float[]{0.1f, 0.2f, 0.3f}),
-        Embedding.from(new float[]{0.4f, 0.5f, 0.6f}));
+        Embedding.from(new float[] {0.1f, 0.2f, 0.3f}),
+        Embedding.from(new float[] {0.4f, 0.5f, 0.6f}));
     List<TextSegment> segments = List.of(
         TextSegment.from("First document"),
         TextSegment.from("Second document"));
@@ -75,12 +75,12 @@ public class TestOpenSearchPayloadBuilder {
 
   @Test
   void buildBulkNdjsonIncludesSegmentMetadata() throws Exception {
-    Embedding embedding = Embedding.from(new float[]{0.1f, 0.2f});
+    Embedding embedding = Embedding.from(new float[] {0.1f, 0.2f});
     TextSegment segment = TextSegment.from("content", Metadata.from("source", "file.pdf"));
     String ndjson = OpenSearchPayloadBuilder.buildBulkNdjson(List.of(embedding), List.of(segment));
     JsonNode doc = JsonUtils.getObjectMapper().readTree(ndjson.strip().split("\n")[1]);
 
-    assertThat(doc.at("/metadata/source").asText()).isEqualTo("file.pdf");
+    assertThat(doc.at("/metadata/source").asString()).isEqualTo("file.pdf");
   }
 
   @Test
@@ -136,7 +136,7 @@ public class TestOpenSearchPayloadBuilder {
   @Test
   void buildUpdateLastIngestedBodyHasTimestamp() throws Exception {
     String json = OpenSearchPayloadBuilder.buildUpdateLastIngestedBody(META);
-    assertThat(JsonUtils.getObjectMapper().readTree(json).at("/_meta/lastIngestedAt").asText())
+    assertThat(JsonUtils.getObjectMapper().readTree(json).at("/_meta/lastIngestedAt").asString())
         .isNotBlank();
   }
 }

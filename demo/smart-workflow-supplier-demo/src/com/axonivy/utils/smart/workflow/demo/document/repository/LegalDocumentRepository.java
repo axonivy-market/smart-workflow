@@ -81,8 +81,7 @@ public class LegalDocumentRepository {
         nvl(doc.getObjectId()),
         doc.getObjectType() != null ? doc.getObjectType().name() : "",
         doc.getDocumentType() != null ? doc.getDocumentType().name() : "",
-        nvl(doc.getDescription())
-    );
+        nvl(doc.getDescription()));
   }
 
   private static LegalDocument decodeName(IDocument ivyDoc) {

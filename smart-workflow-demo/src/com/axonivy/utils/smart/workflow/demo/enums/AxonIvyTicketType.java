@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.demo.enums;
 
-
 public enum AxonIvyTicketType {
   PORTAL("PortalSupport"), CORE("CoreSupport"), MARKET("MarketSupport");
 
