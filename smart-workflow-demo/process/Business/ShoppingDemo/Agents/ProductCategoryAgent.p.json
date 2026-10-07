@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process-1.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
   "id" : "1994C1D1CAB3E84D",
   "kind" : "CALLABLE_SUB",
   "config" : {

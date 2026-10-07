@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process-1.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
   "id" : "19AB0001DEAD0001",
   "config" : {
     "data" : "smart.workflow.webtest.SetupTestDataData"
@@ -189,7 +189,9 @@
         "task" : {
           "name" : "webtest-task-001a-image",
           "responsible" : {
-            "roles" : [ "SYSTEM" ]
+            "roles" : [
+              "SYSTEM"
+            ]
           }
         }
       },
@@ -239,7 +241,9 @@
         "task" : {
           "name" : "webtest-task-002a-image",
           "responsible" : {
-            "roles" : [ "SYSTEM" ]
+            "roles" : [
+              "SYSTEM"
+            ]
           }
         }
       },
@@ -284,7 +288,9 @@
         "task" : {
           "name" : "webtest-task-003a-image",
           "responsible" : {
-            "roles" : [ "SYSTEM" ]
+            "roles" : [
+              "SYSTEM"
+            ]
           }
         }
       },
@@ -329,7 +335,9 @@
         "task" : {
           "name" : "webtest-task-004a-image",
           "responsible" : {
-            "roles" : [ "SYSTEM" ]
+            "roles" : [
+              "SYSTEM"
+            ]
           }
         }
       },
