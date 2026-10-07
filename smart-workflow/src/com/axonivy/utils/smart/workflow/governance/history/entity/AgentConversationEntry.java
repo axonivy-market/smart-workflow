@@ -57,6 +57,10 @@ public class AgentConversationEntry {
     return agentId;
   }
 
+  public String getDisplayName() {
+    return (agentName != null && !agentName.isBlank()) ? agentName : agentId;
+  }
+
   public void setAgentId(String agentId) {
     this.agentId = agentId;
   }
@@ -114,6 +118,9 @@ public class AgentConversationEntry {
   }
 
   public void setToolExecutions(List<ToolExecution> toolExecutions) {
+    if (toolExecutions == null) {
+      throw new IllegalArgumentException("toolExecutions must not be null");
+    }
     try {
       toolExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(toolExecutions);
     } catch (Exception e) {
@@ -135,6 +142,9 @@ public class AgentConversationEntry {
   }
 
   public void setGuardrailExecutions(List<GuardrailExecution> guardrailExecutions) {
+    if (guardrailExecutions == null) {
+      throw new IllegalArgumentException("guardrailExecutions must not be null");
+    }
     try {
       guardrailExecutionsJson = JsonUtils.getObjectMapper().writeValueAsString(guardrailExecutions);
     } catch (Exception e) {
