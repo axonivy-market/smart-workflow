@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 
 import ch.ivyteam.ivy.environment.IvyTest;
 
@@ -108,6 +109,43 @@ public class TestChatHistoryJsonParser {
   @Test
   void getModelName_invalidJson_returnsUnknown() {
     assertThat(ChatHistoryJsonParser.getModelName(entryWithTokens("NOT_VALID_JSON"))).isEqualTo(ChatHistoryJsonParser.UNKNOWN_MODEL);
+  }
+
+  @Test
+  void getArgumentEntries_nullArgs_returnsEmpty() {
+    assertThat(ChatHistoryJsonParser.getArgumentEntries(new ToolExecution("tool", null, null, null))).isEmpty();
+  }
+
+  @Test
+  void getArgumentEntries_blankArgs_returnsEmpty() {
+    assertThat(ChatHistoryJsonParser.getArgumentEntries(new ToolExecution("tool", "  ", null, null))).isEmpty();
+  }
+
+  @Test
+  void getArgumentEntries_nonObjectJson_returnsEmpty() {
+    assertThat(ChatHistoryJsonParser.getArgumentEntries(new ToolExecution("tool", "[\"a\",\"b\"]", null, null))).isEmpty();
+  }
+
+  @Test
+  void getArgumentEntries_objectArgs_returnsKeyValuePairs() {
+    var exec = new ToolExecution("search", "{\"city\":\"Bern\",\"days\":3}", null, null);
+
+    var entries = ChatHistoryJsonParser.getArgumentEntries(exec);
+
+    assertThat(entries).hasSize(2);
+    assertThat(entries).anyMatch(e -> e.key().equals("city") && e.value().equals("Bern"));
+    assertThat(entries).anyMatch(e -> e.key().equals("days") && e.value().equals("3"));
+  }
+
+  @Test
+  void getArgumentEntries_nestedObjectArg_renderedAsPrettyString() {
+    var exec = new ToolExecution("tool", "{\"filter\":{\"status\":\"active\"}}", null, null);
+
+    var entries = ChatHistoryJsonParser.getArgumentEntries(exec);
+
+    assertThat(entries).hasSize(1);
+    assertThat(entries.get(0).key()).isEqualTo("filter");
+    assertThat(entries.get(0).value()).contains("status");
   }
 
   private static AgentConversationEntry entryWithMessages(String json) {
