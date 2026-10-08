@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.governance.history;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,24 +38,19 @@ public class ChatHistoryJsonParser {
     if (args == null || args.isBlank()) {
       return List.of();
     }
-    try {
-      JsonNode node = JsonUtils.getObjectMapper().readTree(args);
-      if (!node.isObject()) {
-        return List.of();
-      }
-      List<ArgumentEntry> entries = new ArrayList<>();
-      var fieldNames = node.fieldNames();
-      while (fieldNames.hasNext()) {
-        var key = fieldNames.next();
-        var val = node.get(key);
-        entries.add(new ArgumentEntry(key, val.isTextual() ? val.asText() : val.toPrettyString()));
-      }
-      return entries;
-    } catch (IOException e) {
-      Ivy.log().warn(String.format(PARSE_FAILURE_MESSAGE,
-          "toolArguments", exec.toolName(), e.getMessage()));
+
+    JsonNode node = JsonUtils.getObjectMapper().readTree(args);
+    if (!node.isObject()) {
       return List.of();
     }
+    List<ArgumentEntry> entries = new ArrayList<>();
+    for (var property : node.properties()) {
+      var value = property.getValue();
+      entries.add(new ArgumentEntry(
+        property.getKey(),
+        value.isString() ? value.asString() : value.toPrettyString()));
+    }
+    return entries;
   }
 
   public static int getMessageCount(AgentConversationEntry entry) {
