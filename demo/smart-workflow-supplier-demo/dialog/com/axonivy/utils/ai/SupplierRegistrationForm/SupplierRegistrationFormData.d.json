@@ -1,10 +1,9 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "SupplierRegistrationFormData",
   "namespace" : "com.axonivy.utils.ai.SupplierRegistrationForm",
   "fields" : [ {
     "name" : "request",
-    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest",
-    "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest"
   } ]
 }

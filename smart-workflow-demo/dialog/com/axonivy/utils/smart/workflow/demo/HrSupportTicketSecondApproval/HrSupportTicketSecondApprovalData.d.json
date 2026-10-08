@@ -1,21 +1,17 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "HrSupportTicketSecondApprovalData",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.HrSupportTicketSecondApproval",
   "fields" : [ {
-    "name" : "supportTicketId",
-    "modifiers" : [ ]
+    "name" : "supportTicketId"
   }, {
     "name" : "supportTicket",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket",
-    "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket"
   }, {
     "name" : "requestor",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee",
-    "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee"
   }, {
     "name" : "firstApprover",
-    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee",
-    "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.dto.Employee"
   } ]
 }

@@ -1,22 +1,18 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "ProductCreationData",
   "namespace" : "com.axonivy.utils.smart.workflow.demo.shopping.product.ProductCreation",
   "fields" : [ {
-    "name" : "productInfo",
-    "modifiers" : [ ]
+    "name" : "productInfo"
   }, {
     "name" : "product",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.Product",
-    "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.model.Product"
   }, {
     "name" : "response",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse",
-    "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.agent.ProductAgentResponse"
   }, {
     "name" : "uploadEvent",
-    "type" : "org.primefaces.event.FileUploadEvent",
-    "modifiers" : [ ]
+    "type" : "org.primefaces.event.FileUploadEvent"
   }, {
     "name" : "similarSuppliers",
     "type" : "List<com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier>",
@@ -27,40 +23,30 @@
     "modifiers" : [ ]
   }, {
     "name" : "isSupplierCreated",
-    "type" : "Boolean",
-    "modifiers" : [ ]
+    "type" : "Boolean"
   }, {
     "name" : "isCategoryCreated",
-    "type" : "Boolean",
-    "modifiers" : [ ]
+    "type" : "Boolean"
   }, {
     "name" : "isProductCreated",
-    "type" : "Boolean",
-    "modifiers" : [ ]
+    "type" : "Boolean"
   }, {
     "name" : "imageUploadEvent",
-    "type" : "org.primefaces.event.FileUploadEvent",
-    "modifiers" : [ ]
+    "type" : "org.primefaces.event.FileUploadEvent"
   }, {
-    "name" : "imageBase64",
-    "modifiers" : [ ]
+    "name" : "imageBase64"
   }, {
     "name" : "isShowUploadSection",
-    "type" : "Boolean",
-    "modifiers" : [ ]
+    "type" : "Boolean"
   }, {
     "name" : "selectedSupplier",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier",
-    "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.supplier.model.Supplier"
   }, {
     "name" : "selectedCategory",
-    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory",
-    "modifiers" : [ ]
+    "type" : "com.axonivy.utils.smart.workflow.demo.erp.product.category.ProductCategory"
   }, {
-    "name" : "originalFileName",
-    "modifiers" : [ ]
+    "name" : "originalFileName"
   }, {
-    "name" : "originalImageName",
-    "modifiers" : [ ]
+    "name" : "originalImageName"
   } ]
 }
