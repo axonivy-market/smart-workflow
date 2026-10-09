@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModelName;
 import dev.langchain4j.model.chat.Capability;

@@ -3,14 +3,13 @@ package com.axonivy.utils.smart.workflow.guardrails.input;
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
 import com.axonivy.utils.smart.workflow.utils.IvyVar;
 
 import ch.ivyteam.ivy.environment.Ivy;
-
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
@@ -189,7 +188,7 @@ public class AiPromptInjectionInputGuardrail implements SmartWorkflowInputGuardr
 
   private GuardrailResult runClassifier(String message, String providerName, String modelName) {
     var provider = ChatModelFactory.getProviderOrDefault(providerName);
-    var model = provider.setup(ModelOptions.options().modelName(modelName));
+    var model = provider.setup(ModelOptions.builder().modelName(modelName).build());
     var resolvedModelName = model.defaultRequestParameters().modelName();
     var systemPrompt = resolveSystemPrompt();
     var builder = AiServices.builder(InjectionClassifier.class)

@@ -1,7 +1,5 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
-import static com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions.options;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +14,7 @@ import com.axonivy.utils.smart.workflow.memory.id.IdStore;
 import com.axonivy.utils.smart.workflow.memory.id.ProcessDataField;
 import com.axonivy.utils.smart.workflow.memory.store.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
@@ -131,10 +130,11 @@ public class AgentCallExecutor {
     var provider = ChatModelFactory.getProviderOrDefault(configuredProvider());
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var agentName = context.element().name();
-    var modelOptions = options()
+    var modelOptions = ModelOptions.builder()
         .modelName(model)
         .structuredOutput(structured)
-        .hasTools(toolFilter != null && !toolFilter.isEmpty());
+        .hasTools(toolFilter != null && !toolFilter.isEmpty())
+        .build();
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);
     var modelName = chatModel.defaultRequestParameters().modelName();

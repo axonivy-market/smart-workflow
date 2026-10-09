@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.ChatModel;
