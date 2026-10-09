@@ -3,18 +3,19 @@ package com.axonivy.utils.smart.workflow.governance.history.analytic.chart;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.primefaces.model.charts.ChartData;
-import org.primefaces.model.charts.donut.DonutChartModel;
-import org.primefaces.model.charts.donut.DonutChartOptions;
-import org.primefaces.model.charts.optionconfig.legend.Legend;
-import org.primefaces.model.charts.pie.PieChartDataSet;
-
 import com.axonivy.utils.smart.workflow.governance.history.analytic.chart.model.ChartPalette;
 
-public class ModelDistributionChartBuilder extends AbstractChartBuilder<DonutChartModel> {
+import software.xdev.chartjs.model.charts.DoughnutChart;
+import software.xdev.chartjs.model.data.DoughnutData;
+import software.xdev.chartjs.model.dataset.DoughnutDataset;
+import software.xdev.chartjs.model.options.DoughnutOptions;
+import software.xdev.chartjs.model.options.LegendOptions;
+import software.xdev.chartjs.model.options.Plugins;
+
+public class ModelDistributionChartBuilder extends AbstractChartBuilder<DoughnutChart> {
 
   @Override
-  public DonutChartModel build(HistoryAggregator aggregator) {
+  public DoughnutChart build(HistoryAggregator aggregator) {
     List<String> labels = new ArrayList<>();
     List<Number> values = new ArrayList<>();
     aggregator.getCountByModel().forEach((model, count) -> {
@@ -22,26 +23,20 @@ public class ModelDistributionChartBuilder extends AbstractChartBuilder<DonutCha
       values.add(count);
     });
 
-    PieChartDataSet dataSet = new PieChartDataSet();
+    DoughnutDataset dataSet = new DoughnutDataset();
     dataSet.setData(values);
-    dataSet.setBackgroundColor(ChartPalette.PASTEL_COLORS.colors(labels.size()));
+    dataSet.setBackgroundColor(asColors(ChartPalette.PASTEL_COLORS.colors(labels.size())));
 
-    ChartData data = new ChartData();
-    data.setLabels(labels);
-    data.addChartDataSet(dataSet);
+    DoughnutData data = new DoughnutData().setLabels(labels).addDataset(dataSet);
 
-    DonutChartModel model = new DonutChartModel();
-    model.setData(data);
-    model.setOptions(modelDistributionOptions());
-    return model;
+    return new DoughnutChart().setData(data).setOptions(modelDistributionOptions());
   }
 
-  private DonutChartOptions modelDistributionOptions() {
-    Legend legend = new Legend();
-    legend.setPosition(ChartConfig.LEGEND_RIGHT);
-    DonutChartOptions options = new DonutChartOptions();
+  private DoughnutOptions modelDistributionOptions() {
+    LegendOptions legend = new LegendOptions().setPosition(ChartConfig.LEGEND_RIGHT);
+    DoughnutOptions options = new DoughnutOptions();
     applyResponsiveOptions(options);
-    options.setLegend(legend);
+    options.setPlugins(new Plugins().setLegend(legend));
     return options;
   }
 }

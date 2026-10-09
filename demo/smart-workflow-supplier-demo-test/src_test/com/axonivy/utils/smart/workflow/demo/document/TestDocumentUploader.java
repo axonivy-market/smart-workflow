@@ -28,8 +28,7 @@ class TestDocumentUploader {
         Arguments.of(LegalDocumentType.ANNUAL_REPORT, true),
         Arguments.of(LegalDocumentType.ISO_9001, true),
         Arguments.of(LegalDocumentType.BANKING_CONFIRMATION, false),
-        Arguments.of(LegalDocumentType.CONTRACT, false)
-    );
+        Arguments.of(LegalDocumentType.CONTRACT, false));
   }
 
   @Test

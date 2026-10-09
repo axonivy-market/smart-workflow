@@ -12,7 +12,6 @@ import com.axonivy.utils.smart.workflow.governance.history.analytic.report.stati
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
@@ -20,6 +19,7 @@ import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 import ch.ivyteam.ivy.security.exec.Sudo;
 import ch.ivyteam.ivy.workflow.ICase;
+import tools.jackson.core.JacksonException;
 
 public class CaseAnalysisService {
 
@@ -92,7 +92,7 @@ public class CaseAnalysisService {
   public static String toJson(List<AgentSummary> summaries) {
     try {
       return JsonUtils.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(summaries);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       return "[]";
     }
   }

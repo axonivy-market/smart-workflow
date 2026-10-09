@@ -16,6 +16,8 @@ import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter
 import com.axonivy.utils.smart.workflow.guardrails.entity.GuardrailResult;
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuardrail;
 
+import dev.langchain4j.data.message.ImageContent;
+import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.guardrail.GuardrailRequestParams;
 import dev.langchain4j.guardrail.InputGuardrail;
@@ -81,6 +83,18 @@ public class TestInputGuardrailListener {
     assertThat(entry.failureMessage()).isEqualTo("Critical violation");
   }
 
+  @Test
+  void recordsMultimodalUserMessage_regressionForSingleTextBug() {
+    var multimodal = UserMessage.from(
+        TextContent.from("describe this:"),
+        ImageContent.from("http://example.com/img.png", "image/png"));
+
+    listener.onEvent(buildEvent(multimodal, InputGuardrailResult.success(), Duration.ofMillis(10)));
+
+    assertThat(captured).hasSize(1);
+    assertThat(captured.get(0).message()).isEqualTo("describe this:\n<file: IMAGE>");
+  }
+
   private static final InputGuardrail GUARDRAIL_HELPER = new InputGuardrail() {};
   private static final InputGuardrailAdapter INPUT_ADAPTER = new InputGuardrailAdapter(new TestInputGuardrail());
 
@@ -92,6 +106,10 @@ public class TestInputGuardrailListener {
   }
 
   private InputGuardrailExecutedEvent buildEvent(String userText, InputGuardrailResult result, Duration duration) {
+    return buildEvent(UserMessage.from(userText), result, duration);
+  }
+
+  private InputGuardrailExecutedEvent buildEvent(UserMessage userMessage, InputGuardrailResult result, Duration duration) {
     var invocationCtx = InvocationContext.builder()
         .invocationId(UUID.randomUUID())
         .timestamp(Instant.now())
@@ -99,7 +117,7 @@ public class TestInputGuardrailListener {
         .interfaceName("ChatAgent")
         .build();
     var request = InputGuardrailRequest.builder()
-        .userMessage(UserMessage.from(userText))
+        .userMessage(userMessage)
         .commonParams(GuardrailRequestParams.builder()
             .userMessageTemplate("")
             .variables(java.util.Map.of())

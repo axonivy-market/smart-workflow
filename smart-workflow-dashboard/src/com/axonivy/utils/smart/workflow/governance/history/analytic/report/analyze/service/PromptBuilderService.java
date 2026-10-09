@@ -4,15 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import dev.langchain4j.model.input.PromptTemplate;
-
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service.CaseStatisticsService;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.model.input.PromptTemplate;
+import tools.jackson.core.JacksonException;
 
 class PromptBuilderService {
 
@@ -52,7 +51,7 @@ class PromptBuilderService {
     try {
       return JsonUtils.getObjectMapper().writerWithDefaultPrettyPrinter()
           .writeValueAsString(CaseStatisticsService.compute(caseId, caseName, summaries));
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       Ivy.log().warn(WARN_METRICS_FAILURE + e.getMessage());
       return "{}";
     }

@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import com.axonivy.utils.smart.workflow.test.Person;
 import com.axonivy.utils.smart.workflow.tools.internal.JsonProcessParameters;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
 
 @IvyTest
 class TestJsonProcessParameters {

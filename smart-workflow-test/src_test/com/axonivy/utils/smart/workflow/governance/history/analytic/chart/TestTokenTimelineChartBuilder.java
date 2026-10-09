@@ -5,13 +5,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.utils.DatePatternUtils;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.dataset.BarDataset;
 
 @IvyTest
 public class TestTokenTimelineChartBuilder {
@@ -20,8 +20,8 @@ public class TestTokenTimelineChartBuilder {
 
   @Test
   void build_emptyAggregator_singleDatasetPaddedToMinDaysAllZero() {
-    BarChartModel model = BUILDER.build(HistoryAggregator.of(List.of()));
-    assertThat(model.getData().getDataSet()).hasSize(1);
+    BarChart model = BUILDER.build(HistoryAggregator.of(List.of()));
+    assertThat(model.getData().getDatasets()).hasSize(1);
     assertThat((List<?>) model.getData().getLabels())
         .hasSize(AbstractChartBuilder.ChartConfig.MIN_TIMELINE_DAYS);
     assertThat(dataValues(model))
@@ -49,15 +49,15 @@ public class TestTokenTimelineChartBuilder {
     HistoryAggregator aggregator = HistoryAggregator.of(List.of(
         entryWithDate("m", 70, 40, 30, 1_000, today),
         entryWithDate("m", 50, 20, 30, 1_000, today)));
-    BarChartModel model = BUILDER.build(aggregator);
+    BarChart model = BUILDER.build(aggregator);
     String todayLabel = today.toLocalDate().format(DatePatternUtils.DAY_FMT);
     int idx = ((List<?>) model.getData().getLabels()).indexOf(todayLabel);
     // total = input(40+20) + output(30+30) = 120
     assertThat(dataValues(model).get(idx).longValue()).isEqualTo(120L);
   }
 
-  private static List<Number> dataValues(BarChartModel model) {
-    return ((BarChartDataSet) model.getData().getDataSet().get(0)).getData();
+  private static List<Number> dataValues(BarChart model) {
+    return ((BarDataset) model.getData().getDatasets().get(0)).getData(Number.class);
   }
 
   private static AgentConversationEntry entryWithDate(String model, long total, long input, long output,

@@ -25,8 +25,7 @@ public class CaseService {
       return String.format(NO_NAME_FORMAT, caseUuid);
     }
     String name = ivyCase.getName();
-    return (name == null || name.isBlank()) ?
-        String.format(NO_NAME_FORMAT, ivyCase.getId())
+    return (name == null || name.isBlank()) ? String.format(NO_NAME_FORMAT, ivyCase.getId())
         : String.format(DISPLAY_NAME_FORMAT, name, ivyCase.getId());
   }
 

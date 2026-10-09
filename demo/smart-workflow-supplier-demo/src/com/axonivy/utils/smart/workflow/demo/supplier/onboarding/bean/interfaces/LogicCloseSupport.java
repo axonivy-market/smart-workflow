@@ -18,7 +18,7 @@ public interface LogicCloseSupport {
     callLogicClose(argument);
   }
 
-  default void beforeClose() { }
+  default void beforeClose() {}
 
   default void callLogicClose() {
     invokeLogicClose(new Class<?>[0]);
@@ -26,7 +26,7 @@ public interface LogicCloseSupport {
 
   default void callLogicClose(Object argument) {
     invokeLogicClose(
-        new Class<?>[] { Object.class },
+        new Class<?>[] {Object.class},
         argument);
   }
 

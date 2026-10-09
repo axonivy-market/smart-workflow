@@ -33,13 +33,13 @@ public class AnthropicModelProvider implements ChatModelProvider {
   @Override
   public List<String> models() {
     return Stream.of(AnthropicChatModelName.values())
-      .map(AnthropicChatModelName::toString)
-      .toList();
+        .map(AnthropicChatModelName::toString)
+        .toList();
   }
 
   @Override
   public List<String> secretsVars() {
     return List.of(AnthropicConf.API_KEY);
   }
-  
+
 }

@@ -31,16 +31,43 @@ public final class LegalDocumentBuilder {
     return of(LegalDocumentType.CERTIFICATION, null, description);
   }
 
-  public LegalDocumentBuilder objectId(String v) { doc.setObjectId(v); return this; }
-  public LegalDocumentBuilder objectType(LegalDocumentObjectType v) { doc.setObjectType(v); return this; }
-  public LegalDocumentBuilder documentType(LegalDocumentType v) { doc.setDocumentType(v); return this; }
-  public LegalDocumentBuilder fileName(String v) { doc.setFileName(v); return this; }
-  public LegalDocumentBuilder fileContent(byte[] v) { doc.setFileContent(v); return this; }
-  public LegalDocumentBuilder description(String v) { doc.setDescription(v); return this; }
+  public LegalDocumentBuilder objectId(String v) {
+    doc.setObjectId(v);
+    return this;
+  }
+
+  public LegalDocumentBuilder objectType(LegalDocumentObjectType v) {
+    doc.setObjectType(v);
+    return this;
+  }
+
+  public LegalDocumentBuilder documentType(LegalDocumentType v) {
+    doc.setDocumentType(v);
+    return this;
+  }
+
+  public LegalDocumentBuilder fileName(String v) {
+    doc.setFileName(v);
+    return this;
+  }
+
+  public LegalDocumentBuilder fileContent(byte[] v) {
+    doc.setFileContent(v);
+    return this;
+  }
+
+  public LegalDocumentBuilder description(String v) {
+    doc.setDescription(v);
+    return this;
+  }
+
   public LegalDocumentBuilder uploadedNow() {
     doc.setUploadedAt(java.time.LocalDateTime.now()
         .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
     return this;
   }
-  public LegalDocument build() { return doc; }
+
+  public LegalDocument build() {
+    return doc;
+  }
 }

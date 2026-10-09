@@ -1,9 +1,9 @@
 package com.axonivy.utils.smart.workflow.governance.history.entity;
 
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import tools.jackson.core.JacksonException;
 
 public class AiGovernanceReportEntry {
 
@@ -29,7 +29,7 @@ public class AiGovernanceReportEntry {
     }
     try {
       return JsonUtils.getObjectMapper().readValue(reportJson, AiGovernanceReport.class);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       Ivy.log().warn(WARN_DESERIALIZE.formatted(caseUuid, e.getMessage()));
       return null;
     }
@@ -38,7 +38,7 @@ public class AiGovernanceReportEntry {
   public void setReport(AiGovernanceReport report) {
     try {
       reportJson = JsonUtils.getObjectMapper().writeValueAsString(report);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       Ivy.log().warn(WARN_SERIALIZE.formatted(caseUuid, e.getMessage()));
       reportJson = null;
     }

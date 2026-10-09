@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="jakarta.faces.core"
   xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets"
   xmlns:cc="jakarta.faces.composite" xmlns:ic="http://ivyteam.ch/jsf/component"
-  xmlns:p="http://primefaces.org/ui">
+  xmlns:p="primefaces">
 
 <cc:interface componentType="IvyComponent">
   <!-- Enable drag/drop upload mode in the assistant input area -->
@@ -194,15 +194,13 @@
                 listener="#{cc.attrs.uploadListener}"
                 mode="advanced"
                 auto="true"
-                dragDropSupport="false"
+                dragDrop="false"
                 process="@this"
                 update="@all"
-                allowTypes="/(\.|\/)(txt|md|pdf)$/"
                 accept=".txt,.md,.pdf"
-                sizeLimit="5242880"
-                invalidFileMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidFileMessage')}"
-                invalidSizeMessage="#{ivy.cms.co('/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAiAssistant/InvalidSizeMessage')}"
-                styleClass="hidden" />
+                styleClass="hidden">
+                <p:validateFile allowTypes="/(\.|\/)(txt|md|pdf)$/" sizeLimit="5242880" />
+              </p:fileUpload>
               <p:commandButton id="assistant-upload-trigger"
                 type="button"
                 icon="ti ti-file-upload"

@@ -12,39 +12,38 @@ public class PolicyContextBuilder {
 
   private static final int CONTENT_TRUNCATION_LIMIT = 3_000;
 
-  private static final String PARA_BREAK              = "\n\n";
-  private static final String DOC_ENTRY_HEADER_FORMAT   = "Document Type: %s\nFile Name: %s\nContent:\n";
-  private static final String NO_CONTENT_TEXT           = "(no content extracted)";
-  private static final String NO_DOCUMENTS_TEXT         = "No documents were extracted.";
-  private static final String TODAY_DATE_FORMAT         = "\nTODAY'S DATE: %s";
-  private static final String SUPPLIER_CONTEXT_FORMAT   = "SUPPLIER CONTEXT:\n%s\n\n";
-  private static final String DOC_UNDER_EVALUATION      = "DOCUMENT UNDER EVALUATION:\n";
-  private static final String FILE_TYPE_FORMAT          = "File: %s\nType: %s\n";
-  private static final String EXTRACTED_FIELDS_FORMAT   = "Extracted Fields: %s\n";
-  private static final String TRUNCATION_SUFFIX         = "\n... [truncated]";
-  private static final String CONTENT_FORMAT            = "Content:\n%s\n";
-  private static final String NO_DOC_FOUND_TEXT         = "DOCUMENT: No specific document found for this rule.\n";
+  private static final String PARA_BREAK = "\n\n";
+  private static final String DOC_ENTRY_HEADER_FORMAT = "Document Type: %s\nFile Name: %s\nContent:\n";
+  private static final String NO_CONTENT_TEXT = "(no content extracted)";
+  private static final String NO_DOCUMENTS_TEXT = "No documents were extracted.";
+  private static final String TODAY_DATE_FORMAT = "\nTODAY'S DATE: %s";
+  private static final String SUPPLIER_CONTEXT_FORMAT = "SUPPLIER CONTEXT:\n%s\n\n";
+  private static final String DOC_UNDER_EVALUATION = "DOCUMENT UNDER EVALUATION:\n";
+  private static final String FILE_TYPE_FORMAT = "File: %s\nType: %s\n";
+  private static final String EXTRACTED_FIELDS_FORMAT = "Extracted Fields: %s\n";
+  private static final String TRUNCATION_SUFFIX = "\n... [truncated]";
+  private static final String CONTENT_FORMAT = "Content:\n%s\n";
+  private static final String NO_DOC_FOUND_TEXT = "DOCUMENT: No specific document found for this rule.\n";
   private static final String EVALUATE_WITHOUT_DOC_TEXT = "Evaluate based on supplier context and available signals only.\n";
   private static final String SINGLE_RULE_PROMPT_FORMAT = """
-      You are a supplier compliance auditor evaluating a single policy rule for supplier onboarding.
+    You are a supplier compliance auditor evaluating a single policy rule for supplier onboarding.
 
-      RULE UNDER EVALUATION:
-      Target: %s
-      Policy: %s
-      Risk Score Deduction: %d points if violated
+    RULE UNDER EVALUATION:
+    Target: %s
+    Policy: %s
+    Risk Score Deduction: %d points if violated
 
-      Based on the supplier context and document content provided, evaluate whether this rule is satisfied.
-      Produce a PolicyValidationResult with one or more ValidationFinding entries:
-      - severity: PASSED (rule met), WARNING (partial/advisory), or FAILURE (rule violated)
-      - message: specific explanation relevant to this rule
-      - source: use "%s" as the source
-      - documentTypeKey: CERTIFICATION:<NAME> or DOCUMENT:<NAME> if document-relevant, otherwise null
-      - score: points deducted from the compliance score - 0 for PASSED, %d for WARNING, %d for FAILURE
+    Based on the supplier context and document content provided, evaluate whether this rule is satisfied.
+    Produce a PolicyValidationResult with one or more ValidationFinding entries:
+    - severity: PASSED (rule met), WARNING (partial/advisory), or FAILURE (rule violated)
+    - message: specific explanation relevant to this rule
+    - source: use "%s" as the source
+    - documentTypeKey: CERTIFICATION:<NAME> or DOCUMENT:<NAME> if document-relevant, otherwise null
+    - score: points deducted from the compliance score - 0 for PASSED, %d for WARNING, %d for FAILURE
 
-      Focus ONLY on this specific rule. Do not evaluate or invent findings for other rules.""";
+    Focus ONLY on this specific rule. Do not evaluate or invent findings for other rules.""";
 
-  private PolicyContextBuilder() {
-  }
+  private PolicyContextBuilder() {}
 
   public static String buildPolicyDocumentContext(DocumentExtractionResult extractionResult) {
     StringBuilder sb = new StringBuilder();

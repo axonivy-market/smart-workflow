@@ -54,13 +54,13 @@ public class OpenAiServiceConnector {
 
   private static OpenAiChatModelBuilder initBuilder(String modelName) {
     OpenAiChatModelBuilder model = initBuilder();
-    
+
     var request = ChatRequestParameters.builder()
-      .modelName(modelName);
+        .modelName(modelName);
     temperature(modelName)
-      .ifPresent(request::temperature);
-    model.defaultRequestParameters(request.build()); 
-    
+        .ifPresent(request::temperature);
+    model.defaultRequestParameters(request.build());
+
     return model;
   }
 

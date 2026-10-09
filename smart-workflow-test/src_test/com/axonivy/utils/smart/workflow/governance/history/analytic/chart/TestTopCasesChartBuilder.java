@@ -5,12 +5,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.dataset.BarDataset;
 
 @IvyTest
 public class TestTopCasesChartBuilder {
@@ -19,7 +19,7 @@ public class TestTopCasesChartBuilder {
 
   @Test
   void build_emptyAggregator_emptyChart() {
-    BarChartModel model = BUILDER.build(HistoryAggregator.of(List.of()));
+    BarChart model = BUILDER.build(HistoryAggregator.of(List.of()));
     assertThat((List<?>) model.getData().getLabels()).isEmpty();
     assertThat(dataValues(model)).isEmpty();
   }
@@ -34,7 +34,7 @@ public class TestTopCasesChartBuilder {
       e.setProcessName(processes[i]);
       entries.add(e);
     }
-    BarChartModel model = BUILDER.build(HistoryAggregator.of(entries));
+    BarChart model = BUILDER.build(HistoryAggregator.of(entries));
     assertThat((List<?>) model.getData().getLabels())
         .hasSize(AbstractChartBuilder.ChartConfig.TOP_N_PROCESSES);
   }
@@ -58,8 +58,8 @@ public class TestTopCasesChartBuilder {
     assertThat(labels.get(0)).isNotEqualTo("");
   }
 
-  private static List<Number> dataValues(BarChartModel model) {
-    return ((BarChartDataSet) model.getData().getDataSet().get(0)).getData();
+  private static List<Number> dataValues(BarChart model) {
+    return ((BarDataset) model.getData().getDatasets().get(0)).getData(Number.class);
   }
 
   private static AgentConversationEntry entry(String model, long total, long input, long output, long durationMs) {

@@ -22,16 +22,17 @@ class ValidationUtils {
   private static final String STEP_NAMES_CMS_PREFIX =
       "/Dialogs/com/axonivy/utils/smart/workflow/demo/erp/supplier/onboarding/components/SupplierAgentProcessingDetails/";
 
-  private ValidationUtils() {
-  }
+  private ValidationUtils() {}
 
   public static String stepName(String cmsKey) {
     return Ivy.cms().co(STEP_NAMES_CMS_PREFIX + cmsKey);
   }
 
   public static LogLineSeverity toLogSeverity(FindingSeverity severity) {
-    if (severity == FindingSeverity.FAILURE) return LogLineSeverity.ERROR;
-    if (severity == FindingSeverity.WARNING) return LogLineSeverity.WARNING;
+    if (severity == FindingSeverity.FAILURE)
+      return LogLineSeverity.ERROR;
+    if (severity == FindingSeverity.WARNING)
+      return LogLineSeverity.WARNING;
     return LogLineSeverity.OK;
   }
 

@@ -8,8 +8,7 @@ public class RagResult {
   private List<RagMatch> matches;
   private String error;
 
-  public RagResult() {
-  }
+  public RagResult() {}
 
   public RagResult(List<RagMatch> matches) {
     this.matches = matches;

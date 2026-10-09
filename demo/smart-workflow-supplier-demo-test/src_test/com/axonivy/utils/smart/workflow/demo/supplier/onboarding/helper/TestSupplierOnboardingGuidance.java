@@ -27,8 +27,7 @@ class TestSupplierOnboardingGuidance {
         SupplierOnboardingGuidance.forRequest(),
         SupplierOnboardingGuidance.forRegistration(),
         SupplierOnboardingGuidance.forAgentProcessing(),
-        SupplierOnboardingGuidance.forDuplicateCheck()
-    );
+        SupplierOnboardingGuidance.forDuplicateCheck());
     for (List<AgentGuidance> list : allLists) {
       for (AgentGuidance entry : list) {
         assertThat(entry.getQuestionPattern()).isNotBlank();

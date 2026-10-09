@@ -5,8 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +14,7 @@ import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConne
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
+import jakarta.ws.rs.core.Response;
 
 @RestResourceTest
 public class TestAiPromptInjectionInputGuardrail {
@@ -76,7 +75,7 @@ public class TestAiPromptInjectionInputGuardrail {
     assertThat(result.getReason()).contains("Safety check could not be completed");
   }
 
-    @Test
+  @Test
   void customProviderUnavailable_fallsBackToDefaultAndAllows(AppFixture fixture) {
     fixture.var(AiPromptInjectionInputGuardrail.Var.PROVIDER, "NonExistentProvider");
     AtomicBoolean defaultHit = new AtomicBoolean(false);
@@ -100,7 +99,7 @@ public class TestAiPromptInjectionInputGuardrail {
     // First call (custom model) fails; second call (default, model field absent or
     // different) succeeds with NO
     defineChat(request -> {
-      String model = request.get("model").asText();
+      String model = request.get("model").asString();
       if ("gpt-99-does-not-exist".equals(model)) {
         return Response.status(404).entity("{\"error\":{\"message\":\"model not found\"}}").build();
       }
@@ -178,7 +177,7 @@ public class TestAiPromptInjectionInputGuardrail {
     AtomicBoolean mockHit = new AtomicBoolean(false);
     defineChat(request -> {
       mockHit.set(true);
-      assertThat(request.get("model").asText()).isEqualTo("gpt-4.1-nano");
+      assertThat(request.get("model").asString()).isEqualTo("gpt-4.1-nano");
       return buildClassifierResponse("NO");
     });
 
@@ -198,7 +197,7 @@ public class TestAiPromptInjectionInputGuardrail {
     defineChat(request -> {
       mockHit.set(true);
       // Verify the custom prompt reached the model (first message role is system)
-      var systemContent = request.get("messages").get(0).get("content").asText();
+      var systemContent = request.get("messages").get(0).get("content").asString();
       assertThat(systemContent).contains("strict classifier");
       assertThat(systemContent).doesNotContain("prompt injection classifier");
       return buildClassifierResponse("NO");
@@ -216,7 +215,7 @@ public class TestAiPromptInjectionInputGuardrail {
     AtomicBoolean mockHit = new AtomicBoolean(false);
     defineChat(request -> {
       mockHit.set(true);
-      var systemContent = request.get("messages").get(0).get("content").asText();
+      var systemContent = request.get("messages").get(0).get("content").asString();
       assertThat(systemContent).contains("prompt injection classifier");
       return buildClassifierResponse("NO");
     });
@@ -282,19 +281,19 @@ public class TestAiPromptInjectionInputGuardrail {
 
   private static Response buildClassifierResponse(String verdict) {
     String body = """
-        {
-          "id": "chatcmpl-test",
-          "object": "chat.completion",
-          "created": 1773582770,
-          "model": "gpt-4.1-mini",
-          "choices": [{
-            "index": 0,
-            "message": {"role": "assistant", "content": "%s"},
-            "finish_reason": "stop"
-          }],
-          "usage": {"prompt_tokens": 10, "completion_tokens": 1, "total_tokens": 11}
-        }
-        """.formatted(verdict);
+      {
+        "id": "chatcmpl-test",
+        "object": "chat.completion",
+        "created": 1773582770,
+        "model": "gpt-4.1-mini",
+        "choices": [{
+          "index": 0,
+          "message": {"role": "assistant", "content": "%s"},
+          "finish_reason": "stop"
+        }],
+        "usage": {"prompt_tokens": 10, "completion_tokens": 1, "total_tokens": 11}
+      }
+      """.formatted(verdict);
     return Response.ok().entity(body).build();
   }
 }

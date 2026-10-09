@@ -22,27 +22,27 @@ import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import ch.ivyteam.ivy.environment.Ivy;
 
 public final class DataGenerationUtils {
-  
+
   private static final String DATA_PATH = "/com/axonivy/utils/smart/workflow/demo/erp/util/data/";
-  
+
   public static void createData() {
     try {
       Ivy.log().info("Starting data generation...");
-      
+
       createSuppliers();
       createCategories();
       createBrands();
       createProductImages();
       createProducts();
-      
+
       Ivy.log().info("Data generation completed successfully!");
-      
+
     } catch (Exception e) {
       Ivy.log().error("Failed to create data: " + e.getMessage(), e);
       throw new RuntimeException("Data generation failed", e);
     }
   }
-  
+
   private static void createSuppliers() {
     List<Supplier> suppliers = loadEntities("supplier.json", Supplier.class);
     SupplierRepository repository = SupplierRepository.getInstance();

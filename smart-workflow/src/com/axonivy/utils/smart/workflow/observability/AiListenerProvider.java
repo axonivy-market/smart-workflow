@@ -8,5 +8,5 @@ public interface AiListenerProvider {
   /**
    * @return listeners to track AI service execution.
    */
-  List<AiServiceListener<?>> provide(); 
+  List<AiServiceListener<?>> provide();
 }

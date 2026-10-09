@@ -2,8 +2,6 @@ package com.axonivy.utils.smart.workflow.agent.message.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -12,7 +10,6 @@ import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.test.TestToolUserData;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
@@ -21,6 +18,8 @@ import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
 
 @RestResourceTest
 class TestAgenticProcessCallElementQuery {
@@ -38,7 +37,7 @@ class TestAgenticProcessCallElementQuery {
   }
 
   private Response query(JsonNode request, ResourceResponder responder) {
-    var userMessage = request.get("messages").get(0).get("content").asText();
+    var userMessage = request.get("messages").get(0).get("content").toString();
     if (userMessage.contains("ivy.session")) {
       throw new IllegalStateException("given 'query' was not expaned, received: " + userMessage);
     }

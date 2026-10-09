@@ -1,11 +1,9 @@
 package com.axonivy.utils.smart.workflow.demo.erp.support.mock;
 
-import jakarta.ws.rs.core.Response;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-
 import ch.ivyteam.test.resource.ResourceResponder;
+import jakarta.ws.rs.core.Response;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
 public class AxonIvySupportChat {
 

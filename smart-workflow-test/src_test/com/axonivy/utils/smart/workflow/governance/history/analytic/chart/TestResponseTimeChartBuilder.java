@@ -8,12 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.dataset.BarDataset;
+import software.xdev.chartjs.model.enums.IndexAxis;
 
 @IvyTest
 public class TestResponseTimeChartBuilder {
@@ -22,11 +23,11 @@ public class TestResponseTimeChartBuilder {
 
   @Test
   void build_emptyAggregator_structureCorrectAndAllBarsZero() {
-    BarChartModel model = BUILDER.build(HistoryAggregator.of(List.of()));
+    BarChart model = BUILDER.build(HistoryAggregator.of(List.of()));
     assertThat((List<?>) model.getData().getLabels()).hasSize(4);
     assertThat(dataValues(model)).hasSize(4).allMatch(v -> v.longValue() == 0L);
-    assertThat((List<?>) dataSet(model).getBackgroundColor()).hasSize(4);
-    assertThat(model.getOptions().getIndexAxis()).isEqualTo("y");
+    assertThat(dataSet(model).getBackgroundColor()).hasSize(4);
+    assertThat(model.getOptions().getIndexAxis()).isEqualTo(IndexAxis.Y);
   }
 
   @ParameterizedTest(name = "{argumentSetNameOrArgumentsWithNames}")
@@ -67,12 +68,12 @@ public class TestResponseTimeChartBuilder {
     assertThat(values.get(3).longValue()).isEqualTo(1L);
   }
 
-  private static List<Number> dataValues(BarChartModel model) {
-    return ((BarChartDataSet) model.getData().getDataSet().get(0)).getData();
+  private static List<Number> dataValues(BarChart model) {
+    return ((BarDataset) model.getData().getDatasets().get(0)).getData(Number.class);
   }
 
-  private static BarChartDataSet dataSet(BarChartModel model) {
-    return (BarChartDataSet) model.getData().getDataSet().get(0);
+  private static BarDataset dataSet(BarChart model) {
+    return (BarDataset) model.getData().getDatasets().get(0);
   }
 
   private static AgentConversationEntry entry(String model, long total, long input, long output, long durationMs) {

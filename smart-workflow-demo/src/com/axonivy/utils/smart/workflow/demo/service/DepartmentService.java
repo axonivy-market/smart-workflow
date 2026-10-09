@@ -17,7 +17,7 @@ public class DepartmentService {
     if (instance == null) {
       instance = new DepartmentService();
     }
-    
+
     return instance;
   }
 

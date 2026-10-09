@@ -38,8 +38,7 @@ public class PolicyValidationService {
   private static final String ALL_RULES_PASSED_FORMAT = "All %d policy rules passed.";
   private static final String FINDING_SUMMARY_FORMAT = "[%s] %s\n";
 
-  private PolicyValidationService() {
-  }
+  private PolicyValidationService() {}
 
   public static List<SupplierPolicyRule> loadPolicyRules(String caseUuid) {
     return ValidationUtils.loadRulesByType(RuleType.POLICY, caseUuid);
@@ -248,7 +247,7 @@ public class PolicyValidationService {
     return result;
   }
 
-private static boolean isDuplicate(List<ValidationFinding> accumulated, ValidationFinding incoming) {
+  private static boolean isDuplicate(List<ValidationFinding> accumulated, ValidationFinding incoming) {
     String docKey = incoming.getDocumentTypeKey();
     String source = incoming.getSource();
     for (ValidationFinding existing : accumulated) {

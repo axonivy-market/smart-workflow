@@ -12,14 +12,14 @@ public class DocumentContextBuilder {
   private static final int DEFAULT_CONTENT_LIMIT = 3_000;
   private static final double MAX_NON_PRINTABLE_RATIO = 0.05;
 
-  private static final String NO_DOCUMENT_MSG           = "No document provided.";
-  private static final String FILE_FORMAT               = "File: %s";
-  private static final String TYPE_FORMAT               = "Type: %s";
+  private static final String NO_DOCUMENT_MSG = "No document provided.";
+  private static final String FILE_FORMAT = "File: %s";
+  private static final String TYPE_FORMAT = "Type: %s";
   private static final String CERTIFICATION_TYPE_FORMAT = "CertificationType: %s";
-  private static final String DESCRIPTION_FORMAT        = "Description: %s";
-  private static final String CONTENT_FORMAT            = "Content: %s";
-  private static final String N_A                       = "n/a";
-  private static final String TRUNCATION_SUFFIX         = "...[truncated]";
+  private static final String DESCRIPTION_FORMAT = "Description: %s";
+  private static final String CONTENT_FORMAT = "Content: %s";
+  private static final String N_A = "n/a";
+  private static final String TRUNCATION_SUFFIX = "...[truncated]";
 
   private final LegalDocument doc;
   private boolean showCertificationSubtype = false;

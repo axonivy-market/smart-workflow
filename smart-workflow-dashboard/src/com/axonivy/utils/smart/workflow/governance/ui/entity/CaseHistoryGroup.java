@@ -21,9 +21,17 @@ public class CaseHistoryGroup implements HistoryGroupView {
     this.stats = HistoryGroupView.of(tasks);
   }
 
-  public String getCaseUuid() { return caseUuid; }
-  public List<AgentConversationEntry> getTasks() { return tasks; }
-  public int getTaskCount() { return tasks.size(); }
+  public String getCaseUuid() {
+    return caseUuid;
+  }
+
+  public List<AgentConversationEntry> getTasks() {
+    return tasks;
+  }
+
+  public int getTaskCount() {
+    return tasks.size();
+  }
 
   public String getCaseDisplayName() {
     if (caseDisplayName == null) {
@@ -46,8 +54,23 @@ public class CaseHistoryGroup implements HistoryGroupView {
     return ivyCase != null ? ivyCase.getId() : -1L;
   }
 
-  @Override public String getLastUpdatedText() { return stats.getLastUpdatedText(); }
-  @Override public int    getMessageCount()    { return stats.getMessageCount(); }
-  @Override public long   getTotalTokens()     { return stats.getTotalTokens(); }
-  @Override public String getModelName()       { return stats.getModelName(); }
+  @Override
+  public String getLastUpdatedText() {
+    return stats.getLastUpdatedText();
+  }
+
+  @Override
+  public int getMessageCount() {
+    return stats.getMessageCount();
+  }
+
+  @Override
+  public long getTotalTokens() {
+    return stats.getTotalTokens();
+  }
+
+  @Override
+  public String getModelName() {
+    return stats.getModelName();
+  }
 }

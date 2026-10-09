@@ -14,7 +14,7 @@ public class ProcessDataField implements IdStore {
     this(scripting, "aiMemoryId");
   }
 
-  private ProcessDataField(ScriptingService scripting, String fieldName){
+  private ProcessDataField(ScriptingService scripting, String fieldName) {
     this.scripting = scripting;
     this.fieldName = fieldName;
   }
@@ -23,8 +23,8 @@ public class ProcessDataField implements IdStore {
   public Optional<String> id() {
     try {
       return scripting.executeExpression("in." + fieldName, String.class)
-        .filter(Objects::nonNull)
-        .filter(id -> !id.isEmpty());
+          .filter(Objects::nonNull)
+          .filter(id -> !id.isEmpty());
     } catch (Exception ex) {
       return Optional.empty();
     }
@@ -34,7 +34,7 @@ public class ProcessDataField implements IdStore {
   public void id(String id) {
     try {
       scripting.executeScript("in." + fieldName + " = \"" + id + "\";");
-    } catch (Exception ex) {//ignore
+    } catch (Exception ex) {// ignore
     }
 
   }

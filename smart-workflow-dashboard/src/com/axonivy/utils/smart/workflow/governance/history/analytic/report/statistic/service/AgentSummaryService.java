@@ -16,11 +16,11 @@ import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversat
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecorder.ResponseMetadata;
 import com.axonivy.utils.smart.workflow.utils.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 public class AgentSummaryService {
 
@@ -172,7 +172,7 @@ public class AgentSummaryService {
       }
       var messages = node.path(FIELD_MESSAGES);
       return messages.isArray() ? messages.size() : 0;
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       Ivy.log().warn(WARN_PARSE_MESSAGES + e.getMessage());
       return 0;
     }
@@ -184,7 +184,7 @@ public class AgentSummaryService {
     }
     try {
       return MAPPER.readValue(json, new TypeReference<List<ResponseMetadata>>() {});
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       Ivy.log().warn(WARN_PARSE_METADATA + e.getMessage());
       return List.of();
     }

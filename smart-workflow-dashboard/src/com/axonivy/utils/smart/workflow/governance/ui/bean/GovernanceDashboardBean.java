@@ -51,11 +51,12 @@ public class GovernanceDashboardBean implements Serializable {
   public void applyFilter() {
     try {
       entries = HistoryEntryFilter.filter(storage.findAll(), filterCase, filterModel, filterDateRange);
+      historyTree = HistoryTreeBuilder.build(entries);
     } catch (Exception e) {
       Ivy.log().error(ERROR_LOADING_HISTORY, e);
       entries = List.of();
+      historyTree = new DefaultTreeNode<>();
     }
-    historyTree = HistoryTreeBuilder.build(entries);
   }
 
   public int getEntryCount() {
@@ -114,7 +115,7 @@ public class GovernanceDashboardBean implements Serializable {
   }
 
   public TreeNode<Object> getHistoryTree() {
-    return historyTree;
+    return historyTree == null ? new DefaultTreeNode<>() : historyTree;
   }
 
   public AgentConversationEntry getSelectedEntry() {

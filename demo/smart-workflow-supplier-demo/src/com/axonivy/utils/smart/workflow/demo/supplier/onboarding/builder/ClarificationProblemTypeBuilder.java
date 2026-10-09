@@ -6,8 +6,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.enums.RiskKind;
 
 public class ClarificationProblemTypeBuilder {
 
-  private ClarificationProblemTypeBuilder() {
-  }
+  private ClarificationProblemTypeBuilder() {}
 
   public static ClarificationProblemType resolve(ValidationFinding finding) {
     return resolve(finding.getDocumentTypeKey(), finding.getRiskKind(),

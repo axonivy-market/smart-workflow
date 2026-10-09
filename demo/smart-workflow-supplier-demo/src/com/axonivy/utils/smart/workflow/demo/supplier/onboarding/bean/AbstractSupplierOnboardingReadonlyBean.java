@@ -20,7 +20,7 @@ import com.axonivy.utils.smart.workflow.demo.supplier.onboarding.helper.Onboardi
 
 public abstract class AbstractSupplierOnboardingReadonlyBean
     implements Serializable, CertificationUploader, RequiredDocumentUploader, AgentResultView, DocumentDisplaySupport,
-               SupplierFormSupport {
+    SupplierFormSupport {
 
   private static final long serialVersionUID = 1L;
 

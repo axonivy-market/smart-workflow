@@ -41,7 +41,7 @@ import jakarta.inject.Named;
 @ViewScoped
 public class SupplierRegistrationFormBean
     implements Serializable, CertificationUploader, RequiredDocumentUploader,
-               AssistantUploadSupport<OnboardingRequest>, LogicCloseSupport, SupplierFormSupport {
+    AssistantUploadSupport<OnboardingRequest>, LogicCloseSupport, SupplierFormSupport {
 
   private static final long serialVersionUID = 1L;
   private static final String CONTENT_TYPE_OCTET_STREAM = "application/octet-stream";
@@ -331,8 +331,7 @@ public class SupplierRegistrationFormBean
   }
 
   @Override
-  public void setAssistantParsedDraft(OnboardingRequest assistantParsedDraft) {
-  }
+  public void setAssistantParsedDraft(OnboardingRequest assistantParsedDraft) {}
 
   public String getAssistantUploadedFileName() {
     return assistantUploadedFileName;

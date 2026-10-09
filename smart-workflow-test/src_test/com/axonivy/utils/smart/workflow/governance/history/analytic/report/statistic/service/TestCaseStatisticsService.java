@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
-import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.GuardrailSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.ToolSummary;
 
 import ch.ivyteam.ivy.environment.IvyTest;
@@ -103,8 +102,8 @@ public class TestCaseStatisticsService {
     var a2 = agentWithTools(List.of(tool));
     var stats = CaseStatisticsService.compute("c", "n", List.of(a1, a2));
     assertThat(stats.toolStats).hasSize(1);
-    assertThat(stats.toolStats.get(0).toolName()).isEqualTo("search");
-    assertThat(stats.toolStats.get(0).calls()).isEqualTo(8);  // 4 + 4
+    assertThat(stats.toolStats.get(0).getName()).isEqualTo("search");
+    assertThat(stats.toolStats.get(0).getCalls()).isEqualTo(8);  // 4 + 4
   }
 
   @Test
@@ -113,8 +112,8 @@ public class TestCaseStatisticsService {
     var a2 = agentWithName("Beta");
     var stats = CaseStatisticsService.compute("c", "n", List.of(a1, a2));
     assertThat(stats.agentStats).hasSize(2);
-    assertThat(stats.agentStats.get(0).index()).isEqualTo(0);
-    assertThat(stats.agentStats.get(1).index()).isEqualTo(1);
+    assertThat(stats.agentStats.get(0).getIndex()).isEqualTo(0);
+    assertThat(stats.agentStats.get(1).getIndex()).isEqualTo(1);
   }
 
   @Test
