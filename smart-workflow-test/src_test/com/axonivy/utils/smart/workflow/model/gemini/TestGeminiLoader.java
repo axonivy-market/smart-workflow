@@ -71,7 +71,7 @@ public class TestGeminiLoader {
         .hasTools(false)
         .listeners(List.of())
         .build());
-    assertThat(structured.supportedCapabilities()).isNotEmpty();
+    assertThat(structured.supportedCapabilities()).isEmpty();
   }
 
   private static ChatModelProvider loadModel() {
