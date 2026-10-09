@@ -29,7 +29,7 @@ public class OpenAiModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = OpenAiServiceConnector.buildOpenAiModel(options.modelName());
+    var builder = OpenAiServiceConnector.buildOpenAiModel(options);
     if (options.structuredOutput()) {
       builder.responseFormat("json_schema");
     }

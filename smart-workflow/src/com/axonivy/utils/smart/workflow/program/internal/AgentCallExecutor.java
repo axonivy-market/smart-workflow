@@ -22,6 +22,7 @@ import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.tools.human.internal.HumanInTheLoop;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
+import com.axonivy.utils.smart.workflow.utils.ModelOptionUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
@@ -130,10 +131,13 @@ public class AgentCallExecutor {
     var provider = ChatModelFactory.getProviderOrDefault(configuredProvider());
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var agentName = context.element().name();
+    var temperature = ModelOptionUtils.toTemperature(execute(Conf.TEMPERATURE, String.class).orElse(null));
+
     var modelOptions = ModelOptions.builder()
         .modelName(model)
         .structuredOutput(structured)
         .hasTools(toolFilter != null && !toolFilter.isEmpty())
+        .temperature(temperature)
         .build();
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);

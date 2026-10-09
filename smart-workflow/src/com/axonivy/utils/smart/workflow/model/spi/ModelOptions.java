@@ -8,7 +8,8 @@ public record ModelOptions(
     String modelName,
     boolean structuredOutput,
     boolean hasTools,
-    List<ChatModelListener> listeners) {
+    List<ChatModelListener> listeners,
+    Double temperature) {
 
   public static Builder builder() {
     return new Builder();
@@ -19,6 +20,7 @@ public record ModelOptions(
     private boolean structuredOutput;
     private boolean hasTools;
     private List<ChatModelListener> listeners = List.of();
+    private Double temperature;
 
     public Builder modelName(String modelName) {
       this.modelName = modelName;
@@ -40,8 +42,13 @@ public record ModelOptions(
       return this;
     }
 
+    public Builder temperature(Double temperature) {
+      this.temperature = temperature;
+      return this;
+    }
+
     public ModelOptions build() {
-      return new ModelOptions(modelName, structuredOutput, hasTools, listeners);
+      return new ModelOptions(modelName, structuredOutput, hasTools, listeners, temperature);
     }
   }
 }
