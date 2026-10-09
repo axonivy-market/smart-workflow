@@ -7,7 +7,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
 

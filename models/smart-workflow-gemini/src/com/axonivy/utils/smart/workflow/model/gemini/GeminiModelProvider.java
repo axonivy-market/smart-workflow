@@ -7,6 +7,7 @@ import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConne
 import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector.GeminiConf;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.ChatModel;

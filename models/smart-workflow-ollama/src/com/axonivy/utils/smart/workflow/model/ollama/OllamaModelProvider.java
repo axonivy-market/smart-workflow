@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.utils.smart.workflow.model.ollama.internal.OllamaServiceConnector;
 import com.axonivy.utils.smart.workflow.model.ollama.internal.OllamaServiceConnector.OllamaConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;

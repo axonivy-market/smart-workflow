@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
@@ -50,7 +50,12 @@ public class TestAnthropicLoader {
 
   @Test
   void capabilities() {
-    ChatModel structured = provider.setup(new ModelOptions(MODEL, true, false, List.of()));
+    ChatModel structured = provider.setup(ModelOptions.builder()
+      .modelName(MODEL)
+      .structuredOutput(true)
+      .hasTools(false)
+      .listeners(List.of())
+      .build());
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 

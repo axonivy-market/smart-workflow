@@ -12,6 +12,7 @@ import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiSe
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;

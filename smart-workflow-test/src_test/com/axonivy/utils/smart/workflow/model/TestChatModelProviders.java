@@ -14,7 +14,7 @@ import com.axonivy.utils.smart.workflow.market.ProductJson;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -39,7 +39,12 @@ class TestChatModelProviders {
   @MethodSource("providerNames")
   void observable_sharesModelAsRequestParameter(String providerName) {
     var provider = ChatModelFactory.create(providerName).orElseThrow();
-    var model = provider.setup(new ModelOptions("AwesomeModel", true, false, List.of()));
+    var model = provider.setup(ModelOptions.builder()
+        .modelName("AwesomeModel")
+        .structuredOutput(true)
+        .hasTools(false)
+        .listeners(List.of())
+        .build());
     assertThat(model.defaultRequestParameters().modelName())
         .as("Model as request parameter; allows tracing distribution for provider " + providerName)
         .isEqualTo("AwesomeModel");
@@ -60,7 +65,12 @@ class TestChatModelProviders {
         System.out.println("response");
       }
     };
-    var model = provider.setup(new ModelOptions("", true, false, List.of(myListener)));
+    var model = provider.setup(ModelOptions.builder()
+        .modelName("")
+        .structuredOutput(true)
+        .hasTools(false)
+        .listeners(List.of(myListener))
+        .build());
     assertThat(model.listeners())
         .as("providers install listeners passed from Agent")
         .contains(myListener);
