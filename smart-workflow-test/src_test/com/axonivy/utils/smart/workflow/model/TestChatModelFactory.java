@@ -1,14 +1,13 @@
 package com.axonivy.utils.smart.workflow.model;
 
-import static com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider.ModelNames.GENIOUS;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider;
+import static com.axonivy.utils.smart.workflow.model.dummy.DummyChatModelProvider.ModelNames.GENIOUS;
 import com.axonivy.utils.smart.workflow.model.openai.OpenAiModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
@@ -74,7 +73,12 @@ class TestChatModelFactory {
         calls.add("response");
       }
     };
-    ChatModel model = loadDummy().setup(new ModelOptions(GENIOUS, false, false, List.of(listener)));
+    ChatModel model = loadDummy().setup(ModelOptions.builder()
+        .modelName(GENIOUS)
+        .structuredOutput(false)
+        .hasTools(false)
+        .listeners(List.of(listener))
+        .build());
     model.chat(ChatRequest.builder().messages(UserMessage.from("ping")).build());
     assertThat(calls).containsExactly("request", "response");
   }

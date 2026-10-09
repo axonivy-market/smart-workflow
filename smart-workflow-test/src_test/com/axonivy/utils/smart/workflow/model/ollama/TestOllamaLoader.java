@@ -1,9 +1,8 @@
 package com.axonivy.utils.smart.workflow.model.ollama;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -72,7 +71,12 @@ public class TestOllamaLoader {
 
   @Test
   void structuredOutputWithToolsDoesNotConstrainJsonSchema() {
-    ChatModel model = provider.setup(new ModelOptions(MODEL, true, true, List.of()));
+    ChatModel model = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .structuredOutput(true)
+        .hasTools(true)
+        .listeners(List.of())
+        .build());
     assertThat(model.supportedCapabilities())
         .doesNotContain(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
