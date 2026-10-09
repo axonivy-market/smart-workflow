@@ -28,7 +28,7 @@ public class MessageViewModelParser {
       return Map.of();
     }
     CacheKey cacheKey = new CacheKey(entry.getCaseUuid(), entry.getTaskUuid(), entry.getAgentId());
-    return cache.computeIfAbsent(cacheKey, key -> groupByRole(parseJson(entry.getMessagesJson(), entry.getTaskUuid())));
+    return cache.computeIfAbsent(cacheKey, key -> groupByRole(parseJson(entry.getMessagesJson(), key.taskUuid)));
   }
 
   private List<MessageViewModel> parseJson(String json, String taskUuid) {

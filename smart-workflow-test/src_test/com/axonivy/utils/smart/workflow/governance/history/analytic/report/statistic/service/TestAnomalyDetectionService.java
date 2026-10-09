@@ -47,8 +47,9 @@ public class TestAnomalyDetectionService {
   void detect_toolCallCountExceedsThreshold_anomalyDetected() {
     var tools = repeat(toolExecution("search", "{}", "ok"), 11);
     var result = AnomalyDetectionService.detect(tools, List.of(), List.of(), 100, 1_000, "STOP");
-    assertThat(result).hasSize(1);
-    assertThat(result.get(0)).contains("11");
+    assertThat(result).hasSize(2);
+    assertThat(result).anySatisfy(msg -> assertThat(msg).contains("11").contains("tool calls"));
+    assertThat(result).anySatisfy(msg -> assertThat(msg).contains("11").contains("search"));
   }
 
   @Test

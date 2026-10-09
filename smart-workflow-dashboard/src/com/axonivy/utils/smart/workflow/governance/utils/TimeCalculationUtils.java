@@ -31,11 +31,12 @@ public final class TimeCalculationUtils {
   }
 
   public static String formatDuration(long minutes) {
-    if (minutes < 60) {
-      return Ivy.cms().co(CMS_MINUTES, List.of(minutes));
+    long effectiveMinute = Math.max(minutes, 0);
+    if (effectiveMinute < 60) {
+      return Ivy.cms().co(CMS_MINUTES, List.of(effectiveMinute));
     }
-    long hours = minutes / 60;
-    long remainingMinutes = minutes % 60;
+    long hours = effectiveMinute / 60;
+    long remainingMinutes = effectiveMinute % 60;
     boolean singular = hours == 1;
     if (remainingMinutes > 0) {
       String key = singular ? CMS_HOUR_MINUTES : CMS_HOURS_MINUTES;

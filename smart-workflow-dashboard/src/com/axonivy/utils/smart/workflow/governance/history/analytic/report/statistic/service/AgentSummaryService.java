@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,10 +55,13 @@ public class AgentSummaryService {
     List<ToolExecution> tools     = Optional.ofNullable(entry.getToolExecutions()).orElse(List.of());
     List<GuardrailExecution> grds = Optional.ofNullable(entry.getGuardrailExecutions()).orElse(List.of());
 
-    Map<String, ToolSummary> toolMap = allToolSummaries.stream()
-        .collect(Collectors.toMap(ToolSummary::getToolName, summary -> summary, (existing, replacement) -> replacement));
-    Map<String, GuardrailSummary> grdMap = allGuardrailSummaries.stream()
-        .collect(Collectors.toMap(GuardrailSummary::getGuardrailName, summary -> summary, (existing, replacement) -> replacement));
+    Map<String, ToolSummary> toolMap = new HashMap<>();
+    allToolSummaries.forEach(summary
+      -> toolMap.put(summary.getToolName(), summary));
+
+    Map<String, GuardrailSummary> grdMap = new HashMap<>();
+    allGuardrailSummaries.forEach(summary
+      -> grdMap.put(summary.getGuardrailName(), summary));
 
     List<ToolSummary> toolSummaries = tools.stream()
         .map(ToolExecution::toolName).distinct()
