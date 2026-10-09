@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/process-1.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
   "id" : "19E6DA610B1196AB",
   "kind" : "CALLABLE_SUB",
   "config" : {
@@ -19,7 +19,7 @@
           ],
           "map" : {
             "out.caseUuid" : "param.caseUuid",
-            "out.iCase" : "param.iCase",
+            "out.myCase" : "param.iCase",
             "out.prompt" : "param.prompt"
           }
         },
@@ -51,9 +51,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "if (in.iCase != null) {",
-            "  ivy.task.setName(\"Generate Agent History Report for case \" + in.iCase.getName() + \" (#\" + in.iCase.getId() + \")\");",
-            "  ivy.case.setName(\"Generate Agent History Report for case \" + in.iCase.getName() + \" (#\" + in.iCase.getId() + \")\");",
+            "if (in.myCase != null) {",
+            "  ivy.task.setName(\"Generate Agent History Report for case \" + in.myCase.getName() + \" (#\" + in.myCase.getId() + \")\");",
+            "  ivy.case.setName(\"Generate Agent History Report for case \" + in.myCase.getName() + \" (#\" + in.myCase.getId() + \")\");",
             "}"
           ]
         },

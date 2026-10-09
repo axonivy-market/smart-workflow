@@ -1,8 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:f="http://xmlns.jcp.org/jsf/core"
-  xmlns:h="http://xmlns.jcp.org/jsf/html"
-  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-  xmlns:p="http://primefaces.org/ui">
+  xmlns:f="jakarta.faces.core"
+  xmlns:h="jakarta.faces.html"
+  xmlns:ui="jakarta.faces.facelets"
+  xmlns:p="primefaces">
 <h:body>
 <ui:composition>
 
@@ -159,7 +159,7 @@
                      styleClass="p-button-sm"
                      action="#{conversationsBean.generateAiRecommendation()}"
                      process="@form"
-                     update=":conv-form:ai-report-panel"
+                     update=":conversation-form:ai-report-panel"
                      global="false"
                      onstart="CvAiAnalyze.start();"
                      oncomplete="CvAiAnalyze.stop();" />
