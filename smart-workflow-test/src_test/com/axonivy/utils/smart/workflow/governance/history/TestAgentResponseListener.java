@@ -69,16 +69,6 @@ public class TestAgentResponseListener {
   }
 
   private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName, int inputTokens,
-      int outputTokens) {
-    var response = ChatResponse.builder()
-        .aiMessage(AiMessage.aiMessage("test response"))
-        .tokenUsage(new TokenUsage(inputTokens, outputTokens))
-        .modelName("test-model")
-        .build();
-    return buildEvent(userText, methodName, response, null);
-  }
-
-  private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName, int inputTokens,
       int outputTokens, Double temperature) {
     var response = ChatResponse.builder()
         .aiMessage(AiMessage.aiMessage("test response"))
