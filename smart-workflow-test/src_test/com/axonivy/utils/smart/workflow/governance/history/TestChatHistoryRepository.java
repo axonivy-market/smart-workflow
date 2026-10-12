@@ -1,9 +1,10 @@
 package com.axonivy.utils.smart.workflow.governance.history;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +16,7 @@ import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.invocation.InvocationContext;
 import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.observability.api.event.AiServiceResponseReceivedEvent;
@@ -98,13 +100,18 @@ public class TestChatHistoryRepository {
 
   private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName,
       int inputTokens, int outputTokens, String aiText, Double temperature) {
+    var requestParams = ChatRequestParameters.builder();
+    if (temperature != null) {
+      requestParams.temperature(temperature);
+    }
     var invocationCtx = InvocationContext.builder()
         .invocationId(UUID.randomUUID())
         .timestamp(Instant.now())
         .methodName(methodName)
         .interfaceName("ChatAgent")
+        .defaultRequestParameters(requestParams.build())
         .build();
-    var request = ChatRequest.builder().messages(UserMessage.from(userText)).temperature(temperature).build();
+    var request = ChatRequest.builder().messages(UserMessage.from(userText)).build();
     var response = ChatResponse.builder()
         .aiMessage(AiMessage.aiMessage(aiText))
         .tokenUsage(new TokenUsage(inputTokens, outputTokens))

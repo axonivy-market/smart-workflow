@@ -72,8 +72,9 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
+          "temperature" : "\"0.7\"",
           "system" : "You are an invoice OCR specialist. Extract all text content from the invoice image exactly as it appears, preserving structure, labels, values, and layout as clearly as possible.",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.invoiceContent",
           "query" : "Extract all text content from this invoice image: <%=in.invoiceStream%>"
         }
