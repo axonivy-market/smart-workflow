@@ -1,8 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.gemini;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,9 +57,6 @@ public class TestGeminiLoader {
   void capabilities() {
     ModelOptions options = ModelOptions.builder()
         .modelName(MODEL)
-        .structuredOutput(false)
-        .hasTools(false)
-        .listeners(List.of())
         .build();
     ChatModel normal = provider.setup(options);
     assertThat(normal.supportedCapabilities()).isEmpty();
@@ -68,8 +64,6 @@ public class TestGeminiLoader {
     ChatModel structured = provider.setup(ModelOptions.builder()
         .modelName(MODEL)
         .structuredOutput(true)
-        .hasTools(false)
-        .listeners(List.of())
         .build());
     assertThat(structured.supportedCapabilities()).isEmpty();
   }

@@ -42,8 +42,6 @@ class TestChatModelProviders {
     var model = provider.setup(ModelOptions.builder()
         .modelName("AwesomeModel")
         .structuredOutput(true)
-        .hasTools(false)
-        .listeners(List.of())
         .build());
     assertThat(model.defaultRequestParameters().modelName())
         .as("Model as request parameter; allows tracing distribution for provider " + providerName)
@@ -66,9 +64,7 @@ class TestChatModelProviders {
       }
     };
     var model = provider.setup(ModelOptions.builder()
-        .modelName("")
         .structuredOutput(true)
-        .hasTools(false)
         .listeners(List.of(myListener))
         .build());
     assertThat(model.listeners())

@@ -1,7 +1,5 @@
 package com.axonivy.utils.smart.workflow.model.azureopenai;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -105,9 +103,6 @@ public class TestAzureOpenAiLoader {
   private ModelOptions buildNormalModelOptions() {
     return ModelOptions.builder()
       .modelName(TEST_DEPLOYMENT_NAME)
-      .structuredOutput(false)
-      .hasTools(false)
-      .listeners(List.of())
       .build();
   }
 
@@ -115,8 +110,6 @@ public class TestAzureOpenAiLoader {
     return ModelOptions.builder()
       .modelName(TEST_DEPLOYMENT_NAME)
       .structuredOutput(true)
-      .hasTools(false)
-      .listeners(List.of())
       .build();
   }
 }
