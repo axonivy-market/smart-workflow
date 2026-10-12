@@ -18,8 +18,16 @@ import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.observability.api.event.AiServiceRequestIssuedEvent;
 
 class RequestRecorder {
+
+  interface InvocationParams {
+    String TEMPERATURE = "temperature";
+    String MAX_TOKENS = "max_tokens";
+    String TOP_P = "top_p";
+  }
+
   private final String provider;
   private final String model;
   private final Map<String, Object> attributes = new LinkedHashMap<>();
@@ -29,10 +37,11 @@ class RequestRecorder {
     this.model = model;
   }
 
-  Map<String, Object> handleRequest(ChatRequest request, boolean hideInput) {
+  Map<String, Object> handleRequest(AiServiceRequestIssuedEvent event, boolean hideInput) {
+    var request = event.request();
     basicAttributes(request);
     ivyAttributes();
-    invocationParams(request);
+    invocationParams(event);
     attributes.putAll(ToolRecorder.toolSpecs(request.toolSpecifications()));
     if (!hideInput) {
       inputMessages(request);
@@ -57,16 +66,18 @@ class RequestRecorder {
     attributes.put("ivy.task", task.uuid());
   }
 
-  private void invocationParams(ChatRequest request) {
+  private void invocationParams(AiServiceRequestIssuedEvent event) {
+    var defaultParam = event.invocationContext().defaultRequestParameters();
+
     Map<String, Object> invocationParams = new HashMap<>();
-    if (request.temperature() != null) {
-      invocationParams.put("temperature", request.temperature());
+    if (defaultParam.temperature() != null) {
+      invocationParams.put(InvocationParams.TEMPERATURE, defaultParam.temperature());
     }
-    if (request.maxOutputTokens() != null) {
-      invocationParams.put("max_tokens", request.maxOutputTokens());
+    if (defaultParam.maxOutputTokens() != null) {
+      invocationParams.put(InvocationParams.MAX_TOKENS, defaultParam.maxOutputTokens());
     }
-    if (request.topP() != null) {
-      invocationParams.put("top_p", request.topP());
+    if (defaultParam.topP() != null) {
+      invocationParams.put(InvocationParams.TOP_P, defaultParam.topP());
     }
     try {
       attributes.put(SemanticConventions.LLM_INVOCATION_PARAMETERS,

@@ -18,6 +18,7 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.invocation.InvocationContext;
 import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.observability.api.event.AiServiceResponseReceivedEvent;
@@ -88,13 +89,18 @@ public class TestAgentResponseListener {
   }
 
   private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName, ChatResponse response, Double temperature) {
+    var requestParams = ChatRequestParameters.builder();
+    if (temperature != null) {
+      requestParams.temperature(temperature);
+    }
     var invocationCtx = InvocationContext.builder()
         .invocationId(UUID.randomUUID())
         .timestamp(Instant.now())
         .methodName(methodName)
         .interfaceName("ChatAgent")
+        .defaultRequestParameters(requestParams.build())
         .build();
-    var request = ChatRequest.builder().messages(UserMessage.from(userText)).temperature(temperature).build();
+    var request = ChatRequest.builder().messages(UserMessage.from(userText)).build();
     return AiServiceResponseReceivedEvent.builder()
         .invocationContext(invocationCtx)
         .request(request)
