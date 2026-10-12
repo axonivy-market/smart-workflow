@@ -1,11 +1,14 @@
 package com.axonivy.utils.smart.workflow.model.gemini.internal;
 
+import static com.axonivy.utils.smart.workflow.utils.ModelOptionUtils.resolveTemperature;
+
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.request.ChatRequestParameters;
@@ -14,7 +17,6 @@ import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel.GoogleAiGeminiChat
 
 public class GeminiServiceConnector {
 
-  private static final int DEFAULT_TEMPERATURE = 0;
   private static final String DEFAULT_MODEL = GoogleAiGeminiChatModelName.GEMINI_2_5_FLASH.toString();
 
   public interface GeminiConf {
@@ -24,15 +26,11 @@ public class GeminiServiceConnector {
     String DEFAULT_MODEL = PREFIX + "DefaultModel";
   }
 
-  public static GoogleAiGeminiChatModelBuilder buildGeminiModel(String modelName) {
-    return initBuilder(resolveModelName(modelName));
-  }
-
-  private static GoogleAiGeminiChatModelBuilder initBuilder(String modelName) {
+  public static GoogleAiGeminiChatModelBuilder buildGeminiModel(ModelOptions options) {
     GoogleAiGeminiChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
-        .modelName(modelName)
-        .temperature(Double.valueOf(DEFAULT_TEMPERATURE));
+        .modelName(resolveModelName(options.modelName()))
+        .temperature(resolveTemperature(options.temperature()));
     builder.defaultRequestParameters(request.build());
     return builder;
   }

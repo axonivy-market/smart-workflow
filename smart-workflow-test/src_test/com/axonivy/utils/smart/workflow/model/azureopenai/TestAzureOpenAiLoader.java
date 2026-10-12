@@ -100,6 +100,20 @@ public class TestAzureOpenAiLoader {
         .isEqualTo(1.0);
   }
 
+  @Test
+  void custom_temperature(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "custom-model");
+
+    var options = ModelOptions.builder()
+      .modelName(TEST_DEPLOYMENT_NAME)
+      .temperature(0.7)
+      .build();
+    
+    var model = provider.setup(options);
+    assertThat(model.defaultRequestParameters().temperature())
+        .isEqualTo(0.7);
+  }
+
   private ModelOptions buildNormalModelOptions() {
     return ModelOptions.builder()
       .modelName(TEST_DEPLOYMENT_NAME)

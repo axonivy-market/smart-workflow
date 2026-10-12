@@ -58,4 +58,13 @@ public class TestAnthropicLoader {
   private static ChatModelProvider loadModel() {
     return ChatModelFactory.create(AnthropicModelProvider.NAME).get();
   }
+
+  @Test
+  void customTemperature() {
+    ChatModel customTemp = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .temperature(0.7)
+        .build());
+    assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
+  }
 }

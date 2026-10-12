@@ -78,7 +78,6 @@ public class AgentEditor {
     
     ui.group("⚙️ Advanced")
         .add(ui.label("Advanced settings for the agent.").create())
-        .add(ui.label("Temperature:").create())
         .add(ui.scriptField(Conf.TEMPERATURE)
             .label("Temperature:")
             .help("Specify the temperature for the model's output randomness.")

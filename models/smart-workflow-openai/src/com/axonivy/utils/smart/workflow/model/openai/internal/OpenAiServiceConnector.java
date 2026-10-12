@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.openai.internal;
 
+import static com.axonivy.utils.smart.workflow.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -18,8 +20,6 @@ import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 
 public class OpenAiServiceConnector {
-
-  private static final int DEFAULT_TEMPERATURE = 0;
 
   // Temporary model name and temperature for GPT-5. Will remove once LangChain4j fully support GPT-5
   private static final String GPT_5 = "gpt-5";

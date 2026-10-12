@@ -1,7 +1,6 @@
 package com.axonivy.utils.smart.workflow.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,8 +37,24 @@ public class TestModelOptionUtils {
   }
 
   @Test
-  void toTemperature_null_throwsNullPointerException() {
-    assertThatThrownBy(() -> ModelOptionUtils.toTemperature(null))
-        .isInstanceOf(NullPointerException.class);
+  void toTemperature_null_returnDefault() {
+    Double result = ModelOptionUtils.toTemperature(null);
+    assertThat(result).isEqualTo(DEFAULT_TEMPERATURE);
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+      "0.5, 0.5",
+      "0.0, 0.0",
+      "2.0, 2.0",
+      "1, 1.0",
+      "1.5E-1, 0.15",
+      "  0.75, 0.75",
+      "0.75  , 0.75",
+      ", 0.0"
+  })
+  void resolve_temperature(Double input, double expected) {
+    Double result = ModelOptionUtils.resolveTemperature(input);
+    assertThat(result).isEqualTo(expected);
   }
 }
