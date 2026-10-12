@@ -85,6 +85,15 @@ public class TestOllamaLoader {
     assertThat(provider.secretsVars()).isEmpty();
   }
 
+  @Test
+  void customTemperature() {
+    ChatModel customTemp = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .temperature(0.7)
+        .build());
+    assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
+  }
+
   private static ChatModelProvider loadProvider() {
     return ChatModelFactory.create(OllamaModelProvider.NAME).get();
   }

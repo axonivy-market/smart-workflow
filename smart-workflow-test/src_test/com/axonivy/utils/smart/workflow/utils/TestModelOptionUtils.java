@@ -41,4 +41,20 @@ public class TestModelOptionUtils {
     Double result = ModelOptionUtils.toTemperature(null);
     assertThat(result).isEqualTo(DEFAULT_TEMPERATURE);
   }
+
+  @ParameterizedTest
+  @CsvSource({
+      "0.5, 0.5",
+      "0.0, 0.0",
+      "2.0, 2.0",
+      "1, 1.0",
+      "1.5E-1, 0.15",
+      "  0.75, 0.75",
+      "0.75  , 0.75",
+      ", 0.0"
+  })
+  void resolve_temperature(Double input, double expected) {
+    Double result = ModelOptionUtils.resolveTemperature(input);
+    assertThat(result).isEqualTo(expected);
+  }
 }

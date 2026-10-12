@@ -23,7 +23,7 @@ public class GeminiModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = GeminiServiceConnector.buildGeminiModel(options.modelName());
+    var builder = GeminiServiceConnector.buildGeminiModel(options);
     if (options.structuredOutput()) {
       // Gemini currently does NOT support structured JSON responses.
       // Reference:

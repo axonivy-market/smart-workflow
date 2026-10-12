@@ -1,7 +1,9 @@
 package com.axonivy.utils.smart.workflow.utils;
 
+import java.util.Optional;
+
 public final class ModelOptionUtils {
-  private static final Double DEFAULT_TEMPERATURE = 0.0;
+  public static final Double DEFAULT_TEMPERATURE = 0.0;
 
   public static Double toTemperature(String temperatureStr) {
     if (temperatureStr == null || temperatureStr.isBlank()) {
@@ -13,5 +15,9 @@ public final class ModelOptionUtils {
     } catch (NumberFormatException ex) {
       return DEFAULT_TEMPERATURE;
     }
+  }
+
+  public static Double resolveTemperature(Double temperature) {
+    return Optional.ofNullable(temperature).orElse(DEFAULT_TEMPERATURE);
   }
 }

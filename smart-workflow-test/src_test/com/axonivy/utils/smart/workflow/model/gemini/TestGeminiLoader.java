@@ -68,6 +68,15 @@ public class TestGeminiLoader {
     assertThat(structured.supportedCapabilities()).isEmpty();
   }
 
+  @Test
+  void customTemperature() {
+    ChatModel customTemp = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .temperature(0.7)
+        .build());
+    assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
+  }
+
   private static ChatModelProvider loadModel() {
     return ChatModelFactory.create(GeminiModelProvider.NAME).get();
   }

@@ -28,7 +28,7 @@ public class AzureOpenAiModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = AzureOpenAiServiceConnector.buildOpenAiModel(options.modelName());
+    var builder = AzureOpenAiServiceConnector.buildOpenAiModel(options);
     if (builder == null) {
       return null;
     }

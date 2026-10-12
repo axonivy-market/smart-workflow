@@ -22,7 +22,7 @@ public class OllamaModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = OllamaServiceConnector.buildChatModel(options.modelName());
+    var builder = OllamaServiceConnector.buildChatModel(options);
     if (options.structuredOutput() && !options.hasTools()) {
       builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
     }
