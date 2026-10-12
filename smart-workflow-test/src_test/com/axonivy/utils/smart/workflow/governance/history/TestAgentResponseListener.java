@@ -1,11 +1,12 @@
 package com.axonivy.utils.smart.workflow.governance.history;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,7 @@ public class TestAgentResponseListener {
 
   @Test
   void capturesMetadata() {
-    listener.onEvent(buildEvent("Hello", "chat", 100, 50));
+    listener.onEvent(buildEvent("Hello", "chat", 100, 50, 0.7));
 
     assertThat(capturedMetadata).hasSize(1);
     var meta = capturedMetadata.get(0);
@@ -51,17 +52,19 @@ public class TestAgentResponseListener {
     assertThat(meta.durationMs()).isGreaterThanOrEqualTo(0L);
     assertThat(meta.aiServiceMethod()).isEqualTo("chat");
     assertThat(meta.toolNames()).isEmpty();
+    assertThat(meta.temperature()).isEqualTo(0.7);
 
     var responseNoTokens = ChatResponse.builder()
         .aiMessage(AiMessage.aiMessage("test response"))
         .modelName("test-model")
         .build();
-    listener.onEvent(buildEvent("Hi", "chat", responseNoTokens));
+    listener.onEvent(buildEvent("Hi", "chat", responseNoTokens, null));
 
     var nullMeta = capturedMetadata.get(1);
     assertThat(nullMeta.inputTokens()).isNull();
     assertThat(nullMeta.outputTokens()).isNull();
     assertThat(nullMeta.totalTokens()).isNull();
+    assertThat(nullMeta.temperature()).isNull();
   }
 
   private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName, int inputTokens,
@@ -71,17 +74,27 @@ public class TestAgentResponseListener {
         .tokenUsage(new TokenUsage(inputTokens, outputTokens))
         .modelName("test-model")
         .build();
-    return buildEvent(userText, methodName, response);
+    return buildEvent(userText, methodName, response, null);
   }
 
-  private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName, ChatResponse response) {
+  private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName, int inputTokens,
+      int outputTokens, Double temperature) {
+    var response = ChatResponse.builder()
+        .aiMessage(AiMessage.aiMessage("test response"))
+        .tokenUsage(new TokenUsage(inputTokens, outputTokens))
+        .modelName("test-model")
+        .build();
+    return buildEvent(userText, methodName, response, temperature);
+  }
+
+  private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName, ChatResponse response, Double temperature) {
     var invocationCtx = InvocationContext.builder()
         .invocationId(UUID.randomUUID())
         .timestamp(Instant.now())
         .methodName(methodName)
         .interfaceName("ChatAgent")
         .build();
-    var request = ChatRequest.builder().messages(UserMessage.from(userText)).build();
+    var request = ChatRequest.builder().messages(UserMessage.from(userText)).temperature(temperature).build();
     return AiServiceResponseReceivedEvent.builder()
         .invocationContext(invocationCtx)
         .request(request)

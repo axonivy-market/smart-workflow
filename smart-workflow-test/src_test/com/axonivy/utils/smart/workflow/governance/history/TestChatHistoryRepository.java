@@ -64,6 +64,17 @@ public class TestChatHistoryRepository {
     assertThat(entry.getProcessName()).isEqualTo("test-process");
   }
 
+  @Test
+  void storesTemperatureInMetadata() {
+    listener.onEvent(buildEvent("It's so hot", "chat", 5, 10, "Head to Lake Lucerne, it's refreshing!", 0.75));
+
+    assertThat(storage.findAll()).hasSize(1);
+    var entry = storage.findAll().get(0);
+
+    assertThat(entry.getTokenUsageJson())
+        .contains("\"temperature\":0.75");
+  }
+
   private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName,
       int inputTokens, int outputTokens, String aiText) {
     var invocationCtx = InvocationContext.builder()
@@ -73,6 +84,27 @@ public class TestChatHistoryRepository {
         .interfaceName("ChatAgent")
         .build();
     var request = ChatRequest.builder().messages(UserMessage.from(userText)).build();
+    var response = ChatResponse.builder()
+        .aiMessage(AiMessage.aiMessage(aiText))
+        .tokenUsage(new TokenUsage(inputTokens, outputTokens))
+        .modelName("test-model")
+        .build();
+    return AiServiceResponseReceivedEvent.builder()
+        .invocationContext(invocationCtx)
+        .request(request)
+        .response(response)
+        .build();
+  }
+
+  private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName,
+      int inputTokens, int outputTokens, String aiText, Double temperature) {
+    var invocationCtx = InvocationContext.builder()
+        .invocationId(UUID.randomUUID())
+        .timestamp(Instant.now())
+        .methodName(methodName)
+        .interfaceName("ChatAgent")
+        .build();
+    var request = ChatRequest.builder().messages(UserMessage.from(userText)).temperature(temperature).build();
     var response = ChatResponse.builder()
         .aiMessage(AiMessage.aiMessage(aiText))
         .tokenUsage(new TokenUsage(inputTokens, outputTokens))

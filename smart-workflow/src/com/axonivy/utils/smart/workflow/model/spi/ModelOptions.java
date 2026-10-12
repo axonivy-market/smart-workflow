@@ -20,7 +20,7 @@ public record ModelOptions(
     private boolean structuredOutput;
     private boolean hasTools;
     private List<ChatModelListener> listeners = List.of();
-    private Double temperature;
+    private Double temperature = 0.0;
 
     public Builder modelName(String modelName) {
       this.modelName = modelName;
