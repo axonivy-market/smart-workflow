@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import dev.langchain4j.model.chat.ChatModel;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 
 public interface ChatModelProvider {
@@ -13,37 +12,6 @@ public interface ChatModelProvider {
   ChatModel setup(ModelOptions options);
   List<String> models();
   List<String> secretsVars();
-
-  public static record ModelOptions(
-      String modelName,
-      boolean structuredOutput,
-      boolean hasTools,
-      List<ChatModelListener> listeners) {
-
-    public ModelOptions() {
-      this(null, false, false, List.of());
-    }
-
-    public static ModelOptions options() {
-      return new ModelOptions();
-    }
-
-    public ModelOptions structuredOutput(boolean structured) {
-      return new ModelOptions(modelName, structured, hasTools, listeners);
-    }
-
-    public ModelOptions hasTools(boolean tools) {
-      return new ModelOptions(modelName, structuredOutput, tools, listeners);
-    }
-
-    public ModelOptions modelName(String name) {
-      return new ModelOptions(name, structuredOutput, hasTools, listeners);
-    }
-
-    public ModelOptions listeners(List<ChatModelListener> chatListeners) {
-      return new ModelOptions(modelName, structuredOutput, hasTools, chatListeners);
-    }
-  }
 
   public static record EmbeddingModelOptions(String modelName, String apiKey) {
 
