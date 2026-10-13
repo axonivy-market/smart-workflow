@@ -1,10 +1,13 @@
 package com.axonivy.utils.smart.workflow.model.ollama.internal;
 
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
+
 import java.time.Duration;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.http.client.HttpClientBuilder;
@@ -13,7 +16,6 @@ import dev.langchain4j.model.ollama.OllamaChatModel.OllamaChatModelBuilder;
 
 public class OllamaServiceConnector {
 
-  private static final double DEFAULT_TEMPERATURE = 0.0;
   private static final String FALLBACK_BASE_URL = "http://localhost:11434";
   private static final String FALLBACK_DEFAULT_MODEL = "llama3.2";
   static final Duration FALLBACK_TIMEOUT = Duration.ofMinutes(5);
@@ -26,15 +28,15 @@ public class OllamaServiceConnector {
     String TIMEOUT_SECONDS = PREFIX + "TimeoutSeconds";
   }
 
-  public static OllamaChatModelBuilder buildChatModel(String modelName) {
-    String selectedModel = StringUtils.defaultIfBlank(modelName,
+  public static OllamaChatModelBuilder buildChatModel(ModelOptions options) {
+    String selectedModel = StringUtils.defaultIfBlank(options.modelName(),
         StringUtils.defaultIfBlank(Ivy.var().get(OllamaConf.DEFAULT_MODEL), FALLBACK_DEFAULT_MODEL));
 
     return OllamaChatModel.builder()
         .httpClientBuilder(httpClientBuilder())
         .baseUrl(baseUrl())
         .modelName(selectedModel)
-        .temperature(DEFAULT_TEMPERATURE)
+        .temperature(resolveTemperature(options.temperature()))
         .timeout(timeout())
         .logRequests(true)
         .logResponses(true);
