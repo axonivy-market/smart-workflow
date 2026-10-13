@@ -15,6 +15,7 @@ import com.axonivy.utils.smart.workflow.memory.id.ProcessDataField;
 import com.axonivy.utils.smart.workflow.memory.store.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;

@@ -21,7 +21,6 @@ public class AgentEditor {
 
   public void editor(ProgramUiBuilder ui) {
     ui.group("✉️ Message")
-        .add(ui.label("Smart Workflow uses AI to process information, generate responses, or make decisions within workflows. Depending on the workflow configuration, AI may take actions automatically. AI outputs and decisions may be inaccurate or incomplete. Please always check the outcome.").create())
         .add(ui.textField(Conf.QUERY)
             .label("User message:")
             .multiline()
@@ -30,6 +29,7 @@ public class AgentEditor {
             .label("System message:")
             .multiline()
             .create())
+        .add(ui.label("Smart Workflow uses AI to process information, generate responses, or make decisions within workflows. Depending on the workflow configuration, AI may take actions automatically. AI outputs and decisions may be inaccurate or incomplete. Please always check the outcome.").create())
         .create();
 
     ui.group("🛠️ Tools")
@@ -62,6 +62,12 @@ public class AgentEditor {
             .label("Model:")
             .help("Keep empty to use default from variables.yaml")
             .requireType(String.class)
+            .create())
+        .add(ui.label("Optional Settings (rarely need to be changed, the defaults work for most cases").create())
+        .add(ui.scriptField(Conf.TEMPERATURE)
+            .label("Temperature:")
+            .help("Specify the temperature for the model's output randomness.")
+            .requireType(Double.class)
             .create())
         .create();
 

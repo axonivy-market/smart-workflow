@@ -1,7 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.xai.internal;
 
-import static com.axonivy.utils.smart.workflow.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
-import static com.axonivy.utils.smart.workflow.utils.ModelOptionUtils.resolveTemperature;
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
 
 import java.util.List;
 import java.util.Map;
