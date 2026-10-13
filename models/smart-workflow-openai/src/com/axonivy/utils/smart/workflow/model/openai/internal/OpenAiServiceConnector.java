@@ -1,5 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.openai.internal;
 
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -8,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
@@ -17,8 +20,6 @@ import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 
 public class OpenAiServiceConnector {
-
-  private static final int DEFAULT_TEMPERATURE = 0;
 
   // Temporary model name and temperature for GPT-5. Will remove once LangChain4j fully support GPT-5
   private static final String GPT_5 = "gpt-5";
@@ -35,36 +36,38 @@ public class OpenAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
-    return buildOpenAiModel(DEFAULT_MODEL);
+    return initBuilder(resolveModelName(DEFAULT_MODEL), null);
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
-    return buildJsonOpenAiModel(DEFAULT_MODEL);
-  }
-
-  public static OpenAiChatModelBuilder buildOpenAiModel(String modelName) {
-    return initBuilder(resolveModelName(modelName));
-  }
-
-  public static OpenAiChatModelBuilder buildJsonOpenAiModel(String modelName) {
-    return initBuilder(resolveModelName(modelName))
+    return initBuilder(resolveModelName(DEFAULT_MODEL), null)
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
-  private static OpenAiChatModelBuilder initBuilder(String modelName) {
+  public static OpenAiChatModelBuilder buildOpenAiModel(ModelOptions options) {
+    return initBuilder(resolveModelName(options.modelName()), options.temperature());
+  }
+
+  public static OpenAiChatModelBuilder buildJsonOpenAiModel(ModelOptions options) {
+    return initBuilder(resolveModelName(options.modelName()), options.temperature())
+        .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
+        .strictJsonSchema(true);
+  }
+
+  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature) {
     OpenAiChatModelBuilder model = initBuilder();
 
     var request = ChatRequestParameters.builder()
         .modelName(modelName);
-    temperature(modelName)
+    temperature(modelName, temperature)
         .ifPresent(request::temperature);
     model.defaultRequestParameters(request.build());
 
     return model;
   }
 
-  private static Optional<Double> temperature(String modelName) {
+  private static Optional<Double> temperature(String modelName, Double temperature) {
     if (modelName.startsWith("o")) {
       // Only set temperature if not using the "o" series
       return Optional.empty();
@@ -72,7 +75,8 @@ public class OpenAiServiceConnector {
     if (Strings.CI.startsWith(modelName, GPT_5)) {
       return Optional.of(Double.valueOf(DEFAULT_TEMPERATURE_GPT_5));
     }
-    return Optional.of(Double.valueOf(DEFAULT_TEMPERATURE));
+
+    return Optional.of(temperature == null ? DEFAULT_TEMPERATURE : temperature);
   }
 
   private static OpenAiChatModelBuilder initBuilder() {

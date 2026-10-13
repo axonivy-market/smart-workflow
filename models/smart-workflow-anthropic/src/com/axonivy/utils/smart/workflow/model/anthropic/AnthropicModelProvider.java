@@ -23,7 +23,7 @@ public class AnthropicModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = AnthropicServiceConnector.buildAnthropicModel(options.modelName());
+    var builder = AnthropicServiceConnector.buildAnthropicModel(options);
     if (options.structuredOutput()) {
       builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
     }
