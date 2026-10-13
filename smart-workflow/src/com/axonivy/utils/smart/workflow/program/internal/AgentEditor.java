@@ -21,7 +21,6 @@ public class AgentEditor {
 
   public void editor(ProgramUiBuilder ui) {
     ui.group("✉️ Message")
-        .add(ui.label("Smart Workflow uses AI to process information, generate responses, or make decisions within workflows. Depending on the workflow configuration, AI may take actions automatically. AI outputs and decisions may be inaccurate or incomplete. Please always check the outcome.").create())
         .add(ui.textField(Conf.QUERY)
             .label("User message:")
             .multiline()
@@ -30,6 +29,7 @@ public class AgentEditor {
             .label("System message:")
             .multiline()
             .create())
+        .add(ui.label("Smart Workflow uses AI to process information, generate responses, or make decisions within workflows. Depending on the workflow configuration, AI may take actions automatically. AI outputs and decisions may be inaccurate or incomplete. Please always check the outcome.").create())
         .create();
 
     ui.group("🛠️ Tools")
