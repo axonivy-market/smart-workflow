@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.model.anthropic.internal;
 
-import static com.axonivy.utils.smart.workflow.utils.ModelOptionUtils.resolveTemperature;
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
 
 import java.util.Set;
 import java.util.stream.Stream;

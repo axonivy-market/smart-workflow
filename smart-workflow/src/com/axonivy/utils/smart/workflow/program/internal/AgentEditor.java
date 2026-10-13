@@ -63,6 +63,12 @@ public class AgentEditor {
             .help("Keep empty to use default from variables.yaml")
             .requireType(String.class)
             .create())
+        .add(ui.label("Optional Settings (rarely need to be changed, the defaults work for most cases").create())
+        .add(ui.scriptField(Conf.TEMPERATURE)
+            .label("Temperature:")
+            .help("Specify the temperature for the model's output randomness.")
+            .requireType(Double.class)
+            .create())
         .create();
 
     ui.group("➡️ Output")
@@ -73,15 +79,6 @@ public class AgentEditor {
         .add(ui.scriptField(Conf.MAP_TO)
             .label("Map result to:")
             .requireType(Object.class)
-            .create())
-        .create();
-    
-    ui.group("⚙️ Advanced")
-        .add(ui.label("Advanced settings for the agent.").create())
-        .add(ui.scriptField(Conf.TEMPERATURE)
-            .label("Temperature:")
-            .help("Specify the temperature for the model's output randomness.")
-            .requireType(Double.class)
             .create())
         .create();
   }

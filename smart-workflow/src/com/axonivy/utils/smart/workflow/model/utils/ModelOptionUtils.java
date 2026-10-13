@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.utils;
+package com.axonivy.utils.smart.workflow.model.utils;
 
 import java.util.Optional;
 

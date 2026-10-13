@@ -1,6 +1,6 @@
 package com.axonivy.utils.smart.workflow.model.azureopenai.internal;
 
-import static com.axonivy.utils.smart.workflow.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
 
 import java.util.Map;
 import java.util.Objects;

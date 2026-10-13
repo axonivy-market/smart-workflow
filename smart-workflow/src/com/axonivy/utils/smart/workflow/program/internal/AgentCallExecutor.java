@@ -15,6 +15,7 @@ import com.axonivy.utils.smart.workflow.memory.id.ProcessDataField;
 import com.axonivy.utils.smart.workflow.memory.store.IvyVolatileStore;
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils;
 import com.axonivy.utils.smart.workflow.observability.AiListeners;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.AiProvider;
 import com.axonivy.utils.smart.workflow.observability.AiListeners.ListenerCtxt;
@@ -22,7 +23,6 @@ import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.tools.human.internal.HumanInTheLoop;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
-import com.axonivy.utils.smart.workflow.utils.ModelOptionUtils;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
