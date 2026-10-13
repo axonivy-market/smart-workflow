@@ -19,15 +19,6 @@ import com.axonivy.utils.smart.workflow.test.TestToolUserData;
 import com.axonivy.utils.smart.workflow.tools.math.MathToolChat;
 import com.axonivy.utils.smart.workflow.tools.ntools.MultiToolChat;
 
-import dev.langchain4j.agent.tool.ToolExecutionRequest;
-import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.AudioContent;
-import dev.langchain4j.data.message.ImageContent;
-import dev.langchain4j.data.message.PdfFileContent;
-import dev.langchain4j.data.message.TextContent;
-import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.data.message.VideoContent;
-
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -36,6 +27,14 @@ import ch.ivyteam.ivy.trace.TraceSpan;
 import ch.ivyteam.ivy.trace.Tracer;
 import ch.ivyteam.ivy.workflow.ITask;
 import ch.ivyteam.test.RestResourceTest;
+import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.AudioContent;
+import dev.langchain4j.data.message.ImageContent;
+import dev.langchain4j.data.message.PdfFileContent;
+import dev.langchain4j.data.message.TextContent;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.message.VideoContent;
 
 @RestResourceTest
 class TestOpenInferenceSpans {
@@ -237,7 +236,7 @@ class TestOpenInferenceSpans {
       .containsEntry("input.value", """
         [{"role":"system","content":"Use the 'add' tool to calculate"},{"role":"user","content":"Whats the sum of 1984 plus 41 ?"}]
         """.strip())
-      .containsEntry("llm.invocation_parameters", "{}")
+      .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}")
       .containsEntry("llm.input_messages.0.message.content", "SystemMessage { text = \"Use the 'add' tool to calculate\" }")
       .containsEntry("llm.input_messages.0.message.role", "system")
       .containsEntry("llm.input_messages.1.message.content", "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
@@ -284,7 +283,7 @@ class TestOpenInferenceSpans {
       .containsEntry("llm.system", "langchain4j")
       .containsEntry("llm.provider", "openai")
       .containsEntry("llm.model_name", "gpt-4.1-mini")
-      .containsEntry("llm.invocation_parameters", "{}")
+      .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}")
       .containsEntry("llm.response.finish_reasons", "[STOP]")
       .containsEntry("llm.token_count.completion", "10")
       .containsEntry("llm.token_count.prompt", "138")
