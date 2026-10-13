@@ -11,6 +11,8 @@ import com.axonivy.utils.smart.workflow.governance.history.recorder.HistoryRecor
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.invocation.InvocationContext;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.observability.api.event.AiServiceResponseReceivedEvent;
 import dev.langchain4j.observability.api.listener.AiServiceListener;
@@ -40,6 +42,10 @@ public class AgentResponseListener implements AiServiceListener<AiServiceRespons
     var response = event.response();
     var usage = Optional.ofNullable(response.tokenUsage());
     long durationMs = System.currentTimeMillis() - context.timestamp().toEpochMilli();
+    var temperature = Optional.ofNullable(context)
+      .map(InvocationContext::defaultRequestParameters)
+      .map(ChatRequestParameters::temperature)
+      .orElse(null);
     return new HistoryRecorder.ResponseMetadata(
         usage.map(TokenUsage::inputTokenCount).orElse(null),
         usage.map(TokenUsage::outputTokenCount).orElse(null),
@@ -48,7 +54,8 @@ public class AgentResponseListener implements AiServiceListener<AiServiceRespons
         response.modelName(),
         durationMs,
         context.methodName(),
-        toolNames(event));
+        toolNames(event),
+        temperature);
   }
 
   private static List<String> toolNames(AiServiceResponseReceivedEvent event) {

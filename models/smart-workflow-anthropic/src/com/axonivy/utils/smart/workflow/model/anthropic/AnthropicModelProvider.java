@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModelName;
 import dev.langchain4j.model.chat.Capability;
@@ -22,7 +23,7 @@ public class AnthropicModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = AnthropicServiceConnector.buildAnthropicModel(options.modelName());
+    var builder = AnthropicServiceConnector.buildAnthropicModel(options);
     if (options.structuredOutput()) {
       builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
     }

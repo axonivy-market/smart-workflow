@@ -1,11 +1,15 @@
 package com.axonivy.utils.smart.workflow.model.xai.internal;
 
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
+
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
@@ -15,7 +19,6 @@ import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 
 public class XAiServiceConnector {
 
-  private static final int DEFAULT_TEMPERATURE = 0;
   private static final String DEFAULT_MODEL = "grok-4-1-fast";
   private static final String DEFAULT_BASE_URL = "https://api.x.ai/v1/";
 
@@ -36,28 +39,30 @@ public class XAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
-    return buildOpenAiModel(DEFAULT_MODEL);
+    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE);
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
-    return buildJsonOpenAiModel(DEFAULT_MODEL);
-  }
-
-  public static OpenAiChatModelBuilder buildOpenAiModel(String modelName) {
-    return initBuilder(resolveModelName(modelName));
-  }
-
-  public static OpenAiChatModelBuilder buildJsonOpenAiModel(String modelName) {
-    return initBuilder(resolveModelName(modelName))
+    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE)
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
-  private static OpenAiChatModelBuilder initBuilder(String modelName) {
+  public static OpenAiChatModelBuilder buildOpenAiModel(ModelOptions options) {
+    return initBuilder(resolveModelName(options.modelName()), options.temperature());
+  }
+          
+  public static OpenAiChatModelBuilder buildJsonOpenAiModel(ModelOptions options) {
+    return initBuilder(resolveModelName(options.modelName()), options.temperature())
+        .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
+        .strictJsonSchema(true);
+  }
+
+  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature) {
     OpenAiChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
         .modelName(modelName)
-        .temperature(Double.valueOf(DEFAULT_TEMPERATURE));
+        .temperature(resolveTemperature(temperature));
     builder.defaultRequestParameters(request.build());
     return builder;
   }

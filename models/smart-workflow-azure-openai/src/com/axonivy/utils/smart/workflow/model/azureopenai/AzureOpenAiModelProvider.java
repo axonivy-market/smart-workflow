@@ -12,6 +12,7 @@ import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiSe
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureAiDeployment;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
@@ -27,7 +28,7 @@ public class AzureOpenAiModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = AzureOpenAiServiceConnector.buildOpenAiModel(options.modelName());
+    var builder = AzureOpenAiServiceConnector.buildOpenAiModel(options);
     if (builder == null) {
       return null;
     }

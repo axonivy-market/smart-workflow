@@ -7,6 +7,7 @@ import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConne
 import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector.GeminiConf;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.ChatModel;
@@ -22,7 +23,7 @@ public class GeminiModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = GeminiServiceConnector.buildGeminiModel(options.modelName());
+    var builder = GeminiServiceConnector.buildGeminiModel(options);
     if (options.structuredOutput()) {
       // Gemini currently does NOT support structured JSON responses.
       // Reference:

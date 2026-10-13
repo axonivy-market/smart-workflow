@@ -1,15 +1,12 @@
 package com.axonivy.utils.smart.workflow.model.xai;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector;
 
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -53,8 +50,20 @@ public class TestXAiLoader {
 
   @Test
   void capabilities() {
-    ChatModel structured = provider.setup(new ModelOptions(MODEL, true, false, List.of()));
+    ChatModel structured = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .structuredOutput(true)
+        .build());
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
+  }
+
+  @Test
+  void customTemperature() {
+    ChatModel customTemp = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .temperature(0.7)
+        .build());
+    assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
   }
 
   private static ChatModelProvider loadModel() {

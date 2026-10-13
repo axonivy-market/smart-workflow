@@ -2,15 +2,13 @@ package com.axonivy.utils.smart.workflow.model.anthropic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
@@ -50,11 +48,23 @@ public class TestAnthropicLoader {
 
   @Test
   void capabilities() {
-    ChatModel structured = provider.setup(new ModelOptions(MODEL, true, false, List.of()));
+    ChatModel structured = provider.setup(ModelOptions.builder()
+      .modelName(MODEL)
+      .structuredOutput(true)
+      .build());
     assertThat(structured.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 
   private static ChatModelProvider loadModel() {
     return ChatModelFactory.create(AnthropicModelProvider.NAME).get();
+  }
+
+  @Test
+  void customTemperature() {
+    ChatModel customTemp = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .temperature(0.7)
+        .build());
+    assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
   }
 }

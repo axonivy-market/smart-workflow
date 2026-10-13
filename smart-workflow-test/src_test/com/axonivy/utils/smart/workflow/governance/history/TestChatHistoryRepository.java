@@ -1,9 +1,10 @@
 package com.axonivy.utils.smart.workflow.governance.history;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +16,7 @@ import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.invocation.InvocationContext;
 import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.observability.api.event.AiServiceResponseReceivedEvent;
@@ -64,6 +66,17 @@ public class TestChatHistoryRepository {
     assertThat(entry.getProcessName()).isEqualTo("test-process");
   }
 
+  @Test
+  void storesTemperatureInMetadata() {
+    listener.onEvent(buildEvent("It's so hot", "chat", 5, 10, "Head to Lake Lucerne, it's refreshing!", 0.75));
+
+    assertThat(storage.findAll()).hasSize(1);
+    var entry = storage.findAll().get(0);
+
+    assertThat(entry.getTokenUsageJson())
+        .contains("\"temperature\":0.75");
+  }
+
   private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName,
       int inputTokens, int outputTokens, String aiText) {
     var invocationCtx = InvocationContext.builder()
@@ -71,6 +84,32 @@ public class TestChatHistoryRepository {
         .timestamp(Instant.now())
         .methodName(methodName)
         .interfaceName("ChatAgent")
+        .build();
+    var request = ChatRequest.builder().messages(UserMessage.from(userText)).build();
+    var response = ChatResponse.builder()
+        .aiMessage(AiMessage.aiMessage(aiText))
+        .tokenUsage(new TokenUsage(inputTokens, outputTokens))
+        .modelName("test-model")
+        .build();
+    return AiServiceResponseReceivedEvent.builder()
+        .invocationContext(invocationCtx)
+        .request(request)
+        .response(response)
+        .build();
+  }
+
+  private AiServiceResponseReceivedEvent buildEvent(String userText, String methodName,
+      int inputTokens, int outputTokens, String aiText, Double temperature) {
+    var requestParams = ChatRequestParameters.builder();
+    if (temperature != null) {
+      requestParams.temperature(temperature);
+    }
+    var invocationCtx = InvocationContext.builder()
+        .invocationId(UUID.randomUUID())
+        .timestamp(Instant.now())
+        .methodName(methodName)
+        .interfaceName("ChatAgent")
+        .defaultRequestParameters(requestParams.build())
         .build();
     var request = ChatRequest.builder().messages(UserMessage.from(userText)).build();
     var response = ChatResponse.builder()

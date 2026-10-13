@@ -3,7 +3,6 @@ package com.axonivy.utils.smart.workflow.governance.webtest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import ch.ivyteam.ivy.environment.Ivy;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry.ToolExecution;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport;
@@ -14,6 +13,8 @@ import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceRe
 import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport.RiskEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport.ToolUsagePatterns;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReportEntry;
+
+import ch.ivyteam.ivy.environment.Ivy;
 
 public class ConversationsMockDataFactory {
 
@@ -235,7 +236,7 @@ public class ConversationsMockDataFactory {
     return """
         [{"inputTokens":%d,"outputTokens":%d,"totalTokens":%d,\
         "finishReason":"STOP","modelName":"%s",\
-        "durationMs":5000,"aiServiceMethod":"chat","toolNames":[]}]"""
+        "durationMs":5000,"aiServiceMethod":"chat","toolNames":[],"temperature":null}]"""
         .formatted(in, out, in + out, Meta.MODEL);
   }
 

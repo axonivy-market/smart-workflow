@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.model.chat.Capability;

@@ -4,13 +4,14 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
+
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.security.exec.Sudo;
 import ch.ivyteam.ivy.workflow.ICase;
 import ch.ivyteam.ivy.workflow.ITask;
 import ch.ivyteam.ivy.workflow.query.CaseQuery;
 import ch.ivyteam.ivy.workflow.query.TaskQuery;
-import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 
 public class GovernanceMockDataFactory {
 
@@ -209,7 +210,7 @@ public class GovernanceMockDataFactory {
     return """
       [{"inputTokens":%d,"outputTokens":%d,"totalTokens":%d,\
       "finishReason":"STOP","modelName":"%s",\
-      "durationMs":1000,"aiServiceMethod":"chat","toolNames":[]}]"""
+      "durationMs":1000,"aiServiceMethod":"chat","toolNames":[],"temperature":null}]"""
         .formatted(in, out, in + out, Meta.MODEL);
   }
 

@@ -1,17 +1,20 @@
 package com.axonivy.utils.smart.workflow.model.anthropic.internal;
 
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
+
 import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.anthropic.AnthropicChatModel.AnthropicChatModelBuilder;
 import dev.langchain4j.model.anthropic.AnthropicChatModelName;
 import dev.langchain4j.model.chat.request.ChatRequestParameters;
-import dev.langchain4j.model.anthropic.AnthropicChatModel.AnthropicChatModelBuilder;
 
 public class AnthropicServiceConnector {
 
@@ -28,18 +31,11 @@ public class AnthropicServiceConnector {
     String DEFAULT_MODEL = PREFIX + "DefaultModel";
   }
 
-  public static AnthropicChatModelBuilder buildAnthropicModel() {
-    return buildAnthropicModel(DEFAULT_MODEL);
-  }
-
-  public static AnthropicChatModelBuilder buildAnthropicModel(String modelName) {
-    return initBuilder(resolveModelName(modelName));
-  }
-
-  private static AnthropicChatModelBuilder initBuilder(String modelName) {
+  public static AnthropicChatModelBuilder buildAnthropicModel(ModelOptions options) {
     AnthropicChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
-        .modelName(modelName);
+        .modelName(resolveModelName(options.modelName()))
+        .temperature(resolveTemperature(options.temperature()));
     builder.defaultRequestParameters(request.build());
     return builder;
   }

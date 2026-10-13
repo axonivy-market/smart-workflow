@@ -2,15 +2,13 @@ package com.axonivy.utils.smart.workflow.model.ollama;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.ollama.internal.OllamaServiceConnector.OllamaConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
-import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
@@ -48,20 +46,30 @@ public class TestOllamaLoader {
 
   @Test
   void modelNameIsPassedAsRequestParameter() {
-    ChatModel model = provider.setup(new ModelOptions(MODEL, false, false, List.of()));
+    ChatModel model = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .build());
     assertThat(model.defaultRequestParameters().modelName()).isEqualTo(MODEL);
   }
 
   @Test
   void structuredOutputIsAdvertisedAsSupported() {
-    ChatModel model = provider.setup(new ModelOptions(MODEL, true, false, List.of()));
+    ModelOptions options = ModelOptions.builder()
+        .modelName(MODEL)
+        .structuredOutput(true)
+        .build();
+    ChatModel model = provider.setup(options);
     assertThat(model.supportedCapabilities())
         .contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
 
   @Test
   void structuredOutputWithToolsDoesNotConstrainJsonSchema() {
-    ChatModel model = provider.setup(new ModelOptions(MODEL, true, true, List.of()));
+    ChatModel model = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .structuredOutput(true)
+        .hasTools(true)
+        .build());
     assertThat(model.supportedCapabilities())
         .doesNotContain(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
   }
@@ -75,6 +83,15 @@ public class TestOllamaLoader {
   void secretsVarsIsEmpty() {
     // Ollama has no API key
     assertThat(provider.secretsVars()).isEmpty();
+  }
+
+  @Test
+  void customTemperature() {
+    ChatModel customTemp = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .temperature(0.7)
+        .build());
+    assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
   }
 
   private static ChatModelProvider loadProvider() {

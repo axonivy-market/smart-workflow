@@ -15,15 +15,15 @@ import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.observability.api.event.AiServiceRequestIssuedEvent;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
 public class OpenInferenceCollector {
 
-  static final ObjectMapper objectMapper = new ObjectMapper();
-  static final ObjectMapper toolParamMapper = JsonMapper
+  public static final ObjectMapper objectMapper = new ObjectMapper();
+  public static final ObjectMapper toolParamMapper = JsonMapper
       .builderWithJackson2Defaults()
       .changeDefaultVisibility(visibility -> visibility
           .withFieldVisibility(Visibility.ANY))
@@ -31,8 +31,8 @@ public class OpenInferenceCollector {
 
   private final Map<String, Object> attributes = new LinkedHashMap<>();
 
-  private String provider;
-  private String model;
+  private final String provider;
+  private final String model;
 
   private boolean hideInput = false;
   private boolean hideOutput = false;
@@ -91,8 +91,8 @@ public class OpenInferenceCollector {
     return null;
   }
 
-  public void onRequest(ChatRequest request) {
-    attributes.putAll(new RequestRecorder(provider, model).handleRequest(request, hideInput));
+  public void onRequest(AiServiceRequestIssuedEvent event) {
+    attributes.putAll(new RequestRecorder(provider, model).handleRequest(event, hideInput));
   }
 
   public void onResponse(ChatResponse response) {

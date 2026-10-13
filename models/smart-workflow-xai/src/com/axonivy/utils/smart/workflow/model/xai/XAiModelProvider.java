@@ -1,12 +1,14 @@
 package com.axonivy.utils.smart.workflow.model.xai;
 
+import static com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector.SUPPORTED_MODELS;
+
 import java.util.List;
 
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector;
-import com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector.XAiConf;
-
 import static com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector.SUPPORTED_MODELS;
+import com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector.XAiConf;
 
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
@@ -22,7 +24,7 @@ public class XAiModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
-    var builder = XAiServiceConnector.buildOpenAiModel(options.modelName());
+    var builder = XAiServiceConnector.buildOpenAiModel(options);
     if (options.structuredOutput()) {
       builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
       builder.strictJsonSchema(true);

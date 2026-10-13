@@ -113,7 +113,7 @@ public class OpenInferenceTracing implements AiListenerProvider {
 
     @Override
     public void onEvent(AiServiceRequestIssuedEvent event) {
-      collector.onRequest(event.request());
+      collector.onRequest(event);
       llmSpan = Span.open().instance(() -> new AiSpan("AI Assistant", () -> attributes()));
     }
   }

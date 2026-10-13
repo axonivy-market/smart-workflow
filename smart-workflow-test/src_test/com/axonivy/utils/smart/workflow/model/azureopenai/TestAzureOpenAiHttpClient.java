@@ -4,23 +4,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 
-import jakarta.ws.rs.client.WebTarget;
-
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiServiceConnector;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.client.SmartAzureHttpClientProvider;
-
+import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.azure.core.util.HttpClientOptions;
 
 import ch.ivyteam.ivy.environment.IvyTest;
+import jakarta.ws.rs.client.WebTarget;
 
 @IvyTest
 public class TestAzureOpenAiHttpClient {
 
   @Test
   void smartIvyRestClient_isDefault() {
-    var builder = AzureOpenAiServiceConnector.buildOpenAiModel(null);
+    var builder = AzureOpenAiServiceConnector.buildOpenAiModel(ModelOptions.builder().build());
     assertThat(builder).extracting("httpClientProvider")
         .as("use ivy-jersey client; which integrates into our tracing tools")
         .isInstanceOf(SmartAzureHttpClientProvider.class);

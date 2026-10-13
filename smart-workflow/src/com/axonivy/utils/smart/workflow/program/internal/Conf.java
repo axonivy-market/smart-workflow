@@ -10,4 +10,5 @@ public interface Conf {
   String MAP_TO = "resultMapping";
   String INPUT_GUARD_RAILS = "inputGuardrails";
   String OUTPUT_GUARD_RAILS = "outputGuardrails";
+  String TEMPERATURE = "temperature";
 }
