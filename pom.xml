@@ -18,6 +18,7 @@
     <module>smart-workflow-dashboard</module>
     <module>smart-workflow-demo</module>
     <module>smart-workflow-test</module>
+    <module>smart-workflow-screenshot</module>
     <module>smart-workflow-product</module>
   </modules>
 
@@ -59,6 +60,7 @@
       <id>webtest.test</id>
       <modules>
         <module>smart-workflow-webtest</module>
+        <module>smart-workflow-screenshot</module>
       </modules>
     </profile>
   </profiles>
