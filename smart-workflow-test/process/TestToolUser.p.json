@@ -30,7 +30,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "tools" : "[\"whoami\"]",
+          "tools" : "whoami",
           "resultMapping" : "in.result",
           "query" : "Tools options as json array"
         }
@@ -61,7 +61,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.result",
           "query" : "Return the following name as result: <%=ivy.session.getSessionUserName()%>"
         }
@@ -98,7 +98,8 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "tools" : "[\"whoami\"]",
+          "system" : "",
+          "tools" : "whoami",
           "resultType" : "com.axonivy.utils.smart.workflow.test.Person.class",
           "resultMapping" : "in.person",
           "query" : "Tell me who I am"
@@ -137,7 +138,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are a friendly assistant in a hotel lobby located near Lucerne. All you do is make sure you understood customers requests by repeating questions towards you in a friendly manner",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.result",
           "query" : "It's so hot, where can I cool myself down?"
         }
@@ -201,7 +202,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "",
-          "tools" : "[]",
+          "tools" : "",
           "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
           "resultMapping" : "in.story",
           "query" : "One day Reto Weiss and Bruno Bütler had a gread idea."
@@ -271,7 +272,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "model" : "",
-          "tools" : "[\"whoami\"]",
+          "tools" : "whoami",
           "resultType" : "com.axonivy.utils.smart.workflow.test.Person.class",
           "resultMapping" : "in.person",
           "query" : "Tell me who I am"
@@ -316,12 +317,12 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "",
-          "provider" : "\"dummy\"",
+          "provider" : "dummy",
           "resultMapping" : "in.story.title",
           "query" : "One day Reto Weiss and Bruno Bütler had a gread idea.",
           "model" : "\"Genious\"",
           "resultType" : "",
-          "tools" : "[]"
+          "tools" : ""
         }
       },
       "visual" : {
@@ -341,12 +342,12 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Only extract characters",
-          "provider" : "\"OpenAI\"",
+          "provider" : "OpenAI",
           "resultMapping" : "in.storyTmp",
           "query" : "Story idea:\r\nOne day Reto Weiss and Bruno Bütler had a gread idea.\r\nStory object:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.story) %>",
           "model" : "\"gpt-4.1-mini\"",
           "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
-          "tools" : "[\"summarizeProblem\"]"
+          "tools" : "summarizeProblem"
         }
       },
       "visual" : {
@@ -377,7 +378,7 @@
           "query" : "Story object:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.story) %>",
           "model" : "",
           "resultType" : "com.axonivy.utils.smart.workflow.test.Story.class",
-          "tools" : "[\"summarizeProblem\"]"
+          "tools" : "summarizeProblem"
         }
       },
       "visual" : {
@@ -443,7 +444,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Use the 'add' tool to calculate",
-          "tools" : "[\"add\"]",
+          "tools" : "add",
           "resultType" : "Integer.class",
           "resultMapping" : "in.sum",
           "query" : "Whats the sum of 1984 plus 41 ?"
@@ -482,7 +483,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Use the 'disconnected' tool to verify that a user is available",
-          "tools" : "[\"disconnected\"]",
+          "tools" : "disconnected",
           "resultType" : "",
           "resultMapping" : "",
           "query" : "Verify whether Martha is available by using the 'disconnected' tool"
@@ -521,7 +522,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Use the 'add' tool to calculate my age and 'whoami' to fetch my name",
-          "tools" : "[\"add\", \"whoami\"]",
+          "tools" : "add,whoami",
           "resultType" : "",
           "resultMapping" : "",
           "query" : "Whats my age and name?"
@@ -560,12 +561,12 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "Use the 'add' tool to calculate",
-          "inputGuardrails" : "[\"PromptInjectionInputGuardrail\"]",
+          "inputGuardrails" : "PromptInjectionInputGuardrail",
           "resultMapping" : "in.sum",
           "query" : "Whats the sum of 1984 plus 41 ?",
-          "tools" : "[\"add\"]",
+          "tools" : "add",
           "resultType" : "Integer.class",
-          "outputGuardrails" : "[\"SensitiveDataOutputGuardrail\"]"
+          "outputGuardrails" : "SensitiveDataOutputGuardrail"
         }
       },
       "visual" : {

@@ -3,7 +3,7 @@ azureopenai, openinference, arizephoenix, javaagent,
 Dotel, DOPEN,
 stackoverflow, duckduckgo, opensearch
 Pii, Ollama, testcontainers, llava, nomic, mxbai, gemma, qwen, mistral, nemo
-opensearchproject, trixie, devcontainers, nightlies, webtest, Ddev
+opensearchproject, trixie, devcontainers, nightlies, webtest, Ddev, webapps, Dglsp
 IBAN, Iban
 chatbots, roleplay, defence, Customising, customise, behaviour, behaviours, recognise, recognised
 facelets. noround, tabview
