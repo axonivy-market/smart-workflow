@@ -35,11 +35,14 @@ public class CaseAnalysisService {
   }
 
   public static List<AgentSummary> buildSummaries(List<AgentConversationEntry> entries) {
-    List<ToolSummary> allToolSummaries = AgentSummaryService.summarizeTools(entries);
-    List<GuardrailSummary> allGuardrailSummaries = AgentSummaryService.summarizeGuardrails(entries);
     TokenUsageSummary tokenUsageSummary = AgentSummaryService.summarizeTokenUsage(entries);
     return entries.stream()
-        .map(e -> AgentSummaryService.summarizeAgent(e, allToolSummaries, allGuardrailSummaries, tokenUsageSummary))
+        .map(entry -> {
+          List<AgentConversationEntry> singleEntry = List.of(entry);
+          List<ToolSummary> toolSummaries = AgentSummaryService.summarizeTools(singleEntry);
+          List<GuardrailSummary> guardrailSummaries = AgentSummaryService.summarizeGuardrails(singleEntry);
+          return AgentSummaryService.summarizeAgent(entry, toolSummaries, guardrailSummaries, tokenUsageSummary);
+        })
         .toList();
   }
 
