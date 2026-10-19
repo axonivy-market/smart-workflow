@@ -1,8 +1,12 @@
 package com.axonivy.utils.smart.workflow.governance.history.analytic.report.analyze.service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service.CaseStatisticsService;
@@ -12,10 +16,21 @@ import com.axonivy.utils.smart.workflow.utils.JsonUtils;
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.input.PromptTemplate;
 import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
 
 class PromptBuilderService {
 
   private static final String WARN_METRICS_FAILURE = "PromptBuilderService: failed to serialize CaseStatistics: ";
+  private static final String WARN_PARSE_FAILURE = "PromptBuilderService: failed to parse messagesJson: ";
+
+  private interface Field {
+    String MESSAGES = "messages";
+    String TEXT     = "text";
+    String TYPE     = "type";
+    String CONTENTS = "contents";
+    String METRICS  = "metrics";
+    String CONVERSATIONS = "conversations";
+  }
 
   private static final String TEMPLATE = """
       You are an AI governance analyst. Based on the structured metrics and raw conversations below,
@@ -33,6 +48,8 @@ class PromptBuilderService {
 
   private static final String AGENT_HEADER       = "--- Agent %d: %s | %dms | %d tokens ---\n";
   private static final String MSG_DATA_UNAVAILABLE = "  (conversation data unavailable)\n";
+  private static final String TYPE_TEXT          = "TEXT";
+  private static final String TYPE_UNKNOWN       = "UNKNOWN";
   private static final String TOOL_FORMAT        = "  [TOOL] %s: %s\n";
   private static final String GUARDRAIL_FORMAT   = "  [GUARDRAIL] %s: %s\n";
 
@@ -42,8 +59,8 @@ class PromptBuilderService {
       List<AgentConversationEntry> entries) {
     return PromptTemplate.from(TEMPLATE)
         .apply(Map.of(
-            "metrics", buildMetrics(caseId, caseName, summaries),
-            "conversations", buildConversations(summaries, entries)))
+            Field.METRICS, buildMetrics(caseId, caseName, summaries),
+            Field.CONVERSATIONS, buildConversations(summaries, entries)))
         .text();
   }
 
@@ -61,12 +78,16 @@ class PromptBuilderService {
     if (entries == null) {
       return "";
     }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < entries.size(); i++) {
-      AgentSummary summary = summaries != null && i < summaries.size() ? summaries.get(i) : null;
-      sb.append(buildEntryConversation(i, entries.get(i), summary));
-    }
-    return sb.toString();
+    IntPredicate hasSummaryAt = index->
+      Optional.of(summaries).map(s -> s.get(index)).isPresent() 
+      && index < summaries.size();
+
+    return IntStream.range(0, entries.size())
+        .mapToObj(i -> {
+          AgentSummary summary = hasSummaryAt.test(i) ? summaries.get(i) : null;
+          return buildEntryConversation(i, entries.get(i), summary);
+        })
+        .collect(Collectors.joining());
   }
 
   private static String buildEntryConversation(int index, AgentConversationEntry entry, AgentSummary summary) {
@@ -82,11 +103,47 @@ class PromptBuilderService {
   }
 
   private static String formatConversation(AgentConversationEntry entry) {
-    var parsed = ConversationParserService.parse(entry);
-    if (parsed.isEmpty()) {
+    try {
+      var node = JsonUtils.getObjectMapper().readTree(entry.getMessagesJson());
+      return buildConversationText(node.isArray() ? node : node.path(Field.MESSAGES));
+    } catch (JacksonException e) {
+      Ivy.log().warn(WARN_PARSE_FAILURE + e.getMessage());
       return MSG_DATA_UNAVAILABLE;
     }
-    return parsed.get();
+  }
+
+  private static String buildConversationText(JsonNode messages) {
+    if (!messages.isArray()) {
+      return "";
+    }
+    StringBuilder text = new StringBuilder();
+    for (var message : messages) {
+      String type = message.path(Field.TYPE).asString(TYPE_UNKNOWN).toUpperCase(Locale.ROOT);
+      String messageText = extractText(message);
+      if (messageText != null && !messageText.isBlank()) {
+        text.append("[").append(type).append("] ").append(messageText).append("\n");
+      }
+    }
+    return text.toString();
+  }
+
+  private static String extractText(JsonNode message) {
+    var textNode = message.path(Field.TEXT);
+    if (!textNode.isMissingNode()) {
+      return textNode.asString();
+    }
+    var contents = message.path(Field.CONTENTS);
+    if (contents.isArray()) {
+      StringBuilder text = new StringBuilder();
+      for (var content : contents) {
+        var contentText = content.path(Field.TEXT);
+        if (!contentText.isMissingNode() && TYPE_TEXT.equalsIgnoreCase(content.path(Field.TYPE).asString(""))) {
+          text.append(contentText.asString());
+        }
+      }
+      return !text.isEmpty() ? text.toString() : null;
+    }
+    return null;
   }
 
   private static String formatToolExecutions(AgentConversationEntry entry) {
