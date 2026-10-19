@@ -3,8 +3,6 @@ package com.axonivy.utils.smart.workflow.governance.history.analytic.report.anal
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -78,13 +76,9 @@ class PromptBuilderService {
     if (entries == null) {
       return "";
     }
-    IntPredicate hasSummaryAt = index->
-      Optional.of(summaries).map(s -> s.get(index)).isPresent() 
-      && index < summaries.size();
-
     return IntStream.range(0, entries.size())
         .mapToObj(i -> {
-          AgentSummary summary = hasSummaryAt.test(i) ? summaries.get(i) : null;
+          AgentSummary summary = summaries != null && i < summaries.size() ? summaries.get(i) : null;
           return buildEntryConversation(i, entries.get(i), summary);
         })
         .collect(Collectors.joining());
