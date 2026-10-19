@@ -5,9 +5,7 @@ import java.util.Map;
 
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.analyze.entity.CaseAnalysisResult;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
-import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.GuardrailSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.TokenUsageSummary;
-import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.ToolSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service.AgentSummaryService;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport;
@@ -37,12 +35,7 @@ public class CaseAnalysisService {
   public static List<AgentSummary> buildSummaries(List<AgentConversationEntry> entries) {
     TokenUsageSummary tokenUsageSummary = AgentSummaryService.summarizeTokenUsage(entries);
     return entries.stream()
-        .map(entry -> {
-          List<AgentConversationEntry> singleEntry = List.of(entry);
-          List<ToolSummary> toolSummaries = AgentSummaryService.summarizeTools(singleEntry);
-          List<GuardrailSummary> guardrailSummaries = AgentSummaryService.summarizeGuardrails(singleEntry);
-          return AgentSummaryService.summarizeAgent(entry, toolSummaries, guardrailSummaries, tokenUsageSummary);
-        })
+        .map(entry -> AgentSummaryService.summarizeAgent(entry, tokenUsageSummary))
         .toList();
   }
 

@@ -1,8 +1,6 @@
 package com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,25 +48,11 @@ public class AgentSummaryService {
 
   private AgentSummaryService() {}
 
-  public static AgentSummary summarizeAgent(AgentConversationEntry entry, List<ToolSummary> allToolSummaries,
-      List<GuardrailSummary> allGuardrailSummaries, TokenUsageSummary tokenUsageSummary) {
+  public static AgentSummary summarizeAgent(AgentConversationEntry entry, TokenUsageSummary tokenUsageSummary) {
     List<ToolExecution> tools     = Optional.ofNullable(entry.getToolExecutions()).orElse(List.of());
     List<GuardrailExecution> grds = Optional.ofNullable(entry.getGuardrailExecutions()).orElse(List.of());
-
-    Map<String, ToolSummary> toolMap = new HashMap<>();
-    allToolSummaries.forEach(summary
-      -> toolMap.put(summary.getToolName(), summary));
-
-    Map<String, GuardrailSummary> grdMap = new HashMap<>();
-    allGuardrailSummaries.forEach(summary
-      -> grdMap.put(summary.getGuardrailName(), summary));
-
-    List<ToolSummary> toolSummaries = tools.stream()
-        .map(ToolExecution::toolName).distinct()
-        .map(toolMap::get).filter(summary -> summary != null).toList();
-    List<GuardrailSummary> grdSummaries = grds.stream()
-        .map(GuardrailExecution::guardrailName).distinct()
-        .map(grdMap::get).filter(summary -> summary != null).toList();
+    List<ToolSummary> toolSummaries = summarizeToolExecutions(tools);
+    List<GuardrailSummary> grdSummaries = summarizeGuardrailExecutions(grds);
 
     MetadataSummary meta = summarizeMetadata(parseMetadata(entry.getTokenUsageJson()));
 
@@ -81,8 +65,14 @@ public class AgentSummaryService {
   }
 
   public static List<ToolSummary> summarizeTools(List<AgentConversationEntry> entries) {
-    return entries.stream()
+    List<ToolExecution> executions = entries.stream()
         .flatMap(entry -> Optional.ofNullable(entry.getToolExecutions()).orElse(List.of()).stream())
+        .toList();
+    return summarizeToolExecutions(executions);
+  }
+
+  private static List<ToolSummary> summarizeToolExecutions(List<ToolExecution> executions) {
+    return executions.stream()
         .collect(Collectors.groupingBy(ToolExecution::toolName))
         .entrySet().stream()
         .map(group -> toToolSummary(group.getKey(), group.getValue()))
@@ -90,8 +80,14 @@ public class AgentSummaryService {
   }
 
   public static List<GuardrailSummary> summarizeGuardrails(List<AgentConversationEntry> entries) {
-    return entries.stream()
+    List<GuardrailExecution> executions = entries.stream()
         .flatMap(entry -> Optional.ofNullable(entry.getGuardrailExecutions()).orElse(List.of()).stream())
+        .toList();
+    return summarizeGuardrailExecutions(executions);
+  }
+
+  private static List<GuardrailSummary> summarizeGuardrailExecutions(List<GuardrailExecution> executions) {
+    return executions.stream()
         .collect(Collectors.groupingBy(GuardrailExecution::guardrailName))
         .entrySet().stream()
         .map(group -> toGuardrailSummary(group.getKey(), group.getValue()))
