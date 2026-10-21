@@ -70,9 +70,9 @@ public class CaseStatisticsService {
         new ToolMetrics(aggregates.totalToolCalls(), aggregates.totalErrors(),
             aggregates.totalNullResults(), toolSuccesses, toolSuccessRate, toolErrorRate,
             computeToolStats(summaries)),
-        agentStats,
         CaseObservationsService.computeObservations(agentStats, summaries,
-            aggregates.totalTokens(), aggregates.totalDurationMs()));
+            aggregates.totalTokens(), aggregates.totalDurationMs()),
+        agentStats);
   }
 
   private static CaseAggregates computeAggregates(List<AgentSummary> summaries) {
