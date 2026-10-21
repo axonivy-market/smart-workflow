@@ -6,20 +6,20 @@ It reuses the platform's capabilities and integrates through its extension point
 ### Platform integration points
 
 - 🛍️ Discover:
-  - Market: Find, install, and promote solutions for Axon Ivy.
-  - Process Editor: Installed agent steps appear as ready-to-use components in the extension drawer.
+  - Market: Find, install, and promote solutions for Axon Ivy.   [ℹ️ product-template](https://github.com/axonivy-market/market/wiki/c2-Product-Development)
+  - Process Editor: Installed agent steps appear as ready-to-use components in the extension drawer. [ℹ️ program-extension-api](https://dev.axonivy.com/doc/14.0/en/reference/extension-api/index.html#process-model-extension-api)
 - 🗒️ Configure:
-  - Variables: Configure development- and runtime-specific settings in the Variables Editor and Engine Cockpit.
+  - Variables: Configure development- and runtime-specific settings in the Variables Editor and Engine Cockpit. [ℹ️ project-variables](https://dev.axonivy.com/doc/14.0/en/reference/configuration/variables.html)
   - Manage global defaults with per-application and per-agent-element overrides.
 - 🔀 Collaborate (workflow):
-  - Call existing processes as tools.
+  - Call existing processes as tools. [ℹ️ process-call-api](https://dev.axonivy.com/public-api/14.0/ch/ivyteam/ivy/process/call/package-summary.html)
   - Map unstructured input to structured process data.
   - Involve people through tasks.
   - Integrate with Portal's optional AI service provider.
 - ⏯️ Execute:
-  - Runtime logs: Quickly access REST traffic to LLM providers.
+  - Runtime logs: Quickly access REST traffic to LLM providers. [ℹ️ rest-api](https://dev.axonivy.com/public-api/14.0/ch/ivyteam/ivy/rest/client/IRestClientContext.html)
   - REST monitoring: Detect slow requests and trace agent and tool execution.
-  - Business Data repository: Store runtime memory and opt-in conversation history.
+  - Business Data repository: Store runtime memory and opt-in conversation history. [ℹ️ business-data-api](https://dev.axonivy.com/public-api/14.0/ch/ivyteam/ivy/business/data/store/BusinessDataInfoRepository.html)
 - ♻️ Maintain:
   - CI/CD pipelines on axonivy-market.org.
   - Releases in GitHub Packages.
@@ -42,7 +42,7 @@ flowchart LR
   end
 
   subgraph SmartWorkflow["Smart Workflow harness"]
-    Runtime["Agent runtime<br/>LangChain4j"]
+    Runtime["⏩️ Agent runtime<br/>LangChain4j"]
     Constraints["Instructions, typed results,<br/>guardrails, memory"]
     ToolFilter["Configured tool allow-list"]
     IvyTools["Ivy subprocess tool provider"]
@@ -88,7 +88,7 @@ flowchart LR
     OpsApi["Logging, tracing, monitoring"]
   end
 
-  Core["Smart Workflow core<br/>agent runtime and adapters"]
+  Core["🪄 smart-workflow<br/>❤️‍🔥️ core: agent runtime and adapters"]
   ChatMemory["Persistent chat memory<br/>BusinessDataMemory"]
   HistoryStorage["Opt-in conversation history<br/>IvyRepoHistoryStorage"]
 
