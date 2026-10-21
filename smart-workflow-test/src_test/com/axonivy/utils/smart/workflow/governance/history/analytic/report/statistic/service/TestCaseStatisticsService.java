@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.TokenUsageSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.ToolSummary;
 
 import ch.ivyteam.ivy.environment.IvyTest;
@@ -18,28 +19,32 @@ public class TestCaseStatisticsService {
   @Test
   void compute_emptySummaries_returnsZeroAggregates() {
     var stats = CaseStatisticsService.compute("case-1", "My Case", List.of());
-    assertThat(stats.agentCount).isEqualTo(0);
-    assertThat(stats.totalTokens).isEqualTo(0);
-    assertThat(stats.totalDurationMs).isEqualTo(0L);
-    assertThat(stats.totalToolCalls).isEqualTo(0);
-    assertThat(stats.totalMessages).isEqualTo(0);
-    assertThat(stats.agentStats).isEmpty();
+    assertThat(stats.getOverview().getAgentCount()).isZero();
+    assertThat(stats.getTokenMetrics().getTotalTokens()).isZero();
+    assertThat(stats.getOverview().getTotalDurationMs()).isZero();
+    assertThat(stats.getToolMetrics().getTotalCalls()).isZero();
+    assertThat(stats.getOverview().getTotalMessages()).isZero();
+    assertThat(stats.getAgentStats()).isEmpty();
   }
 
   @Test
   void compute_singleAgent_populatesCaseIdAndName() {
     var stats = CaseStatisticsService.compute("case-42", "Invoice Process", List.of(agent(100, 1000)));
-    assertThat(stats.caseId).isEqualTo("case-42");
-    assertThat(stats.caseName).isEqualTo("Invoice Process");
+    assertThat(stats.getCaseId()).isEqualTo("case-42");
+    assertThat(stats.getCaseName()).isEqualTo("Invoice Process");
   }
 
   @Test
   void compute_multipleAgents_sumsTokensAndDuration() {
     var summaries = List.of(agent(200, 1_000), agent(300, 2_000));
+    setCaseTokenUsage(summaries, new TokenUsageSummary(300, 200, 500, 150, 100, 250, 300));
     var stats = CaseStatisticsService.compute("c", "n", summaries);
-    assertThat(stats.totalTokens).isEqualTo(500);
-    assertThat(stats.totalDurationMs).isEqualTo(3_000L);
-    assertThat(stats.agentCount).isEqualTo(2);
+    assertThat(stats.getTokenMetrics().getTotalTokens()).isEqualTo(500);
+    assertThat(stats.getTokenMetrics().getAvgTokensPerMsg()).isEqualTo(50.0, offset(0.01));
+    assertThat(stats.getTokenMetrics().getUsage().getTotalInputTokens()).isEqualTo(300);
+    assertThat(stats.getTokenMetrics().getUsage().getTotalOutputTokens()).isEqualTo(200);
+    assertThat(stats.getOverview().getTotalDurationMs()).isEqualTo(3_000L);
+    assertThat(stats.getOverview().getAgentCount()).isEqualTo(2);
   }
 
   @Test
@@ -47,8 +52,8 @@ public class TestCaseStatisticsService {
     var withAnomaly    = agentWithAnomalies(List.of("Duration exceeded 30s", "Token spike"));
     var withoutAnomaly = agent(100, 500);
     var stats = CaseStatisticsService.compute("c", "n", List.of(withAnomaly, withoutAnomaly));
-    assertThat(stats.anomalyAgents).isEqualTo(1);
-    assertThat(stats.totalAnomalies).isEqualTo(2);
+    assertThat(stats.getOverview().getAnomalyAgents()).isEqualTo(1);
+    assertThat(stats.getOverview().getTotalAnomalies()).isEqualTo(2);
   }
 
   @Test
@@ -58,8 +63,8 @@ public class TestCaseStatisticsService {
     var a1 = agentWithTools(List.of(tool1));
     var a2 = agentWithTools(List.of(tool2));
     var stats = CaseStatisticsService.compute("c", "n", List.of(a1, a2));
-    assertThat(stats.totalErrors).isEqualTo(3);       // 1 + 2
-    assertThat(stats.totalNullResults).isEqualTo(1);  // 1 + 0
+    assertThat(stats.getToolMetrics().getTotalErrors()).isEqualTo(3);       // 1 + 2
+    assertThat(stats.getToolMetrics().getTotalNullResults()).isEqualTo(1);  // 1 + 0
   }
 
   @Test
@@ -67,7 +72,7 @@ public class TestCaseStatisticsService {
     var noProcess   = agent(100, 500);
     var withProcess = agentWithProcess("Approval Process");
     var stats = CaseStatisticsService.compute("c", "n", List.of(noProcess, withProcess));
-    assertThat(stats.processName).isEqualTo("Approval Process");
+    assertThat(stats.getProcessName()).isEqualTo("Approval Process");
   }
 
   @Test
@@ -76,7 +81,7 @@ public class TestCaseStatisticsService {
     var a2 = agentWithModel("gpt-4");
     var a3 = agentWithModel("claude-3");
     var stats = CaseStatisticsService.compute("c", "n", List.of(a1, a2, a3));
-    assertThat(stats.distinctModels).isEqualTo(2);
+    assertThat(stats.getOverview().getDistinctModels()).isEqualTo(2);
   }
 
   @Test
@@ -84,15 +89,16 @@ public class TestCaseStatisticsService {
     var normal = agentWithFinishReason("STOP");
     var length = agentWithFinishReason("LENGTH");
     var stats = CaseStatisticsService.compute("c", "n", List.of(normal, length, length));
-    assertThat(stats.lengthCount).isEqualTo(2);
+    assertThat(stats.getOverview().getLengthCount()).isEqualTo(2);
   }
 
   @Test
   void compute_avgTokensPerMsg_computed() {
     var a = agent(500, 1_000);
     a.setMessageCount(10);
+    a.setTokenUsageSummary(new TokenUsageSummary(300, 200, 500, 30, 20, 50, 300));
     var stats = CaseStatisticsService.compute("c", "n", List.of(a));
-    assertThat(stats.avgTokensPerMsg).isEqualTo(50.0, offset(0.01));
+    assertThat(stats.getTokenMetrics().getAvgTokensPerMsg()).isEqualTo(50.0, offset(0.01));
   }
 
   @Test
@@ -101,9 +107,9 @@ public class TestCaseStatisticsService {
     var a1 = agentWithTools(List.of(tool));
     var a2 = agentWithTools(List.of(tool));
     var stats = CaseStatisticsService.compute("c", "n", List.of(a1, a2));
-    assertThat(stats.toolStats).hasSize(1);
-    assertThat(stats.toolStats.get(0).getName()).isEqualTo("search");
-    assertThat(stats.toolStats.get(0).getCalls()).isEqualTo(8);  // 4 + 4
+    assertThat(stats.getToolMetrics().getTools()).hasSize(1);
+    assertThat(stats.getToolMetrics().getTools().get(0).getName()).isEqualTo("search");
+    assertThat(stats.getToolMetrics().getTools().get(0).getCalls()).isEqualTo(8);  // 4 + 4
   }
 
   @Test
@@ -111,9 +117,9 @@ public class TestCaseStatisticsService {
     var a1 = agentWithName("Alpha");
     var a2 = agentWithName("Beta");
     var stats = CaseStatisticsService.compute("c", "n", List.of(a1, a2));
-    assertThat(stats.agentStats).hasSize(2);
-    assertThat(stats.agentStats.get(0).getIndex()).isEqualTo(0);
-    assertThat(stats.agentStats.get(1).getIndex()).isEqualTo(1);
+    assertThat(stats.getAgentStats()).hasSize(2);
+    assertThat(stats.getAgentStats().get(0).getIndex()).isEqualTo(0);
+    assertThat(stats.getAgentStats().get(1).getIndex()).isEqualTo(1);
   }
 
   @Test
@@ -121,8 +127,8 @@ public class TestCaseStatisticsService {
     var fast = agent(100, 500);
     var slow = agent(100, 5_000);
     var stats = CaseStatisticsService.compute("c", "n", List.of(fast, slow));
-    assertThat(stats.slowestAgent).isNotNull();
-    assertThat(stats.slowestAgent.getSummary().getDurationMs()).isEqualTo(5_000L);
+    assertThat(stats.getObservations().getSlowestAgent()).isNotNull();
+    assertThat(stats.getObservations().getSlowestAgent().getDurationMs()).isEqualTo(5_000L);
   }
 
   @Test
@@ -130,8 +136,8 @@ public class TestCaseStatisticsService {
     var low  = agent(100, 500);
     var high = agent(900, 500);
     var stats = CaseStatisticsService.compute("c", "n", List.of(low, high));
-    assertThat(stats.highestTokenAgent).isNotNull();
-    assertThat(stats.highestTokenAgent.getSummary().getTotalTokens()).isEqualTo(900);
+    assertThat(stats.getObservations().getHighestTokenAgent()).isNotNull();
+    assertThat(stats.getObservations().getHighestTokenAgent().getTotalTokens()).isEqualTo(900);
   }
 
   @Test
@@ -141,8 +147,8 @@ public class TestCaseStatisticsService {
     var long_ = agent(100, 500);
     long_.setMessageCount(21);
     var stats = CaseStatisticsService.compute("c", "n", List.of(normal, long_));
-    assertThat(stats.longConversationAgents).hasSize(1);
-    assertThat(stats.longConversationAgents.get(0).getMessageCount()).isEqualTo(21);
+    assertThat(stats.getObservations().getLongConversationAgents()).hasSize(1);
+    assertThat(stats.getObservations().getLongConversationAgents().get(0).getMessageCount()).isEqualTo(21);
   }
 
   @Test
@@ -151,10 +157,7 @@ public class TestCaseStatisticsService {
     var a2 = agentWithModel("claude-3");
     var a3 = agentWithModel("gpt-4");
     var stats = CaseStatisticsService.compute("c", "n", List.of(a1, a2, a3));
-    assertThat(stats.modelList).contains("gpt-4").contains("claude-3");
-    // only 2 distinct models
-    long commaCount = stats.modelList.chars().filter(c -> c == ',').count();
-    assertThat(commaCount).isEqualTo(1);
+    assertThat(stats.getObservations().getModels()).contains("gpt-4", "claude-3").hasSize(2);
   }
 
   @Test
@@ -164,8 +167,8 @@ public class TestCaseStatisticsService {
     var a = agentWithTools(List.of(tool));
     a.setToolCallCount(6);
     var stats = CaseStatisticsService.compute("c", "n", List.of(a));
-    assertThat(stats.toolSuccesses).isEqualTo(4);
-    assertThat(stats.overallToolSuccessRate).isEqualTo(66);
+    assertThat(stats.getToolMetrics().getSuccesses()).isEqualTo(4);
+    assertThat(stats.getToolMetrics().getSuccessRate()).isEqualTo(66);
   }
 
   // ── helpers ─────────────────────────────────────────────────────────────────
@@ -179,6 +182,10 @@ public class TestCaseStatisticsService {
     a.setToolCallCount(0);
     a.setFinishReason("STOP");
     return a;
+  }
+
+  private static void setCaseTokenUsage(List<AgentSummary> summaries, TokenUsageSummary tokenUsage) {
+    summaries.forEach(summary -> summary.setTokenUsageSummary(tokenUsage));
   }
 
   private static AgentSummary agentWithAnomalies(List<String> anomalies) {

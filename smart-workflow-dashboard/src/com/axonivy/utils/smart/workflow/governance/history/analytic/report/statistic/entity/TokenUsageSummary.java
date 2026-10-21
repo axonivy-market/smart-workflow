@@ -24,24 +24,52 @@ public class TokenUsageSummary {
     this.maxSingleConversationTokens = maxSingleConversationTokens;
   }
 
-  public int getTotalInputTokens() { return totalInputTokens; }
-  public void setTotalInputTokens(int totalInputTokens) { this.totalInputTokens = totalInputTokens; }
+  public int getTotalInputTokens() {
+    return totalInputTokens;
+  }
+  public void setTotalInputTokens(int totalInputTokens) {
+    this.totalInputTokens = totalInputTokens;
+  }
 
-  public int getTotalOutputTokens() { return totalOutputTokens; }
-  public void setTotalOutputTokens(int totalOutputTokens) { this.totalOutputTokens = totalOutputTokens; }
+  public int getTotalOutputTokens() {
+    return totalOutputTokens;
+  }
+  public void setTotalOutputTokens(int totalOutputTokens) {
+    this.totalOutputTokens = totalOutputTokens;
+  }
 
-  public int getTotalTokens() { return totalTokens; }
-  public void setTotalTokens(int totalTokens) { this.totalTokens = totalTokens; }
+  public int getTotalTokens() {
+    return totalTokens;
+  }
+  public void setTotalTokens(int totalTokens) {
+    this.totalTokens = totalTokens;
+  }
 
-  public double getAvgInputTokens() { return avgInputTokens; }
-  public void setAvgInputTokens(double avgInputTokens) { this.avgInputTokens = avgInputTokens; }
+  public double getAvgInputTokens() {
+    return avgInputTokens;
+  }
+  public void setAvgInputTokens(double avgInputTokens) {
+    this.avgInputTokens = avgInputTokens;
+  }
 
-  public double getAvgOutputTokens() { return avgOutputTokens; }
-  public void setAvgOutputTokens(double avgOutputTokens) { this.avgOutputTokens = avgOutputTokens; }
+  public double getAvgOutputTokens() {
+    return avgOutputTokens;
+  }
+  public void setAvgOutputTokens(double avgOutputTokens) {
+    this.avgOutputTokens = avgOutputTokens;
+  }
 
-  public double getAvgTotalTokens() { return avgTotalTokens; }
-  public void setAvgTotalTokens(double avgTotalTokens) { this.avgTotalTokens = avgTotalTokens; }
+  public double getAvgTotalTokens() {
+    return avgTotalTokens;
+  }
+  public void setAvgTotalTokens(double avgTotalTokens) {
+    this.avgTotalTokens = avgTotalTokens;
+  }
 
-  public int getMaxSingleConversationTokens() { return maxSingleConversationTokens; }
-  public void setMaxSingleConversationTokens(int maxSingleConversationTokens) { this.maxSingleConversationTokens = maxSingleConversationTokens; }
+  public int getMaxSingleConversationTokens() {
+    return maxSingleConversationTokens;
+  }
+  public void setMaxSingleConversationTokens(int maxSingleConversationTokens) {
+    this.maxSingleConversationTokens = maxSingleConversationTokens;
+  }
 }
