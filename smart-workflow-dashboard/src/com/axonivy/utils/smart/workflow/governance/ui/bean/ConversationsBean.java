@@ -9,6 +9,7 @@ import java.util.Optional;
 import com.axonivy.utils.smart.workflow.governance.history.ChatHistoryJsonParser;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.analyze.service.CaseAnalysisService;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.CaseStatistics;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentStats;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service.CaseStatisticsService;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AgentConversationEntry;
 import com.axonivy.utils.smart.workflow.governance.history.entity.AiGovernanceReport;
@@ -174,7 +175,7 @@ public class ConversationsBean implements Serializable {
     return caseStatistics != null;
   }
 
-  public List<String[]> getAgentInfoRows(CaseStatistics.AgentStats as) {
+  public List<String[]> getAgentInfoRows(AgentStats as) {
     var s = as.getSummary();
     var rows = new ArrayList<String[]>();
     if (s.getAgentName() != null && !s.getAgentName().isBlank()) {
@@ -185,7 +186,7 @@ public class ConversationsBean implements Serializable {
     return rows;
   }
 
-  public List<String[]> getAgentTokenRows(CaseStatistics.AgentStats as) {
+  public List<String[]> getAgentTokenRows(AgentStats as) {
     var s = as.getSummary();
     var rows = new ArrayList<String[]>();
     rows.add(new String[]{"Tokens",        fmtLong(s.getTotalTokens())});
@@ -195,19 +196,19 @@ public class ConversationsBean implements Serializable {
     if (as.getThroughputTokensPerSec() > 0) {
       rows.add(new String[]{"Throughput", String.format("%.1f tokens/sec", as.getThroughputTokensPerSec())});
     }
-    if (isReportGenerated() && caseStatistics.getTotalTokens() > 0) {
+    if (isReportGenerated() && caseStatistics.getTokenMetrics().getTotalTokens() > 0) {
       rows.add(new String[]{"Token share", as.getTokenSharePct() + "% of case total"});
     }
     return rows;
   }
 
-  public List<String[]> getAgentActivityRows(CaseStatistics.AgentStats as) {
+  public List<String[]> getAgentActivityRows(AgentStats as) {
     var s = as.getSummary();
     var rows = new ArrayList<String[]>();
     rows.add(new String[]{"Messages",   String.valueOf(s.getMessageCount())});
     rows.add(new String[]{"Tool calls", String.valueOf(s.getToolCallCount())});
     rows.add(new String[]{"Duration",   s.getDurationMs() + " ms"});
-    if (isReportGenerated() && caseStatistics.getTotalDurationMs() > 0) {
+    if (isReportGenerated() && caseStatistics.getOverview().getTotalDurationMs() > 0) {
       rows.add(new String[]{"Time share", as.getTimeSharePct() + "% of case total"});
     }
     return rows;
