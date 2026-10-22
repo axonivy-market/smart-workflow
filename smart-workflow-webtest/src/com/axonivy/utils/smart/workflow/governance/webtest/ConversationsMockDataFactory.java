@@ -19,25 +19,25 @@ public class ConversationsMockDataFactory {
   }
 
   interface AgentId {
-    String OCR      = "d4ea0ad3-c023-35cf-af9d-4a8f59186649";
-    String HEADER   = "1b3556aa-5c12-3444-bbd4-13015f700a7f";
+    String OCR = "d4ea0ad3-c023-35cf-af9d-4a8f59186649";
+    String HEADER = "1b3556aa-5c12-3444-bbd4-13015f700a7f";
     String ANALYZER = "a01c6042-fa87-3133-abba-8e5cf87e8779";
   }
 
   public interface AgentName {
-    String OCR      = "Extract Invoice Content from Image";
-    String HEADER   = "Extract Header Info Agent";
+    String OCR = "Extract Invoice Content from Image";
+    String HEADER = "Extract Header Info Agent";
     String ANALYZER = "Invoice Analyzer Agent";
   }
 
   public interface ToolName {
     String EXTRACT_HEADER = "extractHeaderInfo";
-    String EXTRACT_ITEMS  = "extractLineItems";
+    String EXTRACT_ITEMS = "extractLineItems";
   }
 
   interface Meta {
     String PROCESS = "Agent Pipeline Demo";
-    String MODEL   = "gpt-4.1-mini-2025-04-14";
+    String MODEL = "gpt-4.1-mini-2025-04-14";
   }
 
   enum TestEntry {
@@ -153,7 +153,7 @@ public class ConversationsMockDataFactory {
     return """
         [{"inputTokens":%d,"outputTokens":%d,"totalTokens":%d,\
         "finishReason":"STOP","modelName":"%s",\
-        "durationMs":5000,"aiServiceMethod":"chat","toolNames":[],"temperature":null}]"""
+        "durationMs":5000,"aiServiceMethod":"chat","toolNames":[],"temperature":null, "maxOutputTokens":null}]"""
         .formatted(in, out, in + out, Meta.MODEL);
   }
 
