@@ -7,7 +7,6 @@ import java.util.List;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector;
-import static com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector.SUPPORTED_MODELS;
 import com.axonivy.utils.smart.workflow.model.xai.internal.XAiServiceConnector.XAiConf;
 
 import dev.langchain4j.model.chat.Capability;
