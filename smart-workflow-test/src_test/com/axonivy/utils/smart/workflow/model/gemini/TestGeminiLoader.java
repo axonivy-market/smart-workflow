@@ -14,6 +14,7 @@ import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.model.chat.ChatModel;
+
 @IvyTest
 public class TestGeminiLoader {
 
@@ -49,8 +50,7 @@ public class TestGeminiLoader {
   void listModels() {
     assertThat(provider.models()).contains(
         GoogleAiGeminiChatModelName.GEMINI_1_5_FLASH.toString(),
-        GoogleAiGeminiChatModelName.GEMINI_1_5_PRO.toString()
-    );
+        GoogleAiGeminiChatModelName.GEMINI_1_5_PRO.toString());
   }
 
   @Test
@@ -75,6 +75,15 @@ public class TestGeminiLoader {
         .temperature(0.7)
         .build());
     assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
+  }
+
+  @Test
+  void customMaxOutputTokens() {
+    ChatModel customMaxTokens = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .maxOutputTokens(512)
+        .build());
+    assertThat(customMaxTokens.defaultRequestParameters().maxOutputTokens()).isEqualTo(512);
   }
 
   private static ChatModelProvider loadModel() {

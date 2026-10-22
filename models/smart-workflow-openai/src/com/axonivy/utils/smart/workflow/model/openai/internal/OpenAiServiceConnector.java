@@ -21,7 +21,8 @@ import dev.langchain4j.model.openai.OpenAiChatModelName;
 
 public class OpenAiServiceConnector {
 
-  // Temporary model name and temperature for GPT-5. Will remove once LangChain4j fully support GPT-5
+  // Temporary model name and temperature for GPT-5. Will remove once LangChain4j
+  // fully support GPT-5
   private static final String GPT_5 = "gpt-5";
   private static final int DEFAULT_TEMPERATURE_GPT_5 = 1;
 
@@ -36,32 +37,35 @@ public class OpenAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), null);
+    return initBuilder(resolveModelName(DEFAULT_MODEL), null, null);
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), null)
+    return initBuilder(resolveModelName(DEFAULT_MODEL), null, null)
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature());
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens());
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature())
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens())
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
-  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature) {
+  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature, Integer maxOutputTokens) {
     OpenAiChatModelBuilder model = initBuilder();
 
     var request = ChatRequestParameters.builder()
         .modelName(modelName);
     temperature(modelName, temperature)
         .ifPresent(request::temperature);
+    maxOutputTokens(modelName, maxOutputTokens)
+        .ifPresent(request::maxOutputTokens);
+
     model.defaultRequestParameters(request.build());
 
     return model;
@@ -77,6 +81,15 @@ public class OpenAiServiceConnector {
     }
 
     return Optional.of(temperature == null ? DEFAULT_TEMPERATURE : temperature);
+  }
+
+  private static Optional<Integer> maxOutputTokens(String modelName, Integer maxOutputTokens) {
+    if (modelName.startsWith("o")) {
+      // Only set temperature if not using the "o" series
+      return Optional.empty();
+    }
+
+    return Optional.of(maxOutputTokens);
   }
 
   private static OpenAiChatModelBuilder initBuilder() {

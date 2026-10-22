@@ -4,6 +4,7 @@ import java.util.Optional;
 
 public final class ModelOptionUtils {
   public static final Double DEFAULT_TEMPERATURE = 0.0;
+  public static final Integer DEFAULT_MAX_TOKENS = 1024;
 
   public static Double toTemperature(String temperatureStr) {
     if (temperatureStr == null || temperatureStr.isBlank()) {
@@ -19,5 +20,9 @@ public final class ModelOptionUtils {
 
   public static Double resolveTemperature(Double temperature) {
     return Optional.ofNullable(temperature).orElse(DEFAULT_TEMPERATURE);
+  }
+
+  public static Integer resolveMaxOutputTokens(Integer maxTokens) {
+    return Optional.ofNullable(maxTokens).orElse(DEFAULT_MAX_TOKENS);
   }
 }

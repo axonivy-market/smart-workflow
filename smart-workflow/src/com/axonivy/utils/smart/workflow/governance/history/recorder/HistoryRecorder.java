@@ -8,7 +8,8 @@ public interface HistoryRecorder {
 
   record ResponseMetadata(Integer inputTokens, Integer outputTokens, Integer totalTokens,
       String finishReason, String modelName, Long durationMs,
-      String aiServiceMethod, List<String> toolNames, Double temperature) {}
+      String aiServiceMethod, List<String> toolNames, Double temperature, Integer maxOutputTokens) {
+  }
 
   void store(List<ChatMessage> messages, ResponseMetadata metadata);
 }

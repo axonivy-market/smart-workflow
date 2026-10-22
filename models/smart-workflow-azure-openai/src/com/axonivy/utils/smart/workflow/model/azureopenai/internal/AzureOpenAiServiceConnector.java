@@ -25,7 +25,8 @@ public class AzureOpenAiServiceConnector {
   private static final int DEFAULT_TEMPERATURE_GPT_5 = 1;
 
   public static AzureOpenAiChatModel.Builder buildOpenAiModel(ModelOptions options) {
-    String deploymentName = StringUtils.defaultIfBlank(options.modelName(), Ivy.var().get(AzureOpenAiConf.DEFAULT_DEPLOYMENT));
+    String deploymentName = StringUtils.defaultIfBlank(options.modelName(),
+        Ivy.var().get(AzureOpenAiConf.DEFAULT_DEPLOYMENT));
     String endpoint = StringUtils.stripEnd(Ivy.var().get(AzureOpenAiConf.ENDPOINT), "/");
     var builder = AzureOpenAiChatModel.builder()
         .endpoint(endpoint)
@@ -52,6 +53,9 @@ public class AzureOpenAiServiceConnector {
         .modelName(deployment.getModel());
     temperature(deployment.getModel(), options.temperature())
         .ifPresent(request::temperature);
+    maxOutputTokens(deployment.getModel(), options.maxOutputTokens())
+        .ifPresent(request::maxOutputTokens);
+
     builder.defaultRequestParameters(request.build());
 
     return builder;
@@ -66,5 +70,13 @@ public class AzureOpenAiServiceConnector {
       return Optional.of(Double.valueOf(DEFAULT_TEMPERATURE_GPT_5));
     }
     return Optional.of(temperature == null ? DEFAULT_TEMPERATURE : temperature);
+  }
+
+  private static Optional<Integer> maxOutputTokens(String modelName, Integer maxOutputTokens) {
+    if (modelName.startsWith("o")) {
+      // Only set max output tokens if not using the "o" series
+      return Optional.empty();
+    }
+    return Optional.of(maxOutputTokens);
   }
 }
