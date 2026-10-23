@@ -33,7 +33,7 @@
     </div>
     <div class="flex align-items-center gap-3 mb-2">
       <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/KpiTotalTokens')}</span>
-      <span><h:outputText value="#{stats.tokenMetrics.totalTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
+      <span><h:outputText value="#{stats.tokenMetrics.usage != null ? stats.tokenMetrics.usage.totalTokens : 0}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
     </div>
   </div>
 
@@ -186,7 +186,7 @@
 
       <h:panelGroup rendered="#{not empty as.summary.guardrailSummaries}" layout="block">
         <div class="mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatSubGuardrails')}</div>
-        <p:dataTable value="#{as.summary.guardrailSummaries}" var="gs" styleClass="mb-3">
+        <p:dataTable id="guardrail-summary" value="#{as.summary.guardrailSummaries}" var="gs" styleClass="mb-3">
           <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColGuardrail')}"><code>#{gs.guardrailName}</code></p:column>
           <p:column headerText="#{ivy.cms.co('/Labels/Common/Passed')}">#{gs.passedCount}</p:column>
           <p:column headerText="#{ivy.cms.co('/Labels/Common/Failed')}">#{gs.failedCount}</p:column>
@@ -202,7 +202,7 @@
               <f:param value="#{as.summary.anomalyIssues.size()}" />
             </h:outputFormat>
           </div>
-          <ul class="pl-3 mt-0 mb-0 text-orange-700">
+          <ul id="anomaly-issues" class="pl-3 mt-0 mb-0 text-orange-700">
             <ui:repeat value="#{as.summary.anomalyIssues}" var="issue">
               <li class="mb-1">#{issue}</li>
             </ui:repeat>
