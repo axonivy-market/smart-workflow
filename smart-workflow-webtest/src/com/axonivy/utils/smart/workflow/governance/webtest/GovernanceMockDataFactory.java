@@ -64,14 +64,14 @@ public class GovernanceMockDataFactory {
         "You are an invoice header extraction specialist.",
         "Extract header information from this invoice content.",
         """
-          {"invoiceNumber":"INV-0001-0001","invoiceDate":"January 15, 2024"}""",
+            {"invoiceNumber":"INV-0001-0001","invoiceDate":"January 15, 2024"}""",
         433, 113),
 
     CASE1_TASK1B_ITEMS(CaseName.CASE_1, TaskName.TASK_1B, AgentId.ITEMS, AgentName.ITEMS, 0,
         "You are an invoice line item extraction specialist.",
         "Extract all line items from this invoice content.",
         """
-          [{"description":"Software License","quantity":1,"unitPrice":12500.00}]""",
+            [{"description":"Software License","quantity":1,"unitPrice":12500.00}]""",
         438, 257),
 
     CASE1_TASK1B_COMPLY(CaseName.CASE_1, TaskName.TASK_1B, AgentId.COMPLY, AgentName.COMPLY, 0,
@@ -200,17 +200,17 @@ public class GovernanceMockDataFactory {
 
   private static String messages(String system, String user, String ai) {
     return """
-      [{"text":"%s","type":"SYSTEM"},\
-      {"contents":[{"text":"%s","type":"TEXT"}],"type":"USER"},\
-      {"text":"%s","toolExecutionRequests":[],"attributes":{},"type":"AI"}]"""
+        [{"text":"%s","type":"SYSTEM"},\
+        {"contents":[{"text":"%s","type":"TEXT"}],"type":"USER"},\
+        {"text":"%s","toolExecutionRequests":[],"attributes":{},"type":"AI"}]"""
         .formatted(esc(system), esc(user), esc(ai));
   }
 
   private static String tokens(int in, int out) {
     return """
-      [{"inputTokens":%d,"outputTokens":%d,"totalTokens":%d,\
-      "finishReason":"STOP","modelName":"%s",\
-      "durationMs":1000,"aiServiceMethod":"chat","toolNames":[],"temperature":null}]"""
+        [{"inputTokens":%d,"outputTokens":%d,"totalTokens":%d,\
+        "finishReason":"STOP","modelName":"%s",\
+        "durationMs":1000,"aiServiceMethod":"chat","toolNames":[],"temperature":null,"maxOutputTokens":null}]"""
         .formatted(in, out, in + out, Meta.MODEL);
   }
 

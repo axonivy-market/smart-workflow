@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.xai.internal;
 
 import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveMaxOutputTokens;
 import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
 
 import java.util.List;
@@ -39,30 +40,31 @@ public class XAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE);
+    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null);
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE)
+    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null)
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature());
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens());
   }
-          
+
   public static OpenAiChatModelBuilder buildJsonOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature())
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens())
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
-  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature) {
+  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature, Integer maxOutputTokens) {
     OpenAiChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
         .modelName(modelName)
-        .temperature(resolveTemperature(temperature));
+        .temperature(resolveTemperature(temperature))
+        .maxOutputTokens(resolveMaxOutputTokens(maxOutputTokens));
     builder.defaultRequestParameters(request.build());
     return builder;
   }
