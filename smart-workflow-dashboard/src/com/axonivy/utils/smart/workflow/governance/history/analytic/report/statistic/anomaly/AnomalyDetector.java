@@ -7,6 +7,8 @@ public interface AnomalyDetector {
 
   AnomalyType id();
 
+  String messageFormat();
+
   List<AnomalyIssue> detect(AnomalyDetectionContext context);
 
   default AnomalyIssue issue(Object... messageArguments) {

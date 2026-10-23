@@ -10,9 +10,16 @@ import com.axonivy.utils.smart.workflow.governance.history.analytic.report.stati
 
 public class TruncatedOutputDetector implements AnomalyDetector {
 
+  private static final String MESSAGE_FORMAT = "Finish reason is LENGTH: output was truncated";
+
   @Override
   public AnomalyType id() {
     return AnomalyType.TRUNCATED_OUTPUT;
+  }
+
+  @Override
+  public String messageFormat() {
+    return MESSAGE_FORMAT;
   }
 
   @Override
