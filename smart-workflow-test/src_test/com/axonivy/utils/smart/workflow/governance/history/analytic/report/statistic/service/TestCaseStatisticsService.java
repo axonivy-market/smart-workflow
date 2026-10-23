@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyType;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyIssue;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.TokenUsageSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.ToolSummary;
@@ -49,7 +51,9 @@ public class TestCaseStatisticsService {
 
   @Test
   void compute_agentWithAnomalies_countedInAnomalyAgents() {
-    var withAnomaly    = agentWithAnomalies(List.of("Duration exceeded 30s", "Token spike"));
+    var withAnomaly    = agentWithAnomalies(List.of(
+        new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s"),
+        new AnomalyIssue(AnomalyType.EXCESSIVE_TOKEN_USAGE, "Token spike")));
     var withoutAnomaly = agent(100, 500);
     var stats = CaseStatisticsService.compute("c", "n", List.of(withAnomaly, withoutAnomaly));
     assertThat(stats.getOverview().getAnomalyAgents()).isEqualTo(1);
@@ -188,7 +192,7 @@ public class TestCaseStatisticsService {
     summaries.forEach(summary -> summary.setTokenUsageSummary(tokenUsage));
   }
 
-  private static AgentSummary agentWithAnomalies(List<String> anomalies) {
+  private static AgentSummary agentWithAnomalies(List<AnomalyIssue> anomalies) {
     var a = agent(100, 500);
     a.setAnomalyIssues(anomalies);
     return a;

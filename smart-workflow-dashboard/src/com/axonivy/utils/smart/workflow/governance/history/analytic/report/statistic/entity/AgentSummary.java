@@ -2,6 +2,8 @@ package com.axonivy.utils.smart.workflow.governance.history.analytic.report.stat
 
 import java.util.List;
 
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyIssue;
+
 public class AgentSummary {
 
   private String agentId;
@@ -16,7 +18,7 @@ public class AgentSummary {
   private List<ToolSummary> toolSummaries;
   private List<GuardrailSummary> guardrailSummaries;
   private TokenUsageSummary tokenUsageSummary;
-  private List<String> anomalyIssues;
+  private List<AnomalyIssue> anomalyIssues;
 
   public AgentSummary() {}
 
@@ -24,7 +26,7 @@ public class AgentSummary {
       int messageCount, int toolCallCount, int totalTokens,
       long durationMs, String finishReason, String model, List<ToolSummary> toolSummaries,
       List<GuardrailSummary> guardrailSummaries, TokenUsageSummary tokenUsageSummary,
-      List<String> anomalyIssues) {
+      List<AnomalyIssue> anomalyIssues) {
     this.agentId = agentId;
     this.agentName = agentName;
     this.processName = processName;
@@ -80,7 +82,7 @@ public class AgentSummary {
   public TokenUsageSummary getTokenUsageSummary() { return tokenUsageSummary; }
   public void setTokenUsageSummary(TokenUsageSummary tokenUsageSummary) { this.tokenUsageSummary = tokenUsageSummary; }
 
-  public List<String> getAnomalyIssues() { return anomalyIssues; }
-  public void setAnomalyIssues(List<String> anomalyIssues) { this.anomalyIssues = anomalyIssues; }
+  public List<AnomalyIssue> getAnomalyIssues() { return anomalyIssues; }
+  public void setAnomalyIssues(List<AnomalyIssue> anomalyIssues) { this.anomalyIssues = anomalyIssues; }
   public boolean hasAnomalyIssues() { return anomalyIssues != null && !anomalyIssues.isEmpty(); }
 }

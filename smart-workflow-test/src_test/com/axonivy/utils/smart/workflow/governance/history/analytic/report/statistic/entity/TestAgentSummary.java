@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyType;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyIssue;
+
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest
@@ -46,7 +49,7 @@ public class TestAgentSummary {
   @Test
   void hasAnomalyIssues_withIssues_returnsTrue() {
     var agent = new AgentSummary();
-    agent.setAnomalyIssues(List.of("Duration exceeded 30s"));
+    agent.setAnomalyIssues(List.of(new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s")));
     assertThat(agent.hasAnomalyIssues()).isTrue();
   }
 

@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyDetectionContext;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyDetectionOptions;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.GuardrailSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.TokenUsageSummary;
@@ -24,6 +26,7 @@ import tools.jackson.databind.ObjectMapper;
 public class AgentSummaryService {
 
   private static final ObjectMapper MAPPER = JsonUtils.getObjectMapper();
+  private static final AnomalyDetectionService ANOMALY_DETECTION_SERVICE = new AnomalyDetectionService();
   private static final String FIELD_MESSAGES = "messages";
   private static final String WARN_PARSE_MESSAGES  = "AgentSummaryService: failed to parse messagesJson: ";
   private static final String WARN_PARSE_METADATA  = "AgentSummaryService: failed to parse tokenUsageJson: ";
@@ -49,6 +52,11 @@ public class AgentSummaryService {
   private AgentSummaryService() {}
 
   public static AgentSummary summarizeAgent(AgentConversationEntry entry, TokenUsageSummary tokenUsageSummary) {
+    return summarizeAgent(entry, tokenUsageSummary, AnomalyDetectionOptions.defaults());
+  }
+
+  public static AgentSummary summarizeAgent(AgentConversationEntry entry, TokenUsageSummary tokenUsageSummary,
+      AnomalyDetectionOptions anomalyDetectionOptions) {
     List<ToolExecution> tools     = Optional.ofNullable(entry.getToolExecutions()).orElse(List.of());
     List<GuardrailExecution> grds = Optional.ofNullable(entry.getGuardrailExecutions()).orElse(List.of());
     List<ToolSummary> toolSummaries = summarizeToolExecutions(tools);
@@ -56,12 +64,13 @@ public class AgentSummaryService {
 
     MetadataSummary meta = summarizeMetadata(parseMetadata(entry.getTokenUsageJson()));
 
-    return new AgentSummary(entry.getAgentId(), entry.getAgentName(), entry.getProcessName(),
+    AgentSummary summary = new AgentSummary(entry.getAgentId(), entry.getAgentName(), entry.getProcessName(),
         countMessages(entry.getMessagesJson()),
         tools.size(), meta.totalTokens(), meta.durationMs(), meta.finishReason(), meta.model(),
-        toolSummaries, grdSummaries, tokenUsageSummary,
-        AnomalyDetectionService.detect(tools, toolSummaries, grdSummaries,
-            meta.totalTokens(), meta.durationMs(), meta.finishReason()));
+        toolSummaries, grdSummaries, tokenUsageSummary, null);
+    summary.setAnomalyIssues(ANOMALY_DETECTION_SERVICE.detect(
+        new AnomalyDetectionContext(summary, () -> tools), anomalyDetectionOptions));
+    return summary;
   }
 
   public static List<ToolSummary> summarizeTools(List<AgentConversationEntry> entries) {
