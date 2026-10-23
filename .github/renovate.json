@@ -4,6 +4,9 @@
     "local>axonivy/renovate-config",
     "schedule:earlyMondays"
   ],
+  "baseBranchPatterns": [
+    "master"
+  ],
   "packageRules": [
     {
       "matchPackageNames" :[
