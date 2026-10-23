@@ -35,8 +35,16 @@ public class TestAnomalyDetectionService {
   void detect_durationExceedsThreshold_anomalyDetected() {
     var result = detect(List.of(), List.of(), List.of(), 100, 31_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).isEqualTo("Duration exceeded 30s (31000ms)");
+    assertThat(result.get(0).messageArguments()).containsExactly(31_000L);
     assertThat(result.get(0).type()).isEqualTo(AnomalyType.EXCESSIVE_DURATION);
+  }
+
+  @Test
+  void getMessage_formatsEnumTemplateAndArguments() {
+    var issue = detect(List.of(), List.of(), List.of(), 100, 31_000, "STOP").get(0);
+
+    assertThat(issue.getMessage())
+        .isEqualTo("Duration exceeded 30s (31000ms)");
   }
 
   @Test
@@ -48,7 +56,7 @@ public class TestAnomalyDetectionService {
   void detect_tokensExceedThreshold_anomalyDetected() {
     var result = detect(List.of(), List.of(), List.of(), 10_001, 1_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).isEqualTo("Tokens exceeded 10,000 per conversation (10001)");
+    assertThat(result.get(0).messageArguments()).containsExactly(10_001);
   }
 
   @Test
@@ -56,10 +64,14 @@ public class TestAnomalyDetectionService {
     var tools = repeat(toolExecution("search", "{}", "ok"), 11);
     var result = detect(tools, List.of(), List.of(), 100, 1_000, "STOP");
     assertThat(result).hasSize(2);
-    assertThat(result).anySatisfy(issue ->
-        assertThat(issue.message()).isEqualTo("More than 10 tool calls (11): possible loop"));
-    assertThat(result).anySatisfy(issue ->
-        assertThat(issue.message()).isEqualTo("Tool 'search' called 11 times with identical arguments: possible stuck loop"));
+    assertThat(result).anySatisfy(issue -> {
+      assertThat(issue.type()).isEqualTo(AnomalyType.EXCESSIVE_TOOL_CALLS);
+      assertThat(issue.messageArguments()).containsExactly(10, 11);
+    });
+    assertThat(result).anySatisfy(issue -> {
+      assertThat(issue.type()).isEqualTo(AnomalyType.STUCK_LOOP);
+      assertThat(issue.messageArguments()).containsExactly("search", 11L);
+    });
   }
 
   @Test
@@ -67,7 +79,7 @@ public class TestAnomalyDetectionService {
     var guardrail = new GuardrailSummary("pii-check", 5, 0, 1, 0);
     var result = detect(List.of(), List.of(), List.of(guardrail), 100, 1_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).isEqualTo("FATAL guardrail result on 'pii-check' (1 time(s))");
+    assertThat(result.get(0).messageArguments()).containsExactly("pii-check", 1);
   }
 
   @Test
@@ -80,7 +92,7 @@ public class TestAnomalyDetectionService {
   void detect_lengthFinishReason_anomalyDetected() {
     var result = detect(List.of(), List.of(), List.of(), 100, 1_000, "LENGTH");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).isEqualTo("Finish reason is LENGTH: output was truncated");
+    assertThat(result.get(0).messageArguments()).isEmpty();
   }
 
   @Test
@@ -88,8 +100,7 @@ public class TestAnomalyDetectionService {
     var toolSummary = new ToolSummary("extractor", 10, 6, 0, null);
     var result = detect(List.of(), List.of(toolSummary), List.of(), 100, 1_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).isEqualTo(
-        "Tool 'extractor' returned null/empty in 6/10 calls (>50%)");
+    assertThat(result.get(0).messageArguments()).containsExactly("extractor", 6, 10);
   }
 
   @Test
@@ -103,8 +114,7 @@ public class TestAnomalyDetectionService {
     var tools = repeat(toolExecution("processItem", "{\"id\":1}", null), 6);
     var result = detect(tools, List.of(), List.of(), 100, 1_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).isEqualTo(
-        "Tool 'processItem' called 6 times with identical arguments: possible stuck loop");
+    assertThat(result.get(0).messageArguments()).containsExactly("processItem", 6L);
   }
 
   @Test
