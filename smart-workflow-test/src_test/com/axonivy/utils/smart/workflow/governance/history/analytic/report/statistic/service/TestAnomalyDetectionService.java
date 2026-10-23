@@ -35,7 +35,7 @@ public class TestAnomalyDetectionService {
   void detect_durationExceedsThreshold_anomalyDetected() {
     var result = detect(List.of(), List.of(), List.of(), 100, 31_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).contains("31000ms");
+    assertThat(result.get(0).message()).isEqualTo("Duration exceeded 30s (31000ms)");
     assertThat(result.get(0).type()).isEqualTo(AnomalyType.EXCESSIVE_DURATION);
   }
 
@@ -48,7 +48,7 @@ public class TestAnomalyDetectionService {
   void detect_tokensExceedThreshold_anomalyDetected() {
     var result = detect(List.of(), List.of(), List.of(), 10_001, 1_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).contains("10001");
+    assertThat(result.get(0).message()).isEqualTo("Tokens exceeded 10,000 per conversation (10001)");
   }
 
   @Test
@@ -56,8 +56,10 @@ public class TestAnomalyDetectionService {
     var tools = repeat(toolExecution("search", "{}", "ok"), 11);
     var result = detect(tools, List.of(), List.of(), 100, 1_000, "STOP");
     assertThat(result).hasSize(2);
-    assertThat(result).anySatisfy(issue -> assertThat(issue.message()).contains("11").contains("tool calls"));
-    assertThat(result).anySatisfy(issue -> assertThat(issue.message()).contains("11").contains("search"));
+    assertThat(result).anySatisfy(issue ->
+        assertThat(issue.message()).isEqualTo("More than 10 tool calls (11): possible loop"));
+    assertThat(result).anySatisfy(issue ->
+        assertThat(issue.message()).isEqualTo("Tool 'search' called 11 times with identical arguments: possible stuck loop"));
   }
 
   @Test
@@ -65,7 +67,7 @@ public class TestAnomalyDetectionService {
     var guardrail = new GuardrailSummary("pii-check", 5, 0, 1, 0);
     var result = detect(List.of(), List.of(), List.of(guardrail), 100, 1_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).contains("pii-check");
+    assertThat(result.get(0).message()).isEqualTo("FATAL guardrail result on 'pii-check' (1 time(s))");
   }
 
   @Test
@@ -78,7 +80,7 @@ public class TestAnomalyDetectionService {
   void detect_lengthFinishReason_anomalyDetected() {
     var result = detect(List.of(), List.of(), List.of(), 100, 1_000, "LENGTH");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).containsIgnoringCase("LENGTH");
+    assertThat(result.get(0).message()).isEqualTo("Finish reason is LENGTH: output was truncated");
   }
 
   @Test
@@ -86,7 +88,8 @@ public class TestAnomalyDetectionService {
     var toolSummary = new ToolSummary("extractor", 10, 6, 0, null);
     var result = detect(List.of(), List.of(toolSummary), List.of(), 100, 1_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).contains("extractor");
+    assertThat(result.get(0).message()).isEqualTo(
+        "Tool 'extractor' returned null/empty in 6/10 calls (>50%)");
   }
 
   @Test
@@ -100,7 +103,8 @@ public class TestAnomalyDetectionService {
     var tools = repeat(toolExecution("processItem", "{\"id\":1}", null), 6);
     var result = detect(tools, List.of(), List.of(), 100, 1_000, "STOP");
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).message()).contains("processItem");
+    assertThat(result.get(0).message()).isEqualTo(
+        "Tool 'processItem' called 6 times with identical arguments: possible stuck loop");
   }
 
   @Test

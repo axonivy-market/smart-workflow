@@ -9,9 +9,16 @@ import com.axonivy.utils.smart.workflow.governance.history.analytic.report.stati
 
 public class FatalGuardrailResultsDetector implements AnomalyDetector {
 
+  private static final String MESSAGE_FORMAT = "FATAL guardrail result on '%s' (%d time(s))";
+
   @Override
   public AnomalyType id() {
     return AnomalyType.FATAL_GUARDRAIL_RESULTS;
+  }
+
+  @Override
+  public String messageFormat() {
+    return MESSAGE_FORMAT;
   }
 
   @Override

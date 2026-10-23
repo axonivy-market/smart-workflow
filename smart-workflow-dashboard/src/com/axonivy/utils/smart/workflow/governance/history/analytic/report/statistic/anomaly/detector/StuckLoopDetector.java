@@ -11,12 +11,18 @@ import com.axonivy.utils.smart.workflow.governance.history.analytic.report.stati
 public class StuckLoopDetector implements AnomalyDetector {
 
   private static final int THRESHOLD = 5;
+  private static final String MESSAGE_FORMAT = "Tool '%s' called %d times with identical arguments: possible stuck loop";
 
   private record ToolCallKey(String toolName, String arguments) {}
 
   @Override
   public AnomalyType id() {
     return AnomalyType.STUCK_LOOP;
+  }
+
+  @Override
+  public String messageFormat() {
+    return MESSAGE_FORMAT;
   }
 
   @Override

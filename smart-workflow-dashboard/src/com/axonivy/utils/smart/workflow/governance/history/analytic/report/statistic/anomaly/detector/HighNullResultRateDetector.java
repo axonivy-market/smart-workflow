@@ -9,7 +9,9 @@ import com.axonivy.utils.smart.workflow.governance.history.analytic.report.stati
 
 public class HighNullResultRateDetector implements AnomalyDetector {
 
-  private static final double THRESHOLD = 0.5;
+  private static final int THRESHOLD_PERCENT = 50;
+  private static final double THRESHOLD = THRESHOLD_PERCENT / 100.0;
+  private static final String MESSAGE_FORMAT = "Tool '%s' returned null/empty in %d/%d calls (>%d%%)";
 
   @Override
   public AnomalyType id() {
@@ -17,11 +19,16 @@ public class HighNullResultRateDetector implements AnomalyDetector {
   }
 
   @Override
+  public String messageFormat() {
+    return MESSAGE_FORMAT;
+  }
+
+  @Override
   public List<AnomalyIssue> detect(AnomalyDetectionContext context) {
     return context.toolSummaries().stream()
         .filter(tool -> tool.getCallCount() > 0
             && (double) tool.getNullResultCount() / tool.getCallCount() > THRESHOLD)
-        .map(tool -> issue(tool.getToolName(), tool.getNullResultCount(), tool.getCallCount()))
+        .map(tool -> issue(tool.getToolName(), tool.getNullResultCount(), tool.getCallCount(), THRESHOLD_PERCENT))
         .toList();
   }
 }
