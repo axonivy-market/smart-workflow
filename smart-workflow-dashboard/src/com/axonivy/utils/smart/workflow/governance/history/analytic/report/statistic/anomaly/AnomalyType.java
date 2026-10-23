@@ -15,7 +15,7 @@ public enum AnomalyType {
     this.messageTemplate = messageTemplate;
   }
 
-  public String formatMessage(Object... arguments) {
-    return messageTemplate.formatted(arguments);
+  public String getTemplate() {
+    return messageTemplate;
   }
 }
