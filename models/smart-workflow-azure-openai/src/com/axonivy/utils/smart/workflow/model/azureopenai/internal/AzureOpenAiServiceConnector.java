@@ -77,6 +77,6 @@ public class AzureOpenAiServiceConnector {
       // Only set max output tokens if not using the "o" series
       return Optional.empty();
     }
-    return Optional.of(maxOutputTokens);
+    return Optional.ofNullable(maxOutputTokens);
   }
 }
