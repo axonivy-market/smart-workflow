@@ -49,7 +49,8 @@ public class TestAgentSummary {
   @Test
   void hasAnomalyIssues_withIssues_returnsTrue() {
     var agent = new AgentSummary();
-    agent.setAnomalyIssues(List.of(new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s")));
+    agent.setAnomalyIssues(List.of(
+        new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s (31000ms)")));
     assertThat(agent.hasAnomalyIssues()).isTrue();
   }
 

@@ -40,6 +40,14 @@ public class TestAnomalyDetectionService {
   }
 
   @Test
+  void getMessage_returnsFormattedDetectorMessage() {
+    var issue = detect(List.of(), List.of(), List.of(), 100, 31_000, "STOP").get(0);
+
+    assertThat(issue.getMessage())
+        .isEqualTo("Duration exceeded 30s (31000ms)");
+  }
+
+  @Test
   void detect_durationAtThreshold_noAnomaly() {
     assertThat(detect(List.of(), List.of(), List.of(), 100, 30_000, "STOP")).isEmpty();
   }
@@ -56,10 +64,15 @@ public class TestAnomalyDetectionService {
     var tools = repeat(toolExecution("search", "{}", "ok"), 11);
     var result = detect(tools, List.of(), List.of(), 100, 1_000, "STOP");
     assertThat(result).hasSize(2);
-    assertThat(result).anySatisfy(issue ->
-        assertThat(issue.message()).isEqualTo("More than 10 tool calls (11): possible loop"));
-    assertThat(result).anySatisfy(issue ->
-        assertThat(issue.message()).isEqualTo("Tool 'search' called 11 times with identical arguments: possible stuck loop"));
+    assertThat(result).anySatisfy(issue -> {
+      assertThat(issue.type()).isEqualTo(AnomalyType.EXCESSIVE_TOOL_CALLS);
+      assertThat(issue.message()).isEqualTo("More than 10 tool calls (11): possible loop");
+    });
+    assertThat(result).anySatisfy(issue -> {
+      assertThat(issue.type()).isEqualTo(AnomalyType.STUCK_LOOP);
+      assertThat(issue.message()).isEqualTo(
+          "Tool 'search' called 11 times with identical arguments: possible stuck loop");
+    });
   }
 
   @Test

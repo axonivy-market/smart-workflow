@@ -8,4 +8,8 @@ public record AnomalyIssue(AnomalyType type, String message) {
     Objects.requireNonNull(type, "type");
     Objects.requireNonNull(message, "message");
   }
+
+  public String getMessage() {
+    return message;
+  }
 }

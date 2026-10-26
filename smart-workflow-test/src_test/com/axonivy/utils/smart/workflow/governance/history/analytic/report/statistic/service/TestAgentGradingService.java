@@ -42,7 +42,7 @@ public class TestAgentGradingService {
   @Test
   void gradeAgent_oneAnomaly_penalizedByFifteenPoints() {
     var agent = agent(200, 5_000, null, null,
-        List.of(new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s")), null);
+        List.of(new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s (31000ms)")), null);
     // score = 100 - (1 anomaly * 15) = 85 → B
     assertThat(AgentGradingService.gradeAgent(agent, 1_000, 20_000)).startsWith("B");
   }
@@ -77,9 +77,10 @@ public class TestAgentGradingService {
     var guardrail = new GuardrailSummary("pii", 0, 0, 5, 0);   // 5 fatals × 25 = 125
     var agent = agent(600, 12_000, List.of(tool), List.of(guardrail),
         List.of(
-            new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "a1"),
-            new AnomalyIssue(AnomalyType.EXCESSIVE_TOKEN_USAGE, "a2"),
-            new AnomalyIssue(AnomalyType.STUCK_LOOP, "a3")), "LENGTH");
+        new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s (31000ms)"),
+        new AnomalyIssue(AnomalyType.EXCESSIVE_TOKEN_USAGE, "Tokens exceeded 10,000 per conversation (10001)"),
+        new AnomalyIssue(AnomalyType.STUCK_LOOP,
+            "Tool 'search' called 6 times with identical arguments: possible stuck loop")), "LENGTH");
     // combined penalties far exceed 100 → clamped to 0 → F
     assertThat(AgentGradingService.gradeAgent(agent, 1_000, 20_000)).startsWith("F");
   }

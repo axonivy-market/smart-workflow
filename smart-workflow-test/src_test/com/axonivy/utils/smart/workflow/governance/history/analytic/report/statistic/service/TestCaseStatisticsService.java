@@ -52,8 +52,8 @@ public class TestCaseStatisticsService {
   @Test
   void compute_agentWithAnomalies_countedInAnomalyAgents() {
     var withAnomaly    = agentWithAnomalies(List.of(
-        new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s"),
-        new AnomalyIssue(AnomalyType.EXCESSIVE_TOKEN_USAGE, "Token spike")));
+        new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s (31000ms)"),
+        new AnomalyIssue(AnomalyType.EXCESSIVE_TOKEN_USAGE, "Tokens exceeded 10,000 per conversation (10001)")));
     var withoutAnomaly = agent(100, 500);
     var stats = CaseStatisticsService.compute("c", "n", List.of(withAnomaly, withoutAnomaly));
     assertThat(stats.getOverview().getAnomalyAgents()).isEqualTo(1);
