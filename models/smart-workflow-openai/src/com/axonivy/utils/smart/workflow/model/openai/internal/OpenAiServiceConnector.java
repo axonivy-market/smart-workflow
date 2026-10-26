@@ -89,7 +89,7 @@ public class OpenAiServiceConnector {
       return Optional.empty();
     }
 
-    return Optional.of(maxOutputTokens);
+    return Optional.ofNullable(maxOutputTokens);
   }
 
   private static OpenAiChatModelBuilder initBuilder() {
