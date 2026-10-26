@@ -4,6 +4,7 @@ Internal documentation for people working **on** Smart Workflow. For documentati
 
 | Guide | What it covers |
 | --- | --- |
+| [Architecture](architecture/vision.md) | Product vision, [decisions](architecture/decisions.md), [integrations](architecture/integration.md), and [components](architecture/components.md) |
 | [Dev Container](DEVCONTAINER.md) | Running the development environment locally or as a GitHub Codespace, with its Phoenix and OpenSearch sidecars |
 | [Extending](EXTENDING.md) | Adding a model provider, a custom guardrail, a Java tool or a web search engine |
 | [Testing](TESTING.md) | The test categories in `smart-workflow-test`, and how to mock LLM responses |
