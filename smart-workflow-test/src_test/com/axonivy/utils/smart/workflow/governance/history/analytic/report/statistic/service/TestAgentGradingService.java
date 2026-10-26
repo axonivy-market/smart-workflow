@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyType;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyIssue;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.GuardrailSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.ToolSummary;
@@ -39,7 +41,8 @@ public class TestAgentGradingService {
 
   @Test
   void gradeAgent_oneAnomaly_penalizedByFifteenPoints() {
-    var agent = agent(200, 5_000, null, null, List.of("Duration exceeded 30s"), null);
+    var agent = agent(200, 5_000, null, null,
+        List.of(new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s (31000ms)")), null);
     // score = 100 - (1 anomaly * 15) = 85 → B
     assertThat(AgentGradingService.gradeAgent(agent, 1_000, 20_000)).startsWith("B");
   }
@@ -73,7 +76,11 @@ public class TestAgentGradingService {
     var tool = new ToolSummary("search", 5, 0, 10, null);      // 10 errors × 10 = 100
     var guardrail = new GuardrailSummary("pii", 0, 0, 5, 0);   // 5 fatals × 25 = 125
     var agent = agent(600, 12_000, List.of(tool), List.of(guardrail),
-        List.of("a1", "a2", "a3"), "LENGTH");
+        List.of(
+        new AnomalyIssue(AnomalyType.EXCESSIVE_DURATION, "Duration exceeded 30s (31000ms)"),
+        new AnomalyIssue(AnomalyType.EXCESSIVE_TOKEN_USAGE, "Tokens exceeded 10,000 per conversation (10001)"),
+        new AnomalyIssue(AnomalyType.STUCK_LOOP,
+            "Tool 'search' called 6 times with identical arguments: possible stuck loop")), "LENGTH");
     // combined penalties far exceed 100 → clamped to 0 → F
     assertThat(AgentGradingService.gradeAgent(agent, 1_000, 20_000)).startsWith("F");
   }
@@ -87,7 +94,7 @@ public class TestAgentGradingService {
 
   private static AgentSummary agent(int tokens, long durationMs,
       List<ToolSummary> tools, List<GuardrailSummary> guardrails,
-      List<String> anomalies, String finishReason) {
+      List<AnomalyIssue> anomalies, String finishReason) {
     var agent = new AgentSummary();
     agent.setTotalTokens(tokens);
     agent.setDurationMs(durationMs);

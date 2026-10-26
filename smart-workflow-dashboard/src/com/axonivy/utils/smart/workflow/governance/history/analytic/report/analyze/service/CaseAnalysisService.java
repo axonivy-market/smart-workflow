@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.analyze.entity.CaseAnalysisResult;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly.AnomalyDetectionOptions;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.TokenUsageSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.service.AgentSummaryService;
@@ -33,14 +34,24 @@ public class CaseAnalysisService {
   }
 
   public static List<AgentSummary> buildSummaries(List<AgentConversationEntry> entries) {
+    return buildSummaries(entries, AnomalyDetectionOptions.defaults());
+  }
+
+  public static List<AgentSummary> buildSummaries(List<AgentConversationEntry> entries,
+      AnomalyDetectionOptions anomalyDetectionOptions) {
     TokenUsageSummary tokenUsageSummary = AgentSummaryService.summarizeTokenUsage(entries);
     return entries.stream()
-        .map(entry -> AgentSummaryService.summarizeAgent(entry, tokenUsageSummary))
+        .map(entry -> AgentSummaryService.summarizeAgent(entry, tokenUsageSummary, anomalyDetectionOptions))
         .toList();
   }
 
   public static CaseAnalysisResult analyze(String caseUuid, ICase ivyCase, List<AgentConversationEntry> entries) {
-    List<AgentSummary> summaries = buildSummaries(entries);
+    return analyze(caseUuid, ivyCase, entries, AnomalyDetectionOptions.defaults());
+  }
+
+  public static CaseAnalysisResult analyze(String caseUuid, ICase ivyCase, List<AgentConversationEntry> entries,
+      AnomalyDetectionOptions anomalyDetectionOptions) {
+    List<AgentSummary> summaries = buildSummaries(entries, anomalyDetectionOptions);
 
     String prompt = buildAiPrompt(caseUuid, summaries, entries);
     Map<String, Object> result = Sudo.get(() -> {
