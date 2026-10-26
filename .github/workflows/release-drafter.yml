@@ -15,4 +15,4 @@ permissions:
 
 jobs:
   release_drafter:
-    uses: axonivy-market/github-workflows/.github/workflows/release-drafter.yml@v6
+    uses: axonivy-market/github-workflows/.github/workflows/release-drafter.yml@v14
