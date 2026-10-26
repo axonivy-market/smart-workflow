@@ -12,5 +12,4 @@ jobs:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v14
     with:
       mvnArgs: -pl smart-workflow-webtest -am -P webtest.test
-      javaVersion: 25
       cspellExtraWords: .github/cspell-extra-words.txt
