@@ -59,6 +59,7 @@
       <id>webtest.test</id>
       <modules>
         <module>smart-workflow-webtest</module>
+        <module>smart-workflow-screenshot</module>
       </modules>
     </profile>
   </profiles>
