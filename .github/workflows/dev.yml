@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   build:
-    uses: axonivy-market/github-workflows/.github/workflows/dev.yml@v6
+    uses: axonivy-market/github-workflows/.github/workflows/dev.yml@v14
     with:
       targetBranchForBuildFromMaster: master
       ivyVersion: ${{ inputs.ivyVersion || 'dev' }}
