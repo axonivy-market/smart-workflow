@@ -1,6 +1,5 @@
 package com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.anomaly;
 
-import java.util.Arrays;
 import java.util.List;
 
 public interface AnomalyDetector {
@@ -12,6 +11,6 @@ public interface AnomalyDetector {
   List<AnomalyIssue> detect(AnomalyDetectionContext context);
 
   default AnomalyIssue issue(Object... messageArguments) {
-    return new AnomalyIssue(id(), Arrays.asList(messageArguments));
+    return new AnomalyIssue(id(), messageFormat().formatted(messageArguments));
   }
 }
