@@ -52,9 +52,9 @@ class TestCaseAnalysisService {
         });
 
     var caseStats = CaseStatisticsService.compute("case-1", "Case", summaries);
-    assertThat(caseStats.getTotalToolCalls()).isEqualTo(2);
-    assertThat(caseStats.getTotalErrors()).isEqualTo(1);
-    assertThat(caseStats.getTotalNullResults()).isEqualTo(1);
+    assertThat(caseStats.getToolMetrics().getTotalCalls()).isEqualTo(2);
+    assertThat(caseStats.getToolMetrics().getTotalErrors()).isEqualTo(1);
+    assertThat(caseStats.getToolMetrics().getTotalNullResults()).isEqualTo(1);
   }
 
   private static AgentConversationEntry entry(String agentId, ToolExecution tool, GuardrailExecution guardrail) {

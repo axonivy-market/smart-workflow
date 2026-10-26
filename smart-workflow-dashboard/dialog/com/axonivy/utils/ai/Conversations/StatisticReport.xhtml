@@ -29,83 +29,83 @@
     </h:panelGroup>
     <div class="flex align-items-center gap-3 mb-2">
       <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatAgents')}</span>
-      <span>#{stats.agentCount}</span>
+      <span>#{stats.overview.agentCount}</span>
     </div>
     <div class="flex align-items-center gap-3 mb-2">
       <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/KpiTotalTokens')}</span>
-      <span><h:outputText value="#{stats.totalTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
+      <span><h:outputText value="#{stats.tokenMetrics.usage != null ? stats.tokenMetrics.usage.totalTokens : 0}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
     </div>
   </div>
 
-  <div class="#{stats.totalToolCalls gt 0 ? 'cv-metric-grid' : ''} mb-4">
+  <div class="#{stats.toolMetrics.totalCalls gt 0 ? 'cv-metric-grid' : ''} mb-4">
 
-    <h:panelGroup rendered="#{stats.tokenUsage != null}" layout="block"
+    <h:panelGroup rendered="#{stats.tokenMetrics.usage != null}" layout="block"
                   styleClass="surface-card border-round-lg p-3 shadow-1">
       <div class="cv-detail-subheading mb-2 border-bottom-1 surface-border pb-1">
         #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatSectionTokenUsage')}
       </div>
       <div class="flex justify-content-between align-items-center mb-2">
         <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MetaInputTokens')}</span>
-        <span class="font-semibold"><h:outputText value="#{stats.tokenUsage.totalInputTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
+        <span class="font-semibold"><h:outputText value="#{stats.tokenMetrics.usage.totalInputTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
       </div>
       <div class="flex justify-content-between align-items-center mb-2">
         <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MetaOutputTokens')}</span>
-        <span class="font-semibold"><h:outputText value="#{stats.tokenUsage.totalOutputTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
+        <span class="font-semibold"><h:outputText value="#{stats.tokenMetrics.usage.totalOutputTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
       </div>
       <div class="flex justify-content-between align-items-center mb-2">
         <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatMaxSingle')}</span>
-        <span class="font-semibold"><h:outputText value="#{stats.tokenUsage.maxSingleConversationTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
+        <span class="font-semibold"><h:outputText value="#{stats.tokenMetrics.usage.maxSingleConversationTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
       </div>
       <div class="flex justify-content-between align-items-center mb-3">
         <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MetaTotalTokens')}</span>
-        <span class="font-semibold"><h:outputText value="#{stats.tokenUsage.totalTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
+        <span class="font-semibold"><h:outputText value="#{stats.tokenMetrics.usage.totalTokens}"><f:convertNumber groupingUsed="true"/></h:outputText></span>
       </div>
-      <h:panelGroup rendered="#{stats.tokenUsage.totalTokens gt 0}" layout="block">
+      <h:panelGroup rendered="#{stats.tokenMetrics.usage.totalTokens gt 0}" layout="block">
         <div class="flex justify-content-between mb-1">
           <span class="text-blue-500">
             #{ivy.cms.co('/Labels/Common/Input')}
-            (<h:outputText value="#{stats.tokenUsage.totalInputTokens}"><f:convertNumber groupingUsed="true"/></h:outputText>)
+            (<h:outputText value="#{stats.tokenMetrics.usage.totalInputTokens}"><f:convertNumber groupingUsed="true"/></h:outputText>)
           </span>
           <span class="text-green-600">
             #{ivy.cms.co('/Labels/Common/Output')}
-            (<h:outputText value="#{stats.tokenUsage.totalOutputTokens}"><f:convertNumber groupingUsed="true"/></h:outputText>)
+            (<h:outputText value="#{stats.tokenMetrics.usage.totalOutputTokens}"><f:convertNumber groupingUsed="true"/></h:outputText>)
           </span>
         </div>
         <div class="cv-bar-split">
           <div class="cv-bar-fill--blue"
-               style="width:#{stats.tokenUsage.totalInputTokens * 100 div stats.tokenUsage.totalTokens}%"></div>
+               style="width:#{stats.tokenMetrics.usage.totalInputTokens * 100 div stats.tokenMetrics.usage.totalTokens}%"></div>
           <div class="cv-bar-fill--green" style="flex:1"></div>
         </div>
       </h:panelGroup>
     </h:panelGroup>
 
-    <h:panelGroup rendered="#{stats.totalToolCalls gt 0}" layout="block"
+    <h:panelGroup rendered="#{stats.toolMetrics.totalCalls gt 0}" layout="block"
                   styleClass="surface-card border-round-lg p-3 shadow-1">
       <div class="cv-detail-subheading mb-2 border-bottom-1 surface-border pb-1">
         #{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatSectionToolEffectiveness')}
       </div>
       <div class="flex justify-content-between align-items-center mb-2">
         <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatTotalCalls')}</span>
-        <span class="font-semibold">#{stats.totalToolCalls}</span>
+        <span class="font-semibold">#{stats.toolMetrics.totalCalls}</span>
       </div>
       <div class="flex justify-content-between align-items-center mb-2">
         <span class="cv-stat-label">#{ivy.cms.co('/Labels/Common/Errors')}</span>
-        <span class="font-semibold #{stats.totalErrors gt 0 ? 'text-red-600' : 'text-green-600'}">#{stats.totalErrors}</span>
+        <span class="font-semibold #{stats.toolMetrics.totalErrors gt 0 ? 'text-red-600' : 'text-green-600'}">#{stats.toolMetrics.totalErrors}</span>
       </div>
       <div class="flex justify-content-between align-items-center mb-2">
         <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatNullEmpty')}</span>
-        <span class="font-semibold">#{stats.totalNullResults}</span>
+        <span class="font-semibold">#{stats.toolMetrics.totalNullResults}</span>
       </div>
       <div class="flex justify-content-between align-items-center mb-3">
         <span class="cv-stat-label">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatSuccessful')}</span>
-        <span class="font-semibold text-green-600">#{stats.toolSuccesses} (#{stats.overallToolSuccessRate}%)</span>
+        <span class="font-semibold text-green-600">#{stats.toolMetrics.successes} (#{stats.toolMetrics.successRate}%)</span>
       </div>
       <div class="cv-bar-float-wrap">
-        <span class="cv-bar-float-label #{stats.overallToolSuccessRate ge 80 ? 'text-green-600' : (stats.overallToolSuccessRate ge 40 ? 'text-yellow-500' : 'text-red-600')}"
-              style="left:#{stats.overallToolSuccessRate}%">#{stats.overallToolSuccessRate}%</span>
+        <span class="cv-bar-float-label #{stats.toolMetrics.successRate ge 80 ? 'text-green-600' : (stats.toolMetrics.successRate ge 40 ? 'text-yellow-500' : 'text-red-600')}"
+              style="left:#{stats.toolMetrics.successRate}%">#{stats.toolMetrics.successRate}%</span>
         <div class="cv-bar-track">
-          <div class="cv-bar-fill #{stats.overallToolSuccessRate ge 80 ? 'cv-bar-fill--green' : (stats.overallToolSuccessRate ge 40 ? 'cv-bar-fill--yellow' : 'cv-bar-fill--red')}"
-               style="width:#{stats.overallToolSuccessRate}%"></div>
+          <div class="cv-bar-fill #{stats.toolMetrics.successRate ge 80 ? 'cv-bar-fill--green' : (stats.toolMetrics.successRate ge 40 ? 'cv-bar-fill--yellow' : 'cv-bar-fill--red')}"
+               style="width:#{stats.toolMetrics.successRate}%"></div>
         </div>
       </div>
     </h:panelGroup>
@@ -176,35 +176,40 @@
 
       <h:panelGroup rendered="#{not empty as.summary.toolSummaries}" layout="block">
         <p:dataTable value="#{as.summary.toolSummaries}" var="ts" styleClass="mb-3">
-          <p:column headerText="#{ivy.cms.co('/Labels/Common/Tool')}"><code>#{ts.toolName}</code></p:column>
-          <p:column headerText="#{ivy.cms.co('/Labels/Common/Calls')}">#{ts.callCount}</p:column>
-          <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColSuccessRate')}">#{ts.successRate}%</p:column>
-          <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColNulls')}">#{ts.nullResultCount}</p:column>
-          <p:column headerText="#{ivy.cms.co('/Labels/Common/Errors')}">#{ts.errorCount}</p:column>
+          <p:column headerText="#{ivy.cms.co('/Labels/Common/Tool')}">
+            <h:outputText value="#{ts.toolName}" title="#{ts.toolName}" styleClass="block overflow-hidden text-overflow-ellipsis white-space-nowrap" />
+          </p:column>
+          <p:column headerText="#{ivy.cms.co('/Labels/Common/Calls')}" width="12%">#{ts.callCount}</p:column>
+          <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColSuccessRate')}" width="12%">#{ts.successRate}%</p:column>
+          <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColNulls')}" width="12%">#{ts.nullResultCount}</p:column>
+          <p:column headerText="#{ivy.cms.co('/Labels/Common/Errors')}" width="12%">#{ts.errorCount}</p:column>
         </p:dataTable>
       </h:panelGroup>
 
       <h:panelGroup rendered="#{not empty as.summary.guardrailSummaries}" layout="block">
-        <div class="mb-1">#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatSubGuardrails')}</div>
-        <p:dataTable value="#{as.summary.guardrailSummaries}" var="gs" styleClass="mb-3">
-          <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColGuardrail')}"><code>#{gs.guardrailName}</code></p:column>
-          <p:column headerText="#{ivy.cms.co('/Labels/Common/Passed')}">#{gs.passedCount}</p:column>
-          <p:column headerText="#{ivy.cms.co('/Labels/Common/Failed')}">#{gs.failedCount}</p:column>
-          <p:column headerText="#{ivy.cms.co('/Labels/Common/Fatal')}">#{gs.fatalCount}</p:column>
-          <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColAvgMs')}"><h:outputText value="#{gs.avgDurationMs}"><f:convertNumber maxFractionDigits="1"/></h:outputText></p:column>
+        <p:dataTable id="guardrail-summary" value="#{as.summary.guardrailSummaries}" var="gs" styleClass="mb-3">
+          <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColGuardrail')}">
+            <h:outputText value="#{gs.guardrailName}" title="#{gs.guardrailName}" styleClass="block overflow-hidden text-overflow-ellipsis white-space-nowrap" />
+          </p:column>
+          <p:column headerText="#{ivy.cms.co('/Labels/Common/Passed')}" width="12%">#{gs.passedCount}</p:column>
+          <p:column headerText="#{ivy.cms.co('/Labels/Common/Failed')}" width="12%">#{gs.failedCount}</p:column>
+          <p:column headerText="#{ivy.cms.co('/Labels/Common/Fatal')}" width="12%">#{gs.fatalCount}</p:column>
+          <p:column headerText="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatColAvgMs')}" width="12%">
+            <h:outputText value="#{gs.avgDurationMs}"><f:convertNumber maxFractionDigits="1"/></h:outputText>
+          </p:column>
         </p:dataTable>
       </h:panelGroup>
 
-      <h:panelGroup rendered="#{as.summary.hasAnomalyIssues()}" layout="block">
+      <h:panelGroup rendered="#{as.summary.hasAnomalyIssues()}" layout="block" styleClass="mt-5">
         <div class="border-1 border-orange-200 bg-orange-50 p-3 border-round">
           <div class="font-semibold text-orange-700 mb-1">
             <h:outputFormat value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/StatAnomalies')}">
               <f:param value="#{as.summary.anomalyIssues.size()}" />
             </h:outputFormat>
           </div>
-          <ul class="pl-3 mt-0 mb-0 text-orange-700">
+          <ul id="anomaly-issues" class="pl-3 mt-0 mb-0 text-orange-700">
             <ui:repeat value="#{as.summary.anomalyIssues}" var="issue">
-              <li class="mb-1">#{issue}</li>
+              <li class="mb-1"><h:outputText value="#{issue.getMessage()}" /></li>
             </ui:repeat>
           </ul>
         </div>

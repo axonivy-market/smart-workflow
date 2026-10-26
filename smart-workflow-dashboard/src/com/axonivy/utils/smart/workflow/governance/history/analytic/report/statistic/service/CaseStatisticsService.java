@@ -5,14 +5,20 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentStats;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.AgentSummary;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.CaseOverview;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.CaseStatistics;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.TokenMetrics;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.TokenUsageSummary;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.ToolMetrics;
+import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.ToolStats;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.entity.ToolSummary;
 import com.axonivy.utils.smart.workflow.governance.history.analytic.report.statistic.enums.FinishReasons;
 
@@ -39,43 +45,34 @@ public class CaseStatisticsService {
   private CaseStatisticsService() {}
 
   public static CaseStatistics compute(String caseId, String caseName, List<AgentSummary> summaries) {
-    CaseStatistics stats = new CaseStatistics();
-    stats.caseId    = caseId;
-    stats.caseName  = caseName;
-    stats.summaries = summaries;
+    CaseAggregates aggregates = computeAggregates(summaries);
+    double avgDurationPerAgent = aggregates.agentCount() > 0
+        ? (double) aggregates.totalDurationMs() / aggregates.agentCount() : 0;
+    TokenCosts tokenCosts = computeTokenCosts(summaries);
+    double avgTokensPerMsg = tokenCosts.tokenUsage() != null && aggregates.totalMessages() > 0
+        ? (double) tokenCosts.tokenUsage().getTotalTokens() / aggregates.totalMessages() : 0;
 
-    CaseAggregates agg     = computeAggregates(summaries);
-    stats.agentCount       = agg.agentCount();
-    stats.totalTokens      = agg.totalTokens();
-    stats.totalDurationMs  = agg.totalDurationMs();
-    stats.totalToolCalls   = agg.totalToolCalls();
-    stats.totalMessages    = agg.totalMessages();
-    stats.anomalyAgents    = agg.anomalyAgents();
-    stats.totalAnomalies   = agg.totalAnomalies();
-    stats.totalErrors      = agg.totalErrors();
-    stats.totalNullResults = agg.totalNullResults();
-    stats.processName      = agg.processName();
-    stats.lengthCount      = agg.lengthCount();
-    stats.distinctModels   = agg.distinctModels();
+    int toolSuccesses = aggregates.totalToolCalls()
+        - aggregates.totalNullResults() - aggregates.totalErrors();
+    int toolSuccessRate = sharePct(toolSuccesses, aggregates.totalToolCalls());
+    int toolErrorRate = sharePct(aggregates.totalErrors(), aggregates.totalToolCalls());
 
-    stats.avgTokensPerMsg     = stats.totalMessages > 0 ? (double) stats.totalTokens / stats.totalMessages : 0;
-    stats.avgDurationPerAgent = stats.agentCount   > 0 ? (double) stats.totalDurationMs / stats.agentCount : 0;
-
-    TokenCosts costs       = computeTokenCosts(summaries);
-    stats.tokenUsage       = costs.tokenUsage();
-    stats.outputInputRatio = costs.outputInputRatio();
-    stats.estInputCost     = costs.estInputCost();
-    stats.estOutputCost    = costs.estOutputCost();
-
-    stats.toolSuccesses          = stats.totalToolCalls - stats.totalNullResults - stats.totalErrors;
-    stats.overallToolSuccessRate = sharePct(stats.toolSuccesses, stats.totalToolCalls);
-    stats.toolStats              = computeToolStats(summaries);
-    stats.agentStats             = computeAgentStats(summaries, stats.totalTokens, stats.totalDurationMs);
-
-    CaseObservationsService.populateObservations(stats, stats.agentStats, summaries,
-        stats.totalTokens, stats.totalDurationMs, stats.totalErrors, stats.totalToolCalls);
-
-    return stats;
+    List<AgentStats> agentStats = computeAgentStats(
+        summaries, aggregates.totalTokens(), aggregates.totalDurationMs());
+    return new CaseStatistics(
+        caseId, caseName, aggregates.processName(),
+        new CaseOverview(
+            aggregates.agentCount(), aggregates.totalDurationMs(),
+            aggregates.totalMessages(), aggregates.anomalyAgents(), aggregates.totalAnomalies(),
+            aggregates.lengthCount(), aggregates.distinctModels(), avgDurationPerAgent),
+        new TokenMetrics(tokenCosts.tokenUsage(), avgTokensPerMsg, tokenCosts.outputInputRatio(),
+            tokenCosts.estInputCost(), tokenCosts.estOutputCost()),
+        new ToolMetrics(aggregates.totalToolCalls(), aggregates.totalErrors(),
+            aggregates.totalNullResults(), toolSuccesses, toolSuccessRate, toolErrorRate,
+            computeToolStats(summaries)),
+        CaseObservationsService.computeObservations(agentStats, summaries,
+            aggregates.totalTokens(), aggregates.totalDurationMs()),
+        agentStats);
   }
 
   private static CaseAggregates computeAggregates(List<AgentSummary> summaries) {
@@ -116,7 +113,12 @@ public class CaseStatisticsService {
   }
 
   private static TokenCosts computeTokenCosts(List<AgentSummary> summaries) {
-    TokenUsageSummary ts = summaries.isEmpty() ? null : summaries.get(0).getTokenUsageSummary();
+    // CaseAnalysisService attaches the same case-wide token usage to each summary.
+    TokenUsageSummary ts = summaries.stream()
+        .map(AgentSummary::getTokenUsageSummary)
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElse(null);
     double outputInputRatio = (ts != null && ts.getTotalInputTokens() > 0)
         ? (double) ts.getTotalOutputTokens() / ts.getTotalInputTokens() : 0;
     double estInputCost  = ts != null ? estimateCost(ts.getTotalInputTokens(),  Cost.INPUT_PER_MILLION)  : 0;
@@ -124,7 +126,7 @@ public class CaseStatisticsService {
     return new TokenCosts(ts, outputInputRatio, estInputCost, estOutputCost);
   }
 
-  private static List<CaseStatistics.ToolStats> computeToolStats(List<AgentSummary> summaries) {
+  private static List<ToolStats> computeToolStats(List<AgentSummary> summaries) {
     Map<String, List<ToolSummary>> byTool = summaries.stream()
         .flatMap(CaseStatisticsService::toolStream)
         .collect(Collectors.groupingBy(ToolSummary::getToolName));
@@ -137,16 +139,16 @@ public class CaseStatisticsService {
       int succ  = calls - nulls - errs;
       int rate  = sharePct(succ, calls);
       String grade = gradeToolSuccessRate(rate);
-      return new CaseStatistics.ToolStats(entry.getKey(), calls, succ, nulls, errs, rate, grade);
+      return new ToolStats(entry.getKey(), calls, succ, nulls, errs, rate, grade);
     }).toList();
   }
 
-  private static List<CaseStatistics.AgentStats> computeAgentStats(List<AgentSummary> summaries,
+  private static List<AgentStats> computeAgentStats(List<AgentSummary> summaries,
       int totalTokens, long totalDurationMs) {
-    List<CaseStatistics.AgentStats> result = new ArrayList<>();
+    List<AgentStats> result = new ArrayList<>();
     for (int i = 0; i < summaries.size(); i++) {
       AgentSummary summary = summaries.get(i);
-      result.add(new CaseStatistics.AgentStats(
+      result.add(new AgentStats(
           i,
           summary.getDisplayName(),
           summary,
