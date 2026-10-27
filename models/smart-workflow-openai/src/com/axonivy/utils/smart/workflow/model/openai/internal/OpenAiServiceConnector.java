@@ -84,11 +84,6 @@ public class OpenAiServiceConnector {
   }
 
   private static Optional<Integer> maxOutputTokens(String modelName, Integer maxOutputTokens) {
-    if (modelName.startsWith("o")) {
-      // Only set temperature if not using the "o" series
-      return Optional.empty();
-    }
-
     return Optional.ofNullable(maxOutputTokens);
   }
 
