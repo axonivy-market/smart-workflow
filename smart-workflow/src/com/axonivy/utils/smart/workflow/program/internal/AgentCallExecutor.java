@@ -131,12 +131,14 @@ public class AgentCallExecutor {
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var agentName = context.element().name();
     var temperature = ModelOptionUtils.toTemperature(execute(Conf.TEMPERATURE, String.class).orElse(null));
+    var reasoningEffort = execute(Conf.REASONING_EFFORT, String.class).orElse(null);
 
     var modelOptions = ModelOptions.builder()
         .modelName(model)
         .structuredOutput(structured)
         .hasTools(toolFilter != null && !toolFilter.isEmpty())
         .temperature(temperature)
+        .reasoningEffort(reasoningEffort)
         .build();
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);

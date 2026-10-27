@@ -63,6 +63,8 @@ Note that empty means "use the defaults", not "no guardrails". See [Using guardr
 
 Set them when one agent needs something different, such as a cheaper model for a trivial step. See [Setting a provider and model for one agent](providers.md#setting-a-provider-and-model-for-one-agent) for the values these fields accept and how they are resolved.
 
+The optional `Reasoning effort` setting is supported by OpenAI, Azure OpenAI, and xAI models. Set it to a value accepted by the selected model, commonly `low`, `medium`, or `high`. Leave it empty to use the model's default.
+
 ### Output
 
 ![The Output group of the agent element](img/agent-other-configurations.png)

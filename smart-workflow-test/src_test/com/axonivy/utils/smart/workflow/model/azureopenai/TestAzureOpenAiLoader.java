@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
+import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiServiceConnector;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
@@ -13,6 +14,7 @@ import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import ch.ivyteam.ivy.application.project.Project;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
+import com.azure.ai.openai.models.ReasoningEffortValue;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 
@@ -112,6 +114,19 @@ public class TestAzureOpenAiLoader {
     var model = provider.setup(options);
     assertThat(model.defaultRequestParameters().temperature())
         .isEqualTo(0.7);
+  }
+
+  @Test
+  void reasoningEffort(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", MODEL);
+    var options = ModelOptions.builder()
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .reasoningEffort("high")
+        .build();
+
+    var builder = AzureOpenAiServiceConnector.buildOpenAiModel(options);
+
+    assertThat(builder).extracting("reasoningEffort").isEqualTo(ReasoningEffortValue.HIGH);
   }
 
   private ModelOptions buildNormalModelOptions() {

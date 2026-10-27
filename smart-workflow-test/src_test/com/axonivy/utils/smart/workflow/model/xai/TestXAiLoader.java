@@ -13,6 +13,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.openai.OpenAiChatRequestParameters;
 
 @IvyTest
 public class TestXAiLoader {
@@ -64,6 +65,15 @@ public class TestXAiLoader {
         .temperature(0.7)
         .build());
     assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
+  }
+
+  @Test
+  void reasoningEffort() {
+    ChatModel model = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .reasoningEffort("high")
+        .build());
+    assertThat(((OpenAiChatRequestParameters) model.defaultRequestParameters()).reasoningEffort()).isEqualTo("high");
   }
 
   private static ChatModelProvider loadModel() {

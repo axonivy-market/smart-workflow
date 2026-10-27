@@ -69,6 +69,11 @@ public class AgentEditor {
             .help("Specify the temperature for the model's output randomness.")
             .requireType(Double.class)
             .create())
+        .add(ui.scriptField(Conf.REASONING_EFFORT)
+            .label("Reasoning effort:")
+            .help("Set the reasoning effort for supported models (for example: low, medium, or high).")
+            .requireType(String.class)
+            .create())
         .create();
 
     ui.group("➡️ Output")

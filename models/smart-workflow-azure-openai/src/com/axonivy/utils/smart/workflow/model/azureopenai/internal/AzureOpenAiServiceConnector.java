@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 
+import com.azure.ai.openai.models.ReasoningEffortValue;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.client.SmartAzureHttpClientProvider;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
@@ -31,6 +32,9 @@ public class AzureOpenAiServiceConnector {
         .endpoint(endpoint)
         .httpClientProvider(new SmartAzureHttpClientProvider())
         .logRequestsAndResponses(true);
+    if (StringUtils.isNotBlank(options.reasoningEffort())) {
+      builder.reasoningEffort(ReasoningEffortValue.fromString(options.reasoningEffort()));
+    }
 
     // TODO as pure test variable
     if (StringUtils.isBlank(deploymentName)) {

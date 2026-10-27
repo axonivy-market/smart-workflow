@@ -13,6 +13,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.model.chat.request.DefaultChatRequestParameters;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
+import dev.langchain4j.model.openai.OpenAiChatRequestParameters;
 
 @IvyTest
 public class TestOpenAiModelConfig {
@@ -62,6 +63,18 @@ public class TestOpenAiModelConfig {
     assertThat(builder).extracting("defaultRequestParameters")
         .extracting(r -> ((DefaultChatRequestParameters) r).temperature())
         .isEqualTo(0.5);
+  }
+
+  @Test
+  void reasoningEffort_custom(AppFixture fixture) {
+    var options = ModelOptions.builder()
+        .modelName("gpt-4.1-mini")
+        .reasoningEffort("high")
+        .build();
+    var builder = OpenAiServiceConnector.buildOpenAiModel(options);
+    assertThat(builder).extracting("defaultRequestParameters")
+        .extracting(r -> ((OpenAiChatRequestParameters) r).reasoningEffort())
+        .isEqualTo("high");
   }
 
   private static void assertModel(OpenAiChatModelBuilder builder, String expect) {
