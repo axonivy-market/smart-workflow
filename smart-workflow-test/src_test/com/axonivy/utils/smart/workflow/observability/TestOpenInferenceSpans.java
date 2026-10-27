@@ -38,7 +38,7 @@ import dev.langchain4j.data.message.VideoContent;
 
 @RestResourceTest
 class TestOpenInferenceSpans {
-  
+
   private Tracer tracer;
 
   private void setupTracing(AppFixture fixture) {
@@ -53,7 +53,7 @@ class TestOpenInferenceSpans {
   }
 
   @AfterEach
-  void clean() throws InterruptedException{
+  void clean() throws InterruptedException {
     if (this.tracer == null) {
       return;
     }
@@ -113,7 +113,7 @@ class TestOpenInferenceSpans {
     assertThat(assistants).hasSize(1);
     var llmAttrs = mapOf(assistants.get(0).attributes());
     assertThat(llmAttrs.get("error.message"))
-      .contains("invalid_api_key");
+        .contains("invalid_api_key");
   }
 
   @Test
@@ -131,12 +131,12 @@ class TestOpenInferenceSpans {
     assertAgent(agent);
     var toolCalls = findChild(agent, "Tool").toList();
     assertThat(toolCalls)
-      .as("multi-tool spans are recorded")
-      .hasSize(1);
+        .as("multi-tool spans are recorded")
+        .hasSize(1);
     var another = findChild(toolCalls.get(0), "Tool").toList();
     assertThat(another)
-      .as("records nested tool call spans! actually not expected; but we document the current behavior")
-      .hasSize(1); // should be a parallel span instead. Now we lack APIs to define a parent span
+        .as("records nested tool call spans! actually not expected; but we document the current behavior")
+        .hasSize(1); // should be a parallel span instead. Now we lack APIs to define a parent span
   }
 
   @Test
@@ -210,7 +210,7 @@ class TestOpenInferenceSpans {
 
   private void assertAgent(TraceSpan agent) {
     assertThat(mapOf(agent.attributes()))
-      .containsEntry("openinference.span.kind", "AGENT");
+        .containsEntry("openinference.span.kind", "AGENT");
   }
 
   private void assertTool(TraceSpan toolRun) {
@@ -227,87 +227,95 @@ class TestOpenInferenceSpans {
 
   private void assertToolCallAttrs(Map<String, String> attrs) {
     assertThat(attrs)
-      .as("records tool call request attributes")
-      .containsEntry("openinference.span.kind", "LLM")
-      .containsEntry("llm.system", "langchain4j")
-      .containsEntry("llm.provider", "openai")
-      .containsEntry("llm.model_name", "gpt-4.1-mini")
-      .containsEntry("input.mime_type", "application/json")
-      .containsEntry("input.value", """
-        [{"role":"system","content":"Use the 'add' tool to calculate"},{"role":"user","content":"Whats the sum of 1984 plus 41 ?"}]
-        """.strip())
-      .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}")
-      .containsEntry("llm.input_messages.0.message.content", "SystemMessage { text = \"Use the 'add' tool to calculate\" }")
-      .containsEntry("llm.input_messages.0.message.role", "system")
-      .containsEntry("llm.input_messages.1.message.content", "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
-      .containsEntry("llm.input_messages.1.message.role", "user");
-        
-    assertThat(attrs)
-      .as("records tool schema")
-      .containsEntry("llm.tools.0.tool.json_schema", """
-          {"type":"function","function":{"name":"add","description":"This is a simple calculator: supporting additions of numbers","parameters":{"description":null,"properties":{"a":{"description":"first number"},"b":{"description":"number to be added"}},"required":["a","b"],"additionalProperties":null,"definitions":{}}}}
-          """.trim());
+        .as("records tool call request attributes")
+        .containsEntry("openinference.span.kind", "LLM")
+        .containsEntry("llm.system", "langchain4j")
+        .containsEntry("llm.provider", "openai")
+        .containsEntry("llm.model_name", "gpt-4.1-mini")
+        .containsEntry("input.mime_type", "application/json")
+        .containsEntry("input.value",
+            """
+                [{"role":"system","content":"Use the 'add' tool to calculate"},{"role":"user","content":"Whats the sum of 1984 plus 41 ?"}]
+                """
+                .strip())
+        .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}")
+        .containsEntry("llm.input_messages.0.message.content",
+            "SystemMessage { text = \"Use the 'add' tool to calculate\", attributes = {} }")
+        .containsEntry("llm.input_messages.0.message.role", "system")
+        .containsEntry("llm.input_messages.1.message.content",
+            "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
+        .containsEntry("llm.input_messages.1.message.role", "user");
 
     assertThat(attrs)
-      .as("record tool call response attributes")
-      .containsEntry("llm.output_messages.0.message.content", "[tool calls: add]")
-      .containsEntry("llm.output_messages.0.message.role", "assistant")
-      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments", "{\"a\":1984,\"b\":41}")
-      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.name", "add")
-      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
-      .containsEntry("llm.response.finish_reasons", "[TOOL_EXECUTION]")
-      .containsEntry("llm.token_count.completion", "18")
-      .containsEntry("llm.token_count.prompt", "102")
-      .containsEntry("llm.token_count.total", "120")
-      .containsEntry("output.mime_type", "text/plain")
-      .containsEntry("output.value", "[tool calls: add]");
+        .as("records tool schema")
+        .containsEntry("llm.tools.0.tool.json_schema",
+            """
+                {"type":"function","function":{"name":"add","description":"This is a simple calculator: supporting additions of numbers","parameters":{"description":null,"properties":{"a":{"description":"first number"},"b":{"description":"number to be added"}},"required":["a","b"],"additionalProperties":null,"definitions":{}}}}
+                """
+                .trim());
+
+    assertThat(attrs)
+        .as("record tool call response attributes")
+        .containsEntry("llm.output_messages.0.message.content", "[tool calls: add]")
+        .containsEntry("llm.output_messages.0.message.role", "assistant")
+        .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments",
+            "{\"a\":1984,\"b\":41}")
+        .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.name", "add")
+        .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+        .containsEntry("llm.response.finish_reasons", "[TOOL_EXECUTION]")
+        .containsEntry("llm.token_count.completion", "18")
+        .containsEntry("llm.token_count.prompt", "102")
+        .containsEntry("llm.token_count.total", "120")
+        .containsEntry("output.mime_type", "text/plain")
+        .containsEntry("output.value", "[tool calls: add]");
   }
 
   private void assertToolDoneAttrs(Map<String, String> attrs) {
     assertThat(attrs)
-      .as("records completed tool-run attributes")
-      .containsEntry("input.mime_type", "application/json")
-      .containsEntry("llm.input_messages.0.message.role", "system")
-      .containsEntry("llm.input_messages.0.message.content", 
-      "SystemMessage { text = \"Use the 'add' tool to calculate\" }")
-      .containsEntry("llm.input_messages.1.message.role", "user")
-      .containsEntry("llm.input_messages.1.message.content", 
-      "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
-      .containsEntry("llm.input_messages.2.message.role", "assistant")
-      .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.function.arguments", "{\"a\":1984,\"b\":41}")
-      .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.function.name", "add")
-      .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
-      .containsEntry("llm.input_messages.3.message.role", "tool")
-      .containsEntry("llm.input_messages.3.message.tool_call_id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
-      .containsEntry("openinference.span.kind", "LLM")
-      .containsEntry("llm.system", "langchain4j")
-      .containsEntry("llm.provider", "openai")
-      .containsEntry("llm.model_name", "gpt-4.1-mini")
-      .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}")
-      .containsEntry("llm.response.finish_reasons", "[STOP]")
-      .containsEntry("llm.token_count.completion", "10")
-      .containsEntry("llm.token_count.prompt", "138")
-      .containsEntry("llm.token_count.total", "148")
-      .containsEntry("output.mime_type", "text/plain")
-      .containsEntry("output.value", "{\"value\":2025}");
+        .as("records completed tool-run attributes")
+        .containsEntry("input.mime_type", "application/json")
+        .containsEntry("llm.input_messages.0.message.role", "system")
+        .containsEntry("llm.input_messages.0.message.content",
+            "SystemMessage { text = \"Use the 'add' tool to calculate\", attributes = {} }")
+        .containsEntry("llm.input_messages.1.message.role", "user")
+        .containsEntry("llm.input_messages.1.message.content",
+            "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
+        .containsEntry("llm.input_messages.2.message.role", "assistant")
+        .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.function.arguments",
+            "{\"a\":1984,\"b\":41}")
+        .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.function.name", "add")
+        .containsEntry("llm.input_messages.2.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+        .containsEntry("llm.input_messages.3.message.role", "tool")
+        .containsEntry("llm.input_messages.3.message.tool_call_id", "call_rSF1CF9CDlXPzVykkgJTyRgU")
+        .containsEntry("openinference.span.kind", "LLM")
+        .containsEntry("llm.system", "langchain4j")
+        .containsEntry("llm.provider", "openai")
+        .containsEntry("llm.model_name", "gpt-4.1-mini")
+        .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}")
+        .containsEntry("llm.response.finish_reasons", "[STOP]")
+        .containsEntry("llm.token_count.completion", "10")
+        .containsEntry("llm.token_count.prompt", "138")
+        .containsEntry("llm.token_count.total", "148")
+        .containsEntry("output.mime_type", "text/plain")
+        .containsEntry("output.value", "{\"value\":2025}");
   }
 
   private static void assertToolResult(Map<String, String> attrs) {
     assertThat(attrs)
-      .as("records tool invocation arguments and result")
-      .containsEntry("llm.output_messages.0.message.role", "assistant")
-      .containsEntry("llm.output_messages.0.message.content", "{\"value\":2025}")
-      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.name", "add")
-      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments",
-          "{\"a\":1984,\"b\":41}")
-      .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU");
+        .as("records tool invocation arguments and result")
+        .containsEntry("llm.output_messages.0.message.role", "assistant")
+        .containsEntry("llm.output_messages.0.message.content", "{\"value\":2025}")
+        .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.name", "add")
+        .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments",
+            "{\"a\":1984,\"b\":41}")
+        .containsEntry("llm.output_messages.0.message.tool_calls.0.tool_call.id", "call_rSF1CF9CDlXPzVykkgJTyRgU");
   }
-  
-  private static void assertIvyAttrs(Map<String,String> attrs, ITask task) {
+
+  private static void assertIvyAttrs(Map<String, String> attrs, ITask task) {
     assertThat(attrs)
-      .as("Traces are enriched with Ivy attributes")
-      .containsEntry("ivy.case", task.getCase().uuid())
-      .containsEntry("ivy.task", task.uuid());
+        .as("Traces are enriched with Ivy attributes")
+        .containsEntry("ivy.case", task.getCase().uuid())
+        .containsEntry("ivy.task", task.uuid());
   }
 
   private Stream<TraceSpan> findChild(TraceSpan span, String name) {
