@@ -7,15 +7,17 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.WebAppFixture;
+import com.axonivy.utils.smart.workflow.governance.webtest.ConversationsMockDataFactory.AiReport;
 import com.axonivy.utils.smart.workflow.governance.webtest.fixture.ConversationsFixture;
 import com.axonivy.utils.smart.workflow.governance.webtest.fixture.LoginFixture;
 import com.axonivy.utils.smart.workflow.governance.webtest.page.ConversationsPage;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.cssClass;
+import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 
-@IvyWebTest(browser = "chrome")
+@IvyWebTest(browser = "chrome", headless=false)
 class ConversationsWebIT implements LoginFixture, ConversationsFixture {
 
   private ConversationsPage page;
@@ -34,6 +36,66 @@ class ConversationsWebIT implements LoginFixture, ConversationsFixture {
     verifyOcrAutoExpanded();
     verifyHeaderMessageTabs();
     verifyAnalyzerToolsTab();
+  }
+
+  @Test
+  void analysisReport() {
+    page = navigateToConversations();
+    page.contentPanel().shouldBe(visible);
+    page.reportPanel().shouldBe(visible, Duration.ofSeconds(5));
+    page.expandReportPanel();
+
+    verifyStatisticTab();
+    verifyAiRecommendationTab();
+  }
+
+  private void verifyStatisticTab() {
+    var tab = page.openReportTab(ConversationsPage.ReportTab.STATISTIC);
+
+    tab.shouldHave(text(ConversationsMockDataFactory.CASE_UUID));
+    tab.shouldHave(text(ConversationsMockDataFactory.Meta.PROCESS));
+
+    // one grade badge per agent in the breakdown
+    page.agentGradeBadges(tab).shouldHave(size(3), Duration.ofSeconds(5));
+
+    // tool effectiveness table lists the mocked tool calls
+    tab.shouldHave(text(ConversationsMockDataFactory.ToolName.EXTRACT_HEADER));
+    tab.shouldHave(text(ConversationsMockDataFactory.ToolName.EXTRACT_ITEMS));
+  }
+
+  private void verifyAiRecommendationTab() {
+    var tab = page.openReportTab(ConversationsPage.ReportTab.AI_RECOMMENDATION);
+
+    // a stored report replaces the generate button - clicking it would invoke a real LLM
+    page.aiGenerateButtonWrap().shouldNot(exist);
+
+    // 1. executive summary
+    tab.shouldHave(text(AiReport.SUMMARY));
+
+    // 2. risk assessment - Moderate is sorted ahead of the Low entries
+    page.riskBadges(ConversationsPage.Css.RISK_BADGE_HIGH)
+        .shouldHave(size(AiReport.HIGH_RISK_COUNT));
+    page.riskBadges(ConversationsPage.Css.RISK_BADGE_MODERATE)
+        .shouldHave(size(AiReport.MODERATE_RISK_COUNT));
+    page.riskBadges(ConversationsPage.Css.RISK_BADGE_LOW)
+        .shouldHave(size(AiReport.LOW_RISK_COUNT));
+
+    // 3. efficiency opportunities
+    tab.shouldHave(text(ConversationsMockDataFactory.AgentName.ANALYZER));
+    tab.shouldHave(text(AiReport.EFFICIENCY_OBSERVATION));
+    page.efficiencySuggestions().shouldBe(visible)
+        .shouldHave(text(AiReport.EFFICIENCY_SUGGESTION));
+
+    // 4. reliability concerns + tool usage patterns
+    tab.shouldHave(text(AiReport.ANOMALY));
+    tab.shouldHave(text(AiReport.RELIABILITY_CONCLUSION));
+    page.toolChips(tab).shouldHave(size(AiReport.TOOLS_USED_COUNT));
+    tab.shouldHave(text(AiReport.TOOL_OBSERVATION));
+    tab.shouldHave(text(AiReport.TOOL_INSIGHT));
+
+    // 5. recommendations
+    tab.shouldHave(text(AiReport.RECOMMENDATION_PERFORMANCE));
+    tab.shouldHave(text(AiReport.RECOMMENDATION_DATA_QUALITY));
   }
 
   private void verifySummary() {
