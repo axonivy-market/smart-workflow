@@ -53,7 +53,7 @@ public class AzureOpenAiServiceConnector {
         .modelName(deployment.getModel());
     temperature(deployment.getModel(), options.temperature())
         .ifPresent(request::temperature);
-    maxOutputTokens(deployment.getModel(), options.maxOutputTokens())
+    Optional.ofNullable(options.maxOutputTokens())
         .ifPresent(request::maxOutputTokens);
 
     builder.defaultRequestParameters(request.build());
@@ -70,13 +70,5 @@ public class AzureOpenAiServiceConnector {
       return Optional.of(Double.valueOf(DEFAULT_TEMPERATURE_GPT_5));
     }
     return Optional.of(temperature == null ? DEFAULT_TEMPERATURE : temperature);
-  }
-
-  private static Optional<Integer> maxOutputTokens(String modelName, Integer maxOutputTokens) {
-    if (modelName.startsWith("o")) {
-      // Only set max output tokens if not using the "o" series
-      return Optional.empty();
-    }
-    return Optional.ofNullable(maxOutputTokens);
   }
 }

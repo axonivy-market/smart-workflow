@@ -63,7 +63,7 @@ public class OpenAiServiceConnector {
         .modelName(modelName);
     temperature(modelName, temperature)
         .ifPresent(request::temperature);
-    maxOutputTokens(modelName, maxOutputTokens)
+    Optional.ofNullable(maxOutputTokens)
         .ifPresent(request::maxOutputTokens);
 
     model.defaultRequestParameters(request.build());
@@ -81,10 +81,6 @@ public class OpenAiServiceConnector {
     }
 
     return Optional.of(temperature == null ? DEFAULT_TEMPERATURE : temperature);
-  }
-
-  private static Optional<Integer> maxOutputTokens(String modelName, Integer maxOutputTokens) {
-    return Optional.ofNullable(maxOutputTokens);
   }
 
   private static OpenAiChatModelBuilder initBuilder() {
