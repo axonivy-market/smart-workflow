@@ -10,7 +10,7 @@ on:
       ivyVersion:
         type: string
         required: false
-        default: dev
+        default: nightly-14
         description: ivy engine permalink (e.g. sprint, nightly, dev)
 
 permissions:
@@ -23,7 +23,7 @@ jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v14
     with:
-      ivyVersion: ${{ inputs.ivyVersion || 'dev' }}
+      ivyVersion: ${{ inputs.ivyVersion || 'nightly-14' }}
     secrets:
       mvnArgs: |
        | sed -E "s|[0-9]. (WARNING) in ([^ ]*) \(at line ([0-9]+)\)(.*)|::\L\1 file=\2,line=\3::build issue\n\2@\3\4|g"\
