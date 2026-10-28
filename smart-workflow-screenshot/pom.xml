@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>com.axonivy.ivy.api</groupId>
     <artifactId>ivy-project-parent</artifactId>
-    <version>14.0.0</version>
-    <relativePath />
+    <version>14.0.1</version>
+    <relativePath></relativePath>
   </parent>
-
   <groupId>com.axonivy.utils.ai</groupId>
   <artifactId>smart-workflow-screenshot</artifactId>
   <version>14.0.0-SNAPSHOT</version>
   <packaging>iar-integration-test</packaging>
-
   <properties>
     <engine.dir>${project.build.directory}/ivyEngine</engine.dir>
     <standalone.editor.version>14.0.1-SNAPSHOT</standalone.editor.version>
   </properties>
-
   <dependencies>
     <dependency>
       <groupId>com.axonivy.ivy.api</groupId>
@@ -48,7 +43,6 @@
       <version>${standalone.editor.version}</version>
     </dependency>
   </dependencies>
-
   <repositories>
     <repository>
       <snapshots>
@@ -56,13 +50,6 @@
       </snapshots>
       <id>central</id>
       <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-    <repository>
-      <snapshots>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-      <id>maven.axonivy.com</id>
-      <url>https://maven.axonivy.com</url>
     </repository>
     <repository>
       <releases>
@@ -74,8 +61,11 @@
       <id>github</id>
       <url>https://maven.pkg.github.com/axonivy/process-editor</url>
     </repository>
+    <repository>
+      <id>maven.axonivy.com</id>
+      <url>https://maven.axonivy.com</url>
+    </repository>
   </repositories>
-
   <pluginRepositories>
     <pluginRepository>
       <releases>
@@ -88,19 +78,16 @@
       <url>https://central.sonatype.com/repository/maven-snapshots</url>
     </pluginRepository>
   </pluginRepositories>
-
   <build>
     <testSourceDirectory>src_test</testSourceDirectory>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <configuration>
           <skip>false</skip>
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.8.0</version>
         <executions>
@@ -123,14 +110,6 @@
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
         <version>${project.parent.version}</version>
-        <configuration>
-          <useLatestMinor>true</useLatestMinor>
-          <skipDeploy>false</skipDeploy>
-          <additionalVmArgs>
-            <arg>-Ddev.mode=true</arg>
-            <arg>-Dglsp.test.mode=true</arg>
-          </additionalVmArgs>
-        </configuration>
         <executions>
           <execution>
             <id>fetch-engine1</id>
@@ -147,9 +126,16 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <useLatestMinor>true</useLatestMinor>
+          <skipDeploy>false</skipDeploy>
+          <additionalVmArgs>
+            <arg>-Ddev.mode=true</arg>
+            <arg>-Dglsp.test.mode=true</arg>
+          </additionalVmArgs>
+        </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.8.1</version>
         <executions>
