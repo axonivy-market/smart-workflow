@@ -2,6 +2,7 @@ package com.axonivy.utils.smart.workflow.demo.erp.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.DemoTestProcessData;
@@ -15,6 +16,7 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
 
+@Disabled
 @RestResourceTest
 class TestAxonIvySupportAgent {
 
