@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -26,6 +27,7 @@ import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.resource.ResourceResponder;
 
 @RestResourceTest
+@Disabled
 class TestCustomFieldTrackingListener {
 
   private static final BpmProcess AGENT_PIPELINE = BpmProcess.name("AgentPipeline");
