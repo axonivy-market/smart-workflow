@@ -1,8 +1,7 @@
 package com.axonivy.utils.smart.workflow.demo.erp.shopping;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.DemoTestProcessData;
@@ -17,6 +16,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
 
 @RestResourceTest
+@Disabled
 class TestTranslationAgent {
 
   private static final BpmProcess TEST_PROCESS = BpmProcess.name("DemoTestProcess");

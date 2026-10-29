@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:f="http://xmlns.jcp.org/jsf/core"
-  xmlns:h="http://xmlns.jcp.org/jsf/html"
-  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="jakarta.faces.core"
+  xmlns:h="jakarta.faces.html"
+  xmlns:ui="jakarta.faces.facelets"
   xmlns:ic="http://ivyteam.ch/jsf/component"
   xmlns:p="primefaces"
   xmlns:pe="primefaces.extensions">
@@ -34,7 +34,8 @@
 
       <p:menuitem value="#{ivy.cms.co('/Dialogs/com/axonivy/utils/ai/Conversations/Conversations/MenuExport')}"
                   icon="ti ti-download"
-                  disabled="true" />
+                  disabled="true"
+                  rendered="#{not conversationsBean.internalSmartWorkflow}" />
     </p:menuButton>
     </p:outputPanel>
 </div>

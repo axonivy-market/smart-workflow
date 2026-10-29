@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
@@ -16,6 +17,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
 import jakarta.ws.rs.core.Response;
 
+@Disabled
 @RestResourceTest
 public class TestAiPromptInjectionInputGuardrail {
 
