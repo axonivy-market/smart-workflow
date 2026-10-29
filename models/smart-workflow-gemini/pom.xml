@@ -67,6 +67,12 @@
       <url>https://maven.axonivy.com</url>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>maven.axonivy.com</id>
+      <url>https://maven.axonivy.com</url>
+    </pluginRepository>
+  </pluginRepositories>
   <build>
     <plugins>
       <plugin>
