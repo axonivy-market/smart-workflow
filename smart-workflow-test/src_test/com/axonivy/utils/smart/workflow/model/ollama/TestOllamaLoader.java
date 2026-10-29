@@ -94,6 +94,15 @@ public class TestOllamaLoader {
     assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
   }
 
+  @Test
+  void customMaxOutputTokens() {
+    ChatModel customMaxTokens = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .maxOutputTokens(512)
+        .build());
+    assertThat(customMaxTokens.defaultRequestParameters().maxOutputTokens()).isEqualTo(512);
+  }
+
   private static ChatModelProvider loadProvider() {
     return ChatModelFactory.create(OllamaModelProvider.NAME).get();
   }

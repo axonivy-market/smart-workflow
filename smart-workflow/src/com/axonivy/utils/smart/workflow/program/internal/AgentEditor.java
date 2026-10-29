@@ -19,127 +19,126 @@ import ch.ivyteam.ivy.process.program.ui.select.SelectItem;
 
 public class AgentEditor {
 
-  public void editor(ProgramUiBuilder ui) {
-    ui.group("✉️ Message")
-        .add(ui.textField(Conf.QUERY)
-            .label("User message:")
-            .multiline()
-            .create())
-        .add(ui.textField(Conf.SYSTEM)
-            .label("System message:")
-            .multiline()
-            .create())
-        .add(ui.label("Smart Workflow uses AI to process information, generate responses, or make decisions within workflows. Depending on the workflow configuration, AI may take actions automatically. AI outputs and decisions may be inaccurate or incomplete. Please always check the outcome.").create())
-        .create();
+    public void editor(ProgramUiBuilder ui) {
+        ui.group("✉️ Message")
+                .add(ui.textField(Conf.QUERY)
+                        .label("User message:")
+                        .multiline()
+                        .create())
+                .add(ui.textField(Conf.SYSTEM)
+                        .label("System message:")
+                        .multiline()
+                        .create())
+                .add(ui.label(
+                        "Smart Workflow uses AI to process information, generate responses, or make decisions within workflows. Depending on the workflow configuration, AI may take actions automatically. AI outputs and decisions may be inaccurate or incomplete. Please always check the outcome.")
+                        .create())
+                .create();
 
-    ui.group("🛠️ Tools")
-        .add(ui.multiSelect(Conf.TOOLS)
-            .label("Available tools:")
-            .items(toolList())
-            .create())
-        .create();
+        ui.group("🛠️ Tools")
+                .add(ui.multiSelect(Conf.TOOLS)
+                        .label("Available tools:")
+                        .items(toolList())
+                        .create())
+                .create();
 
-    ui.group("🛡️ Guardrails")
-        .add(ui.label("Select guardrails to apply, or keep empty to use the default guardrails")
-            .create())
-        .add(ui.multiSelect(Conf.INPUT_GUARD_RAILS)
-            .label("Input guardrails:")
-            .items(inputGuardrailsList())
-            .create())
-        .add(ui.multiSelect(Conf.OUTPUT_GUARD_RAILS)
-            .label("Output guardrails:")
-            .items(outputGuardrailsList())
-            .create())
-        .create();
+        ui.group("🛡️ Guardrails")
+                .add(ui.label("Select guardrails to apply, or keep empty to use the default guardrails")
+                        .create())
+                .add(ui.multiSelect(Conf.INPUT_GUARD_RAILS)
+                        .label("Input guardrails:")
+                        .items(inputGuardrailsList())
+                        .create())
+                .add(ui.multiSelect(Conf.OUTPUT_GUARD_RAILS)
+                        .label("Output guardrails:")
+                        .items(outputGuardrailsList())
+                        .create())
+                .create();
 
-    ui.group("🧠️ Model")
-        .add(ui.multiSelect(Conf.PROVIDER)
-            .label("Provider:")
-            .items(providersList())
-            .help("Choose one of the supported providers. Keep empty to use default from variables.yaml")
-            .create())
-        .add(ui.scriptField(Conf.MODEL)
-            .label("Model:")
-            .help("Keep empty to use default from variables.yaml")
-            .requireType(String.class)
-            .create())
-        .add(ui.label("Optional Settings (rarely need to be changed, the defaults work for most cases").create())
-        .add(ui.scriptField(Conf.TEMPERATURE)
-            .label("Temperature:")
-            .help("Specify the temperature for the model's output randomness.")
-            .requireType(Double.class)
-            .create())
-        .create();
+        ui.group("🧠️ Model")
+                .add(ui.multiSelect(Conf.PROVIDER)
+                        .label("Provider:")
+                        .items(providersList())
+                        .help("Choose one of the supported providers. Keep empty to use default from variables.yaml")
+                        .create())
+                .add(ui.scriptField(Conf.MODEL)
+                        .label("Model:")
+                        .help("Keep empty to use default from variables.yaml")
+                        .requireType(String.class)
+                        .create())
+                .add(ui.label("Optional Settings (rarely need to be changed, the defaults work for most cases")
+                        .create())
+                .add(ui.scriptField(Conf.TEMPERATURE)
+                        .label("Temperature:")
+                        .help("Specify the temperature for the model's output randomness.")
+                        .requireType(Double.class)
+                        .create())
+                .add(ui.scriptField(Conf.MAX_OUTPUT_TOKENS)
+                        .label("Max output tokens:")
+                        .help("Limit the maximum number of tokens generated by the model.")
+                        .requireType(Integer.class)
+                        .create())
+                .create();
 
-    ui.group("➡️ Output")
-        .add(ui.scriptField(Conf.OUTPUT)
-            .label("Expect result of type:")
-            .requireType(Class.class)
-            .create())
-        .add(ui.scriptField(Conf.MAP_TO)
-            .label("Map result to:")
-            .requireType(Object.class)
-            .create())
-        .create();
-    
-    ui.group("⚙️ Advanced")
-        .add(ui.label("Advanced settings for the agent.").create())
-        .add(ui.scriptField(Conf.TEMPERATURE)
-            .label("Temperature:")
-            .help("Specify the temperature for the model's output randomness.")
-            .requireType(Double.class)
-            .create())
-        .create();
-  }
-
-  private List<SelectItem> toolList() {
-    try {
-      var ivyTools = new IvyToolsProcesses().toolStarts().stream()
-          .map(SubProcessCallStartEvent::description)
-          .map(AgentEditor::toItem);
-      return Stream.concat(ivyTools, javaToolNames()).toList();
-    } catch (Exception ex) {
-      return List.of();
+        ui.group("➡️ Output")
+                .add(ui.scriptField(Conf.OUTPUT)
+                        .label("Expect result of type:")
+                        .requireType(Class.class)
+                        .create())
+                .add(ui.scriptField(Conf.MAP_TO)
+                        .label("Map result to:")
+                        .requireType(Object.class)
+                        .create())
+                .create();
     }
-  }
 
-  private static SelectItem toItem(StartDescriptor tool) {
-    String params = tool.in().isEmpty() ? ""
-        : tool.in().stream().map(StartParameter::name)
-            .collect(Collectors.joining(", ", " (", ")"));
-    return SelectItem.of(tool.name(), tool.name() + params, "🧰️", tool.description());
-  }
-
-  private Stream<SelectItem> javaToolNames() {
-    try {
-      var pmv = SpiProject.getSmartWorkflowPmv();
-      return new SpiLoader(pmv).load(SmartWorkflowToolsProvider.class).stream()
-          .flatMap(provider -> {
-            var tools = provider.getTools();
-            return tools == null ? Stream.empty() : tools.stream();
-          })
-          .map(t -> SelectItem.of(t.name(), t.name(), "☕️", t.description()));
-    } catch (Exception ex) {
-      return Stream.empty();
+    private List<SelectItem> toolList() {
+        try {
+            var ivyTools = new IvyToolsProcesses().toolStarts().stream()
+                    .map(SubProcessCallStartEvent::description)
+                    .map(AgentEditor::toItem);
+            return Stream.concat(ivyTools, javaToolNames()).toList();
+        } catch (Exception ex) {
+            return List.of();
+        }
     }
-  }
 
-  private List<SelectItem> providersList() {
-    return ChatModelFactory.providers().stream()
-        .distinct()
-        .map(provider -> SelectItem.of(provider.name()))
-        .toList();
-  }
+    private static SelectItem toItem(StartDescriptor tool) {
+        String params = tool.in().isEmpty() ? ""
+                : tool.in().stream().map(StartParameter::name)
+                        .collect(Collectors.joining(", ", " (", ")"));
+        return SelectItem.of(tool.name(), tool.name() + params, "🧰️", tool.description());
+    }
 
-  private List<SelectItem> inputGuardrailsList() {
-    return GuardrailCollector.allInputGuardrailNames().stream()
-        .map(name -> SelectItem.of(name, name, "➡️", null))
-        .toList();
-  }
+    private Stream<SelectItem> javaToolNames() {
+        try {
+            var pmv = SpiProject.getSmartWorkflowPmv();
+            return new SpiLoader(pmv).load(SmartWorkflowToolsProvider.class).stream()
+                    .flatMap(provider -> {
+                        var tools = provider.getTools();
+                        return tools == null ? Stream.empty() : tools.stream();
+                    })
+                    .map(t -> SelectItem.of(t.name(), t.name(), "☕️", t.description()));
+        } catch (Exception ex) {
+            return Stream.empty();
+        }
+    }
 
-  private List<SelectItem> outputGuardrailsList() {
-    return GuardrailCollector.allOutputGuardrailNames().stream()
-        .map(name -> SelectItem.of(name, name, "⬅️", null))
-        .toList();
-  }
+    private List<SelectItem> providersList() {
+        return ChatModelFactory.providers().stream()
+                .distinct()
+                .map(provider -> SelectItem.of(provider.name()))
+                .toList();
+    }
+
+    private List<SelectItem> inputGuardrailsList() {
+        return GuardrailCollector.allInputGuardrailNames().stream()
+                .map(name -> SelectItem.of(name, name, "➡️", null))
+                .toList();
+    }
+
+    private List<SelectItem> outputGuardrailsList() {
+        return GuardrailCollector.allOutputGuardrailNames().stream()
+                .map(name -> SelectItem.of(name, name, "⬅️", null))
+                .toList();
+    }
 }
