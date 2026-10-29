@@ -86,7 +86,7 @@
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
-        <version>${project.parent.version}</version>
+        <version>14.0.1</version>
         <extensions>true</extensions>
       </plugin>
       <plugin>
