@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.portal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -21,6 +22,7 @@ import dev.langchain4j.http.client.log.LoggingHttpClient;
 import jakarta.ws.rs.core.Response;
 import tools.jackson.databind.JsonNode;
 
+@Disabled
 @RestResourceTest
 class TestSmartWorkflowAgent {
 

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import jakarta.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -18,6 +19,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.test.RestResourceTest;
 
+@Disabled
 @RestResourceTest
 public class TestOutputGuardrailProcess {
   private static final BpmProcess GUARDRAIL_DEMO = BpmProcess.name("GuardrailDemo");

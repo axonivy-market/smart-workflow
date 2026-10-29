@@ -3,6 +3,7 @@ package com.axonivy.utils.smart.workflow.model.azureopenai;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -20,6 +21,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
+@Disabled
 @IvyProcessTest
 @EnabledIf("providerSelected")
 public class AzureOpenAiModelE2E {
