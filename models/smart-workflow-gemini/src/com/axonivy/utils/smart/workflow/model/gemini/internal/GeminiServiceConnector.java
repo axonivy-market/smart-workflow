@@ -1,5 +1,6 @@
 package com.axonivy.utils.smart.workflow.model.gemini.internal;
 
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveMaxOutputTokens;
 import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
 
 import java.util.Arrays;
@@ -30,7 +31,9 @@ public class GeminiServiceConnector {
     GoogleAiGeminiChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
         .modelName(resolveModelName(options.modelName()))
-        .temperature(resolveTemperature(options.temperature()));
+        .temperature(resolveTemperature(options.temperature()))
+        .maxOutputTokens(resolveMaxOutputTokens(options.maxOutputTokens()));
+
     builder.defaultRequestParameters(request.build());
     return builder;
   }

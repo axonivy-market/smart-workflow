@@ -11,4 +11,5 @@ public interface Conf {
   String INPUT_GUARD_RAILS = "inputGuardrails";
   String OUTPUT_GUARD_RAILS = "outputGuardrails";
   String TEMPERATURE = "temperature";
+  String MAX_OUTPUT_TOKENS = "maxOutputTokens";
 }
