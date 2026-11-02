@@ -1,0 +1,30 @@
+Dialogs:
+  com:
+    axonivy:
+      utils:
+        ai:
+          components:
+            Chatbot:
+              AssistantName: AI assistant
+              HeaderSubtitle: Ask a question and get a helpful response
+              NewChat: New chat
+              EmptyTitle: How can I help?
+              EmptyText: Ask a question about your work, and I'll do my best to answer it.
+              InputPlaceholder: Ask a question...
+              KeyEnter: Enter
+              KeyShift: Shift
+              HintSend: to send
+              HintNewLine: for a new line
+              SendButtonTitle: Send message
+              ThinkingText: Thinking...
+              CopyAnswer: Copy answer
+              Retry: Retry
+              ShowDetails: Show details
+              HideDetails: Hide details
+              Disclaimer: AI answers can be wrong. Check important information.
+              ErrorMessage: The AI service didn't respond. Your question is kept, so you can try again.
+              InputGuardrailMessage: Your message didn't pass a safety check, so it wasn't sent to the AI. Please rephrase it and try again.
+              OutputGuardrailMessage: The answer didn't pass a safety check, so it isn't shown. Try asking in a different way.
+              CircuitBreakerMessage: The AI assistant is switched off right now. Please try again later or contact your administrator.
+              MessageTooLong: Your message is too long. Please shorten it to {0} characters or fewer.
+              EmptyAnswerMessage: The AI didn't return an answer. Your question is kept, so you can try again.

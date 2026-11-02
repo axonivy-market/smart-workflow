@@ -1,0 +1,22 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "ChatbotAgentsData",
+  "namespace" : "com.axonivy.utils.ai.chatbot",
+  "fields" : [ {
+    "name" : "userMessage",
+    "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage",
+    "modifiers" : [ ]
+  }, {
+    "name" : "history",
+    "type" : "List<com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage>",
+    "modifiers" : [ ]
+  }, {
+    "name" : "answerText"
+  }, {
+    "name" : "blockReason",
+    "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason"
+  }, {
+    "name" : "errorDetails",
+    "type" : "String"
+  } ]
+}
