@@ -12,17 +12,17 @@ public final class SmartWorkflowErrorMessage implements Serializable {
 
   private final String content;
   private final String details;
-  private final boolean retryable;
+  private final boolean retryAllowed;
 
   public SmartWorkflowErrorMessage(String content, String details) {
     this(content, details, true);
   }
 
-  /** @param retryable false when asking again cannot help, e.g. the message itself was rejected */
-  public SmartWorkflowErrorMessage(String content, String details, boolean retryable) {
+  /** @param retryAllowed false when asking again cannot help, e.g. the message itself was rejected */
+  public SmartWorkflowErrorMessage(String content, String details, boolean retryAllowed) {
     this.content = content;
     this.details = details;
-    this.retryable = retryable;
+    this.retryAllowed = retryAllowed;
   }
 
   public String getContent() {
@@ -37,7 +37,7 @@ public final class SmartWorkflowErrorMessage implements Serializable {
     return details != null && !details.isBlank();
   }
 
-  public boolean isRetryable() {
-    return retryable;
+  public boolean isRetryAllowed() {
+    return retryAllowed;
   }
 }

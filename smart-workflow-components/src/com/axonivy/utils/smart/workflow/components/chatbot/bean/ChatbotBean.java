@@ -85,7 +85,7 @@ public class ChatbotBean implements Serializable {
 
   /** Asks the last unanswered question again after an error. */
   public void retry() {
-    if (error == null || !error.isRetryable() || chatHistory.isEmpty()) {
+    if (error == null || !error.isRetryAllowed() || chatHistory.isEmpty()) {
       return;
     }
     SmartWorkflowMessage lastMessage = chatHistory.get(chatHistory.size() - 1);

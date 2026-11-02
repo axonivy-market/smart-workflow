@@ -28,7 +28,7 @@
 <!--
   The component has no h:form of its own so it can be placed inside a host form.
   Put it inside an h:form; its requests only process the chatbot's own fields.
-  It initialises itself whenever it is rendered. AiChatbot.init(clientId) can be called again
+  It initializes itself whenever it is rendered. AiChatbot.init(clientId) can be called again
   safely, e.g. after moving the markup outside of JSF.
 -->
 <cc:implementation>
@@ -103,7 +103,7 @@
               <i class="ti ti-alert-circle chatbot-error-icon" aria-hidden="true" />
               <span class="flex-1 min-w-0 text-color line-height-3">#{cc.attrs.managedBean.error.content}</span>
               <p:commandButton id="retry" icon="ti ti-refresh" styleClass="chatbot-retry ui-button-outlined"
-                rendered="#{cc.attrs.managedBean.error.retryable}"
+                rendered="#{cc.attrs.managedBean.error.retryAllowed}"
                 value="#{ivy.cms.co(cmsPath.concat('Retry'))}"
                 action="#{cc.attrs.managedBean.retry}" process="@this" update="thread" global="false"
                 oncomplete="AiChatbot.afterRetry('#{cc.clientId}');" />
@@ -160,7 +160,7 @@
       oncomplete="AiChatbot.afterAnswer('#{cc.clientId}');" />
 
     <!-- runs on every render of the component, including ajax updates and dynamic dialogs.
-         When chatbot.js is not loaded yet, the id is queued and chatbot.js initialises it on load. -->
+         When chatbot.js is not loaded yet, the id is queued and chatbot.js initializes it on load. -->
     <script>
       if (window.AiChatbot) {
         AiChatbot.init('#{cc.clientId}');
