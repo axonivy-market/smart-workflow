@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.xai.internal;
 
 import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.DEFAULT_TEMPERATURE;
+import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveMaxOutputTokens;
 import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
 
 import java.util.List;
@@ -39,30 +40,34 @@ public class XAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null);
+    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null, null);
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null)
+    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null, null)
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.reasoningEffort());
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens(),
+        options.reasoningEffort());
   }
-          
+
   public static OpenAiChatModelBuilder buildJsonOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.reasoningEffort())
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens(),
+        options.reasoningEffort())
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
-  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature, String reasoningEffort) {
+  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature, Integer maxOutputTokens,
+      String reasoningEffort) {
     OpenAiChatModelBuilder builder = initBuilder();
     var request = OpenAiChatRequestParameters.builder()
         .modelName(modelName)
-        .temperature(resolveTemperature(temperature));
+        .temperature(resolveTemperature(temperature))
+        .maxOutputTokens(resolveMaxOutputTokens(maxOutputTokens));
     if (StringUtils.isNotBlank(reasoningEffort)) {
       request.reasoningEffort(reasoningEffort);
     }

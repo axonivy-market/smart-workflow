@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.azureopenai;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,11 +11,11 @@ import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiSe
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
+import com.azure.ai.openai.models.ReasoningEffortValue;
 
 import ch.ivyteam.ivy.application.project.Project;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
-import com.azure.ai.openai.models.ReasoningEffortValue;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 
@@ -73,9 +74,9 @@ public class TestAzureOpenAiLoader {
   }
 
   @Test
-  void secrets_deploymentAware(){
+  void secrets_deploymentAware() {
     assertThat(provider.secretsVars())
-      .contains(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".APIKey");
+        .contains(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".APIKey");
   }
 
   @Test
@@ -107,13 +108,27 @@ public class TestAzureOpenAiLoader {
     fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "custom-model");
 
     var options = ModelOptions.builder()
-      .modelName(TEST_DEPLOYMENT_NAME)
-      .temperature(0.7)
-      .build();
-    
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .temperature(0.7)
+        .build();
+
     var model = provider.setup(options);
     assertThat(model.defaultRequestParameters().temperature())
         .isEqualTo(0.7);
+  }
+
+  @Test
+  void custom_max_output_tokens(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "custom-model");
+
+    var options = ModelOptions.builder()
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .maxOutputTokens(512)
+        .build();
+
+    var model = provider.setup(options);
+    assertThat(model.defaultRequestParameters().maxOutputTokens())
+        .isEqualTo(512);
   }
 
   @Test
@@ -131,14 +146,14 @@ public class TestAzureOpenAiLoader {
 
   private ModelOptions buildNormalModelOptions() {
     return ModelOptions.builder()
-      .modelName(TEST_DEPLOYMENT_NAME)
-      .build();
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .build();
   }
 
   private ModelOptions buildStructuredModelOptions() {
     return ModelOptions.builder()
-      .modelName(TEST_DEPLOYMENT_NAME)
-      .structuredOutput(true)
-      .build();
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .structuredOutput(true)
+        .build();
   }
 }

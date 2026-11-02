@@ -10,6 +10,7 @@ public record ModelOptions(
     boolean hasTools,
     List<ChatModelListener> listeners,
     Double temperature,
+    Integer maxOutputTokens,
     String reasoningEffort) {
 
   public static Builder builder() {
@@ -22,6 +23,7 @@ public record ModelOptions(
     private boolean hasTools;
     private List<ChatModelListener> listeners = List.of();
     private Double temperature = 0.0;
+    private Integer maxOutputTokens;
     private String reasoningEffort;
 
     public Builder modelName(String modelName) {
@@ -49,13 +51,19 @@ public record ModelOptions(
       return this;
     }
 
+    public Builder maxOutputTokens(Integer maxOutputTokens) {
+      this.maxOutputTokens = maxOutputTokens;
+      return this;
+    }
+
     public Builder reasoningEffort(String reasoningEffort) {
       this.reasoningEffort = reasoningEffort;
       return this;
     }
 
     public ModelOptions build() {
-      return new ModelOptions(modelName, structuredOutput, hasTools, listeners, temperature, reasoningEffort);
+      return new ModelOptions(modelName, structuredOutput, hasTools, listeners, temperature, maxOutputTokens,
+          reasoningEffort);
     }
   }
 }

@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.xai;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,8 +46,7 @@ public class TestXAiLoader {
   void listModels() {
     assertThat(provider.models()).contains(
         "grok-4-1-fast",
-        "grok-4-1-mini"
-    );
+        "grok-4-1-mini");
   }
 
   @Test
@@ -65,6 +65,15 @@ public class TestXAiLoader {
         .temperature(0.7)
         .build());
     assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
+  }
+
+  @Test
+  void customMaxOutputTokens() {
+    ChatModel customMaxTokens = provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .maxOutputTokens(512)
+        .build());
+    assertThat(customMaxTokens.defaultRequestParameters().maxOutputTokens()).isEqualTo(512);
   }
 
   @Test

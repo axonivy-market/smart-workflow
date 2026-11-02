@@ -43,9 +43,14 @@ public class AgentResponseListener implements AiServiceListener<AiServiceRespons
     var usage = Optional.ofNullable(response.tokenUsage());
     long durationMs = System.currentTimeMillis() - context.timestamp().toEpochMilli();
     var temperature = Optional.ofNullable(context)
-      .map(InvocationContext::defaultRequestParameters)
-      .map(ChatRequestParameters::temperature)
-      .orElse(null);
+        .map(InvocationContext::defaultRequestParameters)
+        .map(ChatRequestParameters::temperature)
+        .orElse(null);
+    var maxOutputTokens = Optional.ofNullable(context)
+        .map(InvocationContext::defaultRequestParameters)
+        .map(ChatRequestParameters::maxOutputTokens)
+        .orElse(null);
+
     return new HistoryRecorder.ResponseMetadata(
         usage.map(TokenUsage::inputTokenCount).orElse(null),
         usage.map(TokenUsage::outputTokenCount).orElse(null),
@@ -55,7 +60,8 @@ public class AgentResponseListener implements AiServiceListener<AiServiceRespons
         durationMs,
         context.methodName(),
         toolNames(event),
-        temperature);
+        temperature,
+        maxOutputTokens);
   }
 
   private static List<String> toolNames(AiServiceResponseReceivedEvent event) {
