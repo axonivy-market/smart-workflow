@@ -1,0 +1,59 @@
+name: Screenshots
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  screenshot:
+    name: Capture Screenshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          server-id: github
+          server-username: GH_PKG_USER
+          server-password: GH_PKG_WRITE
+
+      - name: Verify screenshot tests
+        if: github.ref != 'refs/heads/master' 
+        run: mvn -B -ntp -P webtest.test -DskipTests -pl smart-workflow-screenshot -am verify
+        env:
+          GH_PKG_USER: ${{ secrets.GH_PKG_USER }}
+          GH_PKG_WRITE: ${{ secrets.GH_PKG_READ }}
+
+      - name: Deploy screenshot package
+        if: github.ref == 'refs/heads/master'
+        run: |
+          mvn -B -ntp -DskipTests -DskipITs install
+          mvn -B -ntp -P webtest.test -DskipTests -pl smart-workflow-screenshot deploy -DaltDeploymentRepository=github::https://maven.pkg.github.com/${{ github.repository }}
+        env:
+          GH_PKG_USER: ${{ secrets.GH_PKG_USER }}
+          GH_PKG_WRITE: ${{ secrets.GH_PKG_WRITE }}
+
+      - name: Archive screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ github.run_number }}
+          path: |
+            smart-workflow-screenshot/target/selenide/reports/**/*.png
+            smart-workflow-screenshot/target/selenide/reports/**/*.html
+            smart-workflow-screenshot/target/testEngineOut.log
+            smart-workflow-screenshot/target/failsafe-reports/*.*
+          if-no-files-found: warn
+          retention-days: 14

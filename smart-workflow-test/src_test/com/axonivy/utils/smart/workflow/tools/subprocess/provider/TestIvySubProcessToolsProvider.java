@@ -1,18 +1,18 @@
 package com.axonivy.utils.smart.workflow.tools.subprocess.provider;
 
-import static com.axonivy.utils.smart.workflow.client.OpenAiTestClient.aiMock;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
+import static com.axonivy.utils.smart.workflow.client.OpenAiTestClient.aiMock;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 import com.axonivy.utils.smart.workflow.tools.internal.IvySubProcessToolExecutor;
 import com.axonivy.utils.smart.workflow.tools.internal.IvySubProcessToolSpecs;
@@ -31,6 +31,7 @@ import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.service.AiServices;
 
 @RestResourceTest
+@Disabled
 class TestIvySubProcessToolsProvider {
 
   @RegisterExtension

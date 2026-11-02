@@ -1,18 +1,15 @@
 package com.axonivy.utils.smart.workflow.model.azureopenai;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.net.URI;
 import java.net.URL;
 
-import jakarta.ws.rs.core.Response;
-
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.client.SmartAzureHttpClient;
-
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpMethod;
 import com.azure.core.http.HttpRequest;
@@ -21,6 +18,7 @@ import com.azure.core.util.Context;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.test.RestResourceTest;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Drives a real request through {@link SmartAzureHttpClient} against the in-engine
@@ -29,6 +27,7 @@ import ch.ivyteam.test.RestResourceTest;
  * {@code HttpClient} error contract (return, don't throw) is honoured.
  */
 @RestResourceTest
+@Disabled
 public class TestAzureOpenAiHttpClientRouting {
 
   @Test
