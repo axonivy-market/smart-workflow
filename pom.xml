@@ -19,6 +19,8 @@
     <module>smart-workflow-demo</module>
     <module>smart-workflow-test</module>
     <module>smart-workflow-product</module>
+    <module>smart-workflow-components</module>
+    <module>smart-workflow-components-demo</module>
   </modules>
 
   <scm>
