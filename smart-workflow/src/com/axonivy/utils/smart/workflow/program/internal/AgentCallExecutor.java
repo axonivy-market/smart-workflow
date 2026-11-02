@@ -23,6 +23,7 @@ import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.tools.human.internal.HumanInTheLoop;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
+
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.data.message.Content;
@@ -118,25 +119,30 @@ public class AgentCallExecutor {
     return new MemoryContext(new ProcessDataField(context.script()), store);
   }
 
-  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) {}
+  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) {
+  }
 
-  private HumanInTheLoop configureHumanInTheLoop(MemoryContext memory, AiServices<? extends DynamicAgent<?>> agentBuilder) {
+  private HumanInTheLoop configureHumanInTheLoop(MemoryContext memory,
+      AiServices<? extends DynamicAgent<?>> agentBuilder) {
     HumanInTheLoop humanInTheLoop = new HumanInTheLoop(memory.memoryId, memory.store);
     agentBuilder.registerListeners(humanInTheLoop.provide());
     return humanInTheLoop;
   }
 
-  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured, List<String> toolFilter) {
+  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured,
+      List<String> toolFilter) {
     var provider = ChatModelFactory.getProviderOrDefault(configuredProvider());
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var agentName = context.element().name();
     var temperature = ModelOptionUtils.toTemperature(execute(Conf.TEMPERATURE, String.class).orElse(null));
+    var maxOutputTokens = execute(Conf.MAX_OUTPUT_TOKENS, Integer.class).orElse(null);
 
     var modelOptions = ModelOptions.builder()
         .modelName(model)
         .structuredOutput(structured)
         .hasTools(toolFilter != null && !toolFilter.isEmpty())
         .temperature(temperature)
+        .maxOutputTokens(maxOutputTokens)
         .build();
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);
@@ -151,7 +157,8 @@ public class AgentCallExecutor {
     if (!providerConfig.isEmpty()) {
       providerName = providerConfig.get(0);
       if (providerConfig.size() > 1) {
-        Ivy.log().warn("Only one provider is allowed. Will use " + providerConfig.get(0) + ", and ignore other from: " + providerConfig);
+        Ivy.log().warn("Only one provider is allowed. Will use " + providerConfig.get(0) + ", and ignore other from: "
+            + providerConfig);
       }
     }
     return providerName;
