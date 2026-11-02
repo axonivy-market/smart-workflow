@@ -2,10 +2,7 @@ package com.axonivy.utils.smart.workflow.guardrails;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -18,8 +15,8 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.test.RestResourceTest;
+import jakarta.ws.rs.core.Response;
 
-@Disabled
 @RestResourceTest
 public class TestOutputGuardrailProcess {
   private static final BpmProcess GUARDRAIL_DEMO = BpmProcess.name("GuardrailDemo");
@@ -34,11 +31,14 @@ public class TestOutputGuardrailProcess {
 
   private static Response buildResponse() {
     /*
-    * The following fake credentials are used for testing purposes only and do not provide
-    * access to any production systems. Please do not submit them as part of a bug bounty program.
-    * ResourceResponder#send() is not used here because the test requires string concatenation
-    * to prevent false positives from automated sensitive-data detection tools.
-    */
+     * The following fake credentials are used for testing purposes only and do not
+     * provide
+     * access to any production systems. Please do not submit them as part of a bug
+     * bounty program.
+     * ResourceResponder#send() is not used here because the test requires string
+     * concatenation
+     * to prevent false positives from automated sensitive-data detection tools.
+     */
     String apiKeyExample = "sk-" + "1234567890abcdef1234567890abcdef";
     String body = """
         {

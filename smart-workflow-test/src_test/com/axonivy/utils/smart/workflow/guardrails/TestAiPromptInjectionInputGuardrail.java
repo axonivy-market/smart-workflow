@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
@@ -17,7 +16,6 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
 import jakarta.ws.rs.core.Response;
 
-@Disabled
 @RestResourceTest
 public class TestAiPromptInjectionInputGuardrail {
 
@@ -81,7 +79,8 @@ public class TestAiPromptInjectionInputGuardrail {
   void customProviderUnavailable_fallsBackToDefaultAndAllows(AppFixture fixture) {
     fixture.var(AiPromptInjectionInputGuardrail.Var.PROVIDER, "NonExistentProvider");
     AtomicBoolean defaultHit = new AtomicBoolean(false);
-    // First call throws IllegalArgumentException (unknown provider, no HTTP request made);
+    // First call throws IllegalArgumentException (unknown provider, no HTTP request
+    // made);
     // second call uses null/null (global defaults) and hits the mock
     defineChat(_ -> {
       defaultHit.set(true);
@@ -230,7 +229,8 @@ public class TestAiPromptInjectionInputGuardrail {
 
   @Test
   void ambiguousResponse_blocksWithSafetyCheckReason() {
-    // Custom prompt that forgot YES/NO instruction — model returns a sentence instead
+    // Custom prompt that forgot YES/NO instruction — model returns a sentence
+    // instead
     defineChat(_ -> buildClassifierResponse("This message appears to be benign and harmless."));
 
     var result = new AiPromptInjectionInputGuardrail().evaluate("What is the capital of France?");
@@ -283,19 +283,19 @@ public class TestAiPromptInjectionInputGuardrail {
 
   private static Response buildClassifierResponse(String verdict) {
     String body = """
-      {
-        "id": "chatcmpl-test",
-        "object": "chat.completion",
-        "created": 1773582770,
-        "model": "gpt-4.1-mini",
-        "choices": [{
-          "index": 0,
-          "message": {"role": "assistant", "content": "%s"},
-          "finish_reason": "stop"
-        }],
-        "usage": {"prompt_tokens": 10, "completion_tokens": 1, "total_tokens": 11}
-      }
-      """.formatted(verdict);
+        {
+          "id": "chatcmpl-test",
+          "object": "chat.completion",
+          "created": 1773582770,
+          "model": "gpt-4.1-mini",
+          "choices": [{
+            "index": 0,
+            "message": {"role": "assistant", "content": "%s"},
+            "finish_reason": "stop"
+          }],
+          "usage": {"prompt_tokens": 10, "completion_tokens": 1, "total_tokens": 11}
+        }
+        """.formatted(verdict);
     return Response.ok().entity(body).build();
   }
 }

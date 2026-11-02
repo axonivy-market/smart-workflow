@@ -1,10 +1,10 @@
 package com.axonivy.utils.smart.workflow.model.azureopenai;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.net.URI;
 import java.net.URL;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -21,13 +21,14 @@ import ch.ivyteam.test.RestResourceTest;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Drives a real request through {@link SmartAzureHttpClient} against the in-engine
- * {@link MockOpenAI} resource, verifying that Azure-OpenAI traffic is routed through
+ * Drives a real request through {@link SmartAzureHttpClient} against the
+ * in-engine
+ * {@link MockOpenAI} resource, verifying that Azure-OpenAI traffic is routed
+ * through
  * Ivy's REST client (the source of engine-cockpit tracing) and that the Azure
  * {@code HttpClient} error contract (return, don't throw) is honoured.
  */
 @RestResourceTest
-@Disabled
 public class TestAzureOpenAiHttpClientRouting {
 
   @Test
@@ -57,7 +58,8 @@ public class TestAzureOpenAiHttpClientRouting {
     URL url = URI.create(OpenAiTestClient.localMockApiUrl("azureTest") + "/chat/completions").toURL();
     var request = new HttpRequest(HttpMethod.POST, url)
         .setHeader(HttpHeaderName.CONTENT_TYPE, "application/json")
-        // Ivy's REST API rejects POSTs without this CSRF header; real Azure endpoints don't need it.
+        // Ivy's REST API rejects POSTs without this CSRF header; real Azure endpoints
+        // don't need it.
         .setHeader(HttpHeaderName.fromString("X-Requested-By"), "ivy")
         .setBody(body);
     return client.sendSync(request, Context.NONE);
