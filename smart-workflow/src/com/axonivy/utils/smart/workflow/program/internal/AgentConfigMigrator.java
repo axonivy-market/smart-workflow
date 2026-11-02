@@ -26,11 +26,38 @@ public class AgentConfigMigrator implements ProgramConfigMigrator {
     toComma(latest, "tools");
     toComma(latest, "inputGuardrails");
     toComma(latest, "outputGuardrails");
+    toComma(latest, Conf.REASONING_EFFORT);
+    migrateReasoningEffort(config.get(Conf.REASONING_EFFORT), latest);
     Optional.ofNullable(config.get("provider"))
         .filter(Predicate.not(String::isBlank))
         .map(provider -> StringUtils.substringBetween(provider, "\""))
         .ifPresent(newProvider -> latest.put("provider", newProvider));
     return latest;
+  }
+
+  private void migrateReasoningEffort(String configuredEffort, HashMap<String, String> latest) {
+    Optional.ofNullable(configuredEffort)
+        .filter(Predicate.not(String::isBlank))
+        .map(String::trim)
+        .map(value -> {
+          String literal = StringUtils.substringBetween(value, "\"");
+          return literal == null ? reasoningEffortConstant(value) : literal;
+        })
+        .filter(this::isReasoningEffort)
+        .ifPresent(effort -> latest.put(Conf.REASONING_EFFORT, effort));
+  }
+
+  private String reasoningEffortConstant(String value) {
+    return Arrays.stream(ReasoningEffort.values())
+        .map(ReasoningEffort::name)
+        .filter(effort -> value.equals(effort) || value.endsWith("." + effort))
+        .findFirst()
+        .orElse(value);
+  }
+
+  private boolean isReasoningEffort(String value) {
+    return Arrays.stream(ReasoningEffort.values())
+        .anyMatch(effort -> effort.name().equals(value));
   }
 
   private void toComma(HashMap<String, String> config, String what) {

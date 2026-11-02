@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Token Optimization | Multiple-Choice Q&amp;A</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17252a;
+      --muted: #53656a;
+      --accent: #087e78;
+      --accent-light: #e7f4f1;
+      --rule: #cbd8d6;
+      --paper: #fffefa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #e9efec;
+      color: var(--ink);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.48;
+    }
+    .sheet {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 24px auto;
+      padding: .68in .72in .62in;
+      background: var(--paper);
+      box-shadow: 0 5px 24px #17252a20;
+      position: relative;
+    }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: 28pt; line-height: 1.1; letter-spacing: 0; }
+    .subtitle { margin: 10px 0 20px; color: var(--muted); font-size: 12pt; }
+    .meta {
+      display: flex;
+      gap: 30px;
+      margin: 18px 0 22px;
+      color: var(--muted);
+      font-size: 10pt;
+    }
+    .meta span { flex: 1; border-bottom: 1px solid var(--rule); padding-bottom: 5px; }
+    .note {
+      border-left: 3px solid var(--accent);
+      background: var(--accent-light);
+      padding: 10px 13px;
+      margin: 0 0 22px;
+      font-size: 10pt;
+    }
+    .question { break-inside: avoid; margin: 0 0 16px; }
+    .question h2 { margin: 0 0 5px; font-size: 11pt; line-height: 1.35; }
+    .number { color: var(--accent); margin-right: 5px; }
+    .options { margin: 0; padding: 0; list-style: none; }
+    .options li { margin: 2px 0 2px 22px; color: #29383c; }
+    .letter { display: inline-block; width: 19px; font-weight: 700; color: var(--muted); }
+    .answers { break-before: page; }
+    .answers h1 { font-size: 25pt; }
+    .answer { break-inside: avoid; padding: 10px 0 11px; border-bottom: 1px solid var(--rule); }
+    .answer strong { color: var(--accent); }
+    .answer p { margin: 4px 0 0; color: #35464a; }
+    .footer {
+      position: absolute;
+      right: .72in;
+      bottom: .28in;
+      left: .72in;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--rule);
+      padding-top: 6px;
+      color: var(--muted);
+      font-size: 8pt;
+    }
+    @media print {
+      @page { size: letter; margin: 0; }
+      body { background: white; }
+      .sheet { width: 8.5in; min-height: 11in; margin: 0; box-shadow: none; break-after: page; }
+      .sheet:last-child { break-after: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <p class="eyebrow">Practical AI Systems</p>
+    <h1>Token Optimization</h1>
+    <p class="subtitle">Multiple-choice Q&amp;A · 10 questions</p>
+    <div class="meta"><span>Name</span><span>Date</span><span>Score: ____ / 10</span></div>
+    <p class="note"><strong>Instructions:</strong> Choose the best answer for each question. Each question has one correct answer. The answer key with brief explanations begins on the final page.</p>
+
+    <section class="question">
+      <h2><span class="number">01.</span>What is the most accurate description of a token?</h2>
+      <ul class="options"><li><span class="letter">A</span>Exactly one word</li><li><span class="letter">B</span>A unit of text that may be a word, part of a word, or punctuation</li><li><span class="letter">C</span>A complete sentence</li><li><span class="letter">D</span>A fixed number of characters across all models</li></ul>
+    </section>
+    <section class="question">
+      <h2><span class="number">02.</span>Why should an application avoid sending unrelated context to a model?</h2>
+      <ul class="options"><li><span class="letter">A</span>It can consume context capacity and increase input-token cost</li><li><span class="letter">B</span>It always prevents the model from responding</li><li><span class="letter">C</span>It changes the model's training data</li><li><span class="letter">D</span>It reduces the number of available models</li></ul>
+    </section>
+    <section class="question">
+      <h2><span class="number">03.</span>An agent has access to 30 tools but normally needs only 4. What is the best first optimization?</h2>
+      <ul class="options"><li><span class="letter">A</span>Shorten every tool name to one character</li><li><span class="letter">B</span>Grant only the tools needed for that agent's task</li><li><span class="letter">C</span>Ask the model to ignore the other tools</li><li><span class="letter">D</span>Increase the maximum output length</li></ul>
+    </section>
+    <section class="question">
+      <h2><span class="number">04.</span>Which tool description is most likely to be both useful and token-conscious?</h2>
+      <ul class="options"><li><span class="letter">A</span>A long explanation of the tool's history and implementation</li><li><span class="letter">B</span>A vague label such as “Do thing”</li><li><span class="letter">C</span>A concise description of what it does, when to use it, and its key input</li><li><span class="letter">D</span>No description, so the model can infer its purpose</li></ul>
+    </section>
+    <section class="question">
+      <h2><span class="number">05.</span>A multi-step workflow repeatedly resends a large conversation history. What can reduce repeated input?</h2>
+      <ul class="options"><li><span class="letter">A</span>Carry forward a concise, task-relevant summary when full history is unnecessary</li><li><span class="letter">B</span>Duplicate the history so important details stand out</li><li><span class="letter">C</span>Append the complete history to every tool description</li><li><span class="letter">D</span>Increase the number of workflow steps</li></ul>
+    </section>
+    <div class="footer"><span>Token Optimization · Q&amp;A</span><span>Questions · 1 of 2</span></div>
+  </main>
+
+  <main class="sheet">
+    <p class="eyebrow">Questions</p>
+    <h1>Choose the best answer</h1>
+    <p class="subtitle">Continue with questions 6–10.</p>
+
+    <section class="question">
+      <h2><span class="number">06.</span>What is a sensible way to control response-token usage?</h2>
+      <ul class="options"><li><span class="letter">A</span>Ask for the shortest answer possible in every situation</li><li><span class="letter">B</span>Set an output limit appropriate to the task and request a clear response format</li><li><span class="letter">C</span>Remove all instructions from the prompt</li><li><span class="letter">D</span>Allow unlimited output to avoid truncation</li></ul>
+    </section>
+    <section class="question">
+      <h2><span class="number">07.</span>What is the best way to find the biggest token-cost opportunity in production?</h2>
+      <ul class="options"><li><span class="letter">A</span>Optimize the longest-looking prompt by eye</li><li><span class="letter">B</span>Measure token usage and cost by workflow step or model call</li><li><span class="letter">C</span>Reduce every prompt by the same percentage</li><li><span class="letter">D</span>Stop recording usage data</li></ul>
+    </section>
+    <section class="question">
+      <h2><span class="number">08.</span>Which change is most likely to reduce tokens without sacrificing answer quality?</h2>
+      <ul class="options"><li><span class="letter">A</span>Remove duplicated instructions while preserving essential constraints</li><li><span class="letter">B</span>Delete all examples, constraints, and task details</li><li><span class="letter">C</span>Replace specific instructions with ambiguous shorthand</li><li><span class="letter">D</span>Send every available document for completeness</li></ul>
+    </section>
+    <section class="question">
+      <h2><span class="number">09.</span>Why can aggressive prompt compression make results worse?</h2>
+      <ul class="options"><li><span class="letter">A</span>Compressed prompts always use more tokens</li><li><span class="letter">B</span>It may remove context or constraints the model needs</li><li><span class="letter">C</span>It disables all provider-side caching</li><li><span class="letter">D</span>It forces the model to use a larger context window</li></ul>
+    </section>
+    <section class="question">
+      <h2><span class="number">10.</span>Which optimization strategy is the most reliable overall?</h2>
+      <ul class="options"><li><span class="letter">A</span>Minimize every prompt regardless of outcome</li><li><span class="letter">B</span>Use the most capable model for every step</li><li><span class="letter">C</span>Measure usage, remove unnecessary context, and validate quality after changes</li><li><span class="letter">D</span>Disable tools in every workflow</li></ul>
+    </section>
+    <div class="footer"><span>Token Optimization · Q&amp;A</span><span>Questions · 2 of 2</span></div>
+  </main>
+
+  <main class="sheet answers">
+    <p class="eyebrow">Answer Key</p>
+    <h1>Answers &amp; explanations</h1>
+    <p class="subtitle">Use the explanations to review the underlying principle.</p>
+
+    <section class="answer"><strong>1. B</strong><p>Tokens are model text units. A token can correspond to a word, a word fragment, or punctuation; tokenization varies by model.</p></section>
+    <section class="answer"><strong>2. A</strong><p>Unneeded context uses input capacity and can add cost. Include the information needed for the task, not everything available.</p></section>
+    <section class="answer"><strong>3. B</strong><p>Tool definitions are part of what the model receives. Granting only relevant tools reduces overhead and narrows the choices it must consider.</p></section>
+    <section class="answer"><strong>4. C</strong><p>A concise, specific description helps the model select the tool correctly without spending tokens on irrelevant implementation detail.</p></section>
+    <section class="answer"><strong>5. A</strong><p>A focused summary can preserve the facts needed for the next step while avoiding repeated transmission of a large history.</p></section>
+    <section class="answer"><strong>6. B</strong><p>Task-appropriate output limits and a clear format help prevent unnecessarily long responses while retaining enough room for a useful answer.</p></section>
+    <section class="answer"><strong>7. B</strong><p>Usage and cost measurements reveal which calls dominate. Optimize based on observed data rather than prompt appearance alone.</p></section>
+    <section class="answer"><strong>8. A</strong><p>Removing redundant wording preserves the instructions that affect correctness. Keep essential context, constraints, and output requirements.</p></section>
+    <section class="answer"><strong>9. B</strong><p>Over-compression can discard necessary facts or precise constraints, lowering quality and potentially causing costly retries.</p></section>
+    <section class="answer"><strong>10. C</strong><p>Measure first, make targeted reductions, and evaluate quality. A token reduction is only useful if the workflow still performs its task reliably.</p></section>
+    <div class="footer"><span>Token Optimization · Q&amp;A</span><span>Answer key</span></div>
+  </main>
+</body>
+</html>

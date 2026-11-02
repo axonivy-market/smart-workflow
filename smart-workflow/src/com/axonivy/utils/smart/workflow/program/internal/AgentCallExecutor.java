@@ -131,7 +131,7 @@ public class AgentCallExecutor {
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var agentName = context.element().name();
     var temperature = ModelOptionUtils.toTemperature(execute(Conf.TEMPERATURE, String.class).orElse(null));
-    var reasoningEffort = execute(Conf.REASONING_EFFORT, String.class).orElse(null);
+    var reasoningEffort = configuredReasoningEffort();
 
     var modelOptions = ModelOptions.builder()
         .modelName(model)
@@ -145,6 +145,28 @@ public class AgentCallExecutor {
     var modelName = chatModel.defaultRequestParameters().modelName();
     AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName), agentName))
         .forEach(agentBuilder::registerListener);
+  }
+
+  private static String reasoningEffortValue(Object value) {
+    if (value instanceof ReasoningEffort effort) {
+      return effort.name();
+    }
+    if (value instanceof String effort) {
+      return ReasoningEffort.valueOf(effort).name();
+    }
+    throw new IllegalArgumentException("Unsupported reasoning effort value: " + value);
+  }
+
+  private String configuredReasoningEffort() {
+    List<String> efforts = context.config().getList(Conf.REASONING_EFFORT);
+    if (efforts.isEmpty()) {
+      return null;
+    }
+    if (efforts.size() > 1) {
+      Ivy.log().warn("Only one reasoning effort is allowed. Will use " + efforts.getFirst()
+          + ", and ignore other values from: " + efforts);
+    }
+    return reasoningEffortValue(efforts.getFirst());
   }
 
   private String configuredProvider() {

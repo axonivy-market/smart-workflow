@@ -69,10 +69,10 @@ public class AgentEditor {
             .help("Specify the temperature for the model's output randomness.")
             .requireType(Double.class)
             .create())
-        .add(ui.scriptField(Conf.REASONING_EFFORT)
+        .add(ui.select(Conf.REASONING_EFFORT)
             .label("Reasoning effort:")
-            .help("Set the reasoning effort for supported models (for example: low, medium, or high).")
-            .requireType(String.class)
+            .items(reasoningEffortList())
+            .help("Choose the reasoning effort for supported OpenAI models.")
             .create())
         .create();
 
@@ -133,6 +133,12 @@ public class AgentEditor {
     return ChatModelFactory.providers().stream()
         .distinct()
         .map(provider -> SelectItem.of(provider.name()))
+        .toList();
+  }
+
+  private List<SelectItem> reasoningEffortList() {
+    return Stream.of(ReasoningEffort.values())
+        .map(effort -> SelectItem.of(effort.name()))
         .toList();
   }
 
