@@ -75,7 +75,7 @@ public class ChatbotBean implements Serializable {
     reportAccepted(true);
   }
 
-  private static void reportAccepted(boolean accepted) {
+  protected void reportAccepted(boolean accepted) {
     PrimeFaces.current().ajax().addCallbackParam(ACCEPTED_PARAM, accepted);
   }
 
