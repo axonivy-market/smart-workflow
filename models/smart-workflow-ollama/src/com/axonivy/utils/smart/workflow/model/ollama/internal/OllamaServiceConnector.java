@@ -37,6 +37,7 @@ public class OllamaServiceConnector {
         .baseUrl(baseUrl())
         .modelName(selectedModel)
         .temperature(resolveTemperature(options.temperature()))
+        .numPredict(options.maxOutputTokens())
         .timeout(timeout())
         .logRequests(true)
         .logResponses(true);
