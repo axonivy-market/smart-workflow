@@ -19,8 +19,6 @@ Dialogs:
               ThinkingText: Pensando...
               CopyAnswer: Copiar respuesta
               Retry: Reintentar
-              ShowDetails: Mostrar detalles
-              HideDetails: Ocultar detalles
               Disclaimer: Las respuestas de la IA pueden ser incorrectas. Verifique la información importante.
               ErrorMessage: El servicio de IA no respondió. Su pregunta se conserva, puede volver a intentarlo.
               InputGuardrailMessage: Su mensaje no superó un control de seguridad y no se envió a la IA. Reformúlelo e inténtelo de nuevo.

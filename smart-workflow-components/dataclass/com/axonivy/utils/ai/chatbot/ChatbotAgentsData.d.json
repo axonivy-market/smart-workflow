@@ -15,8 +15,5 @@
   }, {
     "name" : "blockReason",
     "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason"
-  }, {
-    "name" : "errorDetails",
-    "type" : "String"
   } ]
 }

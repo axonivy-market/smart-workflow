@@ -19,8 +19,6 @@ Dialogs:
               ThinkingText: Réflexion en cours...
               CopyAnswer: Copier la réponse
               Retry: Réessayer
-              ShowDetails: Afficher les détails
-              HideDetails: Masquer les détails
               Disclaimer: Les réponses de l'IA peuvent être erronées. Vérifiez les informations importantes.
               ErrorMessage: Le service IA n'a pas répondu. Votre question est conservée, vous pouvez réessayer.
               InputGuardrailMessage: Votre message n'a pas passé un contrôle de sécurité et n'a pas été envoyé à l'IA. Veuillez le reformuler et réessayer.

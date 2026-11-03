@@ -19,8 +19,6 @@ Dialogs:
               ThinkingText: Wird bearbeitet...
               CopyAnswer: Antwort kopieren
               Retry: Erneut versuchen
-              ShowDetails: Details anzeigen
-              HideDetails: Details ausblenden
               Disclaimer: KI-Antworten können falsch sein. Prüfen Sie wichtige Informationen.
               ErrorMessage: Der KI-Dienst hat nicht geantwortet. Ihre Frage bleibt erhalten, Sie können es erneut versuchen.
               InputGuardrailMessage: Ihre Nachricht hat eine Sicherheitsprüfung nicht bestanden und wurde nicht an die KI gesendet. Bitte formulieren Sie sie um und versuchen Sie es erneut.

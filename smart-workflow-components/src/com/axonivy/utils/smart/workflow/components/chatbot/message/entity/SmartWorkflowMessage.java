@@ -6,7 +6,6 @@ import java.time.temporal.ChronoUnit;
 
 import com.axonivy.utils.smart.workflow.components.chatbot.message.enums.MessageRole;
 
-/** One turn of the conversation, written by the user or the AI. Create it with {@link #user} or {@link #ai}. */
 public final class SmartWorkflowMessage implements Serializable {
   private static final long serialVersionUID = 1L;
 
@@ -40,10 +39,6 @@ public final class SmartWorkflowMessage implements Serializable {
     return timestamp;
   }
 
-  /**
-   * ISO-8601 UTC instant, e.g. 2026-11-01T13:05:00Z. The browser formats it in the user's own time zone
-   * and locale (see chatbot.js), since the server does not know either.
-   */
   public String getTimestampIso() {
     return timestamp.toString();
   }

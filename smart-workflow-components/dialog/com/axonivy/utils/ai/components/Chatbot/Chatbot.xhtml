@@ -18,21 +18,13 @@
     shortDescription="CSS min-height. The chatbot fills its parent's height; this applies when the parent has none." />
   <cc:attribute name="maxHeight" type="java.lang.String" default=""
     shortDescription="CSS max-height, e.g. 40rem. Empty means no limit." />
-  <cc:attribute name="showErrorDetails" type="java.lang.Boolean" default="true"
-    shortDescription="Offer a 'Show details' link with the error code and stack trace when a request fails." />
   <cc:attribute name="styleClass" type="java.lang.String" default="" />
   <cc:attribute name="updateAfterAnswer" type="java.lang.String" default=""
     shortDescription="Client ids of host components to update after each answer." />
 </cc:interface>
 
-<!--
-  The component has no h:form of its own so it can be placed inside a host form.
-  Put it inside an h:form; its requests only process the chatbot's own fields.
-  It initializes itself whenever it is rendered. AiChatbot.init(clientId) can be called again
-  safely, e.g. after moving the markup outside of JSF.
--->
+<!-- Place the component inside an h:form; it has none of its own, and its requests only process the chatbot's fields. -->
 <cc:implementation>
-  <!-- cc:interface cannot see this param, so the attribute defaults above spell out the path -->
   <ui:param name="cmsPath" value="/Dialogs/com/axonivy/utils/ai/components/Chatbot/" />
   <h:outputStylesheet library="css" name="chatbot.css" />
   <h:outputScript library="js" name="chatbot.js" target="body" />
@@ -50,7 +42,7 @@
             <span class="text-sm text-color-secondary white-space-nowrap overflow-hidden text-overflow-ellipsis">#{cc.attrs.subtitle}</span>
           </ui:fragment>
         </div>
-        <p:commandLink id="new-chat" styleClass="chatbot-header-action flex align-items-center gap-2 border-round text-color-secondary"
+        <p:commandLink id="new-chat" styleClass="chatbot-header-action chatbot-icon-button flex align-items-center gap-2 border-round"
           action="#{cc.attrs.managedBean.newConversation}" process="@this" update="thread" global="false"
           title="#{ivy.cms.co(cmsPath.concat('NewChat'))}"
           pt:aria-label="#{ivy.cms.co(cmsPath.concat('NewChat'))}"
@@ -87,7 +79,7 @@
                 <div class="chatbot-answer text-color"><h:outputText value="#{msg.content.trim()}" /></div>
                 <div class="flex align-items-center gap-1 text-sm text-color-secondary">
                   <time class="chatbot-time chatbot-answer-time" datetime="#{msg.timestampIso}"></time>
-                  <button type="button" class="chatbot-copy border-round text-color-secondary"
+                  <button type="button" class="chatbot-copy chatbot-icon-button border-round"
                     title="#{ivy.cms.co(cmsPath.concat('CopyAnswer'))}"
                     aria-label="#{ivy.cms.co(cmsPath.concat('CopyAnswer'))}"
                     onclick="AiChatbot.copyAnswer(this);"><i class="ti ti-copy" aria-hidden="true" /></button>
@@ -98,26 +90,14 @@
         </ui:repeat>
 
         <ui:fragment rendered="#{not empty cc.attrs.managedBean.error}">
-          <div class="chatbot-error flex flex-column gap-2 border-round text-base" role="alert">
-            <div class="flex align-items-center gap-2">
-              <i class="ti ti-alert-circle chatbot-error-icon" aria-hidden="true" />
-              <span class="flex-1 min-w-0 text-color line-height-3">#{cc.attrs.managedBean.error.content}</span>
-              <p:commandButton id="retry" icon="ti ti-refresh" styleClass="chatbot-retry ui-button-outlined"
-                rendered="#{cc.attrs.managedBean.error.retryAllowed}"
-                value="#{ivy.cms.co(cmsPath.concat('Retry'))}"
-                action="#{cc.attrs.managedBean.retry}" process="@this" update="thread" global="false"
-                oncomplete="AiChatbot.afterRetry('#{cc.clientId}');" />
-            </div>
-            <ui:fragment rendered="#{cc.attrs.showErrorDetails and cc.attrs.managedBean.error.hasDetails()}">
-              <button type="button" class="chatbot-details-toggle text-sm" aria-expanded="false"
-                data-show-label="#{ivy.cms.co(cmsPath.concat('ShowDetails'))}"
-                data-hide-label="#{ivy.cms.co(cmsPath.concat('HideDetails'))}"
-                onclick="AiChatbot.toggleErrorDetails(this);">
-                <i class="ti ti-chevron-right" aria-hidden="true" />
-                <span class="chatbot-details-label">#{ivy.cms.co(cmsPath.concat('ShowDetails'))}</span>
-              </button>
-              <pre class="chatbot-error-details" hidden="hidden"><h:outputText value="#{cc.attrs.managedBean.error.details}" /></pre>
-            </ui:fragment>
+          <div class="chatbot-error flex align-items-center gap-2 border-round text-base" role="alert">
+            <i class="ti ti-alert-circle chatbot-error-icon" aria-hidden="true" />
+            <span class="flex-1 min-w-0 text-color line-height-3">#{cc.attrs.managedBean.error.content}</span>
+            <p:commandButton id="retry" icon="ti ti-refresh" styleClass="chatbot-retry ui-button-outlined"
+              rendered="#{cc.attrs.managedBean.error.retryAllowed}"
+              value="#{ivy.cms.co(cmsPath.concat('Retry'))}"
+              action="#{cc.attrs.managedBean.retry}" process="@this" update="thread" global="false"
+              oncomplete="AiChatbot.afterRetry('#{cc.clientId}');" />
           </div>
         </ui:fragment>
 
