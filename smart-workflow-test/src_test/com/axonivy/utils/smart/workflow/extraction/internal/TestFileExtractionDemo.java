@@ -1,8 +1,8 @@
 package com.axonivy.utils.smart.workflow.extraction.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.ai.mock.MockOpenAI;
@@ -17,7 +17,6 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.resource.ResourceResponder;
 
-@Disabled
 @RestResourceTest
 class TestFileExtractionDemo {
 
