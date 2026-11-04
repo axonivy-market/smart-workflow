@@ -88,9 +88,9 @@
         "userConfig" : {
           "system" : "Instruction to follow:\n- Don't fill information related to approval\n- Find Ivy version or Portal version or Core version\n<%=in.customInstructions%>",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket.class",
+          "tools" : "",
           "resultMapping" : "in.supportTicket",
-          "query" : "<%=in.ticketDescription%>",
-          "tools" : "[]"
+          "query" : "<%=in.ticketDescription%>"
         }
       },
       "visual" : {
@@ -139,9 +139,9 @@
         "userConfig" : {
           "system" : "Instruction to follow:\n- Return task detail url\n<%=in.customInstructions%>",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
+          "tools" : "",
           "resultMapping" : "in.taskInfo",
-          "query" : "<%=in.ticketDescription%>",
-          "tools" : "[]"
+          "query" : "<%=in.ticketDescription%>"
         }
       },
       "visual" : {
