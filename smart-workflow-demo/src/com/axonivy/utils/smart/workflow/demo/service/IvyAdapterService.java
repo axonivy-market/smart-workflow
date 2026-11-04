@@ -36,14 +36,12 @@ public class IvyAdapterService {
           .setSearchScope(scope)
           .setSignature(signature).toFilter();
 
-      // Find subprocess
       var subProcessStartList = SubProcessCallStartEvent.find(filter);
       if (subProcessStartList.isEmpty()) {
         return Map.of();
       }
-      var subProcessStart = subProcessStartList.get(0);
 
-      // Add param to the subprocess and execute
+      var subProcessStart = subProcessStartList.get(0);
       if (params.isEmpty()) {
         return subProcessStart.call().asMap();
       }

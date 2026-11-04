@@ -9,7 +9,8 @@ public record ModelOptions(
     boolean structuredOutput,
     boolean hasTools,
     List<ChatModelListener> listeners,
-    Double temperature) {
+    Double temperature,
+    Integer maxOutputTokens) {
 
   public static Builder builder() {
     return new Builder();
@@ -21,6 +22,7 @@ public record ModelOptions(
     private boolean hasTools;
     private List<ChatModelListener> listeners = List.of();
     private Double temperature = 0.0;
+    private Integer maxOutputTokens;
 
     public Builder modelName(String modelName) {
       this.modelName = modelName;
@@ -47,8 +49,13 @@ public record ModelOptions(
       return this;
     }
 
+    public Builder maxOutputTokens(Integer maxOutputTokens) {
+      this.maxOutputTokens = maxOutputTokens;
+      return this;
+    }
+
     public ModelOptions build() {
-      return new ModelOptions(modelName, structuredOutput, hasTools, listeners, temperature);
+      return new ModelOptions(modelName, structuredOutput, hasTools, listeners, temperature, maxOutputTokens);
     }
   }
 }

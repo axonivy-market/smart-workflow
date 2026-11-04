@@ -3,7 +3,6 @@ package com.axonivy.utils.smart.workflow.model.output;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -28,7 +27,6 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ArrayNode;
 
 @RestResourceTest
-@Disabled
 public class TestMultiModelsOutput {
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");

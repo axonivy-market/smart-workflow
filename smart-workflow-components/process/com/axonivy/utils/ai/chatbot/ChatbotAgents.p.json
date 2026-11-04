@@ -24,13 +24,11 @@
         "result" : {
           "params" : [
             { "name" : "history", "type" : "List<com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage>", "desc" : "" },
-            { "name" : "blockReason", "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason", "desc" : "Set when a guardrail or the circuit breaker refused the request; null when the AI answered" },
-            { "name" : "errorDetails", "type" : "String", "desc" : "Error code, message and stack trace of the refusal, for the 'Show details' section" }
+            { "name" : "blockReason", "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason", "desc" : "Set when a guardrail or the circuit breaker refused the request; null when the AI answered" }
           ],
           "map" : {
             "result.history" : "in.history",
-            "result.blockReason" : "in.#blockReason",
-            "result.errorDetails" : "in.errorDetails"
+            "result.blockReason" : "in.#blockReason"
           }
         }
       },
@@ -66,8 +64,7 @@
             "errorCode" : "smartworkflow:guardrail:input:violation",
             "output" : {
               "map" : {
-                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.INPUT_GUARDRAIL",
-                "out.errorDetails" : "com.axonivy.utils.smart.workflow.components.chatbot.utils.ChatbotUtils.errorDetails(error)"
+                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.INPUT_GUARDRAIL"
               }
             }
           },
@@ -87,8 +84,7 @@
             "errorCode" : "smartworkflow:guardrail:output:violation",
             "output" : {
               "map" : {
-                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.OUTPUT_GUARDRAIL",
-                "out.errorDetails" : "com.axonivy.utils.smart.workflow.components.chatbot.utils.ChatbotUtils.errorDetails(error)"
+                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.OUTPUT_GUARDRAIL"
               }
             }
           },
@@ -108,8 +104,7 @@
             "errorCode" : "smartworkflow:stop",
             "output" : {
               "map" : {
-                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.CIRCUIT_BREAKER",
-                "out.errorDetails" : "com.axonivy.utils.smart.workflow.components.chatbot.utils.ChatbotUtils.errorDetails(error)"
+                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.CIRCUIT_BREAKER"
               }
             }
           },

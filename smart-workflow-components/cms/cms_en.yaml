@@ -19,8 +19,6 @@ Dialogs:
               ThinkingText: Thinking...
               CopyAnswer: Copy answer
               Retry: Retry
-              ShowDetails: Show details
-              HideDetails: Hide details
               Disclaimer: AI answers can be wrong. Check important information.
               ErrorMessage: The AI service didn't respond. Your question is kept, so you can try again.
               InputGuardrailMessage: Your message didn't pass a safety check, so it wasn't sent to the AI. Please rephrase it and try again.

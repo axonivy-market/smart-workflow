@@ -1,8 +1,8 @@
 package com.axonivy.utils.smart.workflow.agent.message.system;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -19,7 +19,6 @@ import ch.ivyteam.test.log.LoggerAccess;
 import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
 
-@Disabled
 @RestResourceTest
 class TestAgenticProcessCallElementSystemMessage {
 

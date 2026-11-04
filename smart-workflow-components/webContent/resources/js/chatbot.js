@@ -201,18 +201,6 @@ var AiChatbot = (function() {
     }).catch(function() {});
   }
 
-  function toggleErrorDetails(button) {
-    var details = button.parentElement.querySelector('.chatbot-error-details');
-    var label = button.querySelector('.chatbot-details-label');
-    if (!details) { return; }
-    var expand = details.hidden;
-    details.hidden = !expand;
-    button.setAttribute('aria-expanded', String(expand));
-    if (label) {
-      label.textContent = button.getAttribute(expand ? 'data-hide-label' : 'data-show-label');
-    }
-  }
-
   /* applies the minHeight / maxHeight attributes of the component; empty values leave the CSS default */
   function applySize(clientId) {
     var root = getRoot(clientId);
@@ -241,8 +229,7 @@ var AiChatbot = (function() {
     handleKeyDown: handleKeyDown,
     init: init,
     isBusy: isBusy,
-    reset: reset,
-    toggleErrorDetails: toggleErrorDetails
+    reset: reset
   };
 }());
 

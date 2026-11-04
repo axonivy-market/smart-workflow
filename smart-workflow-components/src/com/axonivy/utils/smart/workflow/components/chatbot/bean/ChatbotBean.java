@@ -8,7 +8,6 @@ import java.util.Map;
 import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowErrorMessage;
 import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage;
 import com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason;
-import com.axonivy.utils.smart.workflow.components.chatbot.utils.ChatbotUtils;
 import com.axonivy.utils.smart.workflow.components.chatbot.service.IvyAdapterService;
 
 import org.primefaces.PrimeFaces;
@@ -26,16 +25,14 @@ public class ChatbotBean implements Serializable {
 
   private static final String CMS_PATH = "/Dialogs/com/axonivy/utils/ai/components/Chatbot/";
 
-  /** Also the input's maxlength, so the browser and the server apply the same limit. */
   static final int MAX_MESSAGE_LENGTH = 2000;
 
-  // ajax callback param read by AiChatbot.afterSend: false keeps the text in the input and asks no answer
+  // read by AiChatbot.afterSend in chatbot.js
   private static final String ACCEPTED_PARAM = "accepted";
 
   private List<SmartWorkflowMessage> chatHistory = new ArrayList<>();
   private String userMessage;
   private String pendingQuestion;
-  // shown below the last question until the user retries or asks something else; never part of the history
   private SmartWorkflowErrorMessage error;
 
   public List<SmartWorkflowMessage> getChatHistory() {
@@ -66,9 +63,8 @@ public class ChatbotBean implements Serializable {
       return;
     }
     if (question.length() > MAX_MESSAGE_LENGTH) {
-      // the user has to shorten the message, so asking again would not help
       error = new SmartWorkflowErrorMessage(
-          Ivy.cms().co(CMS_PATH + "MessageTooLong", List.of(MAX_MESSAGE_LENGTH)), null, false);
+          Ivy.cms().co(CMS_PATH + "MessageTooLong", List.of(MAX_MESSAGE_LENGTH)), false);
       reportAccepted(false);
       return;
     }
@@ -79,11 +75,10 @@ public class ChatbotBean implements Serializable {
     reportAccepted(true);
   }
 
-  private static void reportAccepted(boolean accepted) {
+  protected void reportAccepted(boolean accepted) {
     PrimeFaces.current().ajax().addCallbackParam(ACCEPTED_PARAM, accepted);
   }
 
-  /** Asks the last unanswered question again after an error. */
   public void retry() {
     if (error == null || !error.isRetryAllowed() || chatHistory.isEmpty()) {
       return;
@@ -121,23 +116,22 @@ public class ChatbotBean implements Serializable {
       handleResults(result);
     } catch (Exception e) {
       Ivy.log().error("Chatbot failed to answer the question.", e);
-      error = new SmartWorkflowErrorMessage(Ivy.cms().co(CMS_PATH + "ErrorMessage"), ChatbotUtils.errorDetails(e));
+      error = new SmartWorkflowErrorMessage(Ivy.cms().co(CMS_PATH + "ErrorMessage"));
     }
   }
 
   @SuppressWarnings("unchecked")
   private void handleResults(Map<String, Object> result) {
-    // a guardrail or the circuit breaker refused: show our own text, the raw error only in the details
     if (result.get("blockReason") instanceof AnswerBlockReason reason) {
-      error = new SmartWorkflowErrorMessage(
-          Ivy.cms().co(CMS_PATH + reason.getCmsKey()), (String) result.get("errorDetails"));
+      Ivy.log().warn("Chatbot answer was blocked: " + reason);
+      error = new SmartWorkflowErrorMessage(Ivy.cms().co(CMS_PATH + reason.getCmsKey()));
       return;
     }
     List<SmartWorkflowMessage> processHistory = (List<SmartWorkflowMessage>) result.get("history");
     // the process only appends an answer when the AI returned text; otherwise keep the question for a retry
     if (processHistory == null || processHistory.isEmpty() || processHistory.get(processHistory.size() - 1).isUser()) {
       Ivy.log().warn("Chatbot received an empty answer from the AI.");
-      error = new SmartWorkflowErrorMessage(Ivy.cms().co(CMS_PATH + "EmptyAnswerMessage"), null);
+      error = new SmartWorkflowErrorMessage(Ivy.cms().co(CMS_PATH + "EmptyAnswerMessage"));
       return;
     }
     chatHistory = new ArrayList<>(processHistory);

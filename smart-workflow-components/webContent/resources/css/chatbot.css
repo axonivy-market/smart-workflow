@@ -1,22 +1,3 @@
-/* ==========================================================================
-   Smart Workflow Chatbot
-
-   Layout, spacing and typography come from PrimeFlex 3 classes in
-   Chatbot.xhtml. This file only holds what PrimeFlex cannot express:
-
-     1. Tokens       colours derived from Freya variables, so light and dark
-                     mode follow the host theme without extra rules
-     2. Parts        the component's own pieces (avatar, bubble, composer...)
-     3. PrimeFaces   the few overrides of Freya's input and button styles
-     4. Responsive   container queries on the component's own width
-     5. Motion
-
-   PrimeFlex utilities are !important. A property that changes with the
-   component width (section 4) must therefore never also be set by a
-   PrimeFlex class on the same element.
-   ========================================================================== */
-
-
 /* 1. Tokens --------------------------------------------------------------- */
 
 .chatbot {
@@ -36,13 +17,14 @@
 
   /* Freya's base is 14px; messages and the input read better slightly larger */
   --chatbot-font-size: 15px;
+  --chatbot-icon-size: 1.125rem;
   --chatbot-radius: 12px;
   --chatbot-gutter: 0.875rem;
   --chatbot-measure: 47.5rem;
 }
 
 
-/* 2. Parts ---------------------------------------------------------------- */
+/* 2. Shared --------------------------------------------------------------- */
 
 .chatbot {
   container: chatbot / inline-size;
@@ -56,7 +38,58 @@
   border-radius: var(--chatbot-radius);
 }
 
-/* header */
+.chatbot-avatar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  font-size: var(--chatbot-icon-size);
+  color: var(--chatbot-primary);
+  background: var(--chatbot-primary-soft);
+}
+
+.chatbot-avatar-lg {
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.375rem;
+}
+
+/* borderless icon action: "New chat" link and copy button */
+.chatbot-icon-button {
+  display: inline-flex;
+  border: 0;
+  background: none;
+  color: var(--chatbot-text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.chatbot-icon-button:hover,
+.chatbot-icon-button:focus-visible {
+  color: var(--chatbot-text);
+  background: var(--chatbot-hover);
+}
+
+.chatbot-key {
+  display: inline-block;
+  padding: 0 0.3em;
+  border: 1px solid var(--chatbot-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--chatbot-text);
+  background: var(--chatbot-surface);
+}
+
+
+/* 3. Parts ---------------------------------------------------------------- */
+
+/* 3.1 header */
 .chatbot-header {
   padding: 0.625rem var(--chatbot-gutter);
 }
@@ -64,13 +97,6 @@
 .chatbot-header-action {
   flex: none;
   padding: 0.375rem 0.5rem;
-  text-decoration: none;
-}
-
-.chatbot-header-action:hover,
-.chatbot-header-action:focus-visible {
-  color: var(--chatbot-text);
-  background: var(--chatbot-hover);
 }
 
 /* no new chat while an answer is loading; keyboard clicks are cancelled by AiChatbot.isBusy */
@@ -84,27 +110,7 @@
   display: none;
 }
 
-/* avatar */
-.chatbot-avatar {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 50%;
-  font-size: 1.125rem;
-  color: var(--chatbot-primary);
-  background: var(--chatbot-primary-soft);
-}
-
-.chatbot-avatar-lg {
-  width: 2.75rem;
-  height: 2.75rem;
-  font-size: 1.375rem;
-}
-
-/* thread */
+/* 3.2 thread */
 .chatbot-scroll {
   padding: 1rem var(--chatbot-gutter);
 }
@@ -118,7 +124,7 @@
   max-width: 34ch;
 }
 
-/* messages */
+/* 3.3 messages */
 .chatbot-message-user {
   max-width: 85%;
 }
@@ -144,21 +150,26 @@
 }
 
 .chatbot-copy {
-  display: inline-flex;
   padding: 0.125rem 0.25rem;
-  border: 0;
-  background: none;
   font-size: 1rem;
-  cursor: pointer;
 }
 
-.chatbot-copy:hover,
-.chatbot-copy:focus-visible {
-  color: var(--chatbot-text);
-  background: var(--chatbot-hover);
+.chatbot-streaming-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: chatbot-blink 0.7s step-end infinite;
 }
 
-/* states */
+/* the answer time stays hidden while the answer is typed out */
+.chatbot-time-hidden {
+  visibility: hidden;
+}
+
+/* 3.4 error */
 .chatbot-error {
   padding: 0.5rem 0.625rem;
   background: var(--chatbot-danger-soft);
@@ -166,51 +177,11 @@
 
 .chatbot-error-icon {
   flex: none;
-  font-size: 1.125rem;
+  font-size: var(--chatbot-icon-size);
   color: var(--chatbot-danger);
 }
 
-/* "Show details" sits under the message text, past the icon */
-.chatbot-details-toggle {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-left: calc(1.125rem + 0.5rem);
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--chatbot-primary);
-  cursor: pointer;
-}
-
-.chatbot-details-toggle:hover .chatbot-details-label {
-  text-decoration: underline;
-}
-
-.chatbot-details-toggle .ti {
-  transition: transform 0.15s;
-}
-
-.chatbot-details-toggle[aria-expanded="true"] .ti {
-  transform: rotate(90deg);
-}
-
-.chatbot-error-details {
-  max-height: 14rem;
-  margin: 0;
-  padding: 0.5rem 0.625rem;
-  overflow: auto;
-  border: 1px solid var(--chatbot-border);
-  border-radius: 6px;
-  background: var(--chatbot-surface);
-  color: var(--chatbot-text);
-  font-family: ui-monospace, Consolas, monospace;
-  font-size: 0.8rem;
-  line-height: 1.45;
-  white-space: pre;
-}
-
+/* 3.5 thinking */
 .chatbot-thinking {
   display: flex;
 }
@@ -234,21 +205,7 @@
 .chatbot-dots i:nth-child(2) { animation-delay: 0.15s; }
 .chatbot-dots i:nth-child(3) { animation-delay: 0.3s; }
 
-.chatbot-streaming-cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  margin-left: 2px;
-  background: currentColor;
-  vertical-align: text-bottom;
-  animation: chatbot-blink 0.7s step-end infinite;
-}
-
-.chatbot-time-hidden {
-  visibility: hidden;
-}
-
-/* composer */
+/* 3.6 composer */
 .chatbot-composer {
   padding: 0.625rem var(--chatbot-gutter) 0.75rem;
 }
@@ -266,30 +223,17 @@
   box-shadow: var(--focus-ring);
 }
 
-.chatbot-hint,
-.chatbot-disclaimer {
+.chatbot-hint {
   display: none;
 }
 
-.chatbot-key {
-  display: inline-block;
-  padding: 0 0.3em;
-  border: 1px solid var(--chatbot-border);
-  border-bottom-width: 2px;
-  border-radius: 4px;
-  font-family: ui-monospace, Consolas, monospace;
-  font-size: 0.85em;
-  line-height: 1.4;
-  color: var(--chatbot-text);
-  background: var(--chatbot-surface);
-}
-
 .chatbot-disclaimer {
+  display: none;
   margin-top: 0.375rem;
 }
 
 
-/* 3. PrimeFaces overrides ------------------------------------------------- */
+/* 4. PrimeFaces overrides ------------------------------------------------- */
 /* Selectors start with "body .chatbot" to outrank Freya's "body .ui-*" rules
    without !important. */
 
@@ -332,7 +276,7 @@ body .chatbot .chatbot-retry.ui-button.ui-button-outlined.ui-state-hover {
 }
 
 
-/* 4. Responsive ----------------------------------------------------------- */
+/* 5. Responsive ----------------------------------------------------------- */
 /* Mobile first: the rules above are the compact layout (side panel, narrow
    form column, phone). These queries measure the component, not the screen. */
 
@@ -372,7 +316,7 @@ body .chatbot .chatbot-retry.ui-button.ui-button-outlined.ui-state-hover {
 }
 
 
-/* 5. Motion --------------------------------------------------------------- */
+/* 6. Motion --------------------------------------------------------------- */
 
 @keyframes chatbot-bounce {
   0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
