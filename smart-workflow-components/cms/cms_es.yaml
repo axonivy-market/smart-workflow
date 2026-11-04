@@ -21,6 +21,7 @@ Dialogs:
               Retry: Reintentar
               Disclaimer: Las respuestas de la IA pueden ser incorrectas. Verifique la información importante.
               ErrorMessage: El servicio de IA no respondió. Su pregunta se conserva, puede volver a intentarlo.
+              RequestFailedMessage: La solicitud al servidor ha fallado. Su mensaje se conserva, puede volver a intentarlo.
               InputGuardrailMessage: Su mensaje no superó un control de seguridad y no se envió a la IA. Reformúlelo e inténtelo de nuevo.
               OutputGuardrailMessage: La respuesta no superó un control de seguridad y no se muestra. Intente formular su pregunta de otra manera.
               CircuitBreakerMessage: El asistente de IA está desactivado en este momento. Inténtelo más tarde o contacte con su administrador.

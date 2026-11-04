@@ -16,7 +16,7 @@
 <!-- Place the component inside an h:form; it has none of its own, and its requests only process the chatbot's fields. -->
 <cc:implementation>
   <ui:param name="cmsPath" value="/Dialogs/com/axonivy/utils/ai/components/Chatbot/" />
-  <ui:param name="answerCommand" value="#{cc.clientId.replace(':', '_')}_getAnswer" />
+  <ui:param name="answerCommand" value="#{cc.clientId.replaceAll('[^a-zA-Z0-9_]', '_')}_getAnswer" />
   <h:outputStylesheet library="css" name="chatbot.css" />
   <h:outputScript library="js" name="chatbot.js" target="body" />
 
@@ -64,8 +64,8 @@
               <span class="chatbot-avatar chatbot-message-avatar" aria-hidden="true"><i class="ti ti-sparkles" /></span>
               <div class="flex flex-column flex-1 gap-1 min-w-0">
                 <div class="chatbot-answer text-color"><h:outputText value="#{msg.content.trim()}" /></div>
-                <div class="flex align-items-center gap-1 text-sm text-color-secondary">
-                  <time class="chatbot-time chatbot-answer-time" datetime="#{msg.timestamp}"></time>
+                <div class="chatbot-answer-meta flex align-items-center gap-1 text-sm text-color-secondary">
+                  <time class="chatbot-time" datetime="#{msg.timestamp}"></time>
                   <button type="button" class="chatbot-copy chatbot-icon-button border-round"
                     title="#{ivy.cms.co(cmsPath.concat('CopyAnswer'))}"
                     aria-label="#{ivy.cms.co(cmsPath.concat('CopyAnswer'))}"
@@ -93,6 +93,14 @@
           <span class="chatbot-dots flex align-items-center gap-1" role="status"
             aria-label="#{ivy.cms.co(cmsPath.concat('ThinkingText'))}"><i /><i /><i /></span>
         </div>
+
+        <div class="chatbot-request-error align-items-center gap-2 border-round text-base" role="alert" hidden="hidden">
+          <i class="ti ti-alert-circle chatbot-error-icon" aria-hidden="true" />
+          <span class="flex-1 min-w-0 text-color line-height-3">#{ivy.cms.co(cmsPath.concat('RequestFailedMessage'))}</span>
+          <p:commandButton id="retry-request" type="button" icon="ti ti-refresh" styleClass="chatbot-retry ui-button-outlined"
+            value="#{ivy.cms.co(cmsPath.concat('Retry'))}"
+            onclick="AiChatbot.retryRequest('#{cc.clientId}');" />
+        </div>
       </h:panelGroup>
     </div>
 
@@ -115,6 +123,7 @@
             title="#{ivy.cms.co(cmsPath.concat('SendButtonTitle'))}"
             ariaLabel="#{ivy.cms.co(cmsPath.concat('SendButtonTitle'))}"
             action="#{cc.attrs.managedBean.sendMessage}" process="@this question" update="thread" global="false"
+            onerror="AiChatbot.requestFailed('#{cc.clientId}');"
             oncomplete="AiChatbot.afterSend('#{cc.clientId}', args);" />
         </div>
       </div>
@@ -124,6 +133,7 @@
     <p:remoteCommand name="#{answerCommand}"
       action="#{cc.attrs.managedBean.answer}" process="@this"
       update="thread question" global="false"
+      onerror="AiChatbot.requestFailed('#{cc.clientId}');"
       oncomplete="AiChatbot.afterAnswer('#{cc.clientId}');" />
 
     <!-- runs on every render of the component, including ajax updates and dynamic dialogs.

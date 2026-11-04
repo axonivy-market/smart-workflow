@@ -2,34 +2,117 @@ var AiChatbot = (function() {
   var TYPEWRITER_CHAR_MS = 12;
   var TYPEWRITER_MAX_CHARS = 150;
   var COPIED_FEEDBACK_MS = 1500;
-  // undefined locale = the browser's own locale and time zone
+
   var TIME_FORMAT = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
-  var FULL_FORMAT = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+  var FULL_TIME_FORMAT = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
-  function getRoot(clientId) {
-    return document.getElementById(clientId);
+  /* an ajax update replaces these elements, so look them up on each call and never keep them */
+  function findParts(clientId) {
+    var root = document.getElementById(clientId);
+    return root && {
+      root: root,
+      input: root.querySelector('.chatbot-input'),
+      send: root.querySelector('.chatbot-send'),
+      thinking: root.querySelector('.chatbot-thinking'),
+      requestError: root.querySelector('.chatbot-request-error'),
+      newChat: root.querySelector('.chatbot-header-action'),
+      scroll: root.querySelector('.chatbot-scroll')
+    };
   }
 
-  function find(clientId, selector) {
-    return getRoot(clientId)?.querySelector(selector);
+  /* turns a function of the parts into a callback for Chatbot.xhtml, which only knows the client id */
+  function withChat(handler) {
+    return function(clientId, args) {
+      var chat = findParts(clientId);
+      return chat && handler(chat, args);
+    };
   }
 
-  function scrollToBottom(clientId) {
-    var scroll = find(clientId, '.chatbot-scroll');
-    if (!scroll) { return; }
-    requestAnimationFrame(function() {
-      scroll.scrollTop = scroll.scrollHeight;
-    });
+  /* called by Chatbot.xhtml on every render; safe to call repeatedly */
+  function init(chat) {
+    autoGrow(chat.input);
+    updateSendButton(chat);
+    refreshThread(chat);
   }
 
-  /* the server renders each message time as a UTC instant; show it in the user's time zone */
-  function formatTimes(clientId) {
-    getRoot(clientId)?.querySelectorAll('time.chatbot-time[datetime]').forEach(function(time) {
-      var date = new Date(time.getAttribute('datetime'));
-      if (isNaN(date.getTime())) { return; }
-      time.textContent = TIME_FORMAT.format(date);
-      time.title = FULL_FORMAT.format(date);
-    });
+  /* request flow */
+
+  function afterSend(chat, args) {
+    // rejected as blank, or the request failed and args is undefined: keep the text in the input
+    if (args?.accepted !== true) {
+      refreshThread(chat);
+      chat.input.focus();
+      return;
+    }
+    clearInput(chat);
+    waitForAnswer(chat);
+  }
+
+  function waitForAnswer(chat) {
+    chat.requestError.hidden = true;
+    setBusy(chat, true);
+    refreshThread(chat);
+    window[chat.root.getAttribute('data-answer-command')]?.();
+  }
+
+  function afterAnswer(chat) {
+    setBusy(chat, false);
+    autoGrow(chat.input);
+    refreshThread(chat);
+    typeOutNewAnswer(chat);
+    chat.input.focus();
+  }
+
+  function requestFailed(chat) {
+    chat.requestError.hidden = false;
+  }
+
+  function retryRequest(chat) {
+    // a failed send kept its text in the input, which enables Send; a failed answer left the input empty
+    if (chat.send.disabled) {
+      waitForAnswer(chat);
+    } else {
+      chat.send.click();
+    }
+  }
+
+  function afterRetry(chat) {
+    waitForAnswer(chat);
+  }
+
+  function reset(chat) {
+    clearInput(chat);
+    setBusy(chat, false);
+    chat.input.focus();
+  }
+
+  function setBusy(chat, busy) {
+    chat.root.classList.toggle('chatbot-busy', busy);
+    chat.thinking.hidden = !busy;
+    chat.input.disabled = busy;
+    // an <a> cannot be disabled; the class greys it out and isBusy() cancels its request
+    chat.newChat.setAttribute('aria-disabled', String(busy));
+    updateSendButton(chat);
+  }
+
+  function isBusy(chat) {
+    return chat.root.classList.contains('chatbot-busy');
+  }
+
+  /* message box */
+
+  function handleKeyDown(event, clientId) {
+    if (event.key !== 'Enter' || event.shiftKey || event.isComposing) { return; }
+    // Enter sends; it must never submit the host form
+    event.preventDefault();
+    var chat = findParts(clientId);
+    if (chat && !chat.send.disabled) { chat.send.click(); }
+  }
+
+  function handleInput(event, clientId) {
+    autoGrow(event.target);
+    var chat = findParts(clientId);
+    if (chat) { updateSendButton(chat); }
   }
 
   function autoGrow(input) {
@@ -37,68 +120,62 @@ var AiChatbot = (function() {
     input.style.height = input.scrollHeight + 'px';
   }
 
-  function clearInput(clientId) {
-    var input = find(clientId, '.chatbot-input');
-    if (input) {
-      input.value = '';
-      autoGrow(input);
+  function clearInput(chat) {
+    chat.input.value = '';
+    autoGrow(chat.input);
+  }
+
+  function updateSendButton(chat) {
+    var enabled = !chat.input.disabled && chat.input.value.trim().length > 0;
+    chat.send.disabled = !enabled;
+    chat.send.classList.toggle('ui-state-disabled', !enabled);
+  }
+
+  /* message thread */
+
+  /* every update of the thread brings the times back unformatted */
+  function refreshThread(chat) {
+    formatTimes(chat);
+    scrollToBottom(chat);
+  }
+
+  /* the server renders each message time as a UTC instant; show it in the user's time zone */
+  function formatTimes(chat) {
+    chat.root.querySelectorAll('time.chatbot-time[datetime]').forEach(function(time) {
+      var date = new Date(time.getAttribute('datetime'));
+      if (isNaN(date.getTime())) { return; }
+      time.textContent = TIME_FORMAT.format(date);
+      time.title = FULL_TIME_FORMAT.format(date);
+    });
+  }
+
+  function scrollToBottom(chat) {
+    requestAnimationFrame(function() {
+      chat.scroll.scrollTop = chat.scroll.scrollHeight;
+    });
+  }
+
+  /* answer animation */
+
+  function typeOutNewAnswer(chat) {
+    var answer = findNewAnswer(chat);
+    if (answer && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      typeOut(answer);
     }
   }
 
-  function updateSendButton(clientId) {
-    var input = find(clientId, '.chatbot-input');
-    var send = find(clientId, '.chatbot-send');
-    if (!input || !send) { return; }
-    var enabled = !input.disabled && input.value.trim().length > 0;
-    send.disabled = !enabled;
-    send.classList.toggle('ui-state-disabled', !enabled);
-  }
-
-  function setBusy(clientId, busy) {
-    getRoot(clientId)?.classList.toggle('chatbot-busy', busy);
-    var input = find(clientId, '.chatbot-input');
-    if (input) { input.disabled = busy; }
-    // an <a> cannot be disabled; the class greys it out and isBusy() cancels its request
-    find(clientId, '.chatbot-header-action')?.setAttribute('aria-disabled', String(busy));
-    updateSendButton(clientId);
-  }
-
-  function isBusy(clientId) {
-    return !!getRoot(clientId)?.classList.contains('chatbot-busy');
-  }
-
-  function showThinking(clientId) {
-    var thinking = find(clientId, '.chatbot-thinking');
-    if (thinking) { thinking.hidden = false; }
-    setBusy(clientId, true);
-    scrollToBottom(clientId);
-  }
-
-  function requestAnswer(clientId) {
-    var command = getRoot(clientId)?.getAttribute('data-answer-command');
-    window[command]?.();
-  }
-
-  function waitForAnswer(clientId) {
-    formatTimes(clientId);
-    showThinking(clientId);
-    requestAnswer(clientId);
-  }
-
-  function streamLastAnswer(clientId) {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
-    var root = getRoot(clientId);
-    if (!root || root.querySelector('.chatbot-error')) { return; }
-    var messages = root.querySelectorAll('.chatbot-message:not(.chatbot-thinking)');
+  /* only animate when the newest message is the answer that just arrived */
+  function findNewAnswer(chat) {
+    if (chat.root.querySelector('.chatbot-error')) { return null; }
+    var messages = chat.root.querySelectorAll('.chatbot-message:not(.chatbot-thinking)');
     var last = messages[messages.length - 1];
-    // only animate when the newest message is the answer that just arrived
-    if (!last?.classList.contains('chatbot-message-ai')) { return; }
+    return last?.classList.contains('chatbot-message-ai') ? last : null;
+  }
 
-    var content = last.querySelector('.chatbot-answer');
-    var meta = last.querySelector('.chatbot-answer-time');
+  function typeOut(message) {
+    var content = message.querySelector('.chatbot-answer');
     var text = content.textContent;
 
-    meta.classList.add('chatbot-time-hidden');
     var typed = document.createTextNode('');
     var cursor = document.createElement('span');
     cursor.className = 'chatbot-streaming-cursor';
@@ -116,58 +193,9 @@ var AiChatbot = (function() {
       } else {
         typed.textContent = text;
         cursor.remove();
-        meta.classList.remove('chatbot-time-hidden');
       }
     }
     typeNext();
-  }
-
-  function focusInput(clientId) {
-    find(clientId, '.chatbot-input')?.focus();
-  }
-
-  /* callbacks wired in Chatbot.xhtml */
-
-  function afterSend(clientId, args) {
-    // the server rejected the message as blank: keep the text in the input
-    if (args?.accepted === false) {
-      formatTimes(clientId);
-      scrollToBottom(clientId);
-      focusInput(clientId);
-      return;
-    }
-    clearInput(clientId);
-    waitForAnswer(clientId);
-  }
-
-  function afterAnswer(clientId) {
-    formatTimes(clientId);
-    setBusy(clientId, false);
-
-    var input = find(clientId, '.chatbot-input');
-    if (input) { autoGrow(input); }
-    streamLastAnswer(clientId);
-    focusInput(clientId);
-    scrollToBottom(clientId);
-  }
-
-  function reset(clientId) {
-    clearInput(clientId);
-    setBusy(clientId, false);
-    focusInput(clientId);
-  }
-
-  function handleKeyDown(event, clientId) {
-    if (event.key !== 'Enter' || event.shiftKey || event.isComposing) { return; }
-    // Enter sends; it must never submit the host form
-    event.preventDefault();
-    var send = find(clientId, '.chatbot-send');
-    if (send && !send.disabled) { send.click(); }
-  }
-
-  function handleInput(event, clientId) {
-    autoGrow(event.target);
-    updateSendButton(clientId);
   }
 
   function copyAnswer(button) {
@@ -180,29 +208,21 @@ var AiChatbot = (function() {
     }).catch(function() {});
   }
 
-  /* called by Chatbot.xhtml on every render; safe to call repeatedly */
-  function init(clientId) {
-    var input = find(clientId, '.chatbot-input');
-    if (!input) { return; }
-    autoGrow(input);
-    formatTimes(clientId);
-    updateSendButton(clientId);
-    scrollToBottom(clientId);
-  }
-
   return {
-    afterAnswer: afterAnswer,
-    afterRetry: waitForAnswer,
-    afterSend: afterSend,
+    afterAnswer: withChat(afterAnswer),
+    afterRetry: withChat(afterRetry),
+    afterSend: withChat(afterSend),
     copyAnswer: copyAnswer,
     handleInput: handleInput,
     handleKeyDown: handleKeyDown,
-    init: init,
-    isBusy: isBusy,
-    reset: reset
+    init: withChat(init),
+    isBusy: withChat(isBusy),
+    requestFailed: withChat(requestFailed),
+    reset: withChat(reset),
+    retryRequest: withChat(retryRequest)
   };
 }());
 
-// components rendered before this script loaded queued their ids (see Chatbot.xhtml)
+// components rendered before this script loaded queued their ids)
 (window.AiChatbotPending || []).forEach(function(clientId) { AiChatbot.init(clientId); });
 window.AiChatbotPending = [];
