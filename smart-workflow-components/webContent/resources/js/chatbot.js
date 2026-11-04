@@ -11,13 +11,7 @@ var AiChatbot = (function() {
   }
 
   function find(clientId, selector) {
-    var root = getRoot(clientId);
-    return root ? root.querySelector(selector) : null;
-  }
-
-  function rootIdOf(element) {
-    var root = element.closest('.chatbot');
-    return root ? root.id : null;
+    return getRoot(clientId)?.querySelector(selector);
   }
 
   function scrollToBottom(clientId) {
@@ -30,9 +24,7 @@ var AiChatbot = (function() {
 
   /* the server renders each message time as a UTC instant; show it in the user's time zone */
   function formatTimes(clientId) {
-    var root = getRoot(clientId);
-    if (!root) { return; }
-    root.querySelectorAll('time.chatbot-time[datetime]').forEach(function(time) {
+    getRoot(clientId)?.querySelectorAll('time.chatbot-time[datetime]').forEach(function(time) {
       var date = new Date(time.getAttribute('datetime'));
       if (isNaN(date.getTime())) { return; }
       time.textContent = TIME_FORMAT.format(date);
@@ -45,6 +37,14 @@ var AiChatbot = (function() {
     input.style.height = input.scrollHeight + 'px';
   }
 
+  function clearInput(clientId) {
+    var input = find(clientId, '.chatbot-input');
+    if (input) {
+      input.value = '';
+      autoGrow(input);
+    }
+  }
+
   function updateSendButton(clientId) {
     var input = find(clientId, '.chatbot-input');
     var send = find(clientId, '.chatbot-send');
@@ -55,19 +55,16 @@ var AiChatbot = (function() {
   }
 
   function setBusy(clientId, busy) {
-    var root = getRoot(clientId);
-    if (root) { root.classList.toggle('chatbot-busy', busy); }
+    getRoot(clientId)?.classList.toggle('chatbot-busy', busy);
     var input = find(clientId, '.chatbot-input');
     if (input) { input.disabled = busy; }
     // an <a> cannot be disabled; the class greys it out and isBusy() cancels its request
-    var newChat = find(clientId, '.chatbot-header-action');
-    if (newChat) { newChat.setAttribute('aria-disabled', String(busy)); }
+    find(clientId, '.chatbot-header-action')?.setAttribute('aria-disabled', String(busy));
     updateSendButton(clientId);
   }
 
   function isBusy(clientId) {
-    var root = getRoot(clientId);
-    return !!root && root.classList.contains('chatbot-busy');
+    return !!getRoot(clientId)?.classList.contains('chatbot-busy');
   }
 
   function showThinking(clientId) {
@@ -78,34 +75,34 @@ var AiChatbot = (function() {
   }
 
   function requestAnswer(clientId) {
-    var root = getRoot(clientId);
-    var command = root && root.getAttribute('data-answer-command');
-    if (command && typeof window[command] === 'function') {
-      window[command]();
-    }
+    var command = getRoot(clientId)?.getAttribute('data-answer-command');
+    window[command]?.();
+  }
+
+  function waitForAnswer(clientId) {
+    formatTimes(clientId);
+    showThinking(clientId);
+    requestAnswer(clientId);
   }
 
   function streamLastAnswer(clientId) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
     var root = getRoot(clientId);
     if (!root || root.querySelector('.chatbot-error')) { return; }
     var messages = root.querySelectorAll('.chatbot-message:not(.chatbot-thinking)');
     var last = messages[messages.length - 1];
     // only animate when the newest message is the answer that just arrived
-    if (!last || !last.classList.contains('chatbot-message-ai')) { return; }
+    if (!last?.classList.contains('chatbot-message-ai')) { return; }
 
     var content = last.querySelector('.chatbot-answer');
-    if (!content) { return; }
     var meta = last.querySelector('.chatbot-answer-time');
-    var text = content.textContent || '';
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+    var text = content.textContent;
 
-    if (meta) { meta.classList.add('chatbot-time-hidden'); }
-    content.textContent = '';
+    meta.classList.add('chatbot-time-hidden');
     var typed = document.createTextNode('');
     var cursor = document.createElement('span');
     cursor.className = 'chatbot-streaming-cursor';
-    content.appendChild(typed);
-    content.appendChild(cursor);
+    content.replaceChildren(typed, cursor);
 
     // only the start is typed out, so long answers do not keep the user waiting;
     // Array.from splits by code point, so emoji are never cut in half
@@ -119,41 +116,28 @@ var AiChatbot = (function() {
       } else {
         typed.data = text;
         cursor.remove();
-        if (meta) { meta.classList.remove('chatbot-time-hidden'); }
+        meta.classList.remove('chatbot-time-hidden');
       }
     }
     typeNext();
   }
 
   function focusInput(clientId) {
-    var input = find(clientId, '.chatbot-input');
-    if (input) { input.focus(); }
+    find(clientId, '.chatbot-input')?.focus();
   }
 
   /* callbacks wired in Chatbot.xhtml */
 
   function afterSend(clientId, args) {
-    // the server rejected the message (e.g. too long): keep the text so the user can fix it
-    if (args && args.accepted === false) {
+    // the server rejected the message as blank: keep the text in the input
+    if (args?.accepted === false) {
       formatTimes(clientId);
       scrollToBottom(clientId);
       focusInput(clientId);
       return;
     }
-    var input = find(clientId, '.chatbot-input');
-    if (input) {
-      input.value = '';
-      autoGrow(input);
-    }
-    formatTimes(clientId);
-    showThinking(clientId);
-    requestAnswer(clientId);
-  }
-
-  function afterRetry(clientId) {
-    formatTimes(clientId);
-    showThinking(clientId);
-    requestAnswer(clientId);
+    clearInput(clientId);
+    waitForAnswer(clientId);
   }
 
   function afterAnswer(clientId) {
@@ -165,55 +149,38 @@ var AiChatbot = (function() {
   }
 
   function reset(clientId) {
-    var input = find(clientId, '.chatbot-input');
-    if (input) {
-      input.value = '';
-      autoGrow(input);
-    }
+    clearInput(clientId);
     setBusy(clientId, false);
     focusInput(clientId);
   }
 
-  function handleKeyDown(event) {
+  function handleKeyDown(event, clientId) {
     if (event.key !== 'Enter' || event.shiftKey || event.isComposing) { return; }
     // Enter sends; it must never submit the host form
     event.preventDefault();
-    var clientId = rootIdOf(event.target);
-    var send = clientId && find(clientId, '.chatbot-send');
+    var send = find(clientId, '.chatbot-send');
     if (send && !send.disabled) { send.click(); }
   }
 
-  function handleInput(event) {
+  function handleInput(event, clientId) {
     autoGrow(event.target);
-    var clientId = rootIdOf(event.target);
-    if (clientId) { updateSendButton(clientId); }
+    updateSendButton(clientId);
   }
 
   function copyAnswer(button) {
-    var message = button.closest('.chatbot-message');
-    var content = message && message.querySelector('.chatbot-answer');
+    var content = button.closest('.chatbot-message').querySelector('.chatbot-answer');
     var icon = button.querySelector('.ti');
-    if (!content || !navigator.clipboard) { return; }
-    navigator.clipboard.writeText(content.textContent || '').then(function() {
-      if (!icon) { return; }
+    if (!navigator.clipboard) { return; }
+    navigator.clipboard.writeText(content.textContent).then(function() {
       icon.classList.replace('ti-copy', 'ti-check');
       setTimeout(function() { icon.classList.replace('ti-check', 'ti-copy'); }, COPIED_FEEDBACK_MS);
     }).catch(function() {});
-  }
-
-  /* applies the minHeight / maxHeight attributes of the component; empty values leave the CSS default */
-  function applySize(clientId) {
-    var root = getRoot(clientId);
-    if (!root) { return; }
-    root.style.minHeight = root.getAttribute('data-min-height') || '';
-    root.style.maxHeight = root.getAttribute('data-max-height') || '';
   }
 
   /* called by Chatbot.xhtml on every render; safe to call repeatedly */
   function init(clientId) {
     var input = find(clientId, '.chatbot-input');
     if (!input) { return; }
-    applySize(clientId);
     autoGrow(input);
     formatTimes(clientId);
     updateSendButton(clientId);
@@ -222,7 +189,7 @@ var AiChatbot = (function() {
 
   return {
     afterAnswer: afterAnswer,
-    afterRetry: afterRetry,
+    afterRetry: waitForAnswer,
     afterSend: afterSend,
     copyAnswer: copyAnswer,
     handleInput: handleInput,

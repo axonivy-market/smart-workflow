@@ -3,15 +3,9 @@
   "simpleName" : "ChatbotAgentsData",
   "namespace" : "com.axonivy.utils.ai.chatbot",
   "fields" : [ {
-    "name" : "userMessage",
-    "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage",
-    "modifiers" : [ ]
+    "name" : "query"
   }, {
-    "name" : "history",
-    "type" : "List<com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage>",
-    "modifiers" : [ ]
-  }, {
-    "name" : "answerText"
+    "name" : "answer"
   }, {
     "name" : "blockReason",
     "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason"

@@ -24,5 +24,4 @@ Dialogs:
               InputGuardrailMessage: Su mensaje no superó un control de seguridad y no se envió a la IA. Reformúlelo e inténtelo de nuevo.
               OutputGuardrailMessage: La respuesta no superó un control de seguridad y no se muestra. Intente formular su pregunta de otra manera.
               CircuitBreakerMessage: El asistente de IA está desactivado en este momento. Inténtelo más tarde o contacte con su administrador.
-              MessageTooLong: Su mensaje es demasiado largo. Acórtelo a {0} caracteres como máximo.
               EmptyAnswerMessage: La IA no devolvió ninguna respuesta. Su pregunta se conserva, puede volver a intentarlo.
