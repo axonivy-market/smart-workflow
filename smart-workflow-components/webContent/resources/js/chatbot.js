@@ -143,6 +143,9 @@ var AiChatbot = (function() {
   function afterAnswer(clientId) {
     formatTimes(clientId);
     setBusy(clientId, false);
+
+    var input = find(clientId, '.chatbot-input');
+    if (input) { autoGrow(input); }
     streamLastAnswer(clientId);
     focusInput(clientId);
     scrollToBottom(clientId);

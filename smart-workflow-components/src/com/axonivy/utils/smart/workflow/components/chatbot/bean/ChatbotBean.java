@@ -106,7 +106,11 @@ public class ChatbotBean implements Serializable {
   private void handleResults(Map<String, Object> result) {
     if (result.get("blockReason") instanceof AnswerBlockReason reason) {
       Ivy.log().warn("Chatbot answer was blocked: " + reason);
-      error = new SmartWorkflowErrorMessage(Ivy.cms().co(CMS_PATH + reason.getCmsKey()));
+      boolean questionRejected = reason == AnswerBlockReason.INPUT_GUARDRAIL;
+      if (questionRejected) {
+        userMessage = chatHistory.removeLast().getContent();
+      }
+      error = new SmartWorkflowErrorMessage(Ivy.cms().co(CMS_PATH + reason.getCmsKey()), !questionRejected);
       return;
     }
     String answer = (String) result.get("answer");

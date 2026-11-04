@@ -123,7 +123,7 @@
 
     <p:remoteCommand name="#{answerCommand}"
       action="#{cc.attrs.managedBean.answer}" process="@this"
-      update="thread" global="false"
+      update="thread question" global="false"
       oncomplete="AiChatbot.afterAnswer('#{cc.clientId}');" />
 
     <!-- runs on every render of the component, including ajax updates and dynamic dialogs.
