@@ -110,11 +110,11 @@ var AiChatbot = (function() {
     var index = 0;
     function typeNext() {
       if (index < head.length) {
-        typed.data += head[index];
+        typed.textContent += head[index];
         index++;
         setTimeout(typeNext, TYPEWRITER_CHAR_MS);
       } else {
-        typed.data = text;
+        typed.textContent = text;
         cursor.remove();
         meta.classList.remove('chatbot-time-hidden');
       }
