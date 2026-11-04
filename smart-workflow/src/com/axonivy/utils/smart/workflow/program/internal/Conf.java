@@ -4,6 +4,7 @@ public interface Conf {
   String SYSTEM = "system";
   String QUERY = "query";
   String TOOLS = "tools";
+  String RUNTIME_TOOLS = "runtimeTools";
   String MODEL = "model";
   String PROVIDER = "provider";
   String OUTPUT = "resultType";

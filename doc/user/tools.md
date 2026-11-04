@@ -39,6 +39,19 @@ Tools are discovered globally but granted per agent, via the `Available tools` p
 
 Keep the list tight. Every tool you grant costs tokens in the request and gives the model one more way to pick wrong.
 
+### Choosing tools at runtime
+
+When the tools are only known while the process runs, set `Tools from variable` to a variable such as `in.tools`. It holds tool signatures in one of these types:
+
+- `List`: `["createSupportTicket(String)", "whoami"]`
+- `Set`: `new java.util.HashSet(["createSupportTicket(String)", "whoami"])`
+- Array: `["createSupportTicket(String)", "whoami"].toArray()`
+- `String`, for a single tool: `"createSupportTicket(String)"`
+
+A tool is matched by its name, so the parameter part of a signature is optional. These tools are added to the ones selected in `Available tools`.
+
+Tool names from the variable are looked up like any other tool, in the current project **and all required projects**. A tool in a project the current one does not require is not found.
+
 ## Java tools
 
 Tool logic can also be implemented in Java. This is rarely needed — prefer callable processes whenever possible, and reach for Java only when the logic has no workflow steps and is better expressed as a plain class.

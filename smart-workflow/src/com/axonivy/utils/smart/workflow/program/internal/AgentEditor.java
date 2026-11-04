@@ -37,6 +37,11 @@ public class AgentEditor {
             .label("Available tools:")
             .items(toolList())
             .create())
+        .add(ui.scriptField(Conf.RUNTIME_TOOLS)
+            .label("Tools from variable:")
+            .help("Load tools from a variable. It holds tool signatures as a List, Set, array or single String.")
+            .requireType(Object.class)
+            .create())
         .create();
 
     ui.group("🛡️ Guardrails")

@@ -49,6 +49,8 @@ If you run into trouble crafting these messages, [Messages and expressions](trou
 
 > **Important:** An empty `Available tools` field means the agent has **no tools to use at all**. If your agent ignores a tool you expected it to call, check that the tool is actually selected here.
 
+`Tools from variable` loads tools from a variable. It holds tool signatures as a List, Set, array or single String. See [Choosing tools at runtime](tools.md#choosing-tools-at-runtime).
+
 See [Defining Tools](tools.md) for writing tools and for how their descriptions reach the model.
 
 ### Guardrails

@@ -1,9 +1,12 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,6 +26,7 @@ import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.tools.human.internal.HumanInTheLoop;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
+
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.data.message.Content;
@@ -63,7 +67,8 @@ public class AgentCallExecutor {
     AiServices<DynamicAgent<?>> agentBuilder = AiServices.builder(aiCtxt);
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
-    var toolFilter = context.config().getList(Conf.TOOLS);
+    var toolFilter = new ArrayList<>(context.config().getList(Conf.TOOLS));
+    toolFilter.addAll(runtimeTools(toolFilter));
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
     configureToolProvider(agentBuilder, toolFilter);
     configureGuardrails(agentBuilder);
@@ -99,6 +104,30 @@ public class AgentCallExecutor {
       throw new RuntimeException("Failed to extract config '" + configKey + "' for value '" + value.get() + "'",
           ex);
     }
+  }
+
+  private List<String> runtimeTools(List<String> toolFilter) {
+    var raw = execute(Conf.RUNTIME_TOOLS, Object.class).orElse(null);
+    Stream<?> signatures = switch (raw) {
+      case Collection<?> collection -> collection.stream();
+      case Object[] array -> Arrays.stream(array);
+      case String single -> Stream.of(single);
+      case null -> Stream.empty();
+      default -> throw new IllegalArgumentException("Config '" + Conf.RUNTIME_TOOLS
+          + "' must be a Collection, an array or a String, but was " + raw.getClass().getName());
+    };
+    return signatures
+        .filter(String.class::isInstance)
+        .map(String.class::cast)
+        .map(AgentCallExecutor::toolName)
+        .filter(Predicate.not(String::isEmpty))
+        .filter(Predicate.not(toolFilter::contains))
+        .distinct()
+        .toList();
+  }
+
+  private static String toolName(String signature) {
+    return StringUtils.substringBefore(signature, "(").trim();
   }
 
   private void configureSystemMessage(HumanInTheLoop human, AiServices<? extends DynamicAgent<?>> agentBuilder) {
