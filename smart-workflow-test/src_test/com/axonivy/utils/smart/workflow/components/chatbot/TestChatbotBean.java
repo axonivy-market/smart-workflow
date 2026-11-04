@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.components.chatbot;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,7 +40,6 @@ class TestChatbotBean {
     fixture.var(GuardrailCollector.DEFAULT_OUTPUT_GUARDRAILS, "");
     fixture.var("AI.CircuitBreaker.Enabled", "false");
 
-    // PrimeFaces needs a JSF request, so record the callback param instead
     bean = new ChatbotBean() {
       @Override
       protected void reportAccepted(boolean value) {
@@ -75,7 +73,7 @@ class TestChatbotBean {
     assertThat(bean.getChatHistory()).isEmpty();
     assertThat(bean.getUserMessage()).isEqualTo(tooLong);
     assertThat(bean.getError().isRetryAllowed()).isFalse();
-    assertThat(bean.getError().getContent()).contains(String.valueOf(MAX_MESSAGE_LENGTH));
+    assertThat(bean.getError().getContent()).contains("2,000");
 
     bean.retry();
     bean.answer();
@@ -87,7 +85,6 @@ class TestChatbotBean {
 
   @Test
   void sendMessage_countsWindowsLineBreakAsOneCharacter() {
-    // the browser's maxlength counts \r\n as one character
     String half = "a".repeat(MAX_MESSAGE_LENGTH / 2);
     bean.setUserMessage(half + "\r\n" + half.substring(1));
 

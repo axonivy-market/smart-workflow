@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.components.chatbot;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.ExecutionResult;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
+import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
 import tools.jackson.databind.JsonNode;
@@ -73,15 +75,11 @@ class TestChatbotAgents {
   }
 
   @Test
-  void chat_emptyAnswer_leavesQuestionUnanswered(BpmClient client) {
+  void chat_emptyAnswer_failsWithError(BpmClient client) {
     ChatbotChat.answering("");
 
-    var result = chat(client, "Are you there?", ivyList());
-
-    assertThat(blockReason(result)).isNull();
-    assertThat(history(result))
-        .extracting(SmartWorkflowMessage::getRole, SmartWorkflowMessage::getContent)
-        .containsExactly(tuple(MessageRole.USER, "Are you there?"));
+    assertThatThrownBy(() -> chat(client, "Are you there?", ivyList()))
+        .isInstanceOf(BpmError.class);
   }
 
   static Stream<Arguments> blockedChats() {

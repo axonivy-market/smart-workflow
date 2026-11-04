@@ -1,11 +1,10 @@
 package com.axonivy.utils.smart.workflow.components.chatbot.utils;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage;
@@ -15,7 +14,6 @@ import tools.jackson.databind.json.JsonMapper;
 
 class TestChatbotUtils {
 
-  // mirrors ChatbotUtils.MAX_HISTORY_MESSAGES, which is not visible across the project class loaders
   private static final int MAX_HISTORY_MESSAGES = 20;
 
   private static final JsonMapper JSON = JsonMapper.builder().build();
