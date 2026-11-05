@@ -3,6 +3,8 @@ package com.axonivy.utils.smart.workflow.components.chatbot.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +32,8 @@ class TestIvyAdapterService {
   void startSubProcess_passesParamAndReturnsResults() {
     var ai = ChatbotChat.answering("Hello!");
 
-    var result = IvyAdapterService.startSubProcessInSecurityContext("askChatbotAgent(String)", "query", "Hi");
+    var result = IvyAdapterService.startSubProcessInSecurityContext(
+        "askChatbotAgent(String,List<String>,String)", Map.of("query", "Hi"));
 
     assertThat(ai.lastUserMessage()).isEqualTo("Hi");
     assertThat(result).containsEntry("answer", "Hello!");
@@ -38,7 +41,7 @@ class TestIvyAdapterService {
 
   @Test
   void startSubProcess_unknownSignature_fails() {
-    assertThatThrownBy(() -> IvyAdapterService.startSubProcessInSecurityContext("unknownProcess(String)", "query", "Hi"))
+    assertThatThrownBy(() -> IvyAdapterService.startSubProcessInSecurityContext("unknownProcess(String)", Map.of("query", "Hi")))
         .hasMessageContaining("Expected one subprocess with signature 'unknownProcess(String)', found 0.");
   }
 }
