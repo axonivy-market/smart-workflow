@@ -18,12 +18,13 @@ public final class ChatbotUtils {
 
   record AgentQuery(List<Turn> chatHistory, String latestUserMessage) {}
 
-  public static String toAgentQuery(String userMessage, List<SmartWorkflowMessage> chatHistory) {
-    List<SmartWorkflowMessage> history = chatHistory == null ? List.of() : chatHistory;
-    List<Turn> turns = history.subList(Math.max(0, history.size() - MAX_HISTORY_MESSAGES), history.size())
+  public static String toAgentQuery(List<SmartWorkflowMessage> chatHistory) {
+    // the last message is the one to answer; the ones before it are its context
+    int latest = chatHistory.size() - 1;
+    List<Turn> turns = chatHistory.subList(Math.max(0, latest - MAX_HISTORY_MESSAGES), latest)
         .stream()
         .map(message -> new Turn(message.getRole().name().toLowerCase(Locale.ROOT), message.getContent()))
         .toList();
-    return JSON.writeValueAsString(new AgentQuery(turns, userMessage));
+    return JSON.writeValueAsString(new AgentQuery(turns, chatHistory.get(latest).getContent()));
   }
 }

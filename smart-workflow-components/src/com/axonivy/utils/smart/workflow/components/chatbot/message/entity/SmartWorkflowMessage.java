@@ -39,16 +39,7 @@ public final class SmartWorkflowMessage implements Serializable {
     return timestamp;
   }
 
-  public String getTimestampIso() {
-    return timestamp.toString();
-  }
-
   public boolean isUser() {
     return role == MessageRole.USER;
-  }
-
-  @Override
-  public String toString() {
-    return role.name() + ": " + content;
   }
 }
