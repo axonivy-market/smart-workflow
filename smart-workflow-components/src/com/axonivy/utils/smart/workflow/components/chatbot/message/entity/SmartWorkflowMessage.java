@@ -42,9 +42,4 @@ public final class SmartWorkflowMessage implements Serializable {
   public boolean isUser() {
     return role == MessageRole.USER;
   }
-
-  @Override
-  public String toString() {
-    return role.name() + ": " + content;
-  }
 }
