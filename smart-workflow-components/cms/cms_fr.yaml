@@ -21,8 +21,8 @@ Dialogs:
               Retry: Réessayer
               Disclaimer: Les réponses de l'IA peuvent être erronées. Vérifiez les informations importantes.
               ErrorMessage: Le service IA n'a pas répondu. Votre question est conservée, vous pouvez réessayer.
+              RequestFailedMessage: La requête vers le serveur a échoué. Votre message est conservé, vous pouvez réessayer.
               InputGuardrailMessage: Votre message n'a pas passé un contrôle de sécurité et n'a pas été envoyé à l'IA. Veuillez le reformuler et réessayer.
               OutputGuardrailMessage: La réponse n'a pas passé un contrôle de sécurité et n'est pas affichée. Essayez de formuler votre question autrement.
               CircuitBreakerMessage: L'assistant IA est désactivé pour le moment. Veuillez réessayer plus tard ou contacter votre administrateur.
-              MessageTooLong: Votre message est trop long. Veuillez le raccourcir à {0} caractères maximum.
               EmptyAnswerMessage: L'IA n'a renvoyé aucune réponse. Votre question est conservée, vous pouvez réessayer.

@@ -21,8 +21,8 @@ Dialogs:
               Retry: Retry
               Disclaimer: AI answers can be wrong. Check important information.
               ErrorMessage: The AI service didn't respond. Your question is kept, so you can try again.
+              RequestFailedMessage: The request to the server failed. Your message is kept, so you can try again.
               InputGuardrailMessage: Your message didn't pass a safety check, so it wasn't sent to the AI. Please rephrase it and try again.
               OutputGuardrailMessage: The answer didn't pass a safety check, so it isn't shown. Try asking in a different way.
               CircuitBreakerMessage: The AI assistant is switched off right now. Please try again later or contact your administrator.
-              MessageTooLong: Your message is too long. Please shorten it to {0} characters or fewer.
               EmptyAnswerMessage: The AI didn't return an answer. Your question is kept, so you can try again.

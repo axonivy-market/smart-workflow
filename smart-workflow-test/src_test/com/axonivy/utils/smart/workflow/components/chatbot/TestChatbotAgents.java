@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.components.chatbot;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,8 +15,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
 import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage;
 import com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason;
-import com.axonivy.utils.smart.workflow.components.chatbot.message.enums.MessageRole;
 import com.axonivy.utils.smart.workflow.components.chatbot.mock.ChatbotChat;
+import com.axonivy.utils.smart.workflow.components.chatbot.utils.ChatbotUtils;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 
@@ -28,19 +27,15 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.test.RestResourceTest;
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.json.JsonMapper;
 
 @RestResourceTest
 class TestChatbotAgents {
 
-  private static final String CHAT_SIGNATURE = "chat(String,List<com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage>)";
+  private static final String CHAT_SIGNATURE = "askChatbotAgent(String)";
 
   private static final BpmElement CHAT = BpmProcess.name("ChatbotAgents").elementName(CHAT_SIGNATURE);
 
   private static final String CIRCUIT_BREAKER_ENABLED = "AI.CircuitBreaker.Enabled";
-
-  private static final JsonMapper JSON = JsonMapper.builder().build();
 
   @BeforeEach
   void setup(AppFixture fixture) {
@@ -52,33 +47,25 @@ class TestChatbotAgents {
   }
 
   @Test
-  void chat_sendsJsonQuery_appendsQuestionAndAnswer(BpmClient client) {
+  void chat_sendsJsonQueryToAi_returnsAnswer(BpmClient client) {
     var ai = ChatbotChat.answering("Axon Ivy is a process automation platform.");
-    var history = ivyList(SmartWorkflowMessage.user("Hi"), SmartWorkflowMessage.ai("Hello!"));
+    String query = ChatbotUtils.toAgentQuery(List.of(
+        SmartWorkflowMessage.user("Hi"),
+        SmartWorkflowMessage.ai("Hello!"),
+        SmartWorkflowMessage.user("What is Axon Ivy?")));
 
-    var result = chat(client, "What is Axon Ivy?", history);
+    var result = chat(client, query);
 
-    JsonNode query = JSON.readTree(ai.lastUserMessage());
-    assertThat(query.get("latestUserMessage").asString()).isEqualTo("What is Axon Ivy?");
-    assertThat(query.get("chatHistory"))
-        .extracting(turn -> turn.get("role").asString(), turn -> turn.get("content").asString())
-        .containsExactly(tuple("user", "Hi"), tuple("ai", "Hello!"));
-
+    assertThat(ai.lastUserMessage()).isEqualTo(query);
+    assertThat(answer(result)).isEqualTo("Axon Ivy is a process automation platform.");
     assertThat(blockReason(result)).isNull();
-    assertThat(history(result))
-        .extracting(SmartWorkflowMessage::getRole, SmartWorkflowMessage::getContent)
-        .containsExactly(
-            tuple(MessageRole.USER, "Hi"),
-            tuple(MessageRole.AI, "Hello!"),
-            tuple(MessageRole.USER, "What is Axon Ivy?"),
-            tuple(MessageRole.AI, "Axon Ivy is a process automation platform."));
   }
 
   @Test
   void chat_emptyAnswer_failsWithError(BpmClient client) {
     ChatbotChat.answering("");
 
-    assertThatThrownBy(() -> chat(client, "Are you there?", ivyList()))
+    assertThatThrownBy(() -> chat(client, "Are you there?"))
         .isInstanceOf(BpmError.class);
   }
 
@@ -94,33 +81,28 @@ class TestChatbotAgents {
 
   @ParameterizedTest
   @MethodSource("blockedChats")
-  void chat_blocked_returnsBlockReason(String variable, String value, String userMessage, String answer,
+  void chat_blocked_returnsBlockReason(String variable, String value, String query, String aiAnswer,
       AnswerBlockReason expected, BpmClient client, AppFixture fixture) {
     fixture.var(variable, value);
-    ChatbotChat.answering(answer);
+    ChatbotChat.answering(aiAnswer);
 
-    var result = chat(client, userMessage, ivyList());
+    var result = chat(client, query);
 
     assertThat(blockReason(result)).isEqualTo(expected);
+    assertThat(answer(result)).isNullOrEmpty();
   }
 
-  private static ExecutionResult chat(BpmClient client, String userMessage, List<SmartWorkflowMessage> history) {
+  private static ExecutionResult chat(BpmClient client, String query) {
     return client.start().subProcess(CHAT)
-        .withParam("userMessage", userMessage)
-        .withParam("history", history)
+        .withParam("query", query)
         .execute();
   }
 
-  private static List<SmartWorkflowMessage> history(ExecutionResult result) {
-    return result.subResult().param("history");
+  private static String answer(ExecutionResult result) {
+    return result.subResult().param("answer");
   }
 
   private static AnswerBlockReason blockReason(ExecutionResult result) {
     return result.subResult().param("blockReason");
-  }
-
-  // callable processes only accept Ivy's own List type for List parameters
-  private static List<SmartWorkflowMessage> ivyList(SmartWorkflowMessage... messages) {
-    return ch.ivyteam.ivy.scripting.objects.List.create(SmartWorkflowMessage.class, List.of(messages));
   }
 }
