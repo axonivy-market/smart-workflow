@@ -47,9 +47,9 @@ If you run into trouble crafting these messages, [Messages and expressions](trou
 
 `Available tools` lists the tools an agent can use — both callable sub-processes tagged `tool` and Java tools.
 
-> **Important:** An empty `Available tools` field means the agent has **no tools to use at all**. If your agent ignores a tool you expected it to call, check that the tool is actually selected here.
+> **Important:** If both `Available tools` and `Runtime tools` are empty, the agent has **no tools to use at all**. If your agent ignores a tool you expected it to call, check that the tool is actually selected here.
 
-`Tools from variable` loads tools from a variable. It holds tool signatures as a List, Set, array or single String. See [Choosing tools at runtime](tools.md#choosing-tools-at-runtime).
+`Runtime tools` adds tools chosen while the process runs. It is an expression, such as `in.tools`, that holds tool signatures as a List, Set, array or single String. See [Choosing tools at runtime](tools.md#choosing-tools-at-runtime).
 
 See [Defining Tools](tools.md) for writing tools and for how their descriptions reach the model.
 

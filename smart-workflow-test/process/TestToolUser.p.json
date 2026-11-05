@@ -628,10 +628,18 @@
       }
     }, {
       "id" : "f79",
-      "type" : "RequestStart",
-      "name" : "runtimeToolsList",
+      "type" : "CallSubStart",
+      "name" : "runtimeTools(Object)",
       "config" : {
-        "signature" : "runtimeToolsList"
+        "signature" : "runtimeTools",
+        "input" : {
+          "params" : [
+            { "name" : "tools", "type" : "Object", "desc" : "" }
+          ],
+          "map" : {
+            "out.tools" : "param.#tools"
+          }
+        }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 800 }
@@ -647,7 +655,8 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "provider" : "dummy",
-          "runtimeTools" : "[\"createSupportTicket(String)\", \"whoami\"]",
+          "tools" : "add",
+          "runtimeTools" : "in.#tools",
           "resultMapping" : "in.result",
           "query" : "Hello"
         }
@@ -660,123 +669,9 @@
       ]
     }, {
       "id" : "f83",
-      "type" : "TaskEnd",
+      "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 400, "y" : 800 }
-      }
-    }, {
-      "id" : "f84",
-      "type" : "RequestStart",
-      "name" : "runtimeToolsSet",
-      "config" : {
-        "signature" : "runtimeToolsSet"
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 888 }
-      },
-      "connect" : [
-        { "id" : "f85", "to" : "f86" }
-      ]
-    }, {
-      "id" : "f86",
-      "type" : "ProgramInterface",
-      "name" : "Ivy Agent",
-      "config" : {
-        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig" : {
-          "provider" : "dummy",
-          "runtimeTools" : "new java.util.HashSet([\"createSupportTicket(String)\", \"whoami\"])",
-          "resultMapping" : "in.result",
-          "query" : "Hello"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 232, "y" : 888 }
-      },
-      "connect" : [
-        { "id" : "f87", "to" : "f88" }
-      ]
-    }, {
-      "id" : "f88",
-      "type" : "TaskEnd",
-      "visual" : {
-        "at" : { "x" : 400, "y" : 888 }
-      }
-    }, {
-      "id" : "f89",
-      "type" : "RequestStart",
-      "name" : "runtimeToolsArray",
-      "config" : {
-        "signature" : "runtimeToolsArray"
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 976 }
-      },
-      "connect" : [
-        { "id" : "f90", "to" : "f91" }
-      ]
-    }, {
-      "id" : "f91",
-      "type" : "ProgramInterface",
-      "name" : "Ivy Agent",
-      "config" : {
-        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig" : {
-          "provider" : "dummy",
-          "runtimeTools" : "[\"createSupportTicket(String)\", \"whoami\"].toArray()",
-          "resultMapping" : "in.result",
-          "query" : "Hello"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 232, "y" : 976 }
-      },
-      "connect" : [
-        { "id" : "f92", "to" : "f93" }
-      ]
-    }, {
-      "id" : "f93",
-      "type" : "TaskEnd",
-      "visual" : {
-        "at" : { "x" : 400, "y" : 976 }
-      }
-    }, {
-      "id" : "f94",
-      "type" : "RequestStart",
-      "name" : "runtimeToolsString",
-      "config" : {
-        "signature" : "runtimeToolsString"
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 1064 }
-      },
-      "connect" : [
-        { "id" : "f95", "to" : "f96" }
-      ]
-    }, {
-      "id" : "f96",
-      "type" : "ProgramInterface",
-      "name" : "Ivy Agent",
-      "config" : {
-        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig" : {
-          "provider" : "dummy",
-          "runtimeTools" : "\"createSupportTicket(String)\"",
-          "resultMapping" : "in.result",
-          "query" : "Hello"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 232, "y" : 1064 }
-      },
-      "connect" : [
-        { "id" : "f97", "to" : "f98" }
-      ]
-    }, {
-      "id" : "f98",
-      "type" : "TaskEnd",
-      "visual" : {
-        "at" : { "x" : 400, "y" : 1064 }
       }
     } ]
 }

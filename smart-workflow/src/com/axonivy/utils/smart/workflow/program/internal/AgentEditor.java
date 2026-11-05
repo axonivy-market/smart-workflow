@@ -40,8 +40,8 @@ public class AgentEditor {
             .items(toolList())
             .create())
         .add(ui.scriptField(Conf.RUNTIME_TOOLS)
-            .label("Tools from variable:")
-            .help("Load tools from a variable. It holds tool signatures as a List, Set, array or single String.")
+            .label("Runtime tools:")
+            .help("Expression for tools chosen while the process runs, such as in.tools. It holds tool signatures as a List, Set, array or single String.")
             .requireType(Object.class)
             .create())
         .create();
