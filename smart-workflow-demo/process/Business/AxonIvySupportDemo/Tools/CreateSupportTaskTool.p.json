@@ -6,17 +6,125 @@
     "data" : "Business.AxonIvySupportDemo.Tools.CreateSupportTaskToolData"
   },
   "elements" : [ {
-      "id" : "f3",
+      "id" : "f37",
       "type" : "CallSubStart",
-      "name" : "createAxonIvySupportTask(String)",
+      "name" : "createAxonIvySupportTicket(String)",
       "config" : {
-        "signature" : "createAxonIvySupportTask",
+        "signature" : "createAxonIvySupportTicket",
         "input" : {
           "params" : [
-            { "name" : "ticketDescription", "type" : "String", "desc" : "" }
+            { "name" : "ticketDescription", "type" : "String", "desc" : "The user's full problem report in their own words, including the product version and any error message or stack trace they gave" }
           ],
           "map" : {
             "out.ticketDescription" : "param.ticketDescription"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket", "desc" : "" },
+            { "name" : "responseMessage", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.supportTicket" : "in.supportTicket",
+            "result.responseMessage" : "in.responseMessage"
+          }
+        }
+      },
+      "tags" : [
+        "tool"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "description" : "Step 1 of reporting a problem with Axon Ivy Core, Portal or a Market product: turns the user's problem report into a support ticket with category, title, product version, operating system and stack trace. Returns the ticket and a message saying whether it is complete or which information to ask the user for."
+      },
+      "connect" : [
+        { "id" : "f38", "to" : "f39" }
+      ]
+    }, {
+      "id" : "f39",
+      "type" : "Script",
+      "name" : "Create ticket object",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket;",
+            "",
+            "in.supportTicket = new AxonIvySupportTicket();",
+            "in.supportTicket.setDescription(in.ticketDescription);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f40", "to" : "f41" }
+      ]
+    }, {
+      "id" : "f41",
+      "type" : "ProgramInterface",
+      "name" : "Use AI to create support ticket object",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "system" : "Instruction to follow:\n- Don't fill information related to approval\n- Find Ivy version or Portal version or Core version\n<%=in.customInstructions%>",
+          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket.class",
+          "tools" : "",
+          "resultMapping" : "in.supportTicket",
+          "query" : "<%=in.ticketDescription%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 400, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f42", "to" : "f43" }
+      ]
+    }, {
+      "id" : "f43",
+      "type" : "Script",
+      "name" : "Check missing information",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import org.apache.commons.lang3.StringUtils;",
+            "import org.apache.commons.lang3.Strings;",
+            "",
+            "if (StringUtils.isBlank(in.supportTicket.version)) {",
+            "  in.responseMessage = \"The product version is missing. Ask the user for it, then create the support ticket again.\";",
+            "} else if (Strings.CI.containsAny(in.ticketDescription, \"error\", \"exception\") && StringUtils.isBlank(in.supportTicket.stackTrace)) {",
+            "  in.responseMessage = \"The stack trace is missing. Ask the user for it, then create the support ticket again.\";",
+            "} else {",
+            "  in.responseMessage = \"The support ticket is complete. Pass it unchanged to createAxonIvySupportTaskInfo.\";",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 568, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f44", "to" : "f45" }
+      ]
+    }, {
+      "id" : "f45",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 712, "y" : 64 }
+      }
+    }, {
+      "id" : "f46",
+      "type" : "CallSubStart",
+      "name" : "createAxonIvySupportTaskInfo(com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket)",
+      "config" : {
+        "signature" : "createAxonIvySupportTaskInfo",
+        "input" : {
+          "params" : [
+            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket", "desc" : "The complete support ticket exactly as createAxonIvySupportTicket returned it" }
+          ],
+          "map" : {
+            "out.supportTicket" : "param.supportTicket",
+            "out.ticketDescription" : "param.#supportTicket.#description"
           }
         },
         "result" : {
@@ -32,103 +140,28 @@
         "tool"
       ],
       "visual" : {
-        "at" : { "x" : 392, "y" : 296 },
-        "description" : "Use support task"
+        "at" : { "x" : 96, "y" : 200 },
+        "description" : "Step 2 of reporting a problem: creates the task info for a complete support ticket and the task for the support team. Use it only after createAxonIvySupportTicket said the ticket is complete."
       },
       "connect" : [
-        { "id" : "f4", "to" : "f5" }
+        { "id" : "f54", "to" : "f48" }
       ]
     }, {
-      "id" : "f5",
-      "type" : "Script",
-      "name" : "Create Task info object",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket;",
-            "import com.axonivy.utils.smart.workflow.demo.dto.TaskInfo;",
-            "",
-            "",
-            "in.taskInfo = new TaskInfo();",
-            "in.supportTicket = new AxonIvySupportTicket();",
-            "in.supportTicket.setDescription(in.ticketDescription);"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 584, "y" : 296 }
-      },
-      "connect" : [
-        { "id" : "f6", "to" : "f7" }
-      ]
-    }, {
-      "id" : "f7",
-      "type" : "Script",
-      "name" : "Prepare field explanations",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import dev.langchain4j.internal.Json;",
-            "in.query = Json.toJson(in.supportTicket);"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 768, "y" : 296 }
-      },
-      "connect" : [
-        { "id" : "f8", "to" : "f9" }
-      ]
-    }, {
-      "id" : "f9",
-      "type" : "ProgramInterface",
-      "name" : "Use AI to create support ticket object",
-      "config" : {
-        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
-        "userConfig" : {
-          "system" : "Instruction to follow:\n- Don't fill information related to approval\n- Find Ivy version or Portal version or Core version\n<%=in.customInstructions%>",
-          "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket.class",
-          "resultMapping" : "in.supportTicket",
-          "query" : "<%=in.ticketDescription%>",
-          "tools" : "[]"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 928, "y" : 296 }
-      },
-      "connect" : [
-        { "id" : "f10", "to" : "f11" }
-      ]
-    }, {
-      "id" : "f11",
+      "id" : "f48",
       "type" : "Alternative",
-      "name" : "is version missing",
+      "name" : "has ticket?",
       "config" : {
         "conditions" : {
-          "f12" : "in.supportTicket.version != null && !in.supportTicket.version.isBlank()"
+          "f49" : "in.supportTicket != null && in.supportTicket.type != null"
         }
       },
       "visual" : {
-        "at" : { "x" : 1184, "y" : 296 }
+        "at" : { "x" : 352, "y" : 200 },
+        "labelOffset" : { "y" : -24 }
       },
       "connect" : [
-        { "id" : "f12", "to" : "f14", "color" : "default" },
-        { "id" : "f13", "to" : "f33", "via" : [ { "x" : 1184, "y" : 688 } ] }
-      ]
-    }, {
-      "id" : "f14",
-      "type" : "Alternative",
-      "config" : {
-        "conditions" : {
-          "f15" : "org.apache.commons.lang3.Strings.CI.containsAny(in.ticketDescription, \"error\", \"exception\") && in.supportTicket.stackTrace.isBlank()"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 1280, "y" : 296 }
-      },
-      "connect" : [
-        { "id" : "f15", "to" : "f31", "via" : [ { "x" : 1280, "y" : 608 } ] },
-        { "id" : "f16", "to" : "f17" }
+        { "id" : "f49", "to" : "f17" },
+        { "id" : "f50", "to" : "f51" }
       ]
     }, {
       "id" : "f17",
@@ -137,63 +170,34 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "Instruction to follow:\n- Return task detail url\n<%=in.customInstructions%>",
+          "runtimeTools" : "",
+          "system" : "Instruction to follow:\n- Return task detail url\n- Describe the task from the support ticket: its category, product version, operating system and stack trace\n<%=in.customInstructions%>",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
+          "tools" : "",
           "resultMapping" : "in.taskInfo",
-          "query" : "<%=in.ticketDescription%>",
-          "tools" : "[]"
+          "query" : "User report:\n<%=in.ticketDescription%>\n\nSupport ticket:\n<%= dev.langchain4j.internal.Json.toJson(in.supportTicket) %>"
         }
       },
       "visual" : {
-        "at" : { "x" : 1408, "y" : 296 }
+        "at" : { "x" : 520, "y" : 200 }
       },
       "connect" : [
         { "id" : "f18", "to" : "f35" }
       ]
     }, {
-      "id" : "f19",
+      "id" : "f35",
       "type" : "Script",
-      "name" : "Check task is exists",
+      "name" : "Preserve responsible",
       "config" : {
         "output" : {
-          "code" : [
-            "import ch.ivyteam.ivy.workflow.ITask;",
-            "import ch.ivyteam.ivy.workflow.query.TaskQuery;",
-            "",
-            "",
-            "TaskQuery taskQuery = TaskQuery.create();",
-            "List<ITask> tasks = taskQuery.where().name().isEqual(in.taskInfo.name).executor().results();",
-            "",
-            "",
-            "in.isTaskAlreadyCreated = tasks != null && tasks.size() > 0;",
-            "if (tasks.size() > 0) {",
-            "  in.taskDetailLink = tasks.get(0).getDetailLink().getAbsolute();",
-            "}"
-          ]
-        },
-        "sudo" : true
-      },
-      "visual" : {
-        "at" : { "x" : 1560, "y" : 296 }
-      },
-      "connect" : [
-        { "id" : "f20", "to" : "f21", "color" : "default" }
-      ]
-    }, {
-      "id" : "f21",
-      "type" : "Alternative",
-      "name" : "is task created ?",
-      "config" : {
-        "conditions" : {
-          "f22" : "!in.isTaskAlreadyCreated"
+          "code" : "in.taskInfo.responsible = in.supportTicket.type.getRoleName();"
         }
       },
       "visual" : {
-        "at" : { "x" : 1688, "y" : 296 }
+        "at" : { "x" : 688, "y" : 200 }
       },
       "connect" : [
-        { "id" : "f22", "to" : "f24", "color" : "default" },
-        { "id" : "f23", "to" : "f29", "via" : [ { "x" : 1688, "y" : 416 } ] }
+        { "id" : "f36", "to" : "f24" }
       ]
     }, {
       "id" : "f24",
@@ -209,7 +213,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 1848, "y" : 296 }
+        "at" : { "x" : 856, "y" : 200 }
       },
       "connect" : [
         { "id" : "f25", "to" : "f26", "color" : "default" }
@@ -224,7 +228,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 2016, "y" : 296 }
+        "at" : { "x" : 1024, "y" : 200 }
       },
       "connect" : [
         { "id" : "f27", "to" : "f28", "color" : "default" }
@@ -233,67 +237,28 @@
       "id" : "f28",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 2184, "y" : 296 }
+        "at" : { "x" : 1184, "y" : 200 }
       }
     }, {
-      "id" : "f29",
+      "id" : "f51",
       "type" : "Script",
-      "name" : "Create response message",
+      "name" : "Missing ticket",
       "config" : {
         "output" : {
-          "code" : "in.responseMessage = \"No need to create task. Issue already reported: \" + in.taskDetailLink;"
+          "code" : "in.responseMessage = \"No support ticket was given. Call createAxonIvySupportTicket first and pass its ticket unchanged.\";"
         }
       },
       "visual" : {
-        "at" : { "x" : 1848, "y" : 416 }
+        "at" : { "x" : 520, "y" : 304 }
       },
       "connect" : [
-        { "id" : "f30", "to" : "f28", "via" : [ { "x" : 2056, "y" : 416 } ] }
+        { "id" : "f52", "to" : "f53" }
       ]
     }, {
-      "id" : "f31",
-      "type" : "Script",
-      "name" : "Missing stack trace",
-      "config" : {
-        "output" : {
-          "code" : "in.responseMessage = \"Do not create task. Please provide stack trace\";"
-        }
-      },
+      "id" : "f53",
+      "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 1848, "y" : 608 }
-      },
-      "connect" : [
-        { "id" : "f32", "to" : "f28", "via" : [ { "x" : 2072, "y" : 608 } ] }
-      ]
-    }, {
-      "id" : "f33",
-      "type" : "Script",
-      "name" : "Missing version",
-      "config" : {
-        "output" : {
-          "code" : "in.responseMessage = \"Do not create task. Please provide your product version\";"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 1848, "y" : 688 }
-      },
-      "connect" : [
-        { "id" : "f34", "to" : "f28", "via" : [ { "x" : 2184, "y" : 688 } ] }
-      ]
-    }, {
-      "id" : "f35",
-      "type" : "Script",
-      "name" : "Preserve responsible",
-      "config" : {
-        "output" : {
-          "code" : "in.taskInfo.responsible = in.supportTicket.type.getRoleName();"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 1480, "y" : 392 }
-      },
-      "connect" : [
-        { "id" : "f36", "to" : "f19" }
-      ]
+        "at" : { "x" : 688, "y" : 304 }
+      }
     } ]
 }

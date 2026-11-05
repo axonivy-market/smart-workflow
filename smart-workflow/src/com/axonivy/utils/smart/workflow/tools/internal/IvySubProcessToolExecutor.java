@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.axonivy.utils.smart.workflow.spi.internal.ProjectClassLoader;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
@@ -34,7 +35,7 @@ public class IvySubProcessToolExecutor {
     List<ToolParameter> toolParams = start.description().in().stream()
         .map((StartParameter p) -> new ToolParameter(p.name(), p.description(), p.typeName()))
         .toList();
-    var parameters = new JsonProcessParameters()
+    var parameters = new JsonProcessParameters(ProjectClassLoader.withApplicationFallback(ProjectClassLoader.current()))
         .readParams(toolParams, execTool.arguments());
 
     SubProcessCallResult res = call(start, parameters);

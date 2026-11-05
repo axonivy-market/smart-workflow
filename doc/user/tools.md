@@ -50,7 +50,7 @@ When the tools are only known while the process runs, set `Runtime tools` to an 
 
 A tool is matched by its name, so the parameter part of a signature is optional. These tools are added to the ones selected in `Available tools`. A `String` holds only one tool.
 
-Tool names from `Runtime tools` are looked up like any other tool, in the current project **and all required projects**. A tool that is not found is skipped, and a warning with its name is written to the log.
+Tool names from `Runtime tools` are looked up like any other tool, in the current project **and all required projects**. A tool that is not found there is then looked up in **every project of the application**. That lets a project pass its own tools to an agent that lives in a library it depends on, such as the chatbot component's `tools` attribute. A tool that is not found at all is skipped, and a warning with its name is written to the log.
 
 ## Java tools
 
