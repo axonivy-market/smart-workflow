@@ -629,9 +629,9 @@
     }, {
       "id" : "f79",
       "type" : "CallSubStart",
-      "name" : "runtimeTools(Object)",
+      "name" : "toolsDynamic(Object)",
       "config" : {
-        "signature" : "runtimeTools",
+        "signature" : "toolsDynamic",
         "input" : {
           "params" : [
             { "name" : "tools", "type" : "Object", "desc" : "" }
@@ -656,7 +656,7 @@
         "userConfig" : {
           "provider" : "dummy",
           "tools" : "add",
-          "runtimeTools" : "in.#tools",
+          "toolsDynamic" : "in.#tools",
           "resultMapping" : "in.result",
           "query" : "Hello"
         }
