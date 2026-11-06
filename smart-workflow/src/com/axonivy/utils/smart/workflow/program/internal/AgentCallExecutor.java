@@ -1,9 +1,13 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -64,9 +68,11 @@ public class AgentCallExecutor {
     AiServices<DynamicAgent<?>> agentBuilder = AiServices.builder(aiCtxt);
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
-    var toolFilter = context.config().getList(Conf.TOOLS);
+    var toolsDynamic = toolsDynamic();
+    var toolFilter = new ArrayList<>(context.config().getList(Conf.TOOLS));
+    toolFilter.addAll(toolsDynamic);
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
-    configureToolProvider(agentBuilder, toolFilter);
+    configureToolProvider(agentBuilder, toolFilter, toolsDynamic);
     configureGuardrails(agentBuilder);
     configureSystemMessage(human, agentBuilder);
     var agent = agentBuilder.build();
@@ -100,6 +106,30 @@ public class AgentCallExecutor {
       throw new RuntimeException("Failed to extract config '" + configKey + "' for value '" + value.get() + "'",
           ex);
     }
+  }
+
+  private List<String> toolsDynamic() {
+    var raw = execute(Conf.TOOLS_DYNAMIC, Object.class).orElse(null);
+    Stream<?> signatures = switch (raw) {
+      case Collection<?> collection -> collection.stream();
+      case Object[] array -> Arrays.stream(array);
+      case String single -> Stream.of(single);
+      case null -> Stream.empty();
+      default -> throw new IllegalArgumentException("Config '" + Conf.TOOLS_DYNAMIC
+          + "' must be a Collection, an array or a String, but was " + raw.getClass().getName());
+    };
+    return signatures
+        .map(AgentCallExecutor::toolName)
+        .filter(Predicate.not(String::isEmpty))
+        .toList();
+  }
+
+  private static String toolName(Object signature) {
+    if (signature instanceof String text) {
+      return StringUtils.substringBefore(text, "(").trim();
+    }
+    throw new IllegalArgumentException("Config '" + Conf.TOOLS_DYNAMIC
+        + "' must only contain Strings, but found " + signature);
   }
 
   private void configureSystemMessage(HumanInTheLoop human, AiServices<? extends DynamicAgent<?>> agentBuilder) {
@@ -164,14 +194,25 @@ public class AgentCallExecutor {
     return providerName;
   }
 
-  private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter) {
+  private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter,
+      List<String> toolsDynamic) {
     ToolProvider ivyTools = new IvySubProcessToolsProvider().filtering(toolFilter);
     agentBuilder.toolProvider(request -> {
       List<AiServiceTool> all = new ArrayList<>(ivyTools.provideTools(request).aiServiceTools());
       all.addAll(SmartWorkflowToolsProvider.provideTools(toolFilter).aiServiceTools());
+      warnAboutMissingTools(toolsDynamic, all);
       return new ToolProviderResult(all);
     });
     agentBuilder.toolExecutionErrorHandler(new IvyToolErrorHandler());
+  }
+
+  private static void warnAboutMissingTools(List<String> toolsDynamic, List<AiServiceTool> found) {
+    var missing = new LinkedHashSet<>(toolsDynamic);
+    found.forEach(tool -> missing.remove(tool.toolSpecification().name()));
+
+    if (!missing.isEmpty()) {
+      Ivy.log().warn("Runtime tools not found: " + missing);
+    }
   }
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
