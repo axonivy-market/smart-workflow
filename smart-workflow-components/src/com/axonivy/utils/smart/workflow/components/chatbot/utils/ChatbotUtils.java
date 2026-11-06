@@ -2,7 +2,7 @@ package com.axonivy.utils.smart.workflow.components.chatbot.utils;
 import java.util.List;
 import java.util.Locale;
 
-import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage;
+import com.axonivy.utils.smart.workflow.components.chatbot.message.SmartWorkflowMessage;
 
 import tools.jackson.databind.json.JsonMapper;
 

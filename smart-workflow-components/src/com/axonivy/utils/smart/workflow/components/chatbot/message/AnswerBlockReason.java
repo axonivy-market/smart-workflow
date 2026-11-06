@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.components.chatbot.message.enums;
+package com.axonivy.utils.smart.workflow.components.chatbot.message;
 
 public enum AnswerBlockReason {
   INPUT_GUARDRAIL("InputGuardrailMessage"),
