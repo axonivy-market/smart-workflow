@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.components.chatbot.message.entity;
+package com.axonivy.utils.smart.workflow.components.chatbot.message;
 
 import java.io.Serializable;
 public final class SmartWorkflowErrorMessage implements Serializable {

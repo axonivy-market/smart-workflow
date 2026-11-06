@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.components.chatbot.service;
+package com.axonivy.utils.smart.workflow.components.chatbot.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,10 +12,11 @@ import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;
 import com.axonivy.utils.smart.workflow.model.openai.internal.OpenAiServiceConnector.OpenAiConf;
 
 import ch.ivyteam.ivy.environment.AppFixture;
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.test.RestResourceTest;
 
 @RestResourceTest
-class TestIvyAdapterService {
+class TestSubProcessCaller {
 
   @BeforeEach
   void setup(AppFixture fixture) {
@@ -27,18 +28,31 @@ class TestIvyAdapterService {
   }
 
   @Test
-  void startSubProcess_passesParamAndReturnsResults() {
+  void call_passesParamAndReturnsResults() {
     var ai = ChatbotChat.answering("Hello!");
 
-    var result = IvyAdapterService.startSubProcessInSecurityContext("askChatbotAgent(String)", "query", "Hi");
+    var result = SubProcessCaller.call("askChatbotAgent(String)", "query", "Hi");
 
     assertThat(ai.lastUserMessage()).isEqualTo("Hi");
     assertThat(result).containsEntry("answer", "Hello!");
   }
 
   @Test
-  void startSubProcess_unknownSignature_fails() {
-    assertThatThrownBy(() -> IvyAdapterService.startSubProcessInSecurityContext("unknownProcess(String)", "query", "Hi"))
+  void call_asSessionUser_findsAndCallsSubProcess() throws Exception {
+    ChatbotChat.answering("Hello!");
+    Ivy.session().loginSessionUser("James", "secret");
+    var session = Ivy.session();
+
+    // the test thread runs as system; a dialog request does not
+    var result = session.getSecurityContext().executeAs(
+        () -> SubProcessCaller.call("askChatbotAgent(String)", "query", "Hi"), session);
+
+    assertThat(result).containsEntry("answer", "Hello!");
+  }
+
+  @Test
+  void call_unknownSignature_fails() {
+    assertThatThrownBy(() -> SubProcessCaller.call("unknownProcess(String)", "query", "Hi"))
         .hasMessageContaining("Expected one subprocess with signature 'unknownProcess(String)', found 0.");
   }
 }
