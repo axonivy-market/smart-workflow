@@ -13,8 +13,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.axonivy.utils.smart.workflow.client.OpenAiTestClient;
-import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage;
-import com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason;
+import com.axonivy.utils.smart.workflow.components.chatbot.message.AnswerBlockReason;
+import com.axonivy.utils.smart.workflow.components.chatbot.message.SmartWorkflowMessage;
 import com.axonivy.utils.smart.workflow.components.chatbot.mock.ChatbotChat;
 import com.axonivy.utils.smart.workflow.components.chatbot.utils.ChatbotUtils;
 import com.axonivy.utils.smart.workflow.guardrails.GuardrailCollector;

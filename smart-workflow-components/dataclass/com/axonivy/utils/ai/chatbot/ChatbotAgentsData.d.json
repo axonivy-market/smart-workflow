@@ -16,6 +16,6 @@
     "name" : "answer"
   }, {
     "name" : "blockReason",
-    "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason"
+    "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.AnswerBlockReason"
   } ]
 }

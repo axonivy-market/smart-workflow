@@ -21,9 +21,9 @@ import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.agent.tool.ToolSpecification;
 
 @IvyProcessTest
-class TestAgentRuntimeTools {
+class TestAgentToolsDynamic {
 
-  private static final BpmElement RUNTIME_TOOLS = BpmProcess.name("TestToolUser").elementName("runtimeTools(Object)");
+  private static final BpmElement TOOLS_DYNAMIC = BpmProcess.name("TestToolUser").elementName("toolsDynamic(Object)");
 
   private static final String TICKET_SIGNATURE = "createSupportTicket(String)";
 
@@ -104,6 +104,6 @@ class TestAgentRuntimeTools {
   }
 
   private static void run(BpmClient client, Object tools) {
-    client.start().subProcess(RUNTIME_TOOLS).withParam("tools", tools).execute();
+    client.start().subProcess(TOOLS_DYNAMIC).withParam("tools", tools).execute();
   }
 }

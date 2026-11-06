@@ -39,7 +39,7 @@ public class AgentEditor {
             .label("Available tools:")
             .items(toolList())
             .create())
-        .add(ui.scriptField(Conf.RUNTIME_TOOLS)
+        .add(ui.scriptField(Conf.TOOLS_DYNAMIC)
             .label("Runtime tools:")
             .help("Expression for tools chosen while the process runs, such as in.tools. It holds tool signatures as a List, Set, array or single String.")
             .requireType(Object.class)

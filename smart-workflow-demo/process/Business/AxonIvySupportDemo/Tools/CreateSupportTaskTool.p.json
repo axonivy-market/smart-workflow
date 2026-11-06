@@ -170,7 +170,7 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "runtimeTools" : "",
+          "toolsDynamic" : "",
           "system" : "Instruction to follow:\n- Return task detail url\n- Describe the task from the support ticket: its category, product version, operating system and stack trace\n<%=in.customInstructions%>",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
           "tools" : "",
