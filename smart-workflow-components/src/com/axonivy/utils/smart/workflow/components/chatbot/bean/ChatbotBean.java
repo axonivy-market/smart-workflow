@@ -103,7 +103,7 @@ public class ChatbotBean implements Serializable {
       return;
     }
     try {
-      Map<String, Object> result = SubProcessCaller.startSubProcessInSecurityContext(
+      Map<String, Object> result = SubProcessCaller.call(
           CHAT_SIGNATURE, Param.QUERY, ChatbotUtils.toAgentQuery(chatHistory));
       handleResults(result);
     } catch (Exception e) {
