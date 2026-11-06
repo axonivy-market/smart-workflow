@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.axonivy.utils.smart.workflow.spi.internal.ProjectClassLoader;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowTool.ToolParameter;
 
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
@@ -30,7 +31,7 @@ public class IvySubProcessToolSpecs {
         .map(p -> new ToolParameter(p.name(), p.description(), p.typeName()))
         .toList();
     ClassLoader tcl = Thread.currentThread().getContextClassLoader();
-    var params = new JsonToolParamBuilder(tcl).toParams(toolParams);
+    var params = new JsonToolParamBuilder(ProjectClassLoader.withApplicationFallback(tcl)).toParams(toolParams);
     builder.parameters(params);
 
     return builder.build();
