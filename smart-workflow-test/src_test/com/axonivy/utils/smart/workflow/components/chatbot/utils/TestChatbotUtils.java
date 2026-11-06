@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage;
+import com.axonivy.utils.smart.workflow.components.chatbot.message.SmartWorkflowMessage;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
