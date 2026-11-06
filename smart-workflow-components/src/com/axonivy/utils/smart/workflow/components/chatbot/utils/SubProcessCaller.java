@@ -1,4 +1,4 @@
-package com.axonivy.utils.smart.workflow.components.chatbot.service;
+package com.axonivy.utils.smart.workflow.components.chatbot.utils;
 
 import java.util.Map;
 
@@ -7,15 +7,15 @@ import ch.ivyteam.ivy.process.call.SubProcessSearchFilter;
 import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 import ch.ivyteam.ivy.security.exec.Sudo;
 
-public final class IvyAdapterService {
+public final class SubProcessCaller {
 
-  private IvyAdapterService() {
+  private SubProcessCaller() {
   }
 
-  public static Map<String, Object> startSubProcessInSecurityContext(String signature, String paramName, Object paramValue) {
+  public static Map<String, Object> call(String signature, String paramName, Object paramValue) {
     return Sudo.get(() -> {
       var filter = SubProcessSearchFilter.create()
-          .setSearchScope(SearchScope.SECURITY_CONTEXT)
+          .setSearchScope(SearchScope.PROJECT_AND_ALL_REQUIRED)
           .setSignature(signature)
           .toFilter();
       var processStarts = SubProcessCallStartEvent.find(filter);

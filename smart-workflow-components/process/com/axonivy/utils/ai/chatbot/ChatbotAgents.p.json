@@ -22,7 +22,7 @@
         "result" : {
           "params" : [
             { "name" : "answer", "type" : "String", "desc" : "" },
-            { "name" : "blockReason", "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason", "desc" : "Set when a guardrail or the circuit breaker refused the request; null when the AI answered" }
+            { "name" : "blockReason", "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.AnswerBlockReason", "desc" : "Set when a guardrail or the circuit breaker refused the request; null when the AI answered" }
           ],
           "map" : {
             "result.answer" : "in.answer",
@@ -62,7 +62,7 @@
             "errorCode" : "smartworkflow:guardrail:input:violation",
             "output" : {
               "map" : {
-                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.INPUT_GUARDRAIL"
+                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.AnswerBlockReason.INPUT_GUARDRAIL"
               }
             }
           },
@@ -82,7 +82,7 @@
             "errorCode" : "smartworkflow:guardrail:output:violation",
             "output" : {
               "map" : {
-                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.OUTPUT_GUARDRAIL"
+                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.AnswerBlockReason.OUTPUT_GUARDRAIL"
               }
             }
           },
@@ -102,7 +102,7 @@
             "errorCode" : "smartworkflow:stop",
             "output" : {
               "map" : {
-                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason.CIRCUIT_BREAKER"
+                "out.blockReason" : "com.axonivy.utils.smart.workflow.components.chatbot.message.AnswerBlockReason.CIRCUIT_BREAKER"
               }
             }
           },

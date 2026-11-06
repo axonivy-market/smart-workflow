@@ -1,10 +1,8 @@
-package com.axonivy.utils.smart.workflow.components.chatbot.message.entity;
+package com.axonivy.utils.smart.workflow.components.chatbot.message;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
-import com.axonivy.utils.smart.workflow.components.chatbot.message.enums.MessageRole;
 
 public final class SmartWorkflowMessage implements Serializable {
   private static final long serialVersionUID = 1L;
