@@ -101,6 +101,13 @@
             "version": "${version}",
             "type": "iar",
             "optional": true
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-components",
+            "version": "${version}",
+            "type": "iar",
+            "optional": true
           }
         ],
         "repositories": [
