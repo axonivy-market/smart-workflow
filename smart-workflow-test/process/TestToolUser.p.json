@@ -626,5 +626,52 @@
       "visual" : {
         "at" : { "x" : 400, "y" : 712 }
       }
+    }, {
+      "id" : "f79",
+      "type" : "CallSubStart",
+      "name" : "toolsDynamic(Object)",
+      "config" : {
+        "signature" : "toolsDynamic",
+        "input" : {
+          "params" : [
+            { "name" : "tools", "type" : "Object", "desc" : "" }
+          ],
+          "map" : {
+            "out.tools" : "param.#tools"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 800 }
+      },
+      "connect" : [
+        { "id" : "f80", "to" : "f81" }
+      ]
+    }, {
+      "id" : "f81",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "provider" : "dummy",
+          "tools" : "add",
+          "toolsDynamic" : "in.#tools",
+          "resultMapping" : "in.result",
+          "query" : "Hello"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 800 }
+      },
+      "connect" : [
+        { "id" : "f82", "to" : "f83" }
+      ]
+    }, {
+      "id" : "f83",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 400, "y" : 800 }
+      }
     } ]
 }
