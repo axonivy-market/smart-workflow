@@ -1,0 +1,340 @@
+/* 1. Tokens --------------------------------------------------------------- */
+
+.chatbot {
+  --chatbot-primary: var(--primary-color);
+  --chatbot-surface: var(--surface-card, #ffffff);
+  --chatbot-primary-text: var(--chatbot-surface);
+  --chatbot-border: var(--surface-border);
+  --chatbot-text: var(--text-color);
+  --chatbot-text-secondary: var(--text-color-secondary);
+  --chatbot-danger: var(--red-500, #ff4032);
+  --chatbot-primary-soft: color-mix(in srgb, var(--chatbot-primary) 14%, var(--chatbot-surface));
+  --chatbot-danger-soft: color-mix(in srgb, var(--chatbot-danger) 10%, var(--chatbot-surface));
+  --chatbot-hover: color-mix(in srgb, var(--chatbot-text) 7%, transparent);
+
+  --chatbot-font-size: 15px;
+  --chatbot-icon-size: 1.125rem;
+  --chatbot-radius: 12px;
+  --chatbot-gutter: 0.875rem;
+  --chatbot-measure: 47.5rem;
+}
+
+
+/* 2. Shared --------------------------------------------------------------- */
+
+.chatbot {
+  container: chatbot / inline-size;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  font-size: var(--chatbot-font-size);
+  color: var(--chatbot-text);
+  background: var(--chatbot-surface);
+  border: 1px solid var(--chatbot-border);
+  border-radius: var(--chatbot-radius);
+}
+
+.chatbot-avatar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  font-size: var(--chatbot-icon-size);
+  color: var(--chatbot-primary);
+  background: var(--chatbot-primary-soft);
+}
+
+.chatbot-avatar-lg {
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.375rem;
+}
+
+.chatbot-icon-button {
+  display: inline-flex;
+  border: 0;
+  background: none;
+  color: var(--chatbot-text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.chatbot-icon-button:hover,
+.chatbot-icon-button:focus-visible {
+  color: var(--chatbot-text);
+  background: var(--chatbot-hover);
+}
+
+.chatbot-key {
+  display: inline-block;
+  padding: 0 0.3em;
+  border: 1px solid var(--chatbot-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--chatbot-text);
+  background: var(--chatbot-surface);
+}
+
+
+/* 3. Parts ---------------------------------------------------------------- */
+
+/* 3.1 header */
+.chatbot-header {
+  padding: 0.625rem var(--chatbot-gutter);
+}
+
+.chatbot-header-action {
+  flex: none;
+  padding: 0.375rem 0.5rem;
+}
+
+.chatbot-busy .chatbot-header-action {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+.chatbot-header-action-label {
+  display: none;
+}
+
+/* 3.2 thread */
+.chatbot-scroll {
+  padding: 1rem var(--chatbot-gutter);
+}
+
+.chatbot-thread {
+  min-height: 100%;
+  max-width: var(--chatbot-measure);
+}
+
+.chatbot-empty-text {
+  max-width: 34ch;
+}
+
+/* 3.3 messages */
+.chatbot-message-user {
+  max-width: 85%;
+}
+
+.chatbot-bubble {
+  padding: 0.5rem 0.8125rem;
+  border-radius: 1rem 1rem 0.25rem 1rem;
+  color: var(--chatbot-primary-text);
+  background: var(--chatbot-primary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chatbot-message-avatar {
+  display: none;
+}
+
+.chatbot-answer {
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chatbot-copy {
+  padding: 0.125rem 0.25rem;
+  font-size: 1rem;
+}
+
+.chatbot-streaming-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: chatbot-blink 0.7s step-end infinite;
+}
+
+@media (hover: hover) {
+  .chatbot-message-ai:not(:hover, :has(:focus-visible)) .chatbot-answer-meta {
+    opacity: 0;
+  }
+}
+
+.chatbot-answer:has(.chatbot-streaming-cursor) + .chatbot-answer-meta {
+  visibility: hidden;
+}
+
+/* 3.4 error */
+.chatbot-error,
+.chatbot-request-error {
+  padding: 0.5rem 0.625rem;
+  background: var(--chatbot-danger-soft);
+}
+
+.chatbot-request-error {
+  display: flex;
+}
+
+.chatbot-request-error[hidden] {
+  display: none;
+}
+
+.chatbot-error-icon {
+  flex: none;
+  font-size: var(--chatbot-icon-size);
+  color: var(--chatbot-danger);
+}
+
+/* 3.5 thinking */
+.chatbot-thinking {
+  display: flex;
+}
+
+.chatbot-thinking[hidden] {
+  display: none;
+}
+
+.chatbot-dots {
+  height: 1.75rem;
+}
+
+.chatbot-dots i {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: var(--chatbot-text-secondary);
+  animation: chatbot-bounce 1.2s infinite ease-in-out;
+}
+
+.chatbot-dots i:nth-child(2) { animation-delay: 0.15s; }
+.chatbot-dots i:nth-child(3) { animation-delay: 0.3s; }
+
+/* 3.6 composer */
+.chatbot-composer {
+  padding: 0.625rem var(--chatbot-gutter) 0.75rem;
+}
+
+.chatbot-box {
+  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+  border: 1px solid var(--chatbot-border);
+  border-radius: var(--chatbot-radius);
+  background: var(--chatbot-surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.chatbot-box:focus-within {
+  border-color: var(--chatbot-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.chatbot-hint {
+  display: none;
+}
+
+.chatbot-disclaimer {
+  display: none;
+  margin-top: 0.375rem;
+}
+
+
+/* 4. PrimeFaces overrides ------------------------------------------------- */
+
+body .chatbot .chatbot-input.ui-inputfield,
+body .chatbot .chatbot-input.ui-inputfield.ui-state-hover,
+body .chatbot .chatbot-input.ui-inputfield.ui-state-focus {
+  min-height: 1.5rem;
+  max-height: 9rem;
+  padding: 0.125rem 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  color: var(--chatbot-text);
+  font: inherit;
+  line-height: 1.5;
+  resize: none;
+  overflow-y: auto;
+}
+
+body .chatbot .chatbot-send.ui-button {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+}
+
+body .chatbot .chatbot-retry.ui-button {
+  flex: none;
+  font-size: 0.9375rem;
+}
+
+body .chatbot .chatbot-retry.ui-button.ui-button-outlined {
+  background: var(--chatbot-surface);
+}
+
+body .chatbot .chatbot-retry.ui-button.ui-button-outlined.ui-state-hover {
+  background: var(--chatbot-primary-soft);
+}
+
+
+/* 5. Responsive ----------------------------------------------------------- */
+
+@container chatbot (min-width: 30rem) {
+  .chatbot-header,
+  .chatbot-scroll,
+  .chatbot-composer {
+    --chatbot-gutter: 1.25rem;
+  }
+
+  .chatbot-header-action-label {
+    display: inline;
+  }
+
+  .chatbot-message-user {
+    max-width: 75%;
+  }
+
+  .chatbot-message-avatar {
+    display: inline-flex;
+  }
+
+  .chatbot-hint,
+  .chatbot-disclaimer {
+    display: block;
+  }
+}
+
+@container chatbot (min-width: 50rem) {
+  .chatbot-box,
+  .chatbot-disclaimer {
+    max-width: var(--chatbot-measure);
+    margin-inline: auto;
+  }
+}
+
+
+/* 6. Motion --------------------------------------------------------------- */
+
+@keyframes chatbot-bounce {
+  0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+
+@keyframes chatbot-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chatbot-dots i,
+  .chatbot-streaming-cursor {
+    animation: none;
+  }
+
+  .chatbot-dots i {
+    opacity: 0.6;
+  }
+}

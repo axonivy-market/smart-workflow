@@ -42,8 +42,8 @@
       "config" : {
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
-          "system" : "Classify problem then create a task if neccessary.\r\nCheck for missing information like version, classify problem: Portal or Core or Market product, check create a task to handle it, return the task detail link, then summarize problem, reply to question",
-          "tools" : "createAxonIvySupportTask",
+          "system" : "Classify problem then create a task if neccessary.\r\nFirst call createAxonIvySupportTicket with the problem report. If its message says information is missing, ask for it. When it says the ticket is complete, call createAxonIvySupportTaskInfo with that ticket unchanged to create the task. Then summarize the problem and reply to the question.",
+          "tools" : "createAxonIvySupportTicket,createAxonIvySupportTaskInfo",
           "resultType" : "Business.AxonIvySupportDemo.AxonIvySupportResponse.class",
           "resultMapping" : "in.result",
           "query" : "<%=in.ticketDescription%>"
