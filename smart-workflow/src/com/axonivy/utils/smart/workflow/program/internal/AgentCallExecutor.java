@@ -69,11 +69,11 @@ public class AgentCallExecutor {
     AiServices<DynamicAgent<?>> agentBuilder = AiServices.builder(aiCtxt);
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
-    var runtimeTools = runtimeTools();
+    var toolsDynamic = toolsDynamic();
     var toolFilter = new ArrayList<>(context.config().getList(Conf.TOOLS));
-    toolFilter.addAll(runtimeTools);
+    toolFilter.addAll(toolsDynamic);
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
-    configureToolProvider(agentBuilder, toolFilter, runtimeTools);
+    configureToolProvider(agentBuilder, toolFilter, toolsDynamic);
     configureGuardrails(agentBuilder);
     configureSystemMessage(human, agentBuilder);
     var agent = agentBuilder.build();
@@ -109,14 +109,14 @@ public class AgentCallExecutor {
     }
   }
 
-  private List<String> runtimeTools() {
-    var raw = execute(Conf.RUNTIME_TOOLS, Object.class).orElse(null);
+  private List<String> toolsDynamic() {
+    var raw = execute(Conf.TOOLS_DYNAMIC, Object.class).orElse(null);
     Stream<?> signatures = switch (raw) {
       case Collection<?> collection -> collection.stream();
       case Object[] array -> Arrays.stream(array);
       case String single -> Stream.of(single);
       case null -> Stream.empty();
-      default -> throw new IllegalArgumentException("Config '" + Conf.RUNTIME_TOOLS
+      default -> throw new IllegalArgumentException("Config '" + Conf.TOOLS_DYNAMIC
           + "' must be a Collection, an array or a String, but was " + raw.getClass().getName());
     };
     return signatures
@@ -129,7 +129,7 @@ public class AgentCallExecutor {
     if (signature instanceof String text) {
       return StringUtils.substringBefore(text, "(").trim();
     }
-    throw new IllegalArgumentException("Config '" + Conf.RUNTIME_TOOLS
+    throw new IllegalArgumentException("Config '" + Conf.TOOLS_DYNAMIC
         + "' must only contain Strings, but found " + signature);
   }
 
@@ -196,12 +196,12 @@ public class AgentCallExecutor {
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter,
-      List<String> runtimeTools) {
+      List<String> toolsDynamic) {
     ToolProvider ivyTools = new IvySubProcessToolsProvider().filtering(toolFilter);
     agentBuilder.toolProvider(request -> {
       List<AiServiceTool> all = new ArrayList<>(ivyTools.provideTools(request).aiServiceTools());
       all.addAll(SmartWorkflowToolsProvider.provideTools(toolFilter).aiServiceTools());
-      var notRequired = missingTools(runtimeTools, all);
+      var notRequired = missingTools(toolsDynamic, all);
       if (!notRequired.isEmpty()) {
         // usually passed by a project that requires this one, e.g. to a chatbot component
         ToolProvider applicationTools = new IvySubProcessToolsProvider()
@@ -209,20 +209,20 @@ public class AgentCallExecutor {
             .filtering(notRequired);
         all.addAll(applicationTools.provideTools(request).aiServiceTools());
       }
-      warnAboutMissingTools(runtimeTools, all);
+      warnAboutMissingTools(toolsDynamic, all);
       return new ToolProviderResult(all);
     });
     agentBuilder.toolExecutionErrorHandler(new IvyToolErrorHandler());
   }
 
-  private static List<String> missingTools(List<String> runtimeTools, List<AiServiceTool> found) {
-    var missing = new LinkedHashSet<>(runtimeTools);
+  private static List<String> missingTools(List<String> toolsDynamic, List<AiServiceTool> found) {
+    var missing = new LinkedHashSet<>(toolsDynamic);
     found.forEach(tool -> missing.remove(tool.toolSpecification().name()));
     return List.copyOf(missing);
   }
 
-  private static void warnAboutMissingTools(List<String> runtimeTools, List<AiServiceTool> found) {
-    var missing = missingTools(runtimeTools, found);
+  private static void warnAboutMissingTools(List<String> toolsDynamic, List<AiServiceTool> found) {
+    var missing = missingTools(toolsDynamic, found);
     if (!missing.isEmpty()) {
       Ivy.log().warn("Runtime tools not found: " + missing);
     }

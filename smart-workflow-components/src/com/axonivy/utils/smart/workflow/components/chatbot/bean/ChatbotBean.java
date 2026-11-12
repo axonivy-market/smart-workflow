@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.primefaces.PrimeFaces;
 
-import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowErrorMessage;
-import com.axonivy.utils.smart.workflow.components.chatbot.message.entity.SmartWorkflowMessage;
-import com.axonivy.utils.smart.workflow.components.chatbot.message.enums.AnswerBlockReason;
-import com.axonivy.utils.smart.workflow.components.chatbot.service.IvyAdapterService;
+import com.axonivy.utils.smart.workflow.components.chatbot.message.AnswerBlockReason;
+import com.axonivy.utils.smart.workflow.components.chatbot.message.SmartWorkflowErrorMessage;
+import com.axonivy.utils.smart.workflow.components.chatbot.message.SmartWorkflowMessage;
 import com.axonivy.utils.smart.workflow.components.chatbot.utils.ChatbotUtils;
+import com.axonivy.utils.smart.workflow.components.chatbot.utils.SubProcessCaller;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import jakarta.faces.view.ViewScoped;
@@ -117,7 +117,7 @@ public class ChatbotBean implements Serializable {
     List<String> toolNames = ch.ivyteam.ivy.scripting.objects.List.create(
         String.class, tools == null ? List.of() : tools);
     try {
-      Map<String, Object> result = IvyAdapterService.startSubProcessInSecurityContext(
+      Map<String, Object> result = SubProcessCaller.call(
           CHAT_SIGNATURE,
           Map.of(
               Param.QUERY, ChatbotUtils.toAgentQuery(chatHistory),
