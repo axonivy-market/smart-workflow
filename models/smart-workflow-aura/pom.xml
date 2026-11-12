@@ -22,6 +22,12 @@
       <version>${project.version}</version>
       <type>iar</type>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <version>5.6.4</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <repositories>
     <repository>
