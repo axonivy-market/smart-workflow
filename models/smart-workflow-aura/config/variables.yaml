@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/variables.json
+Variables:
+  AI:
+    Providers:
+      Aura:
+        # Required service root, before /api/v1/{organization}/inference. No default hostname.
+        BaseUrl: ""
+        # DocuWare organization UUID.
+        OrganizationId: ""
+        # Existing JWT access token from DocuWare Identity Service or Entra ID.
+        # Set/rotate in the Engine Cockpit; login and token refresh are not performed here.
+        #[password]
+        BearerToken: ${decrypt:}
+        # Total inference and job-polling deadline, in seconds.
+        TimeoutSeconds: "600"

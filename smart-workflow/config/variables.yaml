@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/variables.json
 Variables:
   AI:
-    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama]
+    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama, Aura]
     DefaultProvider: ""
     # Emergency circuit breaker.
     CircuitBreaker:
@@ -17,7 +17,7 @@ Variables:
         Classifier:
           # AI provider used by AiPromptInjectionInputGuardrail for YES/NO classification.
           # When blank, falls back to AI.DefaultProvider.
-          # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama]
+          # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama, Aura]
           Provider: ""
           # Model used by AiPromptInjectionInputGuardrail for YES/NO classification.
           # Use a lightweight model to reduce cost (e.g. gpt-4.1-nano, gemini-2.0-flash-lite).

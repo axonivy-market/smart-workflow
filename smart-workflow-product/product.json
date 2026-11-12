@@ -97,6 +97,14 @@
           },
           {
             "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-aura",
+            "version": "${version}",
+            "type": "iar",
+            "optional": true,
+            "requireOneOfGroup": "provider"
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-opensearch-rag",
             "version": "${version}",
             "type": "iar",

@@ -70,7 +70,9 @@ public class AgentCallExecutor {
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
     var toolsDynamic = toolsDynamic();
-    var toolFilter = new ArrayList<>(context.config().getList(Conf.TOOLS));
+    var toolFilter = new ArrayList<>(context.config().getList(Conf.TOOLS).stream()
+        .filter(StringUtils::isNotBlank)
+        .toList());
     toolFilter.addAll(toolsDynamic);
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
     configureToolProvider(agentBuilder, toolFilter, toolsDynamic);
