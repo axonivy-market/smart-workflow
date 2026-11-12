@@ -80,7 +80,7 @@ class AxonIvySupportChatbotWebIT implements LoginFixture, MockAiFixture {
             .thenAnswer(ANSWER),
         whenRequestContains(TICKET_COMPLETE).withToolResult(true)
             .thenCallTool(TASK_TOOL, """
-                {"supportTicket": %s}""".formatted(ticket)),
+                {"supportTicket": "%s"}""".formatted(ticket.replace("\"", "\\\"").replace("\n", ""))),
         whenRequestContains(TICKET_TOOL).withToolResult(false)
             .thenCallTool(TICKET_TOOL, """
                 {"ticketDescription": "%s"}""".formatted(description)),

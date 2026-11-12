@@ -95,7 +95,7 @@
             "} else if (Strings.CI.containsAny(in.ticketDescription, \"error\", \"exception\") && StringUtils.isBlank(in.supportTicket.stackTrace)) {",
             "  in.responseMessage = \"The stack trace is missing. Ask the user for it, then create the support ticket again.\";",
             "} else {",
-            "  in.responseMessage = \"The support ticket is complete. Pass it unchanged to createAxonIvySupportTaskInfo.\";",
+            "  in.responseMessage = \"The support ticket is complete. Pass it unchanged, as a JSON string, to createAxonIvySupportTaskInfo.\";",
             "}"
           ]
         }
@@ -115,17 +115,25 @@
     }, {
       "id" : "f46",
       "type" : "CallSubStart",
-      "name" : "createAxonIvySupportTaskInfo(com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket)",
+      "name" : "createAxonIvySupportTaskInfo(String)",
       "config" : {
         "signature" : "createAxonIvySupportTaskInfo",
         "input" : {
           "params" : [
-            { "name" : "supportTicket", "type" : "com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket", "desc" : "The complete support ticket exactly as createAxonIvySupportTicket returned it" }
+            { "name" : "supportTicket", "type" : "String", "desc" : "The complete support ticket as a JSON string, exactly as createAxonIvySupportTicket returned it" }
           ],
-          "map" : {
-            "out.supportTicket" : "param.supportTicket",
-            "out.ticketDescription" : "param.#supportTicket.#description"
-          }
+          "map" : { },
+          "code" : [
+            "// a String, as the ticket type is unknown to projects that pass this tool on, e.g. the chatbot component",
+            "import com.axonivy.utils.smart.workflow.demo.dto.AxonIvySupportTicket;",
+            "import dev.langchain4j.internal.Json;",
+            "import org.apache.commons.lang3.StringUtils;",
+            "",
+            "if (StringUtils.isNotBlank(param.supportTicket)) {",
+            "  out.supportTicket = Json.fromJson(param.supportTicket, AxonIvySupportTicket.class) as AxonIvySupportTicket;",
+            "  out.ticketDescription = out.supportTicket.description;",
+            "}"
+          ]
         },
         "result" : {
           "params" : [
@@ -152,7 +160,7 @@
       "name" : "has ticket?",
       "config" : {
         "conditions" : {
-          "f49" : "in.supportTicket != null && in.supportTicket.type != null"
+          "f49" : "in.#supportTicket != null && in.#supportTicket.#type != null"
         }
       },
       "visual" : {
