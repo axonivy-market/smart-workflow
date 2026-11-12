@@ -67,9 +67,10 @@ the process list.
 An AI-powered support desk inside a business workflow. The agent reads a support
 question, classifies it as a Portal, Core or Market issue, notices when
 information such as the product version is missing, and creates a support task
-through the `createAxonIvySupportTask` tool. Its answer comes back as a typed
-Java object, so the classification, task link and summary are ready for the next
-process step.
+through two tools: `createAxonIvySupportTicket` builds the ticket, and
+`createAxonIvySupportTaskInfo` creates the task from it. Its answer comes back
+as a typed Java object, so the classification, task link and summary are ready
+for the next process step.
 
 ![Support Ticket example](img/support-ticket-example.png)
 
