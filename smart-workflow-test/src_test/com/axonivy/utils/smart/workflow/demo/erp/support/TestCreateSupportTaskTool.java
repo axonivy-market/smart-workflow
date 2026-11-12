@@ -32,6 +32,7 @@ class TestCreateSupportTaskTool {
   void createSupportTask(BpmClient client) {
     var res = client.start().process(TEST_PROCESS.elementName("testCreateSupportTask")).execute();
     DemoTestProcessData data = res.data().last();
-    assertThat(data.getToolResult()).isEqualTo("Do not create task. Please provide your product version");
+    assertThat(data.getToolResult())
+        .isEqualTo("The product version is missing. Ask the user for it, then create the support ticket again.");
   }
 }

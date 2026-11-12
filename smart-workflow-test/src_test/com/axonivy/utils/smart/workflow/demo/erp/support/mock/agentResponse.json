@@ -11,10 +11,10 @@
         "content": null,
         "tool_calls": [
           {
-            "id": "call_createAxonIvySupportTask_001",
+            "id": "call_createAxonIvySupportTicket_001",
             "type": "function",
             "function": {
-              "name": "createAxonIvySupportTask",
+              "name": "createAxonIvySupportTicket",
               "arguments": "{\"ticketDescription\":\"Portal shows 404 error on Cockpit page. Reporter is: testuser. Version: 10.0\"}"
             }
           }

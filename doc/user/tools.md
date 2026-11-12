@@ -35,9 +35,22 @@ That makes the input parameter descriptions the highest-leverage text you write.
 
 Tools are discovered globally but granted per agent, via the `Available tools` picker in the element's **Tools** group.
 
-> **Important:** An empty `Available tools` field means the agent has **no tools to use at all**. This is the usual reason an agent explains what it would do instead of doing it.
+> **Important:** If both `Available tools` and `Runtime tools` are empty, the agent has **no tools to use at all**. This is the usual reason an agent explains what it would do instead of doing it.
 
 Keep the list tight. Every tool you grant costs tokens in the request and gives the model one more way to pick wrong.
+
+### Choosing tools at runtime
+
+When the tools are only known while the process runs, set `Runtime tools` to an expression such as `in.tools`. It holds tool signatures in one of these types:
+
+- `List`: `["createSupportTicket(String)", "whoami"]`
+- `Set`: `new java.util.HashSet(["createSupportTicket(String)", "whoami"])`
+- Array: `["createSupportTicket(String)", "whoami"].toArray()`
+- `String`, for a single tool: `"createSupportTicket(String)"`
+
+A tool is matched by its name, so the parameter part of a signature is optional. These tools are added to the ones selected in `Available tools`. A `String` holds only one tool.
+
+Tool names from `Runtime tools` are looked up like any other tool, in the current project **and all required projects**. A tool that is not found there is then looked up in **every project of the application**. That lets a project pass its own tools to an agent that lives in a library it depends on, such as the chatbot component's `tools` attribute. A tool that is not found at all is skipped, and a warning with its name is written to the log.
 
 ## Java tools
 
