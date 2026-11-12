@@ -1,0 +1,9 @@
+{
+  "content": "Hello from Aura",
+  "session_id": null,
+  "tokens_consumed": 42,
+  "finish_reason": "stop",
+  "total_tokens_consumed": 1042,
+  "total_tokens_limit": 50000,
+  "is_token_limit_reached": false
+}

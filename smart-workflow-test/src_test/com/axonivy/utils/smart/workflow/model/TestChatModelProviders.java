@@ -12,6 +12,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.axonivy.utils.smart.workflow.market.ProductJson;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
+import com.axonivy.utils.smart.workflow.model.aura.AuraModelProvider;
+import com.axonivy.utils.smart.workflow.model.aura.internal.AuraServiceConnector.AuraConf;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
@@ -29,6 +31,9 @@ class TestChatModelProviders {
   @BeforeEach
   void setUp(AppFixture fixture) {
     fixture.var(AnthropicConf.API_KEY, "notMyKey"); // anthropic fails with empty key
+    fixture.var(AuraConf.BASE_URL, "https://aura.example.invalid");
+    fixture.var(AuraConf.ORGANIZATION_ID, "550e8400-e29b-41d4-a716-446655440000");
+    fixture.var(AuraConf.BEARER_TOKEN, "synthetic-test-token");
     fixture.var(Azure.DEPLOYMENTS_PREFIX + "." + Azure.TEST_DEPLOYMENT_NAME + "." + AzureOpenAiConf.MODEL_FIELD,
         Azure.MODEL);
     fixture.var(Azure.DEPLOYMENTS_PREFIX + "." + Azure.TEST_DEPLOYMENT_NAME + "." + AzureOpenAiConf.API_KEY_FIELD,
@@ -36,7 +41,7 @@ class TestChatModelProviders {
   }
 
   @ParameterizedTest
-  @MethodSource("providerNames")
+  @MethodSource("providersWithModelSelection")
   void observable_sharesModelAsRequestParameter(String providerName) {
     var provider = ChatModelFactory.create(providerName).orElseThrow();
     var model = provider.setup(ModelOptions.builder()
@@ -90,6 +95,11 @@ class TestChatModelProviders {
       return "smart-workflow-azure-openai";
     }
     return "smart-workflow-" + provider.name().toLowerCase(Locale.ENGLISH);
+  }
+
+  static Stream<String> providersWithModelSelection() {
+    // Aura has no model-selection field; TestAuraLoader verifies explicit rejection instead.
+    return providerNames().filter(name -> !AuraModelProvider.NAME.equals(name));
   }
 
   static Stream<String> providerNames() {

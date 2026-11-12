@@ -1,0 +1,51 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "A670A11C00000001",
+  "config" : {
+    "data" : "com.axonivy.utils.smart.workflow.test.TestToolUserData"
+  },
+  "elements" : [ {
+      "id" : "start",
+      "type" : "RequestStart",
+      "name" : "start",
+      "config" : {
+        "signature" : "start",
+        "request" : { "isVisibleOnStartList" : false }
+      },
+      "visual" : { "at" : { "x" : 96, "y" : 64 } },
+      "connect" : [ { "id" : "toText", "to" : "text" } ]
+    }, {
+      "id" : "text",
+      "type" : "ProgramInterface",
+      "name" : "Aura text",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "provider" : "Aura",
+          "query" : "Say hello",
+          "resultMapping" : "in.result"
+        }
+      },
+      "visual" : { "at" : { "x" : 232, "y" : 64 } },
+      "connect" : [ { "id" : "toTyped", "to" : "typed" } ]
+    }, {
+      "id" : "typed",
+      "type" : "ProgramInterface",
+      "name" : "Aura typed output",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "provider" : "Aura",
+          "query" : "Extract the person: Alex Example",
+          "resultType" : "com.axonivy.utils.smart.workflow.test.Person.class",
+          "resultMapping" : "in.person"
+        }
+      },
+      "visual" : { "at" : { "x" : 400, "y" : 64 } },
+      "connect" : [ { "id" : "toEnd", "to" : "end" } ]
+    }, {
+      "id" : "end",
+      "type" : "TaskEnd",
+      "visual" : { "at" : { "x" : 536, "y" : 64 } }
+    } ]
+}

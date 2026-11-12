@@ -1,0 +1,6 @@
+{
+  "content": "{\"firstName\":\"Alex\",\"lastName\":\"Example\"}",
+  "session_id": null,
+  "tokens_consumed": 42,
+  "finish_reason": "stop"
+}
