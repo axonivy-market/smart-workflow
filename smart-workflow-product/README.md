@@ -83,7 +83,7 @@ Smart Workflow isn't bound to a specific AI vendor — you choose your model pro
 
 1. Import the provider project you want to use, for example `smart-workflow-openai`.
 2. In the **Engine Cockpit**, under **Variables**, set `AI.DefaultProvider` to that provider.
-3. Set the provider's API key in the same place. The Cockpit encrypts it as you save, so keys are never stored in plain text. Ollama needs no key — the instance is yours.
+3. Set the provider's API key or bearer token in the same place. The Cockpit encrypts it as you save, so credentials are never stored in plain text. Ollama needs no key — the instance is yours.
 
 Each provider has its own variables. The configuration block for every one of them is documented here:
 
@@ -95,6 +95,7 @@ Each provider has its own variables. The configuration block for every one of th
 | Anthropic | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#anthropic) |
 | x.AI | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#xai) |
 | Ollama (self-hosted) | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#ollama) |
+| DocuWare Aura | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#aura) |
 
 They differ in what they support — images, PDFs, structured output and embedding are not available everywhere. Check [Provider Capabilities](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/reference/capabilities.md) before you commit to one.
 

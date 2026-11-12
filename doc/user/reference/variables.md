@@ -10,12 +10,12 @@ Variables marked 🔒 are secrets: declare them as `${decrypt:}` in source contr
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `AI.DefaultProvider` | _(empty)_ | Provider used by agents that do not name one. One of `OpenAI`, `AzureOpenAI`, `Gemini`, `xAI`, `Anthropic`, `Ollama`. |
+| `AI.DefaultProvider` | _(empty)_ | Provider used by agents that do not name one. One of `OpenAI`, `AzureOpenAI`, `Gemini`, `xAI`, `Anthropic`, `Ollama`, `Aura`. |
 | `AI.CircuitBreaker.Enabled` | `"false"` | `"true"` stops **every** agent call in the application. See [Circuit Breaker](../circuit-breaker.md). |
 
 ## Providers
 
-Each provider ships its own block with the corresponding `models/smart-workflow-*` project. Every provider accepts `BaseUrl` (empty means the vendor default) and names its model variable `DefaultModel`.
+Each provider ships its own block with the corresponding `models/smart-workflow-*` project. Endpoint and model settings differ by provider. Aura requires an explicit service root and has no `DefaultModel` setting.
 
 | Variable | 🔒 | Purpose |
 | --- | :---: | --- |
@@ -40,6 +40,10 @@ Each provider ships its own block with the corresponding `models/smart-workflow-
 | `AI.Providers.Ollama.DefaultModel` | | Any model pulled in your instance. |
 | `AI.Providers.Ollama.DefaultEmbeddingModel` | | e.g. `nomic-embed-text`, `mxbai-embed-large`. |
 | `AI.Providers.Ollama.TimeoutSeconds` | `"300"` | Local Ollama on CPU can need minutes for large models or cold starts. |
+| `AI.Providers.Aura.BaseUrl` | | Required service root before `/api/v1/{org_id}/inference`. HTTPS, or HTTP on loopback for local tests. No default hostname. |
+| `AI.Providers.Aura.OrganizationId` | | Required DocuWare organization UUID. |
+| `AI.Providers.Aura.BearerToken` | 🔒 | Required existing JWT access token. Enter/rotate in the Engine Cockpit; no automatic acquisition or refresh. |
+| `AI.Providers.Aura.TimeoutSeconds` | | Inference and polling deadline in seconds; positive integer, default `600`. |
 
 Full YAML blocks for each provider are in [Model Providers](../providers.md#global-configuration).
 

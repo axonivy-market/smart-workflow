@@ -9,7 +9,7 @@ Missing your preferred vendor? A provider is an Ivy project you can contribute �
 Smart Workflow connects to a wide range of LLM platforms, so you can use whichever fits your project — and switch later without changing a line of code.
 
 - **Hosted cloud APIs** — `OpenAI`, `Gemini`, `Anthropic` and `xAI`.
-- **Enterprise platform** — `Azure OpenAI`.
+- **Enterprise platforms** — `Azure OpenAI` and `Aura`.
 - **Self-hosted** — `Ollama`, running on your own hardware.
 
 Each agent can use a different provider and model, giving you the flexibility to pick the right one for each task — see [Mixing providers in one process](#mixing-providers-in-one-process).
@@ -26,8 +26,9 @@ They differ in what they support, so it is worth a look before you pick one:
 | **Anthropic** | Direct | ✓ | ✓ | ✓ | — |
 | **xAI** | Direct | ✓ | — | ✓ | — |
 | **Ollama** | Self-hosted | ✓ | — | ✓ *(not with tools)* | ✓ |
+| **Aura** | DocuWare service | — | — | ✓ *(see caveat)* | — |
 
-Model lists, the per-provider caveats, and the reasons behind each `—` are in [Provider Capabilities](reference/capabilities.md). Read it before relying on file extraction or structured output: nothing is checked locally, so an unsupported combination fails at the provider with the provider's own error message.
+Model lists, the per-provider caveats, and the reasons behind each `—` are in [Provider Capabilities](reference/capabilities.md). Read it before relying on file extraction or structured output; failure behaviour differs by provider.
 
 > **Note:** The asterisk on Ollama is worth knowing before you design around it — structured output and tools cannot be used in the same request. [Troubleshooting](troubleshooting.md#the-agent-answered-but-not-as-expected) explains what happens and how to work around it.
 
@@ -38,7 +39,7 @@ Model lists, the per-provider caveats, and the reasons behind each `—` are in 
 ```yaml
 Variables:
   AI:
-    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama]
+    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama, Aura]
     DefaultProvider: "OpenAI"
 ```
 
@@ -139,9 +140,31 @@ Variables:
         TimeoutSeconds: "300"
 ```
 
+### Aura
+
+Install `smart-workflow-aura` and select `Aura` globally or on the agent. Configure your approved service root and organization, and enter an existing JWT bearer token in the Engine Cockpit. The service root is the part before `/api/v1/{org_id}/inference`; there is no default hostname.
+
+```yaml
+Variables:
+  AI:
+    Providers:
+      Aura:
+        BaseUrl: https://aura.example.invalid/docuware/aura
+        OrganizationId: 550e8400-e29b-41d4-a716-446655440000
+        #[password]
+        BearerToken: ${decrypt:}
+        TimeoutSeconds: "600"
+```
+
+Obtain the token through your organization's DocuWare Identity Service or Entra ID access route. The connector uses a supplied JWT bearer token and does not acquire or refresh it. Replace an expired token in the Engine Cockpit. Use HTTPS; plain HTTP is accepted only on loopback for local tests.
+
+Leave **Model** and **Available tools** empty. See [Aura capabilities and limitations](reference/capabilities.md#aura) before choosing a process to run. A missing setting or invalid configuration fails before the request is sent. Authentication failures are reported as `Aura HTTP 401`; access failures as `Aura HTTP 403`.
+
+Queued inference jobs are polled on the configured service until completion or the configured timeout. Inference HTTP requests are not automatically retried. Ivy remains responsible for conversation memory.
+
 ### Handling API keys
 
-Always enter API keys in the **Engine Cockpit**, under **Variables** — for example `AI.Providers.OpenAI.APIKey`. The Cockpit encrypts the value as you save it, so the key is never stored in plain text.
+Always enter API keys and bearer tokens in the **Engine Cockpit**, under **Variables** — for example `AI.Providers.OpenAI.APIKey`. The Cockpit encrypts the value as you save it, so the key is never stored in plain text.
 
 Do not open `variables.yaml` in a text editor to set a key. A key typed there stays readable and ends up in source control. The file ships with the `${decrypt:}` placeholder, and that is what should stay in it.
 
@@ -170,8 +193,9 @@ The point is that you are not locked into one vendor per application: spend capa
 ## Common mistakes
 
 - An unquoted model name. `Model` is a script field; a bare `gpt-4o` does not compile.
-- Choosing a provider before checking its capabilities. Gemini cannot do structured output, xAI and Ollama cannot read PDFs, and only OpenAI and Ollama can embed. Nothing warns you until the provider rejects the request.
-- Committing a real API key. Ship `${decrypt:}` and set the value in the Engine Cockpit.
+- Choosing a provider before checking its capabilities. Gemini cannot do structured output, xAI and Ollama cannot read PDFs, and only OpenAI and Ollama can embed. See the capability reference for provider-specific validation.
+- Committing a real API key or bearer token. Ship `${decrypt:}` and set the value in the Engine Cockpit.
+- Selecting Aura without installing its provider project, or entering the full inference path as its service root.
 
 ## See also
 
