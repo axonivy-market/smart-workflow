@@ -14,7 +14,6 @@
   <packaging>iar-integration-test</packaging>
   <properties>
     <engine.dir>${project.build.directory}/ivyEngine</engine.dir>
-    <standalone.editor.version>14.0.1-SNAPSHOT</standalone.editor.version>
   </properties>
   <dependencies>
     <dependency>
@@ -37,11 +36,6 @@
       <version>${project.version}</version>
       <type>iar</type>
     </dependency>
-    <dependency>
-      <groupId>ch.ivyteam.ivy.process</groupId>
-      <artifactId>process-editor-standalone-client</artifactId>
-      <version>${standalone.editor.version}</version>
-    </dependency>
   </dependencies>
   <repositories>
     <repository>
@@ -50,16 +44,6 @@
       </snapshots>
       <id>central</id>
       <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/axonivy/process-editor</url>
     </repository>
     <repository>
       <id>maven.axonivy.com</id>
@@ -92,87 +76,131 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.8.0</version>
-        <executions>
-          <execution>
-            <id>attach-screenshots</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>screenshots.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
         <version>14.0.1</version>
-        <executions>
-          <execution>
-            <id>fetch-engine1</id>
-            <phase>package</phase>
-            <goals>
-              <goal>start-test-engine</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>fetch-engine2</id>
-            <phase>package</phase>
-            <goals>
-              <goal>stop-test-engine</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <useLatestMinor>true</useLatestMinor>
-          <skipDeploy>false</skipDeploy>
-          <additionalVmArgs>
-            <arg>-Ddev.mode=true</arg>
-            <arg>-Dglsp.test.mode=true</arg>
-          </additionalVmArgs>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.8.1</version>
-        <executions>
-          <execution>
-            <id>copy-standalone-editor-into-engine</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>ch.ivyteam.ivy.process</groupId>
-                  <artifactId>process-editor-standalone-client</artifactId>
-                  <version>${standalone.editor.version}</version>
-                  <type>jar</type>
-                  <outputDirectory>${engine.dir}/webapps/ivy/WEB-INF/lib</outputDirectory>
-                  <destFileName>process-editor-standalone-client-${standalone.editor.version}.jar</destFileName>
-                  <overWrite>true</overWrite>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
+        <extensions>true</extensions>
       </plugin>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
-          <includes>
-            <include>**/*WebIT.java</include>
-          </includes>
+          <skip>true</skip>
         </configuration>
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>record-screenshots</id>
+      <properties>
+        <standalone.editor.version>14.0.1-SNAPSHOT</standalone.editor.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>ch.ivyteam.ivy.process</groupId>
+          <artifactId>process-editor-standalone-client</artifactId>
+          <version>${standalone.editor.version}</version>
+        </dependency>
+      </dependencies>
+      <repositories>
+        <repository>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <id>github</id>
+          <url>https://maven.pkg.github.com/axonivy/process-editor</url>
+        </repository>
+      </repositories>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.8.0</version>
+            <executions>
+              <execution>
+                <id>attach-screenshots</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <descriptors>
+                    <descriptor>screenshots.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.axonivy.ivy.ci</groupId>
+            <artifactId>project-build-plugin</artifactId>
+            <version>14.0.1</version>
+            <executions>
+              <execution>
+                <id>fetch-engine1</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>start-test-engine</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>fetch-engine2</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>stop-test-engine</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <useLatestMinor>true</useLatestMinor>
+              <skipDeploy>false</skipDeploy>
+              <additionalVmArgs>
+                <arg>-Ddev.mode=true</arg>
+                <arg>-Dglsp.test.mode=true</arg>
+              </additionalVmArgs>
+            </configuration>
+          </plugin>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.11.0</version>
+            <executions>
+              <execution>
+                <id>copy-standalone-editor-into-engine</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>ch.ivyteam.ivy.process</groupId>
+                      <artifactId>process-editor-standalone-client</artifactId>
+                      <version>${standalone.editor.version}</version>
+                      <type>jar</type>
+                      <outputDirectory>${engine.dir}/webapps/ivy/WEB-INF/lib</outputDirectory>
+                      <destFileName>process-editor-standalone-client-${standalone.editor.version}.jar</destFileName>
+                      <overWrite>true</overWrite>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <skip>false</skip>
+              <includes>
+                <include>**/*WebIT.java</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

@@ -17,7 +17,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "strictly ask the user instead of making bold decisions. present your users requests as HumanDecision (title+options)",
-          "tools" : "[\"askUserDecision\"]",
+          "tools" : "askUserDecision",
           "resultType" : "String.class",
           "resultMapping" : "in.iceCream",
           "query" : "Pick 3 nice ice creams and ask the user which one he likes to eat today"

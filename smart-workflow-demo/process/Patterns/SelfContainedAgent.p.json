@@ -140,7 +140,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are an invoice header extraction specialist. Given invoice content, extract the following fields: invoiceNumber, invoiceDate, dueDate, vendorName, vendorAddress, customerName, customerAddress, paymentTerms. Return the result as a structured JSON object.",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.headerInfo",
           "query" : "Extract header information from this invoice content: <%=in.invoiceContent%>"
         }
@@ -199,7 +199,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are an invoice line item extraction specialist. Given invoice content, extract all individual line items. For each item include: description, quantity, unitPrice, lineTotal, currency (default USD). Return the result as a valid JSON array only, with no additional explanation.",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.lineItemsJson",
           "query" : "Extract all line items from this invoice content: <%=in.invoiceContent%>"
         }
@@ -258,7 +258,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are an invoice amount validation specialist. Given a JSON array of invoice line items, verify: 1) quantity x unitPrice = lineTotal for each item, 2) the sum of all lineTotals matches the invoice total if present. Report any arithmetic discrepancies with exact expected vs. actual values, or confirm that all calculations are correct.",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.validationResult",
           "query" : "Validate the amounts in these invoice line items: <%=in.lineItemsJson%>"
         }
@@ -317,7 +317,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are an invoice compliance specialist. Given invoice content, assess: 1) presence of required fields (invoice number, invoice date, due date, vendor name and address, customer name and address, payment terms, tax information), 2) any missing or suspicious fields, 3) standard formatting and readability. Rate overall compliance on a scale of 1 (non-compliant) to 10 (fully compliant) and list specific issues found.",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.complianceReport",
           "query" : "Assess the compliance of this invoice: <%=in.invoiceContent%>"
         }
