@@ -11,6 +11,10 @@
     shortDescription="CSS min-height. The chatbot fills its parent's height; this applies when the parent has none." />
   <cc:attribute name="maxHeight" type="java.lang.String" default=""
     shortDescription="CSS max-height, e.g. 40rem. Empty means no limit." />
+  <cc:attribute name="tools" type="java.util.List"
+    shortDescription="Names of the tools the AI may call: callable processes tagged 'tool' in any project of the application, or Java tools. Empty means no tools." />
+  <cc:attribute name="customSystemPrompt" type="java.lang.String"
+    shortDescription="Instructions appended to the chatbot's system message, e.g. the steps to follow and the tools to use for them." />
 </cc:interface>
 
 <!-- Place the component inside an h:form; it has none of its own, and its requests only process the chatbot's fields. -->
@@ -131,7 +135,7 @@
     </div>
 
     <p:remoteCommand name="#{answerCommand}"
-      action="#{cc.attrs.managedBean.answer}" process="@this"
+      action="#{cc.attrs.managedBean.answer(cc.attrs.tools, cc.attrs.customSystemPrompt)}" process="@this"
       update="thread question" global="false"
       onerror="AiChatbot.requestFailed('#{cc.clientId}');"
       oncomplete="AiChatbot.afterAnswer('#{cc.clientId}');" />
