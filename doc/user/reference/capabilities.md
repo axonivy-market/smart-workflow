@@ -2,7 +2,7 @@
 
 What each provider can and cannot do. This page is the single source of truth for these facts — other pages link here rather than restating them.
 
-> **Important:** This table is curated knowledge, not an enforced contract. Smart Workflow builds image and PDF content unconditionally — no provider declares a vision or PDF capability and nothing is checked before the request is sent. An unsupported combination therefore fails **at the provider**, with the provider's own error message, not locally. When contributing a provider, keep this table honest; it is the only place users can find out.
+> **Important:** This table is curated knowledge, not an enforced contract. Smart Workflow builds image and PDF content unconditionally — no provider declares a vision or PDF capability and nothing is checked before the request is sent. An unsupported combination therefore usually fails **at the provider**, with the provider's own error message. Aura is an exception: its adapter rejects unsupported model, tool and file settings locally. When contributing a provider, keep this table honest; it is the only place users can find out.
 
 ## At a glance
 
@@ -14,6 +14,7 @@ What each provider can and cannot do. This page is the single source of truth fo
 | **Anthropic** | Direct cloud API | ✓ | ✓ | ✓ | — |
 | **xAI** | Direct cloud API | ✓ | — | ✓ | — |
 | **Ollama** | Self-hosted | ✓ | — | ✓ *(not with tools)* | ✓ |
+| **Aura** | DocuWare service | — | — | ✓ *(see Aura below)* | — |
 
 ## Models
 
@@ -27,6 +28,7 @@ Taken from each provider's `DefaultModel` enum in `variables.yaml`. A name outsi
 | **Anthropic** | `claude-opus-4-6`, `claude-sonnet-4-6`, `claude-opus-4-5`, `claude-sonnet-4-5`, `claude-haiku-4-5`, `claude-opus-4-1`, `claude-opus-4-0`, `claude-sonnet-4-0` |
 | **xAI** | `grok-4-1-fast`, `grok-4-1-mini`, `grok-4-1-large`, `grok-4-1-max`, and the `-code` variants |
 | **Ollama** | Any model pulled in your instance (`llama3.2`, `gemma3:27b`, `qwen3:30b`, `llava`, …) |
+| **Aura** | Chosen by the service; leave the agent's Model field empty. No model-selection API is documented. |
 
 Embedding models: OpenAI offers `text-embedding-3-small`, `text-embedding-3-large` and `text-embedding-ada-002`; on Ollama, pull a dedicated embedding model such as `nomic-embed-text` or `mxbai-embed-large`.
 
@@ -58,6 +60,7 @@ How each provider constrains the response to a schema. See [Agent Setup](../agen
 | **xAI** | ✓ | `RESPONSE_FORMAT_JSON_SCHEMA` + `strictJsonSchema` |
 | **Ollama** | ✓ *(not with tools)* | Schema applied only when the agent has no tools |
 | **Gemini** | — | Unsupported; logs an error and continues |
+| **Aura** | ✓ *(documented API)* | `response_format.type=json_schema`; see the verification caveat below |
 
 Two of these differ in ways that change how you design a process:
 
@@ -66,6 +69,14 @@ Two of these differ in ways that change how you design a process:
 **Ollama** — the schema is dropped as soon as an agent has tools, because the two cannot go in the same request. It is dropped **silently**, so an agent configured with both gets its tools and unconstrained text. Split the work across two agents if you need both.
 
 **Anthropic** — the capability is applied for every model in the list above, including the 4.0 generation. Smart Workflow imposes no version gate; newer models are simply more reliable at producing schema-valid output.
+
+## Aura
+
+Aura uses the DocuWare `/inference` API. Its documented contract supports text messages and named JSON schemas. The adapter supports text and typed Java results; explicit model selection, native tool calls, tool-result messages, images and PDFs are rejected rather than silently ignored. Configure both **Model** and **Available tools** as empty.
+
+The integration is covered by synthetic HTTP and Ivy process tests. A live authenticated Aura instance has not yet been verified; schema acceptance depends on the service's underlying model. The adapter does not enable strict-schema mode. Aura reports billed credits rather than standard model token usage, so those credits are not exposed as token counts.
+
+Ivy owns conversation memory; Aura-side history and streaming are disabled. Native-tool-based human-in-the-loop suspension is not available with this provider.
 
 ## Embedding
 

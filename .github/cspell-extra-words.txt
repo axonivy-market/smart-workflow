@@ -8,4 +8,4 @@ IBAN, Iban
 chatbots, roleplay, defence, Customising, customise, behaviour, behaviours, recognise, recognised
 facelets, noround, tabview, conv
 axonivy, circuitbreaker, fasterxml, runbook
-CCPA, Luhn
+CCPA, Luhn, DocuWare, Entra
