@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/variables.example.json
+Variables:
+  AI:
+    Providers:
+      Aura:
+        BaseUrl: https://aura.example.invalid/docuware/aura
+        OrganizationId: 550e8400-e29b-41d4-a716-446655440000
+        # Enter the access token in the Engine Cockpit, not this file.
+        #[password]
+        BearerToken: ${decrypt:}
+        TimeoutSeconds: "600"
