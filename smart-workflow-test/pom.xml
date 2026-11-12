@@ -78,6 +78,12 @@
     </dependency>
     <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
+      <artifactId>smart-workflow-aura</artifactId>
+      <version>${project.version}</version>
+      <type>iar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>smart-workflow-components</artifactId>
       <version>${project.version}</version>
       <type>iar</type>
