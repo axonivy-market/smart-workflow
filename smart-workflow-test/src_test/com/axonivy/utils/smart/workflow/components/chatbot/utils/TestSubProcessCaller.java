@@ -3,6 +3,8 @@ package com.axonivy.utils.smart.workflow.components.chatbot.utils;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +33,7 @@ class TestSubProcessCaller {
   void call_passesParamAndReturnsResults() {
     var ai = ChatbotChat.answering("Hello!");
 
-    var result = SubProcessCaller.call("askChatbotAgent(String)", "query", "Hi");
+    var result = SubProcessCaller.call("askChatbotAgent(String,List<String>,String)", Map.of("query", "Hi"));
 
     assertThat(ai.lastUserMessage()).isEqualTo("Hi");
     assertThat(result).containsEntry("answer", "Hello!");
@@ -45,14 +47,14 @@ class TestSubProcessCaller {
 
     // the test thread runs as system; a dialog request does not
     var result = session.getSecurityContext().executeAs(
-        () -> SubProcessCaller.call("askChatbotAgent(String)", "query", "Hi"), session);
+        () -> SubProcessCaller.call("askChatbotAgent(String,List<String>,String)", Map.of("query", "Hi")), session);
 
     assertThat(result).containsEntry("answer", "Hello!");
   }
 
   @Test
   void call_unknownSignature_fails() {
-    assertThatThrownBy(() -> SubProcessCaller.call("unknownProcess(String)", "query", "Hi"))
+    assertThatThrownBy(() -> SubProcessCaller.call("unknownProcess(String)", Map.of("query", "Hi")))
         .hasMessageContaining("Expected one subprocess with signature 'unknownProcess(String)', found 0.");
   }
 }

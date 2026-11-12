@@ -31,7 +31,7 @@ import ch.ivyteam.test.RestResourceTest;
 @RestResourceTest
 class TestChatbotAgents {
 
-  private static final String CHAT_SIGNATURE = "askChatbotAgent(String)";
+  private static final String CHAT_SIGNATURE = "askChatbotAgent(String,List<String>,String)";
 
   private static final BpmElement CHAT = BpmProcess.name("ChatbotAgents").elementName(CHAT_SIGNATURE);
 

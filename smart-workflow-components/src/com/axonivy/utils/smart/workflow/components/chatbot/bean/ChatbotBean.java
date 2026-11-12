@@ -22,12 +22,14 @@ import jakarta.inject.Named;
 public class ChatbotBean implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  private static final String CHAT_SIGNATURE = "askChatbotAgent(String)";
+  private static final String CHAT_SIGNATURE = "askChatbotAgent(String,List<String>,String)";
 
   static final int MAX_MESSAGE_LENGTH = 2000;
 
   interface Param {
     String QUERY = "query";
+    String TOOLS = "tools";
+    String CUSTOM_SYSTEM_PROMPT = "customSystemPrompt";
     String ACCEPTED = "accepted"; // read by AiChatbot.afterSend in chatbot.js
   }
 
@@ -99,12 +101,28 @@ public class ChatbotBean implements Serializable {
   }
 
   public void answer() {
+    answer(null, null);
+  }
+
+  /**
+   * @param tools names of the tools the agent may call; passed per call, since one bean instance can serve several
+   *          chatbots of a view
+   * @param customSystemPrompt instructions appended to the agent's system message, may be empty
+   */
+  public void answer(List<String> tools, String customSystemPrompt) {
     if (!isAnswerPending()) {
       return;
     }
+    // Callable processes only accept Ivy's own List type for List parameters.
+    List<String> toolNames = ch.ivyteam.ivy.scripting.objects.List.create(
+        String.class, tools == null ? List.of() : tools);
     try {
       Map<String, Object> result = SubProcessCaller.call(
-          CHAT_SIGNATURE, Param.QUERY, ChatbotUtils.toAgentQuery(chatHistory));
+          CHAT_SIGNATURE,
+          Map.of(
+              Param.QUERY, ChatbotUtils.toAgentQuery(chatHistory),
+              Param.TOOLS, toolNames,
+              Param.CUSTOM_SYSTEM_PROMPT, customSystemPrompt == null ? "" : customSystemPrompt));
       handleResults(result);
     } catch (Exception e) {
       Ivy.log().error(Message.ANSWER_FAILED, e);

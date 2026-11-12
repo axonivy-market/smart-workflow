@@ -29,6 +29,7 @@ import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvide
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
@@ -200,16 +201,28 @@ public class AgentCallExecutor {
     agentBuilder.toolProvider(request -> {
       List<AiServiceTool> all = new ArrayList<>(ivyTools.provideTools(request).aiServiceTools());
       all.addAll(SmartWorkflowToolsProvider.provideTools(toolFilter).aiServiceTools());
+      var notRequired = missingTools(toolsDynamic, all);
+      if (!notRequired.isEmpty()) {
+        // usually passed by a project that requires this one, e.g. to a chatbot component
+        ToolProvider applicationTools = new IvySubProcessToolsProvider()
+            .scope(SearchScope.APPLICATION)
+            .filtering(notRequired);
+        all.addAll(applicationTools.provideTools(request).aiServiceTools());
+      }
       warnAboutMissingTools(toolsDynamic, all);
       return new ToolProviderResult(all);
     });
     agentBuilder.toolExecutionErrorHandler(new IvyToolErrorHandler());
   }
 
-  private static void warnAboutMissingTools(List<String> toolsDynamic, List<AiServiceTool> found) {
+  private static List<String> missingTools(List<String> toolsDynamic, List<AiServiceTool> found) {
     var missing = new LinkedHashSet<>(toolsDynamic);
     found.forEach(tool -> missing.remove(tool.toolSpecification().name()));
+    return List.copyOf(missing);
+  }
 
+  private static void warnAboutMissingTools(List<String> toolsDynamic, List<AiServiceTool> found) {
+    var missing = missingTools(toolsDynamic, found);
     if (!missing.isEmpty()) {
       Ivy.log().warn("Runtime tools not found: " + missing);
     }
