@@ -14,10 +14,10 @@ import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
-import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
+import dev.langchain4j.model.openai.OpenAiChatRequestParameters;
 
 public class OpenAiServiceConnector {
 
@@ -37,34 +37,40 @@ public class OpenAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), null, null);
+    return initBuilder(resolveModelName(DEFAULT_MODEL), null, null, null);
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), null, null)
+    return initBuilder(resolveModelName(DEFAULT_MODEL), null, null, null)
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens());
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens(),
+        options.reasoningEffort());
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens())
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens(),
+        options.reasoningEffort())
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
-  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature, Integer maxOutputTokens) {
+  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature, Integer maxOutputTokens,
+      String reasoningEffort) {
     OpenAiChatModelBuilder model = initBuilder();
 
-    var request = ChatRequestParameters.builder()
+    var request = OpenAiChatRequestParameters.builder()
         .modelName(modelName);
     temperature(modelName, temperature)
         .ifPresent(request::temperature);
     Optional.ofNullable(maxOutputTokens)
         .ifPresent(request::maxOutputTokens);
+    if (StringUtils.isNotBlank(reasoningEffort)) {
+      request.reasoningEffort(reasoningEffort);
+    }
 
     model.defaultRequestParameters(request.build());
 
