@@ -1,12 +1,16 @@
 package com.axonivy.utils.smart.workflow.demo.dto;
 
+import java.io.Serializable;
+
 import com.axonivy.utils.smart.workflow.demo.enums.AxonIvyTicketType;
 import com.axonivy.utils.smart.workflow.utils.IdGenerationUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dev.langchain4j.model.output.structured.Description;
 
-public class AxonIvySupportTicket {
+public class AxonIvySupportTicket implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   @Description("Id of support ticket, it's auto-generated")
   private String id;

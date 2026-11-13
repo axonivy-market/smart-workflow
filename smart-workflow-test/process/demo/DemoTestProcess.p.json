@@ -85,7 +85,7 @@
       "type" : "SubProcessCall",
       "name" : "Call CreateSupportTaskTool",
       "config" : {
-        "processCall" : "Business/AxonIvySupportDemo/Tools/CreateSupportTaskTool:createAxonIvySupportTask(String)",
+        "processCall" : "Business/AxonIvySupportDemo/Tools/CreateSupportTaskTool:createAxonIvySupportTicket(String)",
         "call" : {
           "map" : {
             "param.ticketDescription" : "\"Portal shows 404 error on Cockpit page. Reporter is: testuser.\""

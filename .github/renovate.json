@@ -12,7 +12,10 @@
       "matchPackageNames" :[
         "org.apache.maven.*",
         "org.junit.jupiter:*",
-        "org.assertj:*"
+        "org.assertj:*",
+        "com.tngtech.archunit:*",
+        "org.apache.maven.plugins:*",
+        "com.arize:*"
       ],
       "automerge": true
     },
