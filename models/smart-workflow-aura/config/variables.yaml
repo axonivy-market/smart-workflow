@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/variables.json
+Variables:
+  AI:
+    Providers:
+      Aura:
+        # Sent as an Authorization: Bearer credential. Configure in the Engine Cockpit.
+        #[password]
+        APIKey: ${decrypt:}
+        # Required OpenAI-compatible API root; the client appends chat/completions.
+        BaseUrl: ""
+        # Required unless a model is explicitly specified on the calling Agent.
+        DefaultModel: ""

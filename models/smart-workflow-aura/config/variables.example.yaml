@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/variables.example.json
+Variables:
+  AI:
+    Providers:
+      Aura:
+        #[password]
+        APIKey: ${decrypt:your-encrypted-bearer-credential}
+        # Placeholder only; replace with your OpenAI-compatible API root.
+        BaseUrl: https://your-aura-host.example/openai/v1/
+        DefaultModel: your-aura-model

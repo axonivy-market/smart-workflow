@@ -12,6 +12,7 @@
     <module>models/smart-workflow-azure-openai</module>
     <module>models/smart-workflow-gemini</module>
     <module>models/smart-workflow-xai</module>
+    <module>models/smart-workflow-aura</module>
     <module>models/smart-workflow-anthropic</module>
     <module>rag/smart-workflow-opensearch-rag</module>
     <module>demo/smart-workflow-supplier-demo</module>
