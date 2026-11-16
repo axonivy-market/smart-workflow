@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.axonivy.utils.smart.workflow.market.ProductJson;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
+import com.axonivy.utils.smart.workflow.model.aura.internal.AuraServiceConnector.AuraConf;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
@@ -29,6 +30,8 @@ class TestChatModelProviders {
   @BeforeEach
   void setUp(AppFixture fixture) {
     fixture.var(AnthropicConf.API_KEY, "notMyKey"); // anthropic fails with empty key
+    fixture.var(AuraConf.BASE_URL, "https://aura.example.invalid/v1/");
+    fixture.var(AuraConf.DEFAULT_MODEL, "test-aura-model");
     fixture.var(Azure.DEPLOYMENTS_PREFIX + "." + Azure.TEST_DEPLOYMENT_NAME + "." + AzureOpenAiConf.MODEL_FIELD,
         Azure.MODEL);
     fixture.var(Azure.DEPLOYMENTS_PREFIX + "." + Azure.TEST_DEPLOYMENT_NAME + "." + AzureOpenAiConf.API_KEY_FIELD,
