@@ -17,6 +17,11 @@
       <artifactId>ivy-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.axonivy.ivy.api.extension</groupId>
+      <artifactId>ivy-rest-jersey-extension-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>smart-workflow</artifactId>
       <version>${project.version}</version>
@@ -45,6 +50,7 @@
         </exclusion>
       </exclusions>
     </dependency>
+    
   </dependencies>
   <repositories>
     <repository>

@@ -10,3 +10,9 @@ Variables:
         BaseUrl: ""
         # Required unless a model is explicitly specified on the calling Agent.
         DefaultModel: ""
+        # guid
+        OrgId: ""
+        # xyz.docuware.cloud
+        Host: ""
+        # guid
+        AppId: ""
