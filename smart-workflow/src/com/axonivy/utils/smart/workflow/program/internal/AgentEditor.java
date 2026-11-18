@@ -85,7 +85,7 @@ public class AgentEditor {
         .add(ui.multiSelect(Conf.REASONING_EFFORT)
             .label("Reasoning effort:")
             .items(reasoningEffortList())
-            .help("Choose the reasoning effort for supported OpenAI models.")
+            .help("Choose a reasoning effort supported by the selected provider and model.")
             .create())
         .create();
 

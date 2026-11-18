@@ -65,7 +65,7 @@ Note that empty means "use the defaults", not "no guardrails". See [Using guardr
 
 Set them when one agent needs something different, such as a cheaper model for a trivial step. See [Setting a provider and model for one agent](providers.md#setting-a-provider-and-model-for-one-agent) for the values these fields accept and how they are resolved.
 
-The optional `Reasoning effort` setting is supported by OpenAI, Azure OpenAI, and xAI models. Set it to a value accepted by the selected model, commonly `low`, `medium`, or `high`. Leave it empty to use the model's default.
+The optional `Reasoning effort` setting is supported by Anthropic, Gemini, OpenAI, Azure OpenAI, Ollama, and xAI models. OpenAI uses the Responses API for model families that support reasoning effort, so a custom `BaseUrl` must support that API. Unsupported OpenAI models ignore this setting. Set the effort to a value accepted by the selected model, commonly `low`, `medium`, or `high`. Claude also supports `xhigh` or `max` on selected models. Gemini supports `none`, `minimal`, `low`, `medium`, or `high` where available for the selected model. Ollama only exposes a reasoning toggle: `none` disables reasoning, and any other effort enables it without changing its level. Leave it empty to use the model's default.
 
 ### Output
 

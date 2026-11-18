@@ -1,11 +1,13 @@
 package com.axonivy.utils.smart.workflow.model.gemini;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.GeminiServiceConnector.GeminiConf;
 import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGeminiChatModelName;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
@@ -14,6 +16,7 @@ import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.googleai.GeminiThinkingConfig;
 
 @IvyTest
 public class TestGeminiLoader {
@@ -84,6 +87,36 @@ public class TestGeminiLoader {
         .maxOutputTokens(512)
         .build());
     assertThat(customMaxTokens.defaultRequestParameters().maxOutputTokens()).isEqualTo(512);
+  }
+
+  @Test
+  void reasoningEffort() {
+    var builder = GeminiServiceConnector.buildGeminiModel(ModelOptions.builder()
+        .modelName(MODEL)
+        .reasoningEffort("high")
+        .build());
+    assertThat(builder).extracting("thinkingConfig").satisfies(config ->
+        assertThat(((GeminiThinkingConfig) config).thinkingLevel()).isEqualTo("HIGH"));
+  }
+
+  @Test
+  void reasoningEffortNoneDisablesThinking() {
+    var builder = GeminiServiceConnector.buildGeminiModel(ModelOptions.builder()
+        .modelName(MODEL)
+        .reasoningEffort("none")
+        .build());
+    assertThat(builder).extracting("thinkingConfig").satisfies(config ->
+        assertThat(((GeminiThinkingConfig) config).thinkingBudget()).isZero());
+  }
+
+  @Test
+  void rejectsUnsupportedReasoningEffort() {
+    assertThatThrownBy(() -> provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .reasoningEffort("xhigh")
+        .build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("Gemini reasoning effort");
   }
 
   private static ChatModelProvider loadModel() {

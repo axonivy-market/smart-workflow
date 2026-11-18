@@ -32,7 +32,7 @@ public class OllamaServiceConnector {
     String selectedModel = StringUtils.defaultIfBlank(options.modelName(),
         StringUtils.defaultIfBlank(Ivy.var().get(OllamaConf.DEFAULT_MODEL), FALLBACK_DEFAULT_MODEL));
 
-    return OllamaChatModel.builder()
+    OllamaChatModelBuilder builder = OllamaChatModel.builder()
         .httpClientBuilder(httpClientBuilder())
         .baseUrl(baseUrl())
         .modelName(selectedModel)
@@ -41,6 +41,10 @@ public class OllamaServiceConnector {
         .timeout(timeout())
         .logRequests(true)
         .logResponses(true);
+    if (StringUtils.isNotBlank(options.reasoningEffort())) {
+      builder.think(!"none".equals(options.reasoningEffort()));
+    }
+    return builder;
   }
 
   public static HttpClientBuilder httpClientBuilder() {

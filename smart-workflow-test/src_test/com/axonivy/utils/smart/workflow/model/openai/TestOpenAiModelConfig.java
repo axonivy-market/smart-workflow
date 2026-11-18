@@ -12,8 +12,11 @@ import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import dev.langchain4j.model.chat.request.DefaultChatRequestParameters;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiChatRequestParameters;
+import dev.langchain4j.model.openai.OpenAiResponsesChatModel;
+import dev.langchain4j.model.openai.OpenAiResponsesChatRequestParameters;
 
 @IvyTest
 public class TestOpenAiModelConfig {
@@ -68,13 +71,52 @@ public class TestOpenAiModelConfig {
   @Test
   void reasoningEffort_custom(AppFixture fixture) {
     var options = ModelOptions.builder()
-        .modelName("gpt-4.1-mini")
-        .reasoningEffort("high")
+        .modelName("gpt-6-astra")
+        .reasoningEffort("max")
         .build();
-    var builder = OpenAiServiceConnector.buildOpenAiModel(options);
-    assertThat(builder).extracting("defaultRequestParameters")
+    var model = new OpenAiModelProvider().setup(options);
+    assertThat(model).isInstanceOf(OpenAiResponsesChatModel.class);
+    assertThat(model.defaultRequestParameters())
+        .extracting(r -> ((OpenAiResponsesChatRequestParameters) r).reasoningEffort())
+        .isEqualTo("max");
+  }
+
+  @Test
+  void reasoningEffort_unsupportedModel_isNotSent(AppFixture fixture) {
+    var options = ModelOptions.builder()
+        .modelName("gpt-4.1-mini")
+        .reasoningEffort("max")
+        .build();
+    var model = new OpenAiModelProvider().setup(options);
+
+    assertThat(model).isInstanceOf(OpenAiChatModel.class);
+    assertThat(model.defaultRequestParameters())
         .extracting(r -> ((OpenAiChatRequestParameters) r).reasoningEffort())
-        .isEqualTo("high");
+        .isNull();
+  }
+
+  @Test
+  void reasoningEffort_supportedModelNames() {
+    assertThat(OpenAiServiceConnector.supportsReasoningEffort("o3-mini")).isTrue();
+    assertThat(OpenAiServiceConnector.supportsReasoningEffort("gpt-5.5")).isTrue();
+    assertThat(OpenAiServiceConnector.supportsReasoningEffort("gpt-6.2-astra")).isTrue();
+    assertThat(OpenAiServiceConnector.supportsReasoningEffort("gpt-4.1-mini")).isFalse();
+    assertThat(OpenAiServiceConnector.supportsReasoningEffort("gpt-4o")).isFalse();
+  }
+
+  @Test
+  void reasoningEffort_usesConfiguredDefaultModel(AppFixture fixture) {
+    fixture.var(OpenAiConf.DEFAULT_MODEL, "gpt-5.5");
+
+    assertThat(OpenAiServiceConnector.supportsReasoningEffort(null)).isTrue();
+  }
+
+  @Test
+  void withoutReasoningEffort_usesChatCompletions(AppFixture fixture) {
+    var model = new OpenAiModelProvider().setup(ModelOptions.builder()
+        .modelName("gpt-4.1-mini")
+        .build());
+    assertThat(model).isInstanceOf(OpenAiChatModel.class);
   }
 
   private static void assertModel(OpenAiChatModelBuilder builder, String expect) {

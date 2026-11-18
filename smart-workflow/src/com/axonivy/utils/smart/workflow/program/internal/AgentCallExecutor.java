@@ -180,7 +180,7 @@ public class AgentCallExecutor {
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);
     var modelName = chatModel.defaultRequestParameters().modelName();
-    AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName), agentName))
+    AiListeners.create(new ListenerCtxt(new AiProvider(provider.name(), modelName), agentName, reasoningEffort))
         .forEach(agentBuilder::registerListener);
   }
 

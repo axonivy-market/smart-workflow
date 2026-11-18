@@ -20,10 +20,14 @@ public class AiListeners {
     return List.of(
         new CustomFieldTrackingListener(),
         new ChatHistoryListener(ctxt.agentName()),
-        new OpenInferenceTracing(ctxt.provider().name(), ctxt.provider().model()));
+        new OpenInferenceTracing(ctxt.provider().name(), ctxt.provider().model(), ctxt.reasoningEffort()));
   }
 
-  public record ListenerCtxt(AiProvider provider, String agentName) {}
+  public record ListenerCtxt(AiProvider provider, String agentName, String reasoningEffort) {
+    public ListenerCtxt(AiProvider provider, String agentName) {
+      this(provider, agentName, null);
+    }
+  }
 
   public record AiProvider(String name, String model) {}
 }
