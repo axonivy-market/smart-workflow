@@ -10,3 +10,18 @@ Variables:
         BaseUrl: ""
         # Required unless a model is explicitly specified on the calling Agent.
         DefaultModel: ""
+        # guid
+        OrgId: ""
+        # xyz.docuware.cloud
+        Host: ""
+        OAuth2:
+          # guid
+          AppId: ""
+          # [enum: client_credentials, authorization_code, authorization_code_pkce]
+          Mode:
+          # [password]
+          ClientSecret:
+          # OAuth2 scopes requested for Aura access.
+          # authorization_code_pkce=docuware.platform openid dwprofile offline_access
+          # client_credentials=docuware.userProvisioning
+          Scope:

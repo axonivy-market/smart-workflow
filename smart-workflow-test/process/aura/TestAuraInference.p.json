@@ -1,0 +1,70 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19A7FC3259488F28",
+  "config" : {
+    "data" : "com.axonivy.utils.aura.AuraTokenData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "start",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "params" : [
+            { "name" : "orgId", "type" : "String", "desc" : "" },
+            { "name" : "userMessage", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.organizationId" : "param.orgId"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f1", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "RestClientCall",
+      "config" : {
+        "method" : "POST",
+        "target" : {
+          "clientId" : "auraInferenceEndpoint"
+        },
+        "body" : {
+          "type" : "RAW",
+          "raw" : [
+            "{",
+            " \"messages\": [",
+            "    {",
+            "      \"role\": \"user\",",
+            "      \"content\": \"hello test\"",
+            "    }",
+            "  ],",
+            "  \"stream\": false",
+            "}"
+          ]
+        },
+        "response" : {
+          "entity" : {
+            "code" : "ivy.log.info(\"inference sais: \"+response.getStatus());"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f2", "color" : "default" }
+      ]
+    } ]
+}
