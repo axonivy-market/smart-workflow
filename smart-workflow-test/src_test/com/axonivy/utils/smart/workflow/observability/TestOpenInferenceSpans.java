@@ -240,7 +240,7 @@ class TestOpenInferenceSpans {
                 .strip())
         .containsEntry("llm.invocation_parameters", "{\"temperature\":0.0}")
         .containsEntry("llm.input_messages.0.message.content",
-            "SystemMessage { text = \"Use the 'add' tool to calculate\" }")
+            "SystemMessage { text = \"Use the 'add' tool to calculate\", attributes = {} }")
         .containsEntry("llm.input_messages.0.message.role", "system")
         .containsEntry("llm.input_messages.1.message.content",
             "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
@@ -276,7 +276,7 @@ class TestOpenInferenceSpans {
         .containsEntry("input.mime_type", "application/json")
         .containsEntry("llm.input_messages.0.message.role", "system")
         .containsEntry("llm.input_messages.0.message.content",
-            "SystemMessage { text = \"Use the 'add' tool to calculate\" }")
+            "SystemMessage { text = \"Use the 'add' tool to calculate\", attributes = {} }")
         .containsEntry("llm.input_messages.1.message.role", "user")
         .containsEntry("llm.input_messages.1.message.content",
             "UserMessage { name = null, contents = [TextContent { text = \"Whats the sum of 1984 plus 41 ?\" }], attributes = {} }")
