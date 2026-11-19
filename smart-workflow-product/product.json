@@ -89,6 +89,14 @@
           },
           {
             "groupId": "com.axonivy.utils.ai",
+            "artifactId": "smart-workflow-aura",
+            "version": "${version}",
+            "type": "iar",
+            "optional": true,
+            "requireOneOfGroup": "provider"
+          },
+          {
+            "groupId": "com.axonivy.utils.ai",
             "artifactId": "smart-workflow-anthropic",
             "version": "${version}",
             "type": "iar",

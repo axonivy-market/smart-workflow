@@ -10,12 +10,12 @@ Variables marked 🔒 are secrets: declare them as `${decrypt:}` in source contr
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `AI.DefaultProvider` | _(empty)_ | Provider used by agents that do not name one. One of `OpenAI`, `AzureOpenAI`, `Gemini`, `xAI`, `Anthropic`, `Ollama`. |
+| `AI.DefaultProvider` | _(empty)_ | Provider used by agents that do not name one. One of `OpenAI`, `AzureOpenAI`, `Gemini`, `xAI`, `Aura`, `Anthropic`, `Ollama`. |
 | `AI.CircuitBreaker.Enabled` | `"false"` | `"true"` stops **every** agent call in the application. See [Circuit Breaker](../circuit-breaker.md). |
 
 ## Providers
 
-Each provider ships its own block with the corresponding `models/smart-workflow-*` project. Every provider accepts `BaseUrl` (empty means the vendor default) and names its model variable `DefaultModel`.
+Each provider ships its own block with the corresponding `models/smart-workflow-*` project. Every provider accepts `BaseUrl` and names its model variable `DefaultModel`. An empty `BaseUrl` uses the vendor default where one exists; Aura requires an explicit URL.
 
 | Variable | 🔒 | Purpose |
 | --- | :---: | --- |
@@ -36,6 +36,9 @@ Each provider ships its own block with the corresponding `models/smart-workflow-
 | `AI.Providers.xAI.APIKey` | 🔒 | xAI API key. |
 | `AI.Providers.xAI.BaseUrl` | | Override the API endpoint. |
 | `AI.Providers.xAI.DefaultModel` | | `grok-4-1-fast`, `grok-4-1-mini`, `grok-4-1-large`, `grok-4-1-max`, and `-code` variants. A name outside the enum works but logs `Unknown xAI model … Compatibility not guaranteed`. |
+| `AI.Providers.Aura.APIKey` | 🔒 | Raw bearer credential, without the `Bearer ` prefix. No automatic token acquisition or renewal. |
+| `AI.Providers.Aura.BaseUrl` | | Required OpenAI-compatible API root; the client appends `chat/completions`. No default. |
+| `AI.Providers.Aura.DefaultModel` | | Model identifier for your endpoint. Required unless the agent explicitly selects a model. No default. |
 | `AI.Providers.Ollama.BaseUrl` | | Your Ollama server, e.g. `http://localhost:11434`. No API key — the instance is yours. |
 | `AI.Providers.Ollama.DefaultModel` | | Any model pulled in your instance. |
 | `AI.Providers.Ollama.DefaultEmbeddingModel` | | e.g. `nomic-embed-text`, `mxbai-embed-large`. |

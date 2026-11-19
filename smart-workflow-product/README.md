@@ -94,6 +94,7 @@ Each provider has its own variables. The configuration block for every one of th
 | Google Gemini | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#gemini) |
 | Anthropic | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#anthropic) |
 | x.AI | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#xai) |
+| Aura | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#aura) |
 | Ollama (self-hosted) | [Setup](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/providers.md#ollama) |
 
 They differ in what they support — images, PDFs, structured output and embedding are not available everywhere. Check [Provider Capabilities](https://github.com/axonivy-market/smart-workflow/blob/master/doc/user/reference/capabilities.md) before you commit to one.

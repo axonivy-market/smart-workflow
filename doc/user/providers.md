@@ -8,7 +8,7 @@ Missing your preferred vendor? A provider is an Ivy project you can contribute �
 
 Smart Workflow connects to a wide range of LLM platforms, so you can use whichever fits your project — and switch later without changing a line of code.
 
-- **Hosted cloud APIs** — `OpenAI`, `Gemini`, `Anthropic` and `xAI`.
+- **Hosted cloud APIs** — `OpenAI`, `Gemini`, `Anthropic`, `xAI` and `Aura`.
 - **Enterprise platform** — `Azure OpenAI`.
 - **Self-hosted** — `Ollama`, running on your own hardware.
 
@@ -25,6 +25,7 @@ They differ in what they support, so it is worth a look before you pick one:
 | **Gemini** | Direct | ✓ | ✓ | — | — |
 | **Anthropic** | Direct | ✓ | ✓ | ✓ | — |
 | **xAI** | Direct | ✓ | — | ✓ | — |
+| **Aura** | Direct | Not verified | Not verified | Not verified | — |
 | **Ollama** | Self-hosted | ✓ | — | ✓ *(not with tools)* | ✓ |
 
 Model lists, the per-provider caveats, and the reasons behind each `—` are in [Provider Capabilities](reference/capabilities.md). Read it before relying on file extraction or structured output: nothing is checked locally, so an unsupported combination fails at the provider with the provider's own error message.
@@ -38,7 +39,7 @@ Model lists, the per-provider caveats, and the reasons behind each `—` are in 
 ```yaml
 Variables:
   AI:
-    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama]
+    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Aura, Anthropic, Ollama]
     DefaultProvider: "OpenAI"
 ```
 
@@ -121,6 +122,25 @@ Variables:
         # [enum: grok-4-1-fast, grok-4-1-mini, grok-4-1-large, grok-4-1-max, grok-4-1-mini-code, grok-4-1-large-code, grok-4-1-max-code]
         DefaultModel: "grok-4-1-fast"
 ```
+
+### Aura
+
+Install `smart-workflow-aura` and select `Aura` globally or on an agent. Configure the API endpoint, bearer credential, and model below. See [Provider Capabilities](reference/capabilities.md) for capability details.
+
+```yaml
+Variables:
+  AI:
+    Providers:
+      Aura:
+        #[password]
+        APIKey: ${decrypt:}
+        BaseUrl: ""
+        DefaultModel: ""
+```
+
+Set `BaseUrl` to your OpenAI-compatible API root, **not** the full completion URL: the client appends `chat/completions`. Set `DefaultModel` to the model identifier for that endpoint, or select a model on each agent. There is no built-in endpoint, default model, or vendor model catalogue.
+
+Enter the raw bearer credential in `APIKey`, without the `Bearer` prefix. The client adds the prefix. Token acquisition and renewal are not implemented; replace expiring credentials yourself in the Engine Cockpit.
 
 ### Ollama
 
