@@ -90,6 +90,12 @@
             "type" : "ROLE_FROM_ATTRIBUTE",
             "script" : "in1.taskInfo.responsible"
           }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in1",
+            "out.supportTicket" : "in1.supportTicket"
+          }
         }
       },
       "visual" : {

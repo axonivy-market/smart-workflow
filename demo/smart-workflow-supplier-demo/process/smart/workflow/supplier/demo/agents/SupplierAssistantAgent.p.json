@@ -157,7 +157,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are a supplier onboarding document OCR specialist. Extract all text content from the uploaded document exactly as it appears, preserving structure, labels, values, and layout.",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.parseContent",
           "query" : "Extract all text content from this supplier onboarding document:\r\n\r\n---\r\n\r\n<%=in.inputStream%>"
         }
@@ -238,7 +238,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are a procurement assistant that extracts supplier onboarding fields from plain text or markdown. Return only the requested structured object fields. Keep all other fields null.\\n\\nThe content may contain multiple documents separated by '--- DOCUMENT: filename ---' markers. Extract and merge all available fields across all documents. In case of conflicts, prefer the most specific or most recently listed value.\\n\\nFields to extract:\\n- department: use the department ID from the list below that best matches the context (e.g. DEPT-003)\\n- productsServicesNeeded\\n- expectedAnnualVolume (number only, no currency symbol)\\n- urgency (NORMAL, HIGH, or CRITICAL)\\n- neededByDate (yyyy-MM-dd)\\n- additionalNotes\\n- supplier.businessName\\n- supplier.legalForm (e.g. GmbH, AG, SE)\\n- supplier.vatId\\n- supplier.commercialRegisterNo\\n- supplier.businessPurpose\\n- supplier.phone\\n- supplier.email\\n- supplier.website\\n- supplier.businessAddress.street1\\n- supplier.businessAddress.street2\\n- supplier.businessAddress.city\\n- supplier.businessAddress.state\\n- supplier.businessAddress.zipCode\\n- supplier.businessAddress.country (ISO code if possible, otherwise country name)\\n- supplier.primaryContact.firstName\\n- supplier.primaryContact.lastName\\n- supplier.primaryContact.jobTitle\\n- supplier.primaryContact.email\\n- supplier.primaryContact.phone\\n- supplier.banking.iban\\n- supplier.banking.bic\\n- supplier.banking.bankName\\n- supplier.certifications: list of certifications found in the document. For each, provide:\\n  - type: one of ISO_9001, ISO_14001, ISO_27001, GDPR_DPA (match based on the certification name or standard reference)\\n  - certNumber: the certificate number or reference code\\n  - expiryDate: expiry date in yyyy-MM-dd format\\n\\nAvailable departments (ID: Name):\\n<%= in.departmentContext %>",
-          "tools" : "[]",
+          "tools" : "",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.supplier.onboarding.OnboardingRequest.class",
           "resultMapping" : "in.parsedDraft",
           "query" : "Extract supplier onboarding values from this document content:\\n\\n<TEXT>\\n<%= in.parseContent %>\\n</TEXT>"

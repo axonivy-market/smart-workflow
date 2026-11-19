@@ -4,6 +4,7 @@ public interface Conf {
   String SYSTEM = "system";
   String QUERY = "query";
   String TOOLS = "tools";
+  String TOOLS_DYNAMIC = "toolsDynamic";
   String MODEL = "model";
   String PROVIDER = "provider";
   String OUTPUT = "resultType";
@@ -11,4 +12,5 @@ public interface Conf {
   String INPUT_GUARD_RAILS = "inputGuardrails";
   String OUTPUT_GUARD_RAILS = "outputGuardrails";
   String TEMPERATURE = "temperature";
+  String MAX_OUTPUT_TOKENS = "maxOutputTokens";
 }

@@ -72,7 +72,13 @@ public class AgentTreeNode {
     return tools.stream().map(ToolView::new).toList();
   }
 
-  public record ToolView(ToolExecution exec) {
+  public static final class ToolView {
+    private final ToolExecution exec;
+
+    public ToolView(ToolExecution exec) {
+      this.exec = exec;
+    }
+
     public String getToolName() {
       return exec.toolName();
     }

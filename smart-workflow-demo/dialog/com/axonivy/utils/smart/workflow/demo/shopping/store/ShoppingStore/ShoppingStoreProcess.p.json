@@ -423,7 +423,7 @@
           "model" : "\"gpt-4.1\"",
           "system" : "Role:\r\nYou are a Product Category Extraction Agent. Your job is to analyze a user’s message and return the most relevant product categories from a predefined list.\r\n\r\nCategory data in JSON:\r\n\r\n<%= dev.langchain4j.internal.Json.toJson(in.categories) %>\r\n\r\nInstructions:\r\n\r\nConsider the user message and the provided product categories.\r\n\r\nSelect all categories that best match the user’s intent or described product needs.\r\n\r\nIf no category matches, return an empty list.\r\n\r\nDo not create new categories; only use the ones given in the list.\r\n\r\nAlways return the result as a list category ID\r\n\r\nExample result: [\"asdq34dskfsdf234\",\"34234lkn2lk34234\"]",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.erp.store.SearchResponse.class",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.searchResponse",
           "query" : "<%= in.searchTerm %>"
         }

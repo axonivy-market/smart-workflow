@@ -2,6 +2,8 @@ Labels:
   Common:
     Actions: Aktionen
     Back: Zurück
+    Calls: Aufrufe
+    Case: Fall
     Duration:
       InProgress: In Bearbeitung
       Minutes: '{0} Min.'
@@ -9,6 +11,17 @@ Labels:
       Hours: '{0} Stunden'
       HourMinutes: '{0} Stunde {1} Min.'
       HoursMinutes: '{0} Stunden {1} Min.'
+    Errors: Fehler
+    Failed: Fehlgeschlagen
+    Fatal: Fatal
+    Grade: Bewertung
+    Input: Eingabe
+    Output: Ausgabe
+    Passed: Bestanden
+    Process: Prozess
+    Rate: Rate
+    Tool: Tool
+    UUID: UUID
 Dialogs:
   com:
     axonivy:
@@ -114,3 +127,49 @@ Dialogs:
               ProcessFlowTitle: Prozessablauf
               ProcessViewerUnavailableTitle: Entschuldigung
               ProcessViewerUnavailableMsg: Der Prozessbetrachter ist für diesen Fall nicht verfügbar.
+              AiAnalyzeStep1: "Gesprächsverlauf lesen..."
+              AiAnalyzeStep2: "Tool-Nutzung analysieren..."
+              AiAnalyzeStep3: "Anomalien erkennen..."
+              AiAnalyzeStep4: "Risikofaktoren bewerten..."
+              AiAnalyzeStep5: "Compliance prüfen..."
+              AiAnalyzeStep6: "Empfehlungen generieren..."
+              AiAnomalies: 'Anomalien:'
+              AiErrorsGuardrails: 'Fehler & Guardrails:'
+              AiGenerateButton: KI-Empfehlung generieren
+              AiNoReport: Keine KI-Empfehlung verfügbar. Bericht generieren, um Erkenntnisse zu sehen.
+              AiRiskCompliance: Compliance
+              AiRiskCost: Kosten
+              AiRiskOperational: Betrieb
+              AiRiskReliability: Zuverlässigkeit
+              AiSectionEfficiency: Effizienzchancen
+              AiSectionRecommendations: Empfehlungen
+              AiSectionReliability: Zuverlässigkeitsbedenken
+              AiSectionRisk: Risikobewertung
+              AiSectionSummary: Zusammenfassung
+              AiSectionToolUsage: Tool-Nutzungsmuster
+              AiSuggestions: 'Vorschläge:'
+              AnalyzingDialogMessage: Die KI analysiert die Falldaten. Dies kann einen Moment dauern...
+              AnalyzingDialogTitle: KI-Analyse läuft
+              ReportPanelTitle: Analysebericht
+              ReportTabAiRecommendation: KI-Empfehlung
+              ReportTabStatistic: Statistik
+              StatAgentHeader: 'Agent #{0} — {1}'
+              StatAgentSectionActivity: Aktivität
+              StatAgentSectionInfo: Info
+              StatAgents: Agenten
+              StatAnomalies: 'Anomalien ({0}):'
+              StatColAvgMs: Ø ms
+              StatColGuardrail: Guardrail
+              StatColNulls: Nullwerte
+              StatColSuccess: Erfolg
+              StatColSuccessRate: Erfolgsrate
+              StatMaxSingle: Max. Einzeln
+              StatNoAnomalies: Keine Anomalien erkannt
+              StatNoReport: Kein Bericht verfügbar. Erstellen Sie einen Bericht über das Aktionsmenü.
+              StatNullEmpty: Null/leer
+              StatSectionAgentBreakdown: Agenten-Aufschlüsselung
+              StatSectionTokenUsage: Token-Nutzung
+              StatSectionToolEffectiveness: Tool-Effektivität
+              StatSubGuardrails: 'Guardrails:'
+              StatSuccessful: Erfolgreich
+              StatTotalCalls: Aufrufe gesamt

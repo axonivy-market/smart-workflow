@@ -9,6 +9,7 @@ import com.axonivy.utils.smart.workflow.tools.internal.IvySubProcessToolSpecs;
 import com.axonivy.utils.smart.workflow.tools.internal.IvyToolsProcesses;
 
 import ch.ivyteam.ivy.process.call.SubProcessCallStartEvent;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
@@ -18,15 +19,21 @@ import dev.langchain4j.service.tool.ToolProviderResult;
 public class IvySubProcessToolsProvider implements ToolProvider {
 
   private List<String> toolFilter = null;
+  private final IvyToolsProcesses processes = new IvyToolsProcesses();
 
   public IvySubProcessToolsProvider filtering(List<String> toolFilters) {
     this.toolFilter = toolFilters;
     return this;
   }
 
+  public IvySubProcessToolsProvider scope(SearchScope scope) {
+    processes.scope(scope);
+    return this;
+  }
+
   @Override
   public ToolProviderResult provideTools(ToolProviderRequest provide) {
-    return getTools(new IvyToolsProcesses().toolStarts());
+    return getTools(processes.toolStarts());
   }
 
   public ToolProviderResult getTools(List<SubProcessCallStartEvent> starts) {

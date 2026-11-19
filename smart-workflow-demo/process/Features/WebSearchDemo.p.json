@@ -29,9 +29,7 @@
       "name" : "Prepare search query",
       "config" : {
         "output" : {
-          "code" : [
-            "in.query = \"web search engine\";"
-          ]
+          "code" : "in.query = \"web search engine\";"
         }
       },
       "visual" : {
@@ -49,7 +47,7 @@
         "userConfig" : {
           "system" : "You are a research assistant. You receive a search query. Use the webSearch tool to find current information on the internet. From the search results, populate the query field with the original search query, write a concise summary of the key findings, and include all individual search results with their title, URL and snippet. Return a complete WebSearchSummary.",
           "resultType" : "com.axonivy.utils.ai.WebSearchSummary.class",
-          "tools" : "[\"webSearch\"]",
+          "tools" : "webSearch",
           "resultMapping" : "in.searchSummary",
           "query" : "<%=in.query%>"
         }

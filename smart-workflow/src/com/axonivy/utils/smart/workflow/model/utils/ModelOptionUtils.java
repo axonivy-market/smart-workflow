@@ -20,4 +20,8 @@ public final class ModelOptionUtils {
   public static Double resolveTemperature(Double temperature) {
     return Optional.ofNullable(temperature).orElse(DEFAULT_TEMPERATURE);
   }
+
+  public static Integer resolveMaxOutputTokens(Integer maxTokens) {
+    return Optional.ofNullable(maxTokens).map(val -> val > 0 ? val : null).orElse(null);
+  }
 }

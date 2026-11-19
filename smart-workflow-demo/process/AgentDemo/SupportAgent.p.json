@@ -434,7 +434,7 @@
         "userConfig" : {
           "system" : "Instruction to follow: \n- Only focus on adding custom fields\n- Each custom field is a pair of name - value. Example: {\\\"employeeUsername\\\" : \\\"mnhnam\\\"}\")\n- Add custom field: 'ticketId', value is the support ticket id\n- Add custom field: 'employeeUsername', value is the employee username",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.taskInfo",
           "query" : "<%=in.query%>"
         }
@@ -454,7 +454,7 @@
         "userConfig" : {
           "system" : "Instruction to follow: \n- Don't fill information related to approval\n<%=in.instructions%>",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.SupportTicket.class",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.supportTicket",
           "query" : "<%=in.query%>"
         }
@@ -474,7 +474,7 @@
         "userConfig" : {
           "system" : "You are acting as the approving manager for a support ticket request.\nYour goal is to make an approval decision based solely on the provided\nuser information and additional instructions. Be concise and decisive.\n\n---\nUser Information:\n<%=com.axonivy.utils.smart.workflow.demo.service.EmployeeService.getInstance().findByUsername(in.supportTicket.employeeUsername)%>\n\n---\nAdditional Instructions to follow: \n- Analyse the provided data, make decision.\n- Set field 'decision' = APPROVE when you think that the request is reasonable, no reason to deny.\n- set field 'decision' = REJECT when you think that the request is unreasonable, it should be rejected.",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.AiApprovalDecision.class",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.aiApproval",
           "query" : "<%=in.query%>"
         }
@@ -494,7 +494,7 @@
         "userConfig" : {
           "system" : "Instructions to follow: \n- Task name should be in format: <user name> requested a leave request from <from date> to <to date>,\n- from date and to date should be calculated based on content of the request,\n- Date format should be follow this locale: <%=ivy.session.formattingLocale.getDisplayCountry() %>,\n- Description should be: This request is approved by Axon Ivy AI,\n- Add custom field: 'ticketId', value is the support ticket id\n",
           "resultType" : "com.axonivy.utils.smart.workflow.demo.dto.TaskInfo.class",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.taskInfo",
           "query" : "<%=in.query%>"
         }
@@ -571,7 +571,7 @@
         "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
         "userConfig" : {
           "system" : "You are a support problem summarizer. Given a problem description, produce a concise one-sentence summary.",
-          "tools" : "[]",
+          "tools" : "",
           "resultMapping" : "in.summary",
           "query" : "Summarize this support problem: <%= in.problem %>"
         }

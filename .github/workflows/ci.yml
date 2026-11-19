@@ -6,12 +6,6 @@ on:
   schedule:
     - cron:  '21 21 * * *'
   workflow_dispatch:
-    inputs:
-      ivyVersion:
-        type: string
-        required: false
-        default: dev
-        description: ivy engine permalink (e.g. sprint, nightly, dev)
 
 permissions:
   actions: read
@@ -21,15 +15,28 @@ permissions:
 
 jobs:
   build:
-    uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v6
-    with:
-      javaVersion: 25
-      cspellExtraWords: .github/cspell-extra-words.txt
-      ivyVersion: ${{ inputs.ivyVersion || 'dev' }}
-    secrets:
-      mvnArgs: |
-       | sed -E "s|[0-9]. (WARNING) in ([^ ]*) \(at line ([0-9]+)\)(.*)|::\L\1 file=\2,line=\3::build issue\n\2@\3\4|g"\
-       | sed -E "s|\[WARNING\] |::warning::|g"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: 25
+          distribution: temurin
+
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v5.1
+        with:
+          maven-version: 3.10.0
+
+      - name: Run Maven tests
+        run: |
+          set -o pipefail
+          mvn clean test 2>&1 \
+            | sed -E 's|[0-9]. (WARNING) in ([^ ]*) \(at line ([0-9]+)\)(.*)|::\L\1 file=\2,line=\3::build issue\n\2@\3\4|g' \
+            | sed -E 's|\[WARNING\] |::warning::|g'
 
   warnings-awareness:
     name: Compiler Warnings

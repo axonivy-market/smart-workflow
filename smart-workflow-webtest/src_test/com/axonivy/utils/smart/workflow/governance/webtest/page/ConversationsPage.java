@@ -1,6 +1,9 @@
 package com.axonivy.utils.smart.workflow.governance.webtest.page;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import com.codeborne.selenide.ElementsCollection;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -28,6 +31,26 @@ public class ConversationsPage {
     String TOOL_INPUT_BODY    = ".tool-timeline-input-body";
     String TOOL_INPUT_KEY     = ".tool-timeline-kv-key";
     String KPI_VALUES         = ".text-2xl.font-bold.text-900";
+
+    String REPORT_PANEL        = ".cv-report-panel";
+    String REPORT_PANEL_TOGGLE = ".cv-report-panel .ui-panel-titlebar-icon";
+    String REPORT_PANEL_BODY   = ".cv-report-panel .ui-panel-content";
+    String REPORT_TAB_NAV      = ".cv-report-tabs .ui-tabs-nav";
+    String REPORT_TAB_PANEL    = ".cv-report-tabs .ui-tabs-panel";
+    String AI_GEN_BTN_WRAP     = "#cv-ai-gen-btn-wrap";
+    String RISK_BADGE_HIGH     = ".cv-risk-badge--high";
+    String RISK_BADGE_MODERATE = ".cv-risk-badge--moderate";
+    String RISK_BADGE_LOW      = ".cv-risk-badge--low";
+    String OBS_DOT             = ".cv-obs-dot";
+    String SUGGESTIONS         = ".cv-suggestions-indent";
+    String GRADE_BADGE         = ".cv-status-badge";
+    String TOOL_CHIP           = "code";
+  }
+
+  /** 1-based tab positions inside the Analysis Report panel. */
+  public interface ReportTab {
+    int STATISTIC         = 1;
+    int AI_RECOMMENDATION = 2;
   }
 
   public SelenideElement contentPanel() {
@@ -106,5 +129,57 @@ public class ConversationsPage {
   /** Returns all KPI value elements (task count, messages, tokens, avg duration). */
   public ElementsCollection summaryKpiValues() {
     return $$(Css.KPI_VALUES);
+  }
+
+  // ── Analysis Report panel ──────────────────────────────────────────────
+
+  public SelenideElement reportPanel() {
+    return $(Css.REPORT_PANEL);
+  }
+
+  /** The report panel renders collapsed; this expands it and waits for the body. */
+  public SelenideElement expandReportPanel() {
+    $(Css.REPORT_PANEL_TOGGLE).click();
+    return $(Css.REPORT_PANEL_BODY).shouldBe(visible, Duration.ofSeconds(5));
+  }
+
+  /** Clicks the nth report tab (1-based, see {@link ReportTab}). */
+  public void clickReportTab(int tabIndex) {
+    $(Css.REPORT_TAB_NAV + " li:nth-child(" + tabIndex + ") a").click();
+  }
+
+  /** Content panel of the nth report tab (1-based, see {@link ReportTab}). */
+  public SelenideElement reportTabContent(int tabIndex) {
+    return $$(Css.REPORT_TAB_PANEL).get(tabIndex - 1);
+  }
+
+  public SelenideElement openReportTab(int tabIndex) {
+    clickReportTab(tabIndex);
+    return reportTabContent(tabIndex).shouldBe(visible, Duration.ofSeconds(5));
+  }
+
+  public ElementsCollection riskBadges(String levelCss) {
+    return $$(levelCss);
+  }
+
+  public ElementsCollection efficiencyObservationDots() {
+    return $$(Css.OBS_DOT);
+  }
+
+  public SelenideElement efficiencySuggestions() {
+    return $(Css.SUGGESTIONS);
+  }
+
+  /** The generate button only renders when no AI report is stored for the case. */
+  public SelenideElement aiGenerateButtonWrap() {
+    return $(Css.AI_GEN_BTN_WRAP);
+  }
+
+  public ElementsCollection agentGradeBadges(SelenideElement statisticTab) {
+    return statisticTab.$$(Css.GRADE_BADGE);
+  }
+
+  public ElementsCollection toolChips(SelenideElement container) {
+    return container.$$(Css.TOOL_CHIP);
   }
 }

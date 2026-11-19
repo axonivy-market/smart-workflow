@@ -25,7 +25,8 @@ public class AzureOpenAiServiceConnector {
   private static final int DEFAULT_TEMPERATURE_GPT_5 = 1;
 
   public static AzureOpenAiChatModel.Builder buildOpenAiModel(ModelOptions options) {
-    String deploymentName = StringUtils.defaultIfBlank(options.modelName(), Ivy.var().get(AzureOpenAiConf.DEFAULT_DEPLOYMENT));
+    String deploymentName = StringUtils.defaultIfBlank(options.modelName(),
+        Ivy.var().get(AzureOpenAiConf.DEFAULT_DEPLOYMENT));
     String endpoint = StringUtils.stripEnd(Ivy.var().get(AzureOpenAiConf.ENDPOINT), "/");
     var builder = AzureOpenAiChatModel.builder()
         .endpoint(endpoint)
@@ -52,6 +53,9 @@ public class AzureOpenAiServiceConnector {
         .modelName(deployment.getModel());
     temperature(deployment.getModel(), options.temperature())
         .ifPresent(request::temperature);
+    Optional.ofNullable(options.maxOutputTokens())
+        .ifPresent(request::maxOutputTokens);
+
     builder.defaultRequestParameters(request.build());
 
     return builder;

@@ -3,8 +3,6 @@ package com.axonivy.utils.smart.workflow.model.openai;
 import static com.axonivy.utils.smart.workflow.client.OpenAiTestClient.aiMock;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -18,6 +16,7 @@ import ch.ivyteam.test.RestResourceTest;
 import ch.ivyteam.test.log.LoggerAccess;
 import ch.ivyteam.test.resource.ResourceResponder;
 import dev.langchain4j.http.client.log.LoggingHttpClient;
+import jakarta.ws.rs.core.Response;
 
 @RestResourceTest
 class TestOpenAiServiceConnector {

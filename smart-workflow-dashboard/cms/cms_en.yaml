@@ -2,6 +2,8 @@ Labels:
   Common:
     Actions: Actions
     Back: Back
+    Calls: Calls
+    Case: Case
     Duration:
       InProgress: In progress
       Minutes: '{0} min'
@@ -9,6 +11,17 @@ Labels:
       Hours: '{0} hours'
       HourMinutes: '{0} hour {1} min'
       HoursMinutes: '{0} hours {1} min'
+    Errors: Errors
+    Failed: Failed
+    Fatal: Fatal
+    Grade: Grade
+    Input: Input
+    Output: Output
+    Passed: Passed
+    Process: Process
+    Rate: Rate
+    Tool: Tool
+    UUID: UUID
 Dialogs:
   com:
     axonivy:
@@ -114,3 +127,49 @@ Dialogs:
               ProcessFlowTitle: Process Flow
               ProcessViewerUnavailableTitle: 'Oops... sorry'
               ProcessViewerUnavailableMsg: Process viewer is not available for this case.
+              AiAnalyzeStep1: Reading conversation history...
+              AiAnalyzeStep2: Analyzing tool usage...
+              AiAnalyzeStep3: Detecting anomalies...
+              AiAnalyzeStep4: Evaluating risk factors...
+              AiAnalyzeStep5: Assessing compliance...
+              AiAnalyzeStep6: Generating recommendations...
+              AiAnomalies: 'Anomalies:'
+              AiErrorsGuardrails: 'Errors & Guardrails:'
+              AiGenerateButton: Generate AI Recommendation
+              AiNoReport: No AI recommendation available. Generate a report to see insights.
+              AiRiskCompliance: Compliance
+              AiRiskCost: Cost
+              AiRiskOperational: Operational
+              AiRiskReliability: Reliability
+              AiSectionEfficiency: Efficiency Opportunities
+              AiSectionRecommendations: Recommendations
+              AiSectionReliability: Reliability Concerns
+              AiSectionRisk: Risk Assessment
+              AiSectionSummary: Executive Summary
+              AiSectionToolUsage: Tool Usage Patterns
+              AiSuggestions: 'Suggestions:'
+              AnalyzingDialogMessage: Using AI to analyze the case data. This may take a moment...
+              AnalyzingDialogTitle: AI Analysis in Progress
+              ReportPanelTitle: Analysis Report
+              ReportTabAiRecommendation: AI Recommendation
+              ReportTabStatistic: Statistic
+              StatAgentHeader: 'Agent #{0} — {1}'
+              StatAgentSectionActivity: Activity
+              StatAgentSectionInfo: Info
+              StatAgents: Agents
+              StatAnomalies: 'Anomalies ({0}):'
+              StatColAvgMs: Avg ms
+              StatColGuardrail: Guardrail
+              StatColNulls: Nulls
+              StatColSuccess: Success
+              StatColSuccessRate: Success rate
+              StatMaxSingle: Max single
+              StatNoAnomalies: No anomalies detected
+              StatNoReport: No report available. Generate a report from the Actions menu.
+              StatNullEmpty: Null/empty
+              StatSectionAgentBreakdown: Agent Breakdown
+              StatSectionTokenUsage: Token Usage
+              StatSectionToolEffectiveness: Tool Effectiveness
+              StatSubGuardrails: 'Guardrails:'
+              StatSuccessful: Successful
+              StatTotalCalls: Total calls

@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.demo.erp.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +32,7 @@ class TestAxonIvySupportAgent {
   void askAxonIvySupport(BpmClient client) {
     var res = client.start().process(TEST_PROCESS.elementName("testAxonIvySupportAgent")).execute();
     DemoTestProcessData data = res.data().last();
-    assertThat(data.getAgentResult()).isEqualTo("Task has been created successfully for the Portal 404 error on Cockpit page. Please check the support task for details.");
+    assertThat(data.getAgentResult()).isEqualTo(
+        "Task has been created successfully for the Portal 404 error on Cockpit page. Please check the support task for details.");
   }
 }

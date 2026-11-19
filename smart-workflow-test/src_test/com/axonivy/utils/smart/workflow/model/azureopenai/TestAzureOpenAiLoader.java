@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.azureopenai;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -71,9 +72,9 @@ public class TestAzureOpenAiLoader {
   }
 
   @Test
-  void secrets_deploymentAware(){
+  void secrets_deploymentAware() {
     assertThat(provider.secretsVars())
-      .contains(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".APIKey");
+        .contains(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".APIKey");
   }
 
   @Test
@@ -105,25 +106,39 @@ public class TestAzureOpenAiLoader {
     fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "custom-model");
 
     var options = ModelOptions.builder()
-      .modelName(TEST_DEPLOYMENT_NAME)
-      .temperature(0.7)
-      .build();
-    
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .temperature(0.7)
+        .build();
+
     var model = provider.setup(options);
     assertThat(model.defaultRequestParameters().temperature())
         .isEqualTo(0.7);
   }
 
+  @Test
+  void custom_max_output_tokens(AppFixture fixture) {
+    fixture.var(DEPLOYMENTS_PREFIX + "." + TEST_DEPLOYMENT_NAME + ".Model", "custom-model");
+
+    var options = ModelOptions.builder()
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .maxOutputTokens(512)
+        .build();
+
+    var model = provider.setup(options);
+    assertThat(model.defaultRequestParameters().maxOutputTokens())
+        .isEqualTo(512);
+  }
+
   private ModelOptions buildNormalModelOptions() {
     return ModelOptions.builder()
-      .modelName(TEST_DEPLOYMENT_NAME)
-      .build();
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .build();
   }
 
   private ModelOptions buildStructuredModelOptions() {
     return ModelOptions.builder()
-      .modelName(TEST_DEPLOYMENT_NAME)
-      .structuredOutput(true)
-      .build();
+        .modelName(TEST_DEPLOYMENT_NAME)
+        .structuredOutput(true)
+        .build();
   }
 }

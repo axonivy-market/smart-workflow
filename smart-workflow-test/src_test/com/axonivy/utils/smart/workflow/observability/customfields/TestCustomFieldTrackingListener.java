@@ -1,11 +1,12 @@
 package com.axonivy.utils.smart.workflow.observability.customfields;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,8 +44,7 @@ class TestCustomFieldTrackingListener {
         "multiTaskDemo_r2.json",
         "multiTaskDemo_r3.json",
         "multiTaskDemo_r4.json",
-        "multiTaskDemo_r5.json"
-    ));
+        "multiTaskDemo_r5.json"));
     MockOpenAI.defineChat(_ -> responder.send(responses.poll()));
   }
 
@@ -59,10 +59,9 @@ class TestCustomFieldTrackingListener {
         .as("case should not be marked when custom field tracking is disabled")
         .isEmpty();
 
-    icase.tasks().all().forEach(task ->
-        assertThat(task.customFields().stringField(AI_ASSISTED).get())
-            .as("task '%s' should not be marked when custom field tracking is disabled", task.getName())
-            .isEmpty());
+    icase.tasks().all().forEach(task -> assertThat(task.customFields().stringField(AI_ASSISTED).get())
+        .as("task '%s' should not be marked when custom field tracking is disabled", task.getName())
+        .isEmpty());
   }
 
   @Test

@@ -1,0 +1,21 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "ChatbotAgentsData",
+  "namespace" : "com.axonivy.utils.ai.chatbot",
+  "fields" : [ {
+    "name" : "query"
+  }, {
+    "name" : "tools",
+    "type" : "List<String>",
+    "modifiers" : [ ]
+  }, {
+    "name" : "customSystemPrompt",
+    "type" : "String",
+    "modifiers" : [ ]
+  }, {
+    "name" : "answer"
+  }, {
+    "name" : "blockReason",
+    "type" : "com.axonivy.utils.smart.workflow.components.chatbot.message.AnswerBlockReason"
+  } ]
+}

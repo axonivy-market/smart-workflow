@@ -19,5 +19,8 @@
   }, {
     "name" : "sum",
     "type" : "Integer"
+  }, {
+    "name" : "tools",
+    "type" : "Object"
   } ]
 }

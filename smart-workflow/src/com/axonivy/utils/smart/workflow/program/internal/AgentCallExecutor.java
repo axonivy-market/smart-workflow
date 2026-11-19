@@ -1,9 +1,13 @@
 package com.axonivy.utils.smart.workflow.program.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,7 +27,9 @@ import com.axonivy.utils.smart.workflow.output.DynamicAgent;
 import com.axonivy.utils.smart.workflow.tools.human.internal.HumanInTheLoop;
 import com.axonivy.utils.smart.workflow.tools.provider.IvySubProcessToolsProvider;
 import com.axonivy.utils.smart.workflow.tools.provider.SmartWorkflowToolsProvider;
+
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.process.call.SubProcessSearchFilter.SearchScope;
 import ch.ivyteam.ivy.process.program.exec.ProgramContext;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.UserMessage;
@@ -63,9 +69,11 @@ public class AgentCallExecutor {
     AiServices<DynamicAgent<?>> agentBuilder = AiServices.builder(aiCtxt);
     var memory = configureMemory(agentBuilder);
     var human = configureHumanInTheLoop(memory, agentBuilder);
-    var toolFilter = context.config().getList(Conf.TOOLS);
+    var toolsDynamic = toolsDynamic();
+    var toolFilter = new ArrayList<>(context.config().getList(Conf.TOOLS));
+    toolFilter.addAll(toolsDynamic);
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
-    configureToolProvider(agentBuilder, toolFilter);
+    configureToolProvider(agentBuilder, toolFilter, toolsDynamic);
     configureGuardrails(agentBuilder);
     configureSystemMessage(human, agentBuilder);
     var agent = agentBuilder.build();
@@ -101,6 +109,30 @@ public class AgentCallExecutor {
     }
   }
 
+  private List<String> toolsDynamic() {
+    var raw = execute(Conf.TOOLS_DYNAMIC, Object.class).orElse(null);
+    Stream<?> signatures = switch (raw) {
+      case Collection<?> collection -> collection.stream();
+      case Object[] array -> Arrays.stream(array);
+      case String single -> Stream.of(single);
+      case null -> Stream.empty();
+      default -> throw new IllegalArgumentException("Config '" + Conf.TOOLS_DYNAMIC
+          + "' must be a Collection, an array or a String, but was " + raw.getClass().getName());
+    };
+    return signatures
+        .map(AgentCallExecutor::toolName)
+        .filter(Predicate.not(String::isEmpty))
+        .toList();
+  }
+
+  private static String toolName(Object signature) {
+    if (signature instanceof String text) {
+      return StringUtils.substringBefore(text, "(").trim();
+    }
+    throw new IllegalArgumentException("Config '" + Conf.TOOLS_DYNAMIC
+        + "' must only contain Strings, but found " + signature);
+  }
+
   private void configureSystemMessage(HumanInTheLoop human, AiServices<? extends DynamicAgent<?>> agentBuilder) {
     if (human.isRestoredConversion()) {
       return; // keep system message from initial conversion
@@ -118,25 +150,30 @@ public class AgentCallExecutor {
     return new MemoryContext(new ProcessDataField(context.script()), store);
   }
 
-  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) {}
+  private record MemoryContext(IdStore memoryId, ChatMemoryStore store) {
+  }
 
-  private HumanInTheLoop configureHumanInTheLoop(MemoryContext memory, AiServices<? extends DynamicAgent<?>> agentBuilder) {
+  private HumanInTheLoop configureHumanInTheLoop(MemoryContext memory,
+      AiServices<? extends DynamicAgent<?>> agentBuilder) {
     HumanInTheLoop humanInTheLoop = new HumanInTheLoop(memory.memoryId, memory.store);
     agentBuilder.registerListeners(humanInTheLoop.provide());
     return humanInTheLoop;
   }
 
-  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured, List<String> toolFilter) {
+  private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured,
+      List<String> toolFilter) {
     var provider = ChatModelFactory.getProviderOrDefault(configuredProvider());
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var agentName = context.element().name();
     var temperature = ModelOptionUtils.toTemperature(execute(Conf.TEMPERATURE, String.class).orElse(null));
+    var maxOutputTokens = execute(Conf.MAX_OUTPUT_TOKENS, Integer.class).orElse(null);
 
     var modelOptions = ModelOptions.builder()
         .modelName(model)
         .structuredOutput(structured)
         .hasTools(toolFilter != null && !toolFilter.isEmpty())
         .temperature(temperature)
+        .maxOutputTokens(maxOutputTokens)
         .build();
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);
@@ -151,20 +188,44 @@ public class AgentCallExecutor {
     if (!providerConfig.isEmpty()) {
       providerName = providerConfig.get(0);
       if (providerConfig.size() > 1) {
-        Ivy.log().warn("Only one provider is allowed. Will use " + providerConfig.get(0) + ", and ignore other from: " + providerConfig);
+        Ivy.log().warn("Only one provider is allowed. Will use " + providerConfig.get(0) + ", and ignore other from: "
+            + providerConfig);
       }
     }
     return providerName;
   }
 
-  private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter) {
+  private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter,
+      List<String> toolsDynamic) {
     ToolProvider ivyTools = new IvySubProcessToolsProvider().filtering(toolFilter);
     agentBuilder.toolProvider(request -> {
       List<AiServiceTool> all = new ArrayList<>(ivyTools.provideTools(request).aiServiceTools());
       all.addAll(SmartWorkflowToolsProvider.provideTools(toolFilter).aiServiceTools());
+      var notRequired = missingTools(toolsDynamic, all);
+      if (!notRequired.isEmpty()) {
+        // usually passed by a project that requires this one, e.g. to a chatbot component
+        ToolProvider applicationTools = new IvySubProcessToolsProvider()
+            .scope(SearchScope.APPLICATION)
+            .filtering(notRequired);
+        all.addAll(applicationTools.provideTools(request).aiServiceTools());
+      }
+      warnAboutMissingTools(toolsDynamic, all);
       return new ToolProviderResult(all);
     });
     agentBuilder.toolExecutionErrorHandler(new IvyToolErrorHandler());
+  }
+
+  private static List<String> missingTools(List<String> toolsDynamic, List<AiServiceTool> found) {
+    var missing = new LinkedHashSet<>(toolsDynamic);
+    found.forEach(tool -> missing.remove(tool.toolSpecification().name()));
+    return List.copyOf(missing);
+  }
+
+  private static void warnAboutMissingTools(List<String> toolsDynamic, List<AiServiceTool> found) {
+    var missing = missingTools(toolsDynamic, found);
+    if (!missing.isEmpty()) {
+      Ivy.log().warn("Runtime tools not found: " + missing);
+    }
   }
 
   private void configureGuardrails(AiServices<? extends DynamicAgent<?>> agentBuilder) {
