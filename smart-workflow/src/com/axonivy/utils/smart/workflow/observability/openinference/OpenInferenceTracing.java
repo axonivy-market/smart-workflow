@@ -54,8 +54,12 @@ public class OpenInferenceTracing implements AiListenerProvider {
   private record ToolExecution(Span<Void> span, ToolCollector collector) {}
 
   public OpenInferenceTracing(String provider, String model) {
+    this(provider, model, null);
+  }
+
+  public OpenInferenceTracing(String provider, String model, String reasoningEffort) {
     this.options = MessageOptions.fromIvyVar();
-    this.collector = new OpenInferenceCollector(provider, model)
+    this.collector = new OpenInferenceCollector(provider, model, reasoningEffort)
         .hideInputMessages(options.hideInput())
         .hideOutputMessages(options.hideOutput());
   }

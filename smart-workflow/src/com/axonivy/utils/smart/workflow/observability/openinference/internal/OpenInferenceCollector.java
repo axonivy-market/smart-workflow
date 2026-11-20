@@ -33,13 +33,19 @@ public class OpenInferenceCollector {
 
   private final String provider;
   private final String model;
+  private final String reasoningEffort;
 
   private boolean hideInput = false;
   private boolean hideOutput = false;
 
   public OpenInferenceCollector(String provider, String model) {
+    this(provider, model, null);
+  }
+
+  public OpenInferenceCollector(String provider, String model, String reasoningEffort) {
     this.provider = toOpenInferenceProvider(provider);
     this.model = model;
+    this.reasoningEffort = reasoningEffort;
   }
 
   private static String toOpenInferenceProvider(String provider) {
@@ -92,7 +98,7 @@ public class OpenInferenceCollector {
   }
 
   public void onRequest(AiServiceRequestIssuedEvent event) {
-    attributes.putAll(new RequestRecorder(provider, model).handleRequest(event, hideInput));
+    attributes.putAll(new RequestRecorder(provider, model, reasoningEffort).handleRequest(event, hideInput));
   }
 
   public void onResponse(ChatResponse response) {

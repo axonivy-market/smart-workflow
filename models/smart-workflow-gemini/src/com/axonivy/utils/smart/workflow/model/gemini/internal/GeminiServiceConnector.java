@@ -4,6 +4,8 @@ import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.reso
 import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
 
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,6 +14,7 @@ import com.axonivy.utils.smart.workflow.model.gemini.internal.enums.GoogleAiGemi
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.model.googleai.GeminiThinkingConfig;
 import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel.GoogleAiGeminiChatModelBuilder;
@@ -19,6 +22,7 @@ import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel.GoogleAiGeminiChat
 public class GeminiServiceConnector {
 
   private static final String DEFAULT_MODEL = GoogleAiGeminiChatModelName.GEMINI_2_5_FLASH.toString();
+  private static final Set<String> SUPPORTED_EFFORTS = Set.of("none", "minimal", "low", "medium", "high");
 
   public interface GeminiConf {
     String PREFIX = "AI.Providers.Gemini.";
@@ -29,13 +33,33 @@ public class GeminiServiceConnector {
 
   public static GoogleAiGeminiChatModelBuilder buildGeminiModel(ModelOptions options) {
     GoogleAiGeminiChatModelBuilder builder = initBuilder();
+    String modelName = resolveModelName(options.modelName());
     var request = ChatRequestParameters.builder()
-        .modelName(resolveModelName(options.modelName()))
+        .modelName(modelName)
         .temperature(resolveTemperature(options.temperature()))
         .maxOutputTokens(resolveMaxOutputTokens(options.maxOutputTokens()));
 
+    configureReasoningEffort(builder, options.reasoningEffort());
     builder.defaultRequestParameters(request.build());
     return builder;
+  }
+
+  private static void configureReasoningEffort(GoogleAiGeminiChatModelBuilder builder, String reasoningEffort) {
+    if (StringUtils.isBlank(reasoningEffort)) {
+      return;
+    }
+    if (!SUPPORTED_EFFORTS.contains(reasoningEffort)) {
+      throw new IllegalArgumentException("Gemini reasoning effort must be one of " + SUPPORTED_EFFORTS
+          + "; the available levels depend on the selected Gemini model.");
+    }
+
+    var config = GeminiThinkingConfig.builder();
+    if ("none".equals(reasoningEffort)) {
+      config.thinkingBudget(0);
+    } else {
+      config.thinkingLevel(reasoningEffort.toUpperCase(Locale.ROOT));
+    }
+    builder.thinkingConfig(config.build());
   }
 
   private static GoogleAiGeminiChatModelBuilder initBuilder() {

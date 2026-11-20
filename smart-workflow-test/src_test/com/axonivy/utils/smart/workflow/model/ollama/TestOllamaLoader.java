@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.ollama.internal.OllamaServiceConnector;
 import com.axonivy.utils.smart.workflow.model.ollama.internal.OllamaServiceConnector.OllamaConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
@@ -101,6 +102,24 @@ public class TestOllamaLoader {
         .maxOutputTokens(512)
         .build());
     assertThat(customMaxTokens.defaultRequestParameters().maxOutputTokens()).isEqualTo(512);
+  }
+
+  @Test
+  void reasoningEffortEnablesThinking() {
+    var builder = OllamaServiceConnector.buildChatModel(ModelOptions.builder()
+        .modelName(MODEL)
+        .reasoningEffort("high")
+        .build());
+    assertThat(builder).extracting("think").isEqualTo(true);
+  }
+
+  @Test
+  void reasoningEffortNoneDisablesThinking() {
+    var builder = OllamaServiceConnector.buildChatModel(ModelOptions.builder()
+        .modelName(MODEL)
+        .reasoningEffort("none")
+        .build());
+    assertThat(builder).extracting("think").isEqualTo(false);
   }
 
   private static ChatModelProvider loadProvider() {

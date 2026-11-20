@@ -51,6 +51,18 @@ class TestProgramConfigMigrator {
   }
 
   @Test
+  void v2_reasoningEffort() {
+    var config = migrate(Map.of("reasoningEffort", "\"high\""));
+    assertThat(config.get("reasoningEffort")).isEqualTo("high");
+  }
+
+  @Test
+  void v2_reasoningEffort_enumExpression() {
+    var config = migrate(Map.of("reasoningEffort", "ReasoningEffort.xhigh"));
+    assertThat(config.get("reasoningEffort")).isEqualTo("xhigh");
+  }
+
+  @Test
   void v2_inputGuardrails() {
     var config = migrate(Map.of("inputGuardrails", "[\"Guardrail1\", \"Guardrail2\"]"));
     assertThat(config.get("inputGuardrails")).isEqualTo("Guardrail1,Guardrail2");

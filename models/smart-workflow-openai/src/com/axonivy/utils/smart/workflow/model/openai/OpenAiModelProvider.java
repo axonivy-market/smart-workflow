@@ -12,6 +12,7 @@ import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
+import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
@@ -29,9 +30,24 @@ public class OpenAiModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
+    if (StringUtils.isNotBlank(options.reasoningEffort())
+        && OpenAiServiceConnector.supportsReasoningEffort(options.modelName())) {
+      var responsesBuilder = OpenAiServiceConnector.buildOpenAiResponsesModel(options);
+      if (options.structuredOutput()) {
+        responsesBuilder.strictJsonSchema(true);
+      }
+      responsesBuilder.listeners(options.listeners());
+      return responsesBuilder.build();
+    }
+
+    if (StringUtils.isNotBlank(options.reasoningEffort())) {
+      Ivy.log().warn("Ignoring OpenAI reasoning effort because the selected model does not support it.");
+    }
+
     var builder = OpenAiServiceConnector.buildOpenAiModel(options);
     if (options.structuredOutput()) {
-      builder.responseFormat("json_schema");
+      builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
+      builder.strictJsonSchema(true);
     }
     builder.listeners(options.listeners());
     return builder.build();
