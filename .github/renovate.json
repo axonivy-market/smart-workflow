@@ -1,24 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>axonivy-market/renovate-config",
-    "schedule:earlyMondays"
-  ],
-  "baseBranchPatterns": [
-    "master"
+    "local>axonivy-market/renovate-config"
   ],
   "packageRules": [
-    {
-      "matchPackageNames" :[
-        "org.apache.maven.*",
-        "org.junit.jupiter:*",
-        "org.assertj:*",
-        "com.tngtech.archunit:*",
-        "org.apache.maven.plugins:*",
-        "com.arize:*"
-      ],
-      "automerge": true
-    },
     {
       "matchManagers": [
         "maven"
@@ -27,18 +12,6 @@
         "/^dev\\.langchain4j:.*/"
       ],
       "groupName": "langchain4j"
-    },
-    {
-      "matchManagers": [
-        "maven"
-      ],
-      "matchPackageNames": [
-        "/^dev\\.langchain4j:.*/"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "automerge": true
     },
     {
       "matchManagers": [
