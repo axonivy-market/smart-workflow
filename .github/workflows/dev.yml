@@ -9,7 +9,7 @@ on:
       ivyVersion:
         type: string
         required: false
-        default: dev
+        default: nightly-14
         description: ivy engine permalink (e.g. sprint, nightly, dev)
 
 permissions:
@@ -22,4 +22,4 @@ jobs:
     uses: axonivy-market/github-workflows/.github/workflows/dev.yml@v14
     with:
       targetBranchForBuildFromMaster: master
-      ivyVersion: ${{ inputs.ivyVersion || 'dev' }}
+      ivyVersion: ${{ inputs.ivyVersion || 'nightly-14' }}
