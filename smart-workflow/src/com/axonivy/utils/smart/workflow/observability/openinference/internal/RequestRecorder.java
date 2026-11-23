@@ -1,7 +1,6 @@
 package com.axonivy.utils.smart.workflow.observability.openinference.internal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +25,18 @@ class RequestRecorder {
     String TEMPERATURE = "temperature";
     String MAX_TOKENS = "max_tokens";
     String TOP_P = "top_p";
+    String REASONING_EFFORT = "reasoning_effort";
   }
 
   private final String provider;
   private final String model;
+  private final String reasoningEffort;
   private final Map<String, Object> attributes = new LinkedHashMap<>();
 
-  public RequestRecorder(String provider, String model) {
+  public RequestRecorder(String provider, String model, String reasoningEffort) {
     this.provider = provider;
     this.model = model;
+    this.reasoningEffort = reasoningEffort;
   }
 
   Map<String, Object> handleRequest(AiServiceRequestIssuedEvent event, boolean hideInput) {
@@ -69,7 +71,7 @@ class RequestRecorder {
   private void invocationParams(AiServiceRequestIssuedEvent event) {
     var defaultParam = event.invocationContext().defaultRequestParameters();
 
-    Map<String, Object> invocationParams = new HashMap<>();
+    Map<String, Object> invocationParams = new LinkedHashMap<>();
     if (defaultParam.temperature() != null) {
       invocationParams.put(InvocationParams.TEMPERATURE, defaultParam.temperature());
     }
@@ -78,6 +80,9 @@ class RequestRecorder {
     }
     if (defaultParam.topP() != null) {
       invocationParams.put(InvocationParams.TOP_P, defaultParam.topP());
+    }
+    if (reasoningEffort != null && !reasoningEffort.isBlank()) {
+      invocationParams.put(InvocationParams.REASONING_EFFORT, reasoningEffort);
     }
     try {
       attributes.put(SemanticConventions.LLM_INVOCATION_PARAMETERS,

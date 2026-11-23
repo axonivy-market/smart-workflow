@@ -35,6 +35,7 @@ import dev.langchain4j.data.message.PdfFileContent;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.message.VideoContent;
+import jakarta.ws.rs.core.Response;
 
 @RestResourceTest
 class TestOpenInferenceSpans {
@@ -169,6 +170,26 @@ class TestOpenInferenceSpans {
 
     var toolRun = findChild(agent, "Tool").findFirst().orElseThrow();
     assertTool(toolRun);
+  }
+
+  @Test
+  void recordsReasoningEffortInInvocationParameters(BpmClient client, AppFixture fixture) {
+    setupTracing(fixture);
+    MockOpenAI.defineResponses(_ -> Response.ok().entity("""
+        {"id":"resp_test","model":"gpt-5","status":"completed","output":[{"type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}]}
+        """).build());
+
+    var res = client.start()
+        .process(BpmProcess.name("TestToolUser").elementName("customTemperature"))
+        .execute();
+    assertThat(res.bpmError()).isNull();
+
+    var spans = tracer.slowTraces().all();
+    var rootSpan = spans.getFirst().rootSpan();
+    var agent = findChild(rootSpan, "AI Agent").findFirst().orElseThrow();
+    var assistant = findChild(agent, "AI Assistant").findFirst().orElseThrow();
+    assertThat(mapOf(assistant.attributes()).get("llm.invocation_parameters"))
+        .contains("\"reasoning_effort\":\"high\"");
   }
 
   @Test

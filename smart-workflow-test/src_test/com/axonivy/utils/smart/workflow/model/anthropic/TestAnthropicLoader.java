@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.model.anthropic;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,5 +67,15 @@ public class TestAnthropicLoader {
         .temperature(0.7)
         .build());
     assertThat(customTemp.defaultRequestParameters().temperature()).isEqualTo(0.7);
+  }
+
+  @Test
+  void rejectsUnsupportedReasoningEffort() {
+    assertThatThrownBy(() -> provider.setup(ModelOptions.builder()
+        .modelName(MODEL)
+        .reasoningEffort("none")
+        .build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("Anthropic reasoning effort");
   }
 }

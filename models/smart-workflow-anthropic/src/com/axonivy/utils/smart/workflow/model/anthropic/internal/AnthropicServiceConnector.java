@@ -20,6 +20,7 @@ import dev.langchain4j.model.chat.request.ChatRequestParameters;
 public class AnthropicServiceConnector {
 
   private static final String DEFAULT_MODEL = AnthropicChatModelName.CLAUDE_HAIKU_4_5_20251001.toString();
+  private static final Set<String> SUPPORTED_EFFORTS = Set.of("low", "medium", "high", "xhigh", "max");
 
   private static final Set<String> KNOWN_ALIASES = Set.of(
       "claude-haiku-4-5", "claude-sonnet-4-5", "claude-opus-4-5", "claude-opus-4-1",
@@ -33,7 +34,9 @@ public class AnthropicServiceConnector {
   }
 
   public static AnthropicChatModelBuilder buildAnthropicModel(ModelOptions options) {
-    AnthropicChatModelBuilder builder = initBuilder();
+    var effort = options.reasoningEffort();
+    validateReasoningEffort(effort);
+    AnthropicChatModelBuilder builder = initBuilder(effort);
     var request = ChatRequestParameters.builder()
         .modelName(resolveModelName(options.modelName()))
         .temperature(resolveTemperature(options.temperature()))
@@ -43,9 +46,13 @@ public class AnthropicServiceConnector {
     return builder;
   }
 
-  private static AnthropicChatModelBuilder initBuilder() {
+  private static AnthropicChatModelBuilder initBuilder(String reasoningEffort) {
+    var httpClientBuilder = new SmartHttpClientBuilderFactory().create();
+    if (StringUtils.isNotBlank(reasoningEffort)) {
+      httpClientBuilder = new AnthropicEffortHttpClientBuilder(httpClientBuilder, reasoningEffort);
+    }
     AnthropicChatModelBuilder builder = AnthropicChatModel.builder()
-        .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
+        .httpClientBuilder(httpClientBuilder)
         .logRequests(true)
         .logResponses(true);
     var baseUrl = Ivy.var().get(AnthropicConf.BASE_URL);
@@ -57,6 +64,13 @@ public class AnthropicServiceConnector {
       builder.apiKey(key);
     }
     return builder;
+  }
+
+  private static void validateReasoningEffort(String reasoningEffort) {
+    if (StringUtils.isNotBlank(reasoningEffort) && !SUPPORTED_EFFORTS.contains(reasoningEffort)) {
+      throw new IllegalArgumentException("Anthropic reasoning effort must be one of " + SUPPORTED_EFFORTS
+          + "; the available levels depend on the selected Claude model.");
+    }
   }
 
   private static String resolveModelName(String modelName) {
