@@ -17,33 +17,15 @@
       <artifactId>ivy-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.axonivy.ivy.api.extension</groupId>
+      <artifactId>ivy-rest-jersey-extension-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.axonivy.utils.ai</groupId>
       <artifactId>smart-workflow</artifactId>
       <version>${project.version}</version>
       <type>iar</type>
-    </dependency>
-    <dependency>
-      <groupId>dev.langchain4j</groupId>
-      <artifactId>langchain4j-open-ai</artifactId>
-      <version>1.20.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>dev.langchain4j</groupId>
-          <artifactId>langchain4j-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>dev.langchain4j</groupId>
-          <artifactId>langchain4j-http-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>dev.langchain4j</groupId>
-          <artifactId>langchain4j-http-client-jdk</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
   <repositories>

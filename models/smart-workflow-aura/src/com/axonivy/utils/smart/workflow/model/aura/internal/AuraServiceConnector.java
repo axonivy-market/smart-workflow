@@ -1,55 +1,40 @@
 package com.axonivy.utils.smart.workflow.model.aura.internal;
 
-import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveMaxOutputTokens;
-import static com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils.resolveTemperature;
-
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.Ivy;
-import dev.langchain4j.model.chat.request.ChatRequestParameters;
-import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
+import jakarta.ws.rs.client.WebTarget;
 
 public class AuraServiceConnector {
 
+  private static final String AURA_INFERENCE_CLIENT = "auraInferenceEndpoint";
+
   public interface AuraConf {
     String PREFIX = "AI.Providers.Aura.";
-    String BASE_URL = PREFIX + "BaseUrl";
-    String API_KEY = PREFIX + "APIKey";
-    String DEFAULT_MODEL = PREFIX + "DefaultModel";
+    String ORG_ID = PREFIX + "OrgId";
+    String HOST = PREFIX + "Host";
+    String APP_ID = PREFIX + "AppId";
   }
 
-  public static OpenAiChatModelBuilder buildOpenAiModel(ModelOptions options) {
-    var baseUrl = Ivy.var().get(AuraConf.BASE_URL);
-    if (StringUtils.isBlank(baseUrl)) {
-      throw new IllegalArgumentException("Configure " + AuraConf.BASE_URL + " before calling Aura");
+  public static AuraChatModel buildAuraModel(ModelOptions options) {
+    requireConfigured(AuraConf.ORG_ID);
+    requireConfigured(AuraConf.HOST);
+    requireConfigured(AuraConf.APP_ID);
+    var target = Ivy.rest().client(AURA_INFERENCE_CLIENT)
+        .resolveTemplate("host", Ivy.var().get(AuraConf.HOST))
+        .resolveTemplate("orgId", Ivy.var().get(AuraConf.ORG_ID));
+    return buildAuraModel(options, target);
+  }
+
+  static AuraChatModel buildAuraModel(ModelOptions options, WebTarget target) {
+    return new AuraChatModel(options, target);
+  }
+
+  private static void requireConfigured(String variable) {
+    if (StringUtils.isBlank(Ivy.var().get(variable))) {
+      throw new IllegalArgumentException("Configure " + variable + " before calling Aura");
     }
-    var modelName = StringUtils.defaultIfBlank(options.modelName(), Ivy.var().get(AuraConf.DEFAULT_MODEL));
-    if (StringUtils.isBlank(modelName)) {
-      throw new IllegalArgumentException("Configure " + AuraConf.DEFAULT_MODEL + " or select a model on the agent");
-    }
-    var request = ChatRequestParameters.builder()
-        .modelName(modelName)
-        .temperature(resolveTemperature(options.temperature()))
-        .maxOutputTokens(resolveMaxOutputTokens(options.maxOutputTokens()))
-        .build();
-    var builder = OpenAiChatModel.builder()
-        .httpClientBuilder(new SmartHttpClientBuilderFactory().create())
-        .baseUrl(baseUrl)
-        .defaultRequestParameters(request)
-        .logRequests(true)
-        .logResponses(true);
-    var key = Ivy.var().get(AuraConf.API_KEY);
-    if (StringUtils.isNotBlank(key)) {
-      builder.apiKey(key);
-    } else {
-      builder.customHeaders(Map.of("X-Requested-By", "ivy")); // allow local mock calls
-    }
-    return builder;
   }
 }
