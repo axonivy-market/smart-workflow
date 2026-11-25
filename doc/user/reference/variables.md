@@ -15,7 +15,7 @@ Variables marked 🔒 are secrets: declare them as `${decrypt:}` in source contr
 
 ## Providers
 
-Each provider ships its own block with the corresponding `models/smart-workflow-*` project. Every provider accepts `BaseUrl` and names its model variable `DefaultModel`. An empty `BaseUrl` uses the vendor default where one exists; Aura requires an explicit URL.
+Each provider ships its own block with the corresponding `models/smart-workflow-*` project. Most providers accept `BaseUrl` and name their model variable `DefaultModel`. Aura is the exception: it has no base URL or model variable and uses `OrgId`, `Host` and `AppId` instead.
 
 | Variable | 🔒 | Purpose |
 | --- | :---: | --- |
@@ -36,9 +36,9 @@ Each provider ships its own block with the corresponding `models/smart-workflow-
 | `AI.Providers.xAI.APIKey` | 🔒 | xAI API key. |
 | `AI.Providers.xAI.BaseUrl` | | Override the API endpoint. |
 | `AI.Providers.xAI.DefaultModel` | | `grok-4-1-fast`, `grok-4-1-mini`, `grok-4-1-large`, `grok-4-1-max`, and `-code` variants. A name outside the enum works but logs `Unknown xAI model … Compatibility not guaranteed`. |
-| `AI.Providers.Aura.APIKey` | 🔒 | Raw bearer credential, without the `Bearer ` prefix. No automatic token acquisition or renewal. |
-| `AI.Providers.Aura.BaseUrl` | | Required OpenAI-compatible API root; the client appends `chat/completions`. No default. |
-| `AI.Providers.Aura.DefaultModel` | | Model identifier for your endpoint. Required unless the agent explicitly selects a model. No default. |
+| `AI.Providers.Aura.OrgId` | | DocuWare Aura organization ID, used in the inference URL and for sign-in. |
+| `AI.Providers.Aura.Host` | | Your DocuWare tenant host, for example `your-tenant.docuware.cloud`. |
+| `AI.Providers.Aura.AppId` | | OAuth application ID registered in DocuWare for Smart Workflow. |
 | `AI.Providers.Ollama.BaseUrl` | | Your Ollama server, e.g. `http://localhost:11434`. No API key — the instance is yours. |
 | `AI.Providers.Ollama.DefaultModel` | | Any model pulled in your instance. |
 | `AI.Providers.Ollama.DefaultEmbeddingModel` | | e.g. `nomic-embed-text`, `mxbai-embed-large`. |

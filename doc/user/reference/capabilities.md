@@ -13,7 +13,7 @@ What each provider can and cannot do. This page is the single source of truth fo
 | **Gemini** | Direct cloud API | ✓ | ✓ | — | — |
 | **Anthropic** | Direct cloud API | ✓ | ✓ | ✓ | — |
 | **xAI** | Direct cloud API | ✓ | — | ✓ | — |
-| **Aura** | Direct cloud API | Not verified | Not verified | Not verified | — |
+| **Aura** | Direct cloud API | — | — | — | — |
 | **Ollama** | Self-hosted | ✓ | — | ✓ *(not with tools)* | ✓ |
 
 ## Models
@@ -27,7 +27,7 @@ Where a provider defines a `DefaultModel` enum in `variables.yaml`, its values a
 | **Gemini** | `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.0-flash`, `gemini-2.0-flash-exp`, `gemini-1.5-pro`, `gemini-1.5-flash` |
 | **Anthropic** | `claude-opus-4-6`, `claude-sonnet-4-6`, `claude-opus-4-5`, `claude-sonnet-4-5`, `claude-haiku-4-5`, `claude-opus-4-1`, `claude-opus-4-0`, `claude-sonnet-4-0` |
 | **xAI** | `grok-4-1-fast`, `grok-4-1-mini`, `grok-4-1-large`, `grok-4-1-max`, and the `-code` variants |
-| **Aura** | Model identifier configured in `DefaultModel` or on the agent; no bundled model catalogue |
+| **Aura** | None to choose; Aura selects the model, and naming one is rejected |
 | **Ollama** | Any model pulled in your instance (`llama3.2`, `gemma3:27b`, `qwen3:30b`, `llava`, …) |
 
 Embedding models: OpenAI offers `text-embedding-3-small`, `text-embedding-3-large` and `text-embedding-ada-002`; on Ollama, pull a dedicated embedding model such as `nomic-embed-text` or `mxbai-embed-large`.
@@ -40,7 +40,7 @@ Supported input formats are PNG, JPG, JPEG and PDF. See [File Extraction](../fil
 
 **xAI** — PDFs are not supported by the xAI API. Convert them to images before passing them to Smart Workflow.
 
-**Aura** — image and PDF input have not been verified against a live Aura endpoint.
+**Aura** — text only. Image and PDF input are rejected.
 
 **Anthropic** — images and PDFs can be sent by URL or base64, both supporting text extraction and visual understanding of charts, diagrams and layouts.
 
@@ -60,7 +60,7 @@ How each provider constrains the response to a schema. See [Agent Setup](../agen
 | **Azure OpenAI** | ✓ | `RESPONSE_FORMAT_JSON_SCHEMA` + `strictJsonSchema` |
 | **Anthropic** | ✓ | `RESPONSE_FORMAT_JSON_SCHEMA` |
 | **xAI** | ✓ | `RESPONSE_FORMAT_JSON_SCHEMA` + `strictJsonSchema` |
-| **Aura** | Not verified | Configured to request `RESPONSE_FORMAT_JSON_SCHEMA` + `strictJsonSchema`; live endpoint support has not been verified |
+| **Aura** | — | Not implemented yet; requesting it is rejected with a configuration error |
 | **Ollama** | ✓ *(not with tools)* | Schema applied only when the agent has no tools |
 | **Gemini** | — | Unsupported; logs an error and continues |
 
