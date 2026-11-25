@@ -17,6 +17,7 @@ import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.test.log.LoggerAccess;
 import dev.langchain4j.agent.tool.ToolSpecification;
 
@@ -28,7 +29,7 @@ class TestAgentToolsDynamic {
   private static final String TICKET_SIGNATURE = "createSupportTicket(String)";
 
   @RegisterExtension
-  LoggerAccess log = new LoggerAccess();
+  LoggerAccess log = new LoggerAccess(Ivy.log().getName());
 
   private final List<String> toolsSentToModel = new ArrayList<>();
 
@@ -56,7 +57,7 @@ class TestAgentToolsDynamic {
 
   @Test
   void array(BpmClient client) {
-    run(client, new String[] {TICKET_SIGNATURE, "whoami"});
+    run(client, new String[] { TICKET_SIGNATURE, "whoami" });
     assertThat(toolsSentToModel).containsExactlyInAnyOrder("add", "createSupportTicket", "whoami");
   }
 
