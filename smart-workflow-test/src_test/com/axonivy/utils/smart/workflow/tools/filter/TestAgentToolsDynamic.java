@@ -23,7 +23,7 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 @IvyProcessTest
 class TestAgentToolsDynamic {
 
-  private static final BpmElement TOOLS_DYNAMIC = BpmProcess.name("TestToolUser").elementName("toolsDynamic(Object)");
+  private static final BpmElement TOOLS_DYNAMIC = BpmProcess.name("TestDynamicTools").elementName("toolsDynamic(Object)");
 
   private static final String TICKET_SIGNATURE = "createSupportTicket(String)";
 
