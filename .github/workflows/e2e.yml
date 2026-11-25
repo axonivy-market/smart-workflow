@@ -12,7 +12,7 @@ on:
       ivyVersion:
         type: string
         required: false
-        default: dev
+        default: nightly-14
         description: ivy engine permalink (e.g. sprint, nightly, dev)
 
 permissions:
@@ -24,7 +24,7 @@ jobs:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v14
     with:
       mvnArgs: -P e2e.test -Dproviders=${{ inputs.providers }}
-      ivyVersion: ${{ inputs.ivyVersion || 'dev' }}
+      ivyVersion: ${{ inputs.ivyVersion || 'nightly-14' }}
     secrets:
       mvnArgs: |
         -DOPEN_AI_API_KEY=${{ secrets.OPEN_AI_API_KEY }} \
