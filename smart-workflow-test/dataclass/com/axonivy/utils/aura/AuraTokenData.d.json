@@ -1,0 +1,24 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "AuraTokenData",
+  "namespace" : "com.axonivy.utils.aura",
+  "fields" : [ {
+    "name" : "accessToken",
+    "type" : "java.lang.String"
+  }, {
+    "name" : "refreshToken",
+    "type" : "java.lang.String"
+  }, {
+    "name" : "expiresIn",
+    "type" : "java.lang.Integer"
+  }, {
+    "name" : "tokenType",
+    "type" : "java.lang.String"
+  }, {
+    "name" : "scope",
+    "type" : "java.lang.String"
+  }, {
+    "name" : "organizationId",
+    "type" : "java.lang.String"
+  } ]
+}
