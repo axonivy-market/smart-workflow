@@ -11,7 +11,7 @@ on:
       ivyVersion:
         type: string
         required: false
-        default: dev
+        default: nightly-14
         description: ivy engine permalink (e.g. sprint, nightly, dev)
 
 permissions:
@@ -24,4 +24,5 @@ jobs:
     uses: axonivy-market/github-workflows/.github/workflows/release.yml@v14
     with:
       mvnArgs: -DignoreSnapshots=true -DreleaseVersion=${{ inputs.releaseVersion }} -Divy.engine.download.url=https://dev.axonivy.com/permalink/${{ inputs.ivyVersion }}/axonivy-engine.zip
+      ivyVersion: ${{ inputs.ivyVersion || 'nightly-14' }}
       javaVersion: 25
