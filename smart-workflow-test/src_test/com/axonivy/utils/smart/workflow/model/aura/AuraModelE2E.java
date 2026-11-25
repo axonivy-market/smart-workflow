@@ -18,7 +18,7 @@ import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.Ivy;
 
-/** End-to-end agent flows configured with AURA_BASE_URL, AURA_MODEL and AURA_API_KEY. */
+/** Text inference against Aura, configured with AURA_ORG_ID, AURA_HOST and AURA_APP_ID. */
 @IvyProcessTest
 @EnabledIf("providerConfigured")
 class AuraModelE2E {
@@ -28,9 +28,9 @@ class AuraModelE2E {
   @BeforeEach
   void setup(AppFixture fixture) {
     fixture.var(AiConf.DEFAULT_PROVIDER, AuraModelProvider.NAME);
-    fixture.var(AuraConf.BASE_URL, TestUtils.getSystemProperty("AURA_BASE_URL"));
-    fixture.var(AuraConf.DEFAULT_MODEL, TestUtils.getSystemProperty("AURA_MODEL"));
-    fixture.var(AuraConf.API_KEY, TestUtils.getSystemProperty("AURA_API_KEY"));
+    fixture.var(AuraConf.ORG_ID, TestUtils.getSystemProperty("AURA_ORG_ID"));
+    fixture.var(AuraConf.HOST, TestUtils.getSystemProperty("AURA_HOST"));
+    fixture.var(AuraConf.APP_ID, TestUtils.getSystemProperty("AURA_APP_ID"));
   }
 
   @Test
@@ -42,27 +42,10 @@ class AuraModelE2E {
     assertThat(data.getResult()).contains("James");
   }
 
-  @Test
-  void structuredOutput(BpmClient client) {
-    var result = client.start().process(AGENT_TOOLS.elementName("structuredOutputList")).execute();
-    TestToolUserData data = result.data().last();
-    assertThat(data.getStory()).isNotNull();
-    assertThat(data.getStory().getTitle()).isNotBlank();
-  }
-
-  @Test
-  void structuredOutputWithTool(BpmClient client) {
-    Ivy.session().loginSessionUser("James", "secret");
-    var result = client.start().process(AGENT_TOOLS.elementName("structuredOutput"))
-        .as().session(Ivy.session()).execute();
-    TestToolUserData data = result.data().last();
-    assertThat(data.getPerson().getFirstName()).isEqualTo("James");
-  }
-
   static boolean providerConfigured() {
     return TestUtils.isProviderEnabled(AuraModelProvider.NAME)
-        && StringUtils.isNotBlank(TestUtils.getSystemProperty("AURA_BASE_URL"))
-        && StringUtils.isNotBlank(TestUtils.getSystemProperty("AURA_MODEL"))
-        && StringUtils.isNotBlank(TestUtils.getSystemProperty("AURA_API_KEY"));
+        && StringUtils.isNotBlank(TestUtils.getSystemProperty("AURA_ORG_ID"))
+        && StringUtils.isNotBlank(TestUtils.getSystemProperty("AURA_HOST"))
+        && StringUtils.isNotBlank(TestUtils.getSystemProperty("AURA_APP_ID"));
   }
 }

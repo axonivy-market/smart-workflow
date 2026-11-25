@@ -7,14 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.utils.smart.workflow.model.ChatModelFactory;
+import com.axonivy.utils.smart.workflow.model.aura.internal.AuraChatModel;
 import com.axonivy.utils.smart.workflow.model.aura.internal.AuraServiceConnector.AuraConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
 
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
-import dev.langchain4j.model.chat.Capability;
-import dev.langchain4j.model.openai.OpenAiChatModel;
 
 @IvyTest
 class TestAuraLoader {
@@ -23,49 +22,29 @@ class TestAuraLoader {
 
   @BeforeEach
   void setup(AppFixture fixture) {
-    fixture.var(AuraConf.BASE_URL, "https://aura.example.invalid/v1/");
-    fixture.var(AuraConf.DEFAULT_MODEL, "test-aura-model");
-    fixture.var(AuraConf.API_KEY, "");
+    fixture.var(AuraConf.ORG_ID, "test-org");
+    fixture.var(AuraConf.HOST, "aura.example.invalid");
+    fixture.var(AuraConf.APP_ID, "test-app");
     provider = ChatModelFactory.create(AuraModelProvider.NAME).orElseThrow();
   }
 
   @Test
   void loadWithoutConfiguration(AppFixture fixture) {
-    fixture.var(AuraConf.BASE_URL, "");
-    fixture.var(AuraConf.DEFAULT_MODEL, "");
+    fixture.var(AuraConf.ORG_ID, "");
     assertThat(ChatModelFactory.create("Aura")).isPresent();
     assertThat(provider.models()).isEmpty();
   }
 
   @Test
-  void usesOpenAiChatModel() {
-    assertThat(provider.setup(ModelOptions.builder().build())).isInstanceOf(OpenAiChatModel.class);
+  void usesAuraChatModel() {
+    assertThat(provider.setup(ModelOptions.builder().build())).isInstanceOf(AuraChatModel.class);
   }
 
   @Test
-  void defaultModel() {
-    assertThat(provider.setup(ModelOptions.builder().build()).defaultRequestParameters().modelName())
-        .isEqualTo("test-aura-model");
-    assertThat(provider.models()).containsExactly("test-aura-model");
-  }
-
-  @Test
-  void explicitModelOverridesDefault() {
-    var model = provider.setup(ModelOptions.builder().modelName("another-model").build());
-    assertThat(model.defaultRequestParameters().modelName()).isEqualTo("another-model");
-  }
-
-  @Test
-  void explicitModelWithoutDefault(AppFixture fixture) {
-    fixture.var(AuraConf.DEFAULT_MODEL, "");
-    var model = provider.setup(ModelOptions.builder().modelName("explicit-model").build());
-    assertThat(model.defaultRequestParameters().modelName()).isEqualTo("explicit-model");
-  }
-
-  @Test
-  void structuredOutput() {
-    var model = provider.setup(ModelOptions.builder().structuredOutput(true).build());
-    assertThat(model.supportedCapabilities()).contains(Capability.RESPONSE_FORMAT_JSON_SCHEMA);
+  void modelSelectionIsRejected() {
+    assertThatThrownBy(() -> provider.setup(ModelOptions.builder().modelName("some-model").build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("does not support model selection");
   }
 
   @Test
@@ -76,22 +55,43 @@ class TestAuraLoader {
   }
 
   @Test
-  void secretVariable() {
-    assertThat(provider.secretsVars()).containsExactly(AuraConf.API_KEY);
+  void structuredOutputIsRejected() {
+    assertThatThrownBy(() -> provider.setup(ModelOptions.builder().structuredOutput(true).build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("structured output is not implemented");
+  }
+
+  @Test
+  void toolsAreRejected() {
+    assertThatThrownBy(() -> provider.setup(ModelOptions.builder().hasTools(true).build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("tool calls are not implemented");
+  }
+
+  @Test
+  void secretsVarsIsEmpty() {
+    assertThat(provider.secretsVars()).isEmpty();
     assertThat(provider.supportsEmbedding()).isFalse();
   }
 
   @Test
-  void missingBaseUrl(AppFixture fixture) {
-    fixture.var(AuraConf.BASE_URL, "");
+  void missingOrgId(AppFixture fixture) {
+    fixture.var(AuraConf.ORG_ID, "");
     assertThatThrownBy(() -> provider.setup(ModelOptions.builder().build()))
-        .isInstanceOf(IllegalArgumentException.class).hasMessageContaining(AuraConf.BASE_URL);
+        .isInstanceOf(IllegalArgumentException.class).hasMessageContaining(AuraConf.ORG_ID);
   }
 
   @Test
-  void missingModel(AppFixture fixture) {
-    fixture.var(AuraConf.DEFAULT_MODEL, "");
+  void missingHost(AppFixture fixture) {
+    fixture.var(AuraConf.HOST, "");
     assertThatThrownBy(() -> provider.setup(ModelOptions.builder().build()))
-        .isInstanceOf(IllegalArgumentException.class).hasMessageContaining(AuraConf.DEFAULT_MODEL);
+        .isInstanceOf(IllegalArgumentException.class).hasMessageContaining(AuraConf.HOST);
+  }
+
+  @Test
+  void missingAppId(AppFixture fixture) {
+    fixture.var(AuraConf.APP_ID, "");
+    assertThatThrownBy(() -> provider.setup(ModelOptions.builder().build()))
+        .isInstanceOf(IllegalArgumentException.class).hasMessageContaining(AuraConf.APP_ID);
   }
 }
