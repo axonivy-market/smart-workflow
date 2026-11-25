@@ -4,6 +4,9 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.tngtech.archunit.base.DescribedPredicate;
@@ -11,6 +14,11 @@ import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 
 public class TestArchitecture {
+
+  @BeforeAll
+  static void suppressArchUnitTraceLogging() {
+    Configurator.setLevel("com.tngtech.archunit", Level.INFO);
+  }
 
   @Test
   void internalSmartWorkflowPackages_areNotUsedInConsumingBundles() throws IOException {
