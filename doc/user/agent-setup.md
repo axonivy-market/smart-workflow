@@ -65,6 +65,10 @@ Note that empty means "use the defaults", not "no guardrails". See [Using guardr
 
 Set them when one agent needs something different, such as a cheaper model for a trivial step. See [Setting a provider and model for one agent](providers.md#setting-a-provider-and-model-for-one-agent) for the values these fields accept and how they are resolved.
 
+`Reasoning effort` decides how much the model reasons before it answers: `None`, `Low`, `Medium` or `High`. More effort usually means better answers to hard questions, but also slower and more expensive ones. Leave it empty to use the model's own default. That is not the same as `None`, since many models reason by default.
+
+Not every model offers all four. See [Reasoning effort](reference/capabilities.md#reasoning-effort) for what each provider does with your choice.
+
 ### Output
 
 ![The Output group of the agent element](img/agent-other-configurations.png)

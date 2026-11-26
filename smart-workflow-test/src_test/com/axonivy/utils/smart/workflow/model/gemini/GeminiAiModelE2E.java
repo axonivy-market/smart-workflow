@@ -2,7 +2,6 @@ package com.axonivy.utils.smart.workflow.model.gemini;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
@@ -44,7 +43,16 @@ public class GeminiAiModelE2E {
         .as().session(Ivy.session())
         .execute();
     TestToolUserData data = res.data().last();
-    assertThat(StringUtils.isNotBlank(data.getResult()));
+    assertThat(data.getResult()).isNotBlank();
+  }
+
+  @Test
+  void reasoningEffort_e2e(BpmClient client, AppFixture fixture) {
+    fixture.var(GeminiServiceConnector.GeminiConf.DEFAULT_MODEL, "gemini-2.5-flash");
+    var res = client.start().process(AGENT_TOOLS.elementName("reasoningEffort")).execute();
+    TestToolUserData data = res.data().last();
+    assertThat(data.getResult()).isNotBlank();
+    assertThat(log.infos()).anyMatch(line -> line.contains("thinkingBudget"));
   }
 
   static boolean providerSelected() {

@@ -55,6 +55,29 @@ Two parts of `ModelOptions` decide how your provider behaves in edge cases, and 
 - `structuredOutput()` — whether to apply a JSON schema. If your vendor cannot, log an error and build the model without it rather than failing the call.
 - `hasTools()` — whether the agent also has tools. Ollama uses this to drop the schema, since the two are mutually exclusive there.
 
+### Reasoning effort
+
+`ModelOptions.reasoningEffort()` is what the user chose, or `null` for nothing. Implement `ReasoningEffortResolver` to translate it to the option of your vendor, where `T` is the type your client library expects:
+
+```java
+public interface ReasoningEffortResolver<T> {
+  Optional<T> toOption(String modelName, ReasoningEffort effort);
+
+  default Optional<T> resolve(String modelName, ReasoningEffort effort);
+}
+```
+
+Implement `toOption`, and call `resolve` with the final model name when you build the model:
+
+```java
+new MyReasoningEffortResolver().resolve(modelName, options.reasoningEffort())
+    .ifPresent(builder::reasoningEffort);
+```
+
+- Return empty for models without reasoning. `resolve` then logs a warning.
+- Map `NONE` to the lowest effort for models that cannot stop reasoning, and log a warning.
+- Check which other options your vendor rejects while a model reasons. Temperature is the usual one.
+
 ### Variables
 
 Every provider has its own set of variables. Contribute yours under `Variables.AI.Providers.PROVIDER`:
@@ -93,7 +116,7 @@ We expect all providers to work the same way, so no extra demonstration process 
 - [ ] custom `variables.yaml` in your provider project
 - [ ] provider listed in `AI.DefaultProvider` of the `smart-workflow` project's `variables.yaml`
 - [ ] project added to the module list in the root `pom.xml`
-- [ ] models, file-extraction support and structured-output behaviour documented in [Provider Capabilities](../user/reference/capabilities.md) — including any condition under which the schema is dropped
+- [ ] models, file-extraction support, reasoning effort and structured-output behaviour documented in [Provider Capabilities](../user/reference/capabilities.md) — including any condition under which the schema is dropped
 - [ ] provider configuration block added to [Model Providers](../user/providers.md#global-configuration), and the provider named in its supported-providers list
 - [ ] variables listed in [Variables](../user/reference/variables.md#providers)
 - [ ] provider added to the supported list in the `smart-workflow-product` README
