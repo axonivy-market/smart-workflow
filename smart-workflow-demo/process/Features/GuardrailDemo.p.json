@@ -632,5 +632,54 @@
         "at" : { "x" : 488, "y" : 2000 },
         "size" : { "width" : 480, "height" : 62 }
       }
+    }, {
+      "id" : "f98",
+      "type" : "RequestStart",
+      "name" : "PII Multiple Guardrails Demo",
+      "config" : {
+        "signature" : "start",
+        "case" : {
+          "name" : "PII Masking Multiple Guardrail Demo"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 960, "y" : 944 }
+      },
+      "connect" : [
+        { "id" : "f100", "to" : "f99" }
+      ]
+    }, {
+      "id" : "f99",
+      "type" : "ProgramInterface",
+      "name" : "Call AI Agent with PII in the message",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "inputGuardrails" : "PiiMaskingGuardrail,PromptInjectionInputGuardrail",
+          "system" : "\"Values formatted as <TYPE_hash> are anonymized placeholders — the original sensitive data was removed before reaching you. Treat each placeholder as an opaque token and echo it back as-is.\"",
+          "provider" : "",
+          "resultMapping" : "in.result",
+          "query" : "\"Please echo back all fields: MAC 00:1A:2B:3C:4D:5E, email john.doe@example.com, phone +1-555-123-4567, card 4532015112830366, SSN 123-45-6789, born 15/06/1990, IP 192.168.1.42.\"",
+          "outputGuardrails" : "PiiMaskingGuardrail,SensitiveDataOutputGuardrail",
+          "resultType" : ""
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1232, "y" : 943 },
+        "size" : { "width" : 208, "height" : 62 },
+        "description" : [
+          "The following fake credentials and PII data are used for testing purposes only.",
+          "They do not correspond to any real persons, accounts, or systems."
+        ]
+      },
+      "connect" : [
+        { "id" : "f102", "to" : "f101" }
+      ]
+    }, {
+      "id" : "f101",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1464, "y" : 944 }
+      }
     } ]
 }

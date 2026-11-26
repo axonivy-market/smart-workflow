@@ -107,6 +107,8 @@ Masking and unmasking are the two halves of one call, so this guardrail has to r
 
 For a single agent, select it in both the `Input guardrails` picker **and** the `Output guardrails` picker of the `AgenticProcessCall` element.
 
+`PiiMaskingGuardrail` always runs last on both sides, wherever you list it. Other guardrails therefore check the masked text, and the model's reply is restored only after they have all passed.
+
 > **Important:** Choosing it on only one side is worse than not using it at all.
 >
 > - Input only — the placeholders are never translated back, so raw `<TYPE_hash>` values reach the caller.

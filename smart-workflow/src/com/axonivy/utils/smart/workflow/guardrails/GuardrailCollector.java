@@ -1,6 +1,7 @@
 package com.axonivy.utils.smart.workflow.guardrails;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,6 +20,7 @@ import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapte
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.entity.internal.SmartWorkflowInternalInputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.entity.internal.SmartWorkflowInternalOutputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.pii.PiiMaskingGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiLoader;
 import com.axonivy.utils.smart.workflow.spi.internal.SpiProject;
@@ -96,6 +98,7 @@ public class GuardrailCollector {
     return effectiveRequestedNames.stream()
         .map(guardrailsByName::get)
         .filter(Objects::nonNull)
+        .sorted(Comparator.comparing(PiiMaskingGuardrail.class::isInstance))
         .map(adapterFactory)
         .toList();
   }
