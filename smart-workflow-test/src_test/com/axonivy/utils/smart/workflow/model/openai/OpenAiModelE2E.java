@@ -47,6 +47,15 @@ class OpenAiModelE2E {
         .isEqualTo("James");
   }
 
+  @Test
+  void reasoningEffort_e2e(BpmClient client, AppFixture fixture) {
+    fixture.var(OpenAiConf.DEFAULT_MODEL, "gpt-5");
+    var res = client.start().process(AGENT_TOOLS.elementName("reasoningEffort")).execute();
+    TestToolUserData data = res.data().last();
+    assertThat(data.getResult()).isNotBlank();
+    assertThat(log.infos()).anyMatch(line -> line.contains("reasoning_effort"));
+  }
+
   static boolean providerSelected() {
     return TestUtils.isProviderEnabled(OpenAiModelProvider.NAME);
   }

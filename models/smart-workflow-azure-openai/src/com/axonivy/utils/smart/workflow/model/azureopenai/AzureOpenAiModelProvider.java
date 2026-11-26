@@ -13,6 +13,7 @@ import com.axonivy.utils.smart.workflow.model.azureopenai.internal.entity.AzureA
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.utils.VariableUtils;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils;
 
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
@@ -28,6 +29,7 @@ public class AzureOpenAiModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
+    ModelOptionUtils.warnReasoningEffortUnsupported(NAME, options.reasoningEffort());
     var builder = AzureOpenAiServiceConnector.buildOpenAiModel(options);
     if (builder == null) {
       return null;

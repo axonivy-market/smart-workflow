@@ -20,6 +20,8 @@ public class OllamaServiceConnector {
   private static final String FALLBACK_DEFAULT_MODEL = "llama3.2";
   static final Duration FALLBACK_TIMEOUT = Duration.ofMinutes(5);
 
+  private static final OllamaReasoningEffortResolver REASONING_EFFORT = new OllamaReasoningEffortResolver();
+
   public interface OllamaConf {
     String PREFIX = "AI.Providers.Ollama.";
     String BASE_URL = PREFIX + "BaseUrl";
@@ -32,7 +34,7 @@ public class OllamaServiceConnector {
     String selectedModel = StringUtils.defaultIfBlank(options.modelName(),
         StringUtils.defaultIfBlank(Ivy.var().get(OllamaConf.DEFAULT_MODEL), FALLBACK_DEFAULT_MODEL));
 
-    return OllamaChatModel.builder()
+    OllamaChatModelBuilder builder = OllamaChatModel.builder()
         .httpClientBuilder(httpClientBuilder())
         .baseUrl(baseUrl())
         .modelName(selectedModel)
@@ -41,6 +43,9 @@ public class OllamaServiceConnector {
         .timeout(timeout())
         .logRequests(true)
         .logResponses(true);
+    REASONING_EFFORT.resolve(selectedModel, options.reasoningEffort())
+        .ifPresent(builder::think);
+    return builder;
   }
 
   public static HttpClientBuilder httpClientBuilder() {

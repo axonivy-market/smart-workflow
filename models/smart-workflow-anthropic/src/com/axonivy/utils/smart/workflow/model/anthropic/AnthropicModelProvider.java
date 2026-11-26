@@ -7,6 +7,7 @@ import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServic
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.utils.ModelOptionUtils;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModelName;
 import dev.langchain4j.model.chat.Capability;
@@ -23,6 +24,8 @@ public class AnthropicModelProvider implements ChatModelProvider {
 
   @Override
   public ChatModel setup(ModelOptions options) {
+    // waits for https://github.com/langchain4j/langchain4j/issues/7284
+    ModelOptionUtils.warnReasoningEffortUnsupported(NAME, options.reasoningEffort());
     var builder = AnthropicServiceConnector.buildAnthropicModel(options);
     if (options.structuredOutput()) {
       builder.supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA);

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.utils.smart.workflow.client.SmartHttpClientBuilderFactory;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
+import com.axonivy.utils.smart.workflow.model.spi.ReasoningEffort;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import dev.langchain4j.model.chat.Capability;
@@ -22,6 +23,8 @@ public class XAiServiceConnector {
 
   private static final String DEFAULT_MODEL = "grok-4-1-fast";
   private static final String DEFAULT_BASE_URL = "https://api.x.ai/v1/";
+
+  private static final XAiReasoningEffortResolver REASONING_EFFORT = new XAiReasoningEffortResolver();
 
   public static final List<String> SUPPORTED_MODELS = List.of(
       "grok-4-1-fast",
@@ -40,32 +43,37 @@ public class XAiServiceConnector {
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null);
+    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null, null);
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel() {
-    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null)
+    return initBuilder(resolveModelName(DEFAULT_MODEL), DEFAULT_TEMPERATURE, null, null)
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
   public static OpenAiChatModelBuilder buildOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens());
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens(),
+        options.reasoningEffort());
   }
 
   public static OpenAiChatModelBuilder buildJsonOpenAiModel(ModelOptions options) {
-    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens())
+    return initBuilder(resolveModelName(options.modelName()), options.temperature(), options.maxOutputTokens(),
+        options.reasoningEffort())
         .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
         .strictJsonSchema(true);
   }
 
-  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature, Integer maxOutputTokens) {
+  private static OpenAiChatModelBuilder initBuilder(String modelName, Double temperature, Integer maxOutputTokens,
+      ReasoningEffort reasoningEffort) {
     OpenAiChatModelBuilder builder = initBuilder();
     var request = ChatRequestParameters.builder()
         .modelName(modelName)
         .temperature(resolveTemperature(temperature))
         .maxOutputTokens(resolveMaxOutputTokens(maxOutputTokens));
     builder.defaultRequestParameters(request.build());
+    REASONING_EFFORT.resolve(modelName, reasoningEffort)
+        .ifPresent(builder::reasoningEffort);
     return builder;
   }
 

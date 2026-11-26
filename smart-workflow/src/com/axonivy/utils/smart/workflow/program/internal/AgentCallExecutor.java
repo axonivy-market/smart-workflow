@@ -162,11 +162,12 @@ public class AgentCallExecutor {
 
   private void configureModel(AiServices<? extends DynamicAgent<?>> agentBuilder, boolean structured,
       List<String> toolFilter) {
-    var provider = ChatModelFactory.getProviderOrDefault(configuredProvider());
+    var provider = ChatModelFactory.getProviderOrDefault(selected(Conf.PROVIDER, "provider"));
     var model = execute(Conf.MODEL, String.class).orElse(StringUtils.EMPTY);
     var agentName = context.element().name();
     var temperature = ModelOptionUtils.toTemperature(execute(Conf.TEMPERATURE, String.class).orElse(null));
     var maxOutputTokens = execute(Conf.MAX_OUTPUT_TOKENS, Integer.class).orElse(null);
+    var reasoningEffort = ModelOptionUtils.toReasoningEffort(selected(Conf.REASONING_EFFORT, "reasoning effort"));
 
     var modelOptions = ModelOptions.builder()
         .modelName(model)
@@ -174,6 +175,7 @@ public class AgentCallExecutor {
         .hasTools(toolFilter != null && !toolFilter.isEmpty())
         .temperature(temperature)
         .maxOutputTokens(maxOutputTokens)
+        .reasoningEffort(reasoningEffort)
         .build();
     var chatModel = provider.setup(modelOptions);
     agentBuilder.chatModel(chatModel);
@@ -182,17 +184,16 @@ public class AgentCallExecutor {
         .forEach(agentBuilder::registerListener);
   }
 
-  private String configuredProvider() {
-    String providerName = null;
-    List<String> providerConfig = context.config().getList(Conf.PROVIDER);
-    if (!providerConfig.isEmpty()) {
-      providerName = providerConfig.get(0);
-      if (providerConfig.size() > 1) {
-        Ivy.log().warn("Only one provider is allowed. Will use " + providerConfig.get(0) + ", and ignore other from: "
-            + providerConfig);
-      }
+  private String selected(String configKey, String label) {
+    List<String> selection = context.config().getList(configKey);
+    if (selection.isEmpty()) {
+      return null;
     }
-    return providerName;
+    if (selection.size() > 1) {
+      Ivy.log().warn("Only one " + label + " is allowed. Will use " + selection.getFirst()
+          + ", and ignore other from: " + selection);
+    }
+    return selection.getFirst();
   }
 
   private void configureToolProvider(AiServices<? extends DynamicAgent<?>> agentBuilder, List<String> toolFilter,

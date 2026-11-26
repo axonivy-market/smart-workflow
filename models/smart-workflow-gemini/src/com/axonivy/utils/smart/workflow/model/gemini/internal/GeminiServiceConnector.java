@@ -20,6 +20,8 @@ public class GeminiServiceConnector {
 
   private static final String DEFAULT_MODEL = GoogleAiGeminiChatModelName.GEMINI_2_5_FLASH.toString();
 
+  private static final GeminiReasoningEffortResolver REASONING_EFFORT = new GeminiReasoningEffortResolver();
+
   public interface GeminiConf {
     String PREFIX = "AI.Providers.Gemini.";
     String BASE_URL = PREFIX + "BaseUrl";
@@ -29,12 +31,17 @@ public class GeminiServiceConnector {
 
   public static GoogleAiGeminiChatModelBuilder buildGeminiModel(ModelOptions options) {
     GoogleAiGeminiChatModelBuilder builder = initBuilder();
+    String modelName = resolveModelName(options.modelName());
     var request = ChatRequestParameters.builder()
-        .modelName(resolveModelName(options.modelName()))
+        .modelName(modelName)
         .temperature(resolveTemperature(options.temperature()))
         .maxOutputTokens(resolveMaxOutputTokens(options.maxOutputTokens()));
 
     builder.defaultRequestParameters(request.build());
+    REASONING_EFFORT.resolve(modelName, options.reasoningEffort())
+        .ifPresent(config -> builder.thinkingConfig(config)
+            .returnThinking(true)
+            .sendThinking(true));
     return builder;
   }
 

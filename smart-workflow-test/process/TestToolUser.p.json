@@ -673,5 +673,42 @@
       "visual" : {
         "at" : { "x" : 400, "y" : 800 }
       }
+    }, {
+      "id" : "f84",
+      "type" : "RequestStart",
+      "name" : "reasoningEffort",
+      "config" : {
+        "signature" : "reasoningEffort"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 888 }
+      },
+      "connect" : [
+        { "id" : "f85", "to" : "f86" }
+      ]
+    }, {
+      "id" : "f86",
+      "type" : "ProgramInterface",
+      "name" : "Ivy Agent",
+      "config" : {
+        "javaClass" : "com.axonivy.utils.smart.workflow.AgenticProcessCall",
+        "userConfig" : {
+          "reasoningEffort" : "LOW",
+          "resultMapping" : "in.result",
+          "query" : "Hello"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 232, "y" : 888 }
+      },
+      "connect" : [
+        { "id" : "f87", "to" : "f88" }
+      ]
+    }, {
+      "id" : "f88",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 400, "y" : 888 }
+      }
     } ]
 }

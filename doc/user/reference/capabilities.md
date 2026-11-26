@@ -67,6 +67,28 @@ Two of these differ in ways that change how you design a process:
 
 **Anthropic** — the capability is applied for every model in the list above, including the 4.0 generation. Smart Workflow imposes no version gate; newer models are simply more reliable at producing schema-valid output.
 
+## Reasoning effort
+
+What each provider receives for the `Reasoning effort` of an agent. See [Agent Setup](../agent-setup.md#model) for how to set it. If it is empty, nothing is sent and the model's own default applies.
+
+| Provider | Setting | `None` | `Low` | `Medium` | `High` |
+| --- | --- | --- | --- | --- | --- |
+| **OpenAI** | `reasoning_effort` | `none` | `low` | `medium` | `high` |
+| **xAI** | `reasoning_effort` | `none` | `low` | `medium` | `high` |
+| **Gemini** 2.5 | `thinkingBudget` | 0 | 1024 | 8192 | 24576 |
+| **Ollama** | `think` | `false` | `true` | `true` | `true` |
+
+- **Anthropic** and **Azure OpenAI** do not support the setting yet and ignore it. A warning is logged.
+- **Models that cannot reason** — such as `gpt-4.1`, `gemini-2.0-flash` or `llama3.2` — ignore the setting. A warning is logged.
+- **Models that cannot stop reasoning** — such as `gpt-5` or `gemini-2.5-pro` — use their lowest effort for `None`. A warning is logged.
+- **Unknown models** are treated like the newest models of the provider. On Gemini, they ignore the setting instead.
+
+Reasoning changes other settings of the same request:
+
+**OpenAI** — `Temperature` is not sent while the model reasons. From `gpt-5.6` on, models accept tools and reasoning together only through the Responses API, which Smart Workflow does not use. Choose `None` for agents with tools where the model supports it.
+
+**Ollama** — a model that cannot think and is not known to Smart Workflow fails with `does not support thinking`. Leave the setting empty for it.
+
 ## Embedding
 
 Embedding support matters only for [RAG](../rag.md), where `AI.RAG.EmbeddingModel.Provider` accepts only a provider whose Embedding column is ticked — currently **OpenAI** and **Ollama**.

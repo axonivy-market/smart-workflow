@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.ollama.OllamaContainer;
@@ -24,6 +25,8 @@ import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.test.log.LoggerAccess;
+import dev.langchain4j.http.client.log.LoggingHttpClient;
 
 @IvyProcessTest
 @Testcontainers
@@ -32,6 +35,7 @@ public class OllamaModelE2E {
 
   private static final String MODEL_NAME = StringUtils.defaultIfBlank(
       TestUtils.getSystemProperty("OLLAMA_MODEL"), "llama3.2");
+  private static final String REASONING_MODEL = "qwen3:0.6b";
 
   private static final BpmProcess AGENT_TOOLS = BpmProcess.name("TestToolUser");
 
@@ -39,9 +43,13 @@ public class OllamaModelE2E {
   private static final OllamaContainer ollama = new OllamaContainer(
       DockerImageName.parse("ollama/ollama:latest"));
 
+  @RegisterExtension
+  LoggerAccess log = new LoggerAccess(LoggingHttpClient.class.getName());
+
   @BeforeAll
   static void pullModel() throws IOException, InterruptedException {
     ollama.execInContainer("ollama", "pull", MODEL_NAME);
+    ollama.execInContainer("ollama", "pull", REASONING_MODEL);
   }
 
   @BeforeEach
@@ -61,6 +69,15 @@ public class OllamaModelE2E {
     TestToolUserData data = res.data().last();
     assertThat(data.getPerson().getFirstName())
         .isEqualTo("James");
+  }
+
+  @Test
+  void reasoningEffort_e2e(BpmClient client, AppFixture fixture) {
+    fixture.var(OllamaConf.DEFAULT_MODEL, REASONING_MODEL);
+    var res = client.start().process(AGENT_TOOLS.elementName("reasoningEffort")).execute();
+    TestToolUserData data = res.data().last();
+    assertThat(data.getResult()).isNotBlank();
+    assertThat(log.infos()).anyMatch(line -> line.contains("\"think\" : true"));
   }
 
   static boolean providerSelected() {
