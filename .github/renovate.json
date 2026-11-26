@@ -1,8 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>axonivy-market/renovate-config",
-    "schedule:earlyMondays"
+    "local>axonivy-market/renovate-config"
   ],
   "baseBranchPatterns": [
     "master"
