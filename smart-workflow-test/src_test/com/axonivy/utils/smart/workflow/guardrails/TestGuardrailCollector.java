@@ -7,6 +7,8 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.axonivy.utils.smart.workflow.guardrails.adapter.InputGuardrailAdapter;
 import com.axonivy.utils.smart.workflow.guardrails.adapter.OutputGuardrailAdapter;
@@ -20,6 +22,7 @@ import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowInputGuar
 import com.axonivy.utils.smart.workflow.guardrails.entity.SmartWorkflowOutputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.input.PromptInjectionInputGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.output.SensitiveDataOutputGuardrail;
+import com.axonivy.utils.smart.workflow.guardrails.pii.PiiMaskingGuardrail;
 import com.axonivy.utils.smart.workflow.guardrails.provider.GuardrailProvider;
 
 import ch.ivyteam.ivy.environment.AppFixture;
@@ -148,5 +151,42 @@ public class TestGuardrailCollector {
     var names = GuardrailCollector.allOutputGuardrailNames();
     assertThat(names).containsExactlyInAnyOrder(
         "SensitiveDataOutputGuardrail", "PiiMaskingGuardrail", "DummyOutputGuardrail", "SecondDummyOutputGuardrail");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "PiiMaskingGuardrail,PromptInjectionInputGuardrail,DummyInputGuardrail",
+      "PromptInjectionInputGuardrail,PiiMaskingGuardrail,DummyInputGuardrail",
+      "PromptInjectionInputGuardrail,DummyInputGuardrail,PiiMaskingGuardrail"})
+  void inputGuardrailAdapters_piiAnywhere_runsPiiLast(String filters) {
+    var adapters = GuardrailCollector.inputGuardrailAdapters(List.of(filters.split(",")));
+    List<SmartWorkflowInputGuardrail> delegates = adapters.stream().map(InputGuardrailAdapter::getDelegate).toList();
+    assertThat(delegates).hasSize(4);
+    assertThat(delegates.get(0)).isInstanceOf(CircuitBreakerGuardrail.class);
+    assertThat(delegates.get(1)).isInstanceOf(PromptInjectionInputGuardrail.class);
+    assertThat(delegates.get(2)).isInstanceOf(DummyInputGuardrail.class);
+    assertThat(delegates.get(3)).isInstanceOf(PiiMaskingGuardrail.class);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "PiiMaskingGuardrail,SensitiveDataOutputGuardrail,DummyOutputGuardrail",
+      "SensitiveDataOutputGuardrail,PiiMaskingGuardrail,DummyOutputGuardrail",
+      "SensitiveDataOutputGuardrail,DummyOutputGuardrail,PiiMaskingGuardrail"})
+  void outputGuardrailAdapters_piiAnywhere_runsPiiLast(String filters) {
+    var adapters = GuardrailCollector.outputGuardrailAdapters(List.of(filters.split(",")));
+    List<SmartWorkflowOutputGuardrail> delegates = adapters.stream().map(OutputGuardrailAdapter::getDelegate).toList();
+    assertThat(delegates).hasSize(4);
+    assertThat(delegates.get(0)).isInstanceOf(CircuitBreakerGuardrail.class);
+    assertThat(delegates.get(1)).isInstanceOf(SensitiveDataOutputGuardrail.class);
+    assertThat(delegates.get(2)).isInstanceOf(DummyOutputGuardrail.class);
+    assertThat(delegates.get(3)).isInstanceOf(PiiMaskingGuardrail.class);
+  }
+
+  @Test
+  void inputGuardrailAdapters_piiFirstInVariable_runsPiiLast(AppFixture fixture) {
+    fixture.var(GuardrailCollector.DEFAULT_INPUT_GUARDRAILS, "PiiMaskingGuardrail,PromptInjectionInputGuardrail");
+    var adapters = GuardrailCollector.inputGuardrailAdapters(null);
+    assertThat(adapters.get(adapters.size() - 1).getDelegate()).isInstanceOf(PiiMaskingGuardrail.class);
   }
 }
