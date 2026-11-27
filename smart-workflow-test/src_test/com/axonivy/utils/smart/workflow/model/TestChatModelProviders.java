@@ -12,6 +12,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.axonivy.utils.smart.workflow.market.ProductJson;
 import com.axonivy.utils.smart.workflow.model.anthropic.internal.AnthropicServiceConnector.AnthropicConf;
+import com.axonivy.utils.smart.workflow.model.aura.AuraModelProvider;
+import com.axonivy.utils.smart.workflow.model.aura.internal.AuraServiceConnector.AuraConf;
 import com.axonivy.utils.smart.workflow.model.azureopenai.internal.AzureOpenAiConf;
 import com.axonivy.utils.smart.workflow.model.spi.ChatModelProvider;
 import com.axonivy.utils.smart.workflow.model.spi.ModelOptions;
@@ -29,6 +31,9 @@ class TestChatModelProviders {
   @BeforeEach
   void setUp(AppFixture fixture) {
     fixture.var(AnthropicConf.API_KEY, "notMyKey"); // anthropic fails with empty key
+    fixture.var(AuraConf.ORG_ID, "test-org");
+    fixture.var(AuraConf.HOST, "aura.example.invalid");
+    fixture.var(AuraConf.APP_ID, "test-app");
     fixture.var(Azure.DEPLOYMENTS_PREFIX + "." + Azure.TEST_DEPLOYMENT_NAME + "." + AzureOpenAiConf.MODEL_FIELD,
         Azure.MODEL);
     fixture.var(Azure.DEPLOYMENTS_PREFIX + "." + Azure.TEST_DEPLOYMENT_NAME + "." + AzureOpenAiConf.API_KEY_FIELD,
@@ -39,13 +44,18 @@ class TestChatModelProviders {
   @MethodSource("providerNames")
   void observable_sharesModelAsRequestParameter(String providerName) {
     var provider = ChatModelFactory.create(providerName).orElseThrow();
-    var model = provider.setup(ModelOptions.builder()
-        .modelName("AwesomeModel")
-        .structuredOutput(true)
-        .build());
-    assertThat(model.defaultRequestParameters().modelName())
-        .as("Model as request parameter; allows tracing distribution for provider " + providerName)
-        .isEqualTo("AwesomeModel");
+    var options = ModelOptions.builder();
+    if (!AuraModelProvider.NAME.equals(providerName)) {
+      options.modelName("AwesomeModel").structuredOutput(true);
+    }
+    var model = provider.setup(options.build());
+    if (AuraModelProvider.NAME.equals(providerName)) {
+      assertThat(model.defaultRequestParameters().modelName()).isNull();
+    } else {
+      assertThat(model.defaultRequestParameters().modelName())
+          .as("Model as request parameter; allows tracing distribution for provider " + providerName)
+          .isEqualTo("AwesomeModel");
+    }
   }
 
   @ParameterizedTest
@@ -64,7 +74,7 @@ class TestChatModelProviders {
       }
     };
     var model = provider.setup(ModelOptions.builder()
-        .structuredOutput(true)
+        .structuredOutput(!AuraModelProvider.NAME.equals(providerName))
         .listeners(List.of(myListener))
         .build());
     assertThat(model.listeners())

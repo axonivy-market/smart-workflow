@@ -9,3 +9,4 @@ chatbots, roleplay, defence, Customising, customise, behaviour, behaviours, reco
 facelets, noround, tabview, conv
 axonivy, circuitbreaker, fasterxml, runbook
 CCPA, Luhn
+PKCE

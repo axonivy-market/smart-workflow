@@ -4,3 +4,7 @@ RestClients:
     Url: '{ivy.app.baseurl}/api/aiMock'
     Features:
       - ch.ivyteam.ivy.rest.client.mapper.JsonFeature
+  auraMockClient:
+    Url: '{ivy.app.baseurl}/api/auraMock'
+    Features:
+      - ch.ivyteam.ivy.rest.client.mapper.JsonFeature

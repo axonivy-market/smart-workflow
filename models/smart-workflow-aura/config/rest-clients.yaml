@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/rest-clients.json
+RestClients:
+  auraInferenceEndpoint:
+    Name: auraInference
+    Url: https://{host}/docuware/aura/api/v1/{orgId}/inference
+    Features:
+      - ch.ivyteam.ivy.rest.client.mapper.JsonFeature
+      - com.axonivy.utils.smart.workflow.model.aura.auth.AuraOAuth2Feature
+    Properties:
+      AUTH.scope: docuware.platform openid dwprofile offline_access
+      AUTH.appId: ${ivy.var.AI.Providers.Aura.AppId}
+      AUTH.baseUri: https://login.docuware.cloud/{orgId}/connect
+      PATH.host: ${ivy.var.AI.Providers.Aura.Host}
+      PATH.orgId: ${ivy.var.AI.Providers.Aura.OrgId}
+      SensitiveData: true

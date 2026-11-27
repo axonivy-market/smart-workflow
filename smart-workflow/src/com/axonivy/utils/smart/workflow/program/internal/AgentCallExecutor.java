@@ -72,6 +72,7 @@ public class AgentCallExecutor {
     var toolsDynamic = toolsDynamic();
     var toolFilter = new ArrayList<>(context.config().getList(Conf.TOOLS));
     toolFilter.addAll(toolsDynamic);
+    toolFilter.removeIf(StringUtils::isBlank);
     configureModel(agentBuilder, structured.isPresent(), toolFilter);
     configureToolProvider(agentBuilder, toolFilter, toolsDynamic);
     configureGuardrails(agentBuilder);

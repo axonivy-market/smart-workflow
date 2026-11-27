@@ -8,7 +8,7 @@ Missing your preferred vendor? A provider is an Ivy project you can contribute �
 
 Smart Workflow connects to a wide range of LLM platforms, so you can use whichever fits your project — and switch later without changing a line of code.
 
-- **Hosted cloud APIs** — `OpenAI`, `Gemini`, `Anthropic` and `xAI`.
+- **Hosted cloud APIs** — `OpenAI`, `Gemini`, `Anthropic`, `xAI` and `Aura`.
 - **Enterprise platform** — `Azure OpenAI`.
 - **Self-hosted** — `Ollama`, running on your own hardware.
 
@@ -25,6 +25,7 @@ They differ in what they support, so it is worth a look before you pick one:
 | **Gemini** | Direct | ✓ | ✓ | — | — |
 | **Anthropic** | Direct | ✓ | ✓ | ✓ | — |
 | **xAI** | Direct | ✓ | — | ✓ | — |
+| **Aura** | Direct | — | — | — | — |
 | **Ollama** | Self-hosted | ✓ | — | ✓ *(not with tools)* | ✓ |
 
 Model lists, the per-provider caveats, and the reasons behind each `—` are in [Provider Capabilities](reference/capabilities.md). Read it before relying on file extraction or structured output: nothing is checked locally, so an unsupported combination fails at the provider with the provider's own error message.
@@ -38,7 +39,7 @@ Model lists, the per-provider caveats, and the reasons behind each `—` are in 
 ```yaml
 Variables:
   AI:
-    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Anthropic, Ollama]
+    # [enum: OpenAI, AzureOpenAI, Gemini, xAI, Aura, Anthropic, Ollama]
     DefaultProvider: "OpenAI"
 ```
 
@@ -121,6 +122,25 @@ Variables:
         # [enum: grok-4-1-fast, grok-4-1-mini, grok-4-1-large, grok-4-1-max, grok-4-1-mini-code, grok-4-1-large-code, grok-4-1-max-code]
         DefaultModel: "grok-4-1-fast"
 ```
+
+### Aura
+
+Install `smart-workflow-aura` and select `Aura` globally or on an agent. Aura calls the DocuWare Aura inference API directly (`/api/v1/{orgId}/inference`). It currently supports plain text requests only. See [Provider Capabilities](reference/capabilities.md) for capability details.
+
+```yaml
+Variables:
+  AI:
+    Providers:
+      Aura:
+        # DocuWare Aura organization, tenant host, and OAuth application ID.
+        OrgId: ""
+        Host: ""
+        AppId: ""
+```
+
+Aura chooses the model itself, so an agent that names a model fails with a configuration error. The same applies to tools and structured output, which are not supported yet. Queued responses (HTTP 202) are not supported yet either.
+
+**Authorization.** Aura uses DocuWare OAuth with PKCE. Register `<your engine URL>/oauth2/callback` as a redirect URI for the application configured in `AppId`. The Aura agent reuses an existing authorization in the current Ivy session; it cannot initiate sign-in itself.
 
 ### Ollama
 

@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/variables.json
+Variables:
+  AI:
+    Providers:
+      Aura:
+        # DocuWare Aura organization, tenant host, and OAuth application ID.
+        OrgId: ""
+        Host: ""
+        AppId: ""
